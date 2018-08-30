@@ -621,7 +621,7 @@ where h.USER_ID = '$userId'";
 		$rs = $this->_db->getArray($sql);
 
 		$rows = array();
-        if(!empty($rows)){
+        if(!empty($rs)){
             foreach($rs as $key => $val){
                 $rows[$val['name']] = $val['content'];
             }
