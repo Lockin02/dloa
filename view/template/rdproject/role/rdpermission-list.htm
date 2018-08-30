@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/manage/js/rd-menu-list.js"></script>
+<style>
+	.remarkClass{
+		width:30%;
+		word-break:keep-all;/* 不换行 */
+		white-space:nowrap;/* 不换行 */
+		overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+		text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+	}
+</style>
+<script>
+$(document).ready(function() {
+	// Tab表头
+	topTabShow(arrayTop, "rdPermission");
+});
+function show_page(page){
+	window.location.href=window.location.href;
+}
+function searchUserFun(){
+	if( $('#userId').val() ){
+		location.href="?model=rdproject_role_rdpermission&action=userlist&userId="+$('#userId').val()+"&userName="+$('#userName').val();
+	}
+}
+
+function searchDeptFun(){
+	if( $('#deptId').val() ){
+		location.href="?model=rdproject_role_rdpermission&action=userlist&deptId="+$('#deptId').val()+"&deptName="+$('#deptName').val();
+	}
+}
+function clearUserFun(){
+	if( !$('#deptName').val() ){
+		location.href="?model=rdproject_role_rdpermission&action=userlist";
+	}
+}
+function clearDeptFun(){
+	if( !$('#userName').val() ){
+		location.href="?model=rdproject_role_rdpermission&action=userlist";
+	}
+}
+</script>
+</head>
+<body>
+<div class="tab_options"></div>
+<div class="tab_line"></div>
+<div>
+<form id="form1">
+<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+				    <span class="main_head_title">
+				        项目中心查看权限列表
+				    </span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="left">
+			部门：
+	            <input type="hidden" id="deptId" name="rdpermission[deptId]"/>
+	            <input type="text" class="txt" id="deptName" name="rdpermission[deptName]" value="{deptName}" readonly/>
+	            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindowDept('deptId','deptName');javascript:$('#deptName').focus();" onblur="searchDeptFun();"/>
+	            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('deptId','deptName'),clearDeptFun();"/>
+			<!--
+			<input type="button" class="txt_btn_a" value="导出到Excel" onclick="export2Excel()">
+			 -->
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			人员：
+			<input type="hidden" id="userId" name="rdpermission[userId]" />
+			<input type="text" class="txt" id="userName" name="rdpermission[userName]" value="{userName}" size="40" readonly/>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('userId','userName');javascript:$('#deptName').focus();" onblur="searchUserFun();"/>
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('userId','userName'),clearUserFun();"/>
+
+			</td>
+		</tr>
+	</table>
+<!-- 这个版本是直接对应“类型-里程碑点”2010年10月26日注释 -->
+	<table  class="main_table"  style="table-layout:fixed">
+	<thead>
+		<tr class="main_tr_header" >
+			<th width="5%">序号</th>
+			<th width="15%">人员ID</th>
+			<th width="15%">人员名称</th>
+			<th width="15%">人员所属部门</th>
+			<th width="15%" class="remarkClass">可见部门</th>
+			<th width="8%">配置权限</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+	</table>
+</form>
+</div>
+		{pageDiv}
+</body>
+</html>

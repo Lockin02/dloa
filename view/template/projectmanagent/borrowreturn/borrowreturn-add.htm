@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>新增借试用归还管理</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/borrowreturn-add.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_borrowreturn_borrowreturn&action=add" onsubmit="return checkform();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+	             	<span class="main_head_title">
+	               		新增归还申请
+	            	</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请类型</td>
+            <td class="form_text_right">
+                <select id="applyType" name="borrowreturn[applyType]" class="select">
+                    {applyType}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">借用单编号</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readonly id="borrowCode" name="borrowreturn[borrowCode]"
+                       value="{Code}"/>
+                <input type="hidden" id="borrowId" name="borrowreturn[borrowId]" value="{id}"/>
+                <input type="hidden" id="deptId" name="borrowreturn[deptId]" value="{deptId}"/>
+                <input type="hidden" id="deptName" name="borrowreturn[deptName]" value="{deptName}"/>
+                <input type="hidden" id="salesName" name="borrowreturn[salesName]" value="{salesName}"/>
+                <input type="hidden" id="salesId" name="borrowreturn[salesId]" value="{salesId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">借用类型</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readonly id="borrowLimit" name="borrowreturn[borrowLimit]"
+                       value="{limits}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">客户名称</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtLong" readonly id="customerName" name="borrowreturn[customerName]"
+                       value="{customerName}"/>
+                <input type="hidden" id="customerId" name="borrowreturn[customerId]" value="{customerId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right">
+                <textarea class="txt_txtarea_font" name="borrowreturn[remark]"></textarea>
+            </td>
+        </tr>
+        <tr id="product">
+            <td colspan="6">
+                <fieldset style="width:200">
+                    <legend class="legend" onclick="showAndHideDiv('productImg','productInfo')">归还物料清单
+                        <img src="images/icon/info_up.gif" id="productImg"/>
+                    </legend>
+                    <div id="productInfo"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" name="borrowreturn[state]" id="state" value="0"/>
+                <input type="hidden" name="borrowreturn[disposeState]" id="disposeState" value="0"/>
+                <input type="submit" class="txt_btn_a" value=" 提  交 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" align="left" colspan="4">
+                <span class="blue">注：如果设备借出时包含序列号，请在归还的时候将设备的序列号选上。</span>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

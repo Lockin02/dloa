@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        	label { font-weight:bold;float:left; text-align:right; width:70px;}
+			.list_info {padding-left:30px; float:left;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:center; border:solid 0px red;}
+        	#show_info p {width:670px; float:left;}
+			#show_info span {width:140px; display:block; float:left;}
+		</style>
+		<script type="text/javascript">
+		var open_module_id;
+		var platform = eval('{platform}');
+		//platform.push({'id':'','name':'所有平台','selected':true});
+        $(function(){
+            $('#tt').datagrid({
+				view: detailview,
+				detailFormatter:function(index,row){
+					return '<div id="ddv-' + index + '" style="padding:5px 0;"></div>';
+				},onExpandRow: function(index,row){
+					$('#ddv-'+index).panel({
+						border:false,
+						cache:false,
+						href:'?model={t_model}&action=get_history_list&type=audit&identification='+row.identification+'&id='+row.id,
+						onLoad:function(){
+							$('#tt').datagrid('fixDetailRowHeight',index);
+						}
+					});
+					$('#tt').datagrid('fixDetailRowHeight',index);
+				},
+				fit:true,
+                title: '待审批模块列表',
+                iconCls: 'icon-edit',
+                pagination: true,
+                pageSize: 20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=audit_list_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, {
+                    field: 'module_name',
+                    title: '模块名称',
+                    width: 200,
+                    align: 'center'
+                }, {
+                    field: 'version',
+                    title: '版本号',
+                    width: 70,
+                    align: 'center'
+                }, {
+                    field: 'svn_version',
+                    title: 'Revision',
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'platform',
+                    title: '适用平台',
+                    width: 60,
+                    align: 'center'
+                },{
+                    field: 'cpu',
+                    title: 'CPU',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'description',
+                    title: '版本说明',
+                    width: 200,
+                    align: 'center'
+                }, {
+                    field: 'owner_name',
+                    title: '负责人',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'status',
+                    title: '审批状态',
+                    width: 60,
+                    align: 'center',
+					formatter: function(value, row, index){
+						if (value == 1)
+						{
+							return '已通过';
+						}else if (value == -1){
+							return '<a href="#" onclick="show_remark(\''+row.audit_remark+'\');">被打回</a>';
+						}else{
+							return '待审批';
+						}
+					}
+                }, {
+                    field: 'audit_name',
+                    title: '审批人',
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'user_name',
+                    title: '发布人',
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'date',
+                    title: '更新时间',
+                    width: 84,
+                    align: 'center'
+                },{
+                    field: 'download',
+                    title: '下载',
+                    width: 40,
+                    align: 'center',
+					formatter:function(value,row,index){
+						return '<a href="?model={t_model}&action=download&id='+row.id+'" target="_blink">下载</a>';
+					}
+                },  {
+                    field: 'action',
+                    title: '操作',
+                    width: 160,
+                    align: 'center',
+                    formatter: function(value, row, index){
+  
+                            if (row.status == 0)
+							{
+								var a = '<a href="#" onclick="show_info(' + index + ')">查看或审批</a> ';
+							}else{
+								var a = '<a href="#" onclick="show_info(' + index + ')">查看详细</a> ';
+							}
+                            return a;
+                    }
+                }]],
+                onBeforeEdit: function(index, row){
+                    row.editing = true;
+                    updateActions();
+                },
+                onAfterEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+                onCancelEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                }
+            });
+        });
+		function show_info(index)
+		{
+			$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+			show_info_window(row);
+			
+		}
+		function get_info(id)
+		{
+			$.post('?model={t_model}&action=get_info',{id:id,rand:Math.random(0,99999)},function(data){
+				if (data)
+				{
+					show_info_window(eval('('+data+')'));
+				}
+			});
+		}
+		//显示详细信息窗口
+		function show_info_window(row)
+		{
+			open_module_id = row.id;
+			$('#_module_name').html(row.module_name);
+			$('#_version').html(row.version);
+			$('#_svn_version').html(row.svn_version);
+			$('#_user_name').html(row.user_name);
+			$('#_owner').html(row.owner_name);
+			$('#_reviewer').html(row.audit_name);
+			$('#_platform').html(row.platform);
+			$('#_cpu').html(row.cpu);
+			$('#_description').html(row.description.replace(/\r\n/g, "<br />"));
+			$('#_date').html(row.date);
+			$('#_down_num').html(row.down_num);
+			$('#download a').attr('href','?model={t_model}&action=download&id='+row.id);
+			if (row.status != 0)
+			{
+				$('#audit_ok').css('display','none');
+				$('#audit_retrun').css('display','none');
+			}else{
+				$('#audit_ok').css('display','');
+				$('#audit_retrun').css('display','');
+			}
+			$('#show').dialog('open');
+			$('#remark').val('');
+		}
+		/**
+		 * 打回
+		 */
+		function return_apply()
+		{
+			$('#return_window').dialog('open');
+		}
+		/**
+		 * 确定打回
+		 */
+		function return_ok()
+		{
+			var remark = $('#remark').val();
+			if (remark == '')
+			{
+				$.messager.alert('提示','打回理由不能为空！');
+				return false;
+			}
+			update_status(open_module_id,-1,remark);
+		}
+		/**
+		 * 审核通过
+		 */
+		function audit()
+		{
+			update_status(open_module_id,1);
+		}
+		/**
+		 * 更新状态
+		 * @param {Object} module_id
+		 * @param {Object} status
+		 * @param {Object} remark
+		 */
+		function update_status(module_id,status,remark)
+		{
+			remark = remark ? remark : '';
+			$.post('?model={t_model}&action=audit&id='+module_id,{status:status,audit_remark:remark,rand:Math.random(0,9999)},function(data){
+				if (data == 1)
+				{
+					$('#return_window').dialog('close');
+					$('#show').dialog('close');
+					$.messager.show({
+			                        title: '提示',
+			                        msg: '操作成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+					$('#tt').datagrid('reload');
+				}else{
+					$.messager.alert('提示','审核操作失败，请与OA管理员联系！');
+				}
+			});
+		}
+		
+		/**
+		 * 显示被打回理由
+		 * @param {Object} msg
+		 */
+		function show_remark(msg)
+		{
+			$.messager.alert('打回理由',msg,'info');
+
+		}
+		</script>
+    </head>
+   <body id="tabdiv" class="easyui-layout" border="false">
+		<div region="center" border="true" border="false" style="padding:5px;">
+        	<table id="tt"></table>
+		</div>
+		<div id="show" class="easyui-dialog" title="查看模块详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:700px;height:500px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="show_info" region="center" border="false">
+				<p>
+					<label>模块名称：</label><span id="_module_name"></span>
+					<label>版本号：</label><span id="_version"></span>
+					<label>Revision：</label><span id="_svn_version"></span>
+				</p>
+				<p>
+					<label>适用平台：</label><span id="_platform"></span>
+					<label>平台CPU：</label><span id="_cpu"></span>
+					<label>更新时间：</label><span id="_date"></span>
+				</p>
+				<p>
+					<label>发布人：</label><span id="_user_name"></span>
+					<label>负责人：</label><span id="_owner"></span>
+					<label>审批人：</label><span id="_reviewer"></span>
+				</p>
+				<p>
+					<label>已下载数：</label><span id="_down_num"></span>
+					<label>下载模块：</label><span id="download"><a href="" target="_blank">点击下载</a></span>
+				</p>
+				<p>
+					<div style="font-weight:bold; float:left;">版本说明：</div>
+					<div id="_description" style=" line-height:20px; float:left;"></div>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<a id="audit_ok" class="easyui-linkbutton" iconCls="icon-ok" href="#" onclick="audit()">通过审批</a>
+				<a id="audit_retrun" class="easyui-linkbutton" iconCls="icon-cancel" href="#" onclick="return_apply()">打回申请</a>
+				<a class="easyui-linkbutton" iconCls="icon-undo" href="#" onclick="$('#show').window('close');">关闭返回</a>
+			</div>
+		</div>
+		</div>
+    </body>
+	<div id="return_window" class="easyui-dialog" title="打回理由" iconCls="icon-edit" modal="false" closed="true" style="width:400px;height:210px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<textarea rows="8" id="remark" cols="50"></textarea>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<a class="easyui-linkbutton" iconCls="icon-ok" href="#" onclick="return_ok()">确定打回</a>
+				<a class="easyui-linkbutton" iconCls="icon-undo" href="#" onclick="$('#return_window').window('close');">取消关闭</a>
+			</div>
+		</div>
+	</div>
+</html>

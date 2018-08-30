@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>员工信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="inc/style.css">
+<link rel="stylesheet" type="text/css" href="css/nav_tab.css">
+<script src="js/jquery.js" type="text/javascript"></script>
+<style>
+<!--
+.tb tr td { padding-right:5px;padding-left:5px;}
+.mydiv{
+    position: absolute;
+    z-index: 100;
+}
+-->
+</style>
+</head>
+<body class="bodycolor">
+<table border="0" cellpadding="2"  width="100%" class="small"  cellspacing="1"  bgcolor="#EFF7FF" align="center">
+  <TBODY>
+  <TR style="background-image: url('images/layerPopupBg.gif');">
+    <TD width="100%" height="23" align="center"><font size="3">发送邮件</font>
+    </TD>
+  </TR>
+  <TR >
+      <TD align="left"  >员工类型：<select name="usertype" id="usertype">
+              <option value="1">全部员工</option>
+              <option value="2">公司员工</option>
+              <option value="3">外派员工</option>
+          </select>
+    </TD>
+  </TR>
+  <TR>
+    <TD align="left" >
+        邮件标题：<input type="text" value="" id="emailtl" size="40" >
+    </TD>
+  </TR>
+  <TR>
+    <TD align="left" >
+        邮件内容：<iframe MARGINHEIGHT="1" MARGINWIDTH="1" width="500" height="350" id="editif" frameborder="0" style="word-break:break-all;border: solid #333333 1px;" >
+        </iframe>
+    </TD>
+  </TR>
+  <TR>
+    <TD align="center" height="23">
+        <input type='button' onclick='changeLeaveUser()' id="subbtn" value="确定" >&nbsp;&nbsp;
+        <input type='button' onclick='closeChange("newDiv")' id="closebtn" value="关闭" >
+    </TD>
+  </TR>
+  </table>
+<script type="text/javascript">
+function closeChange(obj){
+    parent.tb_remove();
+}
+function changeLeaveUser(){
+	var rand=Math.random()*100000;
+	var usertype=$("select[name=usertype] option[selected]").val();
+    var emailtl=$("#emailtl").val();
+    var emailbd=document.frames("editif").document.body.innerHTML;
+	if(usertype==''||emailtl=='' ||emailbd=='')
+	{
+		alert('请输入发送信息！');
+		return false;
+	}
+    $("#subbtn").attr("disabled",true);
+    $("#closebtn").attr("disabled",true);
+    if(confirm('确定发送邮件到 '+$("select[name=usertype] option[selected]").text()+' ？\n提醒：邮件发送时间会比较长，请耐心等待。')){
+        $.post('?model=salary&action=hr_email_send',{action:'send',usertype:usertype,emailtl:emailtl,emailbd:emailbd,tm:rand},
+        function (data)
+        {
+            if (data=='2')
+            {
+                alert('非法ID或输入数据有误！');
+            }else{
+                alert('发送成功！');
+            }
+            $("#subbtn").attr("disabled",false);
+            $("#closebtn").attr("disabled",false);
+        }
+        )
+    }else{
+        $("#subbtn").attr("disabled",false);
+        $("#closebtn").attr("disabled",false);
+    }
+}
+//get frame object
+frameobj=frames[0];
+bodyHtml="<head>\n<style type=\"text/css\">body {font: 10pt verdana;} p{margin:0px;padding:0px;}</style>\n</head>\n<BODY bgcolor=\"#FFFFFF\" MONOSPACE>"
+bodyHtml += "</body>";
+frameobj.document.open();
+frameobj.document.write(bodyHtml);
+frameobj.document.close();
+frameobj.document.designMode="On";
+frameobj.document.contentEditable = true;
+function replaceColor(){
+    var tet=document.frames("editif").document.selection.createRange().text;
+    if(tet){
+        document.frames("editif").document.selection.createRange().pasteHTML("<font color='red'>"+tet+"</font>");
+    }
+}
+</script>
+</body>
+</html>

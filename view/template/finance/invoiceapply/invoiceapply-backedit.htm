@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>开票通知单</title>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+
+
+<link rel="stylesheet" type="text/css" href="css/nav_tab.css" />
+<link rel="stylesheet" type="text/css" href="images/style.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js" ></script>
+<script type="text/javascript" src="js/util.js"></script>
+
+<script type="text/javascript" src="js//ext/ext-base.js"></script>
+<script type="text/javascript" src="js/ext/ext-all.js"></script>
+<script type="text/javascript" src="js/ext/common-ext.js"></script>
+
+<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+<script type="text/javascript" src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+<script type="text/javascript" src="view/template/common/combogrid/EquipmentComboGrid.js"></script>
+<script type="text/javascript" src="view/template/finance/invoiceapply/js/add.js"></script>
+
+	<script>
+		function inputDisable(mytype){
+			if(mytype == 'added'){
+				$('#addedTax').attr('disabled','');
+				$('#FWFPTax').attr('disabled','disabled');
+			}else{
+				$('#addedTax').attr('disabled','disabled');
+				$('#FWFPTax').attr('disabled','');
+			}
+		}
+
+		function changeStyle(obj){
+			$.each($("input:radio"),function(i,n){
+				if($(this).attr('id') != "normal"){
+					if($(this).val() != obj.value){
+						$('#' + n.id + 'Table').hide();
+					}else{
+						$('#' + n.id + 'Table').show();
+						inputDisable(n.id);
+						$('#showIStyle').text($(this).attr('title'));
+					}
+				}
+			})
+		}
+
+		function audit(){
+			document.getElementById('applyForm').action="?model=finance_invoiceapply_invoiceapply&action=backEdit&act=audit";
+		}
+
+		$().ready(function(){
+			var objstr = "{invoiceType}";
+			$('#'+objstr).attr('checked',true);
+			inputDisable(objstr);
+			$.each($("input:radio"),function(i,n){
+				if($(this).attr('id') != "normal"){
+					if(n.id != objstr){
+						$('#'+n.id+'Table').hide();
+					}else{
+
+					}
+				}
+			})
+		});
+	</script>
+</head>
+<body>
+<br />
+<form id="form1" action="?model=finance_invoiceapply_invoiceapply&action=backEdit" method="POST">
+<table width="90%" class="tableform" align="center">
+	<tr class="headform">
+		<td colspan="8">开票申请单
+			<input type="hidden" name="invoiceapply[id]" id="applyId" value="{id}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="formtd1">发票类型</td>
+		<td colspan="3">
+			<input type="radio" id="normal" name="invoiceapply[invoiceType]" value="normal" title="普通发票内容" checked="checked" onclick="changeStyle(this)"/>普通发票
+			<input type="radio" id="added" name="invoiceapply[invoiceType]" value="added" title="增值税发票内容" onclick="changeStyle(this)"/>增值税发票
+			<input type="radio" id="FWFP" name="invoiceapply[invoiceType]" value="FWFP" title="服务发票内容" onclick="changeStyle(this)"/>服务发票
+		</td>
+	</tr>
+	<tr id="normalTable">
+		<td colspan="4">
+			<table width="100%" class="tableform" align="center">
+				<tr>
+					<td id="showIStyle" colspan="4">普通发票内容
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="formtd1">合同号</td>
+		<td colspan="3">
+			<input type="hidden" name="invoiceapply[contractId]" id="contractId" value="{contractId}" />
+			<input type="hidden" name="invoiceapply[contractNumber]" value="{contractNumber}">
+			<input type="hidden" name="invoiceapply[contractName]" value="{contractName}">
+			<a href="?model=contract_sales_sales&action=readDetailedInfo&id={id}&contNumber={contNumber}">{contractNumber} </a>
+		</td>
+	</tr>
+	<tr>
+		<td class="formtd1">单位名称</td>
+		<td colspan="3">
+			<textarea rows="2" name="invoiceapply[customerName]" style="width:100%">{customerName}</textarea>
+			<input type="hidden" name="invoiceapply[customerId]" value="{customerId}">
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="formtd1">单位地址</td>
+		<td colspan="3">
+			<textarea rows="2" name="invoiceapply[unitAddress]" style="width:100%">{unitAddress}</textarea>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="formtd1">联系地址</td>
+		<td colspan="3">
+			<textarea rows="2" name="invoiceapply[linkAddress]" style="width:100%">{linkAddress}</textarea>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td height="28" class="formtd1">联系人</td>
+		<td>
+			<input type="text" name="invoiceapply[linkMan]" value="{linkMan}"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="formtd1">电话</td>
+		<td>
+			<input type="text" name="invoiceapply[linkPhone]" value="{linkPhone}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+
+
+
+	<tr id="addedTable">
+		<td colspan="4">
+			<table width="100%" class="tableform" align="center">
+				<tr>
+					<td class="formtd1">纳税人识别号</td>
+					<td colspan="3">
+						<input type="text" id="addedTax" name="invoiceapply[taxpayerId]" value="{taxpayerId}" value="{taxpayerId}" size="50"/>
+						<span class="red">[*]</span>
+					</td>
+				</tr>
+				<tr>
+					<td height="28" class="formtd1">开户银行</td>
+					<td>
+						<input type="text" name="invoiceapply[bank]" value="{bank}"/>
+						<span class="red">[*]</span>
+					</td>
+					<td class="formtd1">账号</td>
+					<td>
+						<input type="text" name="invoiceapply[bankCount]" value="{bankCount}"/>
+						<span class="red">[*]</span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+	<tr id="FWFPTable">
+		<td colspan="4">
+			<table width="100%" class="tableform" align="center">
+				<tr>
+					<td class="formtd1">纳税人识别号</td>
+					<td colspan="3">
+						<input type="text" id="FWFPTax" name="invoiceapply[taxpayerId]" value="{taxpayerId}" value="{taxpayerId}" size="50"/>
+						<span class="red">[*]</span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<table width="90%" class="tableform" align="center">
+	<tr class="intableform">
+		<td colspan="8" class="nextform">&nbsp;
+			详细：
+		</td>
+		<td width="5%" align="center">
+			<input type="hidden" id="invnumber" name="invnumber" value="{invnumber}"/>
+			<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放">
+	 		<img src="images/collapsed.gif" onclick="packing_add('invbody','invnumber');" title="添加行">
+	 	</td>
+	</tr>
+	<tbody id="invbody">
+		<tr class="intableform">
+			<td>序号</td>
+			<td>货品名称/服务项目</td>
+			<td>数量</td>
+			<td>软件金额</td>
+			<td>硬件金额</td>
+			<td>服务金额</td>
+			<td>产品/服务类型</td>
+			<td>备注</td>
+			<td width="5%">操作</td>
+		</tr>
+		{detail}
+	</tbody>
+</table>
+<table width="90%" class="tableform" align="center">
+	<tr>
+		<td height="28" class="formtd1">总数量</td>
+		<td>
+			<input type="text" name="invoiceapply[allAmount]" id="allAmount" value="{allAmount}" readonly="readonly"/>
+		</td>
+		<td class="formtd1">总金额</td>
+		<td>
+			<input type="text" name="invoiceapply[invoiceMoney]" id="invoiceMoney" value="{invoiceMoney}" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="99" class="footform">
+			<input type="submit" onclick="audit()" value="提交审批" />
+			<input type="submit" value=" 保  存 " />
+			<input type="button" onclick="history.back()" value=" 返  回 " />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+
+

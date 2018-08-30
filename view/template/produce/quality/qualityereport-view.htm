@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看检验报告</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/qualityereport-view.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+</head>
+<body>
+
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">查看检验报告信息</span>
+			</div>
+		</td>
+	</tr>
+        <tr>
+      		<td class="form_text_left">单据编号</td>
+      		<td class="form_text_right">
+      			{docCode}
+      		</td>
+      		<td class="form_text_left">审核结果</td>
+      		<td class="form_text_right">
+      			{auditStatus}
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">报 告 人</td>
+      		<td class="form_text_right" >
+      			{examineUserName}
+      		</td>
+       		<td class="form_text_left">报告日期</td>
+      		<td class="form_text_right">
+      			 {docDate}
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">质检方案</td>
+      		<td class="form_text_right" id="qualityPlanName">
+      			 {qualityPlanName}
+      		</td>
+      		<td class="form_text_left">质检标准</td>
+      		<td class="form_text_right" >
+      			 {standardName}<span  style="padding:0 10px;" >{fileImage}</span>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">质检方式</td>
+      		<td class="form_text_right">
+      			{qualityTypeName}
+      		</td>
+      		<td class="form_text_left">源单类型</td>
+      		<td class="form_text_right">
+      			{relDocTypeName}
+      		</td>
+      		<td class="form_text_left" style="display:none;">实际检验数量</td>
+      		<td class="form_text_right" style="display:none;">
+      			{checkNum}
+      		</td>
+        </tr>
+        <tr  style="display:none;">
+      		<td class="form_text_left">报检数量</td>
+      		<td class="form_text_right">
+      			{supportNum}
+      		</td>
+      		<td class="form_text_left">合格数量</td>
+      		<td class="form_text_right">
+      			{qualitedNum}
+      		</td>
+        </tr>
+        <tr style="display:none;">
+      		<td class="form_text_left">不合格数量</td>
+      		<td class="form_text_right">
+      			{produceNum}
+      		</td>
+	 		<td class="form_text_left">让步接收数量</td>
+	 		<td class="form_text_right" >
+	 			{receiveNum}
+	 		</td>
+        </tr>
+		<tr style="display:none;">
+	 		<td class="form_text_left">退回数量</td>
+      		<td class="form_text_right" colspan="3">
+	 			{backNum}
+	 		</td>
+		</tr>
+        <tr>
+      		<td class="form_text_left">审 核 人</td>
+      		<td class="form_text_right">
+      			{auditorName}
+      		</td>
+      		<td class="form_text_left">审核日期</td>
+      		<td class="form_text_right">
+      			{auditDate}
+      		</td>
+        </tr>
+		<tr>
+	 		<td class="form_text_left">审核说明</td>
+ 			<td class="form_text_right" colspan="3">{auditOpion}</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+			<td class="form_text_right" id="fileTd" colspan="3">
+				{file}
+			</td>
+			<td class="form_text_left" id="ducumentTd" style="display:none;">报告分类</td>
+			<td class="form_text_right" style="display:none;">
+				{typeName}
+			</td>
+	    </tr>
+	   	<tr style="display:none;" id="relCodeTr">
+            <td class="form_text_left">计划单号</td>
+            <td class="form_text_right">
+                {planCode}
+            </td>
+            <td class="form_text_left">合同编号</td>
+            <td class="form_text_right">
+                {contractCode}
+            </td>
+        </tr>
+        <tr style="display:none;" id="guideDocTr">
+			<td class="form_text_left">指引文件</td>
+			<td class="form_text_right" colspan="3">
+				<input type="hidden" id="guideDocName" value="{guideDocName}"/>
+				<input type="hidden" id="guideDocId" value="{guideDocId}"/>
+				<div class="upload"></div>
+			</td>
+        </tr>
+        <tr style="display:none;">
+		    <td class="form_text_left">备注:</td>
+		    <td class="form_text_right" colspan="3" id="remark">
+		        {remark}
+		    </td>
+		</tr>
+</table>
+<div id="ereportequitem"></div>
+<div id="itemTable"></div>
+<div id="failureItem"></div>
+<table class="form_main_table">
+	<tr>
+		<td class="innerTd" colspan="4">
+			<table class="form_in_table">
+				<tr>
+					<td colspan="4" class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{id}"/>
+						<input type="hidden" id="itemType" value="oa_produce_quality_ereport"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" id="id" value="{id}" />
+            <input type="hidden" id="relDocType" value="{relDocType}"/>
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

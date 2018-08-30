@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>借出订单设备列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+</head>
+<body>
+<br />
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td id="select_type">类型筛选：
+		<select name="typeid" id="typeid" onchange="location.href='?model=device_borrow&action=borrow_info_list&typeid='+this.value;">
+		<option value="">全部类别</option>
+		{select_type}
+		</select>
+		</td>
+		<td>归还筛选：
+		<select id="status" name="status" onchange="rt(this.value);">
+		<option value="">全部记录</option>
+		<option {selected_1} value="1">已归还</option>
+		<option {selected_2} value="2">未归还</option>
+		</select>
+		</td>
+		<td>领用人：<input type="text" size="10" onclick="setdiv()" onfocus="setdiv();" onkeydown="keydown()" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid()")' onblur="losefouse();" id="username" name="username" value="" /></td>
+		<td>
+			<form action="?model=device_borrow&action=borrow_info_list&typeid={typeid}&list_id={list_id}&tid={tid}" method="post">
+			开始日期：<input type="text" id="start_date" name="start_date" readonly onClick="WdatePicker()" class="Wdate" value="{start_date}" /> 至
+			<input type="text" id="end_date" name="end_date" readonly onClick="WdatePicker()" class="Wdate" value="{end_date}" /> 
+			<input type="submit" value=" 查看 " />
+			</form>
+		</td>
+	</tr>
+</table>
+<table width="100%" class="table" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+<form method="POST" action="?model=device_borrow&action=return_device_list" onsubmit="return check();" id="list">
+	<tr>
+		<td align="center" style="background:#D3E5FA" colspan="30">设备列表</td>
+	</tr>
+	<tr class="header">
+		<td id="box"><input type="checkbox" onclick="box()"></td>
+		<td>序号</td>
+		<td>设备类型</td>
+		<td>设备名称</td>
+		{fixed_title}
+		{field_title}
+		<td>借出数量</td>
+		<td>归还数量</td>
+		<td>使用项目</td>
+		<td>领用日期</td>
+		<td>预计归还日期</td>
+		<td>实际归还日期</td>
+		<td>设备状况</td>
+	</tr>
+	{list}
+	<tr>
+		<td colspan="30" style="text-align:center;height:50px;"><input type="submit" value=" 批量归还 " /> <input type="button" onclick="history.back();" value=" 返回 " /></td>
+	</tr>
+</form>
+</table>
+<div id="sug"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+ /*设置隔行变色*/       
+  //$("tbody tr:odd").css("background-color","#ece9dc");
+ /*设置鼠标划过时变色*/
+  /*单行变色*/
+  var trodd = $("#mytable tbody tr:odd");
+  var treven = $("#mytable tbody tr:even"); 
+  var temp_odd='';
+  var temp_even='';
+  trodd.mouseover(function(){
+  	temp_odd=$(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  	
+  })
+  trodd.mouseout(function() {$(this).css("background",(temp_odd ? temp_odd : '#FFFFFF'));});
+   
+  treven.mouseover(function(){
+  	temp_even = $(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  })
+  treven.mouseout(function() {$(this).css("background",(temp_even ? temp_even : '#FFFFFF'));});
+ });
+function check()
+{
+	var s = $('input[type=checkbox][name=id[]]').get();
+	var selected = false;
+	for (var i=0;i<s.length;i++)
+	{
+		if (s[i].checked == true)
+		{
+			selected = true;
+			break;
+		}
+	}
+	if (selected == false)
+	{
+		alert('最少需要选择一条数据！');
+		return false;
+	}
+}
+function box()
+{
+	var che = $('#box input[type=checkbox]').attr('checked');
+	var v = $('#list input[type=checkbox][name=id[]]').get();
+	for(var i=0;i<v.length;i++)
+	{
+		if (v[i].disabled == true)
+		{
+			v[i].checked = false;
+		}else{
+			v[i].checked = che;
+		}
+	}
+}
+function rt(id)
+{
+		var typeid = $('#typeid').val() ? $('#typeid').val() : GetQueryString("typeid");
+		var list_id = GetQueryString("list_id");
+		var tid = GetQueryString("tid");
+		if (list_id)
+		{
+			location.href = '?model=device_borrow&action=borrow_info_list&typeid='+typeid+'&list_id='+list_id+'&tid='+tid+'&status='+id;
+		}else{
+			location.href = '?model=device_borrow&action=borrow_info_list&typeid='+typeid+'&tid='+tid+'&status='+id;
+		}
+		
+}
+function GetQueryString(name) 
+{ 
+var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); 
+var r = window.location.search.substr(1).match(reg); 
+if (r!=null) return unescape(r[2]); return null; 
+}
+$(document).ready(function(){
+	if (GetQueryString("list_id"))
+	{
+		$('#select_type').css('display','none');
+	}
+});
+</script>
+</body>
+</html>

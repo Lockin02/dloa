@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>临时添加物料序列号</title>
+{#commonInclude#}
+</head>
+
+<script type="text/javascript" >
+Array.prototype.in_array = function(e){  //判断一个元素是否在数组里面
+ 	for(i=0;i<this.length;i++){  
+	 if(this[i] == e)  
+		 return true;  
+	} 
+	return false;  
+ } 
+	function addItem(){
+		
+		var itemscount=$("#itemscount").val();
+		var trStr='<tr><td>'+(itemscount*1+1)+'</td><td><input type="text" class="txt" id="sequence'+itemscount+'" name="serialno[items]['+itemscount+'][sequence]" /></td></tr>'
+		$("#itembody").append(trStr);
+		$("#itemscount").val(itemscount*1+1);
+	}
+	function checkForm(){
+		var sequenceIsNull=true;
+		var sequenceArr=[];
+		$("input[id^='sequence']").each(function(){
+			var serialNoStr=$(this).val();
+			
+			//后台进行重复性校验
+			$.ajax({
+				type : "POST",
+				async : false,
+				url : "?model=stock_serialno_serialno&action=checkRepeat",
+				data : {
+					isRed:$("#seqStatus").val(),
+					serialNo:serialNoStr,
+					productId:$("#productId").val()
+				},
+				success : function(result) {
+					if (result == 0){
+						alert("序列号《"+serialNoStr+"》库存中已存在!");
+						sequenceIsNull = false;
+						return false;
+					}
+				}
+			})
+			
+			//用户输入的序列号重复性校验
+			if(sequenceArr.in_array(serialNoStr)){
+				sequenceIsNull=false;
+				alert("输入的序列号存在重复！")	
+			}
+			
+			if(serialNoStr==""){
+				//alert("序列号不能为空！")
+				//sequenceIsNull=false;
+				//return false;
+			}else{
+				sequenceArr.push(serialNoStr);
+			}
+		})
+		return sequenceIsNull;
+	}
+	
+	
+	$(document).ready(function(){//判断添加的序列号是库存中还是出了库的
+		var docType=parent.parent.parent.$("#docType").val();
+		
+		if(parent.parent.parent.$("#isRed").val()=="1"){
+			if(docType=="CKSALES"||docType=="CKPICKING"||docType=="CKOTHER"){
+				$("#seqStatus").val("1");
+				
+			}
+		}
+		
+	})
+</script>
+<body>
+<form id="form1" method="post"	action="?model=stock_serialno_serialno&action=addTemp" onsubmit="return checkForm();" >
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+		<div style="height: 350px; overflow-y: auto; overflow-x: hidden">
+
+		<table class="main_table" id="itemtable">
+			<thead>
+				<tr>
+					<td colspan="3" class="form_header">序列号临时添加<img  src="images/add_item.png" align="absmiddle" onclick="addItem();" title="增加一行" />
+					 <input type="hidden" id="itemscount" value="1" />
+					</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th></th>
+					<th>序列号</th>
+				</tr>
+			</thead>
+			<tbody id="itembody">
+			<tr>
+				<td>1</td>
+				<td><input type="text" class="txt" id="sequence0" name="serialno[items][0][sequence]" /></td>
+			</tr>
+				
+			</tbody>
+		</table>
+		</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" class="txt" id="seqStatus" name="serialno[seqStatus]" value="0" /> 
+			<input type="hidden" id="productId" name="serialno[productId]" value="{productId}" />
+			<input type="hidden" id="stockId" name="serialno[stockId]" value="{stockId}" />
+			<input type="submit" class="txt_btn_a" value="  添加  " /> 
+			<input type="button" class="txt_btn_a" value="  取消  " onclick="closeFun()" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

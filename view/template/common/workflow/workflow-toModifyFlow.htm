@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>审批流程</title>
+    {#commonInclude#}
+
+    <style>
+        .stepHead{text-align: center;}
+    </style>
+
+    <!-- 自定义JS脚本 -->
+    <script type="text/javascript" src="view/template/common/workflow/js/workflow-toModifyFlow.js" ></script>
+</head>
+<body>
+<div class="main_head" style="width:98%">
+    <span class="main_head_title">
+      	{title}
+    </span>
+</div>
+<form id="modifyFlowForm" method="post" action="?model=common_workflow_workflow&action=modifyFlow">
+    <fieldset>
+        <legend class="legend">基 本 配 置</legend>
+        <table class="form_main_table" style="width:100%;">
+            <tbody>
+            <tr>
+                <td class="form_text_left">流程名称</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="flowName" name="flow[FLOW_NAME]" value="{flowName}"/>
+                    <input type="hidden" class="txt" id="flowId" name="flow[FLOW_ID]" value="{flowId}"/>
+                    <input type="hidden" class="txt" id="flow_formId" name="flow[FORM_ID]" value="{flow_formId}"/>
+                </td>
+                <td class="form_text_left">创建时间</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="createTime" name="flow[Idate]" value="{createTime}" READONLY/>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">公文类别</td>
+                <td class="form_text_right">
+                    <select id="wfClass" class="txt" name="flow[ClassID]">{wfClass}</select>
+                </td>
+                <td class="form_text_left">流程类别</td>
+                <td class="form_text_right">
+                    <select id="flowType" class="txt" name="flow[FLOW_TYPE]">{flowType}</select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">归档人</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" readonly id="enterUser" value="{enterUser}"/>
+                    <input type="hidden" id="enterUserId" name="flow[Enter_user]" value="{enterUserId}"/>
+                </td>
+                <td class="form_text_left">创建人</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" readonly id="creator" value="{creator}"/>
+                    <input type="hidden" id="creatorId" name="flow[Creator]" value="{creatorId}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">金额下限</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="minMoney" name="flow[MinMoney]" value="{minMoney}"/>
+                </td>
+                <td class="form_text_left">金额上限</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="maxMoney" name="flow[MaxMoney]" value="{maxMoney}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </fieldset>
+
+    <fieldset>
+        <legend class="legend">信 息 筛 选 配 置</legend>
+        <table class="form_main_table" style="width:100%;">
+            <tr>
+                <td class="form_text_left">审批流筛选脚本</td>
+                <td class="form_text_right" colspan="3">
+                    <textarea class="txt_txtarea_font600" id="filtingSql" name="flow[filtingSql]" style="resize: none">{filtingSql}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">审批流筛选类</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="filtingClass" name="flow[filtingClass]" value="{filtingClass}"/>
+                </td>
+                <td class="form_text_left">审批流筛选方法</td>
+                <td class="form_text_right">
+                    <input type="text" class="txt" id="filtingFun" name="flow[filtingFun]" value="{filtingFun}"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <fieldset>
+        <legend class="legend" onclick="showAndHide('baseImg','flowSteps')">&nbsp;&nbsp;&nbsp;流 程 步 骤
+            <img src="images/icon/info_up.gif" id="baseImg"/>
+        </legend>
+        <table class="form_main_table" id="flowSteps" style="width:100%;">
+            <tr>
+                <td>
+                    <div id="innerStepsTable" style="overflow: auto"></div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <table class="form_main_table" style="width:100%;">
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="modifyType" name="modifyType" value="{modifyType}"/>
+                <input type="button" id="editFlowBtn" class="txt_btn_a" value=" 保  存 "/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

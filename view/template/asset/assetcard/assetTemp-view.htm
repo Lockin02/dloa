@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+	<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<!-- 弹窗组件 -->
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<!-- 表格组件 -->
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+
+	<!-- 下拉组件 -->
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotext.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+
+	<!-- tab组件 -->
+	<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+	<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+	</script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript">
+		$(function() {
+		    $("#tabs1").tabs(".panes > div", {effect: 'fade',event:'mouseover' ,initialIndex:0,
+		        onClick:function(){
+	        }});
+		    $("#tabs2").tabs(".panes > div", {effect: 'default',event:'click' ,initialIndex:0, history: true });
+		    var api = $("#tabs2").data("tabs");
+		    //api.next();
+		    api.onClick(function() {
+		    });
+			//当资产类别为手机时，才显示手机频段、手机网络
+		    if($("#assetTypeName").val() == "手机"){
+				$("#mobileInfo").show();
+			}
+		});
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看
+    </span>
+</div>
+<form id="form1" method="post"  name="form1">
+<div>
+    <ul class="tabs" id="tabs2">
+        <li><a href="#tab1.html">基本信息</a></li>
+        <li><a href="#tab2.html">部门及其他</a></li>
+    </ul>
+
+    <div class="panes">
+    	<div>
+		<table class="form_main_table">
+			<tr>	
+					<td class="form_text_left">卡片编号</td>
+					<td class="form_text_right">
+						{assetCode}
+					</td>
+					<td class="form_text_left">资产名称</td>
+					<td class="form_text_right">
+						 {assetName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">资产类别</td>
+					<input type="hidden" value="{assetTypeName}" id="assetTypeName" />
+					<td class="form_text_right" >
+						 {assetTypeName}
+					</td>
+					<td class="form_text_left">机器码</td>
+					<td class="form_text_right" >
+						 {machineCode}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">数量</td>
+					<td class="form_text_right" >
+						 {number}
+					</td>
+					<td class="form_text_left">资产来源</td>
+					<td class="form_text_right" >
+						 {assetSourceName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">英文名称</td>
+					<td class="form_text_right" >
+						 {englishName}
+					</td>
+					<td class="form_text_left">计量单位</td>
+					<td class="form_text_right" >
+						 {unit}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">规格型号</td>
+					<td class="form_text_right" >
+						 {spec}
+					</td>
+					<td class="form_text_left">入账日期</td>
+					<td class="form_text_right" >
+						 {wirteDate}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">购置日期</td>
+					<td class="form_text_right" >
+						 {buyDate}
+					</td>
+					<td class="form_text_left">存放地点</td>
+					<td class="form_text_right" >
+						 {place}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">用途</td>
+					<td class="form_text_right" >
+						 {useType}
+					</td>
+					<td class="form_text_left">物料名称</td>
+					<td class="form_text_right" >
+						 {productName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">品牌</td>
+					<td class="form_text_right">
+						 {brand}
+					</td>
+					<td class="form_text_left">供应商名称</td>
+					<td class="form_text_right">
+						 {supplierName}
+					</td>
+			</tr>
+			<tr>			
+					<td class="form_text_left">配置</td>
+					<td class="form_text_right">
+						{deploy}
+					</td>
+					<td class="form_text_left">购进原值</td>
+					<td class="form_text_right formatMoney">
+						{origina}
+					</td>
+			</tr>
+			<tr id="mobileInfo" style="display:none;">			
+					<td class="form_text_left">手机频段</td>
+					<td class="form_text_right">
+						{mobileBand}
+					</td>
+					<td class="form_text_left">手机网络</td>
+					<td class="form_text_right">
+						{mobileNetwork}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">备注</td>
+					<td class="form_text_right" colspan="3">
+						 <textarea class="textarea_read" name="assetcard[remark]" rows=4 readonly>{remark}</textarea>
+					</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">资产属性</td>
+				<td class="form_text_right" colspan='3'>
+					{propertyName}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<table class="form_main_table">
+			<tr class="usingTr">
+					<td class="form_text_left">使用部门</td>
+					<td class="form_text_right" >
+						 {useOrgName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">使用人</td>
+					<td class="form_text_right" >
+						 {userName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">行政区域</td>
+					<td class="form_text_right">
+						 {agencyName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">所属公司
+					 </td>
+					<td class="form_text_right" >
+						 {companyName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">所属部门</td>
+					<td class="form_text_right" >
+						 {orgName}
+					</td>
+			</tr>
+			<tr class="belongMan">
+					<td class="form_text_left">所属人</td>
+					<td class="form_text_right" >
+						 {belongMan}
+					</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>产品属性配置预览</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/jquery.scrollfollow.js"></script>
+	<script type="text/javascript" src="js/jquery/jquery.highlight.js"></script>
+	<script type="text/javascript" src="view/template/goods/goods/js/properties-config-common.js"></script>
+	<script type="text/javascript" src="view/template/goods/goods/js/properties-config-choosestep.js"></script>
+	<script type="text/javascript" src="{#comboGrid#}/yxcombogrid-material.js"></script>
+	<script type="text/javascript" src="{#comboGrid#}/yxcombogrid-product.js"></script>
+	<script>
+		$(document).ready(function() {
+			//查找
+			$('#win').scrollFollow();
+			$("#searchBtn").click(function() {
+				var searchTxt = strTrim($('#searchTxt').val());
+				var oldObj = $("#oldVal");
+				var oldVal = oldObj.val();
+				if (searchTxt != "") {
+					var highlight;
+
+					if (oldVal != searchTxt) {
+						// 赋值
+						oldObj.val(searchTxt);
+						// 高亮
+						$('#settingInfo').removeHighlight().highlight(searchTxt);
+						// 长度获取
+						var allLength = $("span.highlight").length;
+						// 长度赋值
+						$("#allLength").val(allLength);
+						// 重置索引
+						$("#nowIndex").val(1);
+						// 索引
+						highlight = "highlight" + 1;
+						// 结果显示
+						$("#showArea").html(allLength + '个查询结果');
+					} else {
+						var allLength = $("#allLength").val() * 1;
+						var nowIndexObj = $("#nowIndex");
+						var nowIndex = nowIndexObj.val() * 1 + 1;
+						nowIndex = nowIndex > allLength ? 1 : nowIndex;
+						nowIndexObj.val(nowIndex);
+						// 索引
+						highlight = "highlight" + nowIndex;
+					}
+					$("#hiddenA").attr('href', '#' + highlight);
+					document.getElementById("hiddenA").click();
+				}
+			});
+		})
+	</script>
+	<style type="text/css">
+		.other_input {
+			color: black;
+			width: 150px;
+			border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: 1px solid rgb(192, 192, 192);
+			font-family: Courier background :(自己根据实际情况进行添加);
+
+		}
+
+		.num_input {
+			color: black;
+			width: 50px;
+			border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: 1px solid rgb(192, 192, 192);
+			text-align: center;
+			font-family: Courier background :(自己根据实际情况进行添加);
+
+		}
+
+		/**查找功能CSS**/
+		.highlight {
+			background: #efe821;
+		}
+
+		.win {
+			text-align: center;
+			position: absolute;
+			width: 100%;
+		}
+
+		.innerWin {
+			float: right;
+			position: absolute;
+			right: 10%;
+			padding: 5px;
+			background: #cdcdcd;
+		}
+	</style>
+</head>
+<body>
+<div class="win" id="win">
+	<div class="innerWin">
+		<input type="text" id="searchTxt" class="txtmiddle"/>
+		<a id="hiddenA" style="display: none;"></a>
+		<input type="button" id="searchBtn" value=" 查 找 "/>
+		<span id="showArea" class="blue"></span>
+		<input type="hidden" id="allLength"/>
+		<input type="hidden" id="nowIndex" value="1"/>
+		<input type="hidden" id="oldVal"/>
+	</div>
+</div>
+<table class="form_main_table">
+	<tr>
+		<td>
+			<div class="main_head">
+            	<span class="main_head_title">
+               		步骤 3 ：配置选择
+            	</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" align="left"><span class="blue"><b>说明:&nbsp;</b></span>{description}</td>
+	</tr>
+	<tr>
+		<td class="innerTd">
+			<table id="settingInfo" class="form_in_table">
+				{propertiesInfo}
+			</table>
+		</td>
+	</tr>
+	<tr class="productInfoRow">
+		<td colspan="4" align="left"><span class="blue"><b>新增其他物料:&nbsp;</b></span>{description}</td>
+	</tr>
+	<tr class="productInfoRow">
+		<td>
+			<div id="productInfo"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn">
+			<input type="hidden" id="goodsId" value="{goodsId}"/>
+			<input type="hidden" id="goodsName" value="{goodsName}"/>
+			<input type="hidden" id="goodsValue" value='{goodsValue}'/>
+			<input type="hidden" id="isEncrypt" value="{isEncrypt}"/>
+			<input type="hidden" id="number" value="{number}"/>
+			<input type="hidden" id="price" value="{price}"/>
+			<input type="hidden" id="money" value="{money}"/>
+			<input type="hidden" id="warrantyPeriod" value="{warrantyPeriod}"/>
+			<input type="hidden" id="cacheId" value="{cacheId}"/>
+			<input type="hidden" id="isCon" value="{isCon}"/>
+			<input type="hidden" id="isMoney" value="{isMoney}"/>
+			<input type="hidden" id="isSale" value="{isSale}"/>
+            <input type="hidden" id="typeId" value="{typeId}"/>
+			<input type="hidden" id="notEquSlt" value="{notEquSlt}"/>
+			<input type="hidden" id="rowNum" value="{rowNum}"/>
+			<input type="hidden" id="componentId" value="{componentId}"/>
+			<input type="hidden" id="exeDeptName" value="{exeDeptName}"/>
+			<input type="hidden" id="exeDeptCode" value="{exeDeptCode}"/>
+			<input type="hidden" id="auditDeptCode" value="{auditDeptCode}"/>
+			<input type="hidden" id="auditDeptName" value="{auditDeptName}"/>
+			<input type="button" id="toNext" class="txt_btn_a" value=" 保  存 " onclick="saveSetting();"/>
+			<input type="button" class="txt_btn_a" value=" 返  回  " onclick="toBack();"/>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

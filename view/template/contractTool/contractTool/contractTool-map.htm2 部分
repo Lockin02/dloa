@@ -1,0 +1,229 @@
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">-->
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+{#commonInclude#}
+<title>导航图</title>
+
+<style  type="text/css">
+.draw-line{
+    font-size: 1px;
+}
+.div1
+{
+border:2px solid #a1a1a1;
+padding:10px 40px;
+background:#dddddd;
+width:30px;
+height:80px;
+border-radius:25px;
+-moz-border-radius:25px; /* 老的 Firefox */
+}
+.arrowBody
+{
+background:#FF4060;
+height:20px;
+width:60px;
+display: inline-block;
+}
+.arrowHead
+{
+top:15px;
+height: 0px;
+border: 25px #FF4060 solid;
+width: 20px;
+border-top-color: transparent;
+border-right-color: transparent;
+border-bottom-color: transparent;
+display: inline-block;
+position: relative;
+left: -4px;
+}
+
+</style>
+</head>
+
+<body>
+<div class="main_head">
+	<span class="main_head_title"> 管理导航图
+	</span>
+</div>
+<div style="text-align:center;" >
+<table id="tb" width="90%" border="1" style="x-overflow:hidden;margin:auto;" rules=none>
+<tr>
+   <td rowspan="5"><div class="div1">筹建合同</div></td>
+   <td> </td>
+   <td><div class="div1">合同交付</div></td>
+   <td> </td>
+   <td><div class="div1">验收</div></td>
+   <td></td>
+   <td rowspan="5"><div class="div1">合同关闭</div></td>
+</tr>
+<tr>
+   <td></td>
+   <td></td>
+   <td></td>
+   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+   <td></td>
+</tr>
+<tr>
+   <td></td>
+   <td></td>
+   <td></td>
+   <td><div class="div1">开票、收款</div></td>
+   <td> </td>
+</tr>
+<tr>
+   <td></td>
+   <td></td>
+   <td></td>
+   <td></td>
+   <td></td>
+</tr>
+<tr>
+   <td> </td>
+   <td><div class="div1">合同文本归档</div></td>
+   <td></td>
+   <td></td>
+   <td> </td>
+</tr>
+鼠标X轴:
+<input id=xxx type=text>
+鼠标Y轴:
+<input id=yyy type=text>
+</table>
+</div>
+</body>
+</html>
+
+<script  language="javascript">
+var Line = function() {
+    var color = "#808080";
+    var pointArray = [];
+    var idocument = document;
+
+    var draw = {
+        // 画出最基本的图像，点，和垂直直线或水平直线
+        drawBase : function(x1, y1, w, h) {
+            try {
+                var span = idocument.createElement("span");
+                span.style.position = 'absolute';
+                span.style.left = x1;
+                span.style.top = y1;
+                span.style.height = h;
+                span.style.width = w;
+                span.style.background = color;
+                span.className = 'draw-line';
+                idocument.body.appendChild(span);
+                pointArray.push(span);
+            } catch (e) {
+            }
+        },
+        drawLine : function(x1, y1, x2, y2) {
+            var w = (((x2 - x1) == 0 ? 1 : (x2 - x1)));
+            var h = (((y2 - y1) == 0 ? 1 : (y2 - y1)));
+            if (x1 == x2 || y1 == y2) {
+                // 水平或垂直
+                var minX = (x1 < x2 ? x1 : x2);
+                var minY = (y1 < y2 ? y1 : y2);
+                draw.drawBase(minX, minY, Math.abs(w), Math.abs(h));
+            } else {// 斜线
+                var oldX = -1;
+                var oldY = -1;
+                var newX = 0;
+                var newY = 0;
+                if (Math.abs(w) > Math.abs(h)) {
+                    for (var i = 0; i < Math.abs(w); i++) {
+                        newX = (x1 + (w > 0 ? 1 : -1) * i);
+                        newY = (y1 + (h > 0 ? 1 : -1) * Math.abs(i * h / w));
+                        if (oldX != newX && oldY != newY) {
+                            oldX = newX;
+                            oldY = newY;
+                            draw.drawBase(oldX, oldY, 1, 1)
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < Math.abs(h); i++) {
+                        newX = (x1 + (w > 0 ? 1 : -1) * Math.abs(i * w / h));
+                        newY = (y1 + (h > 0 ? 1 : -1) * i);
+                        if (oldX != newX && oldY != newY) {
+                            oldX = newX;
+                            oldY = newY;
+                            draw.drawBase(oldX, oldY, 1, 1)
+                        }
+                    }
+                }
+            }
+        },
+        drawArrowheaded : function(x0, y0, x1, y1) {// 箭头
+            var w = (((x1 - x0) == 0 ? 1 : (x1 - x0)));
+            var h = (((y1 - y0) == 0 ? 1 : (y1 - y0)));
+
+            var d = Math.sqrt((y1 - y0) * (y1 - y0) + (x1 - x0) * (x1 - x0));
+            var Xa = x1 + 10 * ((x0 - x1) + (y0 - y1) / 2) / d;
+            var Ya = y1 + 10 * ((y0 - y1) - (x0 - x1) / 2) / d;
+            var Xb = x1 + 10 * ((x0 - x1) - (y0 - y1) / 2) / d;
+            var Yb = y1 + 10 * ((y0 - y1) + (x0 - x1) / 2) / d;
+
+            draw.drawLine(x1, y1, Xa, Ya);
+            draw.drawLine(x1, y1, Xb, Yb);
+        },
+        drawArrowheadedLine : function(x1, y1, x2, y2) {
+            // 直线
+            draw.drawLine(x1, y1, x2, y2);
+            // 箭头
+            draw.drawArrowheaded(x1, y1, x2, y2);
+        }
+    }
+
+    Line.prototype.drawArrowLine = function(x1, y1, x2, y2) {
+        draw.drawArrowheadedLine(x1, y1, x2, y2);
+    }
+
+    Line.prototype.remove = function() {// 删除画出的线
+        var len = pointArray.length;
+        for (var i = 0; i < len; i++) {
+            idocument.body.removeChild(pointArray[i]);
+        }
+        pointArray = null;
+        pointArray = [];
+    }
+
+    Line.prototype.setDocument = function(idoc) {
+        idocument = idoc;
+    }
+
+    Line.prototype.setColor = function(newColor) {// 设置线条颜色
+        color = newColor;
+    }
+}
+
+var line = new Line();
+
+line.drawArrowLine(181, 226, 292, 130);
+line.drawArrowLine(418, 122, 544, 122);
+line.drawArrowLine(607, 178, 607, 190);
+line.drawArrowLine(669, 235, 785, 235);
+line.drawArrowLine(182, 244, 292, 349);
+line.drawArrowLine(422, 348, 855, 348);
+line.drawArrowLine(855, 348, 855, 290);
+
+
+function mouseMove(ev)
+{
+Ev= ev || window.event;
+var mousePos = mouseCoords(ev);
+document.getElementById("xxx").value = mousePos.x;
+document.getElementById("yyy").value = mousePos.y;
+}
+function mouseCoords(ev)
+{
+if(ev.pageX || ev.pageY){
+return {x:ev.pageX, y:ev.pageY};
+}
+return{
+x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+y:ev.clientY + document.body.scrollTop - document.body.clientTop
+};
+}
+document.onmousemove = mouseMove;
+</script>

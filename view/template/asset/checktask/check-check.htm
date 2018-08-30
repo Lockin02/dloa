@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<TITLE>固定资产盘盈盘亏表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script>
+	function searchBtn() {
+		window.open("?model=asset_checktask_check&action=toSearch",
+				'newwindow', 'height=350,width=760');
+	}
+	function clearBtn() {
+		document.getElementById("assetCode").value = '';
+		document.getElementById("taskNo").value = '';
+		document.getElementById("dept").value = '';
+		document.getElementById("deptId").value = '';
+
+		this.location
+				.reload("?model=asset_checktask_check&action=toReport");
+	}
+</script>
+</HEAD>
+<BODY style="margin: 0">
+<table style="width:100%;">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+				<input type="button" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+				<input type="button" id="clearBtn" onclick="clearBtn();" value=" 清  空 "/>
+				<input type="hidden" id="assetCode" value="{assetCode}" />
+		        <input type="hidden" id="taskNo" value="{taskNo}"/>
+		        <input type="hidden" id="dept" value="{dept}"/>
+		        <input type="hidden" id="deptId" value="{deptId}"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<font size="4">	
+				任务编号：{taskNo}
+				盘点部门：{dept}
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				</font>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script language="javascript">
+	//用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表模板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+	CreateDisplayViewer("view/template/asset/checktask/check_sub.grf",
+			"view/template/asset/checktask/checkdata.php?assetCode="+document.getElementById("assetCode").value
+			+ "&taskNo="+document.getElementById("taskNo").value
+			+ "&deptId="+document.getElementById("deptId").value)
+</script>
+</BODY>
+</HTML>

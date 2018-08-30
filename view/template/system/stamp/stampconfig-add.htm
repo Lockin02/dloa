@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增盖章配置表</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+    <script type="text/javascript" src="{#jsPath#}/stampconfig-add.js" ></script>
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=system_stamp_stampconfig&action=add" >
+	<table class="form_main_table">
+		<tr>
+      		<td colspan="4">
+        	    <div class="main_head">
+            		<span class="main_head_title">
+               			新增盖章配置表
+					</span>
+            	</div>
+            </td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">章 名 称</td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" class="txt500" id="stampName" name="stampconfig[stampName]" />
+				<spin style="color:red" id="tips"></spin>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">负 责 人</td>
+      		<td class="form_text_right">
+      			 <input type="text" class="txt" id="principalName" name="stampconfig[principalName]" readonly="readonly"/>
+      			 <input type="hidden" id="principalId" name="stampconfig[principalId]" />
+      		</td>
+			<td class="form_text_left">公司法人姓名</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="legalPersonName" name="stampconfig[legalPersonName]" readonly="readonly"/>
+				<input type="hidden" id="legalPersonUsername" name="stampconfig[legalPersonUsername]" />
+			</td>
+        </tr>
+        <tr>
+            <td class="form_text_left">公司</td>
+            <td class="form_text_right">
+                <!--<input type="text" class="txt" name="stampconfig[businessBelongName]" id="businessBelongName" value="世纪鼎利" readonly="readonly"/>-->
+                <!--<input type="hidden" name="stampconfig[businessBelongId]" id="businessBelong" value="dl"/>-->
+				<input type="hidden" name="stampconfig[businessBelongName]" id="businessBelongName"/>
+				<select class="select" name="stampconfig[businessBelongId]" id="businessBelong">
+					<option value="">...请选择...</option>
+				</select>
+            </td>
+            <td class="form_text_left">印章类别:</td>
+            <td class="form_text_right">
+                <input type="hidden" name="stampconfig[typeName]" id="typeName"/>
+                <select class="select" name="stampconfig[typeId]" id="typeId">
+                    <option value="">...请选择...</option>
+                </select>
+            </td>
+        </tr>
+		<tr>
+			<td class="form_text_left">状 态</td>
+			<td class="form_text_right">
+				 <input type="radio" name="stampconfig[status]" value="1" checked/>开启
+				 <input type="radio" name="stampconfig[status]" value="0" />关闭
+			</td>
+			<td class="form_text_left">排 序</td>
+			<td class="form_text_right">
+				<input id="stampSort" type="number" name="stampconfig[stampSort]" value="0" onblur="javascript:if($(this).val() == ''){$(this).val(0)}"/>
+			</td>
+		</tr>
+        <tr>
+      		<td class="form_text_left">备 注</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea id="remark" name="stampconfig[remark]" class="txt_txtarea_font"></textarea>
+      		</td>
+        </tr>
+		<tr>
+	     	<td class="txt_btn" colspan="4">
+	     		<input type="button" class="txt_btn_a" value=" 保  存 " onclick="formChk()"/>
+	     		<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	     	</td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>

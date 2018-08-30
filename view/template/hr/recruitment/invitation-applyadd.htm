@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增面试通知</title>
+   {#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/apply-provin-city.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/invitation-applyadd.js" ></script>
+   <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-formwork.js"></script>
+<script type="text/javascript" src="js/common/formworkDeploy.js"></script>
+<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_invatation_email",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+<!-- 附件上传结束 -->
+<style type="text/css">
+		.rimless_text {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:350px;
+				}
+		.rimless_text_txt {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:200px;
+				}
+		.form_main_table td{
+			width: 10%;
+		}
+		#important{
+			color:#0000FF;
+		}
+   </style>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_recruitment_invitation&action=applyadd" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="6">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增面试通知
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">姓名</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="applicantName" readonly name="invitation[applicantName]" value="{applicantName}"/>
+      		</td>
+      		<td class="form_text_left_three">应聘职位</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="positionsName" readonly name="invitation[positionsName]" value="{positionName}" />
+      			 <input type="hidden" class="txt" id="positionsId" name="invitation[positionsId]" value="{positionId}"/>
+      		</td>
+      		<td class="form_text_left_three" >用人部门</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="deptName" readonly name="invitation[deptName]" value="{deptName}"/>
+      			 <input type="hidden" class="readOnlyText" id="deptId" readonly name="invitation[deptId]" value="{deptId}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three">性别</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="sex" readonly name="invitation[sex]" value="{sex}"/>
+      		</td>
+      		<td class="form_text_left_three">联系电话</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="phone"  name="invitation[phone]" value="{phone}"/>
+      		</td>
+      		<td class="form_text_left_three">电子邮箱</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="email"  name="invitation[email]" value="{email}"/>
+      		</td>
+       </tr>
+
+       <tr>
+       		<td class="form_text_left_three">简历编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="resumeCode" readonly name="invitation[resumeCode]" value="{resumeCode}"/>
+      			 <input type="hidden" class="txt" id="resumeId" name="invitation[resumeId]" value="{resumeId}"/>
+      		</td>
+      		<td class="form_text_left_three">面试类型</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="interviewTypeName" readonly name="invitation[interviewTypeName]" value="{interviewTypeName}"/>
+      			  <input type="hidden" class="readOnlyText" id="interviewType" readonly name="invitation[interviewType]" value="{interviewType}"/>
+      		</td>
+      		<td class="form_text_left_three">源单编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="parentCode" readonly name="invitation[parentCode]" value="{parentCode}"/>
+      			 <input type="hidden" class="txt" id="parentId" name="invitation[parentId]" value="{parentId}"/>
+      		</td>
+       </tr>
+        <tr>
+       		<td class="form_text_left_three">职位类型</td>
+      		<td class="form_text_right" >
+      			<select class="select" id="postType" name="invitation[postType]" >
+      			 	<option value="">...请选择...</option>
+      			 	{postType}
+      			 </select>
+      		</td>
+      		<td class="form_text_left_three" >研发职位</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="developPositionName"  name="invitation[developPositionName]" value="{developPositionName}"/>
+      		</td>
+      		<td class="form_text_left_three" >工作地点</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="workPlace"  name="invitation[workPlace]" value="{workPlace}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three" id="important">级别</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" id="level" value="{positionLevel}" />
+      			 <select class="select" id="positionLevel" name="invitation[positionLevel]">
+      			 	<option value="">...请选择...</option>
+      			 	<option value="1">初级</option>
+      			 	<option value="2">中级</option>
+      			 	<option value="3">高级</option>
+      			 </select>
+      		</td>
+      		<td class="form_text_left_three" id="">面试地点</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="interviewPlace" name="invitation[interviewPlace]" />
+      		</td>
+      		<td class="form_text_left_three" id="">面试时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="interviewDate" readonly onfocus="WdatePicker();" name="invitation[interviewDate]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three" id="important">部门面试官</td>
+      		<td class="form_text_right">
+      			 <input type="text" class="txt" id="interviewerName" name="invitation[interviewerName]" readonly value="{resumeToName}"/>
+      			 <input type="hidden" id="interviewerId" name="invitation[interviewerId]" value="{resumeToId}"/>
+      		</td>
+      		<td class="form_text_left_three" id="important">人力资源面试官</td>
+      		<td class="form_text_right">
+      			  <input type="text" class="txt" id="hrInterviewer" name="invitation[hrInterviewer]" readonly/>
+      			 <input type="hidden" id="hrInterviewerId" name="invitation[hrInterviewerId]"/>
+      		</td>
+      		<td class="form_text_left_three">支撑中心<br>(区域中心)</td>
+      		<td class="form_text_right">
+      			<input type="hidden" id="useAreaName" name="invitation[useAreaName]" />
+      			<input type="hidden" id="useAreaIdHidden" value="{useAreaId}" />
+      			<select class="select" name="invitation[useAreaId]" id="useAreaId">
+					{areaOpt}
+			</select>
+      		</td>
+       </tr>
+	   <tr>
+      		<td class="form_text_left"><span style="color:blue">发件人 ：</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" readonly="readonly" class="rimless_text_txt" id="" name="interMail[user]" value="{user}"/>
+      			 <input type="hidden" class="rimless_text_txt" id="" name="interMail[userId]" value="{userId}"/>
+      			 &nbsp&nbsp<input type="button" id="btnccmail" class="txt_btn_a" value="添加抄送" onclick="addmail('ccmail')" />
+      			 &nbsp&nbsp<input type="button" id="btnbccmail" class="txt_btn_a" value="添加密送" onclick="addmail('bccmail')" />
+      		</td>
+			<td class="form_text_left_three_new">工作省市</td>
+			<td class="form_text_right_three" >
+			   <select class="selectauto" name="invitation[workProvinceId]" id="province"  val="{workProvince}"></select>
+			   <input type="hidden" name="invitation[workProvince]" id="provinceName" />
+			   <select class="selectauto" name="invitation[workCityId]" id="city"  val="{workCity}"></select>
+			   <input type="hidden" name="invitation[workCity]" id="cityName" />
+		   </td>
+        </tr>
+        <tr>
+      		<td class="form_text_left"><span style="color:blue">收件人 ：</span></td>
+      		<td class="form_text_right" colspan="6">
+      			 <input type="text" class="rimless_text" id="toMail" name="interMail[toMail]" value="{toMail}" />
+      		</td>
+        </tr>
+        <tr id="ccmail" style="display:none">
+      		<td class="form_text_left"><span style="color:blue">抄送 ：</span></td>
+      		<td class="form_text_right" colspan="6">
+      			 <input type="text" class="rimless_text" id="toccmail" name="interMail[toccMail]" readonly="readonly" />
+      			 <input type="hidden" class="rimless_text" id="toccmailId" name="interMail[toccMailId]" />
+      		</td>
+        </tr>
+        <tr id="bccmail" style="display:none">
+      		<td class="form_text_left"><span style="color:blue">密送 ：</span></td>
+      		<td class="form_text_right" colspan="6">
+      			 <input type="text" class="rimless_text" id="tobccmail" name="interMail[tobccMail]" readonly="readonly"/>
+      			 <input type="hidden" class="rimless_text" id="tobccmailId" name="interMail[tobccMailId]" />
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left_three"><span style="color:blue">标题 ：</span></td>
+      		<td class="form_text_right" colspan="6">
+      			 <input type="text" class="rimless_text" id="mailTitle" name="interMail[title]"/>
+      		</td>
+        </tr>
+        <tr>
+			<td class="form_text_left">附件</td>
+				<td class="form_text_right"  colspan="6">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div>
+			</td>
+		</tr>
+        <tr>
+      		<td class="form_text_left"><span style="color:blue">模板 ：</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" class="txt"  id="formwork" />
+      			 <input type="hidden" id="deploy" value="MSTZ"/>
+      			 <input type="hidden" id="ids" value="{ids}"/>
+      		</td>
+      		<td colspan="4">
+      			<span style="color: red">*以下内容将作为邮件内容发送</span>
+      		</td>
+        </tr>
+		<tr>
+			<td colspan="6">
+			    <textarea name="interMail[content]" id="remark" class="editor" ></textarea>
+			</td>
+		</tr>
+          <tr>
+      		<td class="txt_btn" colspan="6">
+      		   <input  type="hidden" id="applyid" name="applyid" value="{applyid}"/>
+      		   <input  type="hidden" name="interMail[id]" value="{id}"/>
+      		   <input  type="hidden" id="applyResumeId" name="invitation[applyResumeId]" value="{applyResumeId}"/>
+      		   <input  type="hidden" id="sysCompanyName" name="invitation[sysCompanyName]" value="{sysCompanyName}"/>
+      		   <input  type="hidden" id="sysCompanyId" name="invitation[sysCompanyId]" value="{sysCompanyId}"/>
+      		   <input  type="hidden" id="projectGroupId" name="invitation[projectGroupId]" value="{projectGroupId}"/>
+      		   <input  type="hidden" id="projectCode" name="invitation[projectCode]" value="{projectCode}"/>
+      		   <input  type="hidden" id="projectGroup" name="invitation[projectGroup]" value="{projectGroup}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 发  送 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

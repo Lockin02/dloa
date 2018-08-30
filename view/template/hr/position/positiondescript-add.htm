@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增职位说明书</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/positiondescript-add.js" ></script>
+</head>
+<style>
+	.form_main_table .form_text_left{
+		width:10%;
+	}
+	#important{
+	    color:blue;
+	}
+</style>
+<body>
+   <form id="form1" method="post" action="?model=hr_position_positiondescript&action=add" >
+     <input type="hidden" id="valPlus" name="valPlus" value="{valPlus}"/>
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增职位说明书
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+       <td>
+       	<fieldset><legend><b>基本信息</b></legend>
+       	<table width="100%">
+	       <tr>
+	      		<td class="form_text_left" id="important">所在部门</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="deptName" name="positiondescript[deptName]" readonly/>
+	      			 <input type="hidden" id="deptId" name="positiondescript[deptId]" />
+
+	      		</td>
+	      		<td class="form_text_left" id="important">职位名称</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="positionName" name="positiondescript[positionName]" />
+	      			  <input type="hidden" id="positionCode" name="positiondescript[positionCode]" />
+
+	      		</td>
+	      		<td class="form_text_left" id="important">薪资等级</td>
+	      		<td class="form_text_right" >
+	      			 <select id="rewardGradeCode" name="positiondescript[rewardGradeCode]" class="select" value="{rewardGradeCode}"></select>
+
+	      		</td>
+	       </tr>
+	       <tr>
+	      		<td class="form_text_left">上级职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="superiorPosition" name="positiondescript[superiorPosition]" />
+	      			 <input type="hidden" id="superiorPositionId" name="positiondescript[superiorPositionId]" />
+	      		</td>
+	      		<td class="form_text_left">下属职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="suborPosition" name="positiondescript[suborPosition]" />
+	      			 <input type="hidden" id="suborPositionId" name="positiondescript[suborPositionId]" />
+	      		</td>
+	      		<td class="form_text_left">平行职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="parallelPosition" name="positiondescript[parallelPosition]" />
+	      			 <input type="hidden" id="parallelPositionId" name="positiondescript[parallelPositionId]" />
+	      		</td>
+	       </tr>
+	       <tr>
+	      		<td class="form_text_left">可晋升职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="promotionPosition" name="positiondescript[promotionPosition]" />
+	      			 <input type="hidden" id="promotionPositionId" name="positiondescript[promotionPositionId]" />
+	      		</td>
+	      		<td class="form_text_left">可轮换职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="rotationPosition" name="positiondescript[rotationPosition]" />
+	      			 <input type="hidden" id="rotationPositionId" name="positiondescript[rotationPositionId]" />
+	      		</td>
+	      		<td class="form_text_left">可降级职位</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="downPosition" name="positiondescript[downPosition]" />
+	      			 <input type="hidden" id="downPositionId" name="positiondescript[downPositionId]" />
+	      		</td>
+	       </tr>
+	       <tr>
+      			  <td class="form_text_left" id="important" >职位概要</td>
+                  <td class="form_text_right" colspan="6">
+                  	<textarea class="txt_txtarea_font" id="positionRemark" name="positiondescript[positionRemark]"></textarea>
+
+      				</td>
+      				</tr>
+	       <tr>
+      			  <td class="form_text_left">所需培训</td>
+                  <td class="form_text_right" colspan="6">
+                  <textarea class="txt_txtarea_font" id="trainNeed" name="positiondescript[trainNeed]"></textarea>
+                  </td>
+                  </tr>
+	       </table>
+	       </fieldset>
+      </td>
+      </tr>
+
+      <tr>
+      	<td>
+      		<fieldset><legend><b>工作职责</b></legend>
+      		<div id="workinfoTable"></div>
+      		</fieldset>
+      	</td>
+      </tr>
+     	<tr>
+     	<td colspan="1">
+     		<fieldset><legend><b>任职条件</b></legend>
+      	<table width="100%">
+   		<tr>
+	  		<td class="form_text_left" id="important">专业知识</td>
+	  		<td class="form_text_right" >
+	  			 <input type="text" class="txt" id="professionalKnow" name="positiondescript[professionalKnow]" />
+
+	  		</td>
+	  		<td class="form_text_left" id="important">公司知识</td>
+	  		<td class="form_text_right" >
+	  			 <input type="text" class="txt" id="companyKnow" name="positiondescript[companyKnow]" />
+
+	  		</td>
+	  		<td class="form_text_left" id="important">工作流程</td>
+	  		<td class="form_text_right" >
+	  			 <input type="text" class="txt" id="workProcess" name="positiondescript[workProcess]" />
+
+	  		</td>
+   		</tr>
+
+	       <tr>
+	      		<td class="form_text_left">经验</td>
+
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="experience" name="positiondescript[experience]"/>
+	      		</td>
+	      		<td class="form_text_left">学历</td>
+	      		<td class="form_text_right" >
+	      			  <select id="education" name="positiondescript[education]" class="select" ></select>
+	      		</td>
+
+	      		<td class="form_text_left">专业</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="profession" name="positiondescript[profession]"/>
+	      		</td>
+	      		</tr>
+	       <tr>
+	      		<td class="form_text_left">年龄</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt" id="age" name="positiondescript[age]"/>
+	      		</td>
+	       </tr>
+	       <tr>
+	      <td class="form_text_left">能力及个性要求</td>
+	     <td colspan="6">
+	     	<div id="abilityneedTable"></div>
+	     </td>
+	    </tr>
+	       </table>
+	       </fieldset>
+	  </td>
+	  </tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		<input type="hidden" id="ExaStatus" name="positiondescript[ExaStatus]" value="未审核"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 " onclick="refreshContent();"/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

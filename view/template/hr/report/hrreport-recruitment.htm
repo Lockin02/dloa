@@ -1,0 +1,181 @@
+<HTML>
+<HEAD>
+	<TITLE>招聘数据库报表</TITLE>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+		<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC" codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+		<script src="webreport/CreateControl.js" language="javascript"></script>
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script src="js/DatePicker/WdatePicker.js" language="javascript"></script>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+		<style type="text/css">
+			tr {
+				text-align:right;
+			}
+			tr td{
+				padding-right:10px;
+				padding-left:10px;
+			}
+			select{
+				width:120px;
+			}
+		</style>
+		<script>
+			function searchBtn(){
+				location.href="?model=hr_report_hrreport&action=toRecruitmentReport"
+				+ "&userName=" + $.trim($("#userName").val())
+				+ "&deptName=" + $.trim($("#deptName").val())
+				+ "&hrJobName=" +$.trim($("#hrJobName").val())
+				+ "&createName=" +$.trim($("#createName").val())
+				+ "&formDate=" +  $.trim($("#formDate").val())
+				+ "&postTypeName=" +  $.trim($("#postType").find("option:selected").text())  //职位类型
+				+ "&postType=" +  $.trim($("#postType").val())	//岗位类型code
+				+ "&positionLevel=" + $("#positionLevel").find("option:selected").text() //级别
+				+ "&positionLevelId=" + $("#positionLevel").val() //级别
+				+ "&workPlace=" +  $.trim($("#workPlace").val())
+				+ "&applyType=" +  $.trim($("#addTypeCode").val())    //职位需求类型code;
+				+ "&applyTypeName=" +  $.trim($("#addTypeCode").find("option:selected").text())    //职位需求类型;
+			}
+
+			function reset(){
+				location.href="?model=hr_report_hrreport&action=toRecruitmentReport";
+			}
+
+			//选择网优类型职位时，加载数据字典内容
+			function initLevelWY(){
+				var dataArr = [];
+				var data = $.ajax({
+					url : '?model=engineering_baseinfo_eperson&action=pageJson&sort=orderNum&dir=ASC',
+					type : 'post',
+					dataType : 'json',
+					async : false
+				}).responseText;
+				data = eval("(" + data + ")");
+				data = data.collection;
+				var positionLevel = $("#positionLevel");
+				positionLevel.empty();
+				for(i = 0 ;i < data.length ;i++) {
+					var option = $("<option></option");
+					option.val(data[i].personLevel);
+					option.text(data[i].personLevel);
+					option.appendTo(positionLevel);
+				}
+			}
+
+			function initPostType(){
+				if($("#postType").val() == 'YPZW-WY') {
+					initLevelWY();
+				} else {
+					var options = '<option value=""></option> <option value="1">初级</option><option value="2">中级</option><option value="3">高级</option>';
+					var positionLevel = $("#positionLevel");
+					positionLevel.empty();
+					positionLevel.html(options);
+				}
+			}
+
+			$(function(){
+				initPostType();
+				$("#postType").change(function(){
+					initPostType();
+				});
+				var positionLevelHidden = $("#positionLevelHidden").val();
+				$("#positionLevel").val(positionLevelHidden);
+			});
+	</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+	<table border="0" width="100%" height="100%" class="form_main_table">
+		<tr>
+			<td  align="left">
+				搜索条件：
+			</td>
+		</tr>
+		<tr>
+			<td width="100%">
+				<table class="form_main_table">
+					<tr>
+						<td class="form_text_left_three">入职年月</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="formDate" name="formDate" value="{formDate}" onfocus="WdatePicker({dateFmt:'yyyy-MM'})">
+						</td>
+						<td class="form_text_left_three">姓名</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="userName" name="userName"  value="{userName}">
+						</td>
+						<td class="form_text_left_three">职位类型</td>
+						<td class="form_text_right_three">
+							<input type="hidden" id="postTypeName" value="{postTypeName}"/>
+							<select id="postType" name="postTypeName" >
+								<option value=""></option>
+								{postType}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">部门</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="deptName" value="{deptName}">
+						</td>
+						<td class="form_text_left_three">职位</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="hrJobName" value="{hrJobName}">
+						</td>
+						<td class="form_text_left_three">级别</td>
+						<td class="form_text_right_three">
+							<input type="hidden" id="positionLevelHidden" value="{positionLevelId}"/>
+							<select id="positionLevel" name="positionLevel" >
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">工作地点</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="workPlace" value="{workPlace}">
+						</td>
+						<td class="form_text_left_three">职位需求类型</td>
+						<td class="form_text_right_three">
+							<input id="addTypeCodeHidden" value='{applyTypeName}' type="hidden"/>
+							<select id="addTypeCode" name="applyType" >
+								<option value=""></option>
+								{addTypeCode}
+							</select>
+						</td>
+						<td class="form_text_left_three">招聘人员</td>
+						<td class="form_text_right_three">
+							<input class="txtmiddle" id="createName" value="{createName}">
+						</td>
+					</tr>
+					<tr>
+						<td class="txt_btn" colspan="6" align="center">
+							<input type="button" class="txt_btn_a" onclick="searchBtn();" value=" 查 询 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" class="txt_btn_a" onclick="reset();" value=" 重 置 "/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr height="100%">
+			<td colspan="5" style="font-size: 10pt;" height="100%">
+				<script language="javascript">
+					//用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+					CreateDisplayViewer("POST::view/template/hr/report/hrreport-recruitment.grf"
+						,"view/template/hr/report/hrreport-recruitment.php"
+						+ "?userName=" + $.trim($("#userName").val())
+						+ "&deptName=" + $.trim($("#deptName").val())
+						+ "&hrJobName=" +$.trim($("#hrJobName").val())
+						+ "&createName=" +$.trim($("#createName").val())
+						+ "&formDate=" +  $.trim($("#formDate").val())
+						+ "&postTypeName=" +  $.trim($("#postTypeName").val())  //岗位类型
+						+ "&postType=" +  $.trim($("#postType").val())	//岗位类型code
+						+ "&positionLevel=" + $("#positionLevel").find("option:selected").text() //级别
+						+ "&positionLevelId=" + $.trim($("#positionLevelHidden").val()) //级别
+						+ "&workPlace=" +  $.trim($("#workPlace").val())
+						+ "&applyType=" +  $.trim($("#addTypeCode").val())    //职位需求类型code;
+						+ "&applyTypeName=" +  $.trim($("#addTypeCodeHidden").val())    //职位需求类型;
+					)
+				</script>
+			</td>
+		</tr>
+	</table>
+</BODY>
+</HTML>

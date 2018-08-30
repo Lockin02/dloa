@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>申请盖章</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+	<script>
+		$(document).ready(function(){
+			// 验证信息
+			validate({
+				"stampType" : {
+					required : true
+				}
+			});
+
+			//盖章类型渲染
+			$("#stampType").yxcombogrid_stampconfig({
+				hiddenId : 'stampType',
+				height : 250,
+				gridOptions : {
+					isTitle : true,
+					showcheckbox : true
+				}
+			});
+		});
+
+		function checkForm(){
+			if($("#uploadfileList").html() =="" || $("#uploadfileList").html() =="暂无任何附件"){
+				alert('申请盖章前需要上传合同附件！');
+				return false;
+			}
+			return true;
+		}
+	</script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_sale_outsourcing",
+                 "serviceId": "{id}"
+             });
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	申请盖章 《{orderName}》
+    </span>
+</div>
+<form id="form1" method="post" action="?model=contract_outsourcing_outsourcing&action=stamp" onsubmit="return checkForm();">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left_three">盖章类型</td>
+		<td class="form_text_right_three">
+			<!--select class="select" name="outsourcing[stampType]" id="stampType">
+				{stampType}
+			</select-->
+			<input type="text" class="txt500" name="outsourcing[stampType]" id="stampType" readonly="readonly"/>
+			<span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">备注说明</td>
+		<td class="form_text_right_three">
+			 <textarea class="txt_txtarea_font" name="outsourcing[remark]" id="remark"></textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+		<td class="form_text_right_three" colspan="5">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload">{file}</div>
+			</div>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="2">
+         	<input type="hidden" name="outsourcing[contractId]" value="{id}" />
+         	<input type="hidden" name="outsourcing[contractCode]" value="{orderCode}" />
+         	<input type="hidden" name="outsourcing[contractName]" value="{orderName}" />
+         	<input type="hidden" name="outsourcing[objCode]" value="{objCode}" />
+         	<input type="hidden" name="outsourcing[contractMoney]" value="{orderMoney}" />
+         	<input type="hidden" name="outsourcing[signCompanyName]" value="{signCompanyName}" />
+         	<input type="hidden" name="outsourcing[signCompanyId]" value="{signCompanyId}" />
+         	<input type="hidden" name="outsourcing[applyUserId]" value="{thisUserId}" />
+         	<input type="hidden" name="outsourcing[applyUserName]" value="{thisUserName}" />
+         	<input type="hidden" name="outsourcing[applyDate]" value="{applyDate}" />
+		   	<input type="submit" class="txt_btn_a" value="申请盖章"/>
+		   	<input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

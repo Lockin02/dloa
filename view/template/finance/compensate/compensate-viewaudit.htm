@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>
+        审批赔偿单
+    </title>
+    {#commonInclude#}
+    <!-- 引入质检报告用的类 -->
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-init.js"></script>
+    <script type="text/javascript" src="view/template/produce/quality/js/qualityereportequitem-showqualitydetail.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/compensate-viewaudit.js"></script>
+</head>
+<body>
+<table class="form_main_table">
+    <tr>
+        <td colspan="6">
+            <div class="main_head2">
+                <span class="main_head_title">
+                    审批赔偿单
+                </span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            单据编号
+            <input type="hidden" id="id" value="{id}"/>
+            <input type="hidden" id="formMoney" value="{formMoney}"/>
+            <input type="hidden" id="compensateMoney" value="{compensateMoney}"/>
+            <input type="hidden" id="relDocId" value="{relDocId}"/>
+            <input type="hidden" id="qualityObjType" value="{qualityObjType}"/>
+        </td>
+        <td class="form_text_right">
+            {formCode}
+        </td>
+        <td class="form_text_left">
+            单据日期
+        </td>
+        <td class="form_text_right" width="30%">
+            {formDate}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            业务类型
+        </td>
+        <td class="form_text_right">
+            {objTypeName}
+        </td>
+        <td class="form_text_left">
+            业务单编号
+        </td>
+        <td class="form_text_right">
+            {objCode}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            设备责任人
+        </td>
+        <td class="form_text_right">
+            {chargerName}
+        </td>
+        <td class="form_text_left">
+            责任人部门
+        </td>
+        <td class="form_text_right">
+            {deptName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            <span class="blue">赔偿主体</span>
+        </td>
+        <td class="form_text_right">
+            <select name="compensate[dutyType]" id="dutyType" class="select">
+                {dutyType}
+            </select>
+        </td>
+        <td class="form_text_left">
+            赔偿对象
+        </td>
+        <td class="form_text_right">
+            <input type="text" class="readOnlyTxtNormal" id="dutyObjName" name="compensate[dutyObjName]"
+                   value="{dutyObjName}" readonly="readonly"/>
+            <input type="hidden" id="dutyObjId" name="compensate[dutyObjId]" value="{dutyObjId}"/>
+            <input type="hidden" id="chargerName" name="compensate[chargerName]" value="{chargerName}"/>
+            <input type="hidden" id="chargerId" name="compensate[chargerId]" value="{chargerId}"/>
+            <input type="hidden" id="deptName" name="compensate[deptName]" value="{deptName}"/>
+            <input type="hidden" id="deptId" name="compensate[deptId]" value="{deptId}"/>
+            <input type="hidden" id="unitPrice" value="{unitPrice}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            申请类型
+        </td>
+        <td class="form_text_right">
+            {applyTypeName}
+        </td>
+        <td class="form_text_left">商机编号</td>
+        <td class="form_text_right">
+            {chanceCode}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">销售负责人</td>
+        <td class="form_text_right">
+            {salemanName}
+        </td>
+        <td class="form_text_left">省 份</td>
+        <td class="form_text_right" colspan="3">
+            {province}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            金额确认人
+        </td>
+        <td class="form_text_right">
+            {confirmName}
+        </td>
+        <td class="form_text_left">
+            金额确认时间
+        </td>
+        <td class="form_text_right">
+            {confirmTime}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            备注
+        </td>
+        <td class="form_text_right" colspan="3">
+            {remark}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="innerTd">
+            <div id="detail"></div>
+        </td>
+    </tr>
+</table>
+<div id="costshareGrid"></div>
+<div id="showQualityReport"></div>
+<div id="updateResult"></div>
+<script type="text/javascript">
+    // 审批页面特殊检验标示
+    var hasSpecialChk = "1";
+    var auditSpecificChk = function(){
+        var dutyType = $("#dutyType").val();
+        if(dutyType == ""){
+            alert("请选择赔偿主体。");
+            $("#dutyType").focus();
+            return false;
+        }else{
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

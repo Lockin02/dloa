@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>查看其他合同</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=GBK"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="js/jquery/style/Validator.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css"/>
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //当前记录
+            var id = $("#id").val();
+            //原合同id
+            var originalId = $("#originalId").val();
+            var skey = "";
+            $.ajax({
+                type: "POST",
+                url: "?model=contract_other_other&action=md5RowAjax",
+                data: {
+                    "id": id
+                },
+                async: false,
+                success: function (data) {
+                    skey = data;
+                }
+            });
+
+            var orgSkey = "";
+            $.ajax({
+                type: "POST",
+                url: "?model=contract_other_other&action=md5RowAjax",
+                data: {
+                    "id": originalId
+                },
+                async: false,
+                success: function (data) {
+                    orgSkey = data;
+                }
+            });
+
+            var tabArr = [
+                "?model=contract_other_other&action=changeView&id=" + id + "&skey=" + skey,
+                "?model=contract_other_other&action=viewAccraditation&id=" + originalId + "&skey=" + orgSkey,
+                "?model=contract_stamp_stamp&action=viewForContract&perm=view&id=" + originalId + "&contractType=HTGZYD-02",
+                "?model=common_changeLog&action=toChangeLogList&logObj=other&originalId=&objId=" + originalId + "&originalId=" + id
+            ];
+            $("#tabs1").tabs(".panes > iframe", {
+                history: true,
+                onClick: function (i, e) {
+                    var actTabId = "#iframe" + (parseInt(e) + 1);
+                    if ($(actTabId).attr("src") == "") {
+                        $(actTabId).attr("src", tabArr[e]);
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<div><!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1">变更合同</a></li>
+        <li><a href="#tab2">在用合同</a></li>
+        <li><a href="#tab3">盖章记录</a></li>
+        <li><a href="#tab4">变更记录</a></li>
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+        <iframe class="pane" id="iframe1" src="" height="96%" frameborder="0"></iframe>
+        <iframe class="pane" id="iframe2" src="" height="96%" frameborder="0"></iframe>
+        <iframe class="pane" id="iframe3" src="" height="96%" frameborder="0"></iframe>
+        <iframe class="pane" id="iframe4" src="" height="96%" frameborder="0"></iframe>
+    </div>
+</div>
+
+<input type="hidden" value="{id}" id="id"/>
+<input type="hidden" value="{originalId}" id="originalId"/>
+</body>
+</html>

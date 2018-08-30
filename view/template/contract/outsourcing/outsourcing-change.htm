@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>变更外包合同</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/outsourcing-edit.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/outsourcing-common.js"></script>
+	<script type="text/javascript" src="js/common/changejudge.js"></script>
+	
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script><!--
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_sale_outsourcing",
+                 "serviceId": "{id}"
+            });
+
+			//省份选择
+			$('#proCode').val('{proCode}');
+
+			if($("#isStamp").val() == 0 &&$("#isNeedStamp").val() == 1){
+
+			}else{
+				if($("#isStamp").val() == 1){
+					$(".canStamp").show();
+				}
+			}
+
+			//是否有变更字段初始化
+			initWithoutIgnore();
+        });
+	--></script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	变更外包合同
+    </span>
+</div>
+<form id="form1" method="post" action="?model=contract_outsourcing_outsourcing&action=change" onsubmit="return checkFormChange();">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left_three">鼎利合同号</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyText" name="outsourcing[orderCode]" value="{orderCode}" readonly="readonly"/>
+		</td>
+		<td class="form_text_left_three">合同名称</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" name="outsourcing[orderName]" value="{orderName}" id="orderName"/><span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">外包合同号</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" name="outsourcing[outContractCode]" id="outContractCode" value="{outContractCode}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">签约公司</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[signCompanyName]" value="{signCompanyName}" id="signCompanyName"/>
+			 <input type="hidden" value="{signCompanyId}" id="signCompanyId"/><span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">公司省份</td>
+		<td class="form_text_right_three" >
+			<select class="select"  id="proCode" name="outsourcing[proCode]" onchange="setProName()"></select>
+			<input type="hidden" name="outsourcing[proName]" value="{proName}"  id="proName"/>
+		</td>
+		<td class="form_text_left_three">合同负责人</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[principalName]" value="{principalName}" id="principalName" readonly="readonly"/>
+			 <input type="hidden" name="outsourcing[principalId]" value="{principalId}" id="principalId"/><span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">合同金额</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt formatMoney" name="outsourcing[orderMoney]" value="{orderMoney}" id="orderMoney" onblur="checkApplyMoney()"/><span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">签约日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[signDate]" value="{signDate}" id="signDate" onfocus="WdatePicker()"/>
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">部门名称</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[deptName]" value="{deptName}" id="deptName" readonly="readonly"/>
+			 <input type="hidden" name="outsourcing[deptId]" value="{deptId}" id="deptId"/><span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">开始日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[beginDate]" value="{beginDate}" id="beginDate" onfocus="WdatePicker()" onblur="checkTime_begin(beginDate,endDate)"/>
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">结束日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[endDate]" value="{endDate}" id="endDate" onfocus="WdatePicker()" onblur="checkTime(beginDate,endDate)"/>
+			 <span class="red"> [*]</span>
+		</td>
+    	<td class="form_text_left_three">外包方式</td>
+		<td class="form_text_right_three" >
+			<select class="select" name="outsourcing[outsourcing]" id="outsourcing">
+				{outsourcing}
+			</select>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">外包性质</td>
+		<td class="form_text_right_three" >
+			<select class="select" name="outsourcing[outsourceType]" id="outsourceType" onchange="changeSelect()">
+				{outsourceType}
+			</select>
+		</td>
+		<td class="form_text_left_three">项目编号</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[projectCode]" value="{projectCode}" id="projectCode" />
+			 <input type="hidden" name="outsourcing[projectId]" value="{projectId}" id="projectId"/>
+			 <input type="hidden" name="outsourcing[projectType]" value="{projectType}" id="projectType"/>
+			 <span class="red" style="display:none" id="myspan"> [*]</span>
+		</td>
+		<td class="form_text_left_three">项目名称</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyText" name="outsourcing[projectName]" value="{projectName}" id="projectName" readonly="readonly"/>
+		</td>
+    </tr>
+    <tr>
+   		<td class="form_text_left_three">联 系 人</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="outsourcing[linkman]" value="{linkman}" id="linkman"/><span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">联系电话</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" name="outsourcing[phone]" value="{phone}" id="phone"/><span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">付款方式</td>
+		<td class="form_text_right_three" >
+			<select class="select" name="outsourcing[payType]" id="payType">
+				{payType}
+			</select>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">归属公司</td>
+		<td class="form_text_right_three" colspan="5">
+			<input type="text" class="txt" readonly="readonly" name="outsourcing[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+			<span class="red" id="radioSpan">[*]</span>
+			<input type="hidden" name="outsourcing[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+		 	<input type="hidden" name="outsourcing[formBelong]" id="formBelong" value="{formBelong}" />
+		 	<input type="hidden" name="outsourcing[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+		</td>
+	</tr>
+    <tr>
+		<td class="form_text_left_three">联系地址</td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_biglong" name="outsourcing[address]" id="address">{address}</textarea>
+		</td>
+    </tr>
+	<tr>
+		<td class="form_text_left_three">付款条件</td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_biglong" name="outsourcing[payCondition]" id="payCondition">{payCondition}</textarea>
+			 <span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">内容描述</td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_biglong" name="outsourcing[description]" id="description">{description}</textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three"><span style="color:blue">变更原因</span></td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_biglong ignore" name="outsourcing[changeReason]" id="changeReason"></textarea>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+	<tr class="canStamp" style="display:none">
+		<td class="form_text_left_three">是否重新盖章</td>
+		<td class="form_text_right_three" colspan="5">
+   			<input type="radio" name="outsourcing[isNeedRestamp]" value="1" class="ignore"/>是
+      		<input type="radio" name="outsourcing[isNeedRestamp]" value="0" checked="checked" class="ignore"/>否
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+		<td class="form_text_right_three" colspan="5">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload">{file}</div>
+			</div>
+		</td>
+    </tr>
+    <tr>
+		<td colspan="6"></td>
+    </tr>
+    <!-- 
+    <tr id="personrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>人 员 租 赁</b></legend>
+				<div id="itemTable"></div>
+			</fieldset>
+		</td>
+    </tr>
+    -->
+    <tr>
+		<td colspan="6"></td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+         	<input type="hidden" name="outsourcing[isStamp]" id="isStamp" value="{isStamp}" />
+         	<input type="hidden" name="outsourcing[isNeedStamp]" id="isNeedStamp" value="{isNeedStamp}" />
+         	<input type="hidden" name="outsourcing[stampType]" id="stampType" value="{stampType}" />
+         	<input type="hidden" name="outsourcing[oldId]" id="id" value="{id}" />
+         	<input type="submit" class="txt_btn_a" value="变  更" />
+		   	<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

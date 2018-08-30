@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/select_user.js"></script>
+<script type="text/javascript" src="js/jquery.validate.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css" />
+</head>
+<script type="text/javascript"> 
+	
+		function show_user(n)
+	{
+		if(n==1){
+		tb_show('选择组员','?model=user&action=select_user&union=false&TB_iframe=true&width=500',false);	
+		$('#ushow').css('display','block');
+		}else{
+		tb_show('选择组员','?model=user&action=select_user&union=false&dept_tag_name=deptn_str&dept_tag_id=deptid_str&user_tag_name=usern_str&user_tag_id=userid_str&TB_iframe=true&width=500',false);
+		$('#ashow').css('display','block');	
+		}
+	}
+	
+
+		
+	
+	
+</script>
+
+<body>
+<form  id="commentForm" enctype="multipart/form-data" method="post" action="?model={t_model}&action=addtype" onSubmit="return check();" >
+<input type="hidden" id="administrator" name="administrator" value="" />
+    <input type="hidden" id="adminname" name="adminname" value="" />
+    <input type="hidden" id="deptname" name="deptname" value="" />
+ <input type="hidden" id="deptment" name="deptment" value="" />
+    <input type="hidden" id="pkid" name="pkid" value="{pkid}" />
+    <input type="hidden" id="key" name="key" value="{key}" />
+    
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加标签类型</td>
+	</tr>
+<tr>
+		<td width="100">板块名称：</td>
+		<td align="left">	<input type="text" id="typename" name="typename" value=""  style=" width:250px;"/>
+			<span>*</span>
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="100">排序：</td>
+<td align="left"><input type="text" id="sortid" name="sortid" value="0" style=" width:250px;"/>
+		</td>
+	</tr>
+	<tr>
+		<td>风格：</td>
+		<td align="left">
+			<input type="text" id="styleid" name="styleid" value="0" style=" width:250px;"/>
+			<span>*</span>
+		</td>
+	</tr>
+    <tr>
+		<td>管理员：</td>
+		<td align="left">
+			<span id="usernamelist"></span>
+			<hr id='h2' style=" display:none"/>
+			<input type="text" id="username" name="username" value="" style=" width:250px;"/>
+		</td>
+	</tr>
+	<tr>
+		<td>使用权限</td>
+		<td  align="left" style="word-break:break-all;white-space:normal"><div><input type="button" onClick="show_user(1);" value="选择组员" /></div>
+        <div id="ushow" style="display:none">
+            部门：<span id="dept_name_str" style="color:#0000ff;"></span>
+            <input type="hidden" id="deptname_str" name="deptname_str" value=""/>
+			<input type="hidden" id="dept_id_str" name="dept_id_str" value=""/>
+			<hr />
+			员工：<span id="user_name_str" style="color:#0000ff;"></span>
+            <input type="hidden" id="username_str" name="username_str" value=""/>
+			<input type="hidden" id="user_id_str" name="user_id_str" value=""/>
+		</div>
+		</td>
+	</tr>
+   <tr>
+		<td>查看权限</td>
+			<td  align="left" style="word-break:break-all;white-space:normal"><div><input type="button" onClick="show_user();" value="选择组员" /></div>
+        <div id="ashow" style="display:none">
+            部门：<span id="deptn_str" style="color:#0000ff;"></span>
+            <input type="hidden" id="dept_str" name="dept_str" value=""/>
+			<input type="hidden" id="deptid_str" name="deptid_str" value=""/>
+			<hr />
+			员工：<span id="usern_str" style="color:#0000ff;"></span>
+            <input type="hidden" id="user_str" name="user_str" value=""/>
+			<input type="hidden" id="userid_str" name="userid_str" value=""/>
+		</div>
+		</td>
+
+	</tr>
+    <tr>
+		<td>上传图片：</td>
+		<td align="left"><input name="file"  id="file" type="file" width="250" style="width:325px;">（图片大小：47*57）
+			<inputds type="button" id="upfile" name="upfile" value="上传" />
+		</td>
+	</tr>
+     <tr>
+		<td>描 述：</td>
+		<td align="left">
+        <textarea name="description"  id="description" cols="42" rows="4"style=" width:325px;"></textarea>
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 添加 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var rand=Math.random()*100000;
+	var userid = Array();
+	var detpI = Array();
+	var usernameI = Array();
+	var detpnameI = Array();
+	var tid = 0;
+	var dtid = 0;
+	$(document).ready(function()
+	{
+		$("#username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].user_name,
+							result:row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.user_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						usernameI[tid] = data.user_name;
+						userid[tid] = data.user_id;
+						$('#usernamelist').append('<div id="user_'+tid+'">'+data.user_name+'<a href="javascript:del('+tid+',\''+data.user_name+'\')">删除</a></div>');
+						tid++;
+						$('#h2').css('display','block')
+						$('#username').val('').focus();
+					}
+		});
+
+
+$("#deptid").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=department&field=dept_name&return_field=dept_id,dept_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].dept_name,
+							result:row[i].dept_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.dept_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						detpnameI[dtid] = data.dept_name;
+						detpI[dtid] = data.dept_id;
+						$('#deptidlist').append('<div id="deptid_'+dtid+'">'+data.dept_name+'<a href="javascript:deldept('+dtid+',\''+data.dept_name+'\')">删除</a></div>');
+						dtid++;
+						$('#h1').css('display','block')
+						$('#deptid').val('').focus();
+						
+					}
+		});
+		
+	$("#commentForm").validate({
+		rules: {
+			sortid:{
+				   required:true,
+				   number: true
+				},
+			styleid:{
+				required:true,
+				number: true
+			},
+			typename:{
+			    required:true
+			}
+		},
+		messages: {
+			styleid:{
+				required:"排序不能为空",
+				number:"排序不为数字"
+			},
+			sortid:{
+				required:"编号不能为空",
+				number:"排序不为数字"
+			},
+			typename:{
+				required:"板块名称不能为空"
+			}
+		}
+	
+	});
+	
+	jQuery.validator.addMethod("isbns", function(value, element) {
+		value=value.replace(/(^\s*)|(\s*$)/g, "");
+
+		var html = $.ajax({
+						     type: "POST",
+		 					 url: "?model=general_book&action=isbn",
+		 					 data: {isbnname:value,rand:rand},
+							 async: false
+
+		 }).responseText;
+		
+      	if(html==2){
+		 	return 	this.optional(element) ||true ;
+		 }else{
+				return false;
+		}
+		
+	}, "此编号已存在!");
+		
+
+	});
+	
+	function del(id,username)
+	{
+		$('#user_'+id).remove();
+		delete userid[id];
+		var temp = Array();
+		for(key in userid)
+		{
+			if (userid[key] && userid[key]!='undefined')
+			{
+				temp[key] = userid[key];
+			}
+		}
+		userid = temp;
+		delete usernameI[username];
+		var temps = Array();
+		for(keys in usernameI)
+		{
+			if (usernameI[keys]!=username && usernameI[keys]!='undefined')
+			{
+				temps[keys] = usernameI[keys];
+			}
+		}
+		usernameI = temps;
+	}
+	function deldept(id,username)
+	{
+		$('#deptid_'+id).remove();
+		delete detpI[id];
+		var temp = Array();
+		for(key in detpI)
+		{
+			if (detpI[key] && detpI[key]!='undefined')
+			{
+				temp[key] = detpI[key];
+			}
+		}
+		detpI = temp;
+		delete detpnameI[username];
+		var tempd = Array();
+		for(keyd in detpnameI)
+		{
+			if (detpnameI[keyd]!=username && detpnameI[keyd]!='undefined')
+			{
+				tempd[keyd] = detpnameI[keyd];
+			}
+		}
+		detpnameI = tempd;
+	}
+	function check()
+	{
+		if ($('#typename').val()=='')
+		{
+			alert('板块名称不能为空！');
+			return false;
+		}
+		
+		if (userid.length > 0)
+		{
+			var admin_userid ='';
+			for (key in userid)
+			{
+				admin_userid +=userid[key]+',';
+			}
+			$('#administrator').val(admin_userid);
+		}else
+		{
+			$('#administrator').val('');
+		}
+		if (usernameI.length > 0)
+		{
+			var admin_username ='';
+			for (key in usernameI)
+			{
+				admin_username +=usernameI[key]+',';
+			}
+			$('#adminname').val(admin_username);
+		}else
+		{
+			$('#adminname').val('');
+		}
+		$('#deptname_str').val($('#dept_name_str').html());
+		$('#username_str').val($('#user_name_str').html());
+		$('#dept_str').val($('#deptn_str').html());
+		$('#user_str').val($('#usern_str').html());
+		
+		
+	}
+</script>
+</body>
+</html>

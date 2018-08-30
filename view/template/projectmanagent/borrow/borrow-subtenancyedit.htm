@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>借试用</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+			<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/validate.js"> </script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/dateUtil.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-common.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-proadd.js"></script>
+    <script>
+       window.onload=function(){
+           borrowTime();
+        }
+        function submitR(){
+	         var code = $("#Code").val();
+		         if(code == ''){
+		            alert("编号不能为空");
+		            return false;
+		         }
+             var beginTime = $("#beginTime").val();
+             var closeTime = $("#closeTime").val();
+                 if(beginTime == '' || closeTime == ''){
+                    alert("请正确填写开始或截止日期");
+                    return false;
+                 }
+             var timeType = $("#timeType").val();
+                 if(timeType == ''){
+                    alert("请选择借用期限");
+                    return false;
+                 }
+	            return true;
+	     }
+	     function borrowTime(){
+             var beginTime = $("#beginTime").val();
+             var closeTime = $("#closeTime").val();
+             var borrowTime = daysBetween(closeTime, beginTime);
+             if(borrowTime <= 5){
+                 document.getElementById("timeType").options.length=0;
+	             document.getElementById("timeType").options.add(new Option("短期借用","短期借用"));
+             }else if(borrowTime >5){
+                 document.getElementById("timeType").options.length=0;
+	             document.getElementById("timeType").options.add(new Option("长期借用","长期借用"));
+             }
+	     }
+	     $(function() {
+			getUserDeptMoneyByUser("{createId}","{createName}");
+		});
+
+
+        $(function (){
+           limitType();
+        });
+		function limitType(){
+		    var limit = $("#limits").html();
+		    if(limit == "员工"){
+                 $("#limType").html("<td class='form_text_left'>转借接收人</td>"+
+                                   "<td class='form_text_right'>{createName}</td>"
+                                   );
+					document.getElementById("reason").style.display="";
+		    }else{
+                 $("#limType").html("<td class='form_text_left'>客户名称</td>"+
+                                   "<td class='form_text_right'>{customerName}</td>"+
+                                   "<td class='form_text_left'>销售负责人</td>"+
+                                   "<td class='form_text_right'>{salesName}</td>");
+						  document.getElementById("reason").style.display="none";
+		    }
+		}
+		function serialNo(borrowId,itemId,num,renew){
+			 var amount = $("#number"+num).val();
+			 showThickboxWin('?model=projectmanagent_borrow_borrow&action=serialNo&borrowId=' + borrowId + '&itemId=' + itemId + '&num=' + num + '&amount=' + amount + '&renew=' + renew
+						     + "&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800");
+		}
+    </script>
+</head>
+
+<body>
+
+<form  action="?model=projectmanagent_borrow_borrow&action=subEdit" id="form1" method="post" onsubmit="return submitR();">
+
+	 <table class="form_main_table">
+           <div class="main_head"><span class="main_head_title">员工个人借试用申请表</span></div>
+	    <tr><div id="msg"></div></tr>
+	    <tr>
+			<td  class="form_text_left">编号</td>
+			<td class="form_view_right">
+				{Code}
+			</td>
+			<td  class="form_text_left">类型</td>
+			<td class="form_view_right">
+                 {Type}
+			</td>
+		</tr>
+
+		<tr>
+
+			<td  class="form_text_left">开始日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="borrow[beginTime]" id="beginTime" onfocus="WdatePicker()" value="{beginTime}"/>
+                <span class="red">[*]</span>
+			</td>
+			<td  class="form_text_left">截止日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="borrow[closeTime]" id="closeTime" onfocus="WdatePicker()" value="{closeTime}" onblur="borrowTime();"/>
+                <span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+		    <td  class="form_text_left">范围</td>
+			<td class="form_view_right" id="limits">
+				{limits}
+			</td>
+			<td  class="form_text_left">借用期限</td>
+			<td class="form_view_right">
+				<select class="select" name="borrow[timeType]" id="timeType">
+				       <option value="">请选择</option>
+				       <option value="短期借用">短期借用</option>
+				       <option value="长期借用">长期借用</option>
+				</select>
+				<span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+		    <td  class="form_text_left">转借人</td>
+			<td class="form_view_right">
+				{subtenancyAppName}
+			</td>
+
+		</tr>
+		<tr id="limType">
+
+		</tr>
+        <tr id="reason" style="display:none">
+			<td class="form_text_left">申请理由</td>
+			<td class="form_text_right" colspan="3">
+				{reason}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				{remark}
+			</td>
+		</tr>
+<tr>
+<td colspan="4">
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="10" class="form_header">产品清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="productNumber" value="{productNumber}" />
+			  <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" /></td>
+		</tr>
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="5%">序号</td>
+			<td style="text-align:center" width="10%">产品编号</td>
+			<td style="text-align:center" width="16%">产品名称</td>
+			<td style="text-align:center" width="9%">型号/版本</td>
+			<td style="text-align:center" width="8%">数量</td>
+			<td style="text-align:center" width="8%">单位</td>
+			<td style="text-align:center" width="8%">单价</td>
+			<td style="text-align:center" width="8%">金额</td>
+			<td style="text-align:center" width="8%">保修期</td>
+			<td style="text-align:center" width="8%">加密配置</td>
+			<td style="text-align:center" width="5%">操作</td>
+		</tr>
+	</thead>
+	<tbody id="invbody">
+		{borrowequ}
+	</tbody>
+	</table>
+	</td>
+	</tr>
+<tr>
+<td colspan="4">
+<table class="main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+               <input  type="hidden" name="borrow[id]" value="{id}" id="borrowId"/>
+				<input type="submit" id="isstorage" class="txt_btn_a"  value=" 确  认 " />
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();" />
+		</td>
+		</tr>
+
+	</table>
+	</td>
+	</tr>
+	</table>
+</form>
+</div>
+</body>

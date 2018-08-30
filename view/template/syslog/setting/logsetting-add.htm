@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新增系统日志设置</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="{#jsPath#}/logsetting-add.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            addItems();
+            $("#tableName").bind("change", function () {
+                reloadItems();
+            })
+        });
+    </script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=syslog_setting_logsetting&action=add">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+             <span class="main_head_title">
+               	添加系统日志设置
+             </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">表名</td>
+            <td class="form_text_right">
+                <select class="select" id="tableName" name="logsetting[tableName]">
+                    {tableSelOption}
+                </select>
+                <div id="tableNameTip"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">业务名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="businessName" name="logsetting[businessName]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">业务主键字段名</td>
+            <td class="form_text_right">
+                <select class="select" id="pkName" name="logsetting[pkName]">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table class="main_table" id="itemtable">
+                    <thead>
+                    <tr>
+                        <td colspan="5" class="form_header">设置详细</td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th>
+                            <img src="images/add_item.png" align="absmiddle" onclick="addItems();" title="新增物料"
+                                 alt="新增物料"/>
+                            <input type="hidden" id="itemscount" value="0"/>
+                        </th>
+                        <th>序号</th>
+                        <th>字段名</th>
+                        <th>字段中文名意思</th>
+                        <th>字段数据类型</th>
+                    </tr>
+                    </thead>
+                    <tbody id="itembody">
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="submit" class="txt_btn_a" id="submitSave" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

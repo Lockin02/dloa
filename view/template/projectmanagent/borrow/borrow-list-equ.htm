@@ -1,0 +1,134 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索o
+		function search(){
+			var searchvalue1=$('#productNo').val();
+			var searchvalue2=$('#productName').val();
+			location="?model=projectmanagent_borrow_borrow&action=shipEquList&productCode="+searchvalue1+"&productName="+searchvalue2+"&limits={limits}";
+		}
+
+		//清空
+		function clearNum(){
+			var purchType=$('#purchType').val();
+			location="?model=projectmanagent_borrow_borrow&action=shipEquList&limits={limits}";
+		}
+
+		//form提交判断
+		function purchForm(){
+		}
+
+		function selectButton(obj){
+		}
+    </script>
+</head>
+<body scroll="yes">
+<div class="main_wraper">
+<table id="myTab" class="main_table_search">
+  <tr>
+		<td colspan="15" align="left">
+			&nbsp;物料编号：<input type="text" name="productNo" id="productNo" value="{equNumb}">
+			&nbsp;物料名称：<input type="text" name="productName" id="productName" value="{equName}">
+			<input type="button" class="txt_btn_a" value="搜  索"  onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+			<!--input type="button" class="txt_btn_a" value="下达采购任务" onclick="purchForm()"/-->
+			<input type="hidden" id="idsArry" name="idsArry" value="{idsArry}">
+			<input type="hidden" id="purchType" value="{purchType}">
+		</td>
+	</tr>
+</table>
+<table class="main_table">
+<thead>
+    <tr class="main_tr_header">
+        <th width="4%">
+        	<p class="allImg">序号<br/>
+            	<img src="images/expanded.gif" />
+        	</p>
+        </th>
+        <th >
+            物料编号<br>名称
+        </th>
+        <th width="3%">
+        	<p class="checkAll">
+            	总需求<br/>发货数<br/>
+            	<!-- input type="checkbox" onclick="checkAll();" id="titlecb" /> -->
+            </p>
+        </th>
+        <th>
+        	<p>
+            	默认仓库<br/>库存数量<br/>
+            	<!-- input type="checkbox" onclicrk="checkAll();" id="titlecb" /> -->
+            </p>
+        </th>
+        <th width="65%" class="td_table">
+            <table class="main_table_nested" frame=void>
+            	<tr>
+            		<th colspan="5">
+            			发货需求--物料信息
+            		</th>
+            	</tr>
+            	<tr>
+            		<th width="20%">
+			           	 借用编号
+			        </th>
+			        <th  width="8%">
+			            	借用申请数量
+			        </th>
+			        <th  width="8%">
+			            在途数量
+			        </th>
+			        <th  width="8%">
+			            已执行数量
+			        </th>
+            	</tr>
+            </table>
+        </th>
+    </tr>
+</thead>
+    {list}
+</table>
+</div>
+{pageDiv}
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增项目变更申请单</title>
+	{#commonInclude#}
+
+	<script type="text/javascript" src="{#jsPath#}/esmchange-changeproject.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	项目变更申请单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_change_esmchange&action=add">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left_three">项目编号</td>
+		<td class="form_text_right_three" >
+			 <input type="hidden" id="projectId" name="esmchange[projectId]" value="{id}"/>
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="esmchange[projectCode]" value="{projectCode}"/>
+		</td>
+		<td class="form_text_left_three">项目名称</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="esmchange[projectName]" value="{projectName}"/>
+		</td>
+		<td class="form_text_left_three">变更次数</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="esmchange[changeTimes]" value="{changeTimes}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">申 请 人</td>
+		<td class="form_text_right_three" >
+			 <input type="hidden" name="esmchange[applyId]" readonly="readonly" value="{applyId}"/>
+			 <input type="text" name="esmchange[applyName]" class="readOnlyTxtNormal" readonly="readonly" value="{applyName}"/>
+		</td>
+		<td class="form_text_left_three">申请日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="esmchange[applyDate]" value="{applyDate}"/>
+		</td>
+		<td class="form_text_left_three">预计结束日期</td>
+		<td class="form_text_right_three">
+			<input type="text" class="txt" id="planEndDate" name="esmchange[planEndDate]" value="{planEndDate}" onfocus="WdatePicker()"/>
+			<span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">实际开始日期</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" id="actBeginDate" name="esmchange[actBeginDate]" value="{actBeginDate}" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left_three">实际结束日期</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" id="actEndDate" name="esmchange[actEndDate]" value="{actEndDate}" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left_three">变更前其余预算</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="orgBudgetOther" name="esmchange[orgBudgetOther]" value="{budgetOther}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">变更前总预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="orgBudgetAll" name="esmchange[orgBudgetAll]" value="{budgetAll}"/>
+		</td>
+		<td class="form_text_left_three">变更前现场预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="orgBudgetField" name="esmchange[orgBudgetField]" value="{budgetField}"/>
+		</td>
+		<td class="form_text_left_three">变更前外包预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="orgBudgetOutsourcing" name="esmchange[orgBudgetOutsourcing]" value="{budgetOutsourcing}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">变更后总预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="newBudgetAll" name="esmchange[newBudgetAll]" value="{budgetAll}"/>
+		</td>
+		<td class="form_text_left_three">变更后现场预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt formatMoney" id="newBudgetField" name="esmchange[newBudgetField]" value="{budgetField}" onblur="calBudgetAll();"/>
+			 <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left_three">变更后外包预算</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt formatMoney" id="newBudgetOutsourcing" name="esmchange[newBudgetOutsourcing]" value="{budgetOutsourcing}" onblur="calBudgetAll();"/>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">变更后其余预算</td>
+		<td class="form_text_right_three" colspan="5">
+			 <input type="text" class="txt formatMoney" id="newBudgetOther" name="esmchange[newBudgetOther]" value="{budgetOther}" onblur="calBudgetAll();"/>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">变更说明</td>
+		<td class="form_text_right_three" colspan="5">
+			<textarea class="txt_txtarea_biglong" name="esmchange[changeDescription]" id="changeDescription"></textarea>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" name="esmchange[officeId]" value="{officeId}"/>
+			<input type="hidden" name="esmchange[officeName]" value="{officeName}"/>
+
+			<input type="submit" class="txt_btn_a" onclick="audit('audit')" value="提交审批" />
+			<input type="submit" class="txt_btn_a" onclick="audit()" value=" 保  存 "  />
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

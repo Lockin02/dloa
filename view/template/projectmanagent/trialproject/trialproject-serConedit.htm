@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑试用项目</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/trialproject-proCity.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/trialproject-serConedit.js" ></script>
+   <!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+
+<script>
+	var uploadfile,uploadfile2;
+	$(function() {
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_trialproject_trialproject",
+			"serviceId":"{id}"
+		});
+	});
+$(function(){
+    /**
+	 * 验证信息
+	 */
+	validate({
+		"affirmMoney_v" : {
+			required : true
+		}
+	});
+})
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_trialproject_trialproject&action=edit" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	确认试用项目金额
+             </span>
+         </div>
+      </td>
+   </tr>
+<tr>
+            <td class="form_text_left">项目编号</td>
+      		<td class="form_text_right" >
+      			 {projectCode}
+      		</td>
+      		<td class="form_text_left">项目名称</td>
+      		<td class="form_text_right" >
+      			 {projectName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">试用开始时间</td>
+      		<td class="form_text_right" >
+      			 {beginDate}
+      		</td>
+      		<td class="form_text_left">试用结束时间</td>
+      		<td class="form_text_right" >
+      			 {closeDate}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">工期(天)</td>
+      		<td class="form_text_right" >
+      			 {projectDays}
+      		</td>
+		   <td class="form_text_left"><span style="color:blue">确认试用费用金额</span></td>
+		   <td class="form_text_right" >
+			   <input type="text" class="txt formatMoney" name="trialproject[affirmMoney]" id="affirmMoney" value="{affirmMoney}"/>
+		   </td>
+       </tr>
+       <!--<tr>-->
+            <!--<td class="form_text_left">预计试用费用金额</td>-->
+      		<!--<td class="form_text_right formatMoney" >-->
+      			 <!--{budgetMoney}-->
+      		<!--</td>-->
+		   	<!---->
+       <!--</tr>-->
+       <tr>
+            <td class="form_text_left">商机编号</td>
+      		<td class="form_text_right" >
+      			 {chanceCode}
+      		</td>
+      		<td class="form_text_left">预计合同金额</td>
+      		<td class="form_text_right formatMoney" >
+      			 {planContractMoney}
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">预计签约时间</td>
+      		<td class="form_text_right" >
+      			 {planSignDate}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">客户名称</td>
+      		<td class="form_text_right" >
+      			 {customerName}
+      		</td>
+      		<td class="form_text_left">客户类型</td>
+      		<td class="form_text_right" >
+      		     {customerTypeName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">所属省份:</td>
+			<td class="form_text_right">
+			   {province}
+		    </td>
+			<td class="form_text_left">所属城市:</td>
+			<td class="form_text_right">
+			   {city}
+			</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">归属区域</td>
+      		<td class="form_text_right" >
+      			 {areaName}
+      		</td>
+      		<td class="form_text_left">区域负责人</td>
+      		<td class="form_text_right" >
+      			{areaPrincipal}
+      		</td>
+       </tr>
+       <tr>
+			<td class="form_text_left">附件</td>
+			<td class="form_view_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload"><span id="swfupload"></span> <input
+						id="btnCancel" type="button" value="中止上传"
+						onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+				</div>
+			</td>
+			<td class="form_text_left">申请人</td>
+      	 	<td class="form_text_right" >
+      			 {applyName}
+      		</td>
+	 </tr>
+       <tr>
+      		<td class="form_text_left">客户联系方式</td>
+      		<td class="form_text_right" colspan="3">
+      		      <div id="remark" class="divChangeLine">{customerWay}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">试用要求描述</td>
+      		<td class="form_text_right" colspan="3">
+      		     <div id="remark" class="divChangeLine">{projectDescribe}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">执行意见</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea class="txt_txtarea_font" name="trialproject[executive]" id="executive">{executive}</textarea>
+      		</td>
+       </tr>
+       <tr>
+       		<td colspan="6">
+				<div id="productInfo"></div>
+			</td>
+       </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+			<input  type="hidden" id="isView" value="1" />
+         <input  type="hidden" id="trialprojectId" name="trialproject[id]" value="{id}" />
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toApp();" />
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

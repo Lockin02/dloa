@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+
+		<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-detailcombo.js"></script>
+        <script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-add.js"></script>
+        <script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-va.js"></script>
+		<title>预付款单</title>
+	</head>
+<body>
+<form id="form1" method="post" action="?model=finance_payablesapply_payablesapply&action=add" onsubmit="return checkform();">
+<div class="main_head"><span class="main_head_title">编辑付款申请单</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right" colspan="3">
+			<input id="supplierName" type="text" class="txt" name="payablesapply[supplierName]" value="{supplierName}"/>
+			<input id="supplierId" type="hidden" name="payablesapply[supplierId]" value="{supplierId}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">付款银行</td>
+		<td class="form_text_right">
+			<input type="text" name="payablesapply[bank]" class="txt" value="{bank}"/>
+		</td>
+		<td class="form_text_left">单据日期</td>
+		<td class="form_text_right">
+			<input id="formDate" type="text"  onfocus="WdatePicker()" name="payablesapply[formDate]" class="txt" value="{formDate}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">银行账号</td>
+		<td class="form_text_right">
+			<input type="text" name="payablesapply[account]" class="txt" value="{account}"/>
+		</td>
+		<td class="form_text_left">结算方式</td>
+		<td class="form_text_right">
+			<select id="payType" name="payablesapply[payType]" class="txt">
+				{payType}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">付款条件</td>
+		<td class="form_text_right">
+			<input type="text" name="payablesapply[payCondition]" class="txt"/>
+		</td>
+		<td class="form_text_left">付款类型</td>
+		<td class="form_text_right">
+			<select id="payFor" name="payablesapply[payFor]" class="txt">
+				{payFor}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">部门</td>
+		<td class="form_text_right">
+			<input id="deptName" type="text" name="payablesapply[deptName]" class="txt" value="{deptName}" readonly="readonly"/>
+			<input id="deptId" type="hidden" name="payablesapply[deptId]" value="{deptId}"/>
+		</td>
+		<td class="form_text_left">业务员</td>
+		<td class="form_text_right">
+			<input id="salesman" type="text" name="payablesapply[salesman]" class="txt" value="{salesman}" readonly="readonly"/>
+			<input id="salesmanId" type="hidden" name="payablesapply[salesmanId]" value="{salesmanId}"/>
+			<input id="createId" type="hidden" value="{createId}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">单据金额</td>
+		<td class="form_text_right" colspan="3">
+			<input id="payMoney" type="text" name="payablesapply[payMoney]" class="readOnlyTxtNormal formatMoney" value="{payMoney}" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">款项用途</td>
+		<td colspan="3" class="form_text_right">
+			<textarea class="txt_txtarea_font" name="payablesapply[remark]">{remark}</textarea>
+		</td>
+	</tr>
+</table>
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr>
+			<td align="left" colspan="7">分配详细</td>
+			<td width="5%">
+				<input type="hidden" id="owner" value="{owner}"/>
+				<input type="hidden" id="coutNumb" name="coutNumb" value="{coutNumb}" />
+				<img src="images/collapsed.gif" onclick="add();" title="添加行"/>
+			</td>
+		</tr>
+	</thead>
+	<tbody id="mytbody">
+        <tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th width="14%">关联类型</th>
+			<th>关联编号</th>
+			<th width="14%">申请金额</th>
+			<th width="14%">订单金额</th>
+			<th width="14%">已付金额</th>
+			<th width="14%">已收发票金额</th>
+			<th width="5%">删除</th>
+		</tr>
+		{detail}
+	</tbody>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td>
+			<input type="submit" value=" 保 存 " class="txt_btn_a"/>
+			<input type="button" onclick="closeFun();" value=" 返 回 "  class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

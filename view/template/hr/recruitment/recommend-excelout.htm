@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>导出条件</title>
+	{#commonInclude#}
+	<script>
+		$(document).ready(function() {
+			//推荐人
+			$("#recommendName").yxselect_user({
+				mode : 'check',
+				hiddenId : 'recommendId',
+				formCode : 'recommendName'
+			});
+			//负责人
+			$("#recruitManName").yxselect_user({
+				mode : 'check',
+				hiddenId : 'recruitManId',
+				formCode : 'recruitManName'
+			});
+
+		});
+	</script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_recruitment_recommend&action=excelOut">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							选择导出条件
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">单据编号</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="recommend[formCode]"/>
+				</td>
+				<td class="form_text_left">单据日期</td>
+				<td class="form_text_right">
+					<input type="text" class="txtshort" onfocus="WdatePicker()" readonly name="recommend[formDateSta]"/> ~
+					<input type="text" class="txtshort" onfocus="WdatePicker()" readonly name="recommend[formDateEnd]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">推荐职位</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="recommend[positionName]"/>
+				</td>
+				<td class="form_text_left">推荐人</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="recommendName" name="recommend[recommendName]"/>
+					<input type="hidden" class="txt" id="recommendId" name="recommend[recommendId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">主负责人</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="recruitManName" name="recommend[recruitManName]" readonly>
+					<input type="hidden" class="txt" id="recruitManId" name="recommend[recruitManId]">
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

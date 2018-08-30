@@ -1,0 +1,79 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>
+            计划任务列表
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+
+	<script type="text/javascript" src="js/treetable/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+ 	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/treetable/hashMap.js"></script>
+	<script type="text/javascript" src="js/treetable/GridTree.All.js"></script>
+	<script type="text/javascript" src="view/template/rdproject/task/js/tknode_plan_view_gridtree.js"></script>
+	<script type="text/javascript" src="js/treetable/hashMap.js"></script>
+    </head>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+		var planId=$("#planId").val();
+		var planName=$("#planName").val();
+		var projectId=$("#projectId").val();
+		var projectName=$("#projectName").val();
+	 	var tkAltStrAlt="?model=rdproject_task_rdtask&action=toPlanAddTask&planId="+planId+"&planName="+planName+"&projectId="+projectId+"&projectName="+projectName+"&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800";
+		var tnAltStrAlt="?model=rdproject_task_tknode&action=toAdd&planId="+planId+"&planName="+planName+"&projectId="+projectId+"&projectName="+projectName+"&placeValuesBefore&TB_iframe=true&modal=false&height=300&width=700"
+		$("#addTask").attr("alt",tkAltStrAlt);
+		$("#addNode").attr("alt",tnAltStrAlt);
+	}
+)
+
+	</script>
+    <body onload="newTkNodeGridTree();">
+        <div class="main_head">
+            <span class="main_head_title">
+               计划任务
+            </span>
+            <input name="goBack" type="button" class="main_head_btn" value="返回计划列表"
+			onclick="history.back();" />
+        </div>
+
+
+		<div id="main_wraper" class="main_wraper">
+			<table class="main_table_search">
+                <tr>
+                    <td>
+                        输入关键字：
+                        <input type="text" id="searchvalue" class="txt" name="searchvalue" value=""
+                        />
+                        按
+                        <select id="searchfield" class="select">
+                            <option>
+                                请选择
+                            </option>
+                            <option value="name">
+                                任务名称
+                            </option>
+                            <option value="projectName">
+                                所属项目
+                            </option>
+                        </select>
+                        <input type="hidden" id="planId" value="{planId}">
+                        <input type="hidden" id="planName" value="{planName}">
+                        <input type="hidden" id="projectId" value="{projectId}">
+                        <input type="hidden" id="projectName" value="{projectName}">
+                        <input type="button" value=" 搜索 " class="txt_btn_a" />
+                    </td>
+                </tr>
+            </table>
+
+
+		<div id="tkNodeGridTree">正在装载，请等待。。。</div></div>
+    </body>
+</html>

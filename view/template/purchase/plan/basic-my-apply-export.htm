@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<title>采购申请导出</title>
+	{#commonInclude#}
+<script type="text/javascript" src="js/util.js"></script>
+	<script>
+		/**
+		 * 验证信息
+		 */
+		$(function(){
+			validate({
+				"beginDate" : {
+					required : true
+				},
+				"endDate" : {
+					required : true
+				}
+			});
+			$('#beginDate').val(formatDate(new Date()));
+			$('#endDate').val(formatDate(new Date()));
+		});
+		function exportFun(){
+			$object = new Object;
+			var str=document.getElementsByName("basic[state][]");
+			var objarray=str.length;
+			var chestr="";
+			for (i=0;i<objarray;i++){
+				if(str[i].checked == true){
+					chestr+=str[i].value+",";
+				}
+			}
+			var $object = [];
+			$object[0]=$('#beginDate').val();
+			$object[1]=$('#endDate').val();
+			$object[2]=chestr;
+			$('#stateVal').val(chestr);
+			if(chestr==''){
+				alert('请选择执行状态！');
+				return 0;
+			}
+//			$object = {
+//				'endDate':$('#endDate').val(),
+//				'beginDate':$('#beginDate').val(),
+//				'state':str
+//			};
+			$('#exportForm').submit();
+		//	openPostWindow('?model=purchase_plan_basic&action=myPlanExport',$object,'exportWin');
+		//	closeFun();
+		}
+	</script>
+<body>
+<form id="exportForm" action="?model=purchase_plan_basic&action=myPlanExport"
+ENCTYPE="multipart/form-data" method="POST" name="form1">
+<table  class="form_main_table">
+	<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">采购申请导出</font>
+			    </span>
+			</div>
+	</tr>
+	<tr>
+		<td class="form_text_left">开始时间</td>
+		<td class="form_text_right" >
+			<input type="text" name="basic[beginDate]" id="beginDate" class="txt" onfocus="WdatePicker()"/>
+			<span class="red">
+                [*]
+            </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">结束时间</td>
+		<td class="form_text_right" >
+			<input type="text" name="basic[endDate]" id="endDate" class="txt" onfocus="WdatePicker()"/>
+			<span class="red">
+                [*]
+            </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">执行状态
+			<span class="red">
+                [*]
+            </span></td>
+		<td class="form_text_right" >
+			<input type='hidden' name="basic[stateVal]" id="stateVal"/>
+			<input type='checkbox' class="exeState" name="basic[state][]" value="0"/>&nbsp;执行中&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[state][]" value="1"/>&nbsp;锁定&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[state][]" value="2"/>&nbsp;完成&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[state][]" value="3"/>&nbsp;关闭&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[state][]" value="4"/>&nbsp;待变更&nbsp;&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="2">
+		   <input type="button" class="txt_btn_a" value="导  出" onclick="exportFun();"/>&nbsp;&nbsp;
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

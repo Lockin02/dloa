@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>报销清单</title>
+    {#commonInclude#}
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+    <script type="text/javascript" src="js/jquery/jquery.scrolltotop.js"></script>
+    <script type="text/javascript" src="js/common/approval.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/exsummary-view.js"></script>
+    <script type="text/javascript" src="view/template/finance/expense/js/costtype-expense.js"></script>
+</head>
+<body>
+
+<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+    <tr>
+        <td colspan="4">
+            <div class="main_head2">
+				<span class="main_head_title">
+					报销单
+				</span>
+                <span style="float:right;margin:2px 8px 0px 0px;" title="单据录入时间">{InputDate}</span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <fieldset>
+                <legend class="legend">基 本 信 息 - {BillNo}
+                    <input type="hidden" id="BillNo" value="{BillNo}"/>
+                    <img src="images/icon/info_up.gif" id="costBelongImg"
+                         onclick="showAndHideDiv('costBelongImg','costbelong');"/>
+                </legend>
+                <input type="hidden" id="sourceType" value="{sourceType}"/>
+                <div id="costbelong"></div>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend">费 用 信 息
+                    <img src="images/icon/info_up.gif" id="expenseImg"
+                         onclick="showAndHide('expenseImg','expenseTbl')"/>
+                </legend>
+                <table class="form_in_table" id="expenseTbl">
+                    <thead>
+                    <tr class="main_tr_header">
+                        <th width="15%">费用大类</th>
+                        <th width="15%">费用小类</th>
+                        <th width="15%">费用金额</th>
+                        <th width="15%">特别事项申请</th>
+                        <th>费用说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {expensedetail}
+                    </tbody>
+                    <tr class="tr_count">
+                        <td class="form_text_right" rowspan="2" valign="top">合计</td>
+                        <td class="form_text_right">小写:</td>
+                        <td style="text-align:right"><span class="formatMoney">{Amount}</span></td>
+                        <td colspan="2" align="left">
+                            常规费用 : <span id="feeRegularView" class="formatMoney">{feeRegular}</span>,
+                            补贴费用 : <span id="feeSubsidyView" class="formatMoney">{feeSubsidy}</span>
+                        </td>
+                    </tr>
+                    <tr class="tr_count">
+                        <td class="form_text_right">大写:</td>
+                        <td style="text-align:right">
+                            <span id="chinseAmount"></span>
+                            <input type="hidden" id="Amount" value="{Amount}"/>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend">发 票 信 息 - {BillListNo}
+                    <img src="images/icon/info_up.gif" id="invImg" onclick="showAndHide('invImg','invTbl')"/>
+                </legend>
+                <table class="form_in_table" id="invTbl">
+                    <thead>
+                    <tr class="main_tr_header">
+                        <th width="15%">发票类型</th>
+                        <th width="15%">发票金额</th>
+                        <th width="15%">发票数量</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {expenseinv}
+                    </tbody>
+                    <tr class="tr_count">
+                        <td class="form_text_right">合计</td>
+                        <td style="text-align:right"><span class="formatMoney">{invoiceMoney}</span></td>
+                        <td style="text-align:right">{invoiceNumber}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend"><b>分 摊 信 息</b>
+                    <img src="images/icon/info_up.gif" id="costshareImg" onclick="showAndHide('costshareImg','costshare')"/>
+                </legend>
+                <table class="form_in_table" id="costshare">
+                    <thead>
+                    <tr class="main_tr_header">
+                        <th width="12%">费用大类</th>
+                        <th width="12%">费用小类</th>
+                        <th width="12%">分摊金额</th>
+                        <th width="8.6%">所属板块</th>
+                        <th width="51.4%">分摊说明</th>
+                    </tr>
+                    </thead>
+					{expensecostshare}
+                </table>
+            </fieldset>
+            <input type="hidden" id="tempExpenseId" value="{tempExpenseId}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="innerTd" colspan="4">
+            <table class="form_in_table">
+                <tr>
+                    <td colspan="4" class="td_table" id="approvalView">
+                        <input type="hidden" id="pid" value="{ID}"/>
+                        <input type="hidden" id="isDiffBillInfoMsg" value="{isDiffBillInfoMsg}"/>
+                        <input type="hidden" id="itemType" value="cost_summary_list"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="txt_btn" colspan="4">
+            <input type="hidden" id="id" value="{ID}"/>
+
+            <div id="fileInfo" style="display:none;">{file}</div>
+            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

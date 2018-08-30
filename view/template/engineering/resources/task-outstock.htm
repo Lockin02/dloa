@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<title>
+			任务单出库
+		</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="{#jsPath#}/task-outstock.js"></script>
+	</head>
+	<body>
+        <form id="form1" method="post" action="?model=engineering_resources_task&action=outStockConfirm" onsubmit="return checkForm();">
+            <table class="form_main_table">
+                <tr>
+                    <td colspan="4">
+                        <div class="main_head2">
+                            <span class="main_head_title">
+                                任务单出库
+                                <span class="red">&nbsp;&nbsp;
+                                	友情提醒：1.查询内容中每一行算做一条记录;&nbsp;&nbsp;
+                                			 2.对于暂时不出库的设备，不填写查询内容即可;&nbsp;&nbsp;
+                                			 3.对于需要撤回的设备，请直接删除该设备;&nbsp;&nbsp;
+                                			 4.已关闭的项目不能进行设备出库。
+                                </span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <fieldset>
+                            <legend class="legend" onclick="showAndHide('baseImg','baseInfo')">
+                                基 本 信 息
+                                <img src="images/icon/info_up.gif" id="baseImg" />
+                            </legend>
+                            <table id="baseInfo" class="form_in_table">
+                                <tr>
+                                    <td class="form_text_left">
+                                        设备申请单号
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {applyNo}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        发货区域
+                                    </td>
+                                    <td class="form_text_right" width="30%;">
+                                        {areaName}
+                                    </td>
+                                    <td class="form_text_left">
+                                        发货任务单号
+                                    </td>
+                                    <td class="form_text_right">
+                                        {taskCode}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        申 请 人
+                                    </td>
+                                    <td class="form_text_right">
+                                        {applyUser}
+                                    </td>
+                                    <td class="form_text_left">
+                                        申请部门
+                                    </td>
+                                    <td class="form_text_right">
+                                        {deptName}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        申请日期
+                                    </td>
+                                    <td class="form_text_right">
+                                        {applyDate}
+                                    </td>
+                                    <td class="form_text_left">
+                                        申请类型
+                                    </td>
+                                    <td class="form_text_right">
+                                        {applyTypeName}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        项目编号
+                                    </td>
+                                    <td class="form_text_right">
+                                        {projectCode}
+                                    </td>
+                                    <td class="form_text_left">
+                                        领用方式
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {getTypeName}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        项目名称
+                                    </td>
+                                    <td class="form_text_right">
+                                        {projectName}
+                                    </td>
+                                    <td class="form_text_left">
+                                        项目经理
+                                    </td>
+                                    <td class="form_text_right">
+                                        {managerName}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        设备使用地
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {place}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        申请原因
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {reason}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        备注信息
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {remark}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        接 收 人
+                                    </td>
+                                    <td class="form_text_right">
+                                        {receiverName}
+                                    </td>
+                                    <td class="form_text_left">
+                                        电话号码
+                                    </td>
+                                    <td class="form_text_right">
+                                        {mobile}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        邮寄地址
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        {address}
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <fieldset>
+                            <legend class="legend" onclick="showAndHideDiv('taskImg','taskInfo')">
+                                选择出库设备
+                                <img src="images/icon/info_up.gif" id="taskImg" />
+                            </legend>
+                            <div id="taskInfo"></div>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="txt_btn" colspan="4">
+                        <input type="hidden" id="id" name="task[id]" value="{id}" />
+                        <input type="hidden" id="projectId" value="{projectId}" />
+                        <input type="submit" class="txt_btn_a" value=" 确  认 "/>
+                        <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+	</body>
+</html>

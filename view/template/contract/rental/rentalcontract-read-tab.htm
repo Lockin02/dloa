@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var id = $("#id").val();
+		var originalId = $("#originalId").val();
+		var orderCode = $("#orderCode").val();
+        var originKey = $("#originKey").val();
+        var skeyStr= "&skey="+originKey;
+        var skey= "&skey={skey_}";
+		//初始化tabsURL
+		var tabArr = [
+				"?model=contract_rental_rentalcontract&action=toViewForAudit&id=" + id + skey,
+				"?model=common_changeLog&action=toRentalList&logObj=rentalcontract&originalId="+id+ "&objId=" + originalId+skeyStr,
+                  "?model=contract_rental_rentalcontract&action=toInvoiceTab&obj[objType]=KPRK-05&obj[objCode]="+orderCode + "&obj[objId]=" + originalId + skeyStr,
+                  "?model=contract_rental_rentalcontract&action=toIncomeTab&obj[objType]=KPRK-05&obj[objCode]="+orderCode + "&obj[objId]=" + originalId + skeyStr,
+	              "?model=stock_outplan_outplan&action=listByOrderId&id=" + originalId + "&objType=oa_sale_lease" + skeyStr,
+	              "?model=mail_mailinfo&action=listByOrderId&id=" + originalId + "&type=oa_sale_lease" + skeyStr,
+	              "?model=purchase_plan_basic&action=toListByContractId&contractId=" + originalId + "&purchType=oa_sale_lease"  + skeyStr,
+                  "?model=contract_rental_rentalcontract&action=toCloseInfo&id="+originalId + skeyStr,
+                  "?model=common_changeLog&action=toRentalSignin&logObj=rentalcontractSignin&originalId="+id+ "&objId=" + originalId + "&orderCode="+ orderCode + skeyStr
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+
+</head>
+<body>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">变更历史</a></li>
+	<li><a href="#tab3">开票记录</a></li>
+	<li><a href="#tab4">到款记录</a></li>
+	<li><a href="#tab5">发货计划</a></li>
+	<li><a href="#tab6">邮寄信息</a></li>
+	<li><a href="#tab7">采购申请</a></li>
+	<li><a href="#tab8">关闭信息</a></li>
+	<li><a href="#tab9">签收修改历史</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="" height="700px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe2" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe4" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe5" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe6" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe7" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe8" src="" height="650px" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe9" src="" height="650px" frameborder="0">
+	</iframe>
+</div>
+
+
+<input type="hidden" value="{id}" id="id" /> <input type="hidden"
+	value="{originalId}" id="originalId" />
+<input type="hidden" value="{orderCode}" id="orderCode" />
+<input type="hidden" value="{originKey}" id="originKey" /></div>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>高级查询</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allorder.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-user.js"></script>
+<script>
+	$(document).ready(function(){
+	    $("#prinvipalName").yxselect_user({
+			hiddenId : 'prinvipalId'
+		});
+	    $("#areaPrincipal").yxselect_user({
+			hiddenId : 'areaPrincipalId'
+		});
+	});
+</script>
+<script type="text/javascript">
+/** ****************合同 区域负责人 --- 合同归属区域************************************** */
+$(function() {
+	$("#areaName").yxcombogrid_area({
+		hiddenId : 'chargeId',
+		width : 550,
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+					$("#areaId").val(data.id);
+				}
+			}
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$(function() {
+	$("#customerName").yxcombogrid_customer({
+		isShowButton : false,
+		hiddenId : 'customerId',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+				}
+			}
+		}
+	});
+	//所有合同的combogrid
+	$("#orderCode").yxcombogrid_allorder({
+		hiddenId : 'orderId',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+					if(data.orderCode){
+						$('#orderCode').val(data.orderCode);
+					}else{
+						$('#orderCode').val(data.orderTempCode);
+					}
+					$('#orderType').val(data.tablename);
+				}
+			}
+		}
+	});
+	// 客户类型
+	customerTypeArr = getData('KHLX');
+	addDataToSelect(customerTypeArr, 'customerType');
+
+	$('#beginMonth').val($('#monthStr').val());
+	$('#endMonth').val($('#monthStr').val());
+});
+	function confirm() {
+		var beginYear=$("#beginYear").val();
+		var beginMonth=$("#beginMonth").val();
+		var endYear=$("#endYear").val();
+		var endMonth=$("#endMonth").val();
+		var areaName=$("#areaName").val();
+		var customerId=$("#customerId").val();
+		var customerType=$("#customerType").val();
+		var orderId=$("#orderId").val();
+		var prinvipalId=$("#prinvipalId").val();
+		var areaPrincipalId=$("#areaPrincipalId").val();
+		this.opener.location = "?model=finance_receviable_receviable&action=incomeSummary&beginMonth="+beginMonth
+							+"&beginYear="+beginYear+"&endMonth="+endMonth+"&endYear="+endYear
+							+"&areaName="+areaName+"&customerId="+customerId+"&customerType="+customerType
+							+"&orderId="+orderId+"&prinvipalId="+prinvipalId+"&areaPrincipalId="+areaPrincipalId;
+		this.close();
+	}
+
+	function refresh(){
+		$('.toClear').val("");
+	}
+</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 高级查询
+</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">起始期次年份</td>
+		<td class="form_text_right">
+		<select id="beginYear">
+			{yearStr}
+		</select></td>
+		<td class="form_text_left">起始期次月份</td>
+		<td class="form_text_right"><select id="beginMonth">
+			<option value="1">1月份</option>
+			<option value="2">2月份</option>
+			<option value="3">3月份</option>
+			<option value="4">4月份</option>
+			<option value="5">5月份</option>
+			<option value="6">6月份</option>
+			<option value="7">7月份</option>
+			<option value="8">8月份</option>
+			<option value="9">9月份</option>
+			<option value="10">10月份</option>
+			<option value="11">11月份</option>
+			<option value="12">12月份</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">结束期次年份</td>
+		<td class="form_text_right">
+		<select id="endYear">
+			{yearStr}
+		</select></td>
+		<td class="form_text_left">结束期次月份<input type="hidden" id="monthStr" value="{monthStr}"/></td>
+		<td class="form_text_right"><select id="endMonth">
+			<option value="1">1月份</option>
+			<option value="2">2月份</option>
+			<option value="3">3月份</option>
+			<option value="4">4月份</option>
+			<option value="5">5月份</option>
+			<option value="6">6月份</option>
+			<option value="7">7月份</option>
+			<option value="8">8月份</option>
+			<option value="9">9月份</option>
+			<option value="10">10月份</option>
+			<option value="11">11月份</option>
+			<option value="12">12月份</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">销售区域</td>
+		<td class="form_text_right" colspan="3">
+			<input type="hidden" class="txt toClear" id="areaId" />
+			<input type="text" class="txt toClear" id="areaName" />
+			<input type="hidden" id="chargeId" class="toClear"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt toClear" id="customerName" />
+		   <input type="hidden" class="toClear" id="customerId" />
+	   </td>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+			<select class="select toClear" id="customerType">
+				<option value=""></option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">合同号</td>
+		<td class="form_text_right" >
+			<input type="hidden" class="txt toClear" id="orderId" />
+			<input type="text" class="txt toClear" id="orderCode" />
+			<input type="hidden" class="txt toClear" id="orderName" />
+			<input type="hidden" class="txt toClear" id="orderType" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">负责人</td>
+		<td class="form_text_right" >
+			<input type="text" class="txt toClear" id="prinvipalName" />
+			<input type="hidden" class="txt toClear" id="prinvipalId" />
+		</td>
+		<td class="form_text_left">主管</td>
+		<td class="form_text_right" >
+			<input type="text" class="txt toClear" id="areaPrincipal" />
+			<input type="hidden" class="txt toClear" id="areaPrincipalId" />
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="button"
+			class="txt_btn_a" value="确   认" onclick="confirm();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

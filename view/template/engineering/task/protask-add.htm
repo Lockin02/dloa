@@ -1,0 +1,176 @@
+<html>
+
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>新增任务</title>
+
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="view/template/rdproject/task/js/rdtk_onekey_tab.js"></script>
+	<script type="text/javascript" src="view/template/rdproject/task/js/rdtask-onekey-add-formValidator.js"></script>
+
+	<script type="text/javascript" src="js/ext/ext-base.js"></script>
+	<script type="text/javascript" src="js/ext/ext-all.js"></script>
+	<script type="text/javascript" src="js/ext/common-ext.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+
+	<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+	<script type="text/javascript" src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+	<script type="text/javascript" src="view/template/common/combogrid/rdProjectinfoComboGrid.js"></script>
+	<script type="text/javascript" src="view/template/rdproject/task/js/rdtk_onekey_projectinfo-list.js"></script>
+	<!-- 附件上传开始 -->
+ 	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+	<script type="text/javascript" src="view/template/engineering/task/js/esmtask-formValidator.js"></script>
+    <script>
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_esm_task",
+				"serviceId":"{id}"
+			});
+		});
+	</script>
+<!-- 附件上传结束 -->
+<script type="text/javascript">
+
+	function choiceSubmitType(action){//判断是发布还是保存操作
+
+			if("pOneKey"==action){
+				$("#form1").attr("action","?model=engineering_task_protask&action=addTask&publish=yes");
+		     return;
+		     } else if("addOneKey"==action){
+                      $("#form1").attr("action","?model=engineering_task_protask&action=add&new=no1");
+		       return;
+		     }
+	}
+
+</script>
+
+</head>
+<body>
+<form action="?model=engineering_task_protask&action=add" method="POST" name="form1" id="form1">
+<table class="form_main_table">
+	<tr>
+		<td class="main_tr_header" colspan="4">基本信息</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务名称</td>
+		<td class="form_text_right" colspan="3">
+		  <input  type="hidden" id="projectId" name="protask[projectId]" value="{projectId}">
+          <input class="txt" style="width:550" id="name" name="protask[name]">
+          <span class='red'>[*]</span>
+	      <br/><div id="nameTip" class=""></div></td>
+
+    </tr>
+    <tr>
+		<td class="form_text_left">任务类型</td>
+		<td class="form_text_right">
+		<select class="select" name="protask[taskType]">
+			<option value="需求调研">需求调研</option>
+			<option value="分析设计">分析设计</option>
+			<option value="软件开发">软件开发</option>
+			<option value="系统测试">系统测试</option>
+			<option value="实施部署">实施部署</option>
+			<option value="项目管理">项目管理</option>
+			<option value="评审">评审</option>
+			<option value="QA">QA</option>
+			<option value="配置管理">配置管理</option>
+			<option value="硬件集成">硬件集成</option>
+		</select></td>
+		<td class="form_text_left">优先级</td>
+		<td class="form_text_right">
+		<select class="select" name="protask[priority]">
+			<option value="重要紧急">重要紧急</option>
+			<option value="重要不紧急">重要不紧急</option>
+			<option value="普通紧急">普通紧急</option>
+			<option value="普通不紧急">普通不紧急</option>
+		</select></td>
+	</tr>
+	<tr>
+	    <td class="form_text_left">责任人</td>
+		<td class="form_view_right" colspan="3">
+			<input type="hidden" id="chargeId" name="protask[chargeId]">
+		    <input type="text" class="txt" id="chargeName" name="protask[chargeName]" size="40" readonly>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('chargeId','chargeName')">
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('chargeId','chargeName')"><span class='red'>[*]</span>
+				<br/>
+		</td>
+	 </tr>
+	 <tr>
+	     <td class="form_text_left">发布人</td>
+		<td class="form_view_right" colspan="3">
+			<input type="hidden" id="publishId" name="protask[publishId]">
+		    <input type="text" class="txt" id="publishName" name="protask[publishName]" size="40" readonly>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('publishId','publishName')">
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('publishId','publishName')"><span class='red'>[*]</span>
+				<br/>
+		</td>
+	 </tr>
+
+	<tr>
+		<td class="form_text_left">计划开始日期</td>
+		<td class="form_text_right"><input class="txt" type="text" onblur="changePlanDuration('planBeginDate','planEndDate','planDuration','appraiseWorkload')"
+			name="protask[planBeginDate]" onfocus="WdatePicker()" id="planBeginDate"><span class='red'>[*]</span>
+			<br/></td>
+		<td class="form_text_left">计划完成日期</td>
+		<td class="form_text_right"><input class="txt" type="text" onblur="changePlanDuration('planBeginDate','planEndDate','planDuration','appraiseWorkload')"
+			name="protask[planEndDate]" onfocus="WdatePicker()" id="planEndDate"><span class='red'>[*]</span>
+			<br/></td>
+	</tr>
+   <tr>
+		<td class="form_text_left">任务描述</td>
+		<td class="form_text_right" colspan="3"><textarea
+			style="width:650" name="protask[remark]" id="remark" class="txt_txtarea_font"></textarea>
+		</td>
+	</tr>
+    <tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+
+		</td>
+	</tr>
+    <tr>
+		<td colspan="4">
+		<input type="submit" class="txt_btn_a" value=" 发布 "  onclick="return choiceSubmitType('pOneKey');"  >
+		<input type="submit"class="txt_btn_a" value=" 保存 " onclick="return choiceSubmitType('addOneKey');">
+		<input type="button" class="txt_btn_a" onclick="self.parent.tb_remove();" value="返回 ">
+		</td>
+	</tr>
+  <!-- <tr>
+
+		<td class="text_btn" colspan="4"  style="height: 80px; text-align: center;">
+
+		<input type="submit"  class="txt_btn_a" value=" 保存 " />
+		<input type="button"  class="txt_btn_a"onclick="self.parent.tb_remove();" value=" 取消 " /></td>
+	</tr> -->
+
+</table>
+</form>
+</body>
+</html>
+

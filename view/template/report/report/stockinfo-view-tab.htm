@@ -1,0 +1,59 @@
+
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var cids = $("#cids").val();
+        var bids = $("#bids").val();
+        var pids = $("#pids").val();
+ 	var tabArr = [
+                  "?model=report_report_stockinfo&action=conViewList&cids="+cids,
+                  "?model=report_report_stockinfo&action=borrowViewList&bids="+bids,
+                  "?model=report_report_stockinfo&action=preViewList&pids="+pids
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{cids}" id="cids" />
+<input type="hidden" value="{bids}" id="bids" />
+<input type="hidden" value="{pids}" id="pids" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">合同需求</a></li>
+	<li><a href="#tab2">借用需求</a></li>
+	<li><a href="#tab3">赠送需求</a></li>
+
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+
+</div>
+</div>
+</body>
+</html>
+
+

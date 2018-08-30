@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            $(function(){
+                $('#test').treegrid({
+                    title:'',
+                    iconCls:'icon-save',
+                    fit:true,
+                    fitColumns: true,
+                    nowrap: false,
+                    rownumbers: true,
+                    animate:true,
+                    collapsible:true,
+                    url:'treegrid_data.json',
+                    idField:'code',
+                    treeField:'code',
+                    frozenColumns:[[
+                            {title:'Code',field:'code',width:150,
+                                formatter:function(value){
+                                    return '<span style="color:red">'+value+'</span>';
+                                }
+                            }
+                        ]],
+                    columns:[[
+                            {field:'name',title:'Name',width:120},
+                            {field:'addr',title:'Address',width:120,rowspan:2},
+                            {field:'col4',title:'Col41',width:150,rowspan:2}
+                        ]],
+                    onBeforeLoad:function(row,param){
+                        if (row){
+                            $(this).treegrid('options').url = 'treegrid_subdata.json';
+                        } else {
+                            $(this).treegrid('options').url = 'treegrid_data.json';
+                        }
+                    },
+                    onContextMenu: function(e,row){
+                        e.preventDefault();
+                        $(this).treegrid('unselectAll');
+                        $(this).treegrid('select', row.code);
+                        $('#mm').menu('show', {
+                            left: e.pageX,
+                            top: e.pageY
+                        });
+                    },
+                    pagination:true
+                });
+                $('#tabdiv').css('height',(wh-130+2*((wh-400)/80)));
+            });
+            
+        </script>
+        <style type="text/css">
+        </style>
+    </head>
+    <body id="tabdiv" class="easyui-layout" fit="true">
+                <div region="north" border="false" style="height:28px;padding-left: 5px;padding-top: 2px;background:#fafafa;overflow: hidden">
+                    <div style="float:left;">
+                        <input type="text">
+                        <a href="#" class="easyui-linkbutton" plain="true" icon="icon-search"></a>
+                    </div>
+                    <div style="float:left;">
+                        <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add">Add</a>
+                        <a href="#" class="easyui-linkbutton" plain="true" icon="icon-save">Save</a>
+                    </div>
+                </div>
+                <div region="center" border="true">
+                    <table id="test" border="false" cellpadding="0" cellspacing="0"></table> 
+                </div>
+    </body>
+</html>

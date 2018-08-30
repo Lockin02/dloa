@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>签收其他合同</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/other-change.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/other-common.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+				"serviceType": "oa_sale_other",
+				"serviceId": "{id}"
+			});
+
+			//省份选择
+			$('#proCode').val('{proCode}');
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	签收其他合同
+    </span>
+</div>
+<form id="form1" method="post" action="?model=contract_other_other&action=sign" onsubmit="return checkForm();">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left_three">款项性质</td>
+		<td class="form_text_right_three" colspan="5">
+			<b>{fundTypeName}</b>
+			<input type="hidden" id="fundType" value="{fundType}" />
+			<input type="hidden" id="isNeed" value="{isNeed}" />
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">鼎利合同号</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="readOnlyText" id="orderCode" value="{orderCode}" readonly/>
+		</td>
+		<td class="form_text_left_three">合同名称</td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" name="other[orderName]" id="orderName" value="{orderName}" />
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">合同负责人</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="other[principalName]" id="principalName" value="{principalName}" readonly/>
+			 <input type="hidden" name="other[principalId]" id="principalId" value="{principalId}" /><span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">签约公司</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="other[signCompanyName]" value="{signCompanyName}" id="signCompanyName"/>
+			 <input type="hidden" id="signCompanyId" value="{signCompanyId}"/>
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left_three">公司省份</td>
+		<td class="form_text_right_three" >
+			<select class="select"  id="proCode" name="other[proCode]" onchange="setProName();">
+				<option value="">请选择省份</option>
+			</select>
+			<input type="hidden" name="other[proName]" id="proName" value="{proName}" />
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left_three">负责人部门</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="other[deptName]" value="{deptName}" id="deptName" readonly/>
+			 <input type="hidden" name="other[deptId]" value="{deptId}" id="deptId"/><span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">合同总金额</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt formatMoney" name="other[orderMoney]" value="{orderMoney}" id="orderMoney"/>
+			 <span id="orderMoneyNeed" class="red" style="display:none">[*]</span>
+		</td>
+		<td class="form_text_left_three">签约日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="other[signDate]" value="{signDate}" onfocus="WdatePicker()" id="signDate"/>
+			 <span class="red">[*]</span>
+		</td>
+   		<td class="form_text_left_three">联 系 人</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="other[linkman]" value="{linkman}" id="linkman"/><span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">联系电话</td>
+		<td class="form_text_right_three" colspan="5">
+			 <input type="text" class="txt" name="other[phone]" value="{phone}" id="phone"/><span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">联系地址</td>
+		<td class="form_text_right_three" colspan="5">
+			<textarea class="txt_txtarea_biglong" name="other[address]" id="address">{address}</textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">款项条件</td>
+		<td class="form_text_right_three" colspan="5">
+			<textarea class="txt_txtarea_biglong" name="other[fundCondition]" id="fundCondition">{fundCondition}</textarea>
+			<span class="red" id="myspan" style="display:none">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">合同内容</td>
+		<td class="form_text_right_three" colspan="5">
+			<textarea class="txt_txtarea_biglong" name="other[description]" id="description">{description}</textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three"><span style='color:blue'>签收说明</span></td>
+		<td class="form_text_right_three" colspan="5">
+			<textarea class="txt_txtarea_biglong ignore" name="other[changeReason]" id="changeReason"></textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+		<td class="form_text_right_three" colspan="5">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload">{file}</div>
+			</div>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+         	<input type="hidden" name="other[ExaStatus]" id="ExaStatus" value="{ExaStatus}" />
+         	<input type="hidden" name="other[ExaDT]" id="ExaDT" value="{ExaDT}" />
+         	<input type="hidden" name="other[isStamp]" id="isStamp" value="{isStamp}" />
+         	<input type="hidden" name="other[isNeedStamp]" id="isNeedStamp" value="{isNeedStamp}" />
+         	<input type="hidden" name="other[stampType]" id="stampType" value="{stampType}" />
+         	<input type="hidden" name="other[oldId]" value="{id}" />
+		   	<input type="submit" class="txt_btn_a" value="签  收"/>
+		   	<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

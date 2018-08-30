@@ -1,0 +1,78 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+    var borrowId = $("#borrowId").val();
+    var initTip = $("#initTip").val();
+    var id = $("#id").val();
+    var originalId = $("#originalId").val();
+    var isproShipcondition = $("#isproShipcondition").val();
+    var skeyStr = "&skey={skey_}";
+ 	var tabArr = [
+                  "?model=projectmanagent_borrow_borrow&action=proView&id=" + borrowId,
+                  "?model=projectmanagent_borrow_renew&action=renewList&id=" + borrowId,
+                  "?model=projectmanagent_borrow_borrow&action=subtenancyViewList&id=" + borrowId,
+                  "?model=common_changeLog&action=toBorrowChangeList&logObj=borrow&originalId="+ "&objId=" + id + skeyStr,
+                  "?model=stock_allocation_allocation&action=relDocPage&relDocType=DBDYDLXJY&relDocId=" + borrowId+"&initTip="+initTip + "&isproShipcondition="+isproShipcondition,
+                  "?model=stock_outplan_outplan&action=listByOrderId&id=" + id + "&objType=oa_borrow_borrow" + skeyStr,
+                  "?model=purchase_plan_basic&action=toListByContractId&contractId=" + id + "&purchType=oa_borrow_borrow" + skeyStr
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" id="isproShipcondition" value="{isproShipcondition}" />
+<input type="hidden" id="borrowId" value="{borrowId}" />
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{originalId}" id="originalId" />
+<input type="hidden" value="{initTip}" id="initTip" />
+
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">续借信息</a></li>
+	<li><a href="#tab3">转借信息</a></li>
+	<li><a href="#tab4">变更历史</a></li>
+	<li><a href="#tab5">调拨单</a></li>
+	<li><a href="#tab6">发货计划</a></li>
+	<li><a href="#tab7">采购申请</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

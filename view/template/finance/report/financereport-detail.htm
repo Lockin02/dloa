@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>费用明细列表</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<script src="webreport/CreateControl.js" type="text/javascript"></script>
+	<script src="webreport/GRInstall.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="view/template/finance/report/js/financereport-detail.js"></script>
+</head>
+<body style="margin:0">
+<input type="hidden" id="CostBelongDeptId" value="{CostBelongDeptId}">
+<input type="hidden" id="CostBelongDeptName" value="{CostBelongDeptName}">
+<input type="hidden" id="parentDeptId" value="{parentDeptId}">
+<input type="hidden" id="parentDeptName" value="{parentDeptName}">
+<input type="hidden" id="CostTypeName" value="{CostTypeName}">
+<table style="width:100%;">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+					<td colspan="2">
+						费用类型 ：
+						<input type="checkbox" name="DetailType" value="1" onclick="checkDetail(1);"/> 部门费用
+						<input type="checkbox" name="DetailType" value="2" onclick="checkDetail(2);"/> 合同项目费用
+						<input type="checkbox" name="DetailType" value="3" onclick="checkDetail(3);"/> 研发费用
+						<input type="checkbox" name="DetailType" value="4" onclick="checkDetail(4);"/> 售前费用
+						<input type="checkbox" name="DetailType" value="5" onclick="checkDetail(5);"/> 售后费用
+						<input type="checkbox" id="checkAll" value="all" onclick="checkAll();"/> 全部费用
+						<input type="hidden" id="DetailTypeHidden" value="{DetailType}"/>
+					</td>
+					<td width="40%">
+						单据状态 ：
+						<select class="txtmiddle" id="status">
+							<option value="paying">未付款</option>
+							<option value="" selected="selected">已付款</option>
+						</select>
+						<input type="hidden" id="statusHidden" value="{status}" />
+						<span class="blue">双击费用金额打开明细列表</span>
+					</td>
+				</tr>
+				<tr>
+					<td width="30%">
+						日期 ： <span><input type="text" id="thisYear" class="txtmin" value="{thisYear}" onblur="checkYear('thisYear')"/></span>年
+						<span><input type="text" id="beginMonth" class="txtmin" value="{beginMonth}" onblur="checkMonth('beginMonth')"/></span>月  至
+						<span><input type="text" id="endMonth" class="txtmin" value="{endMonth}" onblur="checkMonth('endMonth')"/></span>月
+
+						<input type="hidden" id="beginMonthHidden" value="{beginMonth}"/>
+						<input type="hidden" id="endMonthHidden" value="{endMonth}"/>
+						<input type="hidden" id="thisYearHidden" value="{thisYear}"/>
+					</td>
+					<td width="20%">
+						公司 ：
+						<select class="select" id="company" style="WIDTH: 120px">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="companyHidden" value="{company}"/>
+						<input type="hidden" id="deptNames" value="{deptNames}"/>
+					</td>
+					<td>
+						所属板块 ：
+						<select class="select" id="moduleName" style="WIDTH: 120px">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="moduleNameHidden" value="{moduleName}"/>
+					</td>
+					<td>
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="search();" value=" 查  询 "/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	var dataUrl =
+	"view/template/finance/report/financereport-detail.php"
+	+ "?thisYear="  + $("#thisYear").val()
+	+ "&beginMonth="  + $("#beginMonth").val()
+	+ "&endMonth="  + $("#endMonth").val()
+	+ "&DetailType="  + $("#DetailTypeHidden").val()
+	+ "&company=" + $("#companyHidden").val()
+	+ "&moduleName=" + $("#moduleNameHidden").val()
+	+ "&CostBelongDeptId=" +$("#CostBelongDeptId").val()
+	+ "&CostBelongDeptName=" +$("#CostBelongDeptName").val()
+	+ "&parentDeptName=" +$("#parentDeptName").val()
+	+ "&parentDeptId=" +$("#parentDeptId").val()
+	+ "&CostTypeName=" +$("#CostTypeName").val()
+	+ "&deptNames=" + $("#deptNames").val()
+	+ "&status="  + $("#statusHidden").val();
+//	alert(dataUrl);
+	//用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+	CreateDisplayViewerEx("100%", "92%",
+	"view/template/finance/report/financereport-detail.grf?v=20180409",dataUrl,
+	true,
+	"<param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+</script>
+</body>
+</html>

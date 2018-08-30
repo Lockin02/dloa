@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title></title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+$(function() {
+	var id = $("#id").val();
+	var applyNumb = $("#applyNumb").val();
+
+	//初始化tabsURL
+ 	var tabArr=[
+    			//"?model=purchase_contract_purchasecontract&action=init&perm=view&contractId="+contractId+"&id="+id,
+    			//"?model=purchase_change_contractchange&action=toTabHistory&contractId="+contractId+"&id="+id+"&applyNumb="+applyNumb,
+    			"?model=purchase_change_contractchange&action=init&perm=view&id="+id+"&applyNumb="+applyNumb,
+    			"?model=common_changeLog&action=tolist&id="+id+"&applyNumb="+applyNumb,
+				];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+
+});
+
+    </script>
+
+</head>
+<body>
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >合同信息</a></li>
+        <li><a href="#tab2" >历史版本</a></li>
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "about:blank" height="650px" scrolling="yes"  frameborder= "0" >
+            </iframe>
+            <iframe class="pane"  id="iframe2"   src= "about:blank" height="650px"  scrolling="yes" frameborder= "0">
+            </iframe>
+    </div>
+
+
+    <input type="hidden" value="{id}" id="id" />
+    <input type="hidden" value="{applyNumb}" id="applyNumb" />
+
+</div>
+
+</body>
+</html>

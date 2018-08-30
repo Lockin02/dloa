@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			领料出库明细表
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"media="screen" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+
+		<script type="text/javascript" src="view/template/stock/outstock/js/stockout-picking-todetail.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				领料出库明细表
+			</span>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					单据日期 从
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txtshort Num" id="beginYear" value="{thisYear}"/> 年
+					<input type="text" class="txtshort Num" id="beginMonth" value="{thisMonth}"/> 月
+				</td>
+				<td class="form_text_left_three">
+					单据编号
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="docCode" id="docCode" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					至
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txtshort Num" id="endYear" value="{thisYear}"/> 年
+					<input type="text" class="txtshort Num" id="endMonth" value="{thisMonth}"/> 月
+				</td>
+				<td class="form_text_left">
+					指定物料
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" id="productId"/>
+					<input type="text" id="productCode" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					领料部门
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" id="deptCode"/>
+					<input type="text" id="deptName" class="txt" readonly="readonly"/>
+				</td>
+				<td class="form_text_left">
+					领料人
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" id="pickCode"/>
+					<input type="text" id="pickName" class="txt" readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					规格型号
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="pattern" id="pattern" class="txt"/>
+				</td>
+				<td class="form_text_left">
+					数量
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="actOutNum" id="actOutNum" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					红蓝字
+				</td>
+				<td class="form_text_right">
+					<select name="isRed" id="isRed" class="select">
+						<option value="" selected>全部</option>
+						<option value="0">蓝字</option>
+						<option value="1">红字</option>
+					</select>
+				</td>
+				<td class="form_text_left">
+					单价
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="cost" id="cost" class="txt formatMoney"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					金额
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="subCost" id="subCost" class="txt formatMoney"/>
+				</td>
+				<td class="form_text_left">
+					序列号
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="serialnoName" id="serialnoName" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">出库用途</td>
+			    <td class="form_text_right">
+			        <select class="select" name="toUse" id="toUse">
+			            {toUse}
+			        </select>
+			    </td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					单据头是否全显示
+				</td>
+				<td class="form_text_right" colspan="3">
+				 	<input type="radio" name="ifshow" class="ifshow" value="1" />是
+				 	<input type="radio" name="ifshow" class="ifshow" value="0" checked/>否
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<input type="hidden" id="docType" value="{docType}"/>
+					<input type="button" class="txt_btn_a" value="确 定" onclick="toList()"/>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>外包申请表</title>
+    {#commonInclude#}
+    <link rel="stylesheet" type="text/css" href="css/apply.css?i=2"/>
+    <script type="text/javascript" src="{#jsPath#}/apply-edit.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/apply-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/apply-arithmetic.js?i=2"></script>
+    <script type="text/javascript" src="{#jsPath#}/apply-changeType.js?i=2"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	外包申请表 - {applyCode}
+    </span>
+</div>
+<form id="form1" method="post" action="?model=outsourcing_outsourcing_apply&action=edit" onsubmit="return checkForm();">
+    <table class="form_main_table" style="width:1200px;margin:auto;text-align:center" align="center">
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">基本信息
+                        <img src="images/icon/info_up.gif" id="baseImg_d"
+                             onclick="showAndHide('baseImg_d', 'baseTbl_d');"/>
+                    </legend>
+                    <table class="form_in_table" id="baseTbl_d">
+                        <tr class="content_all">
+                            <td class="form_text_left_three">项目名称：</td>
+                            <td class="form_text_right_three">
+                                <input type="hidden" name="apply[projectId]" id="projectId" value="{projectId}"/>
+                                <input id="projecttName" name="apply[projecttName]" type="text" value="{projecttName}"
+                                       class="readOnlyTxtNormal" readonly="readonly"/>
+                            </td>
+                            <td class="form_text_left_three">项目编号：</td>
+                            <td class="form_text_right_three">
+                                <input id="projectCode" name="apply[projectCode]" type="text" value="{projectCode}"
+                                       class="readOnlyTxtNormal" readonly="readonly"/>
+                            </td>
+                            <td class="form_text_left_three">项目经理：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectCharge" name="apply[projectCharge]" type="text"
+                                       class="readOnlyTxtNormal" value="{projectCharge}"/>
+                            </td>
+                        </tr>
+                        <tr class="content_all">
+                            <td class="form_text_left_three">项目状态：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectStatus" type="text" class="readOnlyTxtNormal"/>
+                            </td>
+                            <td class="form_text_left_three">项目属性：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectAttribute" type="text" class="readOnlyTxtNormal"/>
+                            </td>
+                            <td class="form_text_left_three">项目类别：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectCategory" type="text" class="readOnlyTxtNormal"/>
+                            </td>
+                        </tr>
+                        <tr class="content_all">
+                            <td class="form_text_left_three">预计开始：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectStartTime" type="text" value="{projectStartTime}"
+                                       name="apply[projectStartTime]" class="readOnlyTxtNormal"/>
+                            </td>
+                            <td class="form_text_left_three">预计结束：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectEndTime" name="apply[projectEndTime]" type="text"
+                                       class="readOnlyTxtNormal" value="{projectEndTime}"/>
+                            </td>
+                            <td class="form_text_left_three">预计工期：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectExpectedDuration" type="text"
+                                       class="readOnlyTxtNormal"/>
+                            </td>
+                        </tr>
+                        <tr class="content_all">
+                            <td class="form_text_left_three" style="white-space:nowrap;">项目金额（税前）：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="projectMoneyWithTax" type="text" class="readOnlyTxtNormal formatMoney"/>
+                            </td>
+                            <td class="form_text_left_three">项目概算：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="estimates" type="text" class="readOnlyTxtNormal formatMoney"/>
+                            </td>
+                            <td class="form_text_left_three">项目预算：</td>
+                            <td class="form_text_right_three">
+                                <input readonly="readonly" id="budgetAll" type="text" class="readOnlyTxtNormal formatMoney"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">申请原因 <img src="images/icon/info_up.gif" id="applyImg"
+                                                     onclick="showAndHide('applyImg', 'applyTbl');"/></legend>
+                    <table class="form_in_table" id="applyTbl">
+                        <tr>
+                            <td colspan="3" align="left">
+                                <input {notEnough} type="checkbox" name="apply[notEnough]" id="notEnough" value="1"/>
+                                <label for="notEnough">人手不足</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input {notSkill} type="checkbox" name="apply[notSkill]" id="notSkill" value="1"/>
+                                <label for="notSkill">非专长技术领域</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input {notCost} type="checkbox" name="apply[notCost]" id="notCost" value="1"/>
+                                <label for="notCost">成本优势</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input {notMart} type="checkbox" name="apply[notMart]" id="notMart" value="1"/>
+                                <label for="notMart">市场扩展</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input {notElse} type="checkbox" name="apply[notElse]" id="notElse" value="1"/>
+                                <label for="notElse">其他(需描述)</label>
+                            </td>
+                        </tr>
+                        <tr class="content_all">
+                            <td class="form_text_left blue" style="white-space:nowrap; width: 10%;">详细描述：</td>
+                            <td class="form_text_right" colspan="3">
+                                <textarea name="apply[whyDescription]" id="whyDescription" class="txt_txtarea_font1">{whyDescription}</textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">外包需求
+                        <img src="images/icon/info_up.gif" id="baseImg3" onclick="showAndHide('baseImg3', 'baseTb3');"/>
+                    </legend>
+                    <table class="form_in_table" id="baseTb3">
+                        <tr>
+                            <td colspan="6" align="left">
+                                <input class="otypename" {outType1} type="radio" name="apply[outType]" value="1"
+                                       onclick="changeType(this.value)" id="outType1"/>
+                                <label for="outType1">整包</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="otypename" {outType2} type="radio" name="apply[outType]" value="2"
+                                       onclick="changeType(this.value)" id="outType2"/>
+                                <label for="outType2">分包</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="otypename" {outType3} type="radio" name="apply[outType]" value="3"
+                                       onclick="changeType(this.value)" id="outType3"/>
+                                <label for="outType3">人员租赁/自由人</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        <tr class="typeForm">
+                            <td class="form_text_left_three blue" style="white-space:nowrap; width: 10%;">最高限价：</td>
+                            <td class="form_text_right_three">
+                                <input name="apply[limitPrice]" id="limitPrice" type="text"
+                                       onblur="calculateLimit(0);" class="txt formatMoney" value="{limitPrice}"
+                                       placeholder="外包最高价格，填写金额"/>
+                            </td>
+                            <td class="form_text_left_three blue" style="white-space:nowrap; width: 10%;">最高限价折扣：</td>
+                            <td class="form_text_right_three">
+                                <input name="apply[limitDiscount]" type="text" id='limitDiscount' value="{limitDiscount}"
+                                       onblur="calculateLimit(1);" class="txt" placeholder="外包最高折扣，填 0 到 10"/>
+                            </td>
+                            <td class="form_text_left_three blue"> </td>
+                            <td class="form_text_right_three">
+                            </td>
+                        </tr>
+                        <tr class="typeForm">
+                            <td class="form_text_left_three blue" style="white-space:nowrap; width: 10%;">工作量描述：</td>
+                            <td class="form_text_right" colspan="5">
+                                <textarea name="apply[workloadDescription]" id="workloadDescription"
+                                          class="txt_txtarea_font1">{workloadDescription}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="typeForm">
+                            <td class="form_text_left_three blue" style="white-space:nowrap; width: 10%;">项目要求：</td>
+                            <td class="form_text_right" colspan="5">
+                                <textarea name="apply[projectRequest]" id="projectRequest"
+                                          class="txt_txtarea_font1">{projectRequest}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="typeForm">
+                            <td class="form_text_left_three blue" style="white-space:nowrap; width: 10%;">客户要求：</td>
+                            <td class="form_text_right" colspan="5">
+                                <textarea name="apply[customerRequest]" id="customerRequest"
+                                          class="txt_txtarea_font1">{customerRequest}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="typeGrid">
+                            <td colspan="6">
+                                <div id="wapdiv">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">申请人信息
+                        <img src="images/icon/info_up.gif" id="aImg" onclick="showAndHide('aImg', 'aTb');"/></legend>
+                    <table class="form_in_table" id="aTb">
+                        <tr>
+                            <td class="form_text_left_three">申请人:</td>
+                            <td class="form_text_right_three">
+                                {createName}
+                            </td>
+                            <td class="form_text_left_three">申请时间:</td>
+                            <td class="form_text_right" colspan="3">
+                                {createTime}
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="6">
+                <input id="subAudit" type="button" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+                <input type="submit" class="txt_btn_a" value="保  存"/>&nbsp;&nbsp;
+                <input name="apply[id]" type="hidden" value="{id}" id="aid"/>
+                <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增工作日志</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmactivity.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-expensemodel.js"></script>
+	<script src="js/jquery/jquery.masonry.min.js"></script>
+
+	<script type="text/javascript" src="{#jsPath#}/esmworklog-countryinfo.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmworklog-add.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmworklog-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmworklog-expense.js" ></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	新增工作日志
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_worklog_esmworklog&action=add" onsubmit="return checkForm();" >
+	<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+		<tr>
+			<td colspan="6">
+				<fieldset>
+					<legend class="legend">
+						基 本 信 息
+						<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+					</legend>
+					<table class="form_in_table" id="baseTbl">
+					    <tr>
+							<td class="form_text_left_three">
+								<span class="blue">执行日期</span>
+							</td>
+							<td class="form_text_right_three" >
+								<input type="text" class="txt" name="esmworklog[executionDate]" onfocus="WdatePicker({maxDate:'{thisDate}'})" value="{thisDate}" id="executionDate" onchange="getMaxWorkRate();"/>
+							</td>
+				      		<td class="form_text_left_three">
+								<span class="blue">工作状态</span>
+				      		</td>
+				      		<td class="form_text_right_three" >
+								<select class="select" id="workStatus" name="esmworklog[workStatus]">
+									<option value="">请选择状态</option>
+									{workStatus}
+								</select>
+				      		</td>
+				      		<td class="form_text_left_three">
+								填报人员
+				      		</td>
+				      		<td class="form_text_right_three" >
+								<input type="text" class="readOnlyTxtNormal" readonly value="{createName}"/>
+				      		</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">
+								<span class="blue">所在国家</span>
+							</td>
+							<td class="form_text_right_three">
+								<select class="select" name="esmworklog[countryId]" id="country"></select>
+							    <input type="hidden" name="esmworklog[country]" id="countryName" />
+							    <input type="hidden" id="countryId" value="{countryId}"/>
+							</td>
+							<td class="form_text_left_three">
+								<span class="blue">所在省份</span>
+							</td>
+							<td class="form_text_right_three" >
+								<select class="select" name="esmworklog[provinceId]" id="province" ></select>
+							    <input type="hidden" name="esmworklog[province]" id="provinceName" />
+							    <input type="hidden" id="provinceId" value="{provinceId}"/>
+							</td>
+							<td class="form_text_left_three">
+								<span class="blue">所在城市</span>
+							</td>
+							<td class="form_text_right_three">
+								<select class="select" name="esmworklog[cityId]" id="city" ></select>
+							    <input type="hidden" name="esmworklog[city]" id="cityName" />
+							    <input type="hidden" id="cityId" value="{cityId}"/>
+							</td>
+					    </tr>
+					    <tr>
+				      		<td class="form_text_left_three">项目名称</td>
+				      		<td class="form_text_right_three" >
+				      			<input type="hidden" name="esmworklog[projectEndDate]" id="projectEndDate"/>
+				      			<input type="hidden" name="esmworklog[projectId]" id="projectId"/>
+				      			<input type="hidden" name="esmworklog[projectCode]" id="projectCode"/>
+				      			<input type="text" class="txt" name="esmworklog[projectName]" id="projectName" readonly="readonly"/>
+				      		</td>
+				      		<td class="form_text_left_three">任务名称</td>
+				      		<td class="form_text_right_three" >
+				      			<input type="hidden" name="esmworklog[activityEndDate]" id="activityEndDate"/>
+								<input type="hidden" name="esmworklog[activityId]" id="activityId"/>
+								<input type="text" class="txt" name="esmworklog[activityName]" id="activityName" readonly="readonly"/>
+				      		</td>
+					    	<td class="form_text_left_three">任务进度(%)</td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal" readonly name="esmworklog[workProcess]" id="workProcess"/>
+				      			<input type="hidden" id="thisActivityProcess" name="esmworklog[thisActivityProcess]"/>
+				      			<input type="hidden" id="thisProjectProcess" name="esmworklog[thisProjectProcess]"/>
+							</td>
+					    </tr>
+					    <tr>
+					    	<td class="form_text_left_three">完 成 量</td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" name="esmworklog[workloadDay]" id="workloadDay" onblur="calTaskProcess(this.value);"/>
+							</td>
+					    	<td class="form_text_left_three">工作量单位</td>
+							<td class="form_text_right">
+								<select class="select" id="workloadUnitView" onchange="changeWorkloadUnit();">
+									{workloadUnit}
+								</select>
+				      			<input type="hidden" id="workloadUnit" name="esmworklog[workloadUnit]" value=""/>
+							</td>
+					    	<td class="form_text_left_three"><span class="blue">投入工作比例(%)</span></td>
+							<td class="form_text_right">
+								<input type="text" class="txt" name="esmworklog[inWorkRate]" id="inWorkRate" value="{maxInWorkRate}"/>
+								<br/>最大可录入投入比例为：<span class="green" id="maxInWorkRateShow">{maxInWorkRate}</span>
+								<input type="hidden" id="maxInWorkRate" value="{maxInWorkRate}"/>
+								<span style="display:none;" id="executionDateShow" class="blue">{thisDate}</span>
+							</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">完成情况<br/>描述</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_long" name="esmworklog[description]" id="description" style="width:920px"></textarea>
+							</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">备注说明</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_long" name="esmworklog[problem]" id="problem" style="width:920px"></textarea>
+							</td>
+					    </tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="6">
+				<fieldset><legend class="legend"><b>费 用 信 息</b>
+					<!--img src="images/icon/info_right.gif" id="feeImg" onclick="alert('日志费用部分暂不可用')"/-->
+					<img src="images/icon/info_right.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl');initFee();"/>
+				</legend>
+				<table class="form_in_table" id="feeTbl" style="display:none">
+					<thead>
+						<tr align="left">
+							<td colspan="10">
+								当前模板:
+								<input type="text" class='txt' id="templateName" readonly="readonly"/>
+								<input type="hidden" id="templateId"/>
+								<input type="button" alt="#TB_inline?height=600&width=1000&inlineId=costTypeInner" title="选择自定义费用类型-在需要的费用类型上打勾即可" onclick="selectCostType2();" class="thickbox txt_btn_a" value="新增费用类型" />
+								<input type="button" class="txt_btn_a" value="保存到模板" onclick="saveTemplate();" title="此操作可以将当前费用类型保存到模板"/>
+							</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th width="4%"></th>
+							<th width="12%">费用大类</th>
+							<th width="12%">费用小类</th>
+							<th width="12%">费用金额</th>
+							<th width="9.7%">发票类型</th>
+							<th width="8.6%">发票金额</th>
+							<th width="8.6%">发票数量</th>
+							<th>操 作</th>
+							<th width="26%">备 注</th>
+						</tr>
+					</thead>
+					<tbody id="invbody"></tbody>
+					<tr class="tr_count">
+						<th width="30px"></th>
+						<td>合计</td>
+						<td></td>
+						<td>
+							<input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="esmworklog[costMoney]" id="countMoney" readonly="readonly"/>
+							<input type="hidden" name="esmworklog[feeRegular]" id="feeRegular"/>
+							<input type="hidden" name="esmworklog[feeSubsidy]" id="feeSubsidy"/>
+						</td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:90px" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="esmworklog[invoiceMoney]" id="invoiceMoney" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:80px" name="esmworklog[invoiceNumber]" id="invoiceNumber" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/></td>
+						<td align="left">常规费用 : <span id="feeRegularView">0</span>, 补贴费用 : <span id="feeSubsidyView">0</span></td>
+					</tr>
+					<tr class="tr_odd">
+						<td colspan="6" style="text-align:left;">
+							<span class="blue">
+								提示：填写费用金额、发票金额时，可直接填写数字或者以"+"接连的加法式子，金额会自动计算。
+							</span>
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+	    <tr>
+			<td class="txt_btn" colspan="4">
+			    <input type="hidden" id="userId" value="{userId}"/>
+			    <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+			    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+	    </tr>
+		<tr style="display:none">
+			<td colspan="6">
+				<div id="costTypeInner"></div>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

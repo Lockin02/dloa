@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看工作日志</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="view/template/engineering/worklog/js/esmworklog-expense.js" ></script>
+   	<script type="text/javascript" src="view/template/engineering/worklog/js/esmworklog-view.js" ></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	工作日志
+    </span>
+</div>
+	<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+		<tr>
+			<td colspan="6">
+				<fieldset>
+					<legend class="legend">
+						基 本 信 息
+						<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+					</legend>
+					<table class="form_in_table" id="baseTbl">
+					    <tr>
+							<td class="form_text_left_three">
+								执行日期
+							</td>
+							<td class="form_text_right_three" >{executionDate}</td>
+				      		<td class="form_text_left_three">
+								工作状态
+				      		</td>
+				      		<td class="form_text_right_three" >
+								{workStatus}
+				      		</td>
+				      		<td class="form_text_left_three">
+								填报人员
+				      		</td>
+				      		<td class="form_text_right_three" >
+								{createName}
+				      		</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">
+								所在国家
+							</td>
+							<td class="form_text_right_three">
+								{country}
+							</td>
+							<td class="form_text_left_three">
+								所在省份
+							</td>
+							<td class="form_text_right_three" >
+								{province}
+							</td>
+							<td class="form_text_left_three">
+								所在城市
+							</td>
+							<td class="form_text_right_three">
+								{city}
+							</td>
+					    </tr>
+					    <tr>
+				      		<td class="form_text_left_three">项目名称</td>
+				      		<td class="form_text_right_three" >
+				     			{projectName}
+				      		</td>
+				      		<td class="form_text_left_three">任务名称</td>
+				      		<td class="form_text_right_three" >
+								{activityName}
+				      		</td>
+					    	<td class="form_text_left_three">任务进度</td>
+							<td class="form_text_right_three">
+								<span id="workProcessShow">{workProcess} %</span>
+								<input type="hidden" id="workProcess" value="{workProcess}"/>
+							</td>
+					    </tr>
+					    <tr>
+					    	<td class="form_text_left_three">完 成 量</td>
+							<td class="form_text_right_three">
+								{workloadDay}
+							</td>
+					    	<td class="form_text_left_three">工作量单位</td>
+							<td class="form_text_right_three">
+								{workloadUnitName}
+							</td>
+					    	<td class="form_text_left_three">投入工作比例</td>
+							<td class="form_text_right_three">
+								{inWorkRate} %
+							</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">完成情况描述</td>
+							<td class="form_text_right" colspan="5">{description}</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">备注说明</td>
+							<td class="form_text_right" colspan="5">{problem}</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">审核结果</td>
+							<td class="form_text_right" colspan="5">{assessResultName}</td>
+					    </tr>
+					    <tr>
+							<td class="form_text_left_three">审核建议</td>
+							<td class="form_text_right" colspan="5">{feedBack}</td>
+					    </tr>
+					</table>
+				</fieldset>
+			</td>
+	    </tr>
+		<tr>
+			<td colspan="6">
+				<fieldset><legend class="legend"><b>费 用 信 息</b>
+					<img src="images/icon/info_right.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl');"/>
+				</legend>
+				<table class="form_in_table" id="feeTbl" style="display:none">
+					<thead>
+						<tr class="main_tr_header">
+							<th width="12%">费用大类</th>
+							<th width="12%">费用小类</th>
+							<th width="12%">费用金额</th>
+							<th width="9.7%">发票类型</th>
+							<th width="8.6%">发票金额</th>
+							<th width="8.6%">发票数量</th>
+							<th width="26%">备 注</th>
+							<th>审核结果</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">{invbody}</tbody>
+					<tr class="tr_count">
+						<td style="text-align:left">合计</td>
+						<td></td>
+						<td class="formatMoney">{costMoney}</td>
+						<td></td>
+						<td class="formatMoney">{invoiceMoney}</td>
+						<td>{invoiceNumber}</td>
+						<td align="left">常规费用 : <span id="feeRegularView">0</span>, 补贴费用 : <span id="feeSubsidyView">0</span></td>
+						<td>
+							<input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/>
+							<input type="hidden" name="esmworklog[feeRegular]" id="feeRegular" value="{feeRegular}"/>
+							<input type="hidden" name="esmworklog[feeSubsidy]" id="feeSubsidy" value="{feeSubsidy}"/>
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+	    <tr>
+			<td class="txt_btn" colspan="4">
+			    <input type="hidden" id="userId" value="{userId}"/>
+			    <input type="hidden" id="costdetailId" value="{costdetailId}"/>
+			    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				<input type="hidden" id="weekId" name="esmworklog[weekId]" value="{weekId}" />
+				<input type="hidden" id="id" name="esmworklog[id]" value="{id}"/>
+			</td>
+	    </tr>
+	</table>
+</body>
+</html>

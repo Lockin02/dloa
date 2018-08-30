@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>资产状态汇总报表</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<script src="webreport/CreateControl.js" type="text/javascript"></script>
+	<script src="webreport/GRInstall.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+
+	<script type="text/javascript" src="view/template/asset/report/js/assetreport-statussummary.js"></script>
+</head>
+<body style="margin:0">
+<table style="width:100%;">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+					<td class="form_text_right" width="60%">
+						日期 ：
+						<input type="text" class="txtshort Wdate" id="beginDate" value="{beginDate}" onfocus="WdatePicker();"/> 至
+						<input type="text" class="txtshort Wdate" id="endDate" value="{endDate}" onfocus="WdatePicker();"/>
+						公司 ：
+						<select class="select" id="company" style="width:100px;">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="companyHidden" value="{company}"/>
+						部门：
+						<input type="text" class="txt" id="deptName" value="{deptName}" readonly="readonly"/>
+		      			<input type="hidden" id="deptId" value="{deptId}"/>
+						行政区域：
+						<select class="select" id="agencyCode" style="width:100px;">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="agencyCodeHidden" value="{agencyCode}"/>
+						<input type="hidden" id="deptIdStr" value="{deptIdStr}"/>
+
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="search();" value=" 查  询 "/>
+						<span class="blue">双击单元格查看资产明细</span>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	//区域权限
+	var agencyCodeStr;
+	$.ajax({
+		type : 'POST',
+		url : '?model=asset_assetcard_assetcard&action=getAgencyStr',
+		async : false,
+		success : function(data) {
+			agencyCodeStr = data;
+		}
+	});
+	var dataUrl =
+	"view/template/asset/report/assetreport-statussummary.php"
+	+ "?beginDate=" + $("#beginDate").val()
+	+ "&endDate=" + $("#endDate").val()
+	+ "&company=" + $("#companyHidden").val()
+	+ "&deptId=" + $("#deptId").val()
+	+ "&agencyCode=" + $("#agencyCodeHidden").val()
+	+ "&agencyCodeStr=" + agencyCodeStr
+	+ "&deptIdStr=" + $("#deptIdStr").val();
+//	alert(dataUrl);
+	//用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表模板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+	CreateDisplayViewerEx("100%", "92%",
+	"POST::view/template/asset/report/assetreport-statussummary.grf",dataUrl,
+	true,
+	"<param name='RowSelection' value=false><param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+</script>
+</body>
+</html>

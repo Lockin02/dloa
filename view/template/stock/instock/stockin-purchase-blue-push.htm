@@ -1,0 +1,181 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>下推外购入库单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockin-stockinfo-combogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-arrival.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockin-arrival-combogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockin-productinfo-combogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockin-contract-combogrid.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockin-purchase-add.js"></script>
+</head>
+<script type="text/javascript">
+	$(document).ready(function() {
+		reloadItemStock();
+		//判断是否有审核权限
+		if ("{auditLimit}" != "1") {
+			$("#auditButton").hide();
+		}
+
+		//设置从表的仓库默认值
+		var itemscount = $('#itemscount').val() * 1;
+		for (var i = 0; i <= itemscount; i++) {
+			$("#inStockId" + i).val($("#inStockId").val());
+			$("#inStockCode" + i).val($("#inStockCode").val());
+			$("#inStockName" + i).val($("#inStockName").val());
+		}
+	});
+</script>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	<font color="blue">下推外购入库单</font>
+    </span>
+</div>
+<form action="?model=stock_instock_stockin&action=add" method="post" id="form1" onsubmit="return checkForm();">
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">单据日期</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" id="auditDate" name="stockin[auditDate]" onfocus="WdatePicker()" value="{auditDate}"
+					   class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购方式</td>
+			<td class="form_text_right">
+				<select class="select" name="stockin[purchMethod]">
+					{purchMethod}
+				</select>
+			</td>
+			<td class="form_text_left">往来科目</td>
+			<td class="form_text_right">
+				<select class="select" name="stockin[accountingCode]">
+					{accountingCode}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">源单类型</td>
+			<td class="form_text_right">
+				<input type="text" id="relDocTypeName" class="readOnlyTxtNormal" value="{relDocTypeName}"
+					   readonly="readonly"/>
+				<input type="hidden" name="stockin[relDocType]" id="relDocType" value="{relDocType}"/>
+			</td>
+			<td class="form_text_left">源单编号</td>
+			<td class="form_text_right" width="30%">
+				<input type="text" class="readOnlyTxtNormal" name="stockin[relDocCode]" value="{relDocCode}"
+					   readonly="readonly"/>
+				<input type="hidden" name="stockin[relDocId]" value="{relDocId}"/>
+				<input type="hidden" name="stockin[relDocName]" value="{relDocName}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供 应 商</td>
+			<td class="form_text_right">
+				<input type="text" id="supplierName" class="readOnlyTxtNormal" name="stockin[supplierName]"
+					   value="{supplierName}" readonly="readonly"/>
+				<input type="hidden" id="supplierId" name="stockin[supplierId]" value="{supplierId}"/>
+			</td>
+			<td class="form_text_left">付款日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="stockin[payDate]" onfocus="WdatePicker()"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同编号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="contractCode" name="stockin[contractCode]"/>
+				<input type="hidden" id="contractId" name="stockin[contractId]"/>
+				<input type="hidden" id="contractType" name="stockin[contractType]"/>
+				<input type="hidden" id="contractObjCode" name="stockin[contractObjCode]"/>
+				<input type="button" value="查看合同审批" class="txt_btn_a" onclick="viewContracAudit()"/>
+			</td>
+			<td class="form_text_left">合同名称</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" id="contractName" name="stockin[contractName]"
+					   readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购订单号</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" id="purOrderCode" name="stockin[purOrderCode]"
+					   value="{purOrderCode}" readonly="readonly"/>
+				<input type="hidden" id="purOrderId" name="stockin[purOrderId]" value="{purOrderId}"/>
+			</td>
+			<td class="form_text_left">采 购 员</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" id="purchaserName" name="stockin[purchaserName]"
+					   value="{purchaserName}" readonly="readonly"/>
+				<input type="hidden" id="purchaserCode" name="stockin[purchaserCode]" value="{purchaserCode}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收料仓库</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" id="inStockName" class="txt" name="stockin[inStockName]" value="{inStockName}"/>
+				<input type="hidden" id="inStockId" name="stockin[inStockId]" value="{inStockId}"/>
+				<input type="hidden" id="inStockCode" name="stockin[inStockCode]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea style="width:80%;" class="txt_txtarea_font" name="stockin[remark]"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" id="itemtable">
+					<thead>
+					<tr>
+						<td colspan="15" class="form_header">
+							物料清单&nbsp;&nbsp; <span id="proTipInfo" style="color:#6CA6CD;text-align:center"></span>
+						</td>
+					</tr>
+					<tr class="main_tr_header">
+						<th>
+							<input type="hidden" id="itemscount" value="{itemscount}"/>
+						</th>
+						<th>序号</th>
+						<th>物料编码</th>
+                        <th>物料分类</th>
+                        <th>K3编码</th>
+						<th>物料名称</th>
+						<th>规格型号</th>
+						<th>单位</th>
+						<th>批次号</th>
+						<th>应收数量</th>
+						<th>实收数量</th>
+						<th>质检合格数</th>
+						<th>收料仓库</th>
+						<th>单价</th>
+						<th>金额</th>
+					</tr>
+					</thead>
+					<tbody id="itembody">
+					{stockinItems}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="hidden" id="isRed" name="stockin[isRed]" value="0"/>
+				<input type="hidden" id="docStatus" name="stockin[docStatus]" value="WSH"/>
+				<input type="hidden" name="stockin[docType]" value="{docType}"/>
+				<input type="submit" value=" 保存 " class="txt_btn_a"/>
+				<input type="button" id="auditButton" value=" 审 核 " class="txt_btn_a" onclick="return confirmAudit();"/>
+				<input type="button" value=" 返 回 " class="txt_btn_a" onclick="closeFun()"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

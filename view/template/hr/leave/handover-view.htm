@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/handover-edit.js"></script>
+<script type="text/javascript" src="js/common/approval.js"></script>
+
+<script>
+      $(function(){
+         var Exa = $("#ExaStatus").val();
+         if(Exa == '完成' || Exa == '部门审批'){
+             $("#aff").hide();
+             $("#approvalList").show();
+         }else{
+             $("#aff").show();
+             $("#approvalList").hide();
+         }
+      })
+   </script>
+</head>
+<body>
+<div id="dy">
+<div align="center" cellpadding="5" >
+
+<table class="tableA">
+	<tr>
+		<td colspan="6" bgcolor="#ECECFF">
+		<h2>离职交接清单</h2></td>
+	</tr>
+	<tr>
+		<td class="td_left">员工姓名</td>
+		<td class="td_right">{userName}</td>
+		<td class="td_left">部门名称</td>
+		<td class="td_right">{deptName}</td>
+		<td class="td_left">职位</td>
+		<td class="td_right">{jobName}</td>
+
+	</tr>
+	<tr>
+		<td class="td_left">入职日期</td>
+		<td class="td_right">{entryDate}</td>
+		<td class="td_left">离职日期</td>
+		<td class="td_right">{quitDate}</td>
+		<td class="td_left">离职类型</td>
+		<td class="td_right">{quitTypeName}</td>
+	</tr>
+	<tr>
+		<td class="td_left">离职原因</td>
+		<td colspan="3" align="left">
+		{quitReson}
+		</td>
+		<td class="td_left">编制</td>
+		<td class="td_right">{companyName}</td>
+	</tr>
+	{fromworkList}
+
+</table>
+<table class="tableA">
+   <tr>
+		<td class="td_left">员工确认意见</td>
+		<td class="td_right" id="staffAffCon">{staffAffCon}</td>
+		<td class="td_left">确认时间</td>
+		<td class="td_right">{staffAffDT}</td>
+	</tr>
+   <tr>
+		<td class="td_left">确认备注</td>
+		<td class="td_right" colspan='3' align='left'>{staffConRemark}</td>
+	</tr>
+	<!--
+   <tr id='approvalList'>
+		<td colspan="4" class="td_table" id="approvalView">
+		    <input type="hidden" id="type" value="handover" />
+		    <input type="hidden" id="pid" value="{id}" />
+		    <input type="hidden" id="itemType" value="oa_leave_handover" />
+		</td>
+	</tr> -->
+</table>
+</div>
+</div>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="6">
+		   <input type="hidden" id="id" name="handover[handoverId]" value="{id}" />
+		   <input type="hidden" id="deptId" name="handover[deptId]" value="{deptId}" />
+		   <input type="hidden" value="{ExaStatus}" id="ExaStatus" />
+		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+	</tr>
+</table>
+</body>
+</html>

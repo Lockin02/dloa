@@ -1,0 +1,161 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+
+<script type="text/javascript" src="view/template/engineering/plan/js/rdplan-add.js"></script>
+<script>
+	var uploadfile;
+	$(function() {
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_rd_project_plan",
+			"serviceId":"{id}"
+		});
+	});
+
+	$().ready(function(){
+		$("#planBeginDate").formValidator({
+	    onshow: "请选择计划启动时间",
+	    onfocus: "请选择日期",
+	    oncorrect: "你输入的日期合法"
+	}).inputValidator({
+	    min: "1900-01-01",
+	    max: "2100-01-01",
+	    type: "date",
+	    onerror: "日期必须在\"1900-01-01\"和\"2100-01-01\"之间"
+	}); //.defaultPassed();
+
+	$("#planEndDate").formValidator({
+	    onshow: "请选择计划完成时间",
+	    onfocus: "请选择日期",
+	    oncorrect: "你输入的日期合法"
+	}).inputValidator({
+	    min: "1900-01-01",
+	    max: "2100-01-01",
+	    type: "date",
+	    onerror: "日期必须在\"1900-01-01\"和\"2100-01-01\"之间"
+    }).compareValidator({
+		desid : "planBeginDate",
+		operateor : ">=",
+		onerror : "计划完成日期不能小于计划开始日期"
+	}); // .defaultPassed();
+})
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+	<div class="main_form">
+		<form id="form1" action="?model=engineering_plan_rdplan&action={loca}" method="post"/>
+			<table class="form_main_table">
+				<tr>
+					<td class="main_tr_header" colspan="4">基本信息</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">所属项目名称</td>
+					<td class="form_view_right" colspan="3">{projectName}</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">上级计划</td>
+					<td class="form_text_right" colspan="3">{parentName}</td>
+				</tr>
+
+				<tr>
+					<td class="form_text_left">计划名称</td>
+					<td class="form_view_right" colspan="3">
+						<input type="hidden" name="rdplan[id]" value="{id}"/>
+						<input type="text" name="rdplan[planName]" value="{planName}" id="planName" class="txt"/>
+						<span class='red'>[*]</span>
+						<div id="planNameTip" class="tipShortTxt"></div>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="form_text_left">创建人</td>
+					<td class="form_text_right">{createName}</td>
+					<td class="form_text_left">创建日期</td>
+					<td class="form_text_right">{createTime}</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">完成率</td>
+					<td class="form_view_right">{effortRate}</td>
+					<td class="form_text_left">偏差率</td>
+					<td class="form_view_right">{warpRate}</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">计划开始时间</td>
+					<td class="form_view_right">
+						<input type="text" name="rdplan[planBeginDate]" value="{planBeginDate}"id="planBeginDate" class="txt" onfocus="WdatePicker()"/>
+						<span class='red'>[*]</span>
+						<div id="planBeginDateTip" class="tipShortTxt"></div>
+					</td>
+					<td class="form_text_left">计划完成时间</td>
+					<td class="form_view_right">
+						<input type="text" name="rdplan[planEndDate]" value="{planEndDate}" class="txt" id="planEndDate" onfocus="WdatePicker()"/>
+						<span class='red'>[*]</span>
+						<div id="planEndDateTip" class="tipShortTxt"></div>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">实际开始时间</td>
+					<td class="form_view_right">{realBeginDate}</td>
+					<td class="form_text_left">实际完成时间</td>
+					<td class="form_view_right">{realEndDate}</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">计划工作量</td>
+					<td class="form_view_right">
+						<input type="text" name="rdplan[appraiseWorkload]" value="{appraiseWorkload}" class="txt"/>
+					</td>
+					<td class="form_text_left">已投入工作量</td>
+					<td class="form_view_right">{putWorkload}</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">描述</td>
+					<td class="form_view_right" colspan="3">
+	                    <textarea id="description" name="rdplan[description]" class="txt_txtarea_font">{description}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">计划附件</td>
+					<td class="form_view_right" colspan="3">
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress"></div>
+							<div class="upload"><span id="swfupload"></span> <input
+								id="btnCancel" type="button" value="中止上传"
+								onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+							</div>
+							<div id="uploadfileList" class="upload">{file}</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<input type="submit" class="txt_btn_a" value="保存 ">
+						<input type="button" class="txt_btn_a" onclick="self.parent.tb_remove();" value="关闭 ">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>
+
+

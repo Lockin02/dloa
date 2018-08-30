@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script>
+			function ifChange(){
+				var projectLevelP = $('#projectLevelP').val();
+				var projectLevel = $('#projectLevel').val();
+				if( projectLevelP == projectLevel ){
+					alert( '无任何修改,请重新选择优先级!' );
+					return false;
+				}else{
+					return true;
+				}
+			}
+		</script>
+        <title>项目优先级修改</title>
+    </head>
+    <body>
+	        <form method="POST" id="form1" onSubmit="return ifChange();" action="?model=rdproject_project_rdproject&action=rpUpdateLevel">
+	            <table class="form_main_table">
+					<tr>
+						<div class="main_head">
+						    <span class="main_head_title">
+						      	<font color="blue">项目优先级修改</font>
+						    </span>
+						</div>
+					</tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        原优先级
+	                    </td>
+	                    <td class="form_view_right">
+                            {rdproject[projectLevelC]}
+                            <input type="hidden" id="projectLevelP" value="{rdproject[projectLevel]}"/>
+                            <input type="hidden" id="projectName" name="rdproject[projectName]" value="{rdproject[projectName]}"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        优先级
+	                    </td>
+	                    <td class="form_view_right">
+	                        <select class="select" id="projectLevel" name="rdproject[projectLevel]" value="{rdproject[projectLevel]}">
+	                            {projectLevel}
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="2">
+	                    	<input type="hidden" id="id" name="rdproject[id]" value="{rdproject[id]}">
+	                        <input type="submit" class="txt_btn_a" value="保存">
+	                        <input type="button" class="txt_btn_a" value="关闭" onclick="closeFun()">
+	                    </td>
+	                </tr>
+	            </table>
+	        </form>
+    </body>
+</html>

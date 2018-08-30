@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+var uploadfile;
+$(function() {
+    // 附件类型
+    fileTypeArr = getData('FJLX');
+    addDataToSelect(fileTypeArr, 'fileType');
+	uploadfile=createSWFUpload({
+	   "serviceType":$("#serviceType").val()
+	});
+	uploadfile2=createSWFUpload({
+	    "serviceType":$("#serviceType2").val()
+	},{
+		button_placeholder_id:'swfupload2',
+		fileListId:'uploadfileList2',
+		progressTarget:'fsUploadProgress2'
+	});
+    $('#fileType').change(function(){
+        if($('#fileType').val() != ''){
+            typeName=$('#fileType').find('option:selected').text();
+            typeId=$('#fileType').val();
+            uploadfile2.addPostParam('typeName', typeName);
+            uploadfile2.addPostParam('typeId', typeId);
+        }
+    });
+});
+function toApp() {
+   var handle = $("#handle").val();
+   if(handle=="1"){
+      document.getElementById('form1').action = "index1.php?model=contract_contract_contract&action=uploadfile&handle=1";
+   }else{
+      document.getElementById('form1').action = "index1.php?model=contract_contract_contract&action=uploadfile";
+   }
+}
+
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=contract_contract_contract&action=uploadfile"  >
+<table class="form_main_table">
+	 <tr>
+
+				<td class="form_text_left">非加密区文件</td>
+				<td class="form_text_right" colspan="3">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span>
+				   <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+				</td>
+				<td class="form_text_left" ><span class="red" title="合同文本只能由相关人员查看">加密区文件</span></td>
+				<td class="form_text_right" colspan="2">
+                    <b>附件类型</b> ： <select  id="fileType"><option value="">..请选择...</option></select>
+				<div class="upload" >
+				<div class="upload" id="fsUploadProgress2" ></div>
+				<div class="upload"><span id="swfupload2" ></span> <input
+					id="btnCancel2" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList2" class="upload"></div>
+				</div>
+
+				</td>
+	</tr>
+<table >
+	<tr>
+		<td colspan="4">&nbsp;&nbsp;
+		<font color='blue'> 温馨提示：</br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		上传的“合同文本”只能由赋权或相关人员查看.</br>
+		<font /></td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		 <input type="hidden" name="contract[serviceId]" id="serviceId" value="{serviceId}" />
+	     <input type="hidden" name="contract[serviceType]" id="serviceType" value="{serviceType}" />
+	     <input type="hidden" name="contract[serviceType2]" id="serviceType2" value="{serviceType2}" />
+	     <input type="hidden" id="handle" value="{handle}" />
+		<input type="submit" class="txt_btn_a" value=" 保  存 "  onclick="toApp();"/>
+		</td>
+	</tr>
+</table>
+</table>
+</form>
+</body>
+</html>

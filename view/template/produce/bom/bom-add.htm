@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增BOM表</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/common/businesspage.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/bom-add.js" ></script>   <script type="text/javascript">
+		$(document).ready(function(){
+			addItems();
+       })
+   </script></head>
+
+<body>
+   <form id="form1" method="post" action="?model=produce_bom_bom&action=add" onsubmit="return checkForm();">
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增BOM表
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left">物料编码</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="productCode" name="bom[productCode]" />
+      			 <input type="hidden" id="productId" name="bom[productId]" />
+      			 <span class="red">[*]</span>
+      		</td>
+      		<td class="form_text_left">物料名称</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="productName" name="bom[productName]" />
+      			 <span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">规格型号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="pattern" name="bom[pattern]" />
+      		</td>
+      		<td class="form_text_left">单位</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="unitName" name="bom[unitName]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">物料属性</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="propertiesName"  />
+      			 <input type="hidden" id="properties" name="bom[properties]" />
+      		</td>
+      		<td class="form_text_left">数量</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="proNum" name="bom[proNum]" value="1" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">使用状态</td>
+      		<td class="form_text_right" >
+      			 <select id="useStatus" name="bom[useStatus]" class="select" >
+      			 		<option value="1" >未使用</option>
+      			 </select>
+      		</td>
+      		<td class="form_text_left">版本</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="version" name="bom[version]" value="1.0" />
+      			  <span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="3">
+				<textarea  style="width:90%"  class="txt_txtarea_font"  name="bom[remark]" id="remark"></textarea>
+      		</td>
+       </tr>
+		<tr>
+				<td colspan="4">
+				<table class="main_table" id="itemtable">
+					<thead>
+						<tr>
+							<td colspan="8" class="form_header">详细</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>
+								<img  src="images/add_item.png" align="absmiddle" onclick="addItems();"  title="新增物料" alt="新增物料" />
+								<input type="hidden" id="itemscount" value="0" />
+							</th>
+							<th>序号</th>
+							<th>物料编码</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>物料属性</th>
+							<th>单位</th>
+							<th>用量</th>
+						</tr>
+					</thead>
+					<tbody id="itembody">
+
+					</tbody>
+				</table>
+			</td>
+		</tr>                <tr>
+      		<td class="txt_btn" colspan="4">
+	      	   <input type="hidden" id="docStatus" name="bom[docStatus]" value="WSH" />
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

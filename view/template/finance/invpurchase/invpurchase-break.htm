@@ -1,0 +1,276 @@
+<html>
+	<head>
+		<title>
+			拆分采购发票
+		</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-break.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				拆分采购发票 -- {formTypeCN}
+			</span>
+		</div>
+		<form id="form1" method="post" action="?model=finance_invpurchase_invpurchase&action=break" onsubmit="return checkform();" onkeypress="return NoSubmit(event);">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						供应商名称
+					</td>
+					<td class="form_text_right" width="30%">
+						{supplierName}
+						<input type="hidden" name="invpurchase[supplierId]" value="{supplierId}"/>
+						<input type="hidden" name="invpurchase[supplierName]" value="{supplierName}"/>
+					</td>
+					<td class="form_text_left">
+						地址
+					</td>
+					<td class="form_text_right">
+						{address}
+						<input type="hidden" name="invpurchase[address]" value="{address}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						发票号码
+					</td>
+					<td class="form_text_right">
+						{objNo}
+						<input type="hidden" name="invpurchase[objNo]" value="{objNo}"/>
+					</td>
+					<td class="form_text_left">
+						付款日期
+					</td>
+					<td class="form_text_right">
+						{payDate}
+						<input type="hidden" name="invpurchase[payDate]" value="{payDate}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						发票类型
+					</td>
+					<td class="form_text_right">
+						{invTypeCN}
+						<input type="hidden" name="invpurchase[invType]" value="{invType}"/>
+					</td>
+					<td class="form_text_left">
+						采购方式
+					</td>
+					<td class="form_text_right">
+						{purTypeCN}
+						<input type="hidden" name="invpurchase[purType]" value="{purType}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						开户银行
+					</td>
+					<td class="form_text_right">
+						{bank}
+						<input type="hidden" name="invpurchase[bank]" value="{bank}"/>
+					</td>
+					<td class="form_text_left">
+						业务类型
+					</td>
+					<td class="form_text_right">
+						{busType}
+						<input type="hidden" name="invpurchase[busType]" value="{busType}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						币别
+					</td>
+					<td class="form_text_right">
+						{currency}
+						<input type="hidden" name="invpurchase[currency]" value="{currency}"/>
+					</td>
+					<td class="form_text_left">
+						汇率
+					</td>
+					<td class="form_text_right">
+						{excRate}
+						<input type="hidden" name="invpurchase[excRate]" value="{excRate}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						源单类型
+					</td>
+					<td class="form_text_right">
+						{sourceTypeCN}
+						<input type="hidden" name="invpurchase[sourceType]" value="{sourceType}"/>
+					</td>
+					<td class="form_text_left">
+						源单编号
+					</td>
+					<td class="form_text_right">
+						{menuNo}
+						<input type="hidden" name="invpurchase[menuNo]" value="{menuNo}"/>
+						<input type="hidden" name="invpurchase[amount]" id="allAmount" value="0"/>
+						<input type="hidden" name="invpurchase[formAssessment]" id="formAssessment" value="0"/>
+						<input type="hidden" name="invpurchase[formCount]" id="formCount" value="0"/>
+						<input type="hidden" name="invpurchase[formNumber]" id="formNumber" value="0"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						往来科目
+					</td>
+					<td class="form_text_right">
+						{subjects}
+						<input type="hidden" name="invpurchase[subjects]" value="{subjects}"/>
+					</td>
+					<td class="form_text_left">
+						单据日期
+					</td>
+					<td class="form_text_right">
+						{formDate}
+						<input type="hidden" name="invpurchase[formDate]" value="{formDate}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						税率(%)
+					</td>
+					<td class="form_text_right">
+						{taxRate}
+						<input type="hidden" name="invpurchase[taxRate]" value="{taxRate}"/>
+					</td>
+					<td class="form_text_left">
+						总税额
+					</td>
+					<td class="form_text_right formatMoney">
+						{formAssessment}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						总金额
+					</td>
+					<td class="form_text_right formatMoney">
+						{amount}
+					</td>
+					<td class="form_text_left">
+						价税合计
+					</td>
+					<td class="form_text_right formatMoney">
+						{formCount}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						关联采购订单编号
+					</td>
+					<td class="form_text_right" colspan="3">
+						{purcontCode}
+						<input type="hidden" name="invpurchase[purcontCode]" value="{purcontCode}"/>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+					<tr align="left">
+						<td colspan="12">
+							详细：
+							<input type="hidden" id="invnumber" value="{invnumber}"/>
+						</td>
+					</tr>
+					<tbody id="invbody">
+						<tr class="main_tr_header" align="center">
+							<th width="5%">序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th width="8%">数量</th>
+							<th width="8%">单价</th>
+							<th width="8%">含税单价</th>
+							<th width="8%">金额</th>
+							<th width="8%">税额</th>
+							<th width="8%">价税合计</th>
+							<th width="8%">拆分数量</th>
+						</tr>
+						{invpurdetail}
+					</tbody>
+				</table>
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						主管
+					</td>
+					<td class="form_text_right" width="30%">
+						{head}
+						<input type="hidden" name="invpurchase[head]" value="{head}"/>
+						<input type="hidden" name="invpurchase[headId]" value="{headId}"/>
+					</td>
+					<td class="form_text_left">
+						部门
+					</td>
+					<td class="form_text_right">
+						{departments}
+						<input type="hidden" name="invpurchase[departments]" value="{departments}"/>
+						<input type="hidden" name="invpurchase[departmentsId]" value="{departmentsId}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						记账
+					</td>
+					<td class="form_text_right">
+						{acount}
+						<input type="hidden" name="invpurchase[acount]" value="{acount}"/>
+						<input type="hidden" name="invpurchase[acountId]" value="{acountId}"/>
+					</td>
+					<td class="form_text_left">
+						业务员
+					</td>
+					<td class="form_text_right">
+						{salesman}
+						<input type="hidden" name="invpurchase[salesman]" value="{salesman}"/>
+						<input type="hidden" name="invpurchase[salesmanId]" value="{salesmanId}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						创建人
+					</td>
+					<td class="form_text_right">
+						{createName}
+					</td>
+					<td class="form_text_left">
+						创建时间
+					</td>
+					<td class="form_text_right">
+						{createTime}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						备注
+					</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="textarea_read" name="invpurchase[remark]" readonly="readonly">{remark}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="4">
+						<input type="hidden"  name="invpurchase[id]" value="{id}"/>
+						<input type="hidden"  name="invpurchase[objCode]" value="{objCode}"/>
+						<input type="hidden"  name="invpurchase[status]" value="{status}"/>
+						<input type="hidden"  name="invpurchase[ExaStatus]" value="{ExaStatus}"/>
+						<input type="hidden"  name="invpurchase[payStatus]" value="{payStatus}"/>
+						<input type="hidden"  name="invpurchase[formType]" value="{formType}"/>
+						<input type="hidden"  name="invpurchase[purcontId]" value="{purcontId}"/>
+						<input type="submit" class="txt_btn_a" value="确  定"/>
+						<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun()"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

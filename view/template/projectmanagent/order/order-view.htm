@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css"
+	media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/common/approval.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-to-orderequ.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/order/js/order-view.js"></script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">销售合同</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">是否签约</td>
+		<td class="form_text_right">{sign}</td>
+		<td class="form_text_left">纸质合同状态</td>
+		<td class="form_text_right">{orderstate}</td>
+		<td class="form_text_left">合同属性</td>
+		<td class="form_text_right">{orderNatureName}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">鼎利合同号</td>
+		<td class="form_text_right">{orderCode}</td>
+		<td class="form_text_left">临时合同号</td>
+		<td class="form_text_right">{orderTempCode}</td>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right">{orderName}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">金额币别</td>
+		<td class="form_text_right"><span id="currency">{currency}</span>
+		</td>
+		<td class="form_text_left">预计金额(人民币)</td>
+		<td class="form_text_right formatMoney">{orderTempMoney}</td>
+		<td class="form_text_left">签约金额(人民币)</td>
+		<td class="form_text_right formatMoney">{orderMoney}</td>
+	</tr>
+	<tr id="currencyRate" style="display:none">
+		<td class="form_text_left">汇率</td>
+		<td class="form_text_right">{rate}</td>
+		<td class="form_text_left">预计金额<span id="cur"></span></td>
+		<td class="form_text_right formatMoney">{orderTempMoneyCur}</td>
+		<td class="form_text_left">签约金额<span id="cur1"></span></td>
+		<td class="form_text_right formatMoney">{orderMoneyCur}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">{customerName}</td>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">{customerType}</td>
+		<td class="form_text_left">合同负责人</td>
+		<td class="form_text_right">{prinvipalName}</td>
+	</tr>
+    <tr>
+        <td class="form_text_left">所属省份</td>
+		<td class="form_text_right">{orderProvince}</td>
+		<td class="form_text_left">所属城市</td>
+		<td class="form_text_right">{orderCity}</td>
+		<td class="form_text_left">合同归属区域</td>
+		<td class="form_text_right">{areaName}</td>
+    </tr>
+	<tr>
+		<td class="form_text_left">客户合同号</td>
+		<td class="form_text_right">{customerContNum}</td>
+		<td class="form_text_left">客户地址</td>
+		<td class="form_text_right">{address}</td>
+        <td class="form_text_left">区域负责人</td>
+		<td class="form_text_right">{areaPrincipal}</td>
+	</tr>
+	<tr>
+
+		<td class="form_text_left">发票类型</td>
+		<td class="form_text_right">{invoiceType}</td>
+		<td class="form_text_left">计划交货日期</td>
+		<td class="form_text_right">{deliveryDate}</td>
+        <td class="form_text_left">签收类型</td>
+		<td class="form_text_right">
+		<div id="signinType">{signinType}</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read" readonly="readonly">{remark}</textarea></td>
+        <td class="form_text_left">父合同号</td>
+		<td class="form_text_right">{parentOrder}</td>
+	</tr>
+	<tr>
+		<td align="center" colspan="2">附件 &nbsp;{file}</td>
+		<td align="center" colspan="2">合同文本&nbsp;{file2}</td>
+		<td class="form_text_left">发货条件</td>
+		<td class="form_text_right">{shipCondition}</td>
+	</tr>
+</table>
+<div id="borrowOrderequ">
+    <input type="hidden" id="orderId" value="{id}" />
+    <input type="hidden" id="orderType" value="order" />
+</div>
+<table class="form_main_table" id="link">
+	<thead>
+		<tr>
+			<td colspan="5" class="form_header">客户联系人 <img
+				src="images/verpic_open.gif" onclick="dis('mylink')" title="缩放" /></td>
+
+		</tr>
+
+	</thead>
+	<tbody id="mylink">
+		<tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th>客户联系人</th>
+			<th>电话</th>
+			<th>邮件</th>
+			<th>备注</th>
+
+		</tr>
+		{linkman}
+	</tbody>
+</table>
+</table>
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="11" class="form_header">产品清单 <img
+				src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" />
+			</td>
+		</tr>
+	</thead>
+	<tbody id="invbody">
+		<tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th>产品编号</th>
+			<th>产品名称</th>
+			<th>产品型号</th>
+			<th>数量</th>
+			<th>单价</th>
+			<th>金额</th>
+			<th>计划交货日期</th>
+			<th>保修期</th>
+			<th>加密配置</th>
+			<th>合同内</th>
+		</tr>
+		{orderequ}
+	</tbody>
+</table>
+
+
+<table class="form_main_table" id="pre">
+	<tr>
+		<td colspan="8" class="form_header">自定义清单 <img
+			src="images/verpic_open.gif" onclick="dis('mycustom')" title="缩放" />
+		</td>
+	</tr>
+</table>
+<table id="mycustom" class="form_main_table">
+	<tr class="main_tr_header">
+		<td width="5%" style="text-align:center">序号</td>
+		<td style="text-align:center">产品编号</td>
+		<td style="text-align:center">产品名称</td>
+		<td width="8%" style="text-align:center">产品型号</td>
+		<td width="8%" style="text-align:center">数量</td>
+		<td width="8%" style="text-align:center">单价</td>
+		<td width="8%" style="text-align:center">金额</td>
+		<td width="8%" style="text-align:center">计划交货日期</td>
+		<td width="15%" style="text-align:center">备注</td>
+		<td width="8%" style="text-align:center">加密配置</td>
+		<td width="4%" style="text-align:center">合同内</td>
+	</tr>
+	{customizelist}
+</table>
+<table class="form_main_table" id="inv">
+	<tr>
+		<td colspan="8" class="form_header">开票计划 <img
+			src="images/verpic_open.gif" onclick="dis('myinv')" title="缩放" /></td>
+	</tr>
+</table>
+<table id="myinv" class="form_main_table">
+	<tr class="main_tr_header">
+		<td width="5%" style="text-align:center">序号</td>
+		<td width="10%" style="text-align:center">开票金额</td>
+		<td width="10%" style="text-align:center">其中软件金额</td>
+		<td width="10%" style="text-align:center">开票类型</td>
+		<td style="text-align:center">开票日期</td>
+		<td style="text-align:center">开票内容</td>
+	</tr>
+	{invoice}
+</table>
+<table class="form_main_table" id="pay">
+	<tr>
+		<td colspan="8" class="form_header">收款计划 <img
+			src="images/verpic_open.gif" onclick="dis('mypay')" title="缩放" /></td>
+	</tr>
+</table>
+<table id="mypay" class="form_main_table">
+	<tr class="main_tr_header">
+		<td width="5%" style="text-align:center">序号</td>
+		<td width="10%" style="text-align:center">收款金额</td>
+		<td style="text-align:center">收款日期</td>
+		<td style="text-align:center">收款方式</td>
+		<td style="text-align:center">收款条件</td>
+	</tr>
+	{receiptplan}
+</table>
+<table class="form_main_table" id="tra">
+	<tr>
+		<td colspan="8" class="form_header">培训计划 <img
+			src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放" /></td>
+	</tr>
+</table>
+<table id="mytra" class="form_main_table">
+	<tr class="main_tr_header">
+		<td width="5%" style="text-align:center">序号</td>
+		<td style="text-align:center">培训开始时间</td>
+		<td style="text-align:center">培训结束时间</td>
+		<td width="8%" style="text-align:center">参与人数</td>
+		<td style="text-align:center">培训地点</td>
+		<td style="text-align:center">培训内容</td>
+		<td style="text-align:center">培训工程师要求</td>
+	</tr>
+	{trainingplan}
+</table>
+<table class='form_main_table'>
+	<tr>
+		<td colspan="8" class="form_header">保修条款 <img
+			src="images/verpic_open.gif" onclick="dis('gua')" title="缩放" /></td>
+	</tr>
+	<tr id="gua">
+		<td colspan="4"><textarea id="warrantyClause" rows="5"
+			style="width: 100%" readOnly>{warrantyClause}</textarea></td>
+	</tr>
+	<tr>
+		<td colspan="8" class="form_header">售后要求 <img
+			src="images/verpic_open.gif" onclick="dis('aft')" title="缩放" /></td>
+	</tr>
+	<tr id="aft">
+		<td colspan="4"><textarea id="afterService" rows="5"
+			style="width: 100%" readOnly>{afterService}</textarea></td>
+	</tr>
+	<tr>
+		<td colspan="4" class="td_table" id="approvalView">
+		    <input type="hidden" id="type" value="order" />
+		    <input type="hidden" id="pid" value="{id}" />
+		    <input type="hidden" id="itemType" value="oa_sale_order" />
+		    <input type="hidden" id="isChange" value="1" />
+		</td>
+	</tr>
+</table>
+
+
+</body>
+</html>

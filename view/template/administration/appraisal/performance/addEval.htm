@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<title></title>
+</head>
+<style type="text/css">
+    body{
+        margin:0px;padding:0px;border:0px;width:100%;height:100%;overflow:hidden;
+    }
+    </style>
+<body>
+<div class="mini-fit" id="form" >
+<input name="keyId"  id="keyId" type="text" value="{keyId}"  class="mini-hidden"/>
+<input name="tplId"  id="tplId" type="text" value="{tplId}"  class="mini-hidden"/>
+<div id="grid" class="mini-datagrid" style="width:100%;height:auto"  dField="id" showFooter="false"  allowSortColumn="false" multiSelect="true">
+     <div property="columns">
+             <div type="removecolumn" headerAlign="center" width="30"></div>
+             <div type="indexcolumn" headerAlign="center" width="30"></div>
+             <div field="eval"  name="eval" width="100"  headerAlign="center" >评 价 人
+                    <div property="editor" class="mini-autocomplete" style="width:100%;" id="eval" name="eval" valueFromSelect="true"  popupWidth="280" required="true" textField="text" valueField="id" onvaluechanged="onValueChanged" url="?model=administration_appraisal_performance_item&action=userData" showNullItem="false">     
+                    <div property="columns">
+                        <div header="部门" width="40" field="deptName"></div>
+                        <div header="姓名" field="text"></div>
+                    </div>
+                </div>
+            </div>
+            <div field="evalName"  name="evalName" headerAlign="center"  width="0"> <input property="editor" type="text"  class="mini-hidden"/></div>    
+    </div>
+</div>
+</div>
+<div class="mini-toolbar" style="text-align:center;margin:0px; border-bottom:0px; border-left:0px; border-right:0px;" > <a class="mini-button" style="width:60px;" onclick="submitForm()">确定</a> <span style="display:inline-block;width:25px;"></span> <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a></div>
+
+<script type="text/javascript">
+        mini.parse();
+		var grid = mini.get("grid");   
+ 		addRow("grid");
+        function addRow(gid) {
+			var regrid = mini.get(gid);
+			if(gid=='grid2'){
+				grid2Data =regrid.getEditData(true);
+				if(grid2Data.length>5){
+				 alert('评价人不能超过5人');
+				 return false;
+				}
+			}
+			var row = {};
+           regrid.addRow(row);
+           regrid.beginEditRow(row);
+        }
+		 function removeRow(gid) {
+			var regrid = mini.get(gid);
+            var rows = regrid.getSelecteds();
+            if (rows.length > 0) {
+                regrid.removeRows(rows, true);
+            }
+		}
+       
+      function submitForm() {
+            var form = new mini.Form("#form");
+				form.validate();
+            if (form.isValid() == false) return false;
+			var formData = form.getData();
+			var gridData =grid.getEditData(true);
+            var infoData = mini.encode(formData);
+			var userData = mini.encode(gridData);
+			//alert(userData);//alert(infoData);alert(projectData);alert(columnsData);  
+			//return false;
+            $.ajax({
+                url: "?model=administration_appraisal_performance_list&action=addEval",
+                type: "post",
+                data: { infoData:infoData,userData:userData},
+                success: function (text) {
+					if(text==2){
+						alert('添加成功！');
+						CloseWindow("save");
+						//grid.reload();
+					}else{
+					    alert('添加失败！');	
+					}
+                }
+            });
+        }
+		
+		function CloseWindow(action) {
+		   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();          
+			window.parent.grid.load();  
+        }
+        function onCancel(e) {
+            CloseWindow("cancel");
+		}
+function onValueChanged(e){
+	var combo = e.sender;
+	var items = e.selected;
+	if (items) { 
+	  var row = grid.getEditorOwnerRow(combo);
+	  var setObj = grid.getCellEditor(e.sender.name+'Name', row);
+	  setObj.setValue(items.text);
+	}
+}	
+</script>
+</body>
+</html>

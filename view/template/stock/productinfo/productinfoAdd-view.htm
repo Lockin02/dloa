@@ -1,0 +1,274 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="css/yxstyle.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css" />
+<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen"
+	rel="stylesheet" />
+<!-- 主题css，可切换 -->
+<link type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<title>查看物料</title>
+<style>
+
+legend {
+	color:#06c;
+	font-weight:800; 
+	background:#fff;
+	border:#b6b6b6 solid 1px;
+	padding:3px 6px;
+} 
+fieldset {
+	padding:3px;
+	margin:3px;
+	color:#333; 
+	border:#8F8F8F double 1px;
+} 
+</style>
+<script>
+/**
+ * 控制扩展信息展示与隐藏
+ */
+function extControl() {
+	if (document.getElementById("extinfo").style.display == "none") {
+		$("#extImg").attr("src", "images/icon/info_up.gif");
+		$("#extinfo").show();
+	} else {
+		$("#extImg").attr("src", "images/icon/info_right.gif");
+		$("#extinfo").hide();
+	}
+}
+/**
+ * 控制扩展信息展示与隐藏
+ */
+function baseControl() {
+	if (document.getElementById("baseinfo").style.display == "none") {
+		$("#baseImg").attr("src", "images/icon/info_up.gif");
+		// document.getElementById("extInfo").style.display=="block";
+		$("#baseinfo").show();
+	} else {
+		$("#baseImg").attr("src", "images/icon/info_right.gif");
+		$("#baseinfo").hide();
+	}
+}
+</script>
+</head>
+<body>
+			<div class="main_head">
+				<span class="main_head_title">
+				物料信息 
+				</span>
+			</div>		
+	 <fieldset> 
+  <legend><b>基本信息<img src="images/icon/info_up.gif" id="baseImg" onclick="baseControl()"></img></b></legend>
+	<table  id="baseinfo" class="form_main_table" >
+	<tr>
+		<td class="form_text_left">物料类型</td>
+		<td class="form_text_right">{proType}</td>
+		<td class="form_text_left">状态</td>
+		<td class="form_text_right">{ext1}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">物料编码</td>
+		<td class="form_text_right">{productCode}</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right">{productName}</td>
+	</tr>
+
+
+	<tr>
+		<td class="form_text_left">型号/版本号</td>
+		<td class="form_text_right">{pattern}</td>
+	
+		<td class="form_text_left">保修期(月)</td>
+		<td class="form_text_right">{warranty}</td>	
+	</tr>
+	<tr>
+		<td class="form_text_left">交货周期(天)</td>
+		<td class="form_text_right">{arrivalPeriod}</td>
+			<td class="form_text_left">采购周期(天)</td>
+		<td class="form_text_right">
+			{purchPeriod}
+		</td>	
+
+	</tr>
+
+	<tr>
+		<td class="form_text_left">采购负责人</td>
+		<td class="form_text_right">
+		{purchUserName}
+		</td>
+		
+		<td class="form_text_left">物料属性</td>
+		<td class="form_text_right">{properties}</td>
+	</tr>			
+		<tr>
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right">{unitName}</td>
+		<td class="form_text_left">品牌</td>
+		<td class="form_text_right">
+			{brand}
+		</td>
+		
+	</tr>
+	<tr>
+	<td class="form_text_left">物料金额</td>
+		<td class="form_text_right">
+			{priCost}
+		</td>
+
+		<td class="form_text_left">K3编码</td>
+		<td class="form_text_right">{ext2}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">封装</td>
+		<td class="form_text_right" colspan="3">
+			{packageInfo}
+		</td>		
+	</tr>	
+	</table>
+	</fieldset> 
+<!-- 
+	<tr>
+		<td class="form_text_left">默认仓库名称</td>
+		<td class="form_text_right">{stockName}</td>
+		<td class="form_text_left">默认仓库代码</td>
+		<td class="form_text_right">{stockCode}</td>
+	</tr>
+ -->
+ 	<tr>
+		<!--
+		<td class="form_text_left">单价</td>
+		<td class="form_text_right">
+			{priCost}
+		</td>
+ -->
+<fieldset> 
+<legend><b>扩展信息<img src="images/icon/info_right.gif" id="extImg" onclick="extControl()"></img></b></legend> 			
+<table class="form_main_table" id="extinfo"  style="display: none;">	
+		<td class="form_text_left">辅助单位</td>
+		<td class="form_text_right">{aidUnit}</td>
+		
+		<td class="form_text_left">换算率</td>
+		<td class="form_text_right">{converRate}</td>
+	</tr>
+ 	<tr>
+		<td class="form_text_left">归属类型</td>
+		<td class="form_text_right">{ext3}</td>
+		<td class="form_text_left" >质检方式</td>
+		<td class="form_text_right" >{checkType}</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">替代物料编码</td>
+		<td class="form_text_right">
+			{changeProductCode}
+		</td>
+		<td class="form_text_left">替代物料名称</td>
+		<td class="form_text_right">
+			{changeProductName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">最小包装量</td>
+		<td class="form_text_right">
+			{leastPackNum}
+		</td>
+		<td class="form_text_left">最小订单量</td>
+		<td class="form_text_right">
+			{leastOrderNum}
+		</td>
+	</tr>	
+	<tr>
+		<td class="form_text_left">材料</td>
+		<td class="form_text_right">
+			{material}
+		</td>
+		<td class="form_text_left">颜色</td>
+		<td class="form_text_right">
+			{color}
+		</td>
+	</tr>
+
+
+	<tr>
+		<td class="form_text_left">统计类型</td>
+		<td class="form_text_right">
+			{statType}
+		</td>
+		<td class="form_text_left">会计科目代码</td>
+		<td class="form_text_right">{accountingCode}</td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">创建人</td>
+		<td class="form_text_right">
+			{createName}
+		</td>
+		<td class="form_text_left">修改人</td>
+		<td class="form_text_right">
+			{updateName}
+		</td>
+
+	</tr>	
+		<tr>
+	
+		<td class="form_text_left">加密配置</td>
+		<td class="form_text_right">
+			{encrypt}
+		</td>
+		<td class="form_text_left">工程启用</td>
+		<td class="form_text_right">
+			{esmCanUse}
+		</td>
+	</tr>		
+	<tr>
+		<td class="form_text_left">厂家信息</td>
+		<td class="form_text_right" colspan="3">{supplier}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关闭原因</td>
+		<td class="form_text_right" colspan="3">{closeReson}</td>
+	</tr>	
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">{remark}</td>
+	</tr>
+		<td class="form_text_left" >附件</td>
+	<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div  class="upload" id="fsUploadProgress"></div>
+
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+	</td>
+</table>
+</fieldset> 
+{configurations}
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<input type="hidden" id="allocation1" value="{allocation}" />
+			<input type="button" class="txt_btn_a" value=" 关闭 " onclick="self.parent.tb_remove();">
+		</td>
+	</tr>
+</table>
+
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+	if($("#allocation1").val()!=""){
+		$("#allocation").attr("checked",'checked');
+		$("#allocation").attr("disabled",'true');
+	}
+
+});
+</script>
+
+</html>

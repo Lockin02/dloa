@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css"/>
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-invPurchase.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-invCost.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-release.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+		<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+		<title>
+			采购发票暂估冲回 - 供应商 : {supplierName}
+		</title>
+	</head>
+	<body>
+		<!-- the tabs -->
+		<ul class="tabs">
+			<li><a href="#first">采购发票</a></li>
+			<li><a href="#second">费用发票</a></li>
+		</ul>
+
+		<form id="form1" method="post" action="?model=finance_related_baseinfo&action=releaseAdd" onsubmit="return checkform()">
+		<!-- tab "panes" -->
+			<div class="panes">
+				<div>
+					<div class="main_head">
+						<span class="main_head_title">
+							采购发票
+							<input type="hidden" id="invpurId" name="invpurId" value="{invpurId}"/>
+							<input type="hidden" id="supplierId" name="supplierId" value="{supplierId}"/>
+							<input type="hidden" id="supplierName" name="supplierName" value="{supplierName}"/>
+							<input type="hidden" id="invCount" value="{invCount}"/>
+							<input type="hidden" id="status" name="status" value="CGFPZT-YGJ"/>
+							<input type="button" id="invPurchase" value=" 选择采购发票 " class="txt_btn_a thickbox" title="选择采购发票"
+							alt="?model=finance_invpurchase_invpurchase&action=instockHookPage&supplierId={supplierId}&supplierName={supplierName}&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=800"/>
+						</span>
+					</div>
+					<div style="height:300px;overflow:auto">
+						<table class="main_table" id="invTable">
+							<tr class="main_tr_header">
+								<th width="10%">
+									本次钩稽数量
+								</th>
+								<th width="8%">
+									日期
+								</th>
+								<th width="12%">
+									发票编号
+								</th>
+								<th width="10%">
+									钩稽状态
+								</th>
+								<th width="8%">
+									物料编号
+								</th>
+								<th>
+									物料名称
+								</th>
+								<th width="7%">
+									数量
+								</th>
+								<th width="7%">
+									已钩稽数量
+								</th>
+								<th width="8%">
+									已钩稽金额
+								</th>
+								<th width="7%">
+									未钩稽数量
+								</th>
+								<th width="8%">
+									未钩稽金额
+								</th>
+							</tr>
+							{invList}
+						</table>
+					</div>
+				</div>
+				<div>
+					<div class="main_head">
+						<span class="main_head_title">
+							费用发票
+							<input type="button" class="txt_btn_a" id="invCost" value=" 选择费用发票 "/>
+							<input type="hidden" id="invCostId" name="invCostId"/>
+							<input type="hidden" id="invCostCount" value="0"/>
+							<select name="shareType">
+								<option value="forNumber">按数量分配</option>
+								<option value="forMoney">按金额分配</option>
+							</select>
+						</span>
+					</div>
+					<div style="height:300px;overflow:auto" >
+						<table class="main_table" id="costTable">
+							<tr class="main_tr_header">
+								<th width="15%">
+									发票编号
+								</th>
+								<th width="20%">
+									 供应商名称
+								</th>
+								<th width="15%">
+									日期
+								</th>
+								<th width="15%">
+									金额
+								</th>
+								<th width="35%">
+								</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="main_head">
+				<span class="main_head_title">
+					外购入库单
+					<input type="button" id="storageApply" value=" 选择外购入库单 " class="txt_btn_a thickbox" title="选择外购入库单"
+							alt="?model=stock_storage_storageinproduct&action=instockReleasePage&supplierId={supplierId}&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=800"/>
+					<input type="hidden" id="storageCount" value="0"/>
+				</span>
+			</div>
+			<div style="height:300px;overflow:auto" >
+				<table class="main_table" id="storageTable">
+					<tr class="main_tr_header">
+						<th width="10%">
+							本次钩稽数量
+						</th>
+						<th width="8%">
+							日期
+						</th>
+						<th width="12%">
+							单据编号
+						</th>
+						<th width="8%">
+							入库仓库
+						</th>
+						<th width="7%">
+							钩稽状态
+						</th>
+						<th width="8%">
+							物料代码
+						</th>
+						<th>
+							物料名称
+						</th>
+						<th width="7%">
+							数量
+						</th>
+						<th width="7%">
+							已钩稽数量
+						</th>
+						<th width="8%">
+							已钩稽金额
+						</th>
+						<th width="7%">
+							未钩稽数量
+						</th>
+						<th width="8%">
+							未钩稽金额
+						</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<table class="form_main_table">
+					<tr>
+						<td class="txt_btn" colspan="4">
+							<input type="submit" class="txt_btn_a" value=" 冲 回 "/>
+							<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="closeFun();"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</body>
+</html>

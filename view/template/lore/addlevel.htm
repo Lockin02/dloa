@@ -1,0 +1,323 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="images/style.css" type="text/css" />
+<script type="text/javascript" src="js/jquery.validate.js"></script>
+</head>
+<body>
+<form  id="commentForm" method="post" action="?model={t_model}&action=addlevel" onSubmit="return check();">
+	<input type="hidden" id="administrator" name="administrator" value="" />
+    <input type="hidden" id="adminname" name="adminname" value="" />
+    <input type="hidden" id="deptname" name="deptname" value="" />
+    <input type="hidden" id="deptment" name="deptment" value="" />
+    <input type="hidden" id="pid" name="pid" value="{pid}" />
+
+    
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加标签类型</td>
+	</tr>
+<tr>
+		<td width="100">等级名称：</td>
+		<td align="left">	<input type="text" id="typename" name="typename" value="" />
+			<span>*</span>
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="100">排序：</td>
+<td align="left"><input type="text" id="sortid" name="sortid" value="0" />
+		</td>
+	</tr>
+    <!--
+	<tr>
+		<td>等级：</td>
+		<td align="left">
+			<input type="text" id="styleid" name="styleid" value="0" />
+			<span>*</span>
+		</td>
+	</tr>
+    -->
+    <tr>
+		<td>部门：</td>
+		<td align="left">
+       	 <span id="deptidlist"></span>
+			<hr id=h1 style="display:none"/>
+			<input type="text" id="deptid" name="deptid" value="" />
+			<span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td>管理员：</td>
+		<td align="left">
+			<span id="usernamelist"></span>
+			<hr id=h2 style="display:none"/>
+			<input type="text" id="username" name="username" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 添加 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var userid = Array();
+	var detpI = Array();
+	var usernameI = Array();
+	var detpnameI = Array();
+	var tid = 0;
+	var dtid = 0;
+	$(document).ready(function()
+	{
+		$("#username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].user_name,
+							result:row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.user_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						usernameI[tid] = data.user_name;
+						userid[tid] = data.user_id;
+						$('#usernamelist').append('<div id="user_'+tid+'">'+data.user_name+'<a href="javascript:del('+tid+',\''+data.user_name+'\')">删除</a></div>');
+						tid++;
+						$('#h2').css('display','block')
+						$('#username').val('').focus();
+					}
+		});
+
+
+$("#deptid").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=department&field=dept_name&return_field=dept_id,dept_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].dept_name,
+							result:row[i].dept_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.dept_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						detpnameI[dtid] = data.dept_name;
+						detpI[dtid] = data.dept_id;
+						$('#deptidlist').append('<div id="deptid_'+dtid+'">'+data.dept_name+'<a href="javascript:deldept('+dtid+',\''+data.dept_name+'\')">删除</a></div>');
+						dtid++;
+						$('#h1').css('display','block')
+						$('#deptid').val('').focus();
+						
+					}
+		});
+		
+		
+	$("#commentForm").validate({
+		rules: {
+			typename: "required",
+			sortid:{
+				   required:true,
+				   number: true
+				},
+			styleid:{
+				required:true,
+				number: true
+			},
+			deptid:{
+			    required:false
+			}
+		},
+		messages: {
+			typename:"请输入书名",
+			styleid:{
+				required:"编号不能为空",
+				number:"此编号已存在"
+			},
+			sortid:{
+				required:"编号不能为空",
+				number:"此编号已存在"
+			},
+			deptid:{
+				required:"编号不能为空"
+			}
+		}
+	
+	});
+	
+	jQuery.validator.addMethod("isbns", function(value, element) {
+		value=value.replace(/(^\s*)|(\s*$)/g, "");
+        var rand=Math.random()*100000;
+		var html = $.ajax({
+						     type: "POST",
+		 					 url: "?model=general_book&action=isbn",
+		 					 data: {isbnname:value,rand:rand},
+							 async: false
+
+		 }).responseText;
+		
+      	if(html==2){
+		 	return 	this.optional(element) ||true ;
+		 }else{
+				return false;
+		}
+		
+	}, "此编号已存在!");
+		
+
+	});
+	function del(id,username)
+	{
+		$('#user_'+id).remove();
+		delete userid[id];
+		var temp = Array();
+		for(key in userid)
+		{
+			if (userid[key] && userid[key]!='undefined')
+			{
+				temp[key] = userid[key];
+			}
+		}
+		userid = temp;
+		delete usernameI[username];
+		var temps = Array();
+		for(keys in usernameI)
+		{
+			if (usernameI[keys]!=username && usernameI[keys]!='undefined')
+			{
+				temps[keys] = usernameI[keys];
+			}
+		}
+		usernameI = temps;
+	}
+	function deldept(id,username)
+	{
+		$('#deptid_'+id).remove();
+		delete detpI[id];
+		var temp = Array();
+		for(key in detpI)
+		{
+			if (detpI[key] && detpI[key]!='undefined')
+			{
+				temp[key] = detpI[key];
+			}
+		}
+		detpI = temp;
+		delete detpnameI[username];
+		var tempd = Array();
+		for(keyd in detpnameI)
+		{
+			if (detpnameI[keyd]!=username && detpnameI[keyd]!='undefined')
+			{
+				tempd[keyd] = detpnameI[keyd];
+			}
+		}
+		detpnameI = tempd;
+	}
+	function check()
+	{
+		if ($('#typename').val()=='')
+		{
+			alert('标签名称不能为空！');
+			return false;
+		}
+		
+		if (userid.length > 0)
+		{
+			var admin_userid ='';
+			for (key in userid)
+			{
+				admin_userid +=userid[key]+',';
+			}
+			$('#administrator').val(admin_userid);
+		}else
+		{
+			$('#administrator').val('');
+		}
+		if (usernameI.length > 0)
+		{
+			var admin_username ='';
+			for (key in usernameI)
+			{
+				admin_username +=usernameI[key]+',';
+			}
+			$('#adminname').val(admin_username);
+		}else
+		{
+			$('#adminname').val('');
+		}
+
+		if (detpI.length > 0)
+		{
+			var admin_detpid ='';
+			for (key in detpI)
+			{
+				admin_detpid +=detpI[key]+',';
+			}
+			$('#deptment').val(admin_detpid);
+		}else
+		{
+			$('#deptment').val('');
+		}
+		if (detpnameI.length > 0)
+		{
+			var admin_detpname ='';
+			for (key in detpnameI)
+			{
+				admin_detpname +=detpnameI[key]+',';
+			}
+			$('#deptname').val(admin_detpname);
+		}else
+		{
+			$('#deptname').val('');
+		}
+		
+		
+		return true;
+	}
+	
+</script>
+</body>
+</html>

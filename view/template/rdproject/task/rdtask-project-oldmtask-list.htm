@@ -1,0 +1,241 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>列表显示</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/contextmenu.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+
+
+        <!-- 下拉多选组件 -->
+        <link href="js/multiselect/jquery.multiSelect.css" rel="stylesheet" type="text/css"/>
+        <script src="js/multiselect/jquery.bgiframe.min.js" type="text/javascript">
+        </script>
+        <script src="js/multiselect/jquery.multiSelect.js" type="text/javascript">
+        </script>
+
+
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="view/template/rdproject/project/js/rdproject-updateOld-topTab.js"></script>
+<script type="text/javascript">
+
+            $(document).ready(function() {
+                topTabShow(arrayTop, "pjTask","{projectId}");
+            });
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toProTkManagePageOld&pjId={projectId}";
+			}
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				this.location="?model=rdproject_task_rdtask&action=toProTkManagePageOld&pjId={projectId}"+"&"+searchfield+"="+searchvalue;
+			}
+			</script>
+
+          <script>
+
+			$().ready(function() {
+			 var option = {
+                    width: 150,
+                    items: [{
+                        text: "查看",
+                        icon : "images/icon/view.gif",
+                        alias: "1-1",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_task_rdtask&action=toReadTask&id='
+								+ row.pid
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800');
+                        }
+                    },{
+                        text: "旧研发任务编辑",
+                        icon : "images/icon/edit.gif",
+                        alias: "1-2",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_task_rdtask&action=toEditTaskOld&id='
+								+ row.pid
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=650&width=900');
+                        }
+                    }],
+                    onShow: applyrule,
+                    onContextMenu: BeforeContextMenu
+                  };
+               $(".tr_even,.tr_odd").contextmenu(option);
+                      			//隐藏右键某些操作
+                function applyrule(menu) {
+				switch(this.pstatus){
+                		case "TG":{  menu.applyrule({
+                            name: "ZT",
+                            disable: true,
+                            items: ["1-2"]
+                        	});break;
+                        };
+                        default:{
+                        menu.applyrule({
+                            name: "other",
+                            disable: true,
+                            items: []
+                        	});break;
+                        };
+                        }
+                }
+               //右键触发前操作
+               function BeforeContextMenu() {
+                    return true;
+                }
+                  })
+
+
+// 映射字段控制
+$(document).ready(function() {
+	$("#control_1").multiSelect();
+})
+/*
+ * 导出EXCEL
+ */
+function exportExcel() {
+	var selectField = "";
+	var tdName = "";
+
+	var ckSize = $('.multiSelect').next('.multiSelectOptions')
+			.find('INPUT:checkbox:checked').size();
+	if (ckSize == 0) {
+		alert("请选择需要导出的字段!")
+	} else {
+		$('.multiSelect').next('.multiSelectOptions')
+				.find('INPUT:checkbox:checked').each(function() {
+					if ($(this).parent().text() != "全选") {
+						selectField += $(this).val() + ",";
+						tdName += $(this).parent().text() + ",";
+					}
+				});
+		window.open(
+				"?model=rdproject_task_rdtask&action=exportTaskExcel&projectId="
+						+ $('#projectId').val()
+						+ "&selectField="
+						+ selectField
+						+ "&tdName="
+						+ tdName, "",
+				"width=200,height=200,top=200,left=200");
+	}
+
+	// window.open("?model=rdproject_task_rdtask&action=exportExcel","","width=200,height=200,top=200,left=200");
+}
+
+function toView(pid){
+showThickboxWin('?model=rdproject_task_rdtask&action=toReadTask&id='
+								+pid
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800');
+
+}
+
+
+		</script>
+</head>
+<body>
+<div class="tab_options"></div>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" value="" /> <input
+			type="hidden" id="projectId" value="{projectId}" /> 按 <select
+			id="searchfield" class="select">
+			<option value="name">任务名称</option>
+			<option value="chargeName">责任人</option>
+			<option value="publicName">发布人</option>
+		</select> <input type="button" value=" 搜索 " class="txt_btn_a"
+			onclick="search()" /></td>
+        <td align="left">
+            &nbsp;
+            <input type="button" class="txt_btn_a" value="导出EXCEL" id="exportbtn" onclick="exportExcel()">
+            &nbsp;映射字段:
+            <select id="control_1" name="control_1[]" multiple="multiple" style="width: 100px;">
+                <option value="projectCode">
+                    项目编号
+                </option>
+                <option value="projectName">
+                    项目名称
+                </option>
+                <option value="planName">
+                    里程碑计划
+                </option>
+                <option value="name">
+                    任务名称
+                </option>
+                <option value="remark">
+                    任务描述
+                </option>
+                <option value="status">
+                    任务状态
+                </option>
+                <option value="chargeName">
+                    责任人
+                </option>
+                <option value="auditUser">
+                    审核人
+                </option>
+                <option value="priority">
+                    优先级
+                </option>
+                <option value="taskType">
+                    任务类型
+                </option>
+<!--                             <option value="">
+                                严重级
+                            </option> -->
+                <option value="planBeginDate">
+                    计划开始时间
+                </option>
+                <option value="actBeginDate">
+                    实际开始时间
+                </option>
+                <option value="planEndDate">
+                    计划完成时间
+                </option>
+                <option value="actEndDate">
+                    实际完成时间
+                </option>
+                <option value="ExaDT">
+                   验收时间
+               	</option>
+                <option value="finishGrade">
+                   完成等级
+               	</option>
+            </select>
+        </td>
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="3%">序号</th>
+			<th width="3%">提示灯</th>
+			<th width="15%">任务名称</th>
+			<th width="10%">进度计划</th>
+			<th width="7%">优先级</th>
+			<th width="6%">状态</th>
+			<th width="6%">完成率</th>
+			<th width="6%">偏差率</th>
+			<th width="7%">责任人</th>
+			<th width="7%">发布人</th>
+			<th width="10%">最近更新时间</th>
+			<th width="8%">计划完成时间</th>
+			<th width="7%">任务类型</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+</table>
+</div>
+{pageDiv}
+</body>
+
+</html>

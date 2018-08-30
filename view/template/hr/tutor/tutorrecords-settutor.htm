@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>指定导师</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/tutorrecords-settutor.js" ></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_tutor_tutorrecords&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head2">
+             <span class="main_head_title">
+               	指定导师
+             </span>
+            </div>
+            </td>
+         </tr>
+	<tr>
+	    <td class="form_text_left"><span class="blue">导师姓名</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="tutorrecords[userName]" id="userName" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[userAccount]" id="userAccount"/>
+		</td>
+		<td class="form_text_left">导师员工号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="tutorrecords[userNo]" id="userNo" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">导师部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal"   name="tutorrecords[deptName]" id="deptName" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[deptId]" id="deptId"/>
+		</td>
+		<td class="form_text_left">导师职位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal"  name="tutorrecords[jobName]" id="jobName" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[jobId]" id="jobId"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">学员姓名</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="tutorrecords[studentName]" id="studentName" value="{staffName}" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[studentNo]" id="studentNo" value="{userNo}"/>
+			 <input type="hidden" name="tutorrecords[studentAccount]" id="studentAccount" value="{userAccount}"/>
+		</td>
+		<td class="form_text_left">学员部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="tutorrecords[studentDeptName]" id="studentDeptName" value="{belongDeptName}" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[studentDeptId]" id="studentDeptId" value="{belongDeptId}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span class="blue">学员直接上级</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="tutorrecords[studentSuperior]" id="studentSuperior" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[studentSuperiorId]" id="studentSuperiorId"/>
+		</td>
+		<td class="form_text_left">学员职位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal"  name="tutorrecords[studentJob]" id="studentJob" value="{jobName}" readonly="readonly"/>
+			 <input type="hidden" name="tutorrecords[studentJobId]" id="studentJobId" value="{jobId}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span class="blue">教学开始时间</span></td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="txt Wdate" onfocus="WdatePicker()" name="tutorrecords[beginDate]" id="beginDate" value="{entryDate}"/>
+		</td>
+<!--		<td class="form_text_left">考核分数</td>-->
+<!--		<td class="form_text_right">-->
+<!--			 <input type="text" class="txt"  name="tutorrecords[assessmentScore]" id="assessmentScore"/>-->
+<!--			 <span class="red">[*]</span>-->
+<!--		</td>-->
+	</tr>
+	<tr>
+		<td class="form_text_left">备注说明</td>
+		<td class="form_text_right" colspan="3">
+			<textarea name="tutorrecords[remark]" class="txt_txtarea_800"></textarea>
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">是否邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="tutorrecords[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="tutorrecords[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr id="maildiv">
+   		<td class="form_text_left">收件人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" class="txt800" style="width:300px" name="tutorrecords[email][TO_NAME]" id="TO_NAME" readonly="readonly" value="{userName}"/>
+    		<input type="hidden" name="tutorrecords[email][TO_ID]" id="TO_ID" value="{userAccount}"/>
+	    </td>
+   	</tr>
+   	<tr id="mailccdiv">
+   		<td class="form_text_left">抄送
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" class="txt800" style="width:300px" name="tutorrecords[email][ADDNAMES]" id="ADDNAMES" value="{sendName}" readonly="readonly"/>
+    		<input type="hidden" name="tutorrecords[email][ADDIDS]" id="ADDIDS" value="{sendUserId}"/>
+	    </td>
+   	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 指  定 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+		</td>
+	</tr>
+      </table>
+   </form>
+</body>
+</html>

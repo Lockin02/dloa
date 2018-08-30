@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>离职交接清单</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/handover-edit.js"></script>
+<script type="text/javascript" src="js/common/approval.js"></script>
+<script type="text/javascript" src="js/Lodop6.058/LodopFuncs.js"></script>
+<object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+	<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0 pluginspage="js/Lodop6.058/install_lodop.exe"></embed>
+</object>
+
+<script>
+      $(function(){
+         var Exa = $("#ExaStatus").val();
+      })
+      function sub(){
+        var flag =  $.ajax({
+			    type : 'POST',
+			    url : '?model=hr_leave_handover&action=getLeaveInfo',
+			    data:{
+			        handoverId : $("#id").val()
+			    },
+			    async: false,
+			    success : function(data){
+                    return data;
+				}
+			}).responseText;
+		  if(flag == '0'){
+		     var staffAffCon = $("#staffAffCon").html();
+		     if(staffAffCon == ''){
+		        alert("员工还未确认离职交接清单，请跟进")
+		        return false;
+		     }
+		     return true;
+		  }else{
+		     alert("交接清单还未确认完成，请跟进")
+             return false;
+		  }
+      }
+   </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_leave_handover&action=startAffirm" onsubmit="return sub();">
+<div id="dy">
+<div align="center" cellpadding="5" >
+
+<table class="tableA">
+	<tr>
+		<td colspan="6" bgcolor="#ECECFF">
+		<h2>离职交接清单</h2></td>
+	</tr>
+	<tr>
+		<td class="td_left">员工姓名</td>
+		<td class="td_right">{userName}</td>
+		<td class="td_left">部门名称</td>
+		<td class="td_right">{deptName}</td>
+		<td class="td_left">职位</td>
+		<td class="td_right">{jobName}</td>
+
+	</tr>
+	<tr>
+		<td class="td_left">员工编号</td>
+		<td class="td_right">{userNo}</td>
+		<td class="td_left">员工电话</td>
+		<td class="td_right">{mobile}</td>
+		<td class="td_left">员工邮箱</td>
+		<td class="td_right">{personEmail}</td>
+	</tr>
+	<tr>
+		<td class="td_left">入职日期</td>
+		<td class="td_right">{entryDate}</td>
+		<td class="td_left">离职日期</td>
+		<td class="td_right">{quitDate}</td>
+		<td class="td_left">离职类型</td>
+		<td class="td_right">{quitTypeName}</td>
+	</tr>
+	<tr>
+		<td class="td_left">离职原因</td>
+		<td colspan="3" align="left">
+		{quitReson}
+		</td>
+		<td class="td_left">编制</td>
+		<td class="td_right">{companyName}</td>
+	</tr>
+	{fromworkList}
+
+</table>
+<table class="tableA">
+   <tr>
+		<td class="td_left">员工确认意见</td>
+		<td class="td_right" id="staffAffCon">{staffAffCon}</td>
+		<td class="td_left">确认时间</td>
+		<td class="td_right">{staffAffDT}</td>
+	</tr>
+   <tr>
+		<td class="td_left">确认备注</td>
+		<td class="td_right" colspan='3' align='left'>{staffConRemark}</td>
+	</tr>
+   <tr>
+		<td class="td_left">人力资源部确认</td>
+		<td class="td_right" colspan='3' align='left'></td>
+	</tr>
+	<!--
+   <tr id='approvalList'>
+		<td colspan="4" class="td_table" id="approvalView">
+		    <input type="hidden" id="type" value="handover" />
+		    <input type="hidden" id="pid" value="{id}" />
+		    <input type="hidden" id="itemType" value="oa_leave_handover" />
+		</td>
+	</tr> -->
+</table>
+</div>
+</div>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="6">
+		   <input type="hidden" id="id" name="handover[handoverId]" value="{id}" />
+		   <input type="hidden" id="deptId" name="handover[deptId]" value="{deptId}" />
+		   <input type="hidden" value="{ExaStatus}" id="ExaStatus" />
+	<!--	   <input type="submit" class="txt_btn_a" value=" 发起确认 " id="aff"/>
+		   -->
+		   <input type="button" class="txt_btn_a" value=" 打  印 " onclick="javascript:previewDom('dy');"/>&nbsp;&nbsp;
+		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>

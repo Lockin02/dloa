@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        
+        </style>
+		<script type="text/javascript">
+		var open_tabs = false;
+		var types_list = [
+		  			    {typeid:'1',name:'募投项目'},
+		  			    {typeid:'2',name:'政府项目'}
+		  			];
+		var types_state =[
+		                  {stateid:'1',name:'开启'},
+		                  {stateid:'0',name:'关闭'}
+		                 ];
+		/**
+		 * 项目类型
+		 * @param {Object} value
+		 */
+		function typeFormatter(value){
+			for(var i=0; i<types_list.length; i++){
+				if (types_list[i].typeid == value) return types_list[i].name;
+			}
+			return value;
+		}
+		/**
+		*项目状态
+		*/
+		function typeFormatterst(value){
+			for(var i=0; i<types_state.length; i++){
+				if (types_state[i].stateid == value) return types_state[i].name;
+			}
+			return value;
+		}
+		
+        $(function(){
+            $('#tt').datagrid({
+                title: '报销项目列表',
+                iconCls: 'icon-edit',
+                pagination: true,//开启分页
+				pageSize:20,
+                singleSelect: true,//只允许选择一行
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',//数据请求地址
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, {
+                    field: 'type',
+                    title: '项目类型',
+                    width: 150,
+                    align: 'center',
+                    editor: 'text',formatter:typeFormatter,editor: {
+						type: 'combobox',
+						options: {
+							valueField: 'typeid',
+							textField: 'name',
+							data: types_list,
+							required: true
+						}
+					}
+                },{
+                    field: 'project_name',
+                    title: '项目名称',
+                    width: 250,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'description',
+                    title: '项目描述',
+                    width: 250,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                	field: 'state',
+                	title: '项目状态',
+                	width: 200,
+                	align: 'center',
+                	//editor:'text',
+                	formatter: function (value, row, index){
+                		if(value==1){
+                			return '进行中';
+                		}else{
+                			return '已关闭';
+                		}
+                	},
+                	/*formatter:typeFormatterst,*/
+                	editor:{
+                		type: 'combobox',
+                		
+                		options:{
+                			valueField : 'state',
+                			textField : 'text',
+                			data :[{state :'1',text :'开启项目'},{state :'0',text : '关闭项目'}],
+							required: true
+                		}
+                	}
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                        if (row.editing) {
+                            var s = '<a href="#" onclick="saverow(' + index + ')">保存</a> ';
+                            var c = '<a href="#" onclick="cancelrow(' + index + ')">取消</a>';
+                            return s + c;
+                        }
+                        else {
+                            var e = '<a href="#" onclick="editrow(' + index + ')">修改</a> ';
+                            var d = '<a href="#" onclick="deleterow(' + index + ')">删除</a>';
+                            return e+d;
+                        }
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				}
+            });
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                     iconCls: 'icon-add',
+                    text: '添加项目',
+                    handler: function(){
+                        insert();
+                    }
+                }]
+            });
+        });
+		function updateActions(){
+				var rowcount = $('#tt').datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#tt').datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			var model='{t_model}';
+			$.messager.confirm('确认提示','你确定要删除该项目吗？',function(r){
+				if (r){
+					$('#tt').datagrid('selectRow',index);
+					var row = $('#tt').datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model='+model+'&action=del',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}
+						})
+					}
+					$('#tt').datagrid('deleteRow', index);
+					updateActions(id);
+				}
+			});
+		}
+	
+	function saverow(index) {
+		$('#tt').datagrid('endEdit', index);
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		id = row.id ? row.id : '';
+		type = row.type;
+		$.post('?model={t_model}&action=save', {
+			type:type,
+			project_name : row.project_name,
+			id : id,
+			description : row.description,
+			state:row.state,
+			rand : Math.random(0, 9999)
+		}, function(data) {
+			if (data == 1) {
+				$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			} else {
+
+				$.messager.show({
+					title : '提示',
+					msg : '操作失败！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			}
+		});
+	}
+	function cancelrow(index) {
+		$('#tt').datagrid('cancelEdit', index);
+	}
+
+	function insert() {
+		var row = $('#tt').datagrid('getSelected');
+		if (row) {
+			var index = $('#tt').datagrid('getRowIndex', row);
+		} else {
+			index = 0;
+		}
+		if (index < 0)
+			index = 0;
+		$('#tt').datagrid('insertRow', {
+			index : index,
+			row : {
+			//status:'P'
+			}
+		});
+		$('#tt').datagrid('selectRow', index);
+		$('#tt').datagrid('beginEdit', index);
+	}
+</script>
+    </head>
+    <body>
+			<table id="tt"></table>
+		</div>
+		<div id="add" class="easyui-dialog" title="添加平台" iconCls="icon-edit" modal="false" closed="true" style="width:300px;height:250px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<p><label>类型名称：</label><span><input type="text" name="typename" id="typename" value="" /></span></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定添加 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+    </body>
+</html>

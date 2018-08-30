@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>编辑外包合同</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsupplier.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/outsourcing-projectrental.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/outsourcing-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/outsourcing-edit.js"></script>
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"> </script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+    <script type="text/javascript" src="swfupload/handlers.js"> </script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+    <script>
+        var uploadfile2;
+        $(function() {
+            uploadfile = createSWFUpload({
+                "serviceType": "oa_sale_outsourcing",
+                "serviceId": "{id}"
+            });
+        });
+    </script>
+    <!-- 附件上传结束 -->
+    <script>
+        $(function(){
+            $('#proCode').val('{proCode}');
+            $isNeedStamp = "{isNeedStamp}";
+            if($isNeedStamp == "1"){
+                $("#isNeedStampYes").attr("checked",true);
+                $("#radioSpan").show();
+
+                //盖章类型渲染
+                $("#stampType").yxcombogrid_stampconfig({
+                    hiddenId : 'stampType',
+                    height : 250,
+                    gridOptions : {
+                        isTitle : true,
+                        showcheckbox : true
+                    }
+                });
+            }else{
+                $("#isNeedStampNo").attr("checked",true);
+            }
+            $isInvoice = "{isInvoice}";
+            if($isInvoice == 0){
+                $("#isInvoiceNo").attr("checked",true);
+            }else{
+                $("#isInvoiceYes").attr("checked",true);
+            }
+            $isEntrust = "{isEntrust}";
+            if($isEntrust == '0'){
+                $("#isEntrustNo").attr("checked",true);
+            }else{
+                $("#isEntrustYes").attr("checked",true);
+                entrustFun(1, true);
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	编辑外包合同
+    </span>
+</div>
+<form id="form1" method="post" action="?model=contract_outsourcing_outsourcing&action=edit" onsubmit="return checkForm();">
+<table class="form_main_table">
+<tr>
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend">基 本 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three">鼎利合同号</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="readOnlyText" name="outsourcing[orderCode]" value="{orderCode}" readonly="readonly"/>
+                    </td>
+                    <td class="form_text_left_three">合同名称</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="outsourcing[orderName]" value="{orderName}" id="orderName"/><span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">外包合同号</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="outsourcing[outContractCode]" id="outContractCode" value="{outContractCode}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">签约公司</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[signCompanyName]" value="{signCompanyName}" id="signCompanyName"/>
+                        <input type="hidden" value="{signCompanyId}" name="outsourcing[signCompanyId]" id="signCompanyId"/><span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">公司省份</td>
+                    <td class="form_text_right_three" >
+                        <select class="select"  id="proCode" name="outsourcing[proCode]" onchange="setProName()"></select>
+                        <input type="hidden" name="outsourcing[proName]" value="{proName}"  id="proName"/>
+                    </td>
+                    <td class="form_text_left_three">合同负责人</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[principalName]" value="{principalName}" id="principalName" readonly="readonly"/>
+                        <input type="hidden" name="outsourcing[principalId]" value="{principalId}" id="principalId"/><span class="red"> [*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">合同金额</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt formatMoney" name="outsourcing[orderMoney]" value="{orderMoney}" id="orderMoney" onblur="checkApplyMoney()"/><span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">签约日期</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[signDate]" value="{signDate}" id="signDate" onfocus="WdatePicker()"/>
+                        <span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">部门名称</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[deptName]" value="{deptName}" id="deptName" readonly="readonly"/>
+                        <input type="hidden" name="outsourcing[deptId]" value="{deptId}" id="deptId"/><span class="red"> [*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">开始日期</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[beginDate]" value="{beginDate}" id="beginDate" onfocus="WdatePicker()" onblur="checkTime_begin(beginDate,endDate)"/>
+                        <span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">结束日期</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[endDate]" value="{endDate}" id="endDate" onfocus="WdatePicker()" onblur="checkTime(beginDate,endDate)"/>
+                        <span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">外包方式</td>
+                    <td class="form_text_right_three" >
+                        <select class="select" name="outsourcing[outsourcing]" id="outsourcing">
+                            {outsourcing}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">外包性质</td>
+                    <td class="form_text_right_three" >
+                        <select class="select" name="outsourcing[outsourceType]" id="outsourceType" onchange="changeSelect()">
+                            {outsourceType}
+                        </select>
+                    </td>
+                    <td class="form_text_left_three">项目编号</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[projectCode]" value="{projectCode}" id="projectCode" />
+                        <input type="hidden" name="outsourcing[projectId]" value="{projectId}" id="projectId"/>
+                        <span class="red" style="display:none" id="myspan"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">项目名称</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="readOnlyText" name="outsourcing[projectName]" value="{projectName}" id="projectName" readonly="readonly"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">联 系 人</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[linkman]" value="{linkman}" id="linkman"/><span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">联系电话</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="outsourcing[phone]" value="{phone}" id="phone"/><span class="red"> [*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款类型</td>
+                    <td class="form_text_right_three" >
+                        <select class="select" name="outsourcing[payType]" id="payType">
+                            {outPayType}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">是否盖章</td>
+                    <td class="form_text_right_three" >
+                        <input type="radio" name="outsourcing[isNeedStamp]" value="1" id="isNeedStampYes" onclick="changeRadio()"/>是
+                        <input type="radio" name="outsourcing[isNeedStamp]" value="0" checked="checked" id="isNeedStampNo" onclick="changeRadio()"/>否
+                    </td>
+                    <td class="form_text_left_three">申 请 人</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{createName}"/>
+                    </td>
+                    <td class="form_text_left_three">录入日期</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{createDate}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">盖章类型</td>
+                    <td class="form_text_right_three">
+                        <!--select class="select" name="outsourcing[stampType]" id="stampType">
+                            {stampType}
+                        </select-->
+                        <input type="text" class="txt" name="outsourcing[stampType]" id="stampType" value="{stampType}" readonly="readonly"/>
+                        <span class="red" style="display:none">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">增值税发票税点</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="outsourcing[addInvoiceCount]" value="{addInvoiceCount}" id="addInvoiceCount"/>
+                        <span class="red" style="display:none">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">归属公司</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <input type="text" class="txt" readonly="readonly" name="outsourcing[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+                        <span class="red">[*]</span>
+                        <input type="hidden" name="outsourcing[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                        <input type="hidden" name="outsourcing[formBelong]" id="formBelong" value="{formBelong}" />
+                        <input type="hidden" name="outsourcing[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">联系地址</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="outsourcing[address]" id="address">{address}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">付款条件</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="outsourcing[payCondition]" id="payCondition">{payCondition}</textarea>
+                        <span class="red"> [*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">内容描述</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="outsourcing[description]" id="description">{description}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">备注说明</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="outsourcing[remark]">{outRemark}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <div class="upload">
+                            <div class="upload" id="fsUploadProgress"></div>
+                            <div class="upload">
+                                <span id="swfupload"></span>
+                                <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+                            </div>
+                            <div id="uploadfileList" class="upload">{file}</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6"></td>
+</tr>
+<tr style="display:none" id="projectrental">
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend"><b>整 包/分 包</b></legend>
+            <div id="projectRentalTb"></div>
+        </fieldset>
+    </td>
+</tr>
+<!--
+<tr id="personrental">
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend"><b>人 员 租 赁</b></legend>
+            <div id="itemTable"></div>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6"></td>
+</tr>
+ -->
+<tr>
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend"><b>付 款 信 息</b></legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three">申请付款</td>
+                    <td class="form_text_right" colspan="5">
+                        <input type="checkbox" id="isNeedPayapply" name="outsourcing[isNeedPayapply]" value="{isNeedPayapply}" onclick="showPayapplyInfo(this)"/>&nbsp;
+                        <span style="color:blue">选中后合同会进入合同付款审批流程，审批完成后会自动生成相应付款申请单。</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">申请金额</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt formatMoney" name="outsourcing[payapply][applyMoney]" id="applyMoney" value="{applyMoney}" onblur="checkApplyMoney()"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">期望付款日期</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[payapply][formDate]" id="formDate" value="{formDate}" onfocus="WdatePicker()"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">费用归属部门</td>
+                    <td class="form_text_right_three" >
+                        <input type="hidden" name="outsourcing[payapply][feeDeptId]" id="feeDeptId" value="{feeDeptId}"/>
+                        <input type="text" class="txt" name="outsourcing[payapply][feeDeptName]" id="feeDeptName" value="{feeDeptName}" readonly/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">收款银行</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[payapply][bank]" id="bank" value="{bank}"/>
+                        <span id="bankNeed" class="red" style="display:none">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">收款账号</td>
+                    <td class="form_text_right_three" >
+                        <input type="text" class="txt" name="outsourcing[payapply][account]" id="account" value="{account}"/>
+                        <span id="accountNeed" class="red" style="display:none">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款类型</td>
+                    <td class="form_text_right_three">
+                        <select id="payFor" name="outsourcing[payapply][payFor]" class="txt">
+                            {payFor}
+                        </select>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">结算方式</td>
+                    <td class="form_text_right_three">
+                        <select id="payType1" name="outsourcing[payapply][payType]" class="txt" onchange="changePayTypeFun();">
+                            {payType}
+                        </select>
+                    </td>
+                    <td class="form_text_left_three">款项用途</td>
+                    <td class="form_text_right_three">
+                        <input id="remark" type="text" name="outsourcing[payapply][remark]" class="txt" value="{remark}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款币种</td>
+                    <td class="form_text_right_three">
+                        <input id="currency" type="text" name="outsourcing[payapply][currency]" class="txt" value="{currency}" readonly="readonly"/>
+                        <input id="currencyCode" type="hidden" name="outsourcing[payapply][currencyCode]" value="{currencyCode}"/>
+                        <input id="rate" type="hidden" name="outsourcing[payapply][rate]" value="{rate}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">是否已付款
+                    </td>
+                    <td class="form_text_right_three">
+                        <input type="radio" name="outsourcing[payapply][isEntrust]" value="1" id="isEntrustYes" onchange="entrustFun(this.value);"/>是
+                        <input type="radio" name="outsourcing[payapply][isEntrust]" value="0" id="isEntrustNo" onchange="entrustFun(this.value);" checked="checked"/>否
+							<span class="blue">
+								<!--注：银行代扣暂时只适用于房屋水电等可由银行代缴费用，<span class="red">正常支付流程请勿选择</span>-->
+							</span>
+                    </td>
+                    <td class="form_text_left_three">是否开据发票
+                    </td>
+                    <td class="form_text_right_three">
+                        <input type="radio" name="outsourcing[payapply][isInvoice]" value="1" id="isInvoiceYes" checked="checked"/>是
+                        <input type="radio" name="outsourcing[payapply][isInvoice]" value="0" id="isInvoiceNo" />否
+                    </td>
+                    <td class="form_text_left_three">汇入地点(省市)</td>
+                    <td class="form_text_right">
+                        <input id="place" type="text" name="outsourcing[payapply][place]" class="txt" value="{place}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">款项说明</td>
+                    <td colspan="5" class="form_text_right">
+                        <textarea class="txt_txtarea_biglong" name="outsourcing[payapply][payDesc]" id="payDesc">{payDesc}</textarea>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three"><span class="red">注意事项</span></td>
+                    <td colspan="5" class="form_text_right">
+							<span class="red">
+								1.请将款项用途描述信息保持在10个字或10个字以内
+								<br/>
+								2.未到期望付款日期单据不能提交财务进行付款
+								<br/>
+								3.财务已付款，申请人补录付款申请，无需财务再次付款时，需选择“是”
+								<br/>
+								4.付款已经由银行代扣，申请人补录付款申请时，需选择“是”
+							</span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td class="txt_btn" colspan="6">
+        <input type="hidden" name="outsourcing[id]" id="id" value="{id}" />
+        <input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+        <input type="submit" class="txt_btn_a" onclick="auditEdit('audit')" value="提交审批" />
+        <input type="submit" class="txt_btn_a" onclick="auditEdit();verification();" value="保  存"/>
+        <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+    </td>
+</tr>
+</table>
+</form>
+</body>
+</html>

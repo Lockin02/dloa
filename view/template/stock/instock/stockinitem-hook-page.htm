@@ -1,0 +1,159 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>列表显示</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/contextmenu.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript">
+	function batchSet() {
+		var newData = "";
+		var thisInvArr = new Array();
+//		self.parent.clearTable("storageTable");
+		$.each($(':checkbox[name^="datacb"]'), function() {
+			if ($(this).attr('checked') == true) {
+				newData = $(this).prev("input").val();
+				self.parent.addStorage(newData);
+			}
+		});
+		self.parent.tb_remove();
+	}
+
+	$(function() {
+		var hookArr = new Array();
+		var hookMainIds = $("#hookMainIds").val();
+		if (hookMainIds != "") {
+			hookArr = hookMainIds.split(",");
+		}
+		for ( var i = 0; i < hookArr.length; i++) {
+			$("#" + hookArr[i]).attr("checked", true);
+		}
+	});
+
+	function search(actType) {
+		var supplierId = $('#supplierId').val();
+		var supplierName = $('#supplierName').val();
+		var searchvalue = $('#searchvalue').val();
+		var searchfield = $('#searchfield').val();
+		var hookMainIds = $("#hookMainIds").val();
+		var url = "?model=stock_instock_stockinitem&action=instockHookPage&"
+				+ searchfield + "=" + searchvalue + "&supplierId=" + supplierId
+				+ "&supplierName=" + supplierName + "&hookMainIds="
+				+ hookMainIds+"&orderIds="+$("#orderIds").val();
+		if('order'==actType){
+			url+="&purchOrderIds="+$("#orderIds").val();
+		}
+		this.location = url;
+	}
+
+	//清空列表查询
+	function clearUrl() {
+		var supplierId = $('#supplierId').val();
+		var supplierName = $('#supplierName').val();
+		var hookMainIds = $("#hookMainIds").val();
+		var orderIds=$("#orderIds").val();
+		var url = "?model=stock_instock_stockinitem&action=instockHookPage"
+				+ "&supplierId=" + supplierId + "&supplierName=" + supplierName
+				+ "&hookMainIds=" + hookMainIds+"&orderIds="+orderIds;
+		this.location = url;
+	}
+
+  /**
+	* 键盘回车事件
+	*/
+	function confirmKeyEvent(){
+	  alert()
+		if (event.keyCode == 13){
+				$("#confirmBtn").click();
+		}
+	}
+
+	//选择行
+	function checkThis(thisId){
+		if($("#"+thisId).attr("checked") == true){
+			window.opener.addStorage($("#inproductdate" + thisId).val());
+		}else{
+			window.opener.$('.storageList_' + thisId).remove();
+		}
+	}
+</script>
+
+<script language="javascript" for="document" event="onkeydown">
+    if (event.keyCode == 13)
+    {
+        document.getElementById("searchBtn").click();
+    }
+</script>
+
+</head>
+
+<body>
+<div class="main_head">
+	<span class="main_head_title"> 入库清单
+		供应商 - {supplierName}  【单击选择框选择入库单据】
+		<input type="hidden" id="supplierId" value="{supplierId}" />
+		<input type="hidden" id="supplierName" value="{supplierName}" />
+		<input type="hidden" id="hookMainIds"  value="{hookMainIds}" />
+		<input type="hidden" id="orderIds"  value="{orderIds}" />
+    </span>
+	<!--input type="button" value=" 关 闭 " class="main_head_btn" onclick="self.parent.tb_remove();" />
+	<input type="button" value=" 确 认 " class="main_head_btn" onclick="batchSet()" /-->
+</div>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" /> 按 <select id="searchfield" class="txtmiddle">
+			<option value="docCode">单据编号</option>
+			<option value="productName">物料名称</option>
+			<option value="productCode">物料编号</option>
+		</select>
+		<input type="button" id="searchBtn" value=" 搜索 " onclick="search('search')" class="txt_btn_a" />
+		<input type="button" value=" 清空 "	onclick="clearUrl()" class="txt_btn_a" />
+		<input type="button" value=" 关联订单  " onclick="search('order')" class="txt_btn_a" />
+	  </td>
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="3%"><!--input type="checkbox" id="titlecb"
+				onclick="checkAll()"--></th>
+			<th width="8%">单据编号</th>
+			<th width="6%">仓库名称</th>
+			<th width="6%">钩稽状态</th>
+			<th width="6%">单据日期</th>
+			<th width="6%">采购订单</th>
+			<th width="8%">物料名称</th>
+			<th width="6%">物料编号</th>
+			<th width="6%">所属类型</th>
+			<th width="6%">数量</th>
+			<th width="6%">未勾稽数量</th>
+			<th width="6%">单价</th>
+			<th width="6%">金额</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+</table>
+</div>
+{pageDiv}
+<table class="main_table">
+	<tr>
+		<td colspan="4">
+		<!--input type="button" id="confirmBtn" value=" 确 认 " class="txt_btn_a" onkeydown="" onclick="batchSet()" /-->
+		<input type="button" value=" 关 闭 " class="txt_btn_a" onclick="window.close();" />
+		</td>
+	</tr>
+</table>
+</body>
+
+</html>

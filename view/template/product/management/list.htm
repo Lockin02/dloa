@@ -1,0 +1,658 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; height:25px; width:100px;}
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:left; padding-left:4px; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p { margin:0px; padding:0px; width:580px; float:left; line-height: 25px;}
+			#info span {width:190px; display:block; float:left; text-align: left;}
+        </style>
+		<script type="text/javascript">
+		var open_tabs = false;
+		var userid='{userid}';
+		var add_auth = '{add_auth}';
+       $(function(){
+            $('#tt').datagrid({
+				view: detailview,
+				detailFormatter:function(index,row){
+					return '<div id="ddv-' + index + '" class="ddv"></div>';
+				},onExpandRow: function(index,row){
+					$('#ddv-'+index).panel({
+						border:false,
+						cache:false,
+						href:'?model={t_model}&action=history_list&id='+row.id+'&identification='+row.identification,
+						onLoad:function(){
+							$('#tt').datagrid('fixDetailRowHeight',index);
+						}
+					});
+					$('#tt').datagrid('fixDetailRowHeight',index);
+				},
+                title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+                pageSize: 20,
+                singleSelect: true,
+                idField: 'id',
+                fit:true,
+                url: '?model={t_model}&action=list_data',
+                columns: [[/*{
+                    field: 'typename',
+                    title: '类型名称',
+                    width: 100,
+                    align: 'center',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.typeid!=row.d_typeid && row.d_typeid ? '<div style="background:#FBEC88;">'+value+'</div>' : value ;
+                    }
+                },*/ {
+                	field: 'product_name',
+                    title: '产品系列',
+                    width: 180,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.product_name!=row.d_product_name && row.d_product_name ? '<div style="background:#FBEC88;">'+value+'</div>' : value ;
+                    }
+                }, {
+                    field: 'cn_name',
+                    title: '中文名称',
+                    width: 180,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.cn_name!=row.d_cn_name && row.d_cn_name ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                },{
+                    field: 'en_name',
+                    title: '英文名称',
+                    width: 180,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.en_name!=row.d_en_name && row.d_en_name ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'code',
+                    title: '代码',
+                    width: 180,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.code!=row.d_code && row.d_code ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'desc',
+                    title: '描述',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.desc!=row.d_desc && row.d_desc ? '<div style="background:#FBEC88;" title="'+value+'">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'status',
+                    title: '状态',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	str = value == 1 ? '成熟' : (value== 0? '不成熟' : (value==2 ? '定型中' : '停止维护'));
+                    	return row.status!=row.d_status && row.d_status ? '<div style="background:#FBEC88;">'+str+'</div>' : str;
+                    }
+                }, {
+                    field: 'flag',
+                    title: '发布',
+                    width: 40,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	str = value == 1 ? '是' : '否';
+                    	return row.flag!=row.d_flag && row.d_flag ? '<div style="background:#FBEC88;">'+str+'</div>' : str;
+                    }
+                }, {
+                    field: 'time',
+                    title: '发布时间',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.time!=row.d_time && row.d_time ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'version',
+                    title: '版本',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.version!=row.d_version && row.d_version ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'status_desc',
+                    title: '状态说明',
+                    width: 150,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.status_desc!=row.d_status_desc && row.d_status_desc? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, /*{
+                    field: 'unit',
+                    title: '单位',
+                    width: 50,
+                    align: 'center',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.unit!=row.d_unit && row.d_unit? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                },*/ {
+                    field: 'owner_name',
+                    title: '接口人',
+                    width: 70,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.owner!=row.d_owner && row.d_owner? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    width: 140,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                        if (row.operator !=userid && row.owner!=userid) {
+                            var s = '<a href="#" onclick="show_info(' + index + ')">查看详细</a> ';
+                            return s;
+                        }
+                        else {
+                        	var s = '<a href="#" onclick="show_info(' + index + ')">查看</a> | ';
+                        	var b = '<a href="#" onclick="FillIn('+index+',\'change\');">变更</a> | ';
+                            var e = '<a href="#" onclick="FillIn(' + index + ',\'edit\');">修改</a> | ';
+                            var d = '<a href="#" onclick="deleterow(' + index + ')">删除</a>';
+                            return s + b + e + d;
+                        }
+                    }
+                }]],
+                onBeforeEdit: function(index, row){
+                    row.editing = true;
+                    updateActions();
+                },
+                onAfterEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+                onCancelEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+				onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+            
+            create_button();
+            
+			//绑定负责人输入框
+            $("#owner_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#owner').val(data.user_id);
+                }
+                else {
+                    $('#owner').val('');
+                }
+            });
+        });
+       
+       function create_button()
+       {
+    	   if (add_auth == '1')
+           {
+	    	   $('#tt').datagrid('getPager').pagination({
+	               buttons: [{
+	                   iconCls: 'icon-add',
+	                   text: '增加产品',
+	                   handler: function(){
+	                       add();
+	                   }
+	               }]
+	           });
+           }
+       }
+        /**
+        *添加
+        */
+        function add()
+        {
+        	$('#type').val('');
+        	$('#identification').val('');
+        	$('#id').val('');
+        	$('#product_id').attr('value','');
+            $('#code').val('');
+            $('#cn_name').val('');
+            $('#en_name').val('');
+            $('#status').attr('value','');
+            $('input[name=flag][value=1]').attr('checked','checked');
+            $('#time').val('');
+            $('#version').val('');
+            $('#unit').attr('value','');
+            $('#desc').val('');
+            $('#status_desc').val('');
+            $('#owner_name').val('');
+            $('#owner').val('');
+        	$('#add').window({title:'添加产品'});
+        	$('#add').window('open');
+        }
+        /**
+        *
+        *修改、变更
+        */
+        function FillIn(index,type)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            
+            $('#type').val(type);
+            $('#identification').val(row.identification);
+            $('#id').val(row.id);
+            $('#product_id').attr('value',row.product_id);
+            $('#code').val(row.code);
+            $('#cn_name').val(row.cn_name);
+            $('#en_name').val(row.en_name);
+            $('#status').attr('value',row.status);
+            $('input[name=flag][value='+row.flag+']').attr('checked','checked');
+            $('#time').val(row.time);
+            $('#version').val(row.version);
+            $('#desc').val(row.desc);
+            $('#status_desc').val(row.status_desc);
+            $('#unit').attr('value',row.unit);
+            $('#owner').val(row.owner);
+            $('#owner_name').val(row.owner_name);
+            $('#identification').val(row.identification);
+            $('#add').window({title:type=='edit' ? '修改产品状态' : '变更产品状态'});
+            $('#add').window('open');
+            
+        }
+       	/**
+       	*保存
+       	*/
+        function save()
+        {
+        	var msg = '';
+        	var type = $('#type').val();
+       		var id = $('#id').val();
+        	var identification = $('#identification').val();
+        	var owner = $('#owner').val();
+        	
+        	var product_id = $('#product_id').val();
+        	var code = $('#code').val();
+        	var cn_name = $('#cn_name').val();
+        	var en_name = $('#en_name').val();
+        	var status = $('#status').val();
+        	var flag = $('input[name=flag]:checked').val();
+        	var time = $('#time').val();
+        	var version = $('#version').val();
+        	var hardware_version = $('#hardware_version').val();
+        	var unit = $('#unit').val();
+        	var owner_name = $('#owner_name').val();
+        	var owner = $('#owner').val();
+        	var desc = $('#desc').val();
+        	var status_desc = $('#status_desc').val();
+        	
+        	if (product_id == '') msg += '- 请选择产品系列！\r\n';
+        	//if (code == '') msg += '- 请填写产品代码！\r\n';
+        	if (en_name == '') msg += '- 请填写英文名称！\r\n';
+        	if (status == '') msg += '- 请选择产品状态！\r\n';
+        	if (flag == '') msg += '- 请选择产品是否发布！\r\n';
+        	if (flag==1 && time == '') msg += '- 请选择发布时间！\r\n';
+        	if (version == '') msg += '- 请填写产品版本号！\r\n';
+        	if (unit == '') msg += '- 请选择研发单位！\r\n';
+        	if (owner == '') msg += '- 请填写接口人姓名！\r\n';
+        	if (desc == '') msg +='- 请填写描述！\r\n';
+        	if (status_desc == '') msg +='- 请填写产品状态说明！\r\n';
+        	if (msg!='')
+        	{
+        		alert(msg);
+        		return false;
+        	}else{
+        		$.post('?model={t_model}&action=save&id='+id+'&type='+type,{
+        			identification:identification,
+        			owner:owner,
+        			product_id:product_id,
+        			code:code,
+        			cn_name:cn_name,
+        			en_name:en_name,
+        			status:status,
+        			flag:flag,
+        			time:time,
+        			version:version,
+        			hardware_version:hardware_version,
+        			unit:unit,
+        			owner_name:owner_name,
+        			owner:owner,
+        			desc:desc,
+        			status_desc:status_desc,
+        			rand:Math.random(0,99999)
+        		},function (data){
+        			if (data == 1)
+        			{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        				$('#add').window('close');
+        				$('#tt').datagrid('reload');
+        			}else{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作失败，请与OA管理员联系！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        			}
+        		});
+        	}
+        }
+       	/**
+       	*删除
+       	*/
+       	function deleterow(index)
+       	{
+       		$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            $.messager.confirm('删除确认','您确定要删除该条产品变更记录吗？',function(r){
+            	if (r)
+            	{
+            		$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random(0,9999)},function(data){
+            			if (data == 1)
+            			{
+            				$.messager.show({
+    	                        title: '提示',
+    	                        msg: '删除成功！',
+    	                        timeout: 3000,
+    	                        showType: 'show'
+    	                    });
+            				$('#tt').datagrid('reload');
+            			}else{
+            				$.messager.alert('提示','删除失败，请与OA管理员联系！');
+            			}
+            		});
+            	}
+            });
+       	}
+       	/**
+       	*类型筛选
+       	*/
+       	function GetType(product_id)
+       	{
+       		$('#tt').datagrid({
+                url: '?model={t_model}&action=list_data&product_id='+product_id
+            });
+            $('#tt').datagrid('reload');
+            create_button();
+       	}
+       	/**
+       	*搜索
+       	*/
+       	function GetSearch()
+       	{
+       		var keyword = $('#keyword').val();
+       		var typeid = $('#select_typeid').val();
+       		$('#tt').datagrid({
+                url: '?model={t_model}&action=list_data&typeid='+typeid+'&keyword='+keyword
+            });
+            $('#tt').datagrid('reload');
+            create_button();
+       	}
+       	/**
+       	*显示单条记录详细
+       	*/
+       function show_info(index)
+       {
+    	   $('#tt').datagrid('selectRow', index);
+           var row = $('#tt').datagrid('getSelected');
+           for (key in row){
+        	   $('#_'+key).html(row[key] ? row[key] : '&nbsp;');
+           }
+           $('#_status').html(row.status==1 ? '成熟' :( row.status== 0 ? '不成熟' : (row.status==2 ? '定型中' : '停止维护')));
+           $('#_flag').html(row.flag == 1 ? '是' : '否');
+           /*$('#_product_name').html(row.product_name);
+           $('#_code').html(row.code);
+           $('#_cn_name').html(row.cn_name);
+           $('#_en_name').html(row.en_name);
+           
+           $('#_time').html(row.time);
+           $('#_version').html(row.version);
+           $('#_unit').html(row.unit);
+           $('#_owner_name').html(row.owner_name);
+           $('#_desc').html(row.desc);
+           $('#_status_desc').html(row.status_desc);
+           */
+           $('#show_info').dialog('open');
+       }
+       /**
+       *获取单条记录详细并显示
+       */
+       function get_info(id)
+       {
+    	   $.post('?model={t_model}&action=getinfo&id='+id,{rnad:Math.random(0,9999)},function(data){
+    		   if (data)
+    			{
+    			   row = eval('('+data+')');
+    			   $('#_product_name').html(row.product_name);
+    	           $('#_code').html(row.code);
+    	           $('#_cn_name').html(row.cn_name);
+    	           $('#_en_name').html(row.en_name);
+    	           $('#_status').html(row.status==1 ? '成熟' :( row.status== 0 ? '不成熟' : (row.status==2 ? '定型中' : '停止维护')));
+    	           $('#_flag').html(row.flag == 1 ? '是' : '否');
+    	           $('#_time').html(row.time);
+    	           $('#_version').html(row.version);
+    	           $('#_hardware_version').html(row.hardware_version);
+    	           $('#_unit').html(row.unit);
+    	           $('#_owner_name').html(row.owner_name);
+    	           $('#_desc').html(row.desc);
+    	           $('#_status_desc').html(row.status_desc);
+    	           
+    	           $('#show_info').dialog('open');
+    			}
+    	   })
+       }
+  	
+</script>
+    </head>
+    <body id="tabdiv" class="easyui-layout" border="false">
+    	<div region="center" border="false" style="padding:5px;">
+       	<table id="tt" toolbar="#tb"></table>
+	   	<div id="tb" style="padding:5px;height:auto;">
+			<div>
+				产品系列筛选: 
+				<select id="select_typeid" name="select_typeid" onchange="GetType(this.value);">
+				<option value="">所有系列</option>
+				{product_option}
+				</select>
+				关键字:
+				<input type="text" name="keyword" id="keyword" value="" />
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search">search</a>
+			</div>
+		</div>
+		</div>
+		<div id="add" class="easyui-window" title="添加产品" iconCls="icon-edit" modal="false" closed="true" style="width:620px;height:400px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+			<input type="hidden" id="type" name="type" value="" />
+			<input type="hidden" name="id" id="id" value="" />
+			<input type="hidden" id="owner" name="owner" value="" />
+			<input type="hidden" id="identification" name="identification" value="" />
+				<p>
+					<label>产品系列：</label>
+					<span>
+						<select id="product_id" name="product_id">
+							<option value="">请选择产品系列</option>
+							{product_option}
+						</select>
+					</span>
+					<label>代码：</label>
+					<span>
+						<input type="text" id="code" name="code" value="" />
+					</span>
+				</p>
+				<p>
+					<label>中文名称：</label>
+					<span>
+						<input type="text" name="cn_name" id="cn_name" value="" />
+					</span>
+					<label>英文名称：</label>
+					<span>
+						<input type="text" name="en_name" id="en_name" value="" />
+					</span>
+				</p>
+				<p>
+					<label>产品状态：</label>
+					<span>
+						<select id="status" name="status">
+							<option value="1">成熟</option>
+							<option value="0">不成熟</option>
+							<option value="2">定型中</option>
+							<option value="3">停止维护</option>
+						</select>
+					</span>
+					<label>是否发布：</label>
+					<span>
+						<input type="radio" checked id="flag" name="flag" value="1" />是
+						<input type="radio" id="flag" name="flag" value="0" />否
+					</span>
+				</p>
+				<p>
+					<label>发布时间：</label>
+					<span>
+						<input type="text" readonly onClick="WdatePicker()" class="Wdate" name="time" id="time" value="" />
+					</span>
+					<label>软件版本：</label>
+					<span>
+						<input type="text" size="6" name="version" id="version" onkeyup="value=this.value.replace(/[^\d\.]/g,'');" value="" />
+						<b>硬件版本</b>：<input type="text" size="6" name="hardware_version" id="hardware_version" onkeyup="value=this.value.replace(/[^\d\.]/g,'');" value="" />
+					</span>
+				</p>
+				<p>
+					<label>研发单位：</label>
+					<span>
+						<select id="unit" name="unit">
+							<option value="">选择单位</option>
+							<option value="鼎利">鼎利</option>
+							<option value="贝软">贝软</option>
+							<option value="世源">世源</option>
+						</select>
+					</span>
+					<label>接口人：</label>
+					<span>
+						<input type="text" name="owner_name" id="owner_name" value="" />
+					</span>
+				</p>
+				<p style="height:60px;">
+					<label style=" line-height: 70px;">描述：</label>
+					<textarea style="width:80%;height:60px;" id="desc" name="desc"></textarea>
+				</p>
+				<p>
+					<label style=" line-height: 70px;">状态说明：</label>
+					<textarea style="width:80%;height:60px;" name="status_desc" id="status_desc"></textarea>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+		<div id="show_info" class="easyui-dialog" title="查看详细" iconCls="icon-edit" modal="false" closed="true" style="width:630px;height:450px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+				<p>
+					<label>产品系列：</label><span id="_product_name"></span>
+					<label>代码：</label><span id="_code"></span>
+				</p>
+				<p>
+					<label>中文名称：</label><span id="_cn_name"></span>
+					<label>英文名称：</label><span id="_en_name"></span>
+				</p>
+				<p>
+					<label>产品状态：</label><span id="_status"></span>
+					<label>是否发布：</label><span id="_flag"></span>
+				</p>
+				<p>
+					<label>发布时间：</label><span id="_time"></span>
+					<label>软件版本：</label><span><small id="_version" style="font-size: 12px;"></small> <b>硬件版本：</b><small style="font-size: 12px;" id="_hardware_version"></small></span>
+				</p>
+				<p>
+					<label>研发单位：</label><span id="_unit"></span>
+					<label>接口人：</label><span id="_owner_name"></span>
+				</p>
+				<p style="height:60px;">
+					<label style=" line-height: 70px;">描述：</label>
+					<span id="_desc"></span>
+				</p>
+				<p>
+					<label style=" line-height: 70px;">状态说明：</label>
+					<span id="_status_desc" style="width: 80%;display:block;line-height: 20px;"></span>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show_info').dialog('close');" value=" 关闭返回 " />
+				</form>
+			</div>
+		</div>
+		</div>
+    </body>
+</html>

@@ -1,0 +1,158 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>
+            计划任务列表
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css"/>
+
+        <script type="text/javascript" src="js/treetable/jquery.js">
+        </script>
+        <!-- 下拉多选组件 -->
+        <link href="js/multiselect/jquery.multiSelect.css" rel="stylesheet" type="text/css"/>
+        <script src="js/multiselect/jquery.bgiframe.min.js" type="text/javascript">
+        </script>
+        <script src="js/multiselect/jquery.multiSelect.js" type="text/javascript">
+        </script>
+
+        <script type="text/javascript" src="js/thickbox.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/jquery.contextmenu.js">
+        </script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+        <script type="text/javascript" src="js/treetable/hashMap.js">
+        </script>
+        <script type="text/javascript" src="js/treetable/GridTree.All.js">
+        </script>
+        <script type="text/javascript" src="view/template/rdproject/task/js/tknode_plan_gridtree.js">
+        </script>
+        <script type="text/javascript" src="js/treetable/hashMap.js">
+        </script>
+		<script type="text/javascript"
+			src="view/template/rdproject/task/js/rdtask-plan-list.js"></script>
+    </head>
+    <body onload="newTkNodeGridTree();">
+        <div class="main_head">
+            <span class="main_head_title">
+                计划任务
+                <<<font color="blue">
+                    {planName}
+                    </font>
+                    >>
+            </span>
+            <input name="goBack" type="button" class="main_head_btn" value="返回计划列表"
+            onclick="history.back();" />
+        </div>
+        <div id="main_wraper" class="main_wraper">
+            <table class="main_table_search">
+                <tr>
+                    <td>
+                        <!-- 输入关键字： <input type="text" id="searchvalue" class="txt" name="searchvalue"
+                        value="" />
+                        按
+                        <select id="searchfield" class="select">
+                            <option>
+                                请选择
+                            </option>
+                            <option value="name">
+                                任务名称
+                            </option>
+                            <option value="projectName">
+                                所属项目
+                            </option>
+                        </select>
+                        <input type="button" value=" 搜索 " class="txt_btn_a" />
+                        -->
+                        <input type="hidden" id="planId" value="{planId}">
+                        <input type="hidden" id="planName" value="{planName}">
+                        <input type="hidden" id="projectId" value="{projectId}">
+                        <input type="hidden" id="projectCode" value="{projectCode}">
+                        <input type="hidden" id="projectName" value="{projectName}">
+                        &nbsp;
+                        <!-- input title="批量编辑" type="button" value=" 批量编辑 " class="thickbox txt_btn_a"
+                        alt="?model=rdproject_task_rdtask&action=toBatchEditor&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=1200"
+                        />
+                        --> &nbsp;
+                        <input title="新建节点" id="addNode" type="button" value=" 新建节点 " class="thickbox txt_btn_a"/>
+                        &nbsp;
+                        <input title="新建任务" id="addTask" type="button" value=" 新建任务 " class="thickbox txt_btn_a"/>
+                        &nbsp;
+<!--                         <input title="导入任务" id="importTask" type="button" value=" 导入任务 " class="thickbox txt_btn_a"/>
+                        &nbsp; -->
+                        <select onchange="goPage(this.value)">
+                            <option value="treeTable">
+                                树状图
+                            </option>
+                            <option value="gantt">
+                                甘特图
+                            </option>
+                        </select>
+                    </td>
+<!--                     <td align="left">
+                        &nbsp;
+                        <input type="button" class="txt_btn_a" value="导出EXCEL" id="exportbtn" onclick="exportExcel()">
+                        &nbsp;映射字段:
+                        <select id="control_1" name="control_1[]" multiple="multiple" style="width: 100px;">
+                            <option value="projectCode">
+                                项目编号
+                            </option>
+                            <option value="projectName">
+                                项目名称
+                            </option>
+                            <option value="name">
+                                任务名称
+                            </option>
+                            <option value="remark">
+                                任务描述
+                            </option>
+                            <option value="status">
+                                任务状态
+                            </option>
+                            <option value="chargeName">
+                                责任人
+                            </option>
+                            <option value="auditUser">
+                                验收人
+                            </option>
+                            <option value="priority">
+                                优先级
+                            </option>
+                            <option value="taskType">
+                                任务类型
+                            </option>
+<!--                             <option value="">
+                                严重级
+                            </option>
+                            <option value="planBeginDate">
+                                计划开始时间
+                            </option>
+                            <option value="actBeginDate">
+                                实际开始时间
+                            </option>
+                            <option value="planEndDate">
+                                计划完成时间
+                            </option>
+                            <option value="actEndDate">
+                                实际完成时间
+                            </option>
+<!--                             <option value="taskType">
+                                验收时间
+                            </option>
+                        </select>
+                    </td>
+                </tr> -->
+            </table>
+            <div id="tkNodeGridTree">
+                正在装载，请等待。。。
+            </div>
+            <div id="tkGantt" style="display:none">
+                <iframe id="tkGanttView" width="98%" height="610px" frameborder=0 id="ganttView">
+                </iframe>
+            </div>
+        </div>
+    </body>
+</html>

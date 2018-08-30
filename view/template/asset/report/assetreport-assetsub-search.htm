@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>资产统计表搜索</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+
+</head>
+<script type="text/javascript">
+	$(function(){
+	    $("#orgName").yxselect_dept({
+			hiddenId : 'orgId'
+		});
+	    $("#useOrgName").yxselect_dept({
+			hiddenId : 'useOrgId'
+		});
+	    $("#userName").yxselect_user({
+			hiddenId : 'userId'
+		});
+	});
+	function confirm() {
+		var assetTypeName=$("#assetTypeName").val();
+		this.opener.location = "?model=asset_report_assetreport&action=toProAssetReport&assetTypeName="+assetTypeName
+		+"&useStatusCode="+$("#useStatusCode").val()
+		+"&useStatusName="+$("#useStatusName").val()
+		+"&assetSource="+$("#assetSource").val()
+		+"&assetSourceName="+$("#assetSourceName").val()
+		+"&orgId="+$("#orgId").val()
+		+"&orgName="+$("#orgName").val()
+		+"&useOrgId="+$("#useOrgId").val()
+		+"&useOrgName="+$("#useOrgName").val()
+		+"&userId="+$("#userId").val()
+		+"&userName="+$("#userName").val();
+		this.close();
+	}
+	function refresh(){
+		$(".cleanType input").val("");
+		$("#useStatusCode").val("");
+		$("#assetSource").val("");
+	}
+</script>
+<body>
+<div class="main_head"><span class="main_head_title"> 资产搜索
+</span></div>
+<table class="form_main_table">
+	<tr class="cleanType">
+		<td class="form_text_left">资产类别</td>
+		<td class="form_text_right"><input type="text" id="assetTypeName"
+			value="{assetTypeName}" class="txt" /></td>
+	</tr>
+	<tr class="cleanType">
+		<td class="form_text_left">使用状态</td>
+		<td class="form_text_right">
+			 <select class="select" id="useStatusCode"
+			  onchange="javascript:$('useStatusName').val(this.options[this.selectedIndex].innerText);">
+			  	<option value="">请选择...</option>
+			     {useOption}
+			 </select>
+			 <input type="hidden" class="txt" id="useStatusName"/>
+		</td>
+	</tr>
+	<tr class="cleanType">
+		<td class="form_text_left">资产来源</td>
+		<td class="form_text_right">
+			 <select class="select" id="assetSource"
+			  onchange="javascript:$('assetSourceName').val(this.options[this.selectedIndex].innerText);">
+			  	<option value="">请选择...</option>
+			     {assetSource}
+			 </select>
+			 <input type="hidden" class="txt" id="assetSourceName" />
+		</td>
+	</tr>
+	<tr class="cleanType">
+		<td class="form_text_left">归属部门</td>
+		<td class="form_text_right">
+			<input type="hidden" id="orgId" value="{orgId}" class="txt" />
+			<input type="text" id="orgName" value="{orgName}" class="txt" />
+		</td>
+	</tr>
+<!--	<tr>-->
+<!--		<td class="form_text_left">归属人</td>-->
+<!--		<td class="form_text_right">-->
+<!--			<input type="text" id="assetTypeName" value="{assetTypeName}" class="txt"/>-->
+<!--		</td>-->
+<!--	</tr>-->
+	<tr class="cleanType">
+		<td class="form_text_left">使用部门</td>
+		<td class="form_text_right">
+			<input type="hidden" id="useOrgId" value="{useOrgId}" class="txt"/>
+			<input type="text" id="useOrgName" value="{useOrgName}" class="txt"/>
+		</td>
+	</tr>
+	<tr class="cleanType">
+		<td class="form_text_left">使用人</td>
+		<td class="form_text_right">
+			<input type="hidden" id="userId" value="{userId}" class="txt"/>
+			<input type="text" id="userName" value="{userName}" class="txt"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="button"
+			class="txt_btn_a" value="确   认" onclick="confirm();" /> <input
+			type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

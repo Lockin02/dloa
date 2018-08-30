@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<TITLE>招聘计划统计报表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC" codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script src="js/DatePicker/WdatePicker.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<style type="text/css">
+	tr {
+		text-align:right;
+	}
+	tr td{
+		padding-right:10px;
+		padding-left:10px;
+	}
+	select{
+		width:120px;
+	}
+</style>
+<script>
+	function searchBtn(){
+		location.href="?model=hr_report_hrreport&action=toApplyStatisticsReport"
+			+ "&formDateSta=" + $.trim($("#formDateSta").val())
+			+ "&formDateEnd=" + $.trim($("#formDateEnd").val())
+	}
+
+	function reset(){
+		location.href="?model=hr_report_hrreport&action=toApplyStatisticsReport";
+	}
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+
+<table border="0" width="100%" height="100%" class="form_main_table">
+<tr>
+	<td  align="left">搜索条件：</td>
+</tr>
+<tr>
+	<td width="100%">
+	<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">开始招聘年月</td>
+		<td class="form_text_right">
+			<input class="txt" id="formDateSta" name="formDateSta" value="{formDateSta}" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" />
+		</td>
+		<td class="form_text_left">结束招聘年月</td>
+		<td class="form_text_right">
+			<input class="txt" id="formDateEnd" name="formDateEnd" value="{formDateEnd}" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" />
+		</td>
+		<tr>
+			<td class="txt_btn" colspan="4" align="center">
+			<input type="button" class="txt_btn_a" onclick="searchBtn();" value=" 查  询 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" onclick="reset();" value=" 重  置 "/>
+			</td>
+		</tr>
+	</tr>
+	</table>
+	</td>
+</tr>
+<tr height="100%">
+	<td colspan="5" style="font-size: 10pt;" height="100%">
+		<script language="javascript">
+		    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+			CreateDisplayViewerEvent("POST::view/template/hr/report/hrreport-applystatistics.grf"
+			,"view/template/hr/report/hrreport-applystatistics.php"
+			+ "?formDateSta=" + $.trim($("#formDateSta").val())
+			+ "&formDateEnd=" + $.trim($("#formDateEnd").val()),
+			"<param name=RowSelection value=false>"
+            + "<param name='OnContentCellDblClick' value='OnReportViewerContentCellDblClick'>"
+			)
+		</script>
+	</td>
+</tr>
+</table>
+</BODY>
+</HTML>

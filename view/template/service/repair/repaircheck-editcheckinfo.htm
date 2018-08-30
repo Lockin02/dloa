@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>修改处理方法</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<!-- 核心组件 -->
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<!-- 组织机构用户 -->
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+		<!-- email -->
+		<script type="text/javascript" src="js/common/email.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				//渲染邮件
+			    $("#TO_NAME").yxselect_user({
+					hiddenId : 'TO_ID',
+					mode : 'check'
+				});
+			});
+    	</script>
+	</head>
+<body>
+	<div class="main_head2"><span class="main_head_title">修改处理方法</span>
+    </div>
+		<form action="?model=service_repair_repaircheck&action=editCheckInfo" method="post" id="form1">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						上次检测处理方法
+					</td>
+					<input type="hidden" name="repaircheck[beforeCheckInfo]" value="{checkInfo}" />
+		      		<td class="form_text_right" colspan="3">
+			      		{checkInfo}
+		      		</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						检测处理方法
+					</td>
+					<td colspan="3" class="form_text_right">
+						<textarea class="txt_txtarea_font" name="repaircheck[checkInfo]" id="checkInfo"></textarea>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+			   	<tr>
+						<td class="form_text_left">是否发送邮件</td>
+						<td class="form_text_right" colspan="3">
+							 <input type="radio" name="repaircheck[mailInfo][issend]" value="y" onclick="checkEmailTA(this);" checked/>是
+							 <input type="radio" name="repaircheck[mailInfo][issend]" value="n" onclick="checkEmailTA(this)"/>否
+						</td>
+				</tr>
+				<tr id="maildiv">
+						<td class="form_text_left">邮件接收者</td>
+						<td class="form_text_right" colspan="3">
+							<input type="text" name="repaircheck[mailInfo][TO_NAME]" class="txtlong" id="TO_NAME" value="{TO_NAME}" readonly/>
+							<input type="hidden" name="repaircheck[mailInfo][TO_ID]" id="TO_ID" value="{TO_ID}"/>
+						</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<input type="hidden" name="repaircheck[id]" value="{id}"/>
+						<input type="submit" class="txt_btn_a" value="提交"/>
+						<input type="button" class="txt_btn_a" value="返回" onclick="closeFun();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

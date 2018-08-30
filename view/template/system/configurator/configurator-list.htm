@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+    <title>配置端</title>
+    {#commonInclude#}
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <script>
+        var attributeNameStr = "{attributeNameStr}";
+        var publicUrl = "?model={t_model}";
+        var createName ="{createName}";
+        var createId = "{createId}";
+        var createTime = "{createTime}";
+        var classify_sel = "{classify_sel}";
+    </script>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="view/template/manufacture/basic/css/template-list.css" />
+
+    <script src="js/jquery/jquery.masonry.min.js"></script>
+
+    <script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/jeasyui_newest/datagrid/datagrid-detailview.js"></script>
+
+    <script type="text/javascript" src="{#jsPath#}/configuration-format.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/configuration-common.js"></script>
+
+    <style type="text/css">
+        #configurator_tree li>div{padding: 2px 0;}
+        #remarks,#cm_remarks{border: 1px solid #C0C2CF;font-size: 12px;text-align: left;padding-left: 3px;width: 220px;height: 50px;}
+        #costTypeInner{overflow-y: scroll !important;}
+        #costTypeInner>div{min-height: 1670px;}
+        #cm_conFig1Opts{padding:10px;float: left;}
+        /*#cm_conFig1Opts .checkboxItem{display: inline-block;padding-right: 15px;}*/
+        #cm_conFig1Opts .checkboxItem{display: block;width: 50%;float: left;}
+    </style>
+</head>
+<body>
+
+<div id='main'>
+
+    <!-- 左侧 -->
+    <div id='left' >
+        <div style="margin: -5px;border-bottom: 1px solid #E0ECFF;margin-bottom: 0;padding: 5px;text-align: center;font-size: 14px;">
+            配置端模块
+        </div>
+        <ul id="configurator_tree"></ul>
+    </div>
+    <!-- 右侧 -->
+    <div id='right' >
+        <div id='configuratorItems-list'></div>
+        <div id='configuratorItem-edit' style="display:none;">
+            <form id="form1" method="post" action="?model=system_configurator_configurator&action=editConfiguratorItem">
+                <table class="form_main_table">
+                    <tr>
+                        <td class="form_text_left">配置部门:</td>
+                        <td class="form_text_right">
+                            <div id="defaultDeptTips" style="font-size: 12px;color:#a0a0a0;margin-bottom: 5px;">允许进行报销分摊的部门</div>
+                            <input type="hidden" id="unDeptFilter" value=""/>
+                            <input type="text" class="txt" name="configurator[belongDeptNames]" id="belongDeptName" readonly="readonly"/>
+                            <input type="hidden" name="configurator[belongDeptIds]" id="belongDeptId"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="form_text_left">备  注:</td>
+                        <td class="form_text_right">
+                            <textarea id="remarks" name="configurator[remarks]"></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <table class="form_main_table">
+                    <tr>
+                        <td class="txt_btn" colspan="2">
+                            <input type="hidden" id="configuratorItemId" name="configurator[id]"/>
+                            <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div id='configuratorItem-commonEdit' style="display:none;">
+            <form id="form2" method="post" action="?model=system_configurator_configurator&action=editConfiguratorItem">
+                <table class="form_main_table">
+                    <tr class="cm_configItem" id="cm_belongDeptTr" style="display:none;">
+                        <td class="form_text_left">配置部门:</td>
+                        <td class="form_text_right">
+                            <input type="text" class="txt" name="configurator[belongDeptNames]" id="cm_belongDeptName" readonly="readonly"/>
+                            <input type="hidden" name="configurator[belongDeptIds]" id="cm_belongDeptId"/>
+                        </td>
+                    </tr>
+
+                    <tr class="cm_configItem" id="cm_conFig1Tr" style="display:none;">
+                        <td class="form_text_left"><span id="cm_conFig1Label">配置1:</span></td>
+                        <td class="form_text_right">
+                            <div id="cm_conFig1ExtWrap"></div>
+                            <input type="text" class="txt" name="configurator[config_item1]" id="cm_conFig1"/>
+                            <input type="hidden" name="configurator[config_itemSub1]" id="cm_conFigSub1"/>
+                        </td>
+                    </tr>
+
+                    <tr class="cm_configItem" id="cm_conFig2Tr" style="display:none;">
+                        <td class="form_text_left"><span id="cm_conFig2Label">配置2:</span></td>
+                        <td class="form_text_right">
+                            <div id="cm_conFig2ExtWrap"></div>
+                            <input type="text" class="txt" name="configurator[config_item2]" id="cm_conFig2"/>
+                            <input type="hidden" name="configurator[config_itemSub2]" id="cm_conFigSub2"/>
+                        </td>
+                    </tr>
+
+                    <tr class="cm_configItem" id="cm_conFig3Tr" style="display:none;">
+                        <td class="form_text_left"><span id="cm_conFig3Label">配置3:</span></td>
+                        <td class="form_text_right">
+                            <div id="cm_conFig3ExtWrap"></div>
+                            <input type="text" class="txt" name="configurator[config_item3]" id="cm_conFig3"/>
+                            <input type="hidden" name="configurator[config_itemSub3]" id="cm_conFigSub3"/>
+                        </td>
+                    </tr>
+
+                    <tr class="cm_configItem" id="cm_conFig4Tr" style="display:none;">
+                        <td class="form_text_left"><span id="cm_conFig4Label">配置4:</span></td>
+                        <td class="form_text_right">
+                            <div id="cm_conFig4ExtWrap"></div>
+                            <input type="text" class="txt" name="configurator[config_item4]" id="cm_conFig4"/>
+                            <input type="hidden" name="configurator[config_itemSub4]" id="cm_conFigSub4"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="form_text_left">备  注:</td>
+                        <td class="form_text_right">
+                            <textarea id="cm_remarks" name="configurator[remarks]"></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <table class="form_main_table">
+                    <tr>
+                        <td class="txt_btn" colspan="2" id="cm_footerWrap">
+                            <input type="hidden" id="cm_configuratorItemId" name="configurator[id]"/>
+                            <input type="button" id="cm_submit" class="txt_btn_a" value=" 保  存 "/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div id="costTypeInner"></div>
+
+        <input type="hidden" id="costTypeIds" value=""/>
+    </div>
+</div>
+</body>
+</html>

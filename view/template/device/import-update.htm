@@ -1,0 +1,180 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="POST" action="?model={t_model}&action=save_data" onsubmit="return check();">
+	<input type="hidden" id="filename" name="filename" value="{filename}" />
+	<input type="hidden" id="sheet" name="sheet" value="{p_sheet}" />
+	<input type="hidden" id="hang" name="hang" value="{p_hang}" />
+	<input type="hidden" id="start_data" name="start_data" value="{p_start_data}" />
+	<input type="hidden" id="operation" name="operation" value="{p_operation}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{p_dept_id}">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" style="display:{none}" id="show_type">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">条件设置</td>
+	</tr>
+	{type_select}
+	{device_select}
+	{area_select}
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="term_list">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="3">选择对应的字段内容作为条件</td>
+	</tr>
+	<tr id="term_0">
+		<td align="left"><span style="width:50px;">&nbsp;&nbsp;</span> 条件：<select name="term_content[]">
+			{content_select}
+			</select>
+			<select name="operator[]">
+				<option value="="> = </option>
+				<option value=">"> > </option>
+				<option value="<"> < </option>
+				<option value=">="> >= </option>
+				<option value="<="> <= </option>
+				<option value="!="> != </option>
+			</select>
+			<select name="term_field[]">
+			<option value="">选择数据库列</option>
+			{field_select}
+			</select>	
+		</td>
+		<td><input type="button" onclick="term_add()" value=" 增加 " /></td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="field_list">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">选择对应的字段内容更新</td>
+	</tr>
+	<tr id="field_0">
+		<td align="left">将：<select name="content[]">
+			{content_select}
+			</select>
+		更新至<select name="field[]">
+			<option value="">选择数据库列</option>
+			{field_select}
+			</select>
+		</td>
+		<td><input type="button" onclick="field_add()" value=" 增加 " /></td>
+	</tr>
+</table>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td align="center"><input type="submit" value=" 开始更新 " /></td>
+	</tr>
+</table>
+
+</form>
+<script type="text/javascript">
+	var termid = 0;
+	var fiedlid = 0;
+	
+	function check()
+	{
+		if ($('#typename').html())
+		{
+			if ($('#typename').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为设备类别！');
+				return false;
+			}
+		}
+		if ($('#device').html())
+		{
+			if ($('#device').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为设备名称！');
+				return false;
+			}
+		}
+		if ($('#area').html())
+		{
+			if ($('#area').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为库存区域！');
+				return false;
+			}
+		}
+		var term_content = $('select[name=term_content[]] option:selected').get();
+		var term_field = $('select[name=term_field[]] option:selected').get();
+		for(var i = 0;i<term_content.length;i++)
+		{
+			if (term_content[i].value=='')
+			{
+				alert('请选择作为条件Excel内容列');
+				return false;
+			}
+			
+			if (term_field[i].value=='')
+			{
+				alert('请选择对应条件的数据库列！');
+				return false;
+			}
+		}
+		
+		var contents = $('select[name=content[]] option:selected').get();
+		var fields = $('select[name=field[]] option:selected').get();
+		if (contents.length < 1) 
+		{
+			alert('最少要选择导入一列Excel数据！');
+			return false;
+		}
+		for(var i = 0;i<contents.length;i++)
+		{
+			if (contents[i].value=='')
+			{
+				alert('请选择要更新的Excel内容列');
+				return false;
+			}
+			
+			if (fields[i].value=='')
+			{
+				alert('请选择更新的对应的数据列');
+				return false;
+			}
+		}
+		show_load();
+		return true;
+	}
+	function term_add()
+	{
+		termid++;
+		var html = $('#term_0').html();
+		html = html.replace('增加','删除');
+		html = html.replace('term_add()','term_del('+termid+')');
+		$('#term_list').append('<tr id="term_'+termid+'">'+html+'</tr>');
+		$('#term_'+termid+' span').html('<select name="where[]"><option value="and">和</option><option value="or">或</option></select>');
+	}
+	function field_add()
+	{
+		fiedlid++;
+		var html = $('#field_0').html();
+		html = html.replace('增加','删除');
+		html = html.replace('field_add()','field_del('+fiedlid+')');
+		$('#field_list').append('<tr id="field_'+fiedlid+'">'+html+'</tr>');
+	}
+	function term_del(id)
+	{
+		$('#term_'+id).remove();
+	}
+	function field_del(id)
+	{
+		$('#field_'+id).remove();
+	}
+	
+	function show_load()
+	{
+		tb_show('','#TB_inline_html?&inlineId=mydiv&modal=true&height=55&width=250');
+	}
+</script>
+<div id="mydiv" style="display:none">正在更新数据，请不要关闭此窗口！</div>
+</body>
+</html>

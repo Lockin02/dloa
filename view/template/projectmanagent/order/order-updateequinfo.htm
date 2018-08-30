@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>更新合同物料错误数据</title>
+   {#commonInclude#}
+   <script>
+   	function updateEquInfo(docType) {
+		$("#msg").html("正在更新中...");
+		$.ajax({
+			url : '?model=contract_common_allcontract&action=updateEquInfo&docType='
+					+ docType,
+			success : function(data) {
+				if (data == -1) {
+					alert('程序出错,更新失败.失败原因:' + data);
+					$("#msg").html('更新失败.失败原因:' + data);
+				} else if(data==0){
+					alert('无错误数据');
+					$("#msg").html('');
+				}else {
+					alert('已更新'+data+'个单据');
+					$("#msg").html('更新成功.请关闭窗口后重新刷新数据查看.');
+				}
+
+			}
+		});
+}
+   </script>
+</head>
+
+<body>
+   <form id="form1">
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	更新合同物料错误数据
+             </span>
+            </div>
+            </td>
+         </tr>
+<tr>
+	<td>
+		1.<input type="button"  value="销售合同" class="txt_btn_a" onclick="updateEquInfo('oa_sale_order')"/></td>
+	<td>
+		2.<input type="button" value="服务合同" class="txt_btn_a" onclick="updateEquInfo('oa_sale_service')"/>
+ 	</td>
+ 	</tr>
+ <tr>
+ 	<td>
+		3.<input type="button" value="租赁合同" class="txt_btn_a" onclick="updateEquInfo('oa_sale_lease')"/></td>
+	<td>
+		4.<input type="button" value="研发合同" class="txt_btn_a" onclick="updateEquInfo('oa_sale_rdproject')"/>
+ 	</td>
+ </tr>
+  <tr>
+ 	<td>
+		5.<input type="button" value="借试用" class="txt_btn_a" onclick="updateEquInfo('oa_borrow_borrow')"/></td>
+	<td>
+		6.<input type="button" value="赠送" class="txt_btn_a" onclick="updateEquInfo('oa_present_present')"/>
+	</td>
+ </tr>
+      </table>
+       <div id='msg'></div>
+   </form>
+</body>
+</html>

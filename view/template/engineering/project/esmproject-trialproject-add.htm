@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新增工程项目</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/esmproject-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/esmproject-trialproject-add.js"></script>
+</head>
+
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	新增工程-试用项目
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_project_esmproject&action=addProject">
+<table class="form_main_table">
+<tr>
+    <td colspan="6">
+        <fieldset>
+            <legend class="legend">基 本 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three"><span class="blue">项目编号：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" name="esmproject[projectCode]" id="projectCode" readonly="readonly"/>
+                    </td>
+                    <td class="form_text_left_three"><span class="blue">项目名称：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="esmproject[projectName]" value="{projectName}"
+                               id="projectName"/>
+                    </td>
+                    <td class="form_text_left_three"><span class="blue">项目经理：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="hidden" name="esmproject[managerId]" id="managerId"/>
+                        <input type="text" class="txt" name="esmproject[managerName]" id="managerName"
+                               readonly="readonly"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">人 数：</td>
+                    <td class="form_text_right_three">
+                        <input type="text" name="esmproject[peopleNumber]" class="txt" id="peopleNumber"/>
+                    </td>
+                    <td class="form_text_left_three">外包类型：</td>
+                    <td class="form_text_right_three">
+                        <select class="select" name="esmproject[outsourcing]" id="outsourcing">
+                            {outsourcing}
+                        </select>
+                    </td>
+                    <td class="form_text_left_three">执行区域：</td>
+                    <td class="form_text_right_three">
+                        <select id="productLine" name="esmproject[productLine]" class="select" onchange="updateOfficeInfo(this)">
+                            {productLine}
+                        </select>
+                        <input type="hidden" name="esmproject[officeId]" id="officeId"/>
+                        <input type="hidden" name="esmproject[officeName]" id="officeNameInput"/>
+                        <input type="hidden" name="esmproject[deptId]" id="deptId"/>
+                        <input type="hidden" name="esmproject[deptName]" class="txt" id="deptNameInput"/>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6">
+        <fieldset>
+            <legend class="legend">详 细 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three"><span class="blue">预计开始：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt Wdate" name="esmproject[planBeginDate]" id="planBeginDate"
+                               value="{planBeginDate}" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+                    </td>
+                    <td class="form_text_left_three"><span class="blue">预计结束：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt Wdate" name="esmproject[planEndDate]" id="planEndDate"
+                               value="{planEndDate}" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+                    </td>
+                    <td class="form_text_left_three"><span class="blue">预计工期：</span></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="esmproject[expectedDuration]" id="expectedDuration"
+                               value="{expectedDuration}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">项目属性：</td>
+                    <td class="form_text_right">
+                        {attributeCN}
+                        <input type="hidden" name="esmproject[attribute]" value="{attribute}"/>
+                    </td>
+                    <td class="form_text_left_three"><span class="blue">项目类别：</span></td>
+                    <td class="form_text_right_three">
+                        <select class="select" name="esmproject[category]" id="category">
+                            {category}
+                        </select>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6">
+        <fieldset>
+            <legend class="legend">合 同 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three">源单编号：</td>
+                    <td class="form_text_right_three">
+                        {contractCode}
+                        <input type="hidden" id="contractCode" name="esmproject[contractCode]" value="{contractCode}"/>
+                        <input type="hidden" id="contractId" name="esmproject[contractId]" value="{id}"/>
+                        <input type="hidden" id="contractType" name="esmproject[contractType]" value="{contractType}"/>
+                        <input type="hidden" name="esmproject[workRate]" id="workRate" value="100"/>
+                    </td>
+                    <td class="form_text_left_three">客户名称：</td>
+                    <td class="form_text_right">
+                        {customerName}
+                        <input type="hidden" name="esmproject[customerName]" value="{customerName}"/>
+                        <input type="hidden" name="esmproject[customerId]" value="{customerId}"/>
+                    </td>
+                    <td class="form_text_left_three">客户类型：</td>
+                    <td class="form_text_right_three">
+                        {customerTypeName}
+                        <input type="hidden" name="esmproject[customerType]" value="{customerType}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">所属国家：</td>
+                    <td class="form_text_right_three">
+                        <select class="select" name="esmproject[countryId]" id="country"></select>
+                        <input type="hidden" name="esmproject[country]" id="countryName" value="中国"/>
+                        <input type="hidden" value="{countryId}" id="countryId"/>
+                    </td>
+                    <td class="form_text_left_three">所属省份：</td>
+                    <td class="form_text_right_three">
+                        <select class="select" name="esmproject[provinceId]" id="province"></select>
+                        <input type="hidden" name="esmproject[province]" id="provinceName"/>
+                        <input type="hidden" value="{provinceId}" id="provinceId"/>
+                    </td>
+                    <td class="form_text_left_three">所属城市：</td>
+                    <td class="form_text_right_three">
+                        <select class="select" name="esmproject[cityId]" id="city"></select>
+                        <input type="hidden" name="esmproject[city]" id="cityName"/>
+                        <input type="hidden" value="{cityId}" id="cityId"/>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6">
+        <fieldset>
+            <legend class="legend">描 述 信 息
+                <img src="images/icon/info_up.gif" id="descImg" onclick="showAndHide('descImg','descTbl')"/>
+            </legend>
+            <table class="form_in_table" id="descTbl">
+                <tr>
+                    <td class="form_text_left_three">项目目标：</td>
+                    <td class="form_text_right" colspan="5">
+                        <textarea class="txt_txtarea_full" name="esmproject[projectObjectives]"
+                                  id="projectObjectives" rows="4" cols="78"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">项目实施要求：</td>
+                    <td class="form_text_right" colspan="5">
+                        <textarea class="txt_txtarea_full" name="esmproject[description]"
+                                  id="description" rows="4" cols="78"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td class="txt_btn" colspan="6">
+        <input type="hidden" name="esmproject[businessBelongName]" id="businessBelongName"
+               value="{businessBelongName}"/>
+        <input type="hidden" name="esmproject[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+        <input type="hidden" name="esmproject[formBelong]" id="formBelong" value="{formBelong}"/>
+        <input type="hidden" name="esmproject[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+		<input type="hidden" id="moduleCode" value="{moduleCode}"/>
+        <input type="hidden" name="esmproject[incomeType]" id="incomeType" value="SRQRFS-01"/>
+        <input type="hidden" name="esmproject[incomeTypeName]" id="incomeTypeName" value="按工程项目进度"/>
+        <input type="hidden" name="esmproject[status]" id="status" value="GCXMZT01"/>
+        <input type="hidden" name="esmproject[ExaStatus]" id="ExaStatus" value="待提交"/>
+        <input type="hidden" name="esmproject[newProLine]" id="newProLine" value="{newProLine}"/>
+        <input type="hidden" name="esmproject[newProLineName]" id="newProLineName" value="{newProLineName}"/>
+        <input type="submit" class="txt_btn_a" value="生成项目" onclick="return confirm('确定要生成项目吗？');"/>
+        <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+    </td>
+</tr>
+</table>
+</form>
+</body>
+</html>

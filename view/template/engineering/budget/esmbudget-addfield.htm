@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>引入预算</title>
+    {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-expensemodel.js"></script>
+	<script src="js/jquery/jquery.masonry.min.js"></script>
+
+    <script type="text/javascript" src="{#jsPath#}/esmbudget-addfield.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/esmbudget-common.js" ></script>
+
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=engineering_budget_esmbudget&action=addBatch" >
+	<table class="form_main_table">
+     		<tr>
+      		<td colspan="4">
+	            <div class="main_head2">
+		            <span class="main_head_title">所属项目：{projectName}</span>
+	            </div>
+            </td>
+		</tr>
+	</table>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4" class="form_text_right">
+	         	费用模板 ：<input type="text" class="txt" id="templateName" value="{templateName}" readonly="readonly"/>
+	       		<input type="hidden" id="templateId" value="{templateId}"/>
+
+				<input type="button" style="height:22px;" alt="#TB_inline?height=450&width=750&inlineId=costTypeInner" title="选择自定义费用类型-在需要的费用类型上打勾即可" onclick="selectCostType2();" class="thickbox txt_btn_a" value="新增费用类型" />
+				<input type="button" style="height:22px;" class="txt_btn_a" value="保存费用类型" onclick="openSavePage();" title="此操作可以将当前费用类型保存到模板"/>
+      		</td>
+		</tr>
+	</table>
+	<div id="importTable"></div>
+	<table class="form_main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+      			<input type="hidden" id="projectId" name="esmbudget[projectId]" value="{projectId}"/>
+      			<input type="hidden" id="projectCode" name="esmbudget[projectCode]" value="{projectCode}"/>
+      			<input type="hidden" id="projectName" name="esmbudget[projectName]" value="{projectName}"/>
+      			<input type="hidden" id="budgetType" name="esmbudget[budgetType]" value="budgetField"/>
+
+      		    <input type="submit" class="txt_btn_a" value=" 保存预算 "/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      			<input type="hidden" id="costTypeIds"/>
+      		</td>
+		</tr>
+		<tr style="display:none">
+			<td colspan="6">
+				<div id="costTypeInner"></div>
+			</td>
+		</tr>
+	</table>
+	<div style="display:none;">
+		<div id="templateInfo">
+			<table class="form_in_table">
+				<tr>
+					<td class="form_text_left">
+						模板名称：
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" id="tempTemplateName"/>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="form_text_right">
+						<span class="blue">提示：请输入模板名称</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="submit" value=" 确 认 " onclick="saveTemplate();" class="txt_btn_a"/>&nbsp;&nbsp;
+						<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="$('#templateInfo').dialog('close')"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+</body>
+</html>

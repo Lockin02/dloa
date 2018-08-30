@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>离职交接清单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/handover-edit.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script>
+		$(function(){
+			var Exa = $("#ExaStatus").val();
+			if(Exa == '完成' || Exa == '部门审批'){
+				$("#aff").hide();
+			} else {
+				$("#aff").show();
+			}
+		});
+
+		function sub() {
+			var flag =  $.ajax({
+				type : 'POST',
+				url : '?model=hr_leave_handover&action=isDone',
+				data:{
+					handoverId : $("#id").val()
+				},
+				async: false,
+				success : function(data){
+					return data;
+				}
+			}).responseText;
+
+			if(flag == '1') {
+				return true;
+			} else {
+				alert("交接清单还未确认完成，请确保交接人员确认完成后，再进行最后的审核确认！")
+				return false;
+			}
+		}
+	</script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_leave_handover&action=startAffirmPro" onsubmit="return sub();">
+		<div id="dy">
+			<div align="center" cellpadding="5">
+				<table class="tableA">
+					<tr>
+						<td colspan="6" bgcolor="#ECECFF"><span>
+							<h3>离职交接清单</h3>
+						</span></td>
+					</tr>
+					<tr>
+						<td class="td_left">员工姓名</td>
+						<td class="td_right">{userName}</td>
+						<td class="td_left">部门名称</td>
+						<td class="td_right">{deptName}</td>
+						<td class="td_left">职位</td>
+						<td class="td_right">{jobName}</td>
+					</tr>
+					<tr>
+						<td class="td_left">入职日期</td>
+						<td class="td_right">{entryDate}</td>
+						<td class="td_left">离职日期</td>
+						<td class="td_right">{quitDate}</td>
+						<td class="td_left">离职类型</td>
+						<td class="td_right">{quitTypeName}</td>
+					</tr>
+					<tr>
+						<td class="td_left">离职原因</td>
+						<td colspan="3">
+							<div id="quitReson" class="divChangeLine" style="text-align:left">{quitReson}</div>
+						</td>
+						<td class="td_left">编制</td>
+						<td class="td_right">{companyName}</td>
+					</tr>
+					{fromworkList}
+				</table>
+				<table class="tableA">
+					<tr>
+						<td class="td_left">员工确认意见</td>
+						<td class="td_right"><input type ="text" class='txt'  name='handover[staffAffCon]' value="{staffAffCon}"/></td>
+						<td class="td_left">确认时间</td>
+						<td class="td_right"><input type ="hidden" class='txt'  name='handover[staffAffDT]' value="{staffAffDT}"/>{staffAffDT}</td>
+					</tr>
+					<tr>
+						<td class="td_left">确认备注</td>
+						<td align='left' colspan='3'><input type ="text" class='txtbiglong'  name='handover[staffConRemark]' value="{staffConRemark}"/></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="hidden" id="id" name="handover[handoverId]" value="{id}" />
+					<input type="hidden" id="leaveId" name="handover[leaveId]" value="{leaveId}" />
+					<input type="hidden" id="deptId" name="handover[deptId]" value="{deptId}" />
+					<input type="hidden" value="{ExaStatus}" id="ExaStatus" />
+					<input type="submit" class="txt_btn_a" value=" 确  认 " id="aff"/>&nbsp;&nbsp;
+					<!-- <input type="button" class="txt_btn_a" value=" 打  印 " onclick="javascript:previewDom('dy');"/>-->
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

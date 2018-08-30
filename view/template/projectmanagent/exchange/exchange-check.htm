@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-contractEqu.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/exchange/js/exchange-check-list.js"></script>
+
+<script>
+        function submitR(){
+		     var equRowNum=$("#backequinfo").yxeditgrid('getCurShowRowNum');
+	          if(equRowNum == '0'){
+	              alert("退货物料不能为空");
+	              return false;
+	          }
+	          var equNum=$("#equinfo").yxeditgrid('getCurShowRowNum');
+	          if(equNum == '0'){
+	              alert("换货物料不能为空");
+	              return false;
+	          }
+                 return true;
+        }
+        $(function(){
+           $('select[name="exchange[deliveryCondition]"] option').each(function() {
+			if( $(this).val() == $("#deliveryCondition").val() ){
+				$(this).attr("selected","selected'");
+			}
+		});
+        })
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	销售换货单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=projectmanagent_exchange_exchange&action=edit" name="form1" onsubmit="return submitR();">
+<table class="form_main_table">
+<tr>
+		<td colspan="6">
+		<fieldset>
+		  <legend class="legend" onclick="showAndHide('baseImg','baseinfo')">基本信息
+			<img src="images/icon/info_up.gif" id="baseImg" />
+		  </legend>
+		<table cellpadding="2" width="100%" id="baseinfo"   style="bcontract-collapse:collapse;background-color:#F3F6FA;" >
+		<tr>
+		        <td class="form_text_left">源单编号</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" name="exchange[contractCode]" id="contractCode" value="{contractCode}" readonly/>
+					 <input type="hidden" name="exchange[contractId]" id="contractId" value="{contractId}"/>
+				</td>
+				<td class="form_text_left">源单名称</td>
+				<td class="form_text_right" >
+				     <input type="text" class="readOnlyText" name="exchange[contractName]" value="{contractName}" id="contractName" readonly/>
+				</td>
+		</tr>
+		<tr>
+		        <td class="form_text_left">客户名称</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" name="exchange[customerName]" id="customerName"  value="{customerName}" readonly/>
+					 <input type="hidden" class="readOnlyText" name="exchange[customerId]" id="customerId" value="{customerId}" readonly/>
+				</td>
+		        <td class="form_text_left">销售负责人</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" name="exchange[saleUserName]" id="saleUserName"  value="{saleUserName}" readonly/>
+					 <input type="hidden" class="readOnlyText" name="exchange[saleUserId]" id="saleUserId" value="{saleUserId}" readonly/>
+				</td>
+		</tr>
+		<tr>
+				<td class="form_text_left_con">换货类型</td>
+				<td class="form_text_right_con">
+				   <input class="readOnlyText" name="exchange[exchangeTypeName]" id="exchangeTypeName" value="{exchangeTypeName}" readonly/>
+				</td>
+				<td class="form_text_left_con">交付条件</td>
+				<td class="form_text_right_con">
+				    <input class="readOnlyText" name="exchange[deliveryCondition]" id="deliveryCondition" value="{deliveryCondition}" readonly/>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">到货日期</td>
+				<td class="form_text_right_con">
+				   <input type="text" class="readOnlyText" name="exchange[arrivalDate]" id="arrivalDate" value="{arrivalDate}" readonly/>
+				</td>
+				<td class="form_text_left_con">期望发货日期</td>
+				<td class="form_text_right_con">
+				    <input type="text" class="readOnlyText" name="exchange[expectedDate]" id="expectedDate" value="{expectedDate}" readonly/>
+			</tr>
+		<tr>
+		        <td class="form_text_left">创建时间</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyTxtNormal" name="exchange[createTime]" value="{createTime}" readonly/>
+				</td>
+				<td class="form_text_left">创建人</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyTxtNormal" name="exchange[createName]" value="{createName}" readonly/>
+					 <input type="hidden" class="txt" name="exchange[createId]" value="{createId}"/>
+				</td>
+		</tr>
+		<tr>
+				<td class="form_text_left">换货原因</td>
+				<td class="form_text_right" colspan="3">
+				      <textarea class="txt_txtarea_font1000" name="exchange[reason]" id="reason" readonly>{reason}</textarea>
+				</td>
+		</tr>
+		</table>
+		</fieldset>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="6">
+		<fieldset style="width:200"><legend class="legend"
+			onclick="showAndHideDiv('backequImg','backequinfo')">退货物料 <img
+			src="images/icon/info_up.gif" id="backequImg" /> </legend>
+		<div id="backequinfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200"><legend class="legend"
+			onclick="showAndHideDiv('equImg','equinfo')">换货物料 <img
+			src="images/icon/info_up.gif" id="equImg" /> </legend>
+		<div id="equinfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+</table>
+<table class="form_main_table" >
+<tr>
+		<td class="txt_btn" colspan="4">
+		    <input  type="hidden" name="exchange[id]" value="{id}" id="exchangeId"/>
+		    <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		    <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

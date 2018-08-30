@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 Strict//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="inc/style.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                font-size: 12px;
+            }
+            .jqgtabs ul li{ line-height: 12px; vertical-align: bottom; }
+            /*Splitter style */
+            #LeftPane {
+                /* optional, initial splitbar position */
+                overflow: auto;
+                border: 1px;
+                
+            }
+            /*
+             Right-side element of the splitter.
+            */
+            #RightPane {
+                padding: 0px;
+                border: 1px;
+                vertical-align: bottom; 
+            }
+            .ui-tabs-nav li {position: relative;float: left; vertical-align: bottom; height: 18px;padding-top: 8px;}
+            .ui-tabs-selected a span {padding-right: 10px;}
+            .ui-tabs-close {display: none;position: absolute;top: 3px;right: 0px;z-index: 800;width: 16px;height: 14px;font-size: 10px; font-style: normal;cursor: pointer;}
+            .ui-tabs-selected .ui-tabs-close {display: block;}
+            #newuserForm label.error {
+                margin-left: 10px;
+                width: auto;
+                display: inline;
+                color: red;
+            }
+            .bill-tr td{
+                border-bottom: 1px #000000 solid;
+            }
+            .trl{ background: #D3E5FA;text-align: center;height:21px; width: 100px;}
+            .trr{ background: #F3F3F3; }
+        </style>
+        <script type="text/javascript">
+            function sub(){
+                var ckt='{ckt}';
+                var remark=$('#remark').val();
+                var pro=$('#pro').val();
+                var rand=Math.random()*100000;
+                if(confirm('是否确认以下数据，提交报销明细？')){
+                    $.post('?model=cost_bill_cost&action=guide_sub',{
+                        rand:rand,ckt:ckt,remark:remark,pro:pro
+                        },
+                        function (data)
+                        {
+                            if(data!=''){
+                                alert(data);
+                            }else{
+                                alert('提交数据成功！');
+                                location.href='index1.php?model=cost_bill_cost&action=guide';
+                            }
+                        }
+                    )
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <table class="ui-widget-content ui-corner-all" align="center" style="width: 100%;" >
+            <tr><td height="78%">
+                <div id="RightPane" class="ui-layout-center ui-helper-reset ui-widget-content"><!-- Tabs pane -->
+                    <div id="tabs" class="jqgtabs">
+                        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                            <li >
+                                导入明细列表
+                            </li>
+                        </ul>
+                        <form action="?model=cost_bill_cost&action=guide"  enctype="multipart/form-data" method="post" name="guide">
+                            <div id="tabs-detail" style="font-size:12px; padding: 0px; margin: 0px; text-align: center" >
+                                <table align="center" class="ui-widget-content ui-corner-all"
+                                       style="text-align: left;font-size: 12px; background: #666666;" cellpadding="0"
+                                       cellspacing="1" border="0" width="580">
+                                    <tr>
+                                        <td class="trl ">事由</td>
+                                        <td class="TableData">
+                                            <input type="text" name="remark" id="remark" style="width:460px;" value="{remark-info}"/>
+                                        </td>
+                                    </tr>
+                                    <tr id="xm_tr">
+                                        <td class="trl ">项目信息</td>
+                                        <td class="TableData">
+                                            <select name="pro" id="pro">
+                                                <option value="">非项目类报销</option>
+                                                {pro-info}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="trl ">导入文件</td>
+                                        <td class="TableData">
+                                            <input type="file" id="xfile" size="40" name="xfile" value="{file-url}"
+                                                   onkeydown="if(event.keyCode!=8&&event.keyCode!=46){if(event.preventDefault)event.preventDefault();else event.returnValue=false;}" >
+                                            <font color="red">*请查看</font><a href="attachment/cost_guide/模版.xls" style="color:blue;">模版</a>
+                                            <font color="red">文件</font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" colspan="2" class="TableData">
+                                            <input type="submit" id="newspeSub" value="导入"/>
+                                            <input type="button" id="newspeSub" onclick="sub()" {up-info} value="提交"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </td>
+            </tr>
+            <tr align="center">
+                <td>{data-list}</td>
+            </tr>
+        </table>
+    </body>
+</html>

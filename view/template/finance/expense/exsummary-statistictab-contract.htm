@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>费用明细</title>
+	{#commonInclude#}
+	<style>
+		#loadingWrap{position: absolute;top: 50%;bottom: 50%;left: 50%;right: 50%;}
+		#loadingWrap>img{height: 25px;width: 25px;}
+	</style>
+</head>
+<body>
+<input type="hidden" id="thisYear" value="{thisYear}"/>
+<input type="hidden" id="areaId" value="{areaId}"/>
+<input type="hidden" id="userId" value="{userId}"/>
+<div id="loadingWrap">
+	<img id="loading" style="vertical-align: middle;" src="js/jquery/images/grid/load.gif">
+</div>
+<div id="grid"></div>
+<script type="text/javascript">
+	$(function() {
+		// 初始化主体表
+		initDataList();
+	});
+
+	// 主体表构建
+	var initDataList = function() {
+		// 基本列表，根据类型不同加载后面的列
+		var defaultModel = [{
+			display: '合同类型',
+			name: 'contType',
+			align: 'center'
+		},{
+			display: '合同状态',
+			name: 'contState',
+			align: 'center'
+		},{
+			display: '合同编号',
+			name: 'contractCode',
+			width:250,
+			align: 'center',
+			process: function (v, row) {
+				var contractCodeStr = v;
+				if(row.contractId > 0){
+					contractCodeStr = "<a href='javascript:void(0)' " +
+					"onclick='window.open(\"?model=contract_contract_contract&action=toViewTab&id=" +
+					row.contractId + '&skey=' + row.skey_ + "\")'>" + v + "</a>";
+				}
+
+				return contractCodeStr;
+			}
+		},{
+			display: '合同名称',
+			width:550,
+			name: 'contractName',
+			align: 'center'
+		},{
+			display: '合同金额',
+			width:150,
+			name: 'contractAllMoney',
+			align: 'right',
+			process: function (v, row) {
+				return moneyFormat2(v);
+			}
+		}];
+
+		var paramObj = ($("#userId").val() == "")? {ExaYear : $("#thisYear").val(),areaCode : $("#areaId").val()} : {ExaYear : $("#thisYear").val(),areaCode : $("#areaId").val(),userId : $("#userId").val()};
+		$("#grid").yxeditgrid({
+			url: '?model=finance_expense_exsummary&action=getStatisticDetailForContract',
+			param: paramObj,
+			type: 'view',
+			event: {
+				reloadData: function(e, g, data) {
+					if (data.length == 0) {
+						alert("没有查询到相关数据!");
+					}
+					hideLoading();
+				}
+			},
+			colModel: defaultModel
+		});
+	};
+
+	function hideLoading(){
+		$("#loadingWrap").hide();
+	}
+</script>
+</body>
+</html>

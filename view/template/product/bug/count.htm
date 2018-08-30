@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>产品类型筛选：
+			<select id="typeid" name="typeid" onchange="select_typeid(this.value)">
+				<option value="">全部类型</option>
+				{typelist}
+			</select>
+		
+		需求状态筛选：
+			<select id="status" name="status" onchange="select_status(this.value);">
+				<option value="">所有状态</option>
+				<option value="0">待确认Bug</option>
+				<option value="1">已确认Bug</option>
+				<option value="2">已解决Bug</option
+			</select>
+				日期：<input type="text" size="12" class="Wdate" onclick="WdatePicker();" id="start_date" name="start_date" value="{start_date}" /> 
+				至 <input type="text" size="12" class="Wdate" onclick="WdatePicker();" id="end_date" name="end_date" value="{end_date}" />	
+			提交人筛选：<input type="text" size="10" id="username" onblur="search_user(this.value)" name="username" value="{username}" />
+			  <input type="button" onclick="submits()" value=" 搜索 " />
+				
+		</td>
+		<td><input type="button" onclick="export_data();"  value="导出当前数据" /></td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="9">产品Bug统计</td>
+		<td>
+			
+		</td>
+	</tr>
+	<tr class="tableheader">
+		<td rowspan="2">提交人</td>
+		<td rowspan="2">总提交次数</td>
+		<td colspan="8">Bug状态</td>
+	</tr>
+	<tr class="tableheader">
+		<td colspan="2">已解决Bug</td>
+		<td colspan="2">已确认Bug</td>
+		<td colspan="2">待确认Bug</td>
+		<td colspan="2">被打回</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	set_status_selected();
+	set_typeid_selected()
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+		function submits()
+			{
+			   var status = $('#status').val();
+			    var typeid = $('#typeid').val();
+			    var username = $('#username').val();
+				var start_date=$('#start_date').val();
+				var end_date=$('#end_date').val();
+				var url='';
+				if(status)
+				{
+					url+='&status=' + status;
+				}
+				if(status)
+				{
+					url+='&typeid=' + typeid;
+				}
+				if(username)
+				{
+					url+='&username=' + username;
+				}
+				if(start_date)
+				{
+					url+='&start_date=' + start_date;
+				}
+				if(end_date)
+				{
+					url+='&end_date=' + end_date;
+				}
+				if(url)
+				{
+				  location.href = '?model={t_model}&action={t_action}' + url;	
+				}
+			    
+			}
+	function set_status_selected()
+	{
+		var status = QueryString('status');
+		var options = $('#status option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function set_typeid_selected()
+	{
+		var typeid = QueryString('typeid');
+		var options = $('#typeid option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == typeid)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function select_typeid(id)
+	{
+		var status = $('#status').val();
+		var username = $('#username').val();
+				var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		location.href='?model={t_model}&action={t_action}&typeid='+id+'&status='+status+'&username='+username+'&start_date='+start_date+'&end_date='+end_date;
+	}
+	function select_status(id)
+	{
+		var typeid = $('#typeid').val();
+		var username = $('#username').val();
+				var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		location.href='?model={t_model}&action={t_action}&status='+id+'&typeid='+typeid+'&username='+username+'&start_date='+start_date+'&end_date='+end_date;
+	}
+	function search_user(username)
+	{
+		var status = $('#status').val();
+		var typeid = $('#typeid').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		if (username)
+		{
+			var rand = Math.random(0,999999);
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function (data)
+				{
+					if (data)
+					{
+						location.href='?model={t_model}&action={t_action}&status='+status+'&typeid='+typeid+'&username='+username+'&start_date='+start_date+'&end_date='+end_date;
+					}else{
+						alert('提交人姓名错误！');
+					}
+				}
+			);
+		}else{
+			location.href='?model={t_model}&action={t_action}&status='+status+'&typeid='+typeid+'&start_date='+start_date+'&end_date='+end_date
+		}
+	}
+	function export_data()
+	{
+		var status = $('#status').val();
+		var typeid = $('#typeid').val();
+		var username=$('#username').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val(); 
+		location.href='?model={t_model}&action=export&type=count&status='+status+'&typeid='+typeid+'&username='+username+'&start_date='+start_date+'&end_date='+end_date
+	}
+</script>
+</body>
+</html>

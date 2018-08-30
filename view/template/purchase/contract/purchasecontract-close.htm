@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>中止采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script>
+		$(function() {
+			if($("#closeFlag").val()==1){
+			    var html='<select class="select" id="closeType" name="contract[closeType]">'+
+			    		'<option value=""></option>'+
+			    		'<option value="1">订单结束</option>'+
+			    		'<option value="2">订单删除</option></select><span class="red">[*]</span>';
+			    $("#closeTypeHtml").append(html);
+			}else{
+				var html='<input type="text" id="closeType" class="readOnlyText" value="订单结束">'+
+				         '<input type="hidden" name="contract[closeType]" value="1">';
+
+			    $("#closeTypeHtml").append(html);
+			}
+		});
+		function checkReason(){
+			var closeType=$("#closeType").val();
+			if(closeType==""){
+				alert("请选择中止类型");
+				return false;
+			}else{
+				var closeReason=$("#closeReason").val();
+				if(closeReason==""){
+					alert("请输入中止原因");
+					return  false;
+				}else{
+					return true;
+				}
+			}
+		}
+
+	</script>
+</head>
+
+<body scroll="auto">
+    <div class="main_head">
+     	<span class="main_head_title">中止采购订单</span>
+ 	</div>
+	<div class="form_main">
+	    <form id='form1' name='form1' action="?model=purchase_contract_purchasecontract&action=close" method="post" onsubmit="return checkReason()">
+                <input type="hidden" name="contract[id]" value="{id}" />
+                <input type="hidden" id="closeFlag" value="{flag}"/>
+	            <table class="form_main_table">
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        采购订单编号
+	                    </td>
+	                    <td align="left">
+	                       &nbsp;
+	                       <input type="text" value="{hwapplyNumb}" class="readOnlyText" readonly/>
+	                    </td>
+	                	<td class="tableheader form_text_left">
+	                        中止类型
+	                    </td>
+	                    <td align="left" id="closeTypeHtml">
+	                       &nbsp;
+	                    </td>
+	                </tr>
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        中止申请人
+	                    </td>
+	                    <td align="left">
+	                       &nbsp;
+	                       <input type="text" class="readOnlyText" name="contract[closeMan]" value="{closeMan}" readonly/>
+	                       <input type="hidden" name="contract[closeManId]" value="{closeManId}" />
+	                    </td>
+	                    <td class="tableheader form_text_left">
+	                       中止申请时间
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                       <input type="text" class="readOnlyText"  name="contract[closeDate]" value="{closeDate}" readonly/>
+	                    </td>
+	                </tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left">
+                       中止原因
+                    </td>
+                    <td class="form_text_right"  colspan="3">
+	                        &nbsp;
+                        <textarea rows="5" id="closeReason" name="contract[closeReason]" class="txt_txtarea_font" ></textarea>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr align="center" class="TableHeader" >
+                    <td colspan="6">
+                        <input type="submit" id="" value=" 提交审批 " class="txt_btn_a"/>
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="button" value=" 返 回 "  class="txt_btn_a" onclick="history.back(-1);"/>
+                    </td>
+                </tr>
+            </table>
+	        </form>
+	 </div>
+		<font color="blue">**中止类型："订单结束"表示该订单正常结束采购行为;"订单删除"表示订单删除后,相关的采购任务重启,可以继续询价和生成订单</font>
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>借试用</title>
+	  <meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdproject.js"></script>
+		<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-common.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-prochange-list.js"></script>
+	<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+	<script type="text/javascript" src="js/common/dateUtil.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-change.js"></script>
+    <script>
+	    $(function () {
+			//判断是否有临时保存的记录，有则提示用户是否加载
+			if($("#tempId").val() != '' && $("#borrowId").val() == $("#oldId").val()){
+				if(confirm("检测到您上次有保存过临时变更记录，是否加载？")){
+					var url = window.location.href;
+					var index = url.indexOf('&',url.indexOf('&')+1);
+					if(index != -1){
+					    url = url.substr(0,index);
+					}
+					window.location.replace(url + '&id=' + $("#borrowId").val() + '&tempId=' + $("#tempId").val());
+				}
+			}
+	    });
+	    
+        function isFormChange(){
+   	        var productInfoObj = $("#productInfo");
+    	    var rowNum = productInfoObj.productInfoGrid('getCurShowRowNum');
+     	    if(rowNum == '0'){
+          	    alert("产品清单不能为空");
+           	    return false;
+      	    }else{
+                // 产品线处理
+	            var proLineAllSelected = true;
+	            productInfoObj.productInfoGrid("getCmpByCol", "newProLineCode").each(function(){
+	                if ($(this).val() == "") {
+	                    alert("请选择产品的产品线！");
+	                    proLineAllSelected = false;
+	                    return false;
+//                  } else {
+//                      var rowNum = $(this).data('rowNum');
+//                      productInfoObj.productInfoGrid("getCmpByRowAndCol", rowNum, 'newProLineName').
+//                      val($(this).find("option:selected").text());
+	                }
+	            });
+	            if (proLineAllSelected == false) {
+	                return false;
+	            }
+       	    }
+        }
+        
+      	//保存
+        function changeSave(){
+        	$("#isSub").val(0);
+        }
+      	
+      	//提交
+        function changeSub(){
+        	$("#isSub").val(1);
+        }
+    </script>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_borrow_borrow&action=change" id="form1" method="post" onsubmit="return isFormChange();" onkeypress="javascript:return NoSubmit(event);">
+
+	 <table class="form_main_table">
+           <div class="main_head"><span class="main_head_title">借试用申请表</span></div>
+	    <tr>
+			<td  class="form_text_left">编号</td>
+			<td class="form_view_right">
+				{Code}
+			</td>
+			<td  class="form_text_left">类型</td>
+			<td class="form_view_right">
+                {Type}
+			</td>
+
+		</tr>
+        <tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+			     {SingleType}
+			</td>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right" id="single">
+                 {singleCode}
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">客户名称</td>
+			<td class="form_view_right">
+				{customerName}
+			</td>
+			<td  class="form_text_left">范围</td>
+			<td class="form_view_right">
+                {limits}
+			</td>
+		</tr>
+		<tr>
+
+			<td  class="form_text_left"><span style="color:blue">开始日期</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="borrow[beginTime]" id="beginTime" onfocus="WdatePicker()" value="{beginTime}"/>
+
+			</td>
+			<td  class="form_text_left"><span style="color:blue">截止日期</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="borrow[closeTime]" id="closeTime" onfocus="WdatePicker()" value="{closeTime}"/>
+			</td>
+		</tr>
+		<tr>
+		    <td class="form_text_left"><span style="color:blue">交货日期</span></td>
+		    <td class="form_text_right">
+                 <input type="text" class="txt" name="borrow[deliveryDate]" id="deliveryDate" onfocus="WdatePicker()" value="{deliveryDate}"/>
+		    </td>
+		    <td  class="form_text_left">所属板块</td>
+			<td class="form_view_right">
+				<select class="select" name="borrow[module]" id="module">
+				   {module}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left"><span style="color:blue">销售负责人</span></td>
+			<td class="form_view_right">
+				<input type="text" class="txt" readonly name="borrow[salesName]" id="salesName" value="{salesName}"/>
+				<input type="hidden" name="borrow[salesNameId]" id="salesNameId" value="{salesNameId}" />
+
+			</td>
+			<td  class="form_text_left">技术负责人</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="borrow[scienceName]" id="scienceName" value="{scienceName}"/>
+				<input type="hidden" name="borrow[scienceNameId]" id="scienceNameId" value="{scienceNameId}"/>
+
+			</td>
+		</tr>
+		 <tr>
+			 <td class="form_text_left">物料成本概算</td>
+			 <td class="form_text_right" colspan="3" >
+				 <div id="equEstimateTax" class="divChangeLine" >{equEstimateTax}</div>
+			 </td>
+		 </tr>
+		<tr>
+			<td class="form_text_left">发货地址</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="borrow[shipaddress]" id="shipaddress"  class="txt_txtarea_font1000" cols="136">{shipaddress}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请原因</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="borrow[remark]" id="remark"  class="txt_txtarea_font1000" cols="136">{remark}</textarea>
+			</td>
+		</tr>
+         <tr>
+             <td class="form_text_left">备注</td>
+             <td class="form_text_right" colspan="3">
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 <img src="images/icon/icon095.gif" /> <span class='blue'>提醒：只变更备注内容，无需提交审批即可生效</span>
+                 <textarea name="borrow[remarkapp]" id="remarkapp"  class="txt_txtarea_font1000" cols="136">{remarkapp}</textarea>
+             </td>
+         </tr>
+		<tr id="productH" style="display:none;text-align:left;">
+			<td><b onclick="hideList('product');">产品清单</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('product');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="product">
+			<td colspan="6">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('product');">产品清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('product');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+		<tr id="equH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('equ');">发货物料清单</b>
+		  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">发货物料清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="equInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+<td colspan="4">
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		    <input type="hidden" name="borrow[oldId]" value="{id}" id="oldId"/>
+		    <input type="hidden" name="borrow[areaCode]" value="{areaCode}" id="areaCode"/>
+			<input type="hidden" name="borrow[areaName]" value="{areaName}" id="areaName"/>
+			<input type="hidden" id="borrowId" name="borrow[borrowId]" value="{borrowId}"/>
+			<input type="hidden" id="isSub" name="borrow[isSub]">
+            <input type="hidden" id="tempId" name="borrow[tempId]" value="{tempId}">
+            <input type="submit" class="txt_btn_a" value=" 保  存 " onclick="changeSave();"/>
+		    <input type="submit" class="txt_btn_a" value=" 变  更 " onclick="changeSub();"/>
+		    <input type="button" class="txt_btn_a" value=" 返  回 " onclick="history.back();" />
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>

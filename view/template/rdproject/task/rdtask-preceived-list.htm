@@ -1,0 +1,429 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>列表显示</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/contextmenu.css" />
+<link href="js/multiselect/jquery.multiSelect.css" rel="stylesheet"
+	type="text/css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+
+<script src="js/multiselect/jquery.bgiframe.min.js"
+	type="text/javascript"></script>
+<script src="js/multiselect/jquery.multiSelect.js"
+	type="text/javascript"></script>
+
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtk_person_tab.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		//显示tab表头
+		topTabShow(ptkTapArr, "preceived");
+		//添加鼠标经过行颜色改变
+		rowsColorChange();
+
+		//右键触发前操作
+		function BeforeContextMenu() {
+		     return true;
+		 }
+	});
+	function show_page(page) {
+		this.location = "?model=rdproject_task_rdtask&action=pReceivedTaskPage";
+	}
+	function search() {
+		var searchfield = $('#searchfield').val();
+		var searchvalue = $('#searchvalue').val();
+		this.location = "?model=rdproject_task_rdtask&action=pReceivedTaskPage&"
+				+ searchfield + "=" + searchvalue;
+
+	}
+
+function fnKeyup(event)
+{
+	var b = document.getElementById("onekey");
+	Hotkey(event, b, true, false, true, 89);
+}
+
+// 捕获系统的Keyup事件
+// 如果是Mozilla系列浏览器
+if (document.addEventListener)
+	document.addEventListener("keyup",fnKeyup,true);
+else
+	document.attachEvent("onkeyup",fnKeyup);
+	/*
+	 *导出EXCEL
+	 */
+	function exportExcel() {
+		var selectField="";
+		var tdName="";
+
+		var ckSize=$('.multiSelect').next('.multiSelectOptions').find('INPUT:checkbox:checked').size();
+		if(ckSize==0){
+			alert("请选择需要导出的字段!")
+		}
+		else{
+			$('.multiSelect').next('.multiSelectOptions').find('INPUT:checkbox:checked').each(function(){
+				if($(this).parent().text()!="全选"){
+					selectField+=$(this).val()+",";
+					tdName+=$(this).parent().text()+",";
+					}
+				})
+				window.open("?model=rdproject_task_rdtask&action=exportExcel&selectField="+selectField+"&tdName="+tdName,"","width=200,height=200,top=200,left=200");
+			}
+
+		//window.open("?model=rdproject_task_rdtask&action=exportExcel","","width=200,height=200,top=200,left=200");
+	}
+</script>
+<script>
+	$().ready(function() {
+		var option = {
+			width : 150,
+			items : [{
+						text : "查看",
+						icon : "images/icon/view.gif",
+						alias : "1-1",
+						action : function(row) {
+							showThickboxWin('?model=rdproject_task_rdtask&action=toReadTask&id='
+									+ row.pid
+									+ '&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=900');
+						}
+					}, {
+						type : "splitLine"
+					}, {
+						text : "填写工作日志",
+						icon : "images/icon/edit.gif",
+						alias : "1-2",
+						action : function(row) {
+							showThickboxWin('?model=rdproject_worklog_rdworklog&action=addInTask&id='
+									+ row.pid
+									+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800');
+
+						}
+					}, {
+                        text: "申请暂停",
+                        icon: "images/icon/edit.gif",
+                        alias: "1-4",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_task_stophistory&action=toApplyToStop&id='
+								+ row.pid+'&status='+row.pstatus
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=250&width=600');
+                        	//alert("暂未开放")
+                        }
+                    }, {
+						text : "提交任务",
+						icon : "images/icon/edit.gif",
+						alias : "1-3",
+						action : function(row) {
+							$.get(
+								'index1.php',
+								{
+									model : 'rdproject_task_rdtask',
+									action : 'isChargeUser',
+									id : row.pid
+								},
+								function(data) {
+									if (data == 0)
+										showThickboxWin('?model=rdproject_task_tkover&action=toSumbit&id='
+												+ row.pid
+												+ '&placeValuesBefore&TB_iframe=true&modal=false&height=550&width=750');
+									else
+										alert("对不起,你不是当前任务负责人，不可以提交！")
+								}
+							)
+						}
+					}],
+			onShow : applyrule,
+			onContextMenu : BeforeContextMenu
+		};
+
+		$(".tr_even,.tr_odd").contextmenu(option);
+
+		//隐藏右键某些操作
+		function applyrule(menu) {
+			switch (this.pstatus) {
+			case "SQZT": {
+				menu.applyrule({
+					name : "SQZT",
+					disable : true,
+					items : [ "1-4" ]
+				});
+				break;
+			}
+				;
+			case "ZT": {
+				menu.applyrule({
+					name : "ZT",
+					disable : true,
+					items : [ "1-2", "1-3","1-4" ]
+				});
+				break;
+			}
+				;
+			case "WQD": {
+				menu.applyrule({
+					name : "WQD",
+					disable : true,
+					items : [ "1-3","1-4" ]
+				});
+				break;
+			}
+				;
+			case "QZZZ": {
+				menu.applyrule({
+					name : "QZZZ",
+					disable : true,
+					items : [ "1-2", "1-3","1-4" ]
+				});
+				break;
+			}
+				;
+			case "DSH": {
+				menu.applyrule({
+					name : "DSH",
+					disable : true,
+					items : [ "1-2", "1-3","1-4" ]
+				});
+				break;
+			}
+				;
+			case "TG": {
+				menu.applyrule({
+					name : "TG",
+					disable : true,
+					items : [ "1-2", "1-3","1-4" ]
+				});
+				break;
+			}
+				;
+			default: {
+				menu.applyrule({
+					name : "other",
+					disable : true,
+					items : []
+				});
+				break;
+			}
+				;
+			}
+		}
+
+		//右键触发前操作
+		function BeforeContextMenu() {
+			 //alert(this.pstatus)
+			return true;
+		}
+
+	})
+</script>
+<script>
+//获取url参数
+function getQuery( key , url ) {
+		var reg = new RegExp( '^\\S*(\\?|&)' + key + '=([^&]*)\\S*$' );
+		var l = url || window.location.href;
+		if ( reg.test( l ) ) {
+			return decodeURIComponent( l.replace( reg , '$2' ) );
+		} else {
+			return null;
+		}
+	}
+//设置url参数
+function setQuery( key , value , url ) {
+	var reg = new RegExp( key + '=[^&]*(?=&|$)' );
+	var l = url || window.location.href;
+	if ( reg.test( l ) ) {
+		return l.replace( reg , key + '=' + encodeURIComponent( value ) );
+	}else{
+		return l + ( /\?/.test( l ) ? '&' : '?' ) + key + '=' + encodeURIComponent( value );
+	}
+}
+//任务状态过滤
+$(function(){
+	if(getQuery('status',document.URL)){
+		$('#proExaStatus').val(getQuery('status',document.URL));
+	}
+	$('.proExaStatus').change(function(){
+		var url = setQuery( "status" ,$('#proExaStatus').val() ,document.URL);
+		window.location.href=url;
+	});
+})
+
+//任务优先级过滤
+$(function(){
+	if(getQuery('priority',document.URL)){
+		$('#priority').val(getQuery('priority',document.URL));
+	}
+	$('.priority').change(function(){
+		var url = setQuery( "priority" ,$('#priority').val() ,document.URL);
+		window.location.href=url;
+	});
+})
+</script>
+<script>
+/*
+ * 导出EXCEL
+ */
+function exportExcel() {
+	var searchStr = '';
+	var proExaStatus = $('#proExaStatus').val();
+	var priority = $('#priority').val();
+	if( proExaStatus ){
+		searchStr += '&status='+proExaStatus;
+	}
+	if( priority ){
+		searchStr += '&priority='+priority;
+	}
+	var selectField = "";
+	var tdName = "";
+
+	var ckSize = $('.multiSelect').next('.multiSelectOptions')
+			.find('INPUT:checkbox:checked').size();
+	if (ckSize == 0) {
+		alert("请选择需要导出的字段!")
+	} else {
+		$('.multiSelect').next('.multiSelectOptions')
+				.find('INPUT:checkbox:checked').each(function() {
+					if ($(this).parent().text() != "全选") {
+						selectField += $(this).val() + ",";
+						tdName += $(this).parent().text() + ",";
+					}
+				});
+		window.open(
+				"?model=rdproject_task_rdtask&action=setSearchArr"
+						+ searchStr
+						+ "&listType="
+						+ getQuery('action',document.URL)
+						+ "&selectField="
+						+ selectField
+						+ "&tdName="
+						+ tdName, "",
+				"width=200,height=200,top=200,left=200,resizable=yes");
+	}
+
+	// window.open("?model=rdproject_task_rdtask&action=exportExcel","","width=200,height=200,top=200,left=200");
+}
+     // 映射字段控制
+$(document).ready(function() {
+	$("#control_1").multiSelect();
+})
+</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 我的任务
+</span></div>
+
+<div class="tab_options"></div>
+<div class="tab_line"></div>
+
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" value="" /> 按 <select id="searchfield"
+			>
+			<option value="name">任务名称</option>
+			<option value="projectName">所属项目</option>
+		</select> <input type="button" value=" 搜索 " class="txt_btn_a"
+			onclick="search()" /> <input type="button" id="onekey" value="一键通"
+			class="txt_btn_a thickbox" title="添加任务"
+			alt="?model=rdproject_task_rdtask&action=toAddOneKey&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=800">
+		<!--
+		<input type="button" id="onekey" value="计划工作量"
+			class="txt_btn_a thickbox" title="查看计划工作量"
+			alt="?model=rdproject_task_rdtask&action=toViewPlanLoad&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=800">
+		 --></td>
+		<!--  td align="left">&nbsp;<input type="button" class="txt_btn_a"
+			value="导出EXCEL" id="exportbtn" onclick="exportExcel()" >
+		&nbsp;映射字段: <select id="control_1" name="control_1[]"
+			multiple="multiple" style="width: 100px;">
+			<option value="name">任务名称</option>
+			<option value="projectName">所属项目</option>
+			<option value="priority">优先级</option>
+			<option value="status">状态</option>
+			<option value="effortRate">完成率</option>
+			<option value="warpRate">偏差率</option>
+			<option value="chargeName">责任人</option>
+			<option value="publishName">发布人</option>
+		</select></td>-->
+       <td style="text-align:align">&nbsp; <input type="button" class="txt_btn_a"
+			value="导出EXCEL" id="exportbtn" onclick="exportExcel()">
+		&nbsp;映射字段: <select id="control_1" name="control_1[]"
+			multiple="multiple" style="width: 100px;">
+			<option value="projectCode">项目编号</option>
+			<option value="projectName">项目名称</option>
+			<option value="planName">里程碑计划</option>
+			<option value="name">任务名称</option>
+			<option value="remark">任务描述</option>
+			<option value="status">任务状态</option>
+			<option value="chargeName">责任人</option>
+			<option value="auditUser">审核人</option>
+			<option value="priority">优先级</option>
+			<option value="taskType">任务类型</option>
+			<!--                             <option value="">
+                                严重级
+                            </option> -->
+			<option value="planBeginDate">计划开始时间</option>
+			<option value="actBeginDate">实际开始时间</option>
+			<option value="planEndDate">计划完成时间</option>
+			<option value="actEndDate">实际完成时间</option>
+			<option value="ExaDT">验收时间</option>
+			<option value="finishGrade">完成等级</option>
+		</select></td>
+        <td style="text-align:right">状态:
+			<select name="proExaStatus" class="proExaStatus" id="proExaStatus">
+				<option value="">所有</option>
+<!--			<option value="WFB">未发布</option> -->
+				<option value="WQD">未启动</option>
+				<option value="JXZ">进行中</option>
+				<option value="SQZT">申请暂停</option>
+				<option value="ZT">暂停</option>
+				<option value="DSH">待审核</option>
+				<option value="TG">通过</option>
+				<option value="WTG">未通过</option>
+				<option value="QZZZ">强制终止</option>
+			</select>
+			优先级:
+			<select name="priority" class="priority" id="priority">
+				<option value="">所有</option>
+				<option value="ZYJJ">重要紧急</option>
+				<option value="ZYBJJ">重要不紧急</option>
+				<option value="PTJJ">普通紧急</option>
+				<option value="PTBJJ">普通不紧急</option>
+			</select>
+        </td>
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="4%">序号</th>
+			<th width="4%">提示灯</th>
+			<th width="15%">任务名称</th>
+			<th width="10%">所属项目</th>
+			<th width="6%">优先级</th>
+			<th width="6%">状态</th>
+			<th width="6%">完成等级</th>
+			<th width="5%">完成率</th>
+			<th width="5%">偏差率</th>
+			<th width="7%">责任人</th>
+			<th width="7%">发布人</th>
+			<th width="8%">最近更新时间</th>
+			<th width="8%">计划完成时间</th>
+			<th width="10%">任务类型</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+</table>
+</div>
+{pageDiv}
+</body>
+
+</html>

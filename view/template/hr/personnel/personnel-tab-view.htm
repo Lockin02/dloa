@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>查看员工档案</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var skeyStr="&skey={skey_}";
+		var id = $("#id").val();
+		var userAccount = $("#userAccount").val();
+		var userNo = $("#userNo").val();
+		var interviewId = $("#interviewId").val();
+		if(interviewId==""){
+			interviewId = "*";
+		}
+		if($("#inventoryLimit").val()!=1){
+			$("#inventory").hide();
+		}
+		var decide=0;
+		//初始化tabsURL·
+		var tabArr = [
+				"?model=hr_personnel_personnel&action=toView&id="+ id+skeyStr,//基本信息
+				"?model=hr_personnel_personnel&action=toInleaveView&id="+ id+skeyStr,//入离职信息
+				"?model=hr_personnel_personnel&action=toContactView&id="+ id+skeyStr,//联系信息
+				"?model=hr_personnel_work&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//工作经历
+				"?model=hr_contract_contract&action=tabList&userAccount="+ userAccount+"&userNo="+userNo,//合同信息
+				"?model=hr_personnel_health&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//健康信息
+				"?model=hr_personnel_education&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//教育经历
+				"?model=hr_personnel_society&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//社会关系
+				"?model=hr_personnel_certificate&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//资格证书
+				"?model=hr_hols_hols&action=page&userNo="+userNo,//考勤信息
+				"?model=hr_assess_assessrecords&action=page&userAccount="+ userAccount+"&userNo="+userNo,    //考核信息
+				"?model=hr_incentive_incentive&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//奖惩信息	
+				"?model=hr_transfer_transfer&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//调动记录
+				"?model=hr_training_trainingrecords&action=pageByPerson&userAccount="+userAccount+"&userNo="+userNo,//培训记录
+				"?model=hr_tutor_tutorrecords&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//导师经历
+				"?model=hr_personnel_certifyapply&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//任职资格
+				"?model=hr_project_project&action=tabList&userAccount="+ userAccount+"&userNo="+userNo,//项目经历
+				"?model=hr_invent_inventory&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo, //人员盘点
+//				"?model=hr_recruitment_interview&action=toView&id="+interviewId,			//面试评估
+				"?model=finance_expense_expense&action=listForLeave&userAccount="+userAccount,			//报销
+				"?model=hr_payView_payView&action=toPersonList&userAccount="+userAccount,			//借款
+				"?model=hr_bookToView_bookToView&action=toPersonList&userAccount="+userAccount			//图书
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				var a=0;
+				if(e!=5){
+					$(actTabId).attr("src", tabArr[e]);
+				}
+				var text = $('#selectHtm option:selected').text();
+				$("#tab6").html(text);		//把选中的赋值给第六格链接		
+			}	
+		});
+		$('#selectHtm').change(function(){
+			var num = $(this).val();
+			var text = $('#selectHtm option:selected').text();		//获取选择文本内容
+			var actTabId = "#iframe6";
+			num--;
+			$("#tab6").html(text);
+			$(actTabId).attr("src", tabArr[num]);
+			if(decide!=0){				//判断是否是刷新页面
+				$("#tab6").click();	
+			}
+			decide++;
+		});
+		$('#selectHtm').trigger('change');
+		
+	});
+</script>
+
+</head>
+<body>
+<table width="100%">
+<tr>
+<td>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1" style="height:30px">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">入离职信息</a></li>
+	<li><a href="#tab3">联系信息</a></li>
+	<li><a href="#tab4">工作经历</a></li>
+	<li><a href="#tab5">合同信息</a></li>
+	<!-- <li><a href="#tab19">面试评估</a></li> -->
+	<li id="11"><a href="#tab6"><span id="tab6"></span>
+</a></li>
+<select id="selectHtm"  style="width:100px;height:30px;" >
+		<option value="6">健康信息</option>
+		<option value="7">教育经历</option>
+		<option value="8">社会关系</option>
+		<option value="9">资格证书</option>
+		<option value="10">考勤信息</option>
+		<option value="11">考核信息</option>
+		<option value="12">奖惩信息</option>
+		<option value="13">调动记录</option>
+		<option value="14">培训记录</option>
+		<option value="15">导师信息</option>
+		<option value="16">任职资格</option>
+		<option value="17">项目经历</option>
+		<option value="18">盘点信息</option>
+		<option value="19">报销</option>
+		<option value="20">借款</option>
+		<option value="21">图书</option>
+	</select>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="about:blank" height="650px" scrolling="auto" frameborder="0" >
+	</iframe>
+	<iframe class="pane" id="iframe2" src="about:blank" height="600px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe4" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe5" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe6" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	</div>
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{userNo}" id="userNo" />
+<input type="hidden" value="{userAccount}" id="userAccount" />
+<input type="hidden" value="{inventoryLimit}" id="inventoryLimit" />
+<input type="hidden" value="{interviewId}" id="interviewId" />
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

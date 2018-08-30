@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>沟通板通知</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+    <!-- 附件上传开始 -->
+    <link rel="stylesheet" type="text/css" href="js/jquery/Huploadify/Huploadify.css"/>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.js"></script>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.handlers.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            // 主表附件上传
+            createUpload($('#upload'), {
+                'serviceId' : '{id}',
+                'serviceType' : 'oa_esm_notice'
+            });
+
+            //单选办事处
+            $("#officeNames").yxcombogrid_office({
+                hiddenId: 'officeIds',
+                height: 250,
+                gridOptions: {
+                    isTitle: true,
+                    title: '发布范围',
+                    showcheckbox: true,
+                    event: {
+                        'row_dblclick': function (e, row, data) {
+                        }
+                    }
+                }
+            });
+        });
+        function checkForm() {
+            if ($("#noticeDate").val() == "") {
+                alert("没有填写日期");
+                return false;
+            }
+
+            if ($("#noticeTitle").val() == "") {
+                alert("没有填写标题");
+                return false;
+            }
+
+            if ($("#content").val() == "") {
+                alert("没有填写内容");
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <!-- 附件上传结束 -->
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=engineering_baseinfo_esmNotice&action=add" onsubmit="return checkForm();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="2">
+                <div class="main_head2">
+				<span class="main_head_title">
+	            	沟通板通知
+	          	</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left blue">日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txtlong Wdate" id="noticeDate" name="esmNotice[noticeDate]"
+                       value="{noticeDate}" onfocus="WdatePicker();"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">类别</td>
+            <td class="form_text_right">
+                <select id="category" name="esmNotice[category]" class="txtlong">
+                    {category}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left blue">主题</td>
+            <td class="form_text_right">
+                <input type="text" class="txtlong" id="noticeTitle" name="esmNotice[noticeTitle]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left blue">内容</td>
+            <td class="form_text_right">
+                <textarea id="content" name="esmNotice[content]" class="txt_txtarea_font" style="height: 120px;"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">附件</td>
+            <td class="form_text_right">
+                <div id="upload"></div>
+                <div id="uploadFileList" class="upload"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">发布范围</td>
+            <td class="form_text_right">
+                <input type="hidden" name="esmNotice[officeIds]" id="officeIds"/>
+                <input type="text" class="txtlong" name="esmNotice[officeNames]"
+                       id="officeNames" readonly="readonly"/>
+                <span>如果为空，则全部都可以看到</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="2">
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

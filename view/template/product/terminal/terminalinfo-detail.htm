@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+    <head>
+        <title>终端信息维护</title>
+        {#commonInclude#}
+        <script type="text/javascript" src="{#jsPath#}/terminalinfo-detail.js" ></script>
+        <style type="text/css">
+            .rightMenu{display: none;}
+            #rightMenu{ width: 50px; border:1px #999 solid;  height: 20px; color:#fff ; background: #f39a00; }
+        </style>
+        <script type="text/javascript">
+            function dumpToView() {
+                $("#rightMenu").hide();
+                showThickboxWin("?model=product_terminal_terminalinfo&action=toViewRemark&terminalId=" + $('#terminalId').val()
+                        + "&perm=view&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=800");
+            }
+            function changeView() {
+                showThickboxWin("?model=syslog_operation_logoperation&action=businessViewMore"
+                        + "&perm=view&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=800");
+            }
+        </script>
+    </head>
+    <body style="padding:2px">
+   		 <form action='?model=product_terminal_terminalinfo&action=detailExcelOut' method='post'>
+		        <div><select id="productSelect" name="terminalinfo[productId]"><option value="">请选择产品...</option></select>
+		            <select id="lang" name="terminalinfo[lang]" >
+		            		<option value="functionName">中文</option>
+		            		<option value="englishName">英文</option>
+		            </select>
+		            <select id="versionSelect" name="terminalinfo[versionStatus]">
+		            	<option value="">版本状态...</option>
+		            </select>
+		            终端名称:<input id="infoName" type="text" name="terminalinfo[terminalName]"  class='txtmiddle' ></input>
+		            软件功能:<input id="functionName" type="text" name="terminalinfo[functionName]"  class='txtmiddle'></input>
+		            <input id="searchBt" type="button" value="搜索" class='txt_btn_a'/>&nbsp;&nbsp;&nbsp;&nbsp;
+		            <input id="saveversion" type="button" value="保存版本" class='txt_btn_a' onclick="saveVersion();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		            <input id="changeBt" type="button" value="分类更新轨迹" class='txt_btn_a' onclick="changeView();"/>
+		             <b> 版本</b>：<select id='versionView' name="terminalinfo[versionView]"  class="select">
+		<!--               <option value="0">即时版本</option>-->
+		            </select>
+		            <input type="submit" class='txt_btn_a' value="导出" />
+		            <div><font color='red'>请注意：“√”代表软件支持；“O”代表硬件支持但软件目前不支持；“-”代表不支持</font></div>
+		
+		        </div>
+		        <div id="detail"></div>
+		        <div id='rightMenu' class="rightMenu" onclick="return dumpToView();" >
+		            查看备注
+		        </div>
+		        <!--<input type="hidden" id="functionId" />-->
+		        <input type="hidden" id="terminalId" />
+		        <input type="hidden" id="isView" value="{isView}" />
+		        <input type="hidden" id="isEdit" value="{isEdit}" />
+       </form>
+    </body>
+</html>

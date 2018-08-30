@@ -1,0 +1,195 @@
+<html>
+<head>
+    <title>未执行的采购任务</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+	$(function() {
+            document.onkeydown = function(e){
+                var ev = document.all ? window.event : e;
+                if(ev.keyCode==13) {
+		          	  document.getElementById("searchBtn").click();
+		            //  search();
+		          }
+			 }
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+			var h=document.body.clientHeight;
+			$("#bodyDiv").attr("style","height:"+(h-190)+"px;overflow-y:scroll;");
+			$("th[id^='th']").each(function(){
+				var id=$(this).attr('id');
+				var ththObj=$("td[name^='td"+id+"']");
+				if(ththObj.length > 0){
+					var w=ththObj.eq(0).width();
+					$(this).width(w);
+				}
+			});
+
+			var searchCol=$('#searchCol').val();
+			$("select[id='searchCondition'] option").each(function(){
+				if($(this).val()==searchCol){
+					$(this).attr("selected","selected");
+				}
+			});
+		});
+	</script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue=$('#taskNumb').val();
+			var searchCol=$('#searchCondition').val();
+			location="?model=purchase_task_basic&action=waitList&taskNumb="+searchvalue+"&searchCol="+searchCol;
+		}
+
+		//清空
+		function clearNum(){
+			var searchvalue=$('#taskNumb').val();
+			location="?model=purchase_task_basic&action=waitList";
+		}
+		$(function(){
+			$("select.myExecuteTask").bind("change",function(){
+
+				var selvalue = $(this).val();
+				var hidevalue = $(this).next().val();
+				var hidevale2 = $(this).next().next().val();
+				var checkValue=$("#check"+hidevalue).val();
+				switch(selvalue){
+					//查看
+					case "view": location='index1.php?model=purchase_task_basic&action=read&id='+hidevalue+'&contNumber='+hidevale2+"&skey="+checkValue;break;
+					//重新分配
+					case "change":location='index1.php?model=purchase_task_basic&action=toAssignTask&id='+hidevalue+'&contNumber='+hidevale2+"&skey="+checkValue;break;
+					default : break;
+				}
+			})
+		});
+
+    </script>
+</head>
+<body  scroll="no">
+ <div class="main_head">
+    <span class="main_head_title">
+      未执行的采购任务
+    </span>
+</div>
+<div class="main_wraper">
+<table class="main_table"  style="width:97.5%">
+	<thead>
+  <tr class="main_table_search">
+		<td colspan="20">
+			<select class="" id="searchCondition">
+			    <option value="taskNumb,sendName,sendTime,productNumb,productName">所有</option>
+			    <option value="taskNumb">任务编号</option>
+			    <option value="sendName">任务负责人</option>
+			    <option value="sendTime">任务下达时间</option>
+			    <option value="productNumb">物料编号</option>
+			    <option value="productName">物料名称</option>
+		  	</select>
+			<input type="text" name="taskNumb" id="taskNumb" value="{taskNumb}">
+			<input type="hidden" id="searchCol" value="{searchCol}">
+			<input type="button" class="txt_btn_a" value="搜 索"   id="searchBtn"  onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+    </td>
+  </tr>
+	    <tr class="main_tr_header">
+	        <th width="3%" id="th01">
+        	<p class="allImg">
+            	序号<br/>
+            	<image src="images/expanded.gif" />
+        	</p>
+	        </th>
+	        <th id="th02">
+        	<p class="checkAll">
+            	采购任务编号<br/>
+            	{allCheckBox}
+            </p>
+	        </th>
+	        <th   width="7%" id="th03">
+            下达时间
+	        </th>
+	        <th   width="7%" id="th04">
+            期望<br>完成日期
+	        </th>
+	        <th   width="8%" id="th05">
+            任务<br>下达人
+	        </th>
+	        <th   width="8%" id="th06">
+            任务<br>负责人
+	        </th>
+	        <th   width="5%" id="th07">
+           状态
+	        </th>
+	        <th width="47%" class="td_table">
+	            <table width="100%" class="main_table_nested" frame=void>
+            	<tr>
+	            		<th colspan="7">
+            			采购任务-物料信息
+	            		</th>
+            	</tr>
+            	<tr>
+	            		<th  id="th08">
+			            设备编号<br>名称
+				        </th>
+				        <th  width="20%" id="th09">
+			            采购类型
+				        </th>
+				        <th  width="12%" id="th10">
+			            任务<br>数量
+				        </th>
+				        <th  width="12%" id="th11">
+			            未下达<br>订单数量
+				        </th>
+				        <th  width="19%" id="th12">
+			            期望<br>完成时间
+				        </th>
+            	</tr>
+            </table>
+	        </th>
+	        <th width="130" id="th13">
+			操作
+			</th>
+    </tr>
+    </thead>
+</table>
+    <div id="bodyDiv">
+    <table class="main_table" >
+    <tbody >
+    {list}
+    </tbody>
+	</table>
+	</div>
+</div>
+{pageDiv}
+<input type="hidden" id="idsArry" name="idsArry" value="{idsArry}">
+</body>
+</html>

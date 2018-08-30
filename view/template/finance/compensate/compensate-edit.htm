@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>确认赔偿单金额</title>
+    {#commonInclude#}
+    <!-- 引入质检报告用的类 -->
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-init.js"></script>
+    <script type="text/javascript"
+            src="view/template/produce/quality/js/qualityereportequitem-showqualitydetail.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/compensate-edit.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=finance_compensate_compensate&action=edit">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head2">
+                    <span class="main_head_title">
+                        确认赔偿单金额
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                单据编号
+            </td>
+            <td class="form_text_right" width="30%">
+                {formCode}
+            </td>
+            <td class="form_text_left">
+                <span class="blue">单据日期</span>
+            </td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="formDate" name="compensate[formDate]" value="{formDate}"
+                       onfocus="WdatePicker();"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                源单类型
+            </td>
+            <td class="form_text_right">
+                {objTypeName}
+                <input type="hidden" id="objType" name="compensate[objType]" value="{objType}"/>
+            </td>
+            <td class="form_text_left">
+                源单编号
+            </td>
+            <td class="form_text_right">
+                {objCode}
+                <input type="hidden" id="objCode" name="compensate[objCode]" value="{objCode}"/>
+                <input type="hidden" id="objId" name="compensate[objId]" value="{objId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                <span class="blue">设备责任人</span>
+            </td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="chargerName" name="compensate[chargerName]" value="{chargerName}"
+                       readonly="readonly"/>
+                <input type="hidden" id="chargerId" name="compensate[chargerId]" value="{chargerId}"/>
+            </td>
+            <td class="form_text_left">
+                <span class="blue">责任人部门</span>
+            </td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="deptName" name="compensate[deptName]" value="{deptName}"
+                       readonly="readonly"/>
+                <input type="hidden" id="deptId" name="compensate[deptId]" value="{deptId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                <span>赔偿主体</span>
+            </td>
+            <td class="form_text_right">
+                <select name="compensate[dutyType]" id="dutyType" class="select">
+                    {dutyType}
+                </select>
+            </td>
+            <td class="form_text_left">
+                赔偿对象
+            </td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="dutyObjName" name="compensate[dutyObjName]"
+                       value="{dutyObjName}" readonly="readonly"/>
+                <input type="hidden" id="dutyObjId" name="compensate[dutyObjId]" value="{dutyObjId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请类型</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="applyTypeName" name="compensate[applyTypeName]"
+                       value="{applyTypeName}" readonly="readonly"/>
+                <input type="hidden" id="applyType" name="compensate[applyType]" value="{applyType}"/>
+            </td>
+            <td class="form_text_left">商机编号</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="chanceCode" name="compensate[chanceCode]"
+                       value="{chanceCode}" readonly="readonly"/>
+                <input type="hidden" id="chanceId" name="compensate[chanceId]" value="{chanceId}"/>
+                <input type="hidden" id="chanceName" name="compensate[chanceName]" value="{chanceName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">销售负责人</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="salemanName" name="compensate[salemanName]"
+                       value="{salemanName}" readonly="readonly"/>
+                <input type="hidden" id="salemanId" name="compensate[salemanId]" value="{salemanId}"/>
+            </td>
+            <td class="form_text_left">省 份</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="readOnlyTxtNormal" id="province" name="compensate[province]"
+                       value="{province}" readonly="readonly"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                备注
+            </td>
+            <td class="form_text_right" colspan="3">
+                <textarea class="txt_txtarea_900" rows="4" name="compensate[remark]" id="remark" style="width:750px;">{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="innerTd">
+                <div id="detail"></div>
+            </td>
+        </tr>
+    </table>
+    <div id="costshareGrid"></div>
+    <table class="form_main_table">
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="isConfirm" name="compensate[isConfirm]" value="{isConfirm}"/>
+                <input type="hidden" id="id" name="compensate[id]" value="{id}"/>
+                <input type="hidden" id="relDocId" value="{relDocId}"/>
+                <input type="hidden" id="qualityObjType" value="{qualityObjType}"/>
+                <input type="hidden" id="formMoney" name="compensate[formMoney]" value="{formMoney}"/>
+                <input type="hidden" id="compensateMoney" name="compensate[compensateMoney]" value="{compensateMoney}"/>
+                <input type="hidden" id="isSubAudit" name="compensate[isSubAudit]" value="0"/>
+                <input type="submit" class="txt_btn_a" value="确认且提交审批" onclick="audit(1);"/>&nbsp;
+                <input type="submit" class="txt_btn_a" value=" 确  认 " onclick="audit(0);"/>&nbsp;
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="innerTd">
+                <div id="showQualityReport"></div>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

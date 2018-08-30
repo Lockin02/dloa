@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#datalist').treegrid({
+                    title:'',
+                    iconCls:'icon-save',
+                    fit:true,
+                    fitColumns: true,
+                    nowrap: false,
+                    animate:false,
+                    collapsible:false,
+                    url:'{url}',
+                    idField:'id',
+                    treeField:'name',
+                    sortName: 'id',
+                    sortOrder: 'desc',
+                    pageSize:20,
+                    columns:[[ {field:'name',title:'栏目',width:350},{field:'datapv',title:'数据权限',width:350}
+                        ]]
+                });
+            });
+            function treeReload(){
+                var row = $('#datalist').treegrid('getSelected');
+                if (row){
+                    $('#datalist').treegrid('reload', row.id);
+                }
+            }
+        </script>
+        <style type="text/css">
+            .linebutton{
+
+            }
+        </style>
+    </head>
+    <body id="tabdiv" class="easyui-layout">
+        <div region="center" border="true">
+            <table id="datalist" border="false" cellpadding="0" cellspacing="0"></table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>客户信息</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/customer-update.js"></script>
+</head>
+<body>
+
+<form id="customerForm"
+	action="?model=customer_customer_customer&action=updateCustomer"
+	method="post">
+	<input type="hidden" id="customerId"
+			name="customer[id]" value="{id}" /> 
+<div>
+<table class='form_main_table'>
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title">更新客户关联业务信息
+		</span></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">更新方式</td>
+		<td class="form_view_right" colspan=3>
+		<select name="updateType" class="select">
+			<option value="1">根据id更新名称</option>
+			<option value="2">根据名称更新id</option>
+		</select></td>
+		
+	</tr>
+	<tr>
+		<td class="form_text_left">客户编号</td>
+		<td class="form_view_right">{objectCode}</td>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Name]" id="customerName" value="{Name}" class="txt"
+			onchange="check();" /><span id="nameTip" class="red">[*]</span>
+		<div id="productNameTip"></div></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">更新开始时间</td>
+		<td class="form_view_right"><input type="text" class="txt"
+			name="customer[updateStartDate]" onfocus="WdatePicker()" /></td>
+		<td class="form_text_left">更新结束时间</td>
+		<td class="form_view_right"><input type="text" class="txt"
+			name="customer[updateEndDate]" onfocus="WdatePicker()" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">更新对象</td>
+		<td class="form_view_right" colspan="3">
+		<div id="objArr" style="white-space: normal; word-break: break-all;"></div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" class="">
+		<input class="txt_btn_a" id="saveButton" type="button" value="确定" />
+		<input class="txt_btn_a" type="button" value="关闭"
+			onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</div>
+</form>

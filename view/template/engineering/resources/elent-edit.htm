@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>修改设备转借申请</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmdevice.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/elent-common.js" ></script>	
+	<script type="text/javascript" src="{#jsPath#}/elent-edit.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_resources_elent&action=edit" onsubmit="return checkSubmit('edit');">
+<table class="form_main_table" style="width:1050px;margin:auto;align:center" align="center">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">修改设备转借申请表&nbsp;&nbsp;
+					<font color='red'>友情提示：转借到试用项目或个人名下时,时间不能超过1个月</font>
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<fieldset>
+				<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+					<img src="images/icon/info_up.gif" id="baseImg" />
+				</legend>
+				<table width="100%" id="contractinfo" class="form_in_table">     
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申 请 人</span>
+						</td>
+						<td class="form_text_right" width="30%">
+							<input type="text" class="txt" id="applyUser" name="elent[applyUser]"  readonly="readonly" value="{applyUser}"/>
+							<input type="hidden" id="applyUserId" name="elent[applyUserId]" value="{applyUserId}"/>
+							<input type="hidden" id="deptId" name="elent[deptId]" value="{deptId}"/>
+							<input type="hidden" id="deptName" name="elent[deptName]" value="{deptName}"/>
+						</td>
+						<td class="form_text_left">申请日期</td>
+						<td class="form_text_right" >
+			 				<input type="text" class="readOnlyTxtNormal" id="applyDate" name="elent[applyDate]" value="{applyDate}" readonly="readonly"/>
+						</td>
+					</tr>                         
+					<tr>
+						<td class="form_text_left">借出项目编号</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="projectCode" name="elent[projectCode]" readonly="readonly" value="{projectCode}" readonly="readonly"/>
+							<input type="hidden" id="projectId" name="elent[projectId]" value="{projectId}"/>
+						</td>
+						<td class="form_text_left">借出项目名称</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="projectName" name="elent[projectName]" readonly="readonly" value="{projectName}"/>
+						</td>
+					</tr> 
+					<tr>
+						<td class="form_text_left">借出项目经理</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="managerName" name="elent[managerName]" readonly="readonly" value="{managerName}"/>
+							<input type="hidden" id="managerId" name="elent[managerId]"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">接收人</span>
+						</td>
+						<td class="form_text_right" >
+			 				<input type="text" class="txt" id="receiverName" name="elent[receiverName]" readonly="readonly" value="{receiverName}"/>
+			 				<input type="hidden" class="txt"  id="receiverId" name="elent[receiverId]" value="{receiverId}"/>
+			 				<input type="hidden" id="receiverDeptId" name="elent[receiverDeptId]" value="{receiverDeptId}"/>
+			 				<input type="hidden" id="receiverDept" name="elent[receiverDept]" value="{receiverDept}"/>
+						</td>
+					</tr>                     
+					<tr>
+						<td class="form_text_left">
+							接收项目编号
+						</td>
+						<td class="form_text_right" >
+			 				<input type="text" class="txt" id="rcProjectCode" name="elent[rcProjectCode]" readonly="readonly" value="{rcProjectCode}"/>
+			 				<input type="hidden" class="txt" id="rcProjectId" name="elent[rcProjectId]" value="{rcProjectId}"/>
+			 				<input type="hidden" class="txt" id="rcContractType" />
+						</td>
+						<td class="form_text_left">接收项目名称</td>
+						<td class="form_text_right" >
+			 				<input type="text" class="readOnlyTxtNormal" id="rcProjectName" name="elent[rcProjectName]" readonly="readonly" value="{rcProjectName}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">接收项目经理</td>
+						<td class="form_text_right">
+			 				<input type="text" class="readOnlyTxtNormal" id="rcManagerName" name="elent[rcManagerName]" readonly="readonly" value="{rcManagerName}"/>
+			 				<input type="hidden" class="txt" id="rcManagerId" name="elent[rcManagerId]" />							
+						</td>
+                        <td class="form_text_left">设备归属部门</td>
+                        <td class="form_text_right">
+                            <input type="text" class="readOnlyTxtNormal" id="deviceDeptName" name="elent[deviceDeptName]" value="{deviceDeptName}" readonly="readonly"/>
+                            <input type="hidden" id="deviceDeptId" name="elent[deviceDeptId]" value="{deviceDeptId}"/>
+                        </td>
+					</tr>        
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申请原因</span>
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_900" style="width:711px;" id="reason" name="elent[reason]">{reason}</textarea>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" >
+			<fieldset style="width:200">
+				<legend class="legend" onclick="showAndHideDiv('importTableImg','importTable')">转借设备明细
+					<img src="images/icon/info_up.gif" id="importTableImg" />
+				</legend>
+			    <div id="importTable"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" id="id" name="elent[id]" value="{id}" />
+			<input type="hidden" id="status" name="elent[status]" value="{status}" />
+			<input type="submit" class="txt_btn_a" value=" 提  交  " onclick="setConfirm(1);" />&nbsp;
+		   	<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="setConfirm(0);" />&nbsp;
+		   	<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

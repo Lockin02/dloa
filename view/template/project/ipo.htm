@@ -1,0 +1,641 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        	
+        </style>
+		<script type="text/javascript">
+		var open_tabs = false;
+		var types_list = [
+		  			    {typeid:'1',name:'募投项目'},
+		  			    {typeid:'2',name:'政府项目'}
+		  			];
+		var types_state =[
+		                  {stateid:'1',name:'开启'},
+		                  {stateid:'0',name:'关闭'}
+		                 ];
+
+		//导入信息反馈
+		function importResult(msg){
+			if (msg == -1)
+	    	{
+	    		$.messager.show({
+					title : '提示',
+					msg : '操作失败，请与OA管理员联系！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+	    	}else if (msg == 1){
+	    		$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+				$('#import_div').window('close');
+	    	}
+		}
+		
+		//提交导入
+		function uploadMethod(){
+			document.import_form.submit();
+		}
+
+		/*$.document.ready({
+			$.get('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id', function(rs){
+
+				alert(rs);
+			});
+		});   */              
+		/**
+		 * 项目类型
+		 * @param {Object} value
+		 */
+		function typeFormatter(value){
+			for(var i=0; i<types_list.length; i++){
+				if (types_list[i].typeid == value) return types_list[i].name;
+			}
+			return value;
+		}
+		/**
+		*项目状态
+		*/
+		function typeFormatterst(value){
+			for(var i=0; i<types_state.length; i++){
+				if (types_state[i].stateid == value) return types_state[i].name;
+			}
+			return value;
+		}
+		
+        $(function(){
+            $('#tt').datagrid({
+                title: '报销项目列表',
+                iconCls: 'icon-edit',
+                pagination: true,//开启分页
+				pageSize:20,
+                singleSelect: true,//只允许选择一行
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',//数据请求地址
+                columns: [[
+                {
+                    field: 'encrypt',
+                    title: '项目编码',
+                    width: 90,
+                    align: 'center',
+                    editor:'text'
+                },
+                {
+                	field: 'year',
+                	title: '立项年度',
+                	width: 55,
+                	align: 'center',
+                	editor: 'text',
+                	editor: {
+                		type: 'combobox',               		
+                		options:{
+                			valueField : 'year',
+                			textField : 'text',
+                			data :[
+                				{year :'2013',text :'2013'},
+                				{year :'2014',text :'2014'},
+                				{year :'2015',text :'2015'},
+                				{year :'2016',text :'2016'},
+                				{year :'2017',text :'2017'},
+                				{year :'2018',text :'2018'},
+                				{year :'2019',text :'2019'},
+                				{year :'2020',text :'2020'}
+                				],
+							
+                		}, 
+                	}
+                },/*{
+                    field: 'type',
+                    title: '项目类型',
+                    width: 100,
+                    align: 'center',
+                    editor: 'text',
+                    formatter:typeFormatter,editor: {
+						type: 'combobox',
+						options: {
+							valueField: 'typeid',
+							textField: 'name',
+							data: types_list,
+							required: true
+						}
+					}
+                },*/{
+                    field: 'project_name',
+                    title: '名称',
+                    width: 120,
+                    align: 'center',
+                    editor: 'text',
+                    formatter: function(value,rowDate,rowIndex){
+                        return '<span title="'+value+'">'+value+'</span>';
+                    }
+                },{
+                	field: 'type',
+                	title: '项目类型',
+                	width: 80,
+                	align: 'center',
+                	editor:{
+                		type:'combobox',
+                		options:{
+                			valueField : 'type',
+                			textField : 'text',
+                			data:[
+                			      {type:1,text:'幕投项目'},
+                			      {type:2,text:'政府项目'}
+                			      ]
+                		}
+                	},
+                	formatter: function(value,rowDate,rowIndex){
+                		if(value==1){
+                			return '募投项目';
+                		}else if(value==2){
+                			return '政府项目';
+                		}
+                	}
+                },{
+                	field: 'leader',
+                	title: '负责人',
+                	width: 70,
+                	align: 'center',
+                	//editor: 'text',
+                	editor:{
+                		type: 'combobox',
+                		
+                		options:{
+                			valueField : 'user_name',
+                			textField : 'user_name',
+                			url :"?model={t_model}&action=user_list",
+							required: false
+                		}
+                	}
+                },{
+                	field: 'money',
+                	title: '财政资金',
+                	width: 60,
+                	align: 'center',
+                	editor: 'text',
+                },{
+                	field: 'amount',
+                	title: '费用总额',
+                	width: 60,
+                	align: 'center',
+                	editor: 'text',
+
+                },{
+                	field: 'starttime',
+                	title: '开始时间',
+                	width: 80,
+                	align: 'center',
+                	editor: 'datebox',
+                	formatter: function(value, row, index){
+                		var dateStr = "";
+                		if(typeof(value) != "undefined"){
+                			dateStr = value.substring(0,7);
+                		}
+                		return dateStr;
+                	}
+                },{
+                	field: 'endtime',
+                	title: '结束时间',
+                	width: 80,
+                	align: 'center',
+                	editor: 'datebox',
+                	formatter: function(value, row, index){
+                		var dateStr = "";
+                		if(typeof(value) != "undefined"){
+                			dateStr = value.substring(0,7);
+                		}
+                		return dateStr;
+                	}
+                },{
+                	field: 'state',
+                	title: '项目状态',
+                	width: 100,
+                	align: 'center',
+                	//editor:'text',
+                	formatter: function (value, row, index){
+                		if(value==1){
+                			return '进行中';
+                		}else if(value==2){
+                			return '完成未验收';
+                		}else if(value==0){
+                			return '完成并验收';
+                		}
+                	},
+                	/*formatter:typeFormatterst,*/
+                	editor:{
+                		type: 'combobox',
+                		
+                		options:{
+                			valueField : 'state',
+                			textField : 'text',
+                			data :[{state :'1',text :'进行中'},{state :'2',text :'完成未验收'},{state :'0',text : '完成并验收'}],
+							required: true
+                		}
+                	}
+                },{
+                    field: 'belong_plan',
+                    title: '所属科技计划',
+                    width: 120,
+                    align: 'center',
+                    editor: 'text',
+                    formatter: function(value,rowDate,rowIndex){
+                        return '<span title="'+value+'">'+value+'</span>';
+                    }
+                },{
+                    field: 'description',
+                    title: '项目描述',
+                    width: 150,
+                    align: 'center',
+                    editor: 'text',
+                    formatter: function(value,rowDate,rowIndex){
+                        return '<span title="'+value+'">'+value+'</span>';
+                    }
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 100,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                        if (row.editing) {
+                            var s = '<a href="#" onclick="saverow(' + index + ')">保存</a> ';
+                            var c = '<a href="#" onclick="cancelrow(' + index + ')">取消</a>';
+                            return s + c;
+                        }
+                        else {
+                            var e = '<a href="#" onclick="editrow(' + index + ')">修改</a> ';
+                            var d = '<a href="#" onclick="deleterow(' + index + ')">删除</a>';
+                            return e+d;
+                        }
+                    }
+                }]],
+
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onDblClickRow:function(rowIndex,rowDate){
+					showEditBox(rowIndex,rowDate);
+				}
+            });
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [
+                    {
+                             iconCls: 'icon-add',
+                            text: '添加项目',
+                            handler: function(){
+                                insert();
+                            }
+                    },
+                    {
+                            iconCls: 'icon-export',
+                            text: '导出',
+                            handler: function(){
+                                export_file();
+                            }
+                    },
+                    {
+                            iconCls: 'icon-import',
+                            text: '导入',
+                            handler: function(){
+                                import_file();
+                        }
+                    }
+                ]
+            });
+        });
+		function updateActions(){
+				var rowcount = $('#tt').datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#tt').datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			var model='{t_model}';
+			$.messager.confirm('确认提示','你确定要删除该项目吗？',function(r){
+				if (r){
+					$('#tt').datagrid('selectRow',index);
+					var row = $('#tt').datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model='+model+'&action=del',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}
+						})
+					}
+					$('#tt').datagrid('deleteRow', index);
+					updateActions(id);
+				}
+			});
+		}
+		
+		
+	function saverow(index) {
+		$('#tt').datagrid('endEdit', index);
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		id = row.id ? row.id : '';
+		type = row.type;
+		$.post('?model={t_model}&action=save', {
+			type:type,
+			year: row.year,
+			project_name : row.project_name,
+			leader: row.leader,
+			money: row.money,
+			belong_plan : row.belong_plan,
+			id : id,
+			description : row.description,
+			state:row.state,
+			starttime: row.starttime,
+			endtime: row.endtime,
+			amount: row.amount,
+			rand : Math.random(0, 9999)
+		}, function(data) {
+			if (data == 1) {
+
+				$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			} else {
+
+				$.messager.show({
+					title : '提示',
+					msg : '操作失败！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			}
+		});
+	}
+	function cancelrow(index) {
+		$('#tt').datagrid('cancelEdit', index);
+	}
+
+	function insert() {
+		var row = $('#tt').datagrid('getSelected');
+		if (row) {
+			var index = $('#tt').datagrid('getRowIndex', row);
+		} else {
+			index = 0;
+		}
+		if (index < 0)
+			index = 0;
+		$('#tt').datagrid('insertRow', {
+			index : index,
+			row : {
+			//status:'P'
+			}
+		});
+		$('#tt').datagrid('selectRow', index);
+		$('#tt').datagrid('beginEdit', index);
+	}
+
+    /**
+    * 导出
+    */
+    function export_file(){
+        var keyword = $('#keyword').val();
+        var projectType = $('#s_project_type').val();
+        var ipoType = $('#s_project_ipo_type').val();
+        var zfType = $('#s_zf_type').val();
+        var projectStatus = $('#s_project_status').val();
+        var stage = $('#s_project_stage').val();
+        var dept = $('#s_dept').val();
+        $('#export_keyword').val(keyword);
+        $('#export_projectType').val(projectType);
+        $('#export_ipoType').val(ipoType);
+        $('#export_zfType').val(zfType);
+        $('#export_projectStatus').val(projectStatus);
+        $('#export_rand').val(Math.random(0, 999));
+        $('#export_dept').val(dept);
+        $('#export_stage').val(stage);
+        document.getElementById('export_frm').submit();
+    }
+    
+    /**
+    * 导入
+    */
+    function import_file(){
+        $('#upfile').val('');
+        $('#import_div').dialog('open');
+    }
+</script>
+    </head>
+    <body>
+        <form id="export_frm" name="export_frm" action="?model={t_model}&action=export" method="post" >
+            <input type="hidden" id="export_keyword" name="export_keyword" value="" />
+            <input type="hidden" id="export_rand" name="export_rand" value="" />
+            <input type="hidden" id="export_projectType" name="export_projectType" value="" />
+            <input type="hidden" id="export_ipoType" name="export_ipoType" value="" />
+            <input type="hidden" id="export_zfType" name="export_zfType" value="" />
+            <input type="hidden" id="export_projectStatus" name="export_projectStatus" value="" />
+            <input type="hidden" id="export_dept" name="export_dept" value="" />
+            <input type="hidden" id="export_stage" name="export_stage" value="" />
+            
+        </form>
+			<table id="tt"></table>
+		</div>
+		<div id="add" class="easyui-dialog" title="添加平台" iconCls="icon-edit" modal="false" closed="true" style="width:300px;height:250px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<p><label>类型名称：</label><span><input type="text" name="typename" id="typename" value="" /></span></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定添加 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+				<!-- 导入 -->
+		<div id="import_div" class="easyui-dialog" title="导入" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:250px;padding:5px;">
+			<div id="import_file_div" style="text-align: center; height: 30px; line-height: 30px">
+ 				<iframe name="updata" style="display: none;"></iframe>
+ 				<form id="import_form" name="import_form" method="post" action="?model={t_model}&action=import" enctype="multipart/form-data" target="updata" >
+ 				<br/>
+ 				<table align="center" >	
+ 					<tr>
+ 						<td>
+ 							<span>导入文件:</span><input type="file" id="upfile" name="upfile">
+ 						</td>
+ 						<!-- 
+ 						<td>
+ 							<a href="./attachment/demo/demo.xlsx">DEMO文件下载</a>
+ 						</td>
+ 						 -->
+ 					</tr>
+ 					
+ 					<tr>
+ 						<td colspan="2">
+ 							<input type="button" id="import_submit" name="import_submit" value="上传" onclick="uploadMethod();">
+ 						</td>
+ 					</tr>
+ 				</table>
+				</form>
+       		</div>
+		</div>
+		<div id='editPublic'></div>
+    </body>
+    <script>
+	//导出
+     function export_file(){
+        var keyword = $('#keyword').val();
+        var projectType = $('#s_project_type').val();
+        var ipoType = $('#s_project_ipo_type').val();
+        var zfType = $('#s_zf_type').val();
+        var projectStatus = $('#s_project_status').val();
+        var stage = $('#s_project_stage').val();
+        var dept = $('#s_dept').val();
+        $('#export_keyword').val(keyword);
+        $('#export_projectType').val(projectType);
+        $('#export_ipoType').val(ipoType);
+        $('#export_zfType').val(zfType);
+        $('#export_projectStatus').val(projectStatus);
+        $('#export_rand').val(Math.random(0, 999));
+        $('#export_dept').val(dept);
+        $('#export_stage').val(stage);
+        document.getElementById('export_frm').submit();
+    }
+
+   //导入信息反馈
+		function importResult(msg){
+			if (msg == -1)
+	    	{
+	    		$.messager.show({
+					title : '提示',
+					msg : '操作失败，请与OA管理员联系！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+	    	}else if (msg == 1){
+	    		$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+				$('#import_div').window('close');
+	    	}
+		}
+     //导入
+     function import_file(){
+         $('#upfile').val('');
+         $('#import_div').dialog('open');
+     }
+    //生成编辑框
+     function showEditBox(rowIndex,rowDate){
+    	//alert(rowDate.money)
+    	var url = '?model={t_model}&action=list_data';
+		//$.post(url,)	
+    	 var div = "";
+			
+			div+= "<div id='showEditBox' style='width:600px;height:500px;padding:10px 20px;'>";
+			div+="<form name='editBox'>";
+			div+="<span>项目编码：</span><input name='encrypt' type='text' value='"+rowDate.encrypt+"'/>";
+			div+="<span style='margin-left:40px;'>立项年度：</span><input name='year' type='text' value='"+rowDate.year+"'/><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span style='padding-left:24px;'>名称：</span><input name='project_name' type='text' value='"+rowDate.project_name+"'/>";
+			div+="<span style='margin-left:40px;'>项目类型：</span><select name='type'><option value='1'>募投项目</option><option value='2'>政府项目</option></select><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span>财政资金：</span><input name='money' type='text' value='"+rowDate.money+"' readonly style='background:#EFEFEF;' />";
+			div+="<span style='margin-left:40px;'>费用总额：</span><input name='amount' type='text' value='"+rowDate.amount+"'/><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span>开始时间：</span><input name='starttime' id='starttime' type='text' value='"+rowDate.starttime+"'/>";
+			div+="<span style='margin-left:40px;'>结束时间：</span><input name='endtime' id='endtime' type='text' value='"+rowDate.endtime+"'/><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span>项目状态：</span><select name='state'><option value='1'>进行中</option><option value='0'>完成并验收</option><option value='2'>完成未验收</option></select>";
+			div+="<span style='margin-left:115px;'>负责人：</span><input name='leader' style='width:80px;' type='text' value='"+rowDate.leader+"'/><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span style=''>所属科技计划：</span><input name='belong_plan' type='text' value='"+rowDate.belong_plan+"' readonly style='background:#EFEFEF;'/><br/>";
+			div+="<p style='height:10px;margin:0;padding:0;'></p>";
+			div+="<span>项目描述：</span><textarea name='description' rows='10' cols='40'>"+rowDate.description+"</textarea>";
+			div+="</form>";
+			div+="</div>";
+			$('#editPublic').html('');
+			$('#editPublic').html(div);
+			$('#showEditBox').dialog({
+				modal:true,
+				title:'编辑',
+				buttons:[
+				         {
+                    text:'Ok',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                    	var url = '?model={t_model}&action=edit_data';
+                        $.post(url,{data:$('form[name=editBox]').serializeArray(),description:$(':input[name=description]').val()},function(data){
+                        	if(data){
+                        		$('#showEditBox').dialog('close');
+                        		$('#editPublic').html('');
+                        		$('#tt').datagrid().reload();
+                        	}else{
+                        		alert('修改失败，请重试或者联系管理员');
+                        	}
+                        });
+                    }
+                },{
+                    text:'Cancel',
+                    handler:function(){
+                    	$('#showEditBox').dialog('close');
+                    	$('#editPublic').html('');
+                    }
+                }
+				       ]
+			});
+			$('#starttime').datebox();
+			$('#endtime').datebox();
+		}
+     
+    </script>
+</html>

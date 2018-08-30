@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看外包预提</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/prepaid-view.js"></script>
+</head>
+<body>
+<table class="form_main_table">
+    <tr>
+        <td colspan="6">
+            <div class="main_head">
+					<span class="main_head_title">
+						外包预提信息
+					</span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">单据编号</td>
+        <td class="form_text_right_three">{formCode}</td>
+        <td class="form_text_left_three">预提月份</td>
+        <td class="form_text_right_three">{prePaidMonth}</td>
+        <td class="form_text_left_three">签约公司</td>
+        <td class="form_text_right_three">{signCompany}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">合作方式</td>
+        <td class="form_text_right_three">{cooperationType}</td>
+        <td class="form_text_left_three">项目编号</td>
+        <td class="form_text_right_three">{projectCode}</td>
+        <td class="form_text_left_three">项目名称</td>
+        <td class="form_text_right_three">{projectName}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">外包公司</td>
+        <td class="form_text_right_three">{suppName}</td>
+        <td class="form_text_left_three">发票税点</td>
+        <td class="form_text_right_three">{taxPoint}</td>
+        <td class="form_text_left_three">区域</td>
+        <td class="form_text_right_three">{officeName}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">省份</td>
+        <td class="form_text_right_three">{province}</td>
+        <td class="form_text_left_three">外包合同号</td>
+        <td class="form_text_right_three">{outContractCode}</td>
+        <td class="form_text_left_three">建立时间</td>
+        <td class="form_text_right_three">{projectTime}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">项目类型</td>
+        <td class="form_text_right_three">{projectTypeName}</td>
+        <td class="form_text_left_three">项目开始日期</td>
+        <td class="form_text_right_three">{beginDate}</td>
+        <td class="form_text_left_three">项目结束日期</td>
+        <td class="form_text_right_three">{endDate}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">外包开始日期</td>
+        <td class="form_text_right_three">{outBeginDate}</td>
+        <td class="form_text_left_three">外包结束日期</td>
+        <td class="form_text_right_three">{outEndDate}</td>
+        <td class="form_text_left_three">结算方式</td>
+        <td class="form_text_right_three">{settlementType}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">外包价格描述</td>
+        <td class="form_text_right_three">{priceDescription}</td>
+        <td class="form_text_left_three">项目合同金额</td>
+        <td class="form_text_right_three"><span class="formatMoney">{orderMoney}</span></td>
+        <td class="form_text_left_three">项目毛利率</td>
+        <td class="form_text_right_three">{grossProfit}</td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">项目状态</td>
+        <td class="form_text_right_three">{projectStatusName}</td>
+        <td class="form_text_left_three">项目进度</td>
+        <td class="form_text_right_three">{projectProcess}</td>
+        <td class="form_text_left_three">预计金额</td>
+        <td class="form_text_right_three"><span class="formatMoney">{predictMoney}</span></td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">总预提</td>
+        <td class="form_text_right_three"><span class="formatMoney">{prepaidTotal}</span></td>
+        <td class="form_text_left_three">总实际</td>
+        <td class="form_text_right_three"><span class="formatMoney">{factTotal}</span></td>
+        <td class="form_text_left_three">总收票</td>
+        <td class="form_text_right_three"><span class="formatMoney">{invoiceTotal}</span></td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">总支付</td>
+        <td class="form_text_right_three"><span class="formatMoney">{payTotal}</span></td>
+        <td class="form_text_left_three">未完成结算</td>
+        <td class="form_text_right_three"><span class="formatMoney">{unSettlement}</span></td>
+        <td class="form_text_left_three">上年预提</td>
+        <td class="form_text_right_three"><span class="formatMoney">{lastPrepaid}</span></td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">上年实际</td>
+        <td class="form_text_right_three"><span class="formatMoney">{lastFactTotal}</span></td>
+        <td class="form_text_left_three">上年收票</td>
+        <td class="form_text_right_three"><span class="formatMoney">{lastInvoiceTotal}</span></td>
+        <td class="form_text_left_three">上年支付</td>
+        <td class="form_text_right_three"><span class="formatMoney">{lastPayTotal}</span></td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">今年收上年发票</td>
+        <td class="form_text_right_three"><span class="formatMoney">{takeLastInvoice}</span></td>
+        <td class="form_text_left_three">今年支付去年</td>
+        <td class="form_text_right_three" colspan="3"><span class="formatMoney">{takeLastPay}</span></td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">备 注</td>
+        <td class="form_text_right_three" colspan="5">
+            <textarea class="textarea_read" readonly>{remark}</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <table width="100%" style="border-collapse:collapse;bcontract-collapse:collapse;">
+                <tr style="background-color:#EFF7FF;">
+                    <td>月份</td>
+                    <td>本月原始</td>
+                    <td>本月补差额</td>
+                    <td>本月预提</td>
+                    <td>本月实际</td>
+                    <td>本月收票金额</td>
+                    <td>本月收票日期</td>
+                    <td>本月支付金额</td>
+                    <td>本月支付日期</td>
+                    <td>本月预提与实际差额</td>
+                    <td>备 注</td>
+                </tr>
+                <tr id="Jan" class="tr_even">
+                    <td>1月</td>
+                    <td class="formatMoney">{JanOriginal}</td>
+                    <td class="formatMoney">{JanSlack}</td>
+                    <td class="formatMoney">{JanPrepaid}</td>
+                    <td class="formatMoney">{JanFact}</td>
+                    <td class="formatMoney">{JanInvoice}</td>
+                    <td>{JanInvoiceDate}</td>
+                    <td class="formatMoney">{JanPayMoney}</td>
+                    <td>{JanPayDate}</td>
+                    <td class="formatMoney">{JanFactDiff}</td>
+                    <td>{JanRemark}</td>
+                </tr>
+                <tr id="Feb" class="tr_odd">
+                    <td>2月</td>
+                    <td class="formatMoney">{FebOriginal}</td>
+                    <td class="formatMoney">{FebSlack}</td>
+                    <td class="formatMoney">{FebPrepaid}</td>
+                    <td class="formatMoney">{FebFact}</td>
+                    <td class="formatMoney">{FebInvoice}</td>
+                    <td>{FebInvoiceDate}</td>
+                    <td class="formatMoney">{FebPayMoney}</td>
+                    <td>{FebPayDate}</td>
+                    <td class="formatMoney">{FebFactDiff}</td>
+                    <td>{FebRemark}</td>
+                </tr>
+                <tr id="Mar" class="tr_even">
+                    <td>3月</td>
+                    <td class="formatMoney">{MarOriginal}</td>
+                    <td class="formatMoney">{MarSlack}</td>
+                    <td class="formatMoney">{MarPrepaid}</td>
+                    <td class="formatMoney">{MarFact}</td>
+                    <td class="formatMoney">{MarInvoice}</td>
+                    <td>{MarInvoiceDate}</td>
+                    <td class="formatMoney">{MarPayMoney}</td>
+                    <td>{MarPayDate}</td>
+                    <td class="formatMoney">{MarFactDiff}</td>
+                    <td>{MarRemark}</td>
+                </tr>
+                <tr id="Apr" class="tr_odd">
+                    <td>4月</td>
+                    <td class="formatMoney">{AprOriginal}</td>
+                    <td class="formatMoney">{AprSlack}</td>
+                    <td class="formatMoney">{AprPrepaid}</td>
+                    <td class="formatMoney">{AprFact}</td>
+                    <td class="formatMoney">{AprInvoice}</td>
+                    <td>{AprInvoiceDate}</td>
+                    <td class="formatMoney">{AprPayMoney}</td>
+                    <td>{AprPayDate}</td>
+                    <td class="formatMoney">{AprFactDiff}</td>
+                    <td>{AprRemark}</td>
+                </tr>
+                <tr id="May" class="tr_even">
+                    <td>5月</td>
+                    <td class="formatMoney">{MayOriginal}</td>
+                    <td class="formatMoney">{MaySlack}</td>
+                    <td class="formatMoney">{MayPrepaid}</td>
+                    <td class="formatMoney">{MayFact}</td>
+                    <td class="formatMoney">{MayInvoice}</td>
+                    <td>{MayInvoiceDate}</td>
+                    <td class="formatMoney">{MayPayMoney}</td>
+                    <td>{MayPayDate}</td>
+                    <td class="formatMoney">{MayFactDiff}</td>
+                    <td>{MayRemark}</td>
+                </tr>
+                <tr id="Jun" class="tr_odd">
+                    <td>6月</td>
+                    <td class="formatMoney">{JunOriginal}</td>
+                    <td class="formatMoney">{JunSlack}</td>
+                    <td class="formatMoney">{JunPrepaid}</td>
+                    <td class="formatMoney">{JunFact}</td>
+                    <td class="formatMoney">{JunInvoice}</td>
+                    <td>{JunInvoiceDate}</td>
+                    <td class="formatMoney">{JunPayMoney}</td>
+                    <td>{JunPayDate}</td>
+                    <td class="formatMoney">{JunFactDiff}</td>
+                    <td>{JunRemark}</td>
+                </tr>
+                <tr id="Jul" class="tr_even">
+                    <td>7月</td>
+                    <td class="formatMoney">{JulOriginal}</td>
+                    <td class="formatMoney">{JulSlack}</td>
+                    <td class="formatMoney">{JulPrepaid}</td>
+                    <td class="formatMoney">{JulFact}</td>
+                    <td class="formatMoney">{JulInvoice}</td>
+                    <td>{JulInvoiceDate}</td>
+                    <td class="formatMoney">{JulPayMoney}</td>
+                    <td>{JulPayDate}</td>
+                    <td class="formatMoney">{JulFactDiff}</td>
+                    <td>{JulRemark}</td>
+                </tr>
+                <tr id="Aug" class="tr_odd">
+                    <td>8月</td>
+                    <td class="formatMoney">{AugOriginal}</td>
+                    <td class="formatMoney">{AugSlack}</td>
+                    <td class="formatMoney">{AugPrepaid}</td>
+                    <td class="formatMoney">{AugFact}</td>
+                    <td class="formatMoney">{AugInvoice}</td>
+                    <td>{AugInvoiceDate}</td>
+                    <td class="formatMoney">{AugPayMoney}</td>
+                    <td>{AugPayDate}</td>
+                    <td class="formatMoney">{AugFactDiff}</td>
+                    <td>{AugRemark}</td>
+                </tr>
+                <tr id="Sep" class="tr_even">
+                    <td>9月</td>
+                    <td class="formatMoney">{SepOriginal}</td>
+                    <td class="formatMoney">{SepSlack}</td>
+                    <td class="formatMoney">{SepPrepaid}</td>
+                    <td class="formatMoney">{SepFact}</td>
+                    <td class="formatMoney">{SepInvoice}</td>
+                    <td>{SepInvoiceDate}</td>
+                    <td class="formatMoney">{SepPayMoney}</td>
+                    <td>{SepPayDate}</td>
+                    <td class="formatMoney">{SepFactDiff}</td>
+                    <td>{SepRemark}</td>
+                </tr>
+                <tr id="Oct" class="tr_odd">
+                    <td>10月</td>
+                    <td class="formatMoney">{OctOriginal}</td>
+                    <td class="formatMoney">{OctSlack}</td>
+                    <td class="formatMoney">{OctPrepaid}</td>
+                    <td class="formatMoney">{OctFact}</td>
+                    <td class="formatMoney">{OctInvoice}</td>
+                    <td>{OctInvoiceDate}</td>
+                    <td class="formatMoney">{OctPayMoney}</td>
+                    <td>{OctPayDate}</td>
+                    <td class="formatMoney">{OctFactDiff}</td>
+                    <td>{OctRemark}</td>
+                </tr>
+                <tr id="Nov" class="tr_even">
+                    <td>11月</td>
+                    <td class="formatMoney">{NovOriginal}</td>
+                    <td class="formatMoney">{NovSlack}</td>
+                    <td class="formatMoney">{NovPrepaid}</td>
+                    <td class="formatMoney">{NovFact}</td>
+                    <td class="formatMoney">{NovInvoice}</td>
+                    <td>{NovInvoiceDate}</td>
+                    <td class="formatMoney">{NovPayMoney}</td>
+                    <td>{NovPayDate}</td>
+                    <td class="formatMoney">{NovFactDiff}</td>
+                    <td>{NovRemark}</td>
+                </tr>
+                <tr id="Dec" class="tr_odd">
+                    <td>12月</td>
+                    <td class="formatMoney">{DecOriginal}</td>
+                    <td class="formatMoney">{DecSlack}</td>
+                    <td class="formatMoney">{DecPrepaid}</td>
+                    <td class="formatMoney">{DecFact}</td>
+                    <td class="formatMoney">{DecInvoice}</td>
+                    <td>{DecInvoiceDate}</td>
+                    <td class="formatMoney">{DecPayMoney}</td>
+                    <td>{DecPayDate}</td>
+                    <td class="formatMoney">{DecFactDiff}</td>
+                    <td>{DecRemark}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="txt_btn" colspan="6">
+            <input type="hidden" id="id" value="{id}"/>
+            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>产品Bug</title>
+<script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	table td.wrap{
+		white-space:normal; word-break:break-all;
+		table-layout:fixed;
+	}
+</style>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		set_status_selected('{status}');
+		set_typeid_selected()
+	});
+	
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	function set_status_selected(id)
+	{
+		var status = id!='' ? id : QueryString('status');
+		var options = $('#status option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function set_typeid_selected()
+	{
+		var typeid = QueryString('typeid');
+		var options = $('#typeid option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == typeid)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function select_typeid(id)
+	{
+		var status = $('#status').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var keyword = $('#keyword').val();
+		  var username = $('#username').val();
+		location.href='?model=product_bug&action=list&typeid='+id+'&status='+status+'&start_date='+start_date+'&end_date='+end_date+'&keyword='+keyword+ '&username=' + username;
+	}
+	function select_status(id)
+	{
+		var typeid = $('#typeid').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var keyword = $('#keyword').val();
+		 var username = $('#username').val();
+		location.href='?model=product_bug&action=list&status='+id+'&typeid='+typeid+'&start_date='+start_date+'&end_date='+end_date+'&keyword='+keyword+ '&username=' + username;
+	}
+
+	function feedback(id,key)
+	{
+		if (!confirm('您确定要设置为已反馈吗？')) return false;
+		if (id && key)
+		{
+			$.post('ajax.php',{model:'{t_model}',action:'feedback',id:id,key:key,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data == 1)
+				{
+					alert('设置成功！');
+					$('#feedback_'+id).html('<span class="green">已反馈</span>');
+				}else
+				{
+					alert('反馈失败，请与管理员联系！');
+				}
+			}
+			);
+		}
+	}
+	
+	function search_user(username)
+			{
+			     if (username) 
+			    {
+			        var rand = Math.random(0, 999999);
+			        $.post('ajax.php', 
+			        {
+			            model: 'user',
+			            action: 'get_userid',
+			            username: username,
+			            rand: rand
+			        }, function(data)
+			        {
+			            if (!data) 
+			            {
+			               $('#username').val(''); alert('提交人姓名错误！'); 
+						    //location.href = '?model={t_model}&action={t_action}&status=' + status + '&typeid=' + typeid + '&username=' + username+ '&id=' + id;
+			            }
+			            else 
+			            {
+			                //alert('提交人姓名错误！');
+			            }
+			        });
+			    }
+			    else if(status&&typeid)
+			    {
+			       // location.href = '?model={t_model}&action={t_action}&status=' + status + '&typeid=' + typeid
+			    }
+			}
+	function export_data()
+	{
+		var typeid = $('#typeid').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var status = $('#status').val();
+		  var username = $('#username').val();
+		var keyword = $('#keyword').val();
+		location.href='?model=product_bug&action=export&type=list&status='+status+'&typeid='+typeid+'&start_date='+start_date+'&end_date='+end_date+'&keyword='+keyword+ '&username=' + username;
+	}
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model=product_bug&action=list">
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="left" width="150">产品类型:<select id="typeid" name="typeid" onchange="select_typeid(this.value)"><option value="">产品类型</option>{options}</select></td>
+		<td>解决状态：
+			<select id="status" name="status" onchange="select_status(this.value);">
+				<option value="">所有状态</option>
+				<option value="0">待确认Bug</option>
+				<option value="1">已确认Bug</option>
+				<option value="2">已解决Bug</option>
+			</select>
+		日期：<input type="text" size="12" class="Wdate" onclick="WdatePicker();" id="start_date" name="start_date" value="{start_date}" />
+		 至 <input type="text" size="12" class="Wdate" onclick="WdatePicker();" id="end_date" name="end_date" value="{end_date}" />
+		提交人：<input type="text" size="10" id="username" onblur="search_user(this.value);" name="username" value="{username}" /> 
+					关键字：<input type="text" id="keyword"  name="keyword" style=" width:75px;" value="{keyword}"/> 
+					<input type="submit" value=" 搜索 " />
+		
+		<input type="button" alt="?model={t_model}&action=add&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=600" class="thickbox" title="提交新Bug" value=" 提交新Bug " />
+	   <input type="button" onclick="export_data();" value=" 导出数据 " />
+	</tr>
+</table>
+</form>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td colspan="17" align="center">产品Bug列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>序号</td>
+		<td>提交日期</td>
+		<td>最后更新时间{update_time_sort}</td>
+		<td>提 交 人</td>
+		<td>接 收 人</td>
+		<td>Bug详细描述(Bug重现条件)</td>
+		<td>Bug截图</td>
+		<td>Bug数据路径及数据名称</td>
+		<td>产品版本号(含日期)</td>
+		<td>解决情况</td>
+		<td>是否已反馈给客户</td>
+		<td>提出单位</td>
+		<td>提出人</td>
+		<td>提出人手机</td>
+		<td>提出人Email</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+</form>
+</body>
+</html>

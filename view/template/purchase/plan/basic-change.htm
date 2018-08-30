@@ -1,0 +1,231 @@
+<html>
+<head>
+    <title>变更采购申请</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+	<script type="text/javascript" src="js/common/changejudge.js"></script>
+
+    <script type="text/javascript">
+
+    	function myDatePick(value){
+    		WdatePicker({el:$dp.$(value)});
+    	}
+
+		function checkSumbit(){
+			if( confirm("确定提交变更采购申请吗？") ){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		function myload(){
+
+			$(".taskAmount").bind("change",function(){
+				var thisVal = parseInt( $(this).val() );
+				var nextVal = parseInt( $(this).next().val() );
+				var amountIssued = parseInt( $(this).next().next().val() );
+				if(thisVal>nextVal){
+					alert("请不要超过最大申请数量 "+nextVal);
+					$(this).attr("value",nextVal);
+				}else if(thisVal<amountIssued){
+					alert("请不要小于最小申请数量 "+amountIssued);
+					$(this).attr("value",nextVal);
+				}else if(thisVal<0){
+					alert("请不要输入负数");
+					$(this).attr("value",nextVal);
+				}else {
+					$(this).attr("value",thisVal);
+				}
+			});
+		}
+
+// 选择负责人
+$(function() {
+	$("#TO_NAME").yxselect_user({
+				hiddenId : 'TO_ID',
+				mode:'check'
+			});
+	});
+
+
+    </script>
+</head>
+<body scroll="yes" onload="myload();initFileds()">
+
+	<div class="main_head">
+	    <span class="main_head_title">
+	      	变更采购申请
+	    </span>
+	</div>
+<div class="main_wraper">
+  	<form id='form1' name='form1' action="?model=purchase_plan_basic&action=change" method="post"  onsubmit="return checkModification()" >
+	<input type="hidden" name="basic[oldId]" value="{id}"/>
+	<input type="hidden" name="basic[planNumb]" value="{planNumb}"/>
+	<table class="form_main_table">
+	<!--
+		<tr>
+				<td colspan="4" class="form_header">
+					采购申请
+				</td>
+			</tr>  -->
+		<tr>
+			<td class="form_text_left" align="center">
+					采购申请编号
+				</td>
+			<td colspan="4" class="form_text_right">
+				{planNumb}
+				</td>
+			</tr>
+			<tr>
+			<td class="form_text_left">
+					申请类型
+			</td>
+			<td class="form_text_right">
+				{purchTypeCName}
+				</td>
+			<td class="form_text_left">源单据号</td>
+			<td class="form_text_right">
+				{sourceNumb}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				申请人
+			</td>
+			<td class="form_text_right">
+				{createName}
+			</td>
+		<td class="form_text_left">采购部门</td>
+		<td class="form_text_right">
+			{purchDepart}
+		</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+					申请日期
+				</td>
+			<td class="form_text_right" >
+				{createTime}
+				</td>
+			<td class="form_text_left">
+					期望完成时间
+				</td>
+			<td class="form_text_right">
+				<input type="text" id="dateHope" name="basic[dateHope]"  class="txt" value="{dateHope}" onfocus="WdatePicker()" readonly />
+			</td>
+		</tr>
+		<tr>
+		<td colspan="4">
+				<table class="form_main_table">
+					<tr>
+						<td colspan="9" class="form_header">
+							采购申请清单
+						</td>
+					</tr>
+					<tr  class="main_tr_header" align="center">
+						<th width="5%">
+								序号
+						</th>
+						<th  width="18%">
+								物料编号/名称
+						</th>
+						<th width="10%">
+								规格型号
+						</th>
+						<th width="10%">
+								单位
+						</th>
+						<th width="10%">
+								原数量
+						</th>
+						<th width="10%">
+								已下达数量
+						</th>
+						<th width="10%">
+								变更数量
+						</th>
+						<th width="10%">
+								预计完成时间
+						</th>
+						<th>
+								备注
+						</th>
+					</tr>
+					{list}
+				</table>
+				</td>
+				</tr>
+		<tr>
+			<td class="form_text_left">
+				变更原因
+			</td>
+			<td colspan="3" class="form_text_right">
+				<textarea rows="5" id="changereason" name="basic[changeReason]" cols="100"></textarea>
+			</td>
+		</tr>
+		<tr align="center" height="90px">
+			<td class="form_text_left">
+				采购说明
+			</td>
+			<td colspan="3" class="form_text_right">
+				<textarea rows="5" id="instruction" name="basic[instruction]" cols="100"></textarea>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+			<td class="form_text_left">
+				备注
+			</td>
+			<td colspan="3" class="form_text_right">
+				<textarea rows="5" id="remark" name="basic[remark]" cols="100">{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+	   		<td class="form_text_left">是否发送邮件
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="basic[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+	      		<input type="radio" name="basic[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+	   	<tr>
+	   		<td class="form_text_left">邮件发送至
+	       	</td>
+	       	<td colspan="3" id="maildiv" class="form_text_right">
+			    <input type="text" class="txtlong" name="basic[email][TO_NAME]" id="TO_NAME" readonly="readonly"/>
+	    		<input type="hidden" name="basic[email][TO_ID]" id="TO_ID" readonly="readonly"/>
+		    </td>
+	   	</tr>
+		<tr>
+			<td colspan="6"class="footform">
+			<!--
+				<input type="hidden" name="basic[id]" value="{id}" /> -->
+
+				<input type="submit" value="变  更" class="txt_btn_a">
+				<input type="button" value="返  回" class="txt_btn_a" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+</form>
+</div>
+</body>
+</html>

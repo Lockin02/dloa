@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        </style>
+		<script type="text/javascript">
+			var table_list = eval('{table_list}');
+			var isManager = '{isManager}';
+			var level =[
+						{name:'一级',value:1},
+						{name:'二级',value:2},
+						{name:'三级',value:3},
+						{name:'四级',value:4},
+						{name:'五级',value:5},
+						{name:'六级',value:6},
+						{name:'七级',value:7},
+						{name:'八级',value:8},
+						{name:'九级',value:9},
+						{name:'十级',value:10}
+			
+			];
+			$(function(){
+				$('#tt').datagrid({
+					title:'绩效考核管理',
+					iconCls:'icon-edit',
+					pagination:true,
+					singleSelect:true,
+					idField:'id',
+					pageSize:20,
+					url:'?model={t_model}&action=mylist_data',
+					columns:[[
+						{field:'id',title:'ID',width:35,align:'center',sortable:true},
+						{field:'name',title:'考核表名称',width:150,align:'center',sortable:true},
+						{field:'user_name',title:'被考核人',width:50,align:'center',sortable:true},
+						{field:'years',title:'年份',width:35,align:'center',sortable:true},
+						{field:'quarter',title:'季度',width:35,align:'center',sortable:true},
+						{field:'count_my_fraction',title:'自评总分',width:50,align:'center',sortable:true},
+						{field:'assess_username',title:'考核人',width:50,align:'center',sortable:true},
+						{field:'assess_status',title:'考核状态',width:50,sortable:true,align:'center',formatter:function(value,row,index){
+							if (value == 1 && row.release_assess_status != 1)
+							{
+								return '待发布';
+							}else if (value == 0)
+							{
+								return '待考核';
+							}else{
+								return '已考核';
+							}
+						}},
+						{field:'count_assess_fraction',title:'考核总分',width:50,align:'center',sortable:true,
+							formatter:function(value, row, index)
+							{
+								if(row.release_assess_status == 1)
+								{
+									return value;
+								}
+							}
+						},
+						{field:'assess_date',title:'考核时间',width:115,align:'center',sortable:true},
+						{field:'audit_username',title:'审核人',width:50,align:'center',sortable:true},
+						{field:'audit_status',title:'审核状态',width:50,sortable:true,align:'center',formatter:function(value,row,index){
+							if (row.audit_username == '')
+							{
+								return '';
+							}
+							if (value==1 && row.release_audit_status != 1)
+							{
+								return '待发布';
+							}else if (value == 0)
+							{
+								return '待审核';
+							}else{
+								return '已审核';
+							}
+						}},
+						{field:'count_audit_fraction',title:'审核总分',width:50,align:'center',sortable:true,formatter:function(value,row,index){
+							if(row.release_audit_status == 1)
+							{
+								return value;
+							}
+						}},
+						{field:'audit_date',title:'审核时间',width:115,align:'center',sortable:true},
+						{field:'level',title:'排名等级',width:50,align:'center',sortable:true,
+							formatter:function(value,row,index)
+							{
+								if ((row.audit_username=='' && row.release_assess_status==1) || (row.audit_username!='' && row.release_audit_status == 1))
+								{
+									for(var i=0;i<level.length;i++)
+									{
+										if (value == level[i].value) return level[i].name;
+									}
+									return value;
+								}
+							},
+							editor: {
+								type: 'combobox',
+								options: {
+									valueField: 'value',
+									textField: 'name',
+									data: level
+								}
+							}
+						},
+						{field:'show',title:'评价人',width:100,sortable:true,align:'center',
+							formatter: function(value, row, index)
+							{
+								var str = '';
+								if (row.evaluate!='') {
+									if (row.evaluate.user.length > 0) 
+									{
+										for (var i = 0; i < row.evaluate.user.length; i++) {
+											//str += ' <a href="#" onclick="show_evaluate(' + row.id + ',\'' + row.evaluate.user[i] + '\',\'' + row.evaluate.evaluators_userid[i] + '\',' + row.evaluate.evaluate_list_id[i] + ');">' + row.evaluate.user[i] + '</a> ';
+											str += ' <a href="#" onclick="show_evaluate(' + row.id + ',' + (i+1) + ',' + row.evaluate.evaluate_list_id[i] + ');">评价人' + (i+1) + '</a> ';
+										}
+									}
+								}
+								return str;
+							}
+						},
+						{
+							field: 'action',
+							title: '操作',
+							width: 120,
+							align: 'center',
+							formatter: function(value, row, index){
+								var str ='';
+								if (row.count_my_fraction == 0){
+									str =  ' <a href="#" onclick="editrow('+index+')">填写考核表</a> ';
+								}else if (row.assess_status == 1)
+								{
+									str =  '<a href="#" onclick="showrow('+index+')">查看</a> ';
+									if (row.my_status!=1 && ((row.audit_username!='' && row.release_audit_status==1) || (row.audit_username=='' && row.release_assess_status==1)))
+									{
+										str +=' | <a href="#" onclick="opinion('+index+')">填写考核意见</a> ';
+									}
+								}else if(row.assess_status == 0){
+									str =  ' <a href="#" onclick="editrow('+index+')">修改</a> ';
+								}
+								
+								if(isManager == 'true'){
+									str += '|<a href="#" onclick="members('+index+')">未评价成员</a>'
+								}
+								return str;
+							}
+						}
+						]]
+				});
+				//show_add_button();
+			});
+			/**
+			 * 显示提交按钮
+			 */
+            function show_add_button(){
+                $('#tt').datagrid('getPager').pagination({
+                    buttons: [{
+                        iconCls: 'icon-add',
+                        text: '提交考核表',
+                        handler: function(){
+                            insert();
+                        }
+                    }],
+                    onBeforeRefresh: function(ageNumber, pageSize){
+                        return true;
+                    }
+                });
+            }
+			/**
+			 * 添加
+			 */
+			function insert()
+			{
+				if (table_list.length > 1)
+				{
+					var radio = '';
+					for(key in table_list)
+					{
+						if (table_list[key].name)
+						{
+							radio +='<p><span><input type="radio" name="tpl" value="'+table_list[key].id+'" /></span><label>'+table_list[key].name+'</lable>';
+						}
+					}
+					$('#radio_list').html(radio);
+					$('#add_window').window('open');
+				}else if (table_list.length == 1){
+					show_add(table_list[0].id);
+				}else{
+					alert('暂无考核表需要填写！');
+					return false;
+				}
+			}
+			/**
+			 * 显示添加界面
+			 */
+			function show_add(id)
+			{
+				var tpl_id = id ? id : $('#radio_list input[type=radio]:checked').val();
+				if (tpl_id)
+				{
+					var iWidth	= 640,	// 800 * 0.8,
+					iHeight	= 420,	// 600 * 0.7,
+					iLeft	= 80;	// (800 - 0.8 * 800) /2 = 800 * 0.1.
+					try
+					{
+						var screen = window.screen;
+						iWidth = screen.width;
+						iHeight = screen.height;
+						iLeft = screen.width;
+					}
+					catch ( e ){}
+					var oWindow = window.open( '?model={t_model}&action=show_add_tpl&tpl_id='+tpl_id, '填写考核表', 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+					iWidth + ',height=' + iHeight);
+					$('#add_window').window('close');
+				}else{
+					alert('请选择要填写的考核表！');
+				}
+			}
+			
+			function editrow(index)
+			{
+				$('#tt').datagrid('selectRow', index);
+				var rows = $('#tt').datagrid('getSelected');
+				var iWidth	= 640,	// 800 * 0.8,
+				iHeight	= 420,	// 600 * 0.7,
+				iLeft	= 80;	// (800 - 0.8 * 800) /2 = 800 * 0.1.
+				try
+				{
+					var screen = window.screen;
+					iWidth = screen.width;
+					iHeight = screen.height;
+					iLeft = screen.width;
+				}
+				catch ( e ){}
+				var oWindow = window.open( '?model={t_model}&action=edit&id='+rows.id, '填写考核表', 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+				iWidth + ',height=' + iHeight);
+			}
+			/**
+			 * 查看
+			 * @param {Object} index
+			 */
+			function showrow(index)
+			{
+				$('#tt').datagrid('selectRow', index);
+				var rows = $('#tt').datagrid('getSelected');
+				var iWidth	= 640,	// 800 * 0.8,
+				iHeight	= 420,	// 600 * 0.7,
+				iLeft	= 80;	// (800 - 0.8 * 800) /2 = 800 * 0.1.
+				try
+				{
+					var screen = window.screen;
+					iWidth = screen.width;
+					iHeight = screen.height;
+					iLeft = screen.width;
+				}
+				catch ( e ){}
+				var oWindow = window.open( '?model={t_model}&action=showinfo&view=user&id='+rows.id, '查看考核表', 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+				iWidth + ',height=' + iHeight);
+			}
+			
+			function opinion(index)
+			{
+				$('#tt').datagrid('selectRow', index);
+				var rows = $('#tt').datagrid('getSelected');
+				var iWidth	= 640,	// 800 * 0.8,
+				iHeight	= 420,	// 600 * 0.7,
+				iLeft	= 80;	// (800 - 0.8 * 800) /2 = 800 * 0.1.
+				try
+				{
+					var screen = window.screen;
+					iWidth = screen.width;
+					iHeight = screen.height;
+					iLeft = screen.width;
+				}
+				catch ( e ){}
+				var oWindow = window.open( '?model={t_model}&action=my_opinion&id='+rows.id,'填写考核意见', 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+				iWidth + ',height=' + iHeight);
+			}
+			/**
+			 * 显示评价
+			 * @param {Object} id
+			 * @param {Object} evaluators_userid
+			 * @param {Object} evaluate_list_id
+			 */
+			function show_evaluate(id,sort,evaluate_list_id)
+			{
+				var iWidth	= 640,	// 800 * 0.8,
+				iHeight	= 420,	// 600 * 0.7,
+				iLeft	= 80;	// (800 - 0.8 * 800) /2 = 800 * 0.1.
+				try
+				{
+					var screen = window.screen;
+					iWidth = screen.width;
+					iHeight = screen.height;
+					iLeft = screen.width;
+				}
+				catch ( e ){}
+				var oWindow = window.open( '?model={t_model}&action=show_evaluate&id='+id+'&sort='+sort+'&list_id='+evaluate_list_id,'查看评价', 'toolbar=yes,location=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=' +
+				iWidth + ',height=' + iHeight);
+			}
+			 
+			function members(index){
+				$('#tt').datagrid('selectRow', index);
+				var rows = $('#tt').datagrid('getSelected');
+				var year = rows.years;
+				var quarter = rows.quarter;
+				$.post('?model={t_model}&action=no_evaluate_member',{year:year,quarter:quarter},function(data){
+					$str ="该记录考核时间已过";
+					if(data != ""){
+						$str = data;
+					}
+					$('#show_members_result').html($str);
+					$('#show_members').window('open');
+				})
+			}
+		</script>
+    </head>
+    <body>
+        <div style="width:98%;margin:0 auto; padding-top:5px;">
+	        <table id="tt" toolbar="#tb"></table>
+		</div>
+	<div id="add_window" class="easyui-window" title="选择考核表" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:300px;height:200px;padding:5px;">	
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<div id="radio_list"></div>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<a class="easyui-linkbutton" iconCls="icon-ok" href="javascript:void(0)" onclick="show_add()">确定</a>
+			<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:void(0)" onclick="$('#add_window').window('close');">取消</a>
+		</div>
+		</div>
+	</div>
+	
+	<div id="show_members" class="easyui-window" title="未评价成员" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:300px;height:200px;padding:5px;">	
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<div id="show_members_result" style="text-align: center;"></div>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:void(0)" onclick="$('#show_members').window('close');">关闭</a>
+		</div>
+		</div>
+	</div>
+    </body>
+</html>

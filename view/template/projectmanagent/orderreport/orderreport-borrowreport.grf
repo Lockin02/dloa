@@ -1,0 +1,177 @@
+﻿Object Report
+	Version='5.8.0.5'
+	Title='你的报表标题'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+	End
+	Object DetailGrid
+		BorderColor=DkGray
+		ColLineColor=DkGray
+		RowLineColor=DkGray
+		Object Recordset
+			ConnectionString='Provider=MSDASQL.1;Persist Security Info=False;Data Source=localhost;Extended Properties="DSN=localhost;"'
+			QuerySQL='select\r\n	c.id ,c.objCode ,c.objNo ,c.payDate ,c.supplierName ,c.invType,c.exaMan,c.ExaDT,c.createName ,c.createTime,c.status,\r\n	c.ExaStatus,c.belongId,c.departments,c.purcontCode,c.formDate,c.salesman,c.formType,\r\n	c.taxRate,c.formAssessment,c.formCount,\r\n	d.hookNumber,d.hookAmount,d.unHookNumber,d.unHookAmount,d.amount,\r\n	d.id as detailId,d.productName,d.productNo,d.productId,d.price,d.number,d.taxPrice,d.assessment,\r\n	d.objId,d.contractCode,d.contractId,d.allCount,d.objId as sourceId,d.objCode as sourceCode,d.objType as sourceType\r\n\r\nfrom\r\n	oa_finance_invpurchase c left join oa_finance_invpurchase_detail d on c.id = d.invPurId where 1=1\r\n\r\n	order by date_format(c.formDate,'%Y%m'),c.supplierId'
+			Items Field
+				Item
+					Name='查询类型'
+					DBFieldName='searchType'
+				End
+				Item
+					Name='统计类型'
+					Type=Currency
+					Format='#,##0.00'
+					DBFieldName='countType'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='序号'
+				Width=2
+			End
+			Item
+				Name='searchType'
+				Width=10
+			End
+			Item
+				Name='countType'
+			End
+		End
+		Object ColumnContent
+			BackColor=00CCFFFF
+			Height=0.6
+			Object Font
+				Name='宋体'
+				Size=90000,0
+				Weight=400
+				Charset=134
+			End
+			AlternatingBackColor=00E8FFFF
+			Items ColumnContentCell
+				Item
+					Column='序号'
+					FreeCell=T
+					Items Control
+						Item
+							Type=SystemVarBox
+							Name='序号'
+							BackColor=White
+							Anchor=[]
+							Dock=Fill
+							TextAlign=MiddleCenter
+							SystemVar=RecordNo
+						End
+					End
+				End
+				Item
+					Column='searchType'
+					CanGrow=T
+					WordWrap=T
+					DataField='查询类型'
+				End
+				Item
+					Column='countType'
+					TextAlign=MiddleRight
+					DataField='统计类型'
+				End
+			End
+		End
+		Object ColumnTitle
+			BackColor=LtGray
+			Height=0.8
+			Object Font
+				Name='宋体'
+				Size=90000,0
+				Weight=400
+				Charset=134
+			End
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='序号'
+					TextAlign=MiddleCenter
+					Text='序号'
+				End
+				Item
+					GroupTitle=F
+					Column='searchType'
+					TextAlign=MiddleCenter
+					Text='查询类型'
+				End
+				Item
+					GroupTitle=F
+					Column='countType'
+					TextAlign=MiddleCenter
+					Text='统计类型'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='合计分组'
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					BackColor=LtGray
+					Height=0.687917
+					Items Control
+						Item
+							Type=SummaryBox
+							Name='SummaryBox1'
+							AlignColumnEx='countType'
+							Left=12.0121
+							Width=3.02
+							Height=0.69
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							DataField='统计类型'
+							Format='#,##0.00'
+						End
+					End
+				End
+			End
+		End
+	End
+	Items Section
+		Item
+			Type=PageHeader
+			Height=0
+		End
+		Item
+			Type=PageFooter
+			Height=1.2
+		End
+		Item
+			Type=ReportHeader
+			Name='ReportHeader1'
+			Height=1.2
+			Items Control
+				Item
+					Type=StaticBox
+					Name='借用统计表'
+					Dock=Fill
+					Center=Horizontal
+					Object Font
+						Name='宋体'
+						Size=157500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='借用统计表'
+				End
+			End
+		End
+	End
+End

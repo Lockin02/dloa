@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/common/email.js"></script>
+	    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+        <script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-close.js"></script>
+		<title>付款申请</title>
+<body>
+<form id="form1" method="post" action="?model=finance_payablesapply_payablesapply&action=close" onsubmit="return checkform();">
+<div class="main_head"><span class="main_head_title">关闭付款申请</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">供 应 商</td>
+		<td class="form_text_right" width="30%">
+			{supplierName}
+			<input type="hidden" name="payablesapply[supplierName]" value="{supplierName}"/>
+			<input type="hidden" name="payablesapply[payMoney]" value="{payMoney}"/>
+		</td>
+		<td class="form_text_left">申请金额</td>
+		<td class="form_text_right">
+			<span class="formatMoney">{payMoney}</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关闭日期</td>
+		<td class="form_text_right">
+			<input id="closeDate" type="text" name="payablesapply[closeDate]" class="txt" value="{thisDate}" readonly="readonly"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">关 闭 人</td>
+		<td class="form_text_right">
+			<input id="closeUser" type="text" name="payablesapply[closeUser]" class="txt" value="{userName}" readonly="readonly"/>
+			<input id="closeUserId" type="hidden" name="payablesapply[closeUserId]" value="{userId}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关闭原因</td>
+		<td class="form_text_right" colspan="3">
+			<textarea class="txt_txtarea_800" name="payablesapply[closeReason]" id="closeReason"></textarea>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">是否邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="payablesapply[mail][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="payablesapply[mail][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr id="maildiv">
+   		<td class="form_text_left">邮件接收人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" name="payablesapply[mail][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly" value="{sendName}"/>
+    		<input type="hidden" name="payablesapply[mail][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+	    </td>
+   	</tr>
+	<tr>
+   		<td class="form_text_right">
+       	</td>
+		<td class="form_text_right" colspan="3">
+      		<span class="blue">邮件通知会将 <span class="red">[关闭原因]</span> 发送到邮件接收人</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="hidden" value="{id}" id="id" name="payablesapply[id]"/>
+			<input type="hidden" value="{formNo}" name="payablesapply[formNo]"/>
+			<input type="hidden" value="FKSQD-04" name="payablesapply[status]"/>
+			<input type="hidden" value="{shareStatus}" name="payablesapply[shareStatus]"/>
+			<input type="submit" value=" 确 认 " class="txt_btn_a"/>
+			<input type="button" onclick="closeFun();" value=" 返 回 "  class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

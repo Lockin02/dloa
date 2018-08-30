@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增项目状态报告</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/statusreport-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/statusreport-submitreport.js" ></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	项目周报
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_project_statusreport&action=add">
+<table class="form_main_table">
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">周报基本信息</legend>
+				<table class="form_in_table">
+					<tr>
+				   		<td class="form_text_left_three">周 次</td>
+						<td class="form_text_right_three">
+							{weekNo}
+							<input type="hidden" name="statusreport[weekNo]" value="{weekNo}"/>
+						</td>
+						<td class="form_text_left_three">汇报日期</td>
+						<td class="form_text_right_three">
+							{thisDate}
+							<input type="hidden" name="statusreport[handupDate]" id="handupDate" value="{thisDate}"/>
+						</td>
+						<td class="form_text_left_three">汇 报 人</td>
+						<td class="form_text_right_three">
+							{userName}
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项目基本信息</legend>
+				<table class="form_in_table">
+					<tr>
+				   		<td class="form_text_left_three">归属区域</td>
+						<td class="form_text_right_three">
+							{officeName}
+							<input type="hidden" name="statusreport[officeName]" value="{officeName}"/>
+							<input type="hidden" name="statusreport[officeId]" value="{officeId}"/>
+						</td>
+						<td class="form_text_left_three">项目编号</td>
+						<td class="form_text_right_three">
+							{projectCode}
+						</td>
+						<td class="form_text_left_three">项目名称</td>
+						<td class="form_text_right_three">
+							{projectName}
+							<input type="hidden" name="statusreport[projectId]" value="{id}"/>
+							<input type="hidden" name="statusreport[projectCode]" value="{projectCode}"/>
+							<input type="hidden" name="statusreport[projectName]" value="{projectName}"/>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">工程进度(%)</span></td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="txt" id="projectProcess" name="statusreport[projectProcess]" value="{projectProcess}" onblur="calProcessGap();"/>
+						</td>
+						<td class="form_text_left_three">费用进度</td>
+						<td class="form_text_right_three" >
+							{feeAllProcess} %
+							 <input type="hidden" id="feeAllProcess" name="statusreport[feeAllProcess]" value="{feeAllProcess}"/>
+							 <input type="hidden" id="feeFieldProcess" name="statusreport[feeFieldProcess]" value="{feeFieldProcess}"/>
+						</td>
+						<td class="form_text_left_three">进度差距(%)</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="processGap" name="statusreport[processGap]" value="0.00"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">项目经理</td>
+						<td class="form_text_right_three" colspan="5">
+							{managerName}
+							<input type="hidden" name="statusreport[managerName]" value="{managerName}"/>
+							<input type="hidden" name="statusreport[managerId]" value="{managerId}"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">详 细 信 息</legend>
+				<table class="form_in_table">
+					<tr>
+						<td class="form_text_left_three">预计开始</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyTxtNormal" name="statusreport[planBeginDate]" id="planBeginDate" value="{planBeginDate}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">预计结束</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="statusreport[planEndDate]" id="planEndDate" value="{planEndDate}" onfocus="WdatePicker()" onchange="timeCheckPlan(this)"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">预计工期</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="statusreport[expectedDuration]" id="expectedDuration" value="{expectedDuration}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">实际开始</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyTxtNormal" name="statusreport[actBeginDate]" id="actBeginDate" value="{actBeginDate}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">实际结束</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="statusreport[actEndDate]" id="actEndDate" value="{actEndDate}" onfocus="WdatePicker()" onchange="timeCheckAct(this)"/>
+						</td>
+						<td class="form_text_left_three">实际工期</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="statusreport[actDuration]" id="actDuration" value="{actDuration}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three"><span class="blue">已实施天数</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="statusreport[workedDays]" id="workedDays" value="{workedDays}"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">预计还需</span></td>
+						<td class="form_text_right_three" colspan="3">
+							<input type="text" class="txt" name="statusreport[needDays]" id="needDays" value="{needDays}"/>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">总 人 数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="statusreport[peopleNumber]" value="{peopleNumber}" id="peopleNumber"/>
+						</td>
+						<td class="form_text_left_three">鼎利人数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="statusreport[dlPeople]" value="{dlPeople}" id="dlPeople"/>
+						</td>
+						<td class="form_text_left_three">外包人数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="statusreport[outsourcingPeople]" value="{outsourcingPeople}" id="outsourcingPeople"/>
+							<span id="outsourcingPeopleUnit" style="display:none">人</span>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">决 算 信 息</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">总 决 算</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeAll" name="statusreport[feeAll]" value="{feeAll}"/>
+						</td>
+						<td class="form_text_left_three">现场决算</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeField" name="statusreport[feeField]" value="{feeField}"/>
+						</td>
+						<td class="form_text_left_three">设备决算</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeEqu" name="statusreport[feeEqu]" value="{feeEqu}"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">人力决算(元)</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feePerson" name="statusreport[feePerson]" value="{feePerson}"/>
+						</td>
+						<td class="form_text_left_three">人力决算(天)</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feePeople" name="statusreport[feePeople]" value="{feePeople}"/>
+						</td>
+						<td class="form_text_left_three">人天决算(天)</td>
+						<td class="form_text_right_three" >
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeDay" name="statusreport[feeDay]" value="{feeDay}"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">外包决算</td>
+						<td class="form_text_right_three">
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeOutsourcing" name="statusreport[feeOutsourcing]" value="{feeOutsourcing}"/>
+						</td>
+						<td class="form_text_left_three">挣  值</td>
+						<td class="form_text_right_three">
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="earnedValue" name="statusreport[earnedValue]" value="{earnedValue}"/>
+						</td>
+						<td class="form_text_left_three">人均挣值</td>
+						<td class="form_text_right_three">
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="perEarnedValue" name="statusreport[perEarnedValue]" value="{perEarnedValue}"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">其他决算</td>
+						<td class="form_text_right_three" colspan="5">
+							 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="feeOther" name="statusreport[feeOther]" value="{feeOther}"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 汇 报</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">关键指标描述</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="description" name="statusreport[description]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">工 作 重 点</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="workFocus" name="statusreport[workFocus]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">工作困难描述</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="difficult" name="statusreport[difficult]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">项目成员状况</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="memberStatus" name="statusreport[memberStatus]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">销 售 机 会</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="saleChance" name="statusreport[saleChance]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">竞争对手动向</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="competitorTrends" name="statusreport[competitorTrends]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">下周计划</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="nextPlan" name="statusreport[nextPlan]"></textarea>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" id="status" name="statusreport[status]" value="XMZTBG01"/>
+			<input type="hidden" id="msg" name="msg" value="保存成功"/>
+
+		    <input type="submit" class="txt_btn_a" value="提交审批" onclick="audit()"/>
+		    <input type="submit" class="txt_btn_a" value="保  存"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

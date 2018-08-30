@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看检测维修任务</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+    	$(document).ready(function(){
+        	//转换是否维修页面显示
+	   		if($("#isAgree").val()=="0"){
+          		$("#isAgree1").text("是");
+          	}else if($("#isAgree").val()=="1"){
+          		$("#isAgree1").text("否");
+          	}
+
+		  	var isagree = $("#isAgree").val();
+		  	var docstatus = $("#docStatus").val();
+		  	if(docstatus == "WJC" && isagree == "2") {
+				$("#checkInfo").hide();
+				$("#agree").hide();
+		  	}
+
+		  	if(docstatus == "YJC" && isagree == "2") {
+				$("#agree").hide();
+		  	}
+
+		  	if(docstatus == "YJC" && ( isagree == "0" || isagree == "1")) {
+				$("#finishTime1").hide();
+				$("#finishTime2").hide();
+		  	}
+
+		  	if($("#beforecheckInfoVal").val() != ""){
+		  	   $("#beforecheckInfo").show();
+		  	}else{
+		  	   $("#beforecheckInfo").hide();
+		  	}
+		  	
+			if($("#isByHuman").text()=="0"){
+				$("#isByHuman").text("否");
+			}else if($("#isByHuman").text()=="1"){
+            	$("#isByHuman").text("是");
+            }
+			//是否过保
+			if($("#isGurantee").text()=="0"){
+				$("#isGurantee").text("是");
+			}else if($("#isGurantee").text()=="1"){
+            	$("#isGurantee").text("否");
+            }
+    	})
+	</script>
+</head>
+<body>
+
+<table class="form_main_table">
+<tr>
+	<td colspan="4">
+      <div class="main_head">
+          <span class="main_head_title">
+            	查看检测维修任务信息
+          </span>
+      </div>
+   </td>
+</tr>
+<tr>
+		<td class="form_text_left">维修申请单编号</td>
+		<td class="form_text_right">
+			{applyDocCode}
+		</td>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">
+			{customerName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">客户联系人</td>
+		<td class="form_text_right">
+			{contactUserName}
+		</td>
+		<td class="form_text_left">联系电话</td>
+		<td class="form_text_right" >
+			{telephone}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">下达人名称</td>
+		<td class="form_text_right">
+			{issuedUserName}
+		</td>
+		<td class="form_text_left">下达时间</td>
+		<td class="form_text_right">
+			{issuedTime}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">检测维修部门</td>
+		<td class="form_text_right">
+			{repairDeptName}
+		</td>
+		<td class="form_text_left">检测维修人员</td>
+		<td class="form_text_right">
+			{repairUserName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right">
+			{productCode}
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right">
+			{productName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">物料类型</td>
+		<td class="form_text_right">
+			{productType}
+		</td>
+		<td class="form_text_left">规格型号</td>
+		<td class="form_text_right">
+			{pattern}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right">
+			{unitName}
+		</td>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right">
+			{serilnoName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">是否人为因素</td>
+		<td class="form_text_right">
+			<span id="isByHuman">{isByHuman}</span>		
+		</td>
+		<td class="form_text_left">是否过保</td>
+		<td class="form_text_right">
+			<span id="isGurantee">{isGurantee}</span>		
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">配件信息</td>
+		<td class="form_text_right" colspan="3">
+			<textarea class="textarea_read" readOnly>{fittings}</textarea>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">故障类型</td>
+		<td class="form_text_right" colspan="3">
+			{troubleType}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">故障现象</td>
+		<td class="form_text_right" colspan="3">
+			<textarea class="textarea_read" readOnly >{troubleInfo}</textarea>
+		</td>
+</tr>
+<tr id="beforecheckInfo">
+		<td class="form_text_left"><span style="color:blue">上次检测处理方法</span></td>
+		<td class="form_text_right" colspan="3">
+	      	<textarea class="textarea_read" readOnly id="beforecheckInfoVal" >{beforeCheckInfo}</textarea>
+      	</td>
+</tr>
+<tr id="checkInfo">
+		<td class="form_text_left">检测处理方法</td>
+		<td class="form_text_right" colspan="3">
+	      	<textarea class="textarea_read" readOnly >{checkInfo}</textarea>
+      	</td>
+</tr>
+<tr>
+		<td class="form_text_left">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+		<td class="form_text_right" colspan="3">
+			{file}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+	      	<textarea class="textarea_read" readOnly >{remark}</textarea>
+      	</td>
+</tr>
+
+<tr id="agree">
+      	<td class="form_text_left">是否同意维修</td>
+      	<td class="form_text_right" >
+      			<span id="isAgree1">{isAgree}</span>
+      	</td>
+      	<td class="form_text_left" id="finishTime1">维修完成时间</td>
+      	<td class="form_text_right" id="finishTime2">
+      		{finishTime}
+      		</td>
+       </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+		  <input type="hidden" name="repaircheck[isAgree]" id="isAgree" value="{isAgree}" />
+		  <input type="hidden" name="repaircheck[docStatus]" id="docStatus" value="{docStatus}" />
+	      <input type="button" class="txt_btn_a" id="btn" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</body>
+</html>

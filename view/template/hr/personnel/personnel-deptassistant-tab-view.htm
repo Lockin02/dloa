@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>查看员工档案</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var skeyStr="&skey={skey_}";
+		var id = $("#id").val();
+		var userAccount = $("#userAccount").val();
+		var userNo = $("#userNo").val();
+		if($("#inventoryLimit").val()!=1){
+			$("#inventory").hide();
+		}
+
+		//初始化tabsURL·
+		var tabArr = [
+				"?model=hr_personnel_personnel&action=toDeptAssistantView&id="+ id+skeyStr,//基本信息
+				"?model=hr_personnel_personnel&action=toDeptAssistantInleaveView&id="+ id+skeyStr,//入离职信息
+				"?model=hr_personnel_certificate&action=toPersonnelList&userAccount="+ userAccount+"&userNo="+userNo,//资格证书
+				"?model=hr_transfer_transfer&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//调动记录
+				"?model=hr_personnel_certifyapply&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//任职资格
+				"?model=hr_project_project&action=tabList&userAccount="+ userAccount+"&userNo="+userNo,//项目经历
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+
+</head>
+<body>
+<table width="100%">
+<tr>
+<td>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">入离职信息</a></li>
+	<li><a href="#tab8">资格证书</a></li>
+	<li><a href="#tab13">调动记录</a></li>
+	<li><a href="#tab16">任职资格</a></li>
+	<li><a href="#tab17">项目经历</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="about:blank" height="650px" scrolling="auto" frameborder="0" >
+	</iframe>
+	<iframe class="pane" id="iframe2" src="about:blank" height="600px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe4" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe5" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe6" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	</div>
+
+
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{userNo}" id="userNo" />
+<input type="hidden" value="{userAccount}" id="userAccount" />
+<input type="hidden" value="{inventoryLimit}" id="inventoryLimit" />
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

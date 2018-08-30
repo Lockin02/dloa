@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑任务</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/trialplandetail-edit.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/trialplandetail-common.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_trialplan_trialplandetail&action=edit" >
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						编辑任务
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">任务名称</span></td>
+			<td class="form_text_right" width="30%">
+				<input type="text" class="txt" id="taskName" name="trialplandetail[taskName]"  value="{taskName}" />
+			</td>
+			<td class="form_text_left">任务类型</td>
+			<td class="form_text_right">
+				<select class="txt" name="trialplandetail[taskType]" id="taskType">
+					{taskType}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">负 责 人</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" id="managerName" name="trialplandetail[managerName]"  value="{managerName}" readonly="readonly"/>
+				<input type="hidden" id="managerId" name="trialplandetail[managerId]"  value="{managerId}" />
+			</td>
+			<td class="form_text_left">执 行 人</td>
+			<td class="form_text_right">
+				{memberName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">任务积分</span></td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" id="taskScore" name="trialplandetail[taskScore]"  value="{taskScore}" onblur="setScore(this.value)"/>
+			</td>
+			<td class="form_text_left">评分范围</td>
+			<td class="form_text_right">
+				<span id="ruleInfo">{lowerLimit} ~ {upperLimit}</span>
+				<a href='javascript:void(0)' onclick="setRule()">设定规则</a>
+				<input type="hidden" id="isRule" name="trialplandetail[isRule]" value="{isRule}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">任务性质</td>
+			<td class="form_text_right" >
+				<select class="txt" name="trialplandetail[isNeed]" id="isNeed">
+					<option value="1">必须</option>
+					<option value="0">可选</option>
+				</select>
+				<input type="hidden" id="isNeedHidden" value="{isNeed}" />
+			</td>
+			<td class="form_text_left">完成方式</td>
+			<td class="form_text_right">
+				<select class="txt" name="trialplandetail[closeType]" id="closeType">
+					<option value="0">审核</option>
+					<option value="1">立即</option>
+				</select>
+				<input type="hidden" id="closeTypeHidden" value="{closeType}" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">前置任务</td>
+			<td class="form_text_right" colspan="3">
+				<select class="txt" name="trialplandetail[beforeId]" id="beforeId" onchange="setBeforeTask(this.value)">
+					<option value=""></option>
+					{beforeId}
+				</select>
+				<input type="hidden" id="beforeName" name="trialplandetail[beforeName]" value="{beforeName}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">任务描述</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="trialplandetail[description]" class="txt_txtarea_900">{description}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">计划总积分</span></td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" id="planScoreAll" name="trialplan[scoreAll]" value="{planScoreAll}" readonly="readonly"/>
+				<input type="hidden" id="planScoreOther" value="{planScoreOther}"/>
+			</td>
+			<td class="form_text_left"><span class="blue">计划合格积分</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="planBaseScore" name="trialplan[baseScore]"  value="{planBaseScore}" />
+			</td>
+		</tr>
+		<tr>
+	   		<td class="txt_btn" colspan="4">
+				<input type="hidden" id="planId" name="trialplandetail[planId]"  value="{planId}" />
+				<input type="hidden" id="memberId" name="trialplandetail[memberId]"  value="{memberId}" />
+				<input type="hidden" id="id" name="trialplandetail[id]" value="{id}" />
+	   		    <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+	   		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	   		</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

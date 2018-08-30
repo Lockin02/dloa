@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>增员申请启用暂停记录</title>
+	{#commonInclude#}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var stopStartStr = $("#stopStartStr").html();
+			stopStartArr = stopStartStr.split('<breakpoint>');
+			for (var i = stopStartArr.length - 2 ;i >= 0 ;i--) {
+				var htmlArr = stopStartArr[i].split('<br>');
+				var htmlStr = htmlArr[0] + '（第 ' + (i + 1) + ' 次操作）<br /><textarea class="textarea_read" readonly>' + htmlArr[1] + '</textarea><br /><br />';
+				$("#stopStart").append(htmlStr);
+			};
+		});
+	</script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+					<span class="main_head_title">
+						增员申请启用暂停记录
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">单据编号</td>
+			<td class="form_text_right_three">
+				{formCode}
+			</td>
+			<td class="form_text_left_three">状  态</td>
+			<td class="form_text_right_three">
+				{stateName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">操作记录</td>
+			<td class="form_text_right_three" colspan="3">
+				<div style="display:none" id="stopStartStr">{stopStart}</div>
+				<div id="stopStart"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" id="id" name="produceapply[id]" value="{id}"/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

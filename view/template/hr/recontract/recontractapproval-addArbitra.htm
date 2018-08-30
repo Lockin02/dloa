@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增合同信息</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/recontract-add.js" ></script>   </head>
+<script>
+	function toApp() 
+	{
+	    var checkSubmitFlag=true;
+		if(true==checkSubmitFlag)
+		{
+			$("#form1").attr("action", "?model=hr_recontract_recontractApproval&action=add&act=app");
+			checkSubmitFlag = false;   
+		  }
+		  else
+		  {
+			alert("你已经提交了表单，请勿重复提交。");
+		   
+		  }
+		
+		//document.getElementById('form1').action = "index1.php?model=hr_recontract_recontractApproval&action=add&act=app";
+	}
+</script>
+<body>
+   <form id="form1" method="post" action="?model=hr_recontract_recontractApproval&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增合同信息
+             </span>
+            </div>
+            </td>
+         </tr>
+ <tr>
+		<td class="form_text_left">员工姓名</td>
+		<td class="form_text_right" >
+			 <input type="text" readonly class="readOnlyTxtNormal" value="{userName}" name="recontractApproval[userName]" />
+			 <input type="hidden" class="txt" id="userAccount"  value="{userAccount}" name="recontractApproval[userAccount]" />
+			 <input type="hidden" class="txt" id="recontractId"  value="{id}" name="recontractApproval[recontractId]" />
+		</td>
+		<td class="form_text_left">员工编号</td>
+		<td class="form_text_right" >
+			 <input type="text" readonly class="readOnlyTxtNormal" value="{userNo}" name="recontractApproval[userNo]" id="userNo" />
+		</td>
+</tr>
+<tr>
+        <td class="form_text_left">是否签约</td>
+		<td class="form_text_right"><input type="radio"
+			name="recontractApproval[isFlag]" value="是" checked onclick="orderSign(this);" />是 <input
+			type="radio" name="recontractApproval[isFlag]" value="否" onclick="orderSign(this);"
+			 />否</td>
+		<td class="form_text_left">用工年限</td>
+		<td class="form_text_right" >
+			 <select id="conNum" name="recontractApproval[conNum]" class="select">
+			 </select>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">合同类型</td>
+		<td class="form_text_right" >
+			 <select id="conType" name="recontractApproval[conType]" class="select">
+			 </select>
+		</td>
+		<td class="form_text_left">用工方式</td>
+		<td class="form_text_right" >
+			 <select id="conState" name="recontractApproval[conState]" class="select">
+			 </select>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">开始时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" value="{closeDate}"  name="recontractApproval[beginDate]" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left">结束时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"   name="recontractApproval[closeDate]" onfocus="WdatePicker()" />
+		</td>
+</tr>
+
+<tr>
+		<td class="form_text_left">续签建议</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea class="txt_txtarea_font" name="recontractApproval[conContent]"></textarea>
+		</td>
+</tr>
+ <tr>
+		<td class="form_text_left">记录人</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" readonly name="recontractApproval[recorderName]" id="recorderName" value="{recorderName}"/>
+			 <input type="hidden" class="txt" id="recorderId" name="recontractApproval[recorderId]" value="{recorderId}"/>
+		</td>
+		<td class="form_text_left">记录时间</td>
+		<td class="form_text_right" >
+			 <input type="text" readonly class="readOnlyTxtNormal" name="recontractApproval[recordDate]" id="recordDate" value="{recordDate}"/>
+		</td>
+</tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="submit" class="txt_btn_a" value=" 提交审批" onclick="toApp();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

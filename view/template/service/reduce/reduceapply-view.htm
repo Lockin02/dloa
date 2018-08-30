@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看维修费用减免申请单</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+
+		//提交审批后查看订单时隐藏关闭按钮
+		$(document).ready(function(){
+			if($("#showBtn").val()==1){
+				$("#btn1").hide();
+				$("#btn2").hide();
+			}
+
+
+        //未提交和审批过的关闭按钮隐藏
+			var es = $("#ExaStatus").val();
+			if(es == "打回" || es == "完成"){
+				$("#btn1").hide();
+			}else {
+				$("#btn2").hide();
+			}
+		});
+	</script>
+
+</head>
+<body>
+
+<table class="form_main_table">
+<tr>
+	<td colspan="4">
+      <div class="main_head">
+          <span class="main_head_title">
+            	查看维修费用减免申请单信息
+          </span>
+      </div>
+   </td>
+</tr>
+<tr>
+		<td class="form_text_left">单据编号</td>
+		<td class="form_text_right">
+			{docCode}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">维修申请单编号</td>
+		<td class="form_text_right">
+			{applyCode}
+		</td>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">
+			{customerName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">客户地址</td>
+		<td class="form_text_right" colspan="3">
+			{adress}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">维修费用</td>
+		<td class="form_text_right formatMoney">
+			{subCost}
+		</td>
+		<td class="form_text_left">减免费用</td>
+		<td class="form_text_right formatMoney">
+			{subReduceCost}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">申请人名称</td>
+		<td class="form_text_right">
+			{applyUserName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			<textarea  class="textarea_read" readOnly >{remark}</textarea>
+		</td>
+</tr>
+		<tr>
+				<td colspan="4">
+				<table class="main_table" id="itemtable">
+					<thead>
+						<tr>
+							<td colspan="11" class="form_header">详细</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>所属分类</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>序列号</th>
+							<th>配件信息</th>
+							<th>收取费用</th>
+							<th>减免费用</th>
+						</tr>
+					</thead>
+					<tbody id="itembody">
+						{itemsList}
+					</tbody>
+				</table>
+			</td>
+		</tr><tr>
+		<td class="txt_btn" colspan="4">
+		  <input type="hidden" id="showBtn" value="{showBtn}" />
+		  <input type="hidden" id="ExaStatus" name="reduceapply[ExaStatus]" value="{ExaStatus}" />
+	      <input type="button" class="txt_btn_a" id="btn1" value=" 关  闭 " onclick="closeFun();"/>
+	      <input type="button" class="txt_btn_a" id="btn2" value=" 关  闭 " onclick="parent.parent.tb_remove();"/>
+		  <input type="hidden" id="reduceapplyId" name="reduceapply[id]" value="{id}"/>
+		</td>
+</tr>
+</table>
+</body>
+</html>

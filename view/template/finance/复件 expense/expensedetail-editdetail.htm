@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>修改费用信息</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/expense-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/expensedetail-editdetail.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=finance_expense_expensedetail&action=editDetail" onsubmit="return checkform();">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">修改费用信息 {CostTypeName} <span class="red">【费用类型请选择相关子类型！】</span></span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">原类型:</td>
+			<td class="form_text_right" title="所属大类 : {mainTypeName}" colspan="3">
+				{CostTypeName}
+				<input type="hidden" id="CostTypeID" value="{CostTypeID}"/>
+				<input type="hidden" id="orgCostTypes" value="{orgCostTypes}"/>
+				<input type="hidden" id="mainTypes" value="{mainTypes}"/>
+				<input type="hidden" name="expensedetail[MainType]" id="mainType" value="{mainType}"/>
+				<input type="hidden" name="expensedetail[MainTypeName]" id="mainTypeName" value="{mainTypeName}"/>
+				<input type="hidden" name="expensedetail[BillNo]" id="BillNo" value="{BillNo}"/>
+				<input type="hidden" name="expensedetail[ID]" id="ID" value="{ID}"/>
+				<input type="hidden" name="expensedetail[AssID]" value="{AssID}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">新类型:</span></td>
+			<td class="form_text_right" width="30%">
+				<select id="newCostTypeID" name="expensedetail[CostTypeID]" class="select" onchange="checkCanSel(this)">
+					{newCostTypeID}
+				</select>
+			</td>
+			<td class="form_text_left"><span class="blue">费用金额:</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt formatMoney" name="expensedetail[CostMoney]" id="costMoney" value="{CostMoney}"/>
+				<input type="hidden" name="expensedetail[orgCostMoney]" value="{CostMoney}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注:</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txtbiglong" style="width:605px" name="expensedetail[Remark]" id="Remark" value="{Remark}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="6">
+				<div id="innerTable"></div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="submit" value=" 保存 " class="txt_btn_a"/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑新员工周报表</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/weekly-weekly-edit.js" ></script>
+   <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+   <script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+   	<script type="text/javascript" src="js/common/email.js"></script>
+   <script>
+	$(document).ready(function() {
+		CKEDITOR.replace( 'lastweekSummary',{
+			removePlugins:'elementspath', //去掉底部一行的元素路径显示
+			toolbarStartupExpanded:false, //默认不显示工具栏
+			enterMode:CKEDITOR.ENTER_BR, //回车显示br
+			extraPlugins : 'uicolor',
+			width:800,
+			height:100,
+			toolbar :[]
+			});
+		CKEDITOR.replace( 'nextweekSummary',{
+			removePlugins:'elementspath', //去掉底部一行的元素路径显示
+			toolbarStartupExpanded:false, //默认不显示工具栏
+			enterMode:CKEDITOR.ENTER_BR, //回车显示br
+			extraPlugins : 'uicolor',
+			width:800,
+			height:100,
+			toolbar :[]
+			});
+		CKEDITOR.replace( 'problem',{
+			removePlugins:'elementspath', //去掉底部一行的元素路径显示
+			toolbarStartupExpanded:false, //默认不显示工具栏
+			enterMode:CKEDITOR.ENTER_BR, //回车显示br
+			extraPlugins : 'uicolor',
+			width:800,
+			height:100,
+			toolbar :[]
+			});
+		CKEDITOR.replace( 'idea',{
+			removePlugins:'elementspath', //去掉底部一行的元素路径显示
+			toolbarStartupExpanded:false, //默认不显示工具栏
+			enterMode:CKEDITOR.ENTER_BR, //回车显示br
+			extraPlugins : 'uicolor',
+			width:800,
+			height:100,
+			toolbar :[]
+			});
+	});
+</script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_tutor_weekly&action=editWeekly" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	编辑新员工周报
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left_three">学员姓名</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="studentName" name="weekly[studentName]" value="{studentName}"/>
+      			 <input type="hidden" class="txt" id="studentNo" name="weekly[studentNo]" value="{studentNo}"/>
+      			 <input type="hidden" class="txt" id="studentAccount" name="weekly[studentAccount]" value="{studentAccount}"/>
+      		</td>
+      		<td class="form_text_left_three">学员部门名称</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="studentDeptName" name="weekly[studentDeptName]" value="{studentDeptName}"/>
+      			 <input type="hidden" class="txt" id="studentDeptId" name="weekly[studentDeptId]" value="{studentDeptId}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">试用期岗位</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="studentJob" name="weekly[studentJob]" value="{studentJob}"/>
+      			 <input type="hidden" class="txt" id="studentJobId" name="weekly[studentJobId]" value="{studentJobId}"/>
+      		</td>
+      		<td class="form_text_left_three">导师姓名</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="userName" name="weekly[userName]" value="{userName}"/>
+      			 <input type="hidden" class="txt" id="userAccount" name="weekly[userAccount]" value="{userAccount}"/>
+      			 <input type="hidden" class="txt" id="userNo" name="weekly[userNo]" value="{userNo}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three"><span style="color:blue">上周工作总结</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="weekly[lastweekSummary]" id="lastweekSummary" class="editor" cols="136">{lastweekSummary}</textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three"><span style="color:blue">下周工作计划</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="weekly[nextweekSummary]" id="nextweekSummary"  class="editor" cols="136">{nextweekSummary}</textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">工作中存在<br/>的问题</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="weekly[problem]" id="problem"  class="editor" cols="136">{problem}</textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">意见、建议、<br/>想法</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="weekly[idea]" id="idea"  class="editor" cols="136">{idea}</textarea>
+      		</td>
+       </tr>
+       <tr>
+   		<td class="form_text_left_three">是否邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="weekly[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="weekly[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr id="maildiv">
+   		<td class="form_text_left_three">收件人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" class="txt800" name="weekly[email][TO_NAME]" id="TO_NAME" readonly="readonly" value="{userName}"/>
+    		<input type="hidden" name="weekly[email][TO_ID]" id="TO_ID" value="{userAccount}"/>
+	    </td>
+   	</tr>
+   	<tr id="mailccdiv">
+   		<td class="form_text_left_three">抄送
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" class="txt800" name="weekly[email][ADDNAMES]" id="ADDNAMES" readonly="readonly" value="{studentSuperior}" />
+    		<input type="hidden" name="weekly[email][ADDIDS]" id="ADDIDS"  value="{studentSuperiorId}"/>
+	    </td>
+   	</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input type="hidden" class="txt" id="id" name="weekly[id]" value="{id}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;
+      		   <input  type="submit" class="txt_btn_a" value=" 提  交 "  onclick="toSubmit()"/>&nbsp;&nbsp;&nbsp;
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

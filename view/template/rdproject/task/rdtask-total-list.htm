@@ -1,0 +1,109 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta name="GENERATOR" content="Zend Studio" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+
+        <link rel="stylesheet" type="text/css" href="inc/style.css">
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="images/style.css" media="screen"/>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <title>
+            项目任务列表
+        </title>
+    </head>
+
+    <body>
+        <script>
+            function search() {
+                var searchfield = $('#searchfield').val();
+                var searchvalue = $('#searchvalue').val();
+                this.location = "?model=rdproject_task_rdtask&action=page&" + searchfield + "=" + searchvalue;
+
+            }
+
+            $(window).bind("load",
+            function() {
+                var altStr = "?model=rdproject_task_rdtask&action=toAdd&proTypeId=" + "" + "&proType=" + "" + "&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=900";
+                $("#addbutton").attr("alt", altStr);
+
+            }) function show_page(page) {
+                this.location = "?model=rdproject_task_rdtask&action=page";
+            }
+        </script>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+            <tr>
+                <td colspan="2">
+                    <img src="images/sys_config.gif">
+                    <b>
+                        项目任务信息管理
+                    </b>
+                </td>
+            </tr>
+            <tr class="tablecontrol">
+                <td width="20">
+                </td>
+                <td>
+                    输入关键字：
+                    <input type="text" size="20" id="searchvalue" name="searchvalue" value=""
+                    />
+                    按
+                    <select id="searchfield">
+                        <option value="proType">
+                            项目名称
+                        </option>
+                        <option value="parentName">
+                            项目计划
+                        </option>
+                    </select>
+                    <input type="button" onclick="search();" value=" 搜索 " />
+                    &nbsp;&nbsp;
+                    <input id="addbutton" title=" 新增项目任务" type="button" class="thickbox" value=" 添加 "
+                    />
+                    &nbsp;&nbsp;
+                    <input type="button" onclick="deleteObjs('rdproject_task_rdtask');" value=" 删除 "
+                    />
+                </td>
+            </tr>
+        </table>
+        <table border="1" width="100%" class="table" align="center">
+            <tr class="tableheader">
+                <td width="5%">
+                    <input type="checkbox" name="titlecb" onClick="checkAll();">
+                </td>
+                <td align="center" width="5%">
+                    <b>
+                        序号
+                    </b>
+                </td>
+                <td align="center" width="20%">
+                    <b>
+                        项目名称
+                    </b>
+                </td>
+                <td align="center" width="20%">
+                    <b>
+                        项目计划
+                    </b>
+                </td>
+                <td align="center" width="20%">
+                    <b>
+                        任务名称
+                    </b>
+                </td>
+                <td align="center" width="10%">
+                    <b>
+                        操作
+                    </b>
+                </td>
+            </tr>
+            {list}
+        </table>
+    </body>
+
+</html>

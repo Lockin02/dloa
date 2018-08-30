@@ -1,0 +1,269 @@
+<html>
+<head>
+    <title>修改采购申请单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="css/nav_tab.css">
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script src="js/checkImage.js" type="text/javascript"></script>
+    <script src="js/common/businesspage.js" type="text/javascript"></script>
+    <script src="js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+
+<script type="text/javascript" src="js/ext/ext-base.js"></script>
+<script type="text/javascript" src="js/ext/ext-all.js"></script>
+<script type="text/javascript" src="js/ext/common-ext.js"></script>
+<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+<script type="text/javascript" src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+<script type="text/javascript" src="view/template/common/combogrid/SupplierComboGrid.js"></script>
+<script type="text/javascript" src="view/template/purchase/task/js/supplier_add.js"></script>
+
+    <script type="text/javascript">
+
+    	var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看 jquery定位
+
+		var amount= "input.taskAmount";
+
+		var allAmount = ".allAmount";
+
+    	function myDatePick(value){
+    		WdatePicker({el:$dp.$(value)});
+    	}
+
+		function checkSumbit(){
+			var purNumb = $("#taskNumb").val();
+			var suppId = $("#SupplierId").val();
+
+			if( purNumb==null || purNumb=="" ){
+				alert("请输入申请单编号");
+				return false;
+			}
+			else if( suppId==null || suppId=="" ){
+				alert("请选择供应商");
+				return false;
+			}else{
+				if( !confirm("确定修改吗？") ){
+					return false;
+				}
+			}
+		}
+
+		function LoadWindow(toid,toname){
+			URL="module/user_select_single/index.php?ID=2&toid="+toid+"&toname="+toname;
+			loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+			loc_y=document.body.scrollTop+event.clientY-event.offsetY+170;
+			//window.open(URL,"read_notify","height=400,width=550,status=1,toolbar=no,menubar=no,location=no,scrollbars=yes,top=150,left=150,resizable=yes");
+			window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:450px;dialogHeight:450px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+		}
+
+		function clear_user(toid,toname){
+			document.getElementById(toid).value="";
+			document.getElementById(toname).value="";
+		}
+
+		function myload(){
+
+			$(".taskAmount").bind("change",function(){
+				var thisVal = parseInt( $(this).val() );
+				var nextVal = parseInt( $(this).next().val() );
+				if(thisVal>nextVal){
+					alert("请不要超过最大可下达数量 "+nextVal);
+					$(this).attr("value",nextVal);
+				}else if(thisVal<0){
+					alert("请不要输入负数");
+					$(this).attr("value",nextVal);
+				}else {
+					$(this).attr("value",thisVal);
+				}
+			});
+
+		}
+
+    </script>
+    <!-- script language="JavaScript" type="text/javascript" src="js/common/imgShrink.js"></script-->
+</head>
+	<body onload="myload()">
+		<table>
+			<tr>
+				<td >
+					<img src="images/sys_config.gif">
+					<b>
+						<font color="#000000">修改采购申请单</font>
+					</b>
+				</td>
+			</tr>
+		</table>
+  	<form id='form1' name='form1' action="?model=purchase_apply_applybasic&action=editSave" method="post"  onsubmit="return checkSumbit()" >
+		<table border="0" cellspacing="0" cellpadding="0" class="main_table" align="center" width="1100">
+			<tr align="center" class=""  height="35">
+				<td colspan="4" class="form_header">
+					<font face="宋体" size="3">采购申请单</font>
+				</td>
+			</tr>
+			<tr height="28">
+				<td class="form_text_left" align="center">
+					采购申请单编号
+				</td>
+				<!--td colspan="3" align="left"-->
+				<td class="form_view_right">
+					<!--font color="red">TODO:XXXXXXXX</font-->
+					&nbsp;<input class="txt" type="text" id="taskNumb" name="basic[applyNumb]" value="{applybasic[applyNumb]}" size="40" readOnly>
+				</td>
+				<td class="form_text_left" align="center">
+					申请人
+				</td>
+				<td class="form_view_right">
+					&nbsp;{applybasic[createName]}
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					预计到货日期
+				</td>
+				<td class="form_view_right" colspan="3">
+					&nbsp;<input class="txt" type="text" id="dateHope" name="basic[dateHope]" size="20" onfocus="WdatePicker()" value="{applybasic[dateHope]}" />
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					供应商名称
+				</td>
+				<td class="form_view_right"  width="38%">
+					<input class="txt" id="SupplierName" type="text" name="basic[suppName]" value="{applybasic[suppName]}" size="40" >
+					<input type="hidden" id="SupplierId" name="basic[suppId]" value="{applybasic[suppId]}" />
+				</td>
+				<td class="form_text_left" width="12%">
+					发票类型
+				</td>
+				<td class="form_view_right"  width="38%">
+					&nbsp;<input class="txt" type="text" id="billingType" name="basic[billingType]" value="{applybasic[billingType]}">
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					联系电话
+				</td>
+				<td class="form_view_right"  width="38%">
+					&nbsp;<input class="txt" type="text" id="suppTel" name="basic[suppTel]" value="{applybasic[suppTel]}">
+				</td>
+				<td class="form_text_left" width="12%">
+					开户银行
+				</td>
+				<td class="form_view_right"  width="38%">
+					&nbsp;<input class="txt" type="text" id="suppBank" name="basic[suppBank]" value="{applybasic[suppBank]}">
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					供应商账号
+				</td>
+				<td class="form_view_right"  width="38%">
+					&nbsp;<input class="txt" type="text" id="suppAccount" name="basic[suppAccount]" value="{applybasic[suppAccount]}">
+				</td>
+				<td class="form_text_left" width="12%">
+					付款类型
+				</td>
+				<td class="form_view_right" width="38%">
+					&nbsp;<input class="txt" type="text" id="paymetType" name="basic[paymetType]" size="20"  value="{applybasic[paymetType]}" />
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					供应商地址
+				</td>
+				<td class="form_view_right" colspan="3">
+					&nbsp;<input class="txt" type="text" id="suppAddress" name="basic[suppAddress]" size="80"  value="{applybasic[suppAddress]}" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table width="100%" cellspacing='0' cellpadding='0' class="table">
+						<tr height="30px" class="main_table">
+							<td colspan="8" class="form_header">
+								&nbsp;&nbsp;<font>采购清单：</font>
+							</td>
+						</tr>
+						<tr height="28" class="main_tr_header" align="center">
+							<td   align="center" width="5%">
+								序号
+							</td>
+							<td  width="20%">
+								设备编号/名称
+							</td>
+							<td  width="20%">
+								业务对象编号
+							</td>
+							<td width="8%">
+								采购类型
+							</td>
+							<td width="10%">
+								申请单数量
+							</td>
+							<td width="10%">
+								申请单价
+							</td>
+							<td width="12%">
+								期望到货时间
+							</td>
+							<td>
+								备注
+							</td>
+						</tr>
+						{list}
+					</table>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<td class="form_text_left">
+					采购说明
+				</td>
+				<td colspan="3" >
+					<textarea rows="5" id="instruction" name="basic[instruction]" cols="136">{applybasic[instruction]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<td class="form_text_left">
+					备注
+				</td>
+				<td colspan="3">
+					<textarea rows="5" id="remark" name="basic[remark]" cols="136">{applybasic[remark]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" class="TableHeader" height="28">
+				<td colspan="6">
+					<input type="hidden" name="oldId" value="{oldId}" >
+
+					<input type="hidden" name="basic[state]" value="0" >
+					<input type="hidden" name="basic[updateId]" value="{userId}" >
+					<input type="hidden" name="basic[updateName]" value="{userName}" >
+					<input type="hidden" name="basic[updateTime]" value="{nowTime}" >
+					<input type="hidden" name="basic[sendUserId]" value="{userId}" >
+					<input type="hidden" name="basic[sendName]" value="{userName}" >
+					<input type="hidden" name="basic[sendTime]" value="{nowTime}" >
+					<input type="hidden" name="basic[isUse]" value="1" >
+					<input type="hidden" name="basic[ExaStatus]" value="保存" >
+					<input type="hidden" name="basic[applyVersionNumb]" value="{applyVersionNumb}" >
+
+					<input type="hidden" id="approval" name="approval" value="0">
+					<input class="txt_btn_a" type="submit" value="保  存" class="BigButton" >&nbsp;
+					<!-- input type="submit" value="提交审批" class="BigButton" onclick=" $('#approval').attr('value','1'); "-->&nbsp;
+					<input class="txt_btn_a" type="button" value="返  回" class="BigButton" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	</form>
+	<br>
+	</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+		<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+		
+		<script type="text/javascript" src="js/jeasyui_newest/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jeasyui_newest/datagrid/datagrid-detailview.js"></script>
+		<!-- <script type="text/javascript" src="js/jeasyui_newest/locale/easyui-lang-zh_CN.js"></script> -->
+		
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		
+		<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		
+		<!-- private js -->
+		<script type="text/javascript">
+			var admin = '{admin}';
+			var canImport = '{canImport}';
+			var canExport = '{canExport}';
+			var rootUrl = '?model={t_model}&action=';
+			
+			/* project search */
+			var projectOption = '{project_option}';
+			var deptOption = '{dept_option}';
+			var ipoOption = '{ipo_option}';
+			var zfOption = '{zf_option}';
+			var productOption = '{product_option}';
+		</script>
+		<script type="text/javascript" src="view/template/project/js/rd_base.js"></script>
+		<script type="text/javascript" src="view/template/project/js/rd_project_grid.js"></script>
+		<script type="text/javascript" src="view/template/project/js/rd_default_set.js"></script>
+		<script type="text/javascript" src="view/template/project/js/rd_project_process.js"></script>
+		<script type="text/javascript" src="view/template/project/js/rd_project_member.js"></script>
+		
+		<style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; height:25px; width:80px;}
+			/*
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			*/
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:left; padding-left:4px; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p { margin:0px; padding:0px; width:600px; float:left; line-height: 25px;}
+			#info span {width:220px; display:block; float:left; text-align: left;}
+			#info i {color:red;}
+		</style>
+		<title>产品/项目</title>
+	</head>
+	<body>
+	   	<div id='main_tabs' class="easyui-tabs" style="width:auto;height:auto;">  
+		    <!-- project tab -->
+		    <div id='project_tab' title="Tab2" data-options="closable:false, cache:true, href:'view/template/project/block_project.htm'" style="overflow: hidden;padding:20px;">  
+		    </div>
+		    <!-- product tab -->
+		    <div id='product_tab' title="Tab1" data-options="closable:false, cache:true" style="overflow: hidden;padding:20px;">
+		    </div>  
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			autoComplete();
+			
+		});
+	
+		function autoComplete(){
+			//绑定项目经理输入框
+		    $("#manager_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+		        multiple: false,
+		        mustMatch: true,
+		        width: 100,
+		        max: 200,
+		        //dataType: 'json',
+		        parse: function(data){
+		            var rows = [];
+		            var row = eval(unescape(data));
+		            for (var i = 0; i < row.length; i++) {
+		                rows[i] = {
+		                    data: row[i],
+		                    value: row[i].user_name,
+		                    result: row[i].user_name
+		                }
+		            }
+		            return rows;
+		        },
+		        formatItem: function(row, i, n){
+		            return row.user_name;
+		        }
+		        
+		    });
+		  
+		    //绑定项目助理输入框
+		    $("#assistant_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+		        multiple: true,
+		        mustMatch: true,
+		        width: 100,
+		        max: 200,
+		        //dataType: 'json',
+		        parse: function(data){
+		            var rows = [];
+		            var row = eval(unescape(data));
+		            for (var i = 0; i < row.length; i++) {
+		                rows[i] = {
+		                    data: row[i],
+		                    value: row[i].user_name,
+		                    result: row[i].user_name
+		                }
+		            }
+		            //alert(rows.length);
+		            return rows;
+		        },
+		        formatItem: function(row, i, n){
+		            return row.user_name;
+		        }
+		    });
+		  
+		    //绑定项目成员输入框
+		    $("#developer_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+		        multiple: false,
+		        mustMatch: true,
+		        width: 100,
+		        max: 200,
+		        //dataType: 'json',
+		        parse: function(data){
+		            var rows = [];
+		            var row = eval(unescape(data));
+		            for (var i = 0; i < row.length; i++) {
+		                rows[i] = {
+		                    data: row[i],
+		                    value: row[i].user_name,
+		                    result: row[i].user_name
+		                }
+		            }
+		            return rows;
+		        },
+		        formatItem: function(row, i, n){
+		            return row.user_name;
+		        }
+		    });
+		}
+	</script>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>验收文件上传</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_contract_check",
+                 "serviceId": "{id}"
+             });
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	附件上传
+    </span>
+</div>
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">合同编号</td>
+		<td class="form_text_right">
+			{contractCode}
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">验收条款</td>
+		<td class="form_text_right">
+			{clause}
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+		<td class="form_text_right">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload">{file}</div>
+			</div>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="2">
+         	<input type="button" class="txt_btn_a" value="关 闭" onclick="self.parent.show_page();self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</body>
+</html>

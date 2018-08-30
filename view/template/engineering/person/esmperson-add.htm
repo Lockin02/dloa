@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增项目人力预算</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+
+    <script type="text/javascript" src="{#jsPath#}/esmperson-add.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/esmperson-common.js" ></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=engineering_person_esmperson&action=add" >
+	<table class="form_main_table">
+		<tr>
+			<td colspan="6">
+            	<div class="main_head2">
+            		<span class="main_head_title">
+               			新增项目人力预算
+           			</span>
+            	</div>
+            </td>
+		</tr>
+		<tr>
+      		<td class="form_text_left_three">人员等级</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="personLevel" name="esmperson[personLevel]" readonly="readonly"/>
+      			 <input type="hidden" id="personLevelId" name="esmperson[personLevelId]" />
+      		</td>
+      		<td class="form_text_left_three">所属项目</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="projectName" name="esmperson[projectName]" value="{projectName}" readonly="readonly"/>
+      			 <input type="hidden" name="esmperson[projectCode]" value="{projectCode}"/>
+      			 <input type="hidden" name="esmperson[projectId]" value="{projectId}"/>
+      		</td>
+      		<td class="form_text_left_three">所属任务</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="activityName" name="esmperson[activityName]" value="{activityName}" readonly="readonly"/>
+      			 <input type="hidden" name="esmperson[activityId]" value="{activityId}"/>
+      		</td>
+		</tr>
+		<tr>
+      		<td class="form_text_left_three">预计开始</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt Wdate" name="esmperson[planBeginDate]" id="planBeginDate" value="{planBeginDate}" onfocus="WdatePicker();" onchange="timeCheck(this);calPerson();"/>
+      		</td>
+      		<td class="form_text_left_three">预计结束</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt Wdate" name="esmperson[planEndDate]" id="planEndDate" value="{planEndDate}" onfocus="WdatePicker();" onchange="timeCheck(this);calPerson();"/>
+      		</td>
+      		<td class="form_text_left_three">天 数</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" name="esmperson[days]" id="days" value="{days}"/>
+      		</td>
+		</tr>
+		<tr>
+      		<td class="form_text_left_three">数 量</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" name="esmperson[number]" id="number" onchange="calPerson();"/>
+      		</td>
+      		<td class="form_text_left_three">人工天数</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" name="esmperson[personDays]" id="personDays"/>
+      			 <input type="hidden" name="esmperson[coefficient]" id="coefficient"/>
+      			 <input type="hidden" name="esmperson[price]" id="price"/>
+      		</td>
+      		<td class="form_text_left_three">人力成本</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" name="esmperson[personCostDays]" id="personCostDays"/>
+      		</td>
+		</tr>
+		<tr>
+      		<td class="form_text_left_three" nowrap="nowrap">人力成本金额</td>
+      		<td class="form_text_right_three" colspan="5">
+      			 <input type="text" class="txt" name="esmperson[personCost]" id="personCost"/>
+      		</td>
+		</tr>
+	    <tr>
+			<td class="form_text_left_three">备注说明</td>
+			<td class="form_text_right_three" colspan="5">
+				<textarea class="txt_txtarea_biglong" name="esmperson[remark]" id="remark"></textarea>
+			</td>
+	    </tr>
+		<tr>
+      		<td class="txt_btn" colspan="6">
+      		   <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

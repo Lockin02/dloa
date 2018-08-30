@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //tabs处理
+            var tt = $('#tt');
+            var thisHeight = document.documentElement.clientHeight - 5;
+            tt.tabs({
+                height : thisHeight,
+                plain : true,
+                onSelect:function(node){
+                    var tb=tt.tabs('getTab',node);
+                    var hc=tb.panel('options').headerCls;
+                    if(hc&&hc!=null){
+                        tb.panel('options').headerCls='';//清空之后才不会重新刷新
+                        tt.tabs('update', {
+                            tab: tb,
+                            options:{
+                                content:'<iframe fit="true" name="'+hc+'" scrolling="auto" frameborder="0"  src="'+hc+'" style="width:100%;height:100%;"></iframe>'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body style="height:100%">
+<div id="tt">
+    <div title="图表" headerCls="?model=contract_conproject_conproject&action=conProjectEcharts"></div>
+    <div title="配置" headerCls="?model=contract_gridreport_gridrecord&action=toViewProductContent"></div>
+    <div title="产品线项目汇总" headerCls="?model=contract_gridreport_gridrecord&action=toViewProduct&objCode=productLine"></div>
+    <div title="执行区域项目汇总" headerCls="?model=contract_gridreport_gridrecord&action=toViewProduct&objCode=exeDept"></div>
+    <div title="产品营收汇总表(临时)" headerCls="?model=contract_gridreport_gridrecord&action=toViewContractPro&objCode=conPro"></div>
+    <!--<div title="产品收入统计" headerCls=""><img src='images/jianshe.gif'></div>-->
+</div>
+</body>
+</html>
+

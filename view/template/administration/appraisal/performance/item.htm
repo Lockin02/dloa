@@ -1,0 +1,905 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<script type="text/javascript" src="module/ckeditor/ckeditor.js"></script> 
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" />
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <style type="text/css">
+        	hr{ margin-top:10px; margin-bottom:10px}
+        </style>
+		<script type="text/javascript">
+        var year = '{year}';
+        var y = Number(year)+1;
+		var year_arr = [];
+        var year_data = [{
+            'id': '',
+            'text': '所有年份',
+            'selected': true
+        }];
+        if (Number(year) > 0) {
+            for (var i = y; i >= (y - 20); i--) {
+                year_arr.push({
+                    'id': i,
+                    'text': i,
+					'selected':(Number(year) == i ? true : false)
+                });
+				year_data.push({
+					'id': i,
+                    'text': i
+				});
+            }
+        }
+        var quarte = '{quarte}';
+        var dept_id='';
+        var dept_select;
+        var years_select;
+        var quarter_select;
+        var dept = eval('{dept}');
+		var tpl_years;
+		var tpl_quarter;
+		var to_tpl_years;
+		var to_tpl_quarter;
+        $(function(){
+			//绑定复制模板年份选择下拉
+			tpl_years = $('#_years').combobox({
+				valueField: 'id',
+                textField: 'text',
+                data: year_arr,
+                onSelect: function(data){
+				}
+			});
+			//绑定复制模板季度选择下拉
+			tpl_quarter =  $('#_quarter').combobox({
+			 	valueField: 'value',
+			 	textField: 'text',
+			 	data: [{
+			 		'value': 1,
+			 		'text': '第一季度',
+			 		'selected': (quarte == 1 ? true : false)
+			 	}, {
+			 		'value': 2,
+			 		'text': '第二季度',
+			 		'selected': (quarte == 2 ? true : false)
+			 	}, {
+			 		'value': 3,
+			 		'text': '第三季度',
+			 		'selected': (quarte == 3 ? true : false)
+			 	}, {
+			 		'value': 4,
+			 		'text': '第四季度',
+			 		'selected': (quarte == 4 ? true : false)
+			 	}],
+			 	onSelect: function(data){
+			 	
+			 	}
+			 });
+			 //绑定复制模板目标年份选择下拉
+			to_tpl_years = $('#to_years').combobox({
+				valueField: 'id',
+                textField: 'text',
+                data: year_arr,
+                onSelect: function(data){
+				}
+			});
+			to_tpl_years.combobox('select',(quarte==4 ? (Number(year)+1) : year));
+			//绑定复制模板目标季度选择下拉
+			to_tpl_quarter =  $('#to_quarter').combobox({
+			 	valueField: 'value',
+			 	textField: 'text',
+			 	data: [{
+			 		'value': 1,
+			 		'text': '第一季度',
+			 		'selected': (quarte == 4 ? true : false)
+			 	}, {
+			 		'value': 2,
+			 		'text': '第二季度',
+			 		'selected': (quarte == 1 ? true : false)
+			 	}, {
+			 		'value': 3,
+			 		'text': '第三季度',
+			 		'selected': (quarte == 2 ? true : false)
+			 	}, {
+			 		'value': 4,
+			 		'text': '第四季度',
+			 		'selected': (quarte == 3 ? true : false)
+			 	}],
+			 	onSelect: function(data){
+			 	
+			 	}
+			 });
+            //绑定考核人输入框
+            $("#assess_username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#assess_userid').val(data.user_id);
+                }
+                else {
+                    $('#assess_userid').val('');
+                }
+            });
+            //绑定审核人输入框
+            $("#audit_username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#audit_userid').val(data.user_id);
+                }
+                else {
+                    $('#audit_userid').val('');
+                }
+            });
+            //绑定编辑器
+            var editor1 = CKEDITOR.replace('content', {
+                toolbar: [['Source', 'Preview', '-', 'Templates'], ['Bold', 'Italic', 'Strike', 'NumberedList', 'BulletedList', '-', 'Link', 'Table', 'percentage'], ['Styles', 'Format'], ['TextColor', 'BGColor', 'Font', 'FontSize'], ['tags']],
+                height: 300
+                //uiColor : '#9AB8F3'
+            });
+            //======================绑定表格数据====================
+            $('#tt').datagrid({
+                title: '考核模板管理',
+                iconCls: 'icon-edit',
+                pagination: true,
+                singleSelect: true,
+                idField: 'id',
+                pageSize: 20,
+				pageList:[10,20,30],
+                url: '?model=administration_appraisal_performance_item&action=list_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'years',
+                    title: '年份',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'quarter',
+                    title: '季度',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'name',
+                    title: '模板名称',
+                    width: 200,
+                    align: 'center'
+                }, {
+                    field: 'dept_id',
+                    title: '归属部门',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value){
+                        for (var i = 0; i < dept.length; i++) {
+                            if (dept[i].DEPT_ID == value) 
+                                return dept[i].DEPT_NAME.replace(/([|]--)/g, '');
+                        }
+                        return value;
+                    },
+                    editor: {
+                        type: 'combobox',
+                        options: {
+                            valueField: 'DEPT_ID',
+                            textField: 'DEPT_NAME',
+                            data: dept,
+                            required: true,
+                            editable: false,
+                            onSelect: function(record){
+                                var row = $('#tt').datagrid('getSelected');
+                                var index = $('#tt').datagrid('getRowIndex', row);
+                                var editors = $('#tt').datagrid('getEditors', index);
+                                var jobs_obj = editors[1];
+                                jobs_obj.target.combobox({
+                                    width: 200,
+                                    listWidth: 200,
+                                    valueField: 'jobs_id',
+                                    textField: 'jobs_name',
+                                    required: true,
+                                    editable: false,
+                                    url: '?model=administration_appraisal_performance_item&action=get_jobs&dept_id=' + record.DEPT_ID
+                                
+                                });
+                            }
+                        }
+                    }
+                }, {
+                    field: 'assess_username',
+                    title: '考核人',
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'audit_username',
+                    title: '审核人',
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'fanwei',
+                    title: '使用范围',
+                    width: 220,
+                    align: 'center'
+                }, {
+                    field: 'date',
+                    title: '最后更新时间',
+                    width: 150,
+                    align: 'center'
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    width: 80,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                        if (row.editing) {
+                            var s = '<a href="#" onclick="saverow(' + index + ')">保存</a> ';
+                            var c = '<a href="#" onclick="cancelrow(' + index + ')">取消</a>';
+                            return s + c;
+                        }
+                        else {
+                            var e = '<a href="#" onclick="editrow(' + index + ')">修改</a> ';
+                            var d = '<a href="#" onclick="deleterow(' + index + ')">删除</a>';
+                            return e + d;
+                        }
+                    }
+                }]],
+                onBeforeEdit: function(index, row){
+                    row.editing = true;
+                    updateActions();
+                },
+                onAfterEdit: function(index, row){
+                    var ac = 'add';
+                    var msg = '添加';
+                    if (row.id) {
+                        ac = 'edit';
+                        msg = '修改';
+                    }
+                    else {
+                        ac = 'add';
+                        msg = '添加';
+                    }
+                    
+                    $.post('?model=administration_appraisal_performance_item&action=' + ac, {
+                        id: row.id,
+                        dept_id: row.dept_id,
+                        jobs_id: row.jobs_id,
+                        item_name: row.item_name
+                    }, function(data){
+                        if (data == 1) {
+                            row.editing = false;
+                            updateActions();
+                            $('#tt').datagrid('reload');
+                            $.messager.show({
+                                title: '提示',
+                                msg: msg + '成功！',
+                                timeout: 3000,
+                                showType: 'show'
+                            });
+                        }
+                        else {
+                            $.messager.alert('提示', '操作失败，请与OA管理员联系！');
+                        }
+                    });
+                },
+                onCancelEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                }
+            });
+            //绑定部门下拉
+            dept_select = $('#dept_select').combobox({
+                url: "?model=administration_appraisal_performance_item&action=dept_data",
+                valueField: 'dept_id',
+                textField: 'dept_name',
+                onSelect: function(data){
+                    var keyword = $('#keyword').val();
+					var quarter_val = quarter_select.combobox('getValue');
+					var years_val = years_select.combobox('getValue');
+                    $('#tt').datagrid({
+                        url: '?model={t_model}&action=list_data&dept_id=' + data.dept_id + '&years='+years_val+'&quarter='+quarter_val+'&keyword=' + keyword
+                    });
+                    $('#tt').datagrid('reload');
+                    dept_id = data.dept_id;
+                    show_add_button();
+                }
+            });
+            //绑定年份下拉
+            years_select = $('#year_select').combobox({
+                valueField: 'id',
+                textField: 'text',
+                data: year_data,
+                onSelect: function(data){
+                    var keyword = $('#keyword').val();
+                    var quarter_val = quarter_select.combobox('getValue');
+                    $('#tt').datagrid({
+                        url: '?model={t_model}&action=list_data&dept_id=' + dept_id + "&years=" + data.id + '&quarter=' + quarter_val + '&keyword=' + keyword
+                    });
+                    $('#tt').datagrid('reload');
+                    show_add_button();
+                }
+            });
+            //绑定季度下拉
+            quarter_select = $('#quarter_select').combobox({
+                valueField: 'value',
+                textField: 'text',
+                data: [{
+                    'value': '',
+                    'text': '所有季度',
+                    'selected': true
+                }, {
+                    'value': 1,
+                    'text': '第一季度'
+                }, {
+                    'value': 2,
+                    'text': '第二季度'
+                }, {
+                    'value': 3,
+                    'text': '第三季度'
+                }, {
+                    'value': 4,
+                    'text': '第四季度'
+                }],
+                onSelect: function(data){
+                    var keyword = $('#keyword').val();
+                    var years_val = years_select.combobox('getValue');
+                    $('#tt').datagrid({
+                        url: '?model=administration_appraisal_performance_item&action=list_data&dept_id=' + dept_id + "&years=" + years_val+ '&quarter=' + data.value + '&keyword=' + keyword
+                    });
+                    $('#tt').datagrid('reload');
+                    show_add_button();
+                }
+            });
+            show_add_button();
+        });
+        /**
+         * 添加模板按钮
+         */
+        function show_add_button(){
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '添加模板',
+                    handler: function(){
+                        insert();
+                    }
+                },{
+					iconCls: 'icon-add',
+                    text: '复制模板',
+                    handler: function(){
+                        copy_tpl();
+                    }
+				}],
+                onBeforeRefresh: function(ageNumber, pageSize){
+                    return true;
+                }
+            });
+        }
+        
+        function updateActions(){
+            var rowcount = $('#tt').datagrid('getRows').length;
+            for (var i = 0; i < rowcount; i++) {
+                $('#tt').datagrid('updateRow', {
+                    index: i,
+                    row: {
+                        action: ''
+                    }
+                });
+            }
+        }
+        
+        /**
+         * 修改
+         * @param {Object} index
+         */
+        function editrow(index){
+            //$('#tt').datagrid('beginEdit', index);
+            $('#tt').datagrid('selectRow', index);
+			$('#add_window').window('expand');
+            var row = $('#tt').datagrid('getSelected');
+            for (key in row) {
+                if (key == 'content') {
+                    CKEDITOR.instances.content.setData(row[key]);
+                }
+                else 
+                    if (key == 'years') {
+                        years_option('years', row[key]);
+                    }
+                    else 
+                        if (key == 'quarter') {
+                            set_quarter_selected('quarter', row[key]);
+                        }
+                        else 
+                            if (key == 'user_id_str' && row[key]) {
+                                $.post('?model={t_model}&action=get_username_list', {
+                                    user_id_str: row[key],
+                                    rand: Math.random(0, 9999)
+                                }, function(data){
+                                    if (data) {
+                                        $('#user_name_str').html(data);
+                                    }
+                                });
+                            }
+                            else 
+                                if (key == 'dept_id_str' && row[key]) {
+                                    $.post('?model={t_model}&action=get_deptname_list', {
+                                        dept_id_str: row[key],
+                                        rand: Math.random(0, 9999)
+                                    }, function(data){
+                                        if (data) {
+                                            $('#dept_name_str').html(data);
+                                        }
+                                    });
+                                }
+                                else 
+                                    if (key == 'area_id_str' && row[key]) {
+                                        $.post('?model={t_model}&action=get_areaname_list', {
+                                            area_id_str: row[key],
+                                            rand: Math.random(0, 9999)
+                                        }, function(data){
+                                            if (data) {
+                                                $('#area_name_str').html(data);
+                                            }
+                                        });
+                                    }
+                                    else 
+                                        if (key == 'jobs_id_str' && row[key]) {
+                                            $.post('?model={t_model}&action=get_jobsname_list', {
+                                                jobs_id_str: row[key],
+                                                rand: Math.random(0, 9999)
+                                            }, function(data){
+                                                if (data) {
+                                                    $('#jobs_name_str').html(data);
+                                                }
+                                            });
+                                        }
+                $('#' + key).val(row[key]);
+            }
+            $('#add_window').window('open');
+            $('#add_window').window('setTitle', '修改模板');
+            $('#save').attr('disabled', false);
+        }
+        
+        /**
+         * 删除单条是数据
+         * @param {Object} index
+         */
+        function deleterow(index){
+            $.messager.confirm('确认提示', '您确定要删除模板吗？', function(r){
+                if (r) {
+                    $.messager.confirm('再次确认提示', '您确认要删除该模板吗？', function(rr){
+                        if (rr) {
+                            $('#tt').datagrid('selectRow', index);
+                            var row = $('#tt').datagrid('getSelected');
+                            if (row.id) {
+                                $.post('?model={t_model}&action=del', {
+                                    id: row.id,
+                                    rand: Math.random()
+                                }, function(data){
+                                    var msg;
+                                    if (data == 1) {
+                                        msg = '删除成功';
+                                        $('#tt').datagrid('deleteRow', index);
+                                        updateActions();
+                                    }
+                                    else {
+                                        msg = '删除失败，请与OA管理员联系！';
+                                    }
+                                    $('#tt').datagrid('reload');
+                                    $.messager.show({
+                                        title: '提示',
+                                        msg: msg,
+                                        timeout: 3000,
+                                        showType: 'show'
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        function saverow(index){
+            $('#tt').datagrid('endEdit', index);
+        }
+        
+        function cancelrow(index){
+            $('#tt').datagrid('cancelEdit', index);
+        }
+        
+        /**
+         * 添加
+         */
+        function insert(){
+            years_option('years');
+            set_quarter_selected('quarter', quarte);
+            $('#id').val('');
+            $('#dept_id').val('');
+            $('#name').val('');
+            $('#assess_userid').val('');
+            $('#audit_userid').val('');
+            $('#assess_username').val('');
+            $('#audit_username').val('')
+            $('#dept_id_str').val('');
+            $('#area_id_str').val('');
+            $('#jobs_id_str').val('');
+            $('#user_id_str').val('');
+            $('#dept_name_str').html('所有部门');
+            $('#area_name_str').html('所有区域');
+            $('#jobs_name_str').html('所有职位');
+            $('#user_name_str').html('所有用户');
+            CKEDITOR.instances.content.setData('');
+			$('#add_window').window('expand');
+            $('#add_window').window('setTitle', '添加模板');
+            $('#add_window').window('open');
+            $('#save').attr('disabled', false);
+            /*
+             var row = $('#tt').datagrid('getSelected');
+             if (row){
+             var index = $('#tt').datagrid('getRowIndex', row);
+             } else {
+             index = 0;
+             }
+             if (index < 0)
+             {
+             index = 0;
+             }
+             $('#tt').datagrid('insertRow', {
+             index: index,
+             row:{item_name:''}
+             });
+             $('#tt').datagrid('selectRow',index);
+             $('#tt').datagrid('beginEdit',index);*/
+        }
+        
+        function select_user(){
+            $('#add_window').window('collapse');
+            tb_show('选择员工', '?model=user&action=select_user&TB_iframe=true&width=500', false);
+        }
+        
+        function return_func(){
+            $('#add_window').window('expand');
+        }
+        
+        /**
+         * 提交
+         */
+        function post(){
+            var id = $('#id').val();
+            var dept_id = $('#dept_id').val();
+            var years = $('#years').val();
+            var quarter = $('#quarter').val();
+            var name = $('#name').val();
+            var assess_userid = $('#assess_userid').val();
+            var audit_userid = $('#audit_userid').val();
+            var dept_id_str = $('#dept_id_str').val();
+            var area_id_str = $('#area_id_str').val();
+            var jobs_id_str = $('#jobs_id_str').val();
+            var user_id_str = $('#user_id_str').val();
+            var content = CKEDITOR.instances.content.getData();
+            var action = 'add';
+            var msg = '添加';
+            if (id!='') {
+                action = 'edit';
+                msg = '修改';
+            }
+            else {
+                action = 'add';
+                msg = '添加';
+            }
+            if (name == '') {
+                alert('模板名称不能为空！');
+                $('#name').focus();
+                return false;
+            }
+            if ($('#audit_username').val()=='')
+			{
+				audit_userid = '';
+			}
+            if (assess_userid == '') {
+                alert('请填写考核人姓名！');
+                $('#assess_userid').focus();
+                return false;
+            }
+            
+            if (content == null || content == '') {
+                alert('模板内容不能为空！');
+                $('#bodyTab').tabs('select', '模板内容');
+                CKEDITOR.instances.content.focus('');
+                return false;
+            }
+			$('#save').attr('disabled', true);
+			$('#save').val('正在提交数据...');
+            $.post('?model={t_model}&action=' + action, {
+                id: id,
+                dept_id: dept_id,
+                years: years,
+                quarter: quarter,
+                name: name,
+                assess_userid: assess_userid,
+                audit_userid: audit_userid,
+                dept_id_str: dept_id_str,
+                area_id_str: area_id_str,
+                jobs_id_str: jobs_id_str,
+                user_id_str: user_id_str,
+                content: content,
+                rand: Math.random(0, 9999)
+            }, function(data){
+                if (data == 1) {
+                    $('#tt').datagrid('reload');
+                    $('#add_window').window('close');
+                    $.messager.show({
+                        title: '提示',
+                        msg: msg + '成功！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+                }else{
+					
+				}
+                $('#save').val(' 提交保存 ');
+                $('#save').attr('disabled', false);
+            })
+        }
+        
+        /**
+         * 设置显示年份且设置选中
+         * @param {Object} id
+         * @param {Object} selectedIndex
+         */
+        function years_option(id, selectedIndex){
+            var y = Number(year);
+            var str = '';
+            if (Number(year) > 0) {
+                for (var i = y; i >= (y - 20); i--) {
+                    if (i == selectedIndex) {
+                        str += '<option selected value="' + i + '">' + i + '</option>';
+                    }
+                    else {
+                        str += '<option value="' + i + '">' + i + '</option>';
+                    }
+                    
+                }
+            }
+            $('#' + id).html(str);
+        }
+        
+        /**
+         * 设置选中季度
+         * @param {Object} id
+         * @param {Object} selectedIndex
+         */
+        function set_quarter_selected(id, selectedIndex){
+            var options = $('#' + id + ' option').get();
+            for (var i = 0; i < options.length; i++) {
+                if (typeof selectedIndex != 'undefined' && selectedIndex != '') {
+                
+                
+                    if (options[i].value == selectedIndex) {
+                        options[i].selected = true;
+                    }
+                    else {
+                        options[i].selected = false;
+                    }
+                }
+                else 
+                    if (i == 0) {
+                        options[i].selected = true;
+                    }
+            }
+        }
+        
+        /**
+         * 搜索筛选
+         */
+        function Fsearch(){
+            var dept_id = dept_select.combobox('getValue');
+            var years_id = years_select.combobox('getValue');
+            var quarter_id = quarter_select.combobox('getValue');
+            var keyword = $('#keyword').val();
+            $('#tt').datagrid({
+                url: '?model={t_model}&action=list_data&dept_id=' + dept_id + '&years=' + years_id + '&quarter=' + quarter_id + '&keyword=' + keyword + '&rand=' + Math.random(0, 999)
+            });
+            $('#tt').datagrid('reload');
+			show_add_button();
+        }
+		function copy_tpl()
+		{
+			$('#select_copy').dialog('open');
+		}
+		
+		function run_copy()
+		{
+			var _years = tpl_years.combobox('getValue');
+			var _quarter = tpl_quarter.combobox('getValue');
+			var to_years = to_tpl_years.combobox('getValue');
+			var to_quarter = to_tpl_quarter.combobox('getValue');
+			$('#run_copy').attr('disabled',true);
+			$('#run_copy').val('正在提交请求...');
+			$.post('?model={t_model}&action=copy_tpl',{years:_years,quarter:_quarter,to_years:to_years,to_quarter:to_quarter,rand:Math.random(0,99999)},function(data){
+				if (data == 1)
+				{
+					$.messager.show({
+                        title: '提示',
+                        msg: '操作成功！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+					$('#select_copy').dialog('close');
+					setTimeout('location.reload()',4000);
+				}else{
+					$.messager.show({
+                        title: '提示',
+                        msg: '操作失败，请与OA管理员联系！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+				}
+				$('#run_copy').val(' 确定复制 ');
+				$('#run_copy').attr('disabled',false);
+			});
+		}
+		</script>
+    </head>
+    <body>
+    	<div style="width:98%;margin:0 auto; padding-top:5px;">
+	        <table id="tt" toolbar="#tb"></table>
+			<div id="tb" style="padding:5px;height:auto">
+			<div>
+				归属部门筛选: 
+				<input id="dept_select" style="width:200px;"/>
+				年份筛选：
+				<input type="text" id="year_select" style="width:80px;">
+				季度筛选：
+				<input type="text" id="quarter_select" style="width:100px;">
+				关键字：
+				<input type="text" id="keyword" name="keyword" value="" />
+				<a href="#" class="easyui-linkbutton" onclick="Fsearch();" iconCls="icon-search">Search</a>
+			</div>
+		</div>
+		<div id="add_window" class="easyui-window" title="添加模板" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:1000px;height:500px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+	            <div class="easyui-tabs" fit="true" border="true" id="bodyTab">
+	                <div title="模板设置" cache="false" >
+	                    <div id="edit_content" region="center" border="false" style="padding:10px;">
+						<input type="hidden" id="id" name="id" value="" />
+						<input type="hidden" id="audit_userid" name="audit_userid" value="" />
+						<input type="hidden" id="assess_userid" name="assess_userid" value="" />
+							<p>
+							<label>模板名称：</label><span><input type="text" size="30" id="name" name="name" value=""></span>
+							</p>
+							<p style="margin-top:5px;">
+							<label>所属年份：</label>
+							<span>
+								<select id="years" name="years">
+									
+								</select>
+							</span>
+							</p>
+							<p style="margin-top:5px;">
+							<label>所属季度：</label>
+							<span>
+									<select id="quarter" name="quarter">
+										<option value="1">第一季度</option>
+										<option value="2">第二季度</option>
+										<option value="3">第三季度</option>
+										<option value="4">第四季度</option>
+									</select>
+							</span>
+							</p>
+							<p style="margin-top:5px;">
+							<label>归属部门：</label><span><select id="dept_id" name="dept_id">{dept_option}</select></span>
+							</p>
+							<p style="margin-top:5px;">
+							<label>考  核 人：&nbsp;</label><span><input type="text" id="assess_username" name="assess_username" value=""></span>
+							</p>
+							<p style="margin-top:5px;">
+							<label>审 核 人：&nbsp;</label><span><input type="text" id="audit_username" name="audit_username" value=""></span>
+							</p>
+							<table width="100%" style="margin-top:10px;">
+								<tr>
+									<td width="80">使用范围：</td>
+									<td>
+										<input type="button" id="btn" onclick="select_user();" value="设置使用范围" />
+										<hr />
+										部门：<span id="dept_name_str" style="color:#0000ff;height:50px;">所有部门</span>
+										<input type="hidden" id="dept_id_str" name="dept_id_str" value=""/>
+										<hr />
+										区域：<span id="area_name_str" style="color:#0000ff;">所有区域</span>
+										<input type="hidden" id="area_id_str" name="area_id_str" value=""/>
+										<hr />
+										职位：<span id="jobs_name_str" style="color:#0000ff;">所有职位</span>
+										<input type="hidden" id="jobs_id_str" name="jobs_id_str" value=""/>
+										<hr />
+										员工：<span id="user_name_str" style="color:#0000ff;">所有员工</span>
+										<input type="hidden" id="user_id_str" name="user_id_str" value=""/>
+									</td>
+								</tr>
+						</table>
+	                </div>
+					</div>
+					<div title="模板内容" cache="false" >
+	                    <div id="edit_content" region="center" border="false" style="padding:10px;">
+								<textarea id="content" name="content"></textarea>
+						</div>
+	                </div>
+	            </div>
+        	</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="post();"  value=" 提交保存 " />
+				<input type="button" onclick="$('#add_window').window('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="select_copy" class="easyui-dialog" title="选择要复制的模板" iconCls="icon-edit" modal="false" closed="true" style="width:300px;height:250px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<p><label>选择年份：</label><span><select id="_years"></select></span></p>
+				<p>&nbsp;</p>
+				<p><label>选择季度：</label><span><select id="_quarter"></select></span></p>
+				<p>&nbsp;</p>
+				<p><label>目标年份：</label><span><select id="to_years"></select></span></p>
+				<p>&nbsp;</p>
+				<p><label>目标季度：</label><span><select id="to_quarter"></select></span></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="run_copy" onclick="run_copy();"  value=" 确定复制 " />
+				<input type="button" onclick="$('#select_copy').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+	</div>
+	</div>
+    </body>
+</html>

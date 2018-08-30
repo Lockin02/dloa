@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>租车情况</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			//tabs处理
+			var tt = $('#tt');
+			var thisHeight = document.documentElement.clientHeight - 5;
+			tt.tabs({
+				height: thisHeight,
+				plain: true,
+				onSelect: function (title) {
+					var tb = tt.tabs('getTab', title);
+					var hc = tb.panel('options').headerCls;
+					if (hc && hc != null) {
+						tb.panel('options').thisUrl = hc; //保存一个值用于tab刷新
+						tb.panel('options').headerCls = ''; //清空之后才不会重新刷新
+						tt.tabs('update', {
+							tab: tb,
+							options: {
+								content: '<iframe fit="true" name="' + hc + '" scrolling="auto" frameborder="0"  src="' + hc +
+									'" style="width:100%;height:100%;"></iframe>'
+							}
+						});
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body style="height:100%">
+	<div id="tt">
+		<div title="租车申请" headerCls="?model=outsourcing_vehicle_rentalcar&action=toAllList&projectId={projectId}"></div>
+		<div title="租车合同" headerCls="?model=outsourcing_contract_rentcar&action=toAllList&projectId={projectId}"></div>
+		<div title="用车信息" headerCls="?model=outsourcing_vehicle_allregister&action=toUseMessagePage&projectId={projectId}"></div>
+		<div title="租车登记" headerCls="?model=outsourcing_vehicle_allregister&action=toRecordPage&projectId={projectId}"></div>
+        <!--<div title="车辆项目信息" headerCls="?model=outsourcing_vehicle_register&action=toAllProject&projectId={projectId}"></div>-->
+	</div>
+</body>
+</html>

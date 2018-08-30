@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>工作日志列表</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=8">
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+    <script type="text/javascript" src="view/template/engineering/worklog/js/esmworklog-audit-grid.js"></script>
+	<script type="text/javascript" src="view/template/engineering/worklog/js/esmworklog-common.js"></script>
+</head>
+<body>
+	<div class="main_head2">
+		<span class="main_head_title">
+			日志考核 - <span class="blue">点击标题中的 优 良 中 差 打回 可以快速设置审核结果</span>
+		</span>
+		<span style="float:right;margin:4px 7px 0px 0px;">
+			<input type="radio" id="auditNormal" name="auditType" checked="checked" value="0" onclick="initWorklog('auditType',this.value)"/>常规审核
+			<input type="radio" id="auditPerson" name="auditType" value="1" onclick="initWorklog('auditType',this.value)"/>按成员统计
+		</span>
+	</div>
+	<table class="main_table_search">
+		<tr>
+			<td class="form_text_right">
+				项目任务：
+				<select id="activityId" class="txtmiddle" onchange="initWorklog()">
+					<option value="">所有</option>
+				</select>
+				项目成员：
+				<select id="memberId" class="txtmiddle" onchange="initWorklog()">
+					<option value="">所有</option>
+				</select>
+				员工属性：
+				<select id="personType" class="txtmiddle" onchange="initWorklog()">
+					<option value="">所有</option>
+					{personType}
+				</select>
+				<span id="assessResultText">审核状态 ：</span>
+				<select id="assessResult" class="txtmiddle" onchange="initWorklog()">
+					<option value="">所有</option>
+					<option value="0" selected="selected">未审核</option>
+					<option value="1">已审核</option>
+				</select>
+				每页条数:
+				<select id="pageSize" class="txtmiddle" name="pageSize" onchange="initWorklog()">
+					<option value="20">20</option>
+					<option value="50" selected="selected">50</option>
+					<option value="100">100</option>
+				</select>
+				<input type="hidden" value="0" id="assessResult"/>
+				<input type="hidden" value="0" id="auditType"/>
+				<input type="hidden" id="memberIds"/>
+				<input type="hidden" value="{projectId}" id="projectId" />
+				<input type="hidden" value="{activityId}" id="activityIdHidden" />
+				<input type="button" class="txt_btn_a" value="确认审核" onclick="auditBatch();"/>
+				<input type="button" class="txt_btn_a" value=" 刷 新 " onclick="show_page();"/>
+			</td>
+		</tr>
+	</table>
+    <div id="esmworklogGrid">
+    </div>
+</body>
+</html>

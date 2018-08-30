@@ -1,0 +1,552 @@
+<html>
+	<head>
+		<title>销售合同</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+		<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/validate.js"></script>
+		<script src="js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+		<script type="text/javascript" src="js/ext/common-ext.js"></script>
+		<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+		<script type="text/javascript"
+			src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+		<script type="text/javascript"
+			src="view/template/common/combogrid/ProductinfoComboGrid.js"></script>
+		<script type="text/javascript"
+			src="view/template/common/combogrid/CustomerLinkManComboGrid.js"></script>
+		<script type="text/javascript"
+			src="view/template/contract/sales/js/sales-js.js"></script>
+		<script type="text/javascript"
+			src="view/template/common/combogrid/CustomerComboGrid.js"></script>
+		<script type="text/javascript"
+			src="js/ext/ux/tree/TreeCheckNodeUI.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript"
+			src="js/ext/ux/combox/ComboBoxCheckTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/form/MultiSelect.class.js"></script>
+		<script Language="JavaScript">
+
+			function saveContract(){
+				document.getElementById('form1').action="index1.php?model=contract_sales_sales&action=changeContract&act=save";
+			}
+
+			function CheckForm()
+            {
+                if ($('#ChangeApplyId').val() == "")
+                {
+                    alert("变更申请单号！");
+                    $('#ChangeApplyId').focus();
+                    return (false);
+                }
+                if ($('#contName').val() == "")
+                {
+                    alert("合同名称需要填写！");
+                    $('#contName').focus();
+                    return (false);
+                }
+                if ($('#money').val() == "")
+                {
+                    alert("合同金额需要填写！");
+                    $('#money').focus();
+                    return (false);
+                }
+                if ($('#principalName').val() == "")
+                {
+                    alert("合同负责人需要填写！");
+                    $('#principalName').focus();
+                    return (false);
+                }
+				if ($('#deliveryDate').val() == "") {
+					alert("交货日期需要填写！");
+					$('#deliveryDate').focus();
+					return (false);
+				}
+				isCorret = checkMoney($("#money").val());
+				if(!isCorret){
+					alert("输入金额有误");
+					$("#money").focus();
+					return false;
+				}
+				return true;
+            }
+
+			function check_code(code)
+			{
+				if (code=='')
+				{
+					$('#_dataCode').html('编码不能为空！');
+				}else{
+					var rand=Math.random()*100000;
+					$.get('index1.php',{model:'contract_change_change',action:'checkRepeat',formNumber:code,rand:rand},
+					function (data)
+					{
+						if (data!='')
+						{
+							alert("该合变更申请单号已存在,请更换");
+							data_code=true;
+						}
+					}
+					)
+				}
+			}
+
+			function openDia(count) {
+				var licensetypeid = "licenseinput" + count;
+				var licensetype = $("#" + licensetypeid).val();
+				if (!licensetype) {
+					alert("请先选择license类型！");
+				} else {
+					var hideid = "licenseNodeId" + count;
+					var textid = "licenseNodeName" + count;
+
+					var hidevalue = $("#" + hideid).val();
+
+					//var thisurl = '?model=product_licensecheck_licensecheck&action=setInHtml&contractLicenseId=-1&hidevalue='+hidevalue+'&hideid='+hideid+'&textid='+textid;
+					var thisurl = '?model=product_licensetype_licensetype&action=viewPages&ids='
+							+ licensetype
+							+ '&hidevalue='
+							+ hidevalue
+							+ '&hideid='
+							+ hideid
+							+ '&textid=' + textid;
+					window.open(thisurl);
+				}
+			}
+		</script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+		<script>
+			var uploadfile;
+			$(function() {
+				uploadfile=createSWFUpload({
+					"serviceType":"oa_contract_sales",
+					"serviceId":"{id}",
+					"serviceNo":"{contNumber}"
+				});
+			});
+		</script>
+		<!-- 附件上传结束 -->
+	</head>
+	<body>
+	<form action="?model=contract_sales_sales&action=changeContract"  method="post" name="form1" enctype="multipart/form-data" onSubmit="return CheckForm()"
+		onkeypress="javascript:return NoSubmit(event);">
+	<table>
+		<tr>
+			<td><img src="images/sys_config.gif">
+				<b>
+					销售合同:<font color="blue">{contNumber}</font>
+				</b>
+			</td>
+		</tr>
+	</table>
+	<br />
+	<table width='950' class='form_main_table' align="center">
+		<tr class="tableheader">
+			<td class="form_header" align="center" colspan="4">
+				<font >变更申请单</font>
+			</td>
+		</tr>
+		<tr>
+        	<td class="form_text_left">
+        		变更申请单号
+        	</td>
+        	<td class="form_text_right" colspan="3">
+  				<input type="text" name="sales[change][formNumber]" id="ChangeApplyId" onblur="check_code(this.value);" size="70" value="{formNumber}"><span class="red">[*]</span>
+        	</td>
+        </tr>
+        <tr>
+        	<td class="form_text_left">
+        		变更原因
+        	</td>
+        	<td class="form_text_right" colspan="3">
+        		<textarea class="txt_txtarea_font"  rows="3" name="sales[change][reason]" id="ChangeRemark" class="all"></textarea>
+        	</td>
+    	</tr>
+
+    	<tr>
+        	<td class="form_text_left">
+        		变更点
+        	</td>
+        	<td class="form_text_right" colspan="3">
+        		<textarea  class="txt_txtarea_font" rows="3" name="sales[change][changepiont]" id="ChangePoint" class="all"></textarea>
+        	</td>
+    	</tr>
+    	<tr class="main_head">
+			<td class="form_header" colspan="4">
+				<font >变更分析</font>
+			</td>
+		</tr>
+    	<tr>
+        	<td class="form_text_left">
+        		合同变更影响
+        	</td>
+        	<td class="form_text_right" colspan="3">
+        		<textarea class="txt_txtarea_font"  rows="3" name="sales[change][effect]" id="MissionAffect" class="all"></textarea>
+        	</td>
+    	</tr>
+    	<tr>
+        	<td class="form_text_left">
+        		变更申请人
+        	</td>
+        	<td class="form_text_right">
+  				<input type="text" name="sales[change][applyName]" class="txt" value="{applyName}" readonly>
+  				<input type="hidden" name="sales[change][applyId]" size="40" value="{applyId}" readonly />
+        	</td>
+        	<td class="form_text_left" align="center">
+        		变更申请时间
+        	</td>
+        	<td class="form_text_right">
+  				<input type="text" name="sales[change][applyTime]" class="txt" value="{applyTime}" readonly />
+        	</td>
+        </tr>
+    </table>
+	<br />
+	<br />
+	<table width='1200' class='form_main_table' align="center">
+		<tr>
+			<td class="form_text_left">
+				鼎利合同号
+			</td>
+			<td class="form_text_right">
+				<input type="hidden" name="sales[contNumber]" id="contNumber" value="{contNumber}">
+				<input type="text" name="sales[formalNo]" id="formalNo" value="{formalNo}" class="txt" onblur="check_code(this.value);"><span id="_formalNo"></span>
+			</td>
+			<td class="form_text_left">
+				临时合同号
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="sales[temporaryNo]" id="temporaryNo" value="{temporaryNo}" class="txt"><span id="_temporaryNo"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同名称</td>
+			<td class="form_text_right" colspan="3">
+				<input class="txt" type="text" name="sales[contName]" id="contName" value="{contName}" size="70"><span id="_contName" class="red ">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left" width="15%">合同金额</td>
+			<td class="form_text_right">
+				<input  type="text" name="sales[money]" id="money" value="{money}" class="txt" maxlength="100" class="formatMoney"><span id="_money" class="red">[*]</span>
+			</td>
+			<td class="form_text_left" width="15%">
+				发票类型
+			</td>
+			<td class="form_text_right">
+				<select class="select" name="sales[invoiceType]" id="invoiceType">
+					{invoiceType}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">交货日期</td>
+			<td class="form_text_right">
+				<input type="text" name="sales[deliveryDate]" id="deliveryDate" value="{deliveryDate}" class="txt" maxlength="12" onfocus="WdatePicker()">
+				<span id="_deliveryDate" class="red">[*]</span>
+			</td>
+			<td class="form_text_left">合同负责人</td>
+			<td class="form_text_right">
+				<input type="hidden" name="sales[principalId]" id="principalId" value="{principalId}">
+				<input type="text" class="txt" name="sales[principalName]" id="principalName" readonly  value="{principalName}">
+				<input type="button" class="txt_btn_a" value="选 择" onClick="loadOrgWindow('principalId','principalName')" title="选择人员" name="button">
+				<input type="button" class="txt_btn_a" value="清 空" title="清空人员" onclick="clearOrgInfo('principalId','principalName')"><span id="_money" class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">客户名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="customerName" name="sales[customerName]" value="{customerName}"/>
+				<input type="hidden" name="sales[customerId]" id="customerId" value="{customerId}"/>
+			</td>
+			<td class="form_text_left">
+				付款单位
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="payUnit" name="sales[payUnit]" value="{payUnit}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">客户联系人</td>
+			<td class="form_text_right"><input type="text"
+				name="sales[customerLinkman]" id="customerLinkman" class="txt"
+				maxlength="100" value="{customerLinkman}" /></td>
+			<td class="form_text_left">客户合同号</td>
+			<td class="form_text_right"><input type="text"
+				name="sales[customerContNum]" id="customerContNum" class="txt"
+				maxlength="100" value="{customerContNum}" /></td>
+		</tr>
+		<tr>
+			<td class="form_text_left">电话</td>
+			<td class="form_text_right"><input type="text"
+				name="sales[customerTel]" id="customerTel" class="txt" maxlength="50"
+				value="{customerTel}" /></td>
+			<td class="form_text_left">邮箱</td>
+			<td class="form_text_right"><input type="text"
+				name="sales[customerEmail]" id="customerEmail" class="txt"
+				maxlength="50" value="{customerEmail}"></td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收货地址</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="txt_txtarea_font" name="sales[address]" id="address" class="all">{address}</textarea></td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" id="equ" width="100%" cellspacing='1'cellpadding="0">
+					<tr class="main_head">
+						<td class="form_header"  style="text-align:left"><font>产品清单</font>
+						</td>
+						<td align="center" width="5%"><input
+							type="hidden" id="EquNum" name="EquNum" value="{equNum}" />
+							<img src="images/verpic_open.gif" onclick="dis('myequ')" title="缩放">
+							<img src="images/collapsed.gif"	onclick="soft_add('myequ','EquNum')" title="添加行">
+						</td>
+					</tr>
+				</table>
+				<table id="myequ" width="100%" cellspacing='0' cellpadding='0'>
+					<tr>
+						<td colspan="11">
+							<table width="100%" cellspacing='1'>
+								<tr class="main_tr_header">
+									<td nowrap style="text-align:center" width="5%">序号</td>
+									<td nowrap style="text-align:center" width="9%">产品线</td>
+									<td nowrap  style="text-align:center" width="10%">产品编号</td>
+									<td width="16%" style="text-align:center">产品名称</td>
+									<td width="9%" style="text-align:center">型号/版本</td>
+									<td  style="text-align:center" width="8%">数量</td>
+									<td  style="text-align:center" width="8%">单价</td>
+									<td  style="text-align:center" width="8%">金额</td>
+									<td width="10%" style="text-align:center">计划交货日期</td>
+									<td  style="text-align:center" width="8%">保修期</td>
+									<td style="text-align:center">合同内</td>
+									<td nowrap  style="text-align:center" width="5%">操作</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				{equipment}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" width="100%" cellspacing='1' cellpadding='0'>
+					<tr class="main_head">
+						<td class="form_header"  style="text-align:left" colspan="4">
+						<font>加密信息</font></td>
+						<td align="center" width="5%"><input
+							type="hidden" id="licenseNum" name="licenseNum" value="{licenseNum}" /> <img
+							src="images/verpic_open.gif" onclick="dis('mylicense')" title="缩放">
+						<img src="images/collapsed.gif"
+							onclick="license_add('mylicense','licenseNum')" title="添加行">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" id="mylicense" cellspacing='1' cellpadding='0'>
+					<tr class="main_tr_header">
+						<td width="5%" style="text-align:center">序号</td>
+						<td width="10%" style="text-align:center">产品线</td>
+						<td width="10%" style="text-align:center">软件狗类型</td>
+						<td width="10%" style="text-align:center">数量</td>
+						<td width="12%" style="text-align:center">License</td>
+						<td width="16%" style="text-align:center">License树</td>
+						<td width="8%" style="text-align:center">有效期</td>
+						<td  style="text-align:center">备注</td>
+						<td style="text-align:center">合同内</td>
+						<td width="5%" style="text-align:center">删除</td>
+					</tr>
+					{licenselist}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" id="pre" width="100%" cellspacing='1' cellpadding='0'>
+					<tr class="main_head">
+						<td colspan="7" class="form_header"  style="text-align:left">
+						<font>自定义清单</font></td>
+						<td align="center" width="5%"><input
+							type="hidden" id="PreNum" name="PreNum" value="{cusNum}" /> <img
+							src="images/verpic_open.gif" onClick="dis('mycustom')" title="缩放">
+						<img src="images/collapsed.gif"
+							onClick="pre_add('mycustom','PreNum')" title="添加行"></td>
+					</tr>
+				</table>
+				<table id="mycustom" width="100%" cellspacing='1' cellpadding='0'>
+					<tr class="main_tr_header">
+						<td nowrap width="5%" style="text-align:center">序号</td>
+						<td width="10%" style="text-align:center">产品线</td>
+						<td nowrap style="text-align:center">产品编号</td>
+						<td nowrap style="text-align:center">产品名称</td>
+						<td nowrap style="text-align:center">产品型号</td>
+						<td nowrap width="8%" style="text-align:center">数量</td>
+						<td nowrap width="8%" style="text-align:center">单价</td>
+						<td nowrap width="8%" style="text-align:center">金额</td>
+						<td nowrap width="8%" style="text-align:center">计划交货日期</td>
+						<td nowrap width="15%" style="text-align:center">备注</td>
+						<td style="text-align:center">合同内</td>
+						<td nowrap width="5%" style="text-align:center">操作</td>
+					</tr>
+				{customizelist}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" width="100%" id="inv" cellspacing='1' cellpadding='0'>
+					<tr class="main_head">
+						<td colspan="4" class="form_header"  style="text-align:left">
+						<font>开票计划</font></td>
+						<td align="center" width="5%"><input
+							type="hidden" id="InvNum" name="InvNum" value="{invNum}" /> <img
+							src="images/verpic_open.gif" onClick="dis('myinv')" title="缩放">
+						<img src="images/collapsed.gif" onClick="inv_add('myinv','InvNum')"
+							title="添加行"></td>
+					</tr>
+				</table>
+				<table width="100%" id="myinv" cellspacing='1' cellpadding='0'>
+					<tr class="main_tr_header">
+						<td nowrap width="5%" style="text-align:center">序号</td>
+						<td nowrap width="10%" style="text-align:center">开票金额</td>
+						<td nowrap width="10%" style="text-align:center">其中软件金额</td>
+						<td nowrap width="10%" style="text-align:center">开票类型</td>
+						<td nowrap style="text-align:center">开票日期</td>
+						<td nowrap style="text-align:center">开票内容</td>
+						<td nowrap width="5%" style="text-align:center">操作</td>
+					</tr>
+				{invlist}
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table" width="100%" id="pay" cellspacing='1' cellpadding='0'>
+					<tr class="main_head">
+						<td colspan="3" class="form_header"  style="text-align:left">
+						<font>收款计划</font></td>
+						<td align="center" width="5%"><input
+							type="hidden" id="PayNum" name="PayNum" value="{payNum}" /> <img
+							src="images/verpic_open.gif" onClick="dis('mypay')" title="缩放">
+						<img src="images/collapsed.gif" onClick="pay_add('mypay','PayNum')"
+							title="添加行"></td>
+					</tr>
+				</table>
+				<table width="100%" id="mypay" cellspacing='1' cellpadding='0'>
+					<tr class="main_tr_header">
+						<td nowrap width="5%" style="text-align:center">序号</td>
+						<td nowrap width="10%" style="text-align:center">收款金额</td>
+						<td nowrap style="text-align:center">收款日期</td>
+						<td nowrap style="text-align:center">收款方式</td>
+						<td nowrap style="text-align:center">收款条件</td>
+						<td nowrap width="5%" style="text-align:center">操作</td>
+					</tr>
+				{receiptplan}
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+			<table class="form_main_table" id="tra" width="100%" cellspacing='1'
+					cellpadding='0'>
+					<tr class="main_head">
+						<td colspan="7" class="form_header"  style="text-align:left">
+						<font>培训计划</font></td>
+						<td align="center" width="5%"><input
+							type="hidden" id="TraNumber" name="TraNumber" value="{traNumber}" /> <img
+							src="images/verpic_open.gif" onClick="dis('mytra')" title="缩放">
+						<img src="images/collapsed.gif"
+							onClick="train_add('mytra','TraNumber')" title="添加行"></td>
+					</tr>
+				</table>
+				<table id="mytra" width="100%" cellspacing='1' cellpadding='0'>
+					<tr class="main_tr_header">
+						<td nowrap width="5%" style="text-align:center">序号</td>
+						<td nowrap width="8%" style="text-align:center">培训开始时间</td>
+						<td nowrap width="8%" style="text-align:center">培训结束时间</td>
+						<td nowrap width="8%" style="text-align:center">参与人数</td>
+						<td nowrap width="18%" style="text-align:center">培训地点</td>
+						<td nowrap style="text-align:center">培训内容</td>
+						<td nowrap width="20%" style="text-align:center">培训工程师要求</td>
+						<td nowrap width="5%" style="text-align:center">操作</td>
+					</tr>
+				{trainingplan}
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_header"  style="text-align:left" colspan="4">
+			<font>保修条款</font>
+				<img src="images/verpic_open.gif" onClick="dis('gua')" title="缩放">
+			</td>
+		</tr>
+		<tr id="gua">
+			<td nowrap class="txt_txtarea_input"  colspan="4"><textarea
+					name="sales[warrantyClause]" id="warrantyClause" rows="5" style="width: 100%"
+					>{warrantyClause}</textarea></td>
+		</tr>
+		<tr>
+			<td class="form_header"  style="text-align:left" colspan="4">
+			<font>售后要求</font>
+				<img src="images/verpic_open.gif" onClick="dis('aft')" title="缩放">
+			</td>
+		</tr>
+		<tr id="aft">
+			<td nowrap  colspan="4"><textarea
+					name="sales[afterService]" id="afterService" rows="5" style="width: 100%"
+					>{afterService}</textarea></td>
+		</tr>
+
+		<tr>
+			<td nowrap colspan="4">合同附件 &nbsp;
+				<p>
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload"><span id="swfupload"></span> <input
+							id="btnCancel" type="button" value="中止上传"
+							onclick="cancelQueue(uploadfile);" disabled="disabled" /><br />
+						</div>
+						<div id="uploadfileList" class="upload">{file}</div>
+					</div>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td align="center" class="main_foot_wraper" nowrap colspan="4" align="left">签约状态：
+			&nbsp;{signStatus}</td>
+		</tr>
+		<tr>
+			<td class="main_foot_wraper" colspan="4">
+				发货条件 : &nbsp;{shipCondition}
+
+			</td>
+		</tr>
+		<tr>
+			<td class="main_foot_wraper" colspan="4">
+				提交方式 : &nbsp;{startType}
+
+			</td>
+		</tr>
+		<tr>
+		 	<td class="footform" colspan="4">
+		 		<input type="hidden" name="sales[change][oldContId]" id="contractId" value="{id}">
+		 		<input type="hidden" name="sales[version]" id="version" value="{version}">
+			 	<input type="submit" class="txt_btn_a" value="提交审批" />&nbsp;&nbsp;
+			 	<input type="submit" class="txt_btn_a" value=" 保 存 " onClick="saveContract();">&nbsp;&nbsp;
+			 	<input type="button" class="txt_btn_a" value=" 关 闭 " onClick="history.go(-1)">
+		 	</td>
+		 </tr>
+		 </table>
+	 </form>
+	</body>
+</html>

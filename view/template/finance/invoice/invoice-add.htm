@@ -1,0 +1,345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>开票</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+    <link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript" src="js/jquery/woo.js"></script>
+    <script type="text/javascript" src="js/jquery/component.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/invoice/js/invoice-combo.js"></script>
+    <script type="text/javascript" src="view/template/finance/invoice/js/invoice-add.js"></script>
+    <script type="text/javascript" src="view/template/finance/invoice/js/invoice-va.js"></script>
+</head>
+<body>
+<form id="form1" action="?model=finance_invoice_invoice&action=add" method="post" onsubmit="return checkform();">
+<table class="form_main_table">
+    <tr class="main_head">
+        <td colspan="4">
+            开票记录
+                    <span style="float:right;padding-right:10px;">
+                        <span style="color:blue">蓝色</span><input type="radio" name="invoice[isRed]" value="0"
+                                                                 checked="checked"/>
+                        <span class="red">红色</span><input type="radio" name="invoice[isRed]" value="1"/>
+                    </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            开票单位
+        </td>
+        <td colspan="3" class="form_text_right">
+            <input type="hidden" id="customerId" name="invoice[invoiceUnitId]"/>
+            <input type="text" id="customerName" class="txtlong" name="invoice[invoiceUnitName]"/>
+            <span class="red">[*]</span>
+            <span style="color:blue">发票抬头对应单位，开票查询时默认显示字段</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            合同单位
+        </td>
+        <td colspan="3" class="form_text_right">
+            <input type="hidden" id="contractUnitId" name="invoice[contractUnitId]"/>
+            <input type="text" id="contractUnitName" class="txtlong" name="invoice[contractUnitName]"/>
+            <span style="color:blue">发票合同对应单位，合同根据此字段过滤</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">归属公司</td>
+        <td class="form_text_right" colspan="3">
+            <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="invoice[businessBelongName]"
+                   id="businessBelongName" value="{businessBelongName}"/>
+            <input type="hidden" name="invoice[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+            <input type="hidden" name="invoice[formBelong]" id="formBelong" value="{formBelong}"/>
+            <input type="hidden" name="invoice[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            源单类型
+        </td>
+        <td class="form_text_right" width="30%">
+            <select id="objTypeView" class="select" onchange="initGrid(this.value)">
+                <option value=""></option>
+                <option value="KPRK-12">鼎利合同</option>
+            </select>
+        </td>
+        <td class="form_text_left">
+            源单编号
+        </td>
+        <td class="form_text_right">
+            <input type="hidden" name="invoice[objId]" id="objId"/>
+            <input type="hidden" name="invoice[objName]" id="objName"/>
+            <input type="hidden" name="invoice[objType]" id="objType"/>
+            <input type="hidden" name="invoice[rObjCode]" id="rObjCode"/>
+            <input type="text" class="txt" name="invoice[objCode]" id="objCode"/>
+            <span class="red">[*]</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            发票号码
+        </td>
+        <td class="form_text_right">
+            <input type="text" id="invoiceNo" class="txt" name="invoice[invoiceNo]"/>
+            <span class="red">[*]</span>
+        </td>
+        <td class="form_text_left">
+            发票类型
+        </td>
+        <td class="form_text_right">
+            <select id="invoiceType" name="invoice[invoiceType]" class="select" onchange="changeInvType(this.id);">
+                {invoiceTypeList}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            开票日期
+        </td>
+        <td class="form_text_right">
+            <input type="text" id="invoiceTime" class="txt" name="invoice[invoiceTime]" value="{invoiceTime}"
+                   readonly="readonly" onfocus="WdatePicker()"/>
+        </td>
+        <td class="form_text_left">
+            主管名称
+        </td>
+        <td class="form_text_right">
+            <input type="text" name="invoice[managerName]" id="managerName" class="txt" readonly="readonly"/>
+            <input type="hidden" name="invoice[managerId]" id="managerId"/>
+            <span class="red">[*]</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            业 务 员
+        </td>
+        <td class="form_text_right">
+            <input type="text" name="invoice[salesman]" id="salesman" class="txt" readonly="readonly"/>
+            <input type="hidden" name="invoice[salesmanId]" id="salesmanId"/>
+            <span class="red">[*]</span>
+        </td>
+        <td class="form_text_left">
+            部门名称
+        </td>
+        <td class="form_text_right">
+            <input type="text" name="invoice[deptName]" id="deptName" class="txt" readonly="readonly"/>
+            <input type="hidden" name="invoice[deptId]" id="deptId"/>
+            <span class="red">[*]</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            客户类型
+        </td>
+        <td class="form_text_right">
+            <select id="invoiceUnitType" name="invoice[invoiceUnitType]" class="select">
+                {invoiceUnitType}
+            </select>
+            <span class="red">[*]</span>
+        </td>
+        <td class="form_text_left">
+            客户省份
+        </td>
+        <td class="form_text_right">
+            <select id="invoiceUnitProvince" name="invoice[invoiceUnitProvince]" class="select">
+                <option value=""></option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            开票金额
+        </td>
+        <td class="form_text_right">
+            <input type="text" name="invoice[invoiceMoney]" id="invoiceMoney" class="readOnlyTxtNormal formatMoney"
+                   readonly="readonly"/>
+            <input type="hidden" id="remainMoney"/>
+        </td>
+        <td class="form_text_left">
+            开票币种
+        </td>
+        <td class="form_text_right">
+            <input type="text" name="invoice[currency]" id="currency" value="{currency}" class="readOnlyTxtNormal"
+                   readonly="readonly"/>
+            <input type="hidden" name="invoice[rate]" id="rate"/>
+        </td>
+    </tr>
+   	<tr class="rentInfo">
+		<td class="form_text_left">租赁开始日期</td>
+		<td class="form_text_right">
+			<input type="text" name="invoice[rentBeginDate]" id="rentBeginDate" class="txt" onfocus="WdatePicker()" onchange="rentDaysCount()"/>
+			<span id="rentBeginDateNeed" class="red"></span>
+		</td>
+		<td class="form_text_left">租赁结束日期</td>
+		<td class="form_text_right">
+			<input type="text" name="invoice[rentEndDate]" id="rentEndDate" class="txt" onfocus="WdatePicker()" onchange="rentDaysCount()"/>
+			<span id="rentEndDateNeed" class="red"></span>
+		</td>
+	</tr>
+	<tr class="rentInfo">
+		<td class="form_text_left">租赁天数</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoice[rentDays]" id="rentDays" class="readOnlyTxtNormal" readonly="readonly"/>
+			<span id="rentDaysNeed" class="red"></span>
+		</td>
+	</tr>
+    <tr>
+        <td class="form_text_left">
+            备注
+        </td>
+        <td colspan="3" class="form_text_right">
+            <input type="text" class="txtbiglong" name="invoice[remark]" style="width: 745px;"/>
+            <input type="hidden" id="psType" name="invoice[psType]"/>
+            <input type="hidden" id="invoiceContent" name="invoice[invoiceContent]"/>
+        </td>
+    </tr>
+</table>
+<div style="max-width: 100%;overflow-x: scroll">
+    <table class="form_main_table">
+        <tr align="left">
+            <td width="5%" style="text-align: center;" class="form_header">
+                <input type="hidden" id="invnumber" name="invnumber" value="1"/>
+                <img src="images/collapsed.gif" onclick="detailAdd('invbody','invnumber');" title="添加行"/>
+            </td>
+            <td colspan="15" class="form_header">
+                开票内容
+                <span id="currencyShowTips" style="font-weight: normal;font-size: 12px;color: blue;display: none;">
+                    - 开票币种为非人民币时，系统会自动根据录入的开票金额【{currency}】以及【合同的汇率】生成人民币金额。
+                </span>
+            </td>
+        </tr>
+        <tbody id="invbody">
+        <tr class="main_tr_header">
+            <th style="width:30px;">序号</th>
+            <th>货品名称/服务项目</th>
+            <th>数量</th>
+            <th>软件金额</th>
+            <th>硬件金额</th>
+            <th>维修金额</th>
+            <th>服务金额</th>
+            <th>设备租赁金额</th>
+            <th>场地租赁金额</th>
+            <th>其他金额</th>
+            <th width="5%">代收电费金额</th>
+            <th width="5%">代收水费金额</th>
+            <th width="5%">房屋出租金额</th>
+            <th width="5%">安装服务金额</th>
+            <th>产品/服务类型</th>
+            <th>操作</th>
+        </tr>
+        <tr align="center">
+            <td>1</td>
+            <td>
+                <input type="hidden" name="invoice[invoiceDetail][1][productId]" id="invoiceEquId1"/>
+                <input type="text" class="txtmiddle" name="invoice[invoiceDetail][1][productName]" id="invoiceEquName1"/>
+            </td>
+            <td>
+                <input type="text" class="txtshort" style="width:50px;" name="invoice[invoiceDetail][1][amount]"
+                       id="amount1" onblur="countDetail()"/>
+            </td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][softMoney]" id="softMoney1"
+                       onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][hardMoney]" id="hardMoney1"
+                       onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][repairMoney]"
+                       id="repairMoney1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][serviceMoney]"
+                       id="serviceMoney1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][equRentalMoney]"
+                       id="equRentalMoney1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][spaceRentalMoney]"
+                       id="spaceRentalMoney1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][otherMoney]"
+                       id="otherMoney1" onblur="countDetail()"/></td>
+
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][dsEnergyCharge]"
+                       id="dsEnergyCharge1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][dsWaterRateMoney]"
+                       id="dsWaterRateMoney1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][houseRentalFee]"
+                       id="houseRentalFee1" onblur="countDetail()"/></td>
+            <td><input type="text" class="txtshort formatMoney" name="invoice[invoiceDetail][1][installationCost]"
+                       id="installationCost1" onblur="countDetail()"/></td>
+            <td>
+                <select id="psType1" name="invoice[invoiceDetail][1][psType]" class="txt-auto" style="width:70px;"></select>
+            </td>
+            <td>
+                <img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行"/>
+            </td>
+        </tr>
+        </tbody>
+        <tr class="tr_count">
+            <td colspan="2">合计</td>
+            <td><input type="text" id="allAmount" name="invoice[allAmount]" value="0" style="width:50px;"
+                       class="readOnlyTxtShortCount" readonly="readonly"/></td>
+            <td><input type="text" id="softMoney" name="invoice[softMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="hardMoney" name="invoice[hardMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="repairMoney" name="invoice[repairMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="serviceMoney" name="invoice[serviceMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="equRentalMoney" name="invoice[equRentalMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="spaceRentalMoney" name="invoice[spaceRentalMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="otherMoney" name="invoice[otherMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+
+            <td><input type="text" id="dsEnergyCharge" name="invoice[dsEnergyCharge]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="dsWaterRateMoney" name="invoice[dsWaterRateMoney]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="houseRentalFee" name="invoice[houseRentalFee]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td><input type="text" id="installationCost" name="invoice[installationCost]" value="0"
+                       class="readOnlyTxtShortCount formatMoney" readonly="readonly"/></td>
+            <td colspan="2"></td>
+        </tr>
+    </table>
+</div>
+<table class="form_main_table">
+    <tr>
+        <td colspan="4" class="innerTd">
+            <div id="checkTable"></div>
+        </td>
+    </tr>
+</table>
+<table class="form_main_table">
+    <tr>
+        <td colspan="4">
+            <input type="hidden" name="invoice[areaName]" id="areaName"/>
+            <input type="hidden" name="invoice[areaId]" id="areaId"/>
+            <input type="hidden" id="submitTag_" name="submitTag_" value="{submitTag_}">
+
+            <input type="submit" class="txt_btn_a" value="保  存"/>
+            <input type="button" class="txt_btn_a" onclick="closeFun();" value="关  闭"/>
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

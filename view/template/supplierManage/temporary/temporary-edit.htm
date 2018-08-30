@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>供应商注册</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/projecttype/js/projecttype-list.js"></script>
+
+
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+	src="view/template/supplierManage/temporary/js/temporary-edit-formValidator.js"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<script type="text/javascript" src="view/template/system/procity/js/cpcCmp.js"></script>
+<script type="text/javascript" src="view/template/supplierManage/temporary/js/tmp-add.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script>
+
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_supp_lib_temp",//业务模块编码，一般取表名
+				"serviceId":"{id}"
+			});
+		});
+
+
+		</script>
+
+
+</head>
+<body>
+<form id="form1" method="post"
+	action="?model=supplierManage_temporary_temporary&action=edit"
+	name="form1">
+	<input  name="temporary[id]" value='{id}'  id="id" type="hidden">
+	<input id="optionHidden" value='{KHBank}' type="hidden">
+<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">供应商编号</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="readOnlyText" name="temporary[busiCode]" id="busiCode" value="{busiCode}" readonly>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[suppName]" id="suppName" value="{suppName}">
+				<span class="red">[*]</span>
+				<br><div id="suppNameTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">注册资金</td>
+			<td class="form_text_right">
+				<input type="text" class="txt formatMoney"  name="temporary[regiCapital]" id="regiCapital" value="{regiCapital}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">工商登记号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[businRegistCode]" id="businRegistCode" value="{businRegistCode}">
+			</td>
+			<td class="form_text_left">主要经营范围</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[products]" id="products" value="{products}">
+			</td>
+		</tr>
+		<tr>
+		<!--
+			<td class="form_text_left">供应商编号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[busiCode]" id="busiCode" value="{busiCode}">
+				<span class="red">[*]</span>
+				<br>
+				<div id="busiCodeTip" class="tipShortTxt"></div>
+			</td> -->
+			<td class="form_text_left">创建日期</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[foundedDate]" id="foundedDate" onfocus="WdatePicker()" value="{foundedDate}">
+			</td>
+			<td class="form_text_left">供应商来源</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[suppSource]" id="suppSource"  value="{suppSource}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供货生效日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[effectDate]" id="effectDate" onfocus="WdatePicker()" value="{effectDate}">
+			</td>
+			<td class="form_text_left">供货失效日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[failureDate]" id="failureDate" onfocus="WdatePicker()" value="{failureDate}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">注册商标</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[registMark]" id="registMark" value="{registMark}">
+			</td>
+			<td class="form_text_left">法人代表</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"   name="temporary[legalRepre]" value="{legalRepre}">
+				<span class="red"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请等级</td>
+			<td class="form_text_right">
+				<select class="select"  name="temporary[requestType]">
+					<option>{requestType}</option>
+					<option>一级供应商</option>
+					<option>二级供应商</option>
+					<option>三级供应商</option>
+				</select>
+			</td>
+			<td class="form_text_left">简称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[shortName]" id="shortName"  value="{shortName}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">营业执照编号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[businessCode]" id="businessCode"  value="{businessCode}">
+			</td>
+			<td class="form_text_left">纳税登记号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[taxCode]"  value="{taxCode}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应类别</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[suppType]" id="suppType"  value="{suppType}">
+			</td>
+			<td class="form_text_left">员工人数</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[employeesNum]"  value="{employeesNum}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公司规模</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[companySize]"  value="{companySize}">
+			</td>
+			<td class="form_text_left">公司性质</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[companyNature]"  value="{companyNature}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">行业</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="temporary[trade]"  value="{trade}">
+			</td>
+			<td class="form_text_left">国家</td>
+			<td class="form_text_right" >
+				<select class="select" name="temporary[countryId]" id='country' val='{country}'>
+				</select>
+				<input type="hidden" class="txt" name="temporary[country]"  id='countryName'>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">省份</td>
+			<td  class="form_text_right">
+				<select class="select" name="temporary[provincesId]" id='province' val='{provinces}'>
+				</select>
+				<input type="hidden" class="txt"  name="temporary[provinces]" id='provinceName'>
+			</td>
+			<td class="form_text_left">城市</td>
+			<td  class="form_text_right">
+				<select class="select" name="temporary[cityId]" id='city' val='{city}'>
+				</select>
+				<input type="hidden" class="txt"  name="temporary[city]" id='cityName'>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">厂房面积</td>
+			<td  class="form_text_right">
+				<input type="text" class="txt"  name="temporary[plantArea]"  value="{plantArea}">
+			</td>
+			<td class="form_text_left">座机</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="temporary[plane]"  value="{plane}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮编</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="temporary[zipCode]" id="zipCode"  value="{zipCode}">
+			</td>
+			<td class="form_text_left">传真</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txt"  name="temporary[fax]"  value="{fax}">
+			</td>
+		</tr>
+	<tr>
+		<td class="form_text_left">银行信息</td>
+		<td colspan="3" class="form_text_right">
+			<input type="hidden" id="PayNum" name="PayNum" value="1" />
+			<div style="padding-left:500px">
+			<img src="images/verpic_open.gif" onclick="dis('mypay')" title="缩放">
+			<img src="images/collapsed.gif" onclick="pay_add('mypay','PayNum')" title="添加行"></div>
+				<table width="98%" id="mypay">
+					<tr class="main_tr_header">
+						<td style="text-align:center">序号</td>
+						<td style="text-align:center">开户银行</td>
+						<td style="text-align:center">开户账号</td>
+						<td style="text-align:center">备注</td>
+						<td>操作</td>
+					</tr>
+					{list}
+				</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">供应商地址</td>
+		<td class="form_text_right" colspan="3"><textarea cols="86"
+			rows="4" name="temporary[address]" id="address">{address}</textarea>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">推荐意见</td>
+		<td colspan="3" class="form_text_right"><textarea cols="86"
+			rows="5" name="temporary[recomComments]">{recomComments}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">公司优势</td>
+		<td colspan="3" class="form_text_right"><textarea cols="86"
+			rows="5" name="temporary[advantages]">{advantages}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">供应商附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4"><input type="submit" class="txt_btn_a" value="保  存" />
+		<!-- onclick="location='?model=suppliertemporary&action=addlink'" -->
+		<input type="button" class="txt_btn_a" value="取  消"
+			onclick="self.parent.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

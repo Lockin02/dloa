@@ -1,0 +1,101 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>编辑产品属性配置</title>
+    {#commonInclude#}
+    <script type="text/javascript"
+            src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/properties-edit.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#propertiesType").val("{propertiesType}");
+
+            if ("{isLeast}" == "on") {
+                $("#isLeast").attr("checked", true);
+            }
+            if ("{isInput}" == "on") {
+                $("#isInput").attr("checked", true);
+            }
+            if ("{existNum}" == "on") {
+                $("#existNum").attr("checked", true);
+            }
+        });
+
+        function goConfigList() {
+            this.location = "index1.php?model=goods_goods_properties&action=page&goodsId={mainId}";
+        }
+    </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=goods_goods_properties&action=edit" onsubmit="return checkForm();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+             <span class="main_head_title">
+               	编辑<{propertiesName}></>配置信息
+                    </span>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="form_text_left">上级属性名称</td>
+            <td class="form_text_right">
+                <input type="hidden" class="txt" id="parentId" name="properties[parentId]" value="{parentId}"/>
+                <input type="text" class="txt" readOnly id="parentName" name="properties[parentName]"
+                       value="{parentName}"/>
+            </td>
+
+            <td class="form_text_left">属性名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="propertiesName" name="properties[propertiesName]"
+                       value="{propertiesName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">排序</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="orderNum" name="properties[orderNum]" value="{orderNum}"/>
+            </td>
+            <td class="form_text_left">配置项类型</td>
+            <td class="form_text_right">
+                <select class="select" id="propertiesType" name="properties[propertiesType]">
+                    <option value="0">单项选择</option>
+                    <option value="1">多项选择</option>
+                    <option value="2">文本输入</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">基本控制</td>
+            <td class="form_text_right" colspan="3">
+                <input type="checkbox" id="isLeast" name="properties[isLeast]"/>至少选中一项
+                &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="isInput" name="properties[isInput]"/>允许直接输入值
+                &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" id="existNum" name="properties[existNum]"/>允许输入数量
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea style="width:600px;" class="txt_txtarea_font" name="properties[remark]">{remark}</textarea>
+            </td>
+        </tr>
+    </table>
+    <div id="itemTable"></div>
+    <table class="form_main_table">
+        <tr>
+            <td class="txt_btn" colspan="4" align>
+                <input type="hidden" id="mainId" name="properties[mainId]" value="{mainId}"/>
+                <input type="hidden" id="id" name="properties[id]" value="{id}"/>
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type=button class="txt_btn_a" value=" 关 闭  " onclick="parent.parent.closeFun();"/>
+                <input type=button class="txt_btn_a" value=" 返回  " onclick="goConfigList()"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

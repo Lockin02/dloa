@@ -1,0 +1,171 @@
+var show_page = function(page) {
+	$("#tutorrecordsGrid").yxgrid("reload");
+};
+$(function() {
+	//表头按钮数组
+//	buttonsArr = [
+//        {
+//			name : 'view',
+//			text : "高级查询",
+//			icon : 'view',
+//			action : function() {
+//				alert('功能暂未开发完成');
+//				showThickboxWin("?model=finance_payablesapply_payablesapply&action=toSearch&"
+//					+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=450&width=800');
+//			}
+//        }
+//    ];
+
+	$("#tutorrecordsGrid").yxgrid({
+		model : 'hr_tutor_tutorrecords',
+		action : 'pageJsonForRead',
+		title : '导师经历信息表',
+		isAddAction : false,
+		isEditAction : false,
+		isDelAction : false,
+		isOpButton : false,
+		//列信息
+		colModel : [{
+				display : 'id',
+				name : 'id',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'userNo',
+				display : '导师员工编号',
+				sortable : true
+			}, {
+				name : 'userAccount',
+				display : '导师员工账号',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'userName',
+				display : '导师姓名',
+				sortable : true,
+				process : function(v,row){
+					return "<a href='#' onclick='showThickboxWin(\"?model=hr_tutor_tutorrecords&action=toView&id=" + row.id + '&skey=' + row.skey_ + "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=800\")'>" + v + "</a>";
+				}
+			}, {
+				name : 'jobId',
+				display : '导师职位id',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'jobName',
+				display : '导师职位',
+				sortable : true
+			}, {
+				name : 'deptId',
+				display : '导师部门Id',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'deptName',
+				display : '导师部门',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'studentNo',
+				display : '学员员工编号',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'studentAccount',
+				display : '学员员工账号',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'studentName',
+				display : '学员姓名',
+				sortable : true
+			}, {
+				name : 'studentDeptName',
+				display : '学员部门',
+				sortable : true
+			}, {
+				name : 'beginDate',
+				display : '教学开始日期',
+				sortable : true
+			}, {
+				name : 'assessmentScore',
+				display : '考核分数',
+				sortable : true
+			}, {
+				name : 'remark',
+				display : '备注',
+				sortable : true,
+				width : 130
+			}, {
+				name : 'createName',
+				display : '创建人名称',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'createTime',
+				display : '创建时间',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'updateName',
+				display : '修改人名称',
+				sortable : true,
+				hide : true
+			}, {
+				name : 'updateTime',
+				display : '修改时间',
+				sortable : true,
+				hide : true
+			}],
+		toEditConfig : {
+			showMenuFn : function(row) {
+				if ((row.id == "noId")) {
+					return false;
+				}
+			},
+			action : 'toEdit',
+			formWidth : '800',
+			formHeight : '400'
+		},
+		toViewConfig : {
+			showMenuFn : function(row) {
+				if ((row.id == "noId")) {
+					return false;
+				}
+			},
+			action : 'toView',
+			formWidth : '800',
+			formHeight : '400'
+		},
+		toDelConfig : {
+			showMenuFn : function(row) {
+				if ((row.id == "noId")) {
+					return false;
+				}
+			}
+		},
+//		buttonsEx : buttonsArr,
+		toEditConfig : {
+			action : 'toEdit'
+		},
+		toViewConfig : {
+			action : 'toView'
+		},
+		/**
+		 * 快速搜索
+		 */
+		searchitems : [{
+			display : "员工编号",
+			name : 'userNoM'
+		},{
+			display : "导师姓名",
+			name : 'userNameM'
+		},{
+			display : "学员姓名",
+			name : 'studentNameM'
+		},{
+			display : "学员部门",
+			name : 'studentDeptNameM'
+		}]
+	});
+});

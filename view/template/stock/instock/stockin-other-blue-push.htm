@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			下推其他入库单
+		</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/stockin-supplier-combogrid.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/stockin-stockinfo-combogrid.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/stockin-productinfo-combogrid.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/stockin-other-add.js"></script>
+	</head>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			reloadItemStock();
+			$("#purchaserName").yxselect_dept({
+				hiddenId : 'purchaserCode'
+			});
+			//判断是否有审核权限
+			if({auditLimit}!="1"){
+				$("#auditButton").hide();
+			}
+		})
+	</script>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				下推其他入库单
+			</span>
+		</div>
+		<form action="?model=stock_instock_stockin&action=add" id="form1" method="post" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					入库类型
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input type="hidden" id="purchMethodStr" data-chkval="{purchMethodStr}" value="{purchMethod}">
+					<input type="text" id="purchMethod" class="txt" name="stockin[purchMethod]" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					源单类型
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="relDocTypeName" class="readOnlyTxtNormal" value="{relDocTypeName}" readonly="readonly"/>
+					<input type="hidden" name="stockin[relDocType]" id="relDocType" value="{relDocType}"/>
+				</td>
+				<td class="form_text_left">
+					源单编号
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="relDocCode" name="stockin[relDocCode]" value="{relDocCode}" readonly="readonly"/>
+					<input type="hidden" name="stockin[relDocId]" id="relDocId" value="{relDocId}" />
+					<input type="hidden" name="stockin[relDocName]" value="{relDocName}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					供应商名称
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="supplierName" class="txt" name="stockin[supplierName]"/>
+					<input type="hidden" id="supplierId" name="stockin[supplierId]"/>
+				</td>
+				<td class="form_text_left">
+					部门
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="purchaserName" name="stockin[purchaserName]"/>
+					<input type="hidden" id="purchaserCode" name="stockin[purchaserCode]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					收料仓库名称
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="inStockName" class="txt" name="stockin[inStockName]"/>
+					<input type="hidden" id="inStockId" name="stockin[inStockId]"/>
+					<input type="hidden" id="inStockCode" name="stockin[inStockCode]"/>
+				</td>
+				<td class="form_text_left">
+					单据日期
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="auditDate" name="stockin[auditDate]" value="{auditDate}" onfocus="WdatePicker()" class="txt" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注
+				</td>
+				<td colspan=3 class="form_text_right">
+					<textarea style="width:80%;" class="txt_txtarea_font" name="stockin[remark]"></textarea>
+				</td>
+			</tr>
+		</table>
+		<div>
+			<table class="main_table" id="itemtable">
+				<thead>
+					<tr>
+						<td colspan="14" class="form_header">
+							物料清单&nbsp;&nbsp;
+							<span id="proTipInfo" style="color:#6CA6CD;text-align:center"></span>
+						</td>
+					</tr>
+					<tr class="main_tr_header">
+						<th>
+							<input type="hidden" id="itemscount" value="{itemscount}" />
+						</th>
+						<th>
+							序号
+						</th>
+						<th>
+							物料编码
+						</th>
+                        <th>
+                            物料分类
+                        </th>
+                        <th>
+                            K3编码
+                        </th>
+						<th>
+							物料名称
+						</th>
+						<th>
+							规格型号
+						</th>
+						<th>
+							单位
+						</th>
+						<th>
+							批次号
+						</th>
+						<th>
+							应收数量
+						</th>
+						<th>
+							实收数量
+						</th>
+						<th>
+							收料仓库
+						</th>
+						<th>
+							单价
+						</th>
+						<th>
+							金额
+						</th>
+					</tr>
+				</thead>
+				<tbody id="itembody">
+					{stockinItems}
+				</tbody>
+			</table>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="isRed" name="stockin[isRed]" value="0" />
+					<input type="hidden" id="docStatus" name="stockin[docStatus]" value="WSH" />
+					<input type="hidden" name="stockin[docType]" value="{docType}" />
+					<input type="button" value=" 保 存 " class="txt_btn_a" onclick="return confirmAudit('save');" />
+					<input type="button" value=" 审 核 " id="auditButton" class="txt_btn_a" onclick="return confirmAudit();" />
+					<input type="button" value=" 返 回 " class="txt_btn_a" onclick="closeFun()" />
+				</td>
+			</tr>
+		</table>
+		</form>
+	<script>
+		$(function() {
+			// ID2295 要求补的一个默认字段(避免其他地方也调用了此页面导致页面数据不一致问题)
+			//purchMethodStr" data-chkval
+
+			var chk = $('#purchMethodStr').attr('data-chkval');
+			if(chk == 'yes'){
+				$('#purchMethod').val($('#purchMethodStr').val());
+				$('#purchMethod').attr("readonly","readonly");
+			}
+		});
+	</script>
+	</body>
+</html>

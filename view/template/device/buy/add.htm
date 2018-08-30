@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>设备采购申请</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+ 
+			};
+		function set_url(table,field)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		//部门
+		$("#deptname").autocomplete(set_url('department','dept_name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var dept_name = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'depart',action:'get_deptid',dept_name:dept_name,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						$('#dept_id').val(unescape(data));
+					}
+				}
+				);
+			}
+		});
+		//项目
+		$("#project").autocomplete(set_url('project_info','name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var project_name = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'xm',action:'get_projectid',project_name:project_name,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						$('#project_id').val(unescape(data));
+					}
+				}
+				);
+			}
+		});
+	});
+	function show_ls(val)
+	{
+		if (val==0)
+		{
+			$('#tr_dt').css('display','');
+			$('#tr_xm').css('display','none');
+		}else
+		{
+			$('#tr_dt').css('display','none');
+			$('#tr_xm').css('display','');
+		}
+	}
+	
+	function add()
+	{
+		var typeid = $('#typeid').val();
+		if (typeid !=='')
+		{
+			$.post('ajax.php?',{model:'{t_model}',action:'get_field_name',typeid:typeid,rand:Math.random(0,999)},
+				function (data)
+				{
+					if (data)
+					{
+						$('body').append(unescape(data));
+					}
+				}
+			)
+		}else
+		{
+			alert('请先选择设备类型！');
+			return false;
+		}
+	}
+</script>
+</head>
+<body>
+<form method="post" action="?model={t_model}&action=add" onsubmit="return check();">
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="" />
+	<input type="hidden" id="project_id" name="project_id" value="" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">设备采购申请</td>
+	</tr>
+	<tr>
+		<td>申 请  人：</td>
+		<td align="left">{username}</td>
+	</tr>
+	<tr>
+		<td>申请归属：</td>
+		<td align="left">
+			<input type="radio" checked onclick="show_ls(0)" name="ls" value="0"> 部门
+			<input type="radio" name="ls" onclick="show_ls(1)" value="1"> 项目
+		</td>
+	<tr id="tr_xm" style="display:none">
+		<td>申请项目：</td>
+		<td align="left"><input type="text" size="40" id="project" name="project" value="" /></td>
+	</tr>
+	<tr id="tr_dt">
+		<td>申请部门：</td>
+		<td align="left"><input type="text" id="deptname" name="deptname" value="" /></td>
+	</tr>
+	<tr>
+		<td>申请说明：</td>
+		<td align="left">
+			<textarea rows="5" cols="60" id="description" name="description"></textarea>
+		</td>
+	</tr>
+</table>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr id="top">
+		<td align="left" class="tableheader">选择采购设备类型：
+			<select id="typeid">
+				<option value="">选择设备类型</option>
+				{select_type}
+			</select>
+			<input type="button" onclick="add();" value=" 确定选中类型 "/>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

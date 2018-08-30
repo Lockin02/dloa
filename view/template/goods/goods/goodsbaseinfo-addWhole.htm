@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>新增产品信息</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/goodsbaseinfo-addWhole.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+    <script type="text/javascript" src="swfupload/handlers.js"></script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+    <script type="text/javascript">
+        var uploadfile;
+        $(function () {
+            uploadfile = createSWFUpload({
+                "serviceType": "oa_goods_base_info"//业务模块编码，一般取表名
+            });
+        });
+    </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=goods_goods_goodsbaseinfo&action=add">
+    <table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+        <tr>
+            <td colspan="6">
+                <div class="main_head2">
+                    <span class="main_head_title">
+                        新增产品基本信息
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">基 本 信 息</legend>
+                    <table class="form_in_table">
+                        <tr>
+                            <td class="form_text_left_three"><span class="blue">产品名称</span></td>
+                            <td class="form_text_right_three">
+                                <input type="text" class="txt" id="goodsName" name="goodsbaseinfo[goodsName]" value="便携式无线网络测试系统/Pilot Walktour"/>
+                            </td>
+                            <td class="form_text_left_three">单 位</td>
+                            <td class="form_text_right_three">
+                                <input type="text" class="txt" id="unitName" name="goodsbaseinfo[unitName]" value="套"/>
+                            </td>
+                            <td class="form_text_left_three"><span class="blue">所属分类名称</span></td>
+                            <td class="form_text_right_three">
+                                <input type="text" readOnly class="txt" id="goodsTypeName" name="goodsbaseinfo[goodsTypeName]"
+                                       value="{parentName}"/>
+                                <input type="hidden" id="goodsTypeId" name="goodsbaseinfo[goodsTypeId]" value="{parentId}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three"><span class="blue">产 品 线</span></td>
+                            <td class="form_text_right_three">
+                                <select id="exeDeptCode" name="goodsbaseinfo[exeDeptCode]" class="select">
+                                    {exeDeptName}
+                                </select>
+                            </td>
+                            <td class="form_text_left_three">执行区域</td>
+                            <td class="form_text_right_three">
+                                <input type="hidden" id="auditDeptCode" name="goodsbaseinfo[auditDeptCode]"/>
+                                <input type="text" class="txt" id="auditDeptName" name="goodsbaseinfo[auditDeptName]" readonly/>
+                            </td>
+                            <td class="form_text_left_three">状 态</td>
+                            <td class="form_text_right_three">
+                                <select class="select" id="useStatus" name="goodsbaseinfo[useStatus]">
+                                    {useStatus}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">版 本 号</td>
+                            <td class="form_text_right_three" >
+                                <input type="text" class="txt" id="version" name="goodsbaseinfo[version]" value="v2.1.1"/>
+                            </td>
+                            <td class="form_text_left_three">是否需要加密</td>
+                            <td class="form_text_right_three">
+                                <input type="checkbox" id="isEncrypt" name="goodsbaseinfo[isEncrypt]"/>
+                            </td>
+                            <td class="form_text_left_three">是否成熟产品</td>
+                            <td class="form_text_right_three">
+                                <input type="checkbox" id="isMature" name="goodsbaseinfo[isMature]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">软件类型</td>
+                            <td class="form_text_right" colspan="5">
+                                <input type="radio" name="softType" checked="checked"/>Walktour
+                                <input type="radio" name="softType"/>Walktour Pack
+                                <input type="radio" name="softType"/>Pioneer
+                                <input type="radio" name="softType"/>RCU
+                                <input type="radio" name="softType"/>SCOUT
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">网络类型</td>
+                            <td class="form_text_right" colspan="5">
+                                <input type="checkbox" checked="checked" name="netType[]"/><a href="javascript:void(0);" onclick="alert('点击这里切换终端属性');" style="font-weight: bold;">GSM</a>
+                                <input type="checkbox" checked="checked" name="netType[]"/><a href="javascript:void(0);" onclick="alert('点击这里切换终端属性');">EDGE</a>
+                                <input type="checkbox" checked="checked" name="netType[]"/><a href="javascript:void(0);" onclick="alert('点击这里切换终端属性');">TD-SCDMA</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">备注</td>
+                            <td class="form_text_right" colspan="5">
+                                <textarea style="width:915px;" class="txt_txtarea_font" name="goodsbaseinfo[remark]"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">附件</td>
+                            <td class="form_text_right" colspan="5">
+                                <div class="upload">
+                                    <div class="upload" id="fsUploadProgress"></div>
+                                    <div class="upload">
+                                        <span id="swfupload"></span>
+                                        <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/>
+                                        <br/>
+                                    </div>
+                                    <div id="uploadfileList" class="upload"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">产 品 终 端</legend>
+                    <div id="itemTable"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">其 他 产 品 属 性</legend>
+                    <div id="properties"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">产 品 属 性 内 容</legend>
+                    <div id="otherTable"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="6">
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 预  览 " onclick="alert('预览产品信息');"/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

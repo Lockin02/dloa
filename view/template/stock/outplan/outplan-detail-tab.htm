@@ -1,0 +1,71 @@
+<html>
+<head>
+<title></title>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+<script type="text/javascript">
+$(function() {
+	if($("#docType").val()=='oa_borrow_borrow'){
+		$('#contract').hide();
+	}else{
+		$('#allocate').hide();
+	}
+
+        var skeyStr="&skey={skey_}";
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=stock_outplan_outplan&action=toView&id=" + $('#planId').val() + '&docType=' + $('#docType').val() + skeyStr,
+    			"?model=stock_outplan_ship&action=listByPlan&planId=" + $('#planId').val() + skeyStr,
+                 "?model=stock_outstock_stockout&action=relDocOutPage&docId="+ $('#planId').val() + "&relDocType=XSCKFHJH" + skeyStr,
+                 "?model=stock_allocation_allocation&action=relDocPage&relDocType=DBDYDLXFH&relDocId=" + $('#planId').val() +"&initTip=0",
+    			"?model=common_changeLog&action=toOutplanList&logObj=outplan&originalId=&objId=" + $('#planId').val() +skeyStr,
+    			];
+
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body scroll="auto">
+
+<div>
+	<input type="hidden" id="planId" value="{planId}"/>
+	<input type="hidden" id="docType" value="{docType}"/>
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >查看</a></li>
+        <li><a href="#tab2" >发货单</a></li>
+        <li id='contract'><a href="#tab3" >出库单</a></li>
+        <li id='allocate'><a href="#tab4" >调拨单</a></li>
+        <li><a href="#tab5" >发货计划变更记录</a></li>
+        <!--
+        <li><a href="#tab3" >变更通知</a></li>
+        -->
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "about:blank" height="93%" frameborder= "0" >
+            </iframe>
+            <iframe class="pane" id="iframe2"  src= "about:blank" height="93%" frameborder= "0" >
+            </iframe>
+            <iframe class="pane" id="iframe3"  src= "about:blank" height="93%" frameborder= "0">
+            </iframe>
+            <iframe class="pane" id="iframe4"  src= "about:blank" height="93%" frameborder= "0">
+            </iframe>
+            <iframe class="pane" id="iframe5"  src= "about:blank" height="93%" frameborder= "0">
+            </iframe>
+    </div>
+
+</div>
+
+</body>
+</html>

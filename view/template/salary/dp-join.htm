@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','姓名','部门','级别', '入职日期', '入职工资'
+                        , '入职当月工资','地区','身份证','账号','开户行','邮箱'
+                        ,'录入日期','录入人','状态','可否修改','公司'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:80, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'username',index:'u1.user_name', width:60, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'olddept',index:'d.dept_name', width:90,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'level',index:'h.userlevel', width:60,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'comedt',index:'s.comedt', width:70, align:'right',editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationam',index:'s.probationam', width:60, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationnowam',index:'s.probationnowam', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'oldarea',index:'s.oldarea', width:60, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'idcard',index:'s.idcard', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'acc',index:'s.acc', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'accbank',index:'s.accbank', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'email',index:'s.email', width:160, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationdt',index:'s.probationdt', width:140, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationuser',index:'s.probationuser', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'usersta',index:'s.usersta', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'ck',index:'',hidden:true ,key:true ,width:40 },
+                        {name:'compt',index:'',hidden:true ,key:true ,width:40 }
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-128+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        if(rowData.usersta=='新入职'){
+                            cl='green';
+                        }else{
+                            cl="#FF9900";
+                        }
+                        switch(rowData.ck){
+                            case 'yes':
+                                be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='入职' title='入职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                break;
+                            case 'no':
+                                be ="-";
+                                break;
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_pro:{
+                            required:true,
+                            number:true
+                        }
+                    },
+                    messages:{
+                        user_pro:{
+                            required:'请输入金额',
+                            number:'请输入正确的金额'
+                        }
+                    }
+                });
+            });
+            //新入职
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_pro').val(rowData.probationam);
+                $('#user_dept').html(rowData.olddept);
+                $('#user_area').html(rowData.oldarea);
+                $('#user_idcard').html(rowData.idcard);
+                $('#user_acc').html(rowData.acc);
+                $('#user_accbank').html(rowData.accbank);
+                $('#user_email').html(rowData.email);
+                $('#user_com').val(rowData.compt);
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var prob=$('#user_pro').val();
+                var compt =$('#user_com').val();
+                $.post('?model=salary&action=dp_join_in',{
+                    id:id,prob:prob,rand:rand,compt:compt
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        paCloseFun('hr_user_new');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 506px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            入职信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 姓名：</td>
+                        <td id="user_name"></td>
+                    </tr>
+                    <tr id="tr_user_pro">
+                        <td class="tl">入职工资：</td>
+                        <td><input id="user_pro" name="user_pro" type="text" style="display: inline;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td id="user_dept"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 地区：</td>
+                        <td id="user_area"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 身份证：</td>
+                        <td id="user_idcard"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 账号：</td>
+                        <td id="user_acc"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 开户行：</td>
+                        <td id="user_accbank"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 邮箱：</td>
+                        <td id="user_email"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newuserSub" value="提交"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                            <input type="hidden" id="user_com" value=""/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

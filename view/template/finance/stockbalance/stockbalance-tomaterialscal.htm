@@ -1,0 +1,115 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title>
+			材料出库核算
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"media="screen" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="view/template/finance/stockbalance/js/stockbalance-tomaterialscal.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				材料出库核算
+			</span>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					核算对象
+				</td>
+				<td class="form_text_right">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					<span style="color:blue">1.所有物料</span>
+				</td>
+				<td class="form_text_right">
+					<input type="radio" id="checkAll" name="checkType" checked="checked" value="1" onclick="showInput(this.value)"/>
+					该类型会核算<span class="red"> [所有] </span>的物料
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					<span style="color:blue">2.物料范围</span>
+				</td>
+				<td class="form_text_right">
+					<input type="radio" name="checkType" onclick="showInput(this.value)" value="3"/>
+					该类型会核算<span class="red"> [物料编码范围内] </span>的物料
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					物料编码 从
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="productNoBegin" class="txt" name="stockbalance[productNoBegin]" disabled="disabled"/>
+					<input type="hidden" id="productIdBegin" name="stockbalance[productIdBegin]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					到
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="productNoEnd" class="txt" name="stockbalance[productNoEnd]" disabled="disabled"/>
+					<input type="hidden" id="productIdEnd" name="stockbalance[productIdEnd]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					<span style="color:blue">3.物料编码</span>
+				</td>
+				<td class="form_text_right">
+					<input type="radio" name="checkType" onclick="showInput(this.value)" value="2"/>
+					该类型会核算<span class="red"> [对应编码] </span>的物料
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					物料编码
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="productNo" class="txt" name="stockbalance[productNo]" disabled="disabled"/>
+					<input type="hidden" id="productId" name="stockbalance[productId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="hidden" id="thisYear" name="stockbalance[thisYear]" value="{thisYear}"/>
+					<input type="hidden" id="thisMonth" name="stockbalance[thisMonth]" value="{thisMonth}"/>
+					<input type="hidden" id="checkType" value="1"/>
+
+					<input type="button" class="txt_btn_a" value="确 定" onclick="materialsCal()"/>
+					<input type="button" class="txt_btn_a" value="更新合同/赠送物料成本" onclick="materialsCostAct()"/>
+                    <input type="button" class="txt_btn_a" value="更新转资产物料单价" onclick="updateProductAssetPrice()"/>
+					<input type="button" class="txt_btn_a" value="查看核算结果" id="toResult" onclick="calDetail();" style="display:none"/>
+				</td>
+			</tr>
+			<tr id="loading" style="display:none">
+				<td colspan="2">
+					<img src="images/loading1.gif"/>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

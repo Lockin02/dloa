@@ -1,0 +1,55 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>分摊明细导入</title>
+    {#commonInclude#}
+    <script>
+        $(function(){
+            console.log();
+            $("form").submit(function(){
+                if ($("#inputExcel").val() == '') {
+                    alert('请选择附件');
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<form method="post" enctype="multipart/form-data">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">
+                <label for="inputExcel">上传文件:</label>
+            </td>
+            <td class="form_text_right">
+                <input type="file" id="inputExcel" name="inputExcel" class="txtlong"/>&nbsp;&nbsp;
+                <input type="submit" class="txt_btn_a" value=" 导 入 "/>&nbsp;&nbsp;
+                <input type="button" onclick="javascript:window.open('upfile/费用管理-分摊明细导入.xls')"
+                       class="txt_btn_a" value="下载模版">
+				<input type="hidden" name="objId" value="{objId}"/>
+				<input type="hidden" name="objType" value="{objType}"/>
+				<input type="hidden" name="change" value="{change}"/>
+                <input type="hidden" name="realImport" value="{realImport}"/>
+                <input type="hidden" name="payForBusiness" value="{payForBusiness}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_right">
+            </td>
+            <td class="form_text_right">
+                <span class="blue">
+                    注：<br/>
+                    1.数据请按模板格式导入 <br/>
+                    2.导入的数据会覆盖录入的数据<br/>
+                    3.导入的数据财务周期不能低于当前周期<br/>
+					4.如果是修改分摊明细导入，则只会增加新分摊记录
+                </span>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

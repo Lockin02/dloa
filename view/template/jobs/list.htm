@@ -1,0 +1,169 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" type="text/css" href="inc/style.css">
+<script type="text/javascript" src="js/ajax_check.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<title>职位管理</title>
+</head>
+<body>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" class="small" align="center">  
+    <tr>    
+        <td class="Big">
+            <img src="images/sys_config.gif">
+            <b><font color="#000000">职位设置</font></b><br>
+        </td>   
+    </tr>
+</table>
+<table border="0" width="60%" class="small" cellpadding="0" cellspacing="0" align="center">
+<form action="?model=jobs&action=add" method="POST" onsubmit="return check();">
+	<tr>
+		<td>职位名称：<input type="text" id="name" name="name" value="" /></td>
+		<td>所属部门：
+			<select id="deprtid" name="deprtid">
+				<option value="">请选择部门</option>
+				{dept_select}
+			</select>
+		</td>
+		<td>级别：<input type="text" size="5" id="level" name="level" value="0" /></td>
+		<td><input type="submit" value=" 添 加 " /></td>
+	</tr>
+</form>
+</td>
+</table>
+<br />
+<table border="1" width="60%" class="small" style="border-collapse: collapse" bordercolor="#B3B3FF" cellpadding="0" cellspacing="0" align="center">
+	<tr class="D3E5FA">
+		<td width="30" height="30" align="center">ID</td>
+		<td width="200" align="center">所属部门</td>
+		<td width="200" align="center">职位名称</td>
+		<td width="50" align="center">级别</td>
+		<td align="center">操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+var temp = Array();
+function check()
+{
+	if ($('#name').val()=='')
+	{
+		alert('请输入职位名称！');
+		return false;
+	}
+	if ($('#deprtid').val()=='')
+	{
+		alert('请选择部门！');
+		return false;
+	}
+}
+function edit_check(id)
+{
+	var rand=Math.random()*100000;
+	var name = $('#edit_name_'+id).val();
+	var level = $('#edit_level_'+id).val();
+	var dept_id = $('#depart_'+id).val();
+	var depart_text = $('#depart_'+id+' option:selected').text();
+	re = /\|/g;
+	depart_text = depart_text.replace(re,'');
+	re = /\─/g;
+	depart_text = depart_text.replace(re,'');
+	re = /　/g;
+	depart_text = depart_text.replace(re,'');
+	if (dept_id =='')
+	{
+		alert('请选择所属部门！');
+		return false;
+	}
+	if (name=='')
+	{
+		alert('职位名称不能为空！');
+		return false;
+	}
+	if (level=='')
+	{
+		alert('级别不能为空！');
+		return false;
+	}
+	$.post('ajax.php',{model:'jobs',action:'edit',id:id,dept_id:dept_id,name:name,level:level,rand:rand},
+	function (data)
+	{
+		if (ajax_check(data))
+		{
+			if (data=='2')
+			{
+				alert('非法ID或数据不存在！');
+			}else{
+				$('#dept_'+id).html(depart_text);
+				$('#name_'+id).html(name);
+				$('#level_'+id).html(level);
+				$('#m_'+id).html('<a href="javascript:edit('+id+')">修改职位</a> | <a id="tab_'+id+'" href="?model=jobs&action=edit_func&id='+id+'&&TB_iframe=true&modal=false&height=600&width=650" class="thickbox" title="编辑《'+name+'》职位权限">编辑权限</a> | <a href="javascript:del('+id+')">删除职位</a>');
+				tb_init('#tab_'+id+'.thickbox');
+			}
+		}
+	}
+	)
+}
+function edit(id)
+{
+	var rand=Math.random()*100000;
+	temp[id] = $('#tr_'+id).html();
+	var name = $('#name_'+id).html();
+	var level = $('#level_'+id).html();
+	var html='';
+	html +='<input type="text" id="edit_name_'+id+'" name="name" value="'+name+'" />';
+	$('#name_'+id).html(html);
+	html = '';
+	html +='<input type="text" size="5" id="edit_level_'+id+'" name="level" value="'+level+'" />';
+	$('#level_'+id).html(html);
+	html = '<input type="button" onclick="edit_check('+id+')" value=" 提交 " /> <input type="button" onclick="exit_edit('+id+')" value=" 取消 " /></form>';
+	$('#m_'+id).html(html);
+	html = '';
+	$.post('ajax.php',{model:'depart',action:'get_depart',id:id,rand:rand},
+	function (data)
+	{
+		html +='<select id="depart_'+id+'" name="depart_x">';
+		html +='<option value="">请选择部门</option>';
+		html +=unescape(data);
+		html +='</select>';
+		$('#dept_'+id).html(html);
+	}
+	)
+}
+function exit_edit(id)
+{
+	$('#tr_'+id).html(temp[id]);
+	tb_init('#tr_'+id+' td a.thickbox');
+}
+function del(id)
+{
+	var rand=Math.random()*100000;
+	if (confirm('你确定要删除该条数据吗？'))
+	{
+		if (confirm('再次确认，真的要删除该条数据吗？'))
+		{
+			$.post('ajax.php',{model:'jobs',action:'del',id:id,rand:rand},
+			function (data)
+			{
+				if (data==1)
+				{
+					$('#tr_'+id).remove();
+				}else if (data==2){
+					alert('对不起，该职位有用户正在使用，暂不能删除！');
+				}else{
+					alert('删除失败！');
+				}
+			}
+			)
+		}
+	}else{
+		return;
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看退料通知单</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script>
+			$(document).ready(function(){
+				var act=$("#viewType").val();
+				if(act!=""){
+					$("#closeBtn").hide();
+				}
+			});
+	</script>
+
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看退料通知单
+    </span>
+</div>
+<div>
+<input type="hidden" id='viewType' value="{viewType}"/>
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">退料单号</td>
+		<td class="form_text_right"  colspan="3">
+			{returnCode}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">退料类型</td>
+		<td class="form_text_right" >
+			 {returnType}
+		</td>
+		<td class="form_text_left">源单编号</td>
+		<td class="form_text_right" >
+			 {sourceCode}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right" >
+			 {supplierName}
+		</td>
+		<td class="form_text_left">退料仓库名称</td>
+		<td class="form_text_right" >
+			{stockName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">退料日期</td>
+		<td class="form_text_right" >
+			{returnDate}
+		</td>
+		<td class="form_text_left">采购员</td>
+		<td class="form_text_right" colspan="3">
+			{purchManName}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">交货地点</td>
+		<td class="form_text_right" >
+			 {deliveryPlace}
+		</td>
+		<td class="form_text_left">采购方式</td>
+		<td class="form_text_right" >
+			 {purchMode}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea class="textarea_read_blue"  readOnly>{remark}</textarea>
+		</td>
+</tr>
+</table>
+<table id="mytable" class="form_main_table">
+			<thead>
+				<tr>
+					<td colspan="10" class="form_header">退料通知单清单
+					</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th width="5%">序号</th>
+					<th>物料编号</th>
+					<th>物料名称</th>
+					<th>规格型号</th>
+					<th>单位</th>
+					<th>批次号</th>
+					<th>数量</th>
+					<th>实际入库数量</th>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+			{list}
+			</tbody>
+</table>
+<table class="form_main_table" >
+	<tr>
+		<td colspan="4" class="td_table" id="approvalView">
+			<input type="hidden" id="pid" value="{id}"/>
+			<input type="hidden" id="itemType" value="oa_purchase_delivered"/>
+		</td>
+	</tr>
+		<tr  id="closeBtn">
+				<td class="txt_btn" colspan="4">
+				   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+		</tr>
+</table>
+</div>
+</body>
+</html>

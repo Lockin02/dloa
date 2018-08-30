@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<TITLE>物料库存台账</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+<script src="webreport/CreateControl.js" type="text/javascript"></script>
+<script src="webreport/GRInstall.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<!-- 日期控件 -->
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<!-- 核心组件 -->
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="{#jsPath#}/stockreport-sfitem.js?v=20170918"></script>
+</HEAD>
+<body style="margin:0" onload="initReport()">
+<table width="100%">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+					<td class="form_text_right" width="60%">
+						期间 ：
+						<input type="text" class="txtshort Wdate" id="year" value="{year}" onfocus="WdatePicker({dateFmt:'yyyy'});"/>
+                        年
+						<input type="text" class="txtshort Wdate" id="month" value="{month}" onfocus="WdatePicker({dateFmt:'MM'});"/>
+						月
+                        &nbsp;&nbsp;至
+                        <input type="text" class="txtshort Wdate" id="nextYear" value="{nextYear}" onfocus="WdatePicker({dateFmt:'yyyy'});"/>
+                        年
+                        <input type="text" class="txtshort Wdate" id="nextMonth" value="{nextMonth}" onfocus="WdatePicker({dateFmt:'MM'});"/>
+                        月
+                        &nbsp;&nbsp;
+                        物料编码 ：
+						<input type="text" class="txtmiddle" id="productNo" value="{productNo}"/>
+                        物料名称 ：
+                        <input type="text" class="txtmiddle" id="productName" value="{productName}"/>
+						k3编码 ：
+						<input type="text" class="txtmiddle" id="k3Code" value="{k3Code}"/>
+						显示分库
+						<input type="checkbox" id="isStock" value="{isStock}"/>
+
+						<input type="button" id="searchBtn" onclick="searchBtn();" value=" 查  询 " />
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	var grfUrl = "";
+    var isStock = $("#isStock").val();
+	if(isStock == '1'){
+		grfUrl = "view/template/stock/report/stockreport_sfitemstock.grf?v=20160612";
+	}else{
+		grfUrl = "view/template/stock/report/stockreport_sfitem.grf?v=20160612";
+	}
+	//用查询显示控件展现报表
+	CreateDisplayViewerEx("100%", "92%",
+		grfUrl,"view/template/stock/report/sfitemdata.php?year="
+		+ $("#year").val()
+		+ "&month=" + $("#month").val()
+		+ "&nextYear=" + $("#nextYear").val()
+		+ "&nextMonth=" + $("#nextMonth").val()
+		+ "&productNo=" + $("#productNo").val()
+        + "&productName=" + $("#productName").val()
+		+ "&k3Code=" + $("#k3Code").val()
+		+ "&isStock=" + isStock,
+		true,
+		"<param name='RowSelection' value=false><param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+</script>
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>编辑评估方案</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-schemeproject.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/scheme-edit.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if ($('#schemeTypeCode').val()) {
+                $('#schemeTypeName').val($('#schemeTypeCode').get(0).options[$('#schemeTypeCode').get(0).selectedIndex].innerText);
+                if ($('#schemeTypeCode').val() == "xgyspg") {
+                    $("#schemePass").val("70");
+                } else {
+                    $("#schemePass").val("60");
+                }
+            }
+
+            $("#schemeTypeCode").bind('change', function () {//根据不同的方案类型，方案的合格分不同
+                if ($(this).val() == "xgyspg") {
+                    $("#schemePass").val("70");
+                } else {
+                    $("#schemePass").val("60");
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div class="main_head"><span class="main_head_title">
+编辑评估方案 </span></div>
+<form id="form1" method="post"
+      action="?model=supplierManage_scheme_scheme&action=edit" name="form1" onsubmit="return check_form(); ">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">方案编码</td>
+            <td class="form_view_right"><input type="text"
+                                               name="scheme[schemeCode]" class="txt" id="schemeCode"
+                                               value="{schemeCode}"/><span
+                    class="red">[*]</span></td>
+            <td class="form_text_left">方案名称</td>
+            <td class="form_view_right"><input type="text"
+                                               name="scheme[schemeName]" class="txt" id="schemeName"
+                                               value="{schemeName}"/><span
+                    class="red">[*]</span></td>
+        </tr>
+        <tr>
+            <td class="form_text_left">方案类型</td>
+            <td class="form_view_right">
+                <select class="select" name="scheme[schemeTypeCode]" id="schemeTypeCode"
+                        onchange="javascript:$('#schemeTypeName').val(this.options[this.selectedIndex].innerText);">
+                    {schemeTypeCode}
+                </select>
+                <input type="hidden" class="txt" name="scheme[schemeTypeName]" id="schemeTypeName"
+                       value="{schemeTypeName}"/>
+            </td>
+            <td class="form_text_left">方案总分</td>
+            <td class="form_view_right"><input type="text"
+                                               name="scheme[schemeTotal]" class="readOnlyText" id="schemeTotal"
+                                               value="{schemeTotal}" value="100" readOnly/>
+                <input type="hidden" name="scheme[schemeSum]" class="txt" id="schemeSum" value="{schemeTotal}"/></td>
+        </tr>
+        <tr>
+            <td class="form_text_left">方案合格分</td>
+            <td class="form_view_right"><input type="text"
+                                               name="scheme[schemePass]" class="readOnlyText" id="schemePass"
+                                               value="{schemePass}" value="60" readOnly/>
+            </td>
+            <td class="form_text_left">制单人</td>
+            <td class="form_view_right">
+                <input type="hidden" id="formManId" name="scheme[formManId]" value="{formManId}"/>
+                <input type="text" name="scheme[formManName]" class="readOnlyText" id="formManName"
+                       value="{formManName}" readOnly/>
+                <input type="hidden" id="formDate" name="scheme[formDate]" value="{formDate}"/>
+                <input type="hidden" id="formManDept" value="{formManDept}"/>
+                <input type="hidden" id="formManDeptId" value="{formManDeptId}"/>
+            </td>
+        </tr>
+    </table>
+
+    <div id="schemeTable"></div>
+
+    <table class="form_main_table">
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="parentId" name="scheme[id]" value="{id}"/>
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <!-- <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" /> -->
+                <input type="button" class="txt_btn_a" value=" 返 回 " onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

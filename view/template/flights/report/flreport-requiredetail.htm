@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>订票需求表</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<script src="webreport/CreateControl.js" type="text/javascript"></script>
+	<script src="webreport/GRInstall.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="view/template/flights/report/js/flreport-requiredetail.js"></script>
+</head>
+<body style="margin:0">
+<table style="width:100%;">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+				</tr>
+				<tr>
+					<td width="30%">
+						日期 ： <span><input type="text" id="thisYear" class="txtmin" value="{thisYear}" onblur="checkYear('thisYear')"/></span>年
+						<span><input type="text" id="beginMonth" class="txtmin" value="{beginMonth}" onblur="checkMonth('beginMonth')"/></span>月  至
+						<span><input type="text" id="endMonth" class="txtmin" value="{endMonth}" onblur="checkMonth('endMonth')"/></span>月
+
+						<input type="hidden" id="beginMonthHidden" value="{beginMonth}"/>
+						<input type="hidden" id="endMonthHidden" value="{endMonth}"/>
+						<input type="hidden" id="thisYearHidden" value="{thisYear}"/>
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="search();" value=" 查  询 "/>
+					</td>
+					<td>
+						<input type="hidden" id="costBelongDeptId" value="{costBelongDeptId}"/>
+						
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+	CreateDisplayViewerEx("100%", "95%",
+	"view/template/flights/report/flreport-requiredetail.grf",
+	"view/template/flights/report/flreport-requiredetail.php"
+	+ "?thisYear=" + $("#thisYear").val()
+	+ "&beginMonth=" + $("#beginMonth").val()
+	+ "&endMonth=" + $("#endMonth").val()
+	+ "&costBelongDeptId=" + $("#costBelongDeptId").val()
+	,
+	true,
+	"<param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+</script>
+</body>
+</html>

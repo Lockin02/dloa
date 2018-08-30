@@ -1,0 +1,158 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>延迟下班申请</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+</head>
+<body>
+<br />
+<form method="post" action="?action=add" onsubmit=" return check();">
+	<input type="hidden" id="userid" name="userid" value="" />
+<table class="table td_height_30" width="400" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="3">延迟下班申请</td>
+	</tr>
+	<tr>
+		<td>员工姓名：</td>
+		<td align="left" colspan="2"><input type="text" id="username" name="username" onclick="setdiv()" onfocus="setdiv();" onkeydown="keydown()" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid()")' onblur="losefouse();" value="" /><span>*</span></td>
+	</tr>
+	<tr style="display:{none}">
+		<td>延迟下班：</td>
+		<td align="left" colspan="2"><input type="radio" checked name="thatday" value="1">是 <input type="radio" name="thatday" value="0">否</td>
+	</tr>
+	<tr>
+		<td>今天日期：</td>
+		<td align="left" colspan="2">{date} （星期{week}）</td>
+	</tr>
+	<tr>
+		<td>下班时间：</td>
+		<td align="left" colspan="2"><input type="radio" checked name="work" value="20:15" />20:15 <input type="radio" name="work" value="21:30" />21:30 </td>
+	</tr>
+	<tr>
+		<td>是否用餐：</td>
+		<td align="left" colspan="2"><input type="radio" checked name="dining" value="1">是 <input type="radio" name="dining" value="0">否</td>
+	</tr>
+	<tr>
+		<td>下车站点：</td>
+		<td align="left" colspan="2">
+			<select id="station" name="station">
+				<option value="">请选择下车站点</option>
+				{station_select}
+			</select>
+		</td>
+	</tr>
+	<tr bgcolor="#D3E5FA" style="display:{none}">
+		<td align="center" colspan="3">周末值班申请</td>
+	</tr>
+	<tr style="display:{none}">
+		<td>选择日期：</td>
+		<td><input type="checkbox" name="satur" value="1">星期六{satur_date} </td>
+		<td><input type="checkbox" name="sun" value="1">星期天{sun_date}</td>
+	</tr>
+	<tr style="display:{none}">
+		<td>是否用餐：</td>
+		<td><input type="radio" checked name="satur_dining" value="1">是 <input type="radio" name="satur_dining" value="0">否</td>
+		<td><input type="radio" checked name="sun_dining" value="1">是 <input type="radio" name="sun_dining" value="0">否</td>
+	</tr>
+	<tr style="display:{none}">
+		<td>乘车站点：</td>
+		<td>
+			<select id="satur_station" name="satur_station">
+				<option value="">请选择乘车站点</option>
+				{station_select}
+			</select>
+		</td>
+		<td>
+			<select id="sun_station" name="sun_station">
+				<option value="">请选择乘车站点</option>
+				{station_select}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" style="text-align:center;"><input type="submit" value=" 提交 " /></td>
+	</tr>
+</table>
+</form>
+<div id="sug"></div>
+</body>
+<script type="text/javascript">
+	function check()
+	{
+		var overtime = $('input[type=radio][name]:checked').val();
+		if ($('#username').val()=='')
+		{
+			alert('员工姓名不能为空！');
+			$('#username').focus();
+			return false;
+		}else if ($('#userid').val()=='')
+		{
+			alert('请填写正确的员工姓名！');
+			return false;
+		}
+		
+		if (overtime == 1 && $('#station').val()=='')
+		{
+			if (!confirm('您确定不坐公司本车下班吗？'))
+			{
+				return false;
+			}
+		}
+		
+		
+		if ($('input[type=checkbox][name=satur]:checked').val() ==1 )
+		{
+			if ($('#satur_station').val()=='')
+			{
+				if (!confirm('您确定星期六不乘坐公司班车上下班吗？'))
+				{
+					return false;
+				}
+				
+			}
+		}
+		
+		if ($('input[type=checkbox][name=sun]:checked').val() ==1 )
+		{
+			if ($('#sun_station').val()=='')
+			{
+				if (!confirm('您确定星期日不乘坐公司班车上下班吗？'))
+				{
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+	}
+	
+	function get_userid()
+	{
+		var username = $('#username').val();
+		if (username!='')
+		{
+			$('#userid').val('');
+			$.post('overtime.php?model={t_model}&action=get_userid',{username:username,rand:Math.random(0,9999)},
+			function (data)
+			{
+				if (data)
+				{
+					$('#userid').val(unescape(data));
+				}else{
+					alert('您输入的姓名不正确，请重新是输入！');
+				}
+			}
+			
+			);
+		}
+	}
+	
+</script>
+</html>

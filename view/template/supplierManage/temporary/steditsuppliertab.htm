@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+   <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+     <LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+    <script type="text/javascript">
+
+
+
+$(function() {
+	var parentId = $("#parentId").val();
+	var parentCode = $("#parentCode").val();
+	var skeyStr="&skey={skey_}";
+
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=supplierManage_temporary_temporary&action=toEditSupp&parentId="+parentId+skeyStr,
+    			"?model=supplierManage_temporary_stcontact&action=toEdconlist&parentId="+parentId+"&parentCode="+parentCode+skeyStr,
+    			"?model=supplierManage_temporary_stproduct&action=stpToEdit&parentId="+parentId+skeyStr,
+    			"?model=supplierManage_temporary_stasse&action=toEditAsse&parentId="+parentId+skeyStr,
+    			"?model=file_uploadfile_management&action=supplyFile&objTable=oa_supp_lib_temp&objId="+parentId
+    			];
+	//绑定事件(待抽出来)
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body>
+
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >基本信息</a></li>
+        <li><a href="#tab2" >联系人</a></li>
+        <li><a href="#tab3" >供应产品</a></li>
+        <li><a href="#tab4" >供应商初步评价</a></li>
+        <!--
+        <li><a href="#tab5" >附件</a></li> -->
+
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "about:blank" height="650px"   frameborder= "0" >
+            </iframe>
+            <iframe class="pane"  id="iframe2"   src= "about:blank" height="650px"  scrolling="no" frameborder= "0">
+            </iframe>
+            <iframe class="pane"  id="iframe3"   src= "about:blank" height="650px"  scrolling="no" frameborder= "0">
+            </iframe>
+            <iframe class="pane"  id="iframe4"   src= "about:blank" height="650px"   frameborder= "0">
+            </iframe>
+            <iframe class="pane"  id="iframe5"   src= "about:blank" height="650px"  scrolling="no" frameborder= "0">
+            </iframe>
+    </div>
+
+	<input type="hidden" value="{parentId}" id="parentId" />
+	<input type="hidden" value="{parentCode}" id="parentCode" />
+</div>
+
+</body>
+</html>

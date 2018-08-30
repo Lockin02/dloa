@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>查看外包合同</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var id = $("#id").val();
+		var skey = "";
+		$.ajax({
+			type : "POST",
+			url : "?model=contract_outsourcing_outsourcing&action=md5RowAjax",
+			data : {
+				"id" : id
+			},
+			async : false,
+			success : function(data) {
+				skey = data;
+			}
+		});
+
+		var tabArr = [
+			"?model=contract_outsourcing_outsourcing&action=init&perm=view&id=" + id+ "&skey=" + skey,
+			"?model=finance_invother_invother&action=toHistoryForObj&obj[objType]=YFQTYD01&obj[objId]=" + id,
+			"?model=finance_payablesapply_payablesapply&action=toHistoryForObj&obj[objType]=YFRK-03&obj[objId]=" + id,
+			"?model=finance_payables_payables&action=toHistoryForObj&obj[objType]=YFRK-03&obj[objId]=" + id,
+			"?model=contract_stamp_stamp&action=viewForContract&id=" + id + "&contractType=HTGZYD-01",
+			"?model=common_changeLog&action=toChangeLogList&logObj=outsourcing&originalId=&objId=" + id + "&skey=" + skey,
+			"?model=common_changeLog&action=toSignLogList&logObj=outsourcingSign&originalId=&objId=" + id + "&skey=" + skey
+		];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				if ($(actTabId).attr("src") == "") {
+					$(actTabId).attr("src", tabArr[e]);
+				}
+			}
+		});
+	});
+</script>
+
+</head>
+<body>
+
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">合同信息</a></li>
+	<li><a href="#tab2">收票记录</a></li>
+	<li><a href="#tab3">付款申请</a></li>
+	<li><a href="#tab4">付款记录</a></li>
+	<li><a href="#tab5">盖章记录</a></li>
+	<li><a href="#tab6">变更记录</a></li>
+	<li><a href="#tab6">签收记录</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0"></iframe>
+</div>
+</div>
+
+<input type="hidden" value="{id}" id="id" />
+</body>
+</html>

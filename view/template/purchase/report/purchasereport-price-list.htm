@@ -1,0 +1,87 @@
+
+<html>
+<head>
+<title>价格表</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="view/template/purchase/report/js/purchasereport-price-list.js"></script>
+			<script>
+		$(function() {
+			$("#tableDiv").width(document.documentElement.clientWidth - 10);
+
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+			var h=document.body.clientHeight;
+			$("#bodyDiv").attr("style","height:"+(h-130)+"px;overflow-y:scroll;");
+			$("th[id^='th']").each(function(){
+				var id=$(this).attr('id');
+				var ththObj=$("td[name^='td"+id+"']");
+				if(ththObj.length > 0){
+					var w=ththObj.eq(0).width();
+					$(this).width(w);
+				}
+			});
+		});
+		</script>
+</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				采购物料价格表
+			</span>
+		</div>
+			<input type="hidden" id="logic" value="{logic}"/>
+			<input type="hidden" id="field" value="{field}"/>
+			<input type="hidden" id="relation" value="{relation}"/>
+			<input type="hidden" id="values" value="{values}"/>
+			<input type="hidden" id="endMonth" value="{endMonth}"/>
+		<table class="main_table" width="100%">
+		<thead>
+		<tr>
+			<td colspan="17" class="form_text_right">
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" id="searchBtn" onclick="clearBtn();" value=" 清 空 "/>
+			</td>
+		</tr>
+			<tr class="main_tr_header">
+                <th id="th13" width="5%">序号 </th>
+                <th id="th14" width="">物料编码/物料名称</th>
+                <th id="th15" width="10%">年度总金额 </th>
+                <th id="th12" width="100">12月</th>
+                <th id="th11" width="100">11月</th>
+                <th id="th10" width="100">10月</th>
+                <th id="th09" width="100">9月</th>
+                <th id="th08" width="100">8月</th>
+                <th id="th07" width="100">7月</th>
+                <th id="th06" width="100">6月</th>
+                <th id="th05" width="100">5月</th>
+                <th id="th04" width="100">4月</th>
+                <th id="th03" width="100">3月</th>
+                <th id="th02" width="100">2月</th>
+                <th id="th01" width="100">1月</th>
+			</tr>
+			</thead>
+    <tbody >
+    {list}
+    </tbody>
+		</table>
+<div style="visibility:hidden;">
+<form id='form2' name='form2' action="?model=purchase_report_purchasereport&action=toPriceList" method="post" onsubmit="">
+</form>
+</div>
+	</body>
+</html>

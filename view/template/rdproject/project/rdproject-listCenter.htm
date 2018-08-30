@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<TITLE>项目中心列表</TITLE>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+<script type="text/javascript" src="js/treetable/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/treetable/hashMap.js"></script>
+<script type="text/javascript" src="js/treetable/GridTree.All.js"></script>
+<script type="text/javascript" src="view/template/rdproject/project/js/rdproject-list-topTab.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="view/template/rdproject/project/js/rdproject-listCenter-GridTree.js"></script>
+<style type="text/css">
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+        //添加鼠标经过行颜色改变
+        //rowsColorChange();
+
+        //实例添加树形列表
+        newProjectTreeGrid();
+    });
+
+	$(document).ready(function() {
+	    var linkStr = '';
+	    if($('#projectType').val()=='YLXM'){
+	    	linkStr='first';
+	    }else if($('#projectType').val()=='ELXM'){
+	    	linkStr='second';
+	    }else if($('#projectType').val()=='SLXM'){
+	    	linkStr='third';
+	    }
+		//显示tab表头
+		topTabShow(arrayTop,linkStr);
+		//添加鼠标经过行颜色改变
+		rowsColorChange();
+	});
+
+</script>
+<script type="text/javascript">
+		$(function(){
+			$("select.proExaStatus").bind("change",function(){
+				var selvalue = $(this).val();
+				switch(selvalue){
+					case "all" : location='index1.php?model=rdproject_project_rdproject&action=rpPageCenter&projectType='+$('#projectType').val()+'&allStatus=1';break;
+					//查看
+					case "ondo": location='index1.php?model=rdproject_project_rdproject&action=rpPageCenter&projectType='+$('#projectType').val()+'&ondoStatus=1';break;
+					//重新分配
+					case "finished":location='index1.php?model=rdproject_project_rdproject&action=rpPageCenter&projectType='+$('#projectType').val()+'&finishedStatus=1';break;
+					default : break;
+				}
+			})
+		});
+</script>
+<script>
+	$(function(){
+		if(getQuery('allStatus',document.URL)){
+			$('.proExaStatus').val('all');
+		}
+		if(getQuery('ondoStatus',document.URL)){
+			$('.proExaStatus').val('ondo');
+		}
+		if(getQuery('finishedStatus',document.URL)){
+			$('.proExaStatus').val('finished');
+		}
+	});
+</script>
+</HEAD>
+<BODY>
+    <div class="main_head">
+        <span class="main_head_title">
+            项目列表
+        </span>
+    </div>
+
+	<div class="tab_options"></div>
+    <div class="tab_line"></div>
+    <div id="main_wraper" class="main_wraper">
+        <table class="main_table_search">
+            <tr>
+                <td>
+                	<input type="hidden" id="projectType" value="{projectType}"/>
+                	<input type="hidden" id="statusStr" value="{statusStr}"/>
+                	&nbsp;
+                    <input type="button" value=" 高级搜索 " class="txt_btn_a thickbox"
+                    alt="?model=rdproject_project_rdproject&action=rpSeachAdvanced&type=center&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800" />
+                    <input title="添加 组合" type="button" value="添加 组合" class="thickbox txt_btn_a"
+                    alt="?model=rdproject_group_rdgroup&action=toAdd&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=750"/>
+                    <input title="添加 项目" type="button" value="添加 项目" class="thickbox txt_btn_a"
+                    alt="?model=rdproject_project_rdproject&action=rpToAdd&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=750"/>
+                    <!-- input type="button" value=" 修复节点 " class="txt_btn_a thickbox"
+                    alt="?model=rdproject_project_rdproject&action=treeNodeWork&type=center&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800" /-->
+                    <input title="添加 项目" type="button" value="添加项目(不经审批)" class="thickbox txt_btn_a"
+                    alt="?model=rdproject_project_rdproject&action=toAddNoApproval&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=750"/>
+                </td>
+                <td>
+					<input title="导入任务" id="importTask" type="button" value=" 导入任务 " class="thickbox txt_btn_a"/>
+					&nbsp;
+                </td>
+                <td style="text-align:right">
+					状态 ： <select class="proExaStatus">
+						<option value="all">所有</option>
+						<option value="ondo">执行中</option>
+						<option value="finished">完成</option>
+					</select>
+                </td>
+            </tr>
+        </table>
+        <div id='newtableTree'>
+            正在装载，请等待。。。
+        </div>
+    </div>
+</BODY>
+
+</HTML>

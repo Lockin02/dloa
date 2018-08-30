@@ -1,0 +1,164 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>区域访问权限</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" href="js/jquery/chosen/css/chosen.css" type="text/css">
+
+</head>
+<body>
+<table border="0" cellspacing="0" cellpadding="0" width="98%" class="small" align="center" >
+    <tr>
+        <td>
+            <img src="images/sys_config.gif">
+            <b><font color="#000000">权限管理</font></b>
+        </td>
+    </tr>
+</table>
+<table border="0" width="98%" class="small" cellpadding="0" cellspacing="0" align="center" style="margin-bottom:3px;">
+	<tr>
+		<td>
+		按栏目显示：
+			<select id="menu_id" name="menu_id" onchange="tourl(this,'menuId');">
+				<option value="">全部栏目</option>
+				{menu_select}
+			</select>
+		详细限制：
+			<select id="areapv" name="areapv" onchange="tourl(this)">
+				<option {selected_all} value="">全部</option>
+				<option {selected_1} value="1">限制</option>
+				<option {selected_0} value="0">非限制</option>
+			</select>
+		<input type="button" alt="?model=purview&action=show_add&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700"" title="添加新权限" class="thickbox" value=" 添加新权限 " />
+		</td>
+		<td>
+			按模块显示：
+			<select id="models" name="models" onchange="tourl(this,'models');">
+				<option value="">全部模块</option>
+				{select_models}
+			</select>
+			<input style='width:50px;' type="text" id="modelName" name="modelName" value="{modelName}"/>
+			<input type="button" id='modelSearch' value="搜索" />
+			<input type="button" id='cleanSearch' value="清空"/>
+		</td>
+	</tr>
+</td>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr class="tablecontrol">
+		<td align="center" colspan="7">权限列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>栏目</td>
+		<td>权限名称</td>
+		<td>模块名称</td>
+		<td>函数名称</td>
+		<td>详细限制</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+</body>
+<script src="js/jquery/chosen/chosen.jquery.js"></script>
+<script type="text/javascript">
+function check()
+{
+	var name = $('#name').val();
+	var menuid = $('#menuid').val();
+	var model = $('#model').val();
+	var func = $('#func').val();
+	if (menuid=='') {
+		alert('请选择栏目！');
+		return false;
+	}else if (name==''){
+		alert('权限名称不能为空！');
+		return false;
+	}/*else if (model==''){
+	alert('模块名称不能为空！');
+	return false;
+	}else if (func==''){
+	alert('函数名称不能为空！');
+	return false;
+	}else*/{
+	var rand=Math.random()*100000;
+	$.post('ajax.php',{model:'purview',action:'insert',name:name,menuid:menuid,models:model,func:func,rand:rand},
+	function (data)
+	{
+		if (ajax_check(data))
+		{
+			if (data==1)
+			{
+				alert('添加成功！');
+				window.location.reload();
+			}else{
+				alert('添加失败！');
+			}
+		}
+	}
+	)
+	}
+}
+function tourl(obj,type)
+{
+	var menuid = $('#menu_id').val();
+	var models = $('#models').val();
+	var areapv = '';
+	var extPAram = "";
+	switch (type){
+		case 'menuId':
+			menuid = obj.value;
+			break;
+		case 'models':
+			models = obj.value;
+			break;
+		default:
+			areapv = obj.value;
+			break;
+	}
+	extPAram = '&menuid='+menuid+'&models='+models+'&areapv='+areapv;
+	location.href='?model=purview' + extPAram;
+}
+$(function(){
+	$('#menu_id').chosen();
+	$('#models').chosen();
+
+	//模块搜索
+	$("#modelSearch").bind("click",function(){
+		var modelName = document.getElementById('modelName').value;
+		var modelstr="";
+		if(modelName!=''){
+			$("#models option").each(function(){
+				var text = $(this).text();
+				if(text.indexOf(modelName)>=0){
+					console.log(text);
+					console.log($(this).val());
+					modelstr+=$(this).val()+",";
+				}
+			})
+		}
+		location.href='?model=purview&modelName='+modelName+"&modelstr="+modelstr;
+	})
+
+	//清空搜索
+	$("#cleanSearch").bind("click",function(){
+		$("#modelName").val('');
+		$("#modelSearch").trigger('click');
+	})
+
+	//监听回车按钮
+	$(document).keydown(function(event){
+		if(event.keyCode==13){
+			var id=document.activeElement.id;
+			if(id=='modelName'){
+				$("#modelSearch").trigger('click');
+			}
+		}
+	});
+});
+</script>
+</body>
+</html>

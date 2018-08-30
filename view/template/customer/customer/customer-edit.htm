@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>客户</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<base target="_self" />
+<link rel="stylesheet" href="css/yxstyle.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css" />
+<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen"
+	rel="stylesheet" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<!-- 主题css，可切换 -->
+<link type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js">
+</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript"
+	src="view/template/system/procity/js/cpcCmp.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript"
+	src="view/template/customer/customer/js/customer-add.js"></script>
+
+</head>
+<body>
+<form action="?model=customer_customer_customer&action=edit"
+	method="post" onsubmit="return check_all()">
+<div><input type="hidden" id="isRelated" value="{isRelated}">
+<input type="hidden" id="customerId" name="customer[id]" value="{id}" />
+<input type="hidden" name="customer[CreateUser]" value="{CreateUser}" />
+<input type="hidden" name="customer[CreateUserId]"
+	value="{CreateUserId}" />
+<table class='form_main_table'>
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title">客户基本信息
+		<span id='msg'></span>
+		</span></div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">客户编号</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[objectCode]" id="objectCode" value="{objectCode}"
+			class="readOnlyText" /></td>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Name]" id="name" value="{Name}" class="txt"
+			onchange="checkName();" /><span id="icon" class="red">[*]</span> <input
+			type="hidden" id="NameOne" value="2" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">归属区域</td>
+		<td class="form_view_right"><input type="text" class="txt"
+			name="customer[AreaName]" id="AreaName" value="{AreaName}" /><span
+			id="area" class="red">[*]</span> <input type="hidden"
+			name="customer[AreaId]" id="AreaId" value="{AreaId}" /></td>
+		<td class="form_text_left">区域负责人</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[AreaLeader]" class="readOnlyText"
+			id="customer_areaLeader" readonly="readonly" value="{AreaLeader}" />
+		<input type="hidden" name="customer[AreaLeaderId]"
+			id="customer_areaLeader_id" value="{AreaLeaderId}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">销售工程师</td>
+		<td class="form_view_right" colspan="3"><textarea cols="62"
+			id="customer_sellMan" name="customer[SellMan]" rows=2 readonly
+			class="txt_txtarea_font">{SellMan}</textarea> <input type="hidden"
+			name="customer[SellManId]" id="customer_sellMan_id"
+			value="{SellManId}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">固定电话</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Tell]" value="{Tell}" class="txt" id="Tell"
+			onchange="tell();" /></td>
+		<td class="form_text_left">手机号码</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Mobile]" value="{Mobile}" class="txt" id="Mobile"
+			onchange="mob();" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">网址</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Url]" value="{Url}" class="txt" id="Url" /></td>
+		<td class="form_text_left">电子邮箱</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Email]" value="{Email}" class="txt" id="Email"
+			onchange="email();" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">传真</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[Fax]" value="{Fax}" class="txt" id="Fax"
+			name="customer[Fax]" onchange="fax();" /></td>
+		<td class="form_text_left">邮编</td>
+		<td class="form_view_right"><input type="text"
+			name="customer[PostalCode]" value="{PostalCode}" class="txt"
+			id="PostalCode" onchange="Post();" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">国家</td>
+		<td class="form_view_right" nowrap><select class="select"
+			name="customer[CountryId]" id='country' val='{CountryId}'>
+		</select> <input type='hidden' name='customer[Country]' id='countryName' /></td>
+		<td class="form_text_left">省份</td>
+		<td class="form_view_right" nowrap><select class="select"
+			name="customer[ProvId]" id='province' val='{ProvId}'>
+		</select> <input type='hidden' name='customer[Prov]' id='provinceName' /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">城市</td>
+		<td class="form_view_right" nowrap><select class="select"
+			name="customer[CityId]" id='city' val='{CityId}'>
+		</select> <input type='hidden' name='customer[City]' id='cityName' /></td>
+		<td class="form_text_left">客户性质</td>
+		<td class="form_view_right" nowrap><select class="select"
+			name="customer[TypeOne]">
+			{TypeOne}
+		</select></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">通讯地址</td>
+		<td class="form_view_right" colspan="3"><textarea rows="4"
+			name="customer[Address]" cols="78" class="txt_txtarea_font">{Address}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right" colspan="3"><textarea rows="4"
+			name="customer[Remark]" cols="78" class="txt_txtarea_font">{Remark}</textarea></td>
+	</tr>
+	<tr>
+		<td colspan="4" class="">
+		 <input type="hidden" name="customer[UpdateDT]" value="{UpdateDT}" />
+		 <input class="txt_btn_a" type="submit" value="保存" />
+		 <input class="txt_btn_a" type="button" value="关闭" onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</div>
+</form>
+
+</body>
+</html>

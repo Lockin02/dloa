@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>修改分摊记录</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+    <link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+    <link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+
+    <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<!-- 弹窗组件 -->
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<!-- 表格组件 -->
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+
+	<!-- 树形组件 -->
+	<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+
+	<!-- 下拉组件 -->
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotext.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-other.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-init-page.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+    <script type="text/javascript" src="{#jsPath#}/other-changeCostShare.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/other-common.js"></script>
+</head>
+<body>
+<style>
+    .hide-box{display:none;}
+</style>
+<form id="form1" method="post" action="?model=contract_other_other&action=changeCostShare"
+      onsubmit="return checkFormChange();">
+	<table class="form_main_table" style="width:1220px;margin:auto;text-align:center" align="center">
+        <tr>
+            <td class="form_text_right_three" colspan="6">
+                <div class="main_head2">
+                    <span class="main_head_title">
+                        修改分摊记录
+                        <span class="red">【注：已生效的分摊记录不能修改，只能通过差值调整或者需要财务撤回才能修改。】</span>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">款项性质</td>
+            <td class="form_text_right_three">
+                <b>{fundTypeName}</b>
+                <input type="hidden" id="fundType" name="other[fundType]" value="{fundType}"/>
+            </td>
+            <td class="form_text_left_three">合同编码</td>
+            <td class="form_text_right_three" colspan="{longColspan}">
+                {orderCode}
+                <input type="hidden" id="orderCode" name="other[orderCode]" value="{orderCode}"/>
+                <input type="hidden" id="signCompanyName" name="other[signCompanyName]" value="{signCompanyName}"/>
+                <input type="hidden" id="businessBelong" name="other[businessBelong]" value="{businessBelong}"/>
+                <input type="hidden" id="businessBelongName" name="other[businessBelongName]" value="{businessBelongName}"/>
+                <input type="hidden" id="currency" name="other[currency]" value="{currency}"/>
+            </td>
+            <td class="form_text_left_three {showPayType}">付款业务类型</td>
+            <td class="form_text_right_three {showPayType}">
+                {payForBusinessName}
+                <input type="hidden" id="pagePayForBusiness" value="{payForBusiness}"/>
+                <input type="hidden" id="unSelectableIds" value="{unSelectableIds}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">合同总金额</td>
+            <td class="form_text_right_three">
+                <span class="formatMoney">{orderMoney}</span>
+                <input type="hidden" name="other[orderMoney]" value="{orderMoney}"
+                       id="orderMoney"/>
+            </td>
+            <td class="form_text_left_three">合同税率(%)</td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="other[taxPoint]" id="taxPoint" value="{taxPoint}"/>
+                <span id="taxPointNeed" class="red">[*]</span>
+            </td>
+            <td class="form_text_left_three">合同金额(不含税)</td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt formatMoney" name="other[moneyNoTax]" id="moneyNoTax"
+                       value="{moneyNoTax}"/>
+                <span id="moneyNoTaxNeed" class="red">[*]</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three"><label for="invoiceType">合同发票类型</label></td>
+            <td class="form_text_right_three">
+                <select class="txt" name="other[invoiceType]" id="invoiceType">
+                    {invoiceType}
+                </select>
+                <span id="invoiceTypeNeed" class="red">[*]</span>
+            </td>
+            <td class="form_text_left_three relativeContract" colspan="2">是否有保证金关联其他类合同</td>
+            <td class="form_text_right_three relativeContract" colspan="2">
+                <select name="other[hasRelativeContract]" id="hasRelativeContract">
+                    {hasRelativeContractOpts}
+                </select>
+                <span class="sltRelativeContractWrap">
+							<input type="text" class="txt extInput" name="other[relativeContract]" id="relativeContract" value="{relativeContract}"/>
+							<input type="hidden" name="other[relativeContractId]" id="relativeContractId" value="{relativeContractId}"/>
+                            <input type="hidden" name="other[isNeedRelativeContract]" id="isNeedRelativeContract" value="{isNeedRelativeContract}"/>
+						</span>
+                <span style="color:red" id="isNeedRelativeContractTip">[*]</span>
+            </td>
+        </tr>
+		<tr id="shareGridTr" style="display:none;">
+			<td colspan="6">
+				<div id="st" style="width:1200px;height:700px">
+					<div title="费用分摊明细" style="padding:5px">
+						<div id="shareGrid"></div>
+					</div>
+				</div>
+			</td>
+		</tr>
+        <tr>
+            <td class="txt_btn" colspan="6">
+                <input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+                <input type="hidden" id="unSltDeptFilter" value="{unSltDeptFilter}"/>
+                <input type="hidden" id="feemansForXtsSales" value="{feemansForXtsSales}"/>
+                <input type="hidden" name="other[oldId]" id="id" value="{id}"/>
+                <input type="hidden" id="changeType" value="{changeType}"/>
+                <input type="hidden" id="createId" value="{createId}"/>
+                <input type="hidden" id="saleDeptId" value="{saleDeptId}"/>
+                <input type="hidden" id="deptId" value="{deptId}"/>
+                <input type="hidden" id="principalName" value="{principalName}"/>
+                <input type="hidden" id="principalId" value="{principalId}"/>
+                <input type="submit" class="txt_btn_a" value="确认修改"/>
+                <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

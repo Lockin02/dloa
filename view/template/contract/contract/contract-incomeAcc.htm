@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+	<link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<!-- 主题css，可切换 -->
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/topoptions.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+	   $(function(){
+	      $('select[name="acc[incomeAccounting]"] option').each(function() {
+			if( $(this).val() == $("#incomeAccounting").val() ){
+				$(this).attr("selected","selected'");
+			}
+		});
+	   })
+
+	   function sub(){
+	      var incomeAcc = $("#incomeAcc").val();
+	      if(incomeAcc == ''){
+	         alert("请选择收入核算方式")
+	         return false;
+	      }
+	         return true;
+	   }
+	</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=contract_contract_contract&action=incomeAccEdit" name="form1" onsubmit="return sub()">
+<table class="form_main_table">
+    <tr>
+        <td colspan="4">
+           <b>请确认收入核算方式</b>
+        </td>
+    </tr>
+	<tr>
+        <td class="form_text_left">合同名称</td>
+        <td class="form_text_right" >
+            {contractName}
+        </td>
+        <td class="form_text_left">合同编号</td>
+        <td class="form_text_right" >
+            {contractCode}
+        </td>
+     </tr>
+     <tr>
+        <td class="form_text_left">收入核算方式</td>
+        <td class="form_text_right" colspan="3">
+            <input type="hidden" id="incomeAccounting" value="{incomeAccounting}"/>
+            <input type="hidden" name="acc[contractId]" value="{id}"/>
+            <select class="select" name="acc[incomeAccounting]" id="incomeAcc">
+               <option value="">...请选择...</option>
+               <option value="AFPQRSR">按发票确认收入</option>
+               <option value="AJDQRSR">按进度确认收入</option>
+               <option value="HEFS">混合方式</option>
+            </select>
+        </td>
+     </tr>
+     <tr>
+		<td class="txt_btn" colspan="4">
+		<input type="submit" class="txt_btn_a" value=" 确  认 " />
+		<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

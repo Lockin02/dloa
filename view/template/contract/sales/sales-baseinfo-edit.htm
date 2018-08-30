@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>销售合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+<script type="text/javascript" src="js/jquery.js">
+		</script>
+<script type="text/javascript" src="js/util.js">
+		</script>
+<script type="text/javascript" src="js/validate.js">
+		</script>
+<script src="js/DatePicker/WdatePicker.js" type="text/javascript">
+		</script>
+<script type="text/javascript" src="js/common/businesspage.js">
+		</script>
+<script type="text/javascript" src="view/template/contract/sales/js/sales-baseinfoedit.js"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js">
+		</script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js">
+		</script>
+<script type="text/javascript" src="swfupload/fileprogress.js">
+		</script>
+<script type="text/javascript" src="swfupload/handlers.js">
+		</script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType": "oa_contract_sales",
+					"serviceId": "{id}",
+					"serviceNo": "{contNumber}"
+				});
+			});
+		</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+<table>
+	<tr>
+		<td><img src="images/sys_config.gif"> <b> 销售合同：<font color="blue">{contNumber}</font><br />
+		执行人：<font color="blue">{executorName}</font> </b><br />
+		<input type="hidden" id="id" value="{id}">
+		</td>
+	</tr>
+</table>
+
+<form action="?model=contract_sales_sales&action=infoedit" method="post" name="form1"
+		enctype="multipart/form-data"  onkeypress="javascript:return NoSubmit(event);">
+<table width='1200' class='form_main_table' align="center">
+	<tr>
+		<td class="form_text_left">鼎利合同号</td>
+		<td class="form_text_right">
+			<input type="hidden" name="sales[contNumber]" id="contNumber" value="{contNumber}">
+			<input type="text" name="sales[formalNo]" id="formalNo" value="{formalNo}" class="txt" onblur="check_code(this.value);" >
+		<span id="_formalNo" class="red">[*]</span></td>
+		<td class="form_text_left">临时合同号</td>
+		<td class="form_text_right">
+		<input type="text" name="sales[temporaryNo]" id="temporaryNo" value="{temporaryNo}" class="txt" onblur="check_codeT(this.value);">
+		<span id="_temporaryNo"> </span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right" colspan="3">
+		<input class="txt"　type="text"　name="sales[contName]" id="contName" value="{contName}" size="70">
+		<span class="red" id="_contName"> [*] </span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left" width="15%">合同金额</td>
+		<td class="form_text_right formatMoney">
+		   {money}
+	    </td>
+		<td class="form_text_left" width="15%">发票类型</td>
+		<td class="form_text_right">
+			<select class="select" name="sales[invoiceType]" id="invoiceType">
+				{invoiceType}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交货日期</td>
+		<td class="form_text_right"><input type="text"
+			name="sales[deliveryDate]" id="deliveryDate" value="{deliveryDate}"
+			class="txt" onfocus="WdatePicker()"> <span class="red"
+			id="_deliveryDate"> [*] </span></td>
+		<td class="form_text_left">合同负责人</td>
+		<td class="form_text_right"><input type="hidden"
+			name="sales[principalId]" id="principalId" value="{principalId}">
+		<input type="text" class="txt" name="sales[principalName]"
+			id="principalName" readonly value="{principalName}"> <input
+			type="button" class="txt_btn_a" value="选 择"
+			onClick="loadOrgWindow('principalId','principalName')" title="选择人员"
+			name="button"> <input type="button" class="txt_btn_a"
+			value="清 空" title="清空人员"
+			onclick="clearOrgInfo('principalId','principalName')"> <span
+			class="red" id="_money"> [*] </span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">
+		<input type="text" name="sales[customerName]" id="customerName" class="txt" maxlength="100" value="{customerName}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户联系人</td>
+		<td class="form_text_right"><input type="text"
+			name="sales[customerLinkman]" id="customerLinkman" class="txt"
+			maxlength="100" value="{customerLinkman}" /></td>
+		<td class="form_text_left">客户合同号</td>
+		<td class="form_text_right"><input type="text"
+			name="sales[customerContNum]" id="customerContNum" class="txt"
+			maxlength="100" value="{customerContNum}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">电话</td>
+		<td class="form_text_right"><input type="text"
+			name="sales[customerTel]" id="customerTel" class="txt" maxlength="50"
+			value="{customerTel}" /></td>
+		<td class="form_text_left">邮箱</td>
+		<td class="form_text_right"><input type="text"
+			name="sales[customerEmail]" id="customerEmail" class="txt"
+			maxlength="50" value="{customerEmail}"></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">收货地址</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="txt_txtarea_font" name="sales[address]" id="address"
+			style="width:100%">{address}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_header" colspan="4"><font> 保修条款 </font> <img
+			src="images/verpic_open.gif" onClick="dis('gua')" title="缩放"></td>
+	</tr>
+	<tr id="gua">
+		<td colspan="4">
+			<textarea name="sales[warrantyClause]"id="warrantyClause" rows="5" style="width: 100%">{warrantyClause}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_header" colspan="4"><font> 售后要求 </font> <img
+			src="images/verpic_open.gif" onClick="dis('aft')" title="缩放"></td>
+	</tr>
+	<tr id="aft">
+		<td colspan="4">
+			<textarea style="width: 100%" name="sales[afterService]" id="afterService" rows="5">{afterService}</textarea>
+		</td>
+	</tr>
+
+	<tr>
+		<td nowrap colspan="4">合同附件 &nbsp;
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"> </span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td align="center" nowrap class="main_foot_wraper" colspan="4"
+			align="left">签约状态： &nbsp;{signStatus}</td>
+	</tr>
+
+	<tr>
+		<td class="" colspan="4">
+			<input type="hidden" name="sales[version]" id="version" value="{version}" />
+			<input type="hidden" name="sales[id]" id="contractId" value="{id}">
+			<input class="txt_btn_a" type="submit" value="保  存"">
+			<input class="txt_btn_a" type="button" value="返  回" onclick="self.parent.tb_remove();"></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

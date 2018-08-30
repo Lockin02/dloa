@@ -1,0 +1,223 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+
+<head>
+
+	<title></title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"> </script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+
+  	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	function confirm() {
+			//合同类型
+			var o=new Array()
+			var j=0
+			var obj=document.getElementsByName("orderType")
+			for (var i=0;i<=obj.length-1;i++){
+				if (obj[i].checked){o[j]=obj[i].value;j++}
+			}
+
+		var beginDT=$("#beginDT").val();
+		var endDT=$("#endDT").val();
+
+		var orderType = o;//合同类型
+		var area=$("#areaName").val();//所属区域
+        var principal=$("#principal").val();// 合同负责人
+        var customerName = $("#customerName").val() //客户名称
+        var customerType = $("#customerType").val() //客户类型
+        var complete = $("#complete").val() // 是否完工
+
+         if(beginDT > endDT){
+		    alert("开始时间不能大于结束时间")
+		}else{
+		     this.location = "?model=projectmanagent_orderreport_orderreport&action=orderDetailReport"
+							+"&beginDT="+beginDT
+							+"&endDT="+endDT
+							+"&orderType="+orderType
+							+"&area="+area
+						    +"&principal="+principal
+						    +"&customerName="+customerName
+						    +"&customerType="+customerType
+						    +"&complete="+complete;
+		}
+
+	}
+
+
+  //年份
+ //$(function() {
+  //var MyDate = new Date();
+  //var value = MyDate.getFullYear();
+  //for (i=value-5;i<=value+5;i++){
+  //  $("#year").append("<option value='"+i+"'>"+i+"</option>");
+  //}
+  // var checkIndex=$("#year").get(0).selectedIndex;
+	//$("#year").get(0).selectedIndex = 5;
+  //});
+
+
+  $(function() {
+    //负责人
+    $("#principal").yxselect_user({
+				hiddenId : 'principalId'
+			});
+    //区域
+	$("#areaName").yxcombogrid_area({
+		hiddenId : 'areaPrincipalId',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+					$("#areaCode").val(data.id);
+				}
+			}
+		}
+	});
+});
+
+//客户
+
+$(function() {
+	$("#customerName").yxcombogrid_customer({
+		hiddenId : 'customerId',
+		gridOptions : {
+			showcheckbox : false
+			// param :{"contid":$('#contractId').val()},
+		}
+	})
+	});
+//客户类型
+$(function() {
+	// 客户类型
+	customerTypeArr = getData('KHLX');
+	addDataToSelect(customerTypeArr, 'customerType');
+	// 合同属性
+	orderNatureCodeArr = getData('XSHTSX');
+	addDataToSelect(orderNatureCodeArr, 'orderNature');
+
+    //获取第一天
+
+   var myDate = new Date();
+    var year = myDate.getFullYear();
+    var month = myDate.getMonth()+1;
+    if (month<10){
+        month = "0"+month;
+    }
+    var firstDay = year+"-"+month+"-"+"01";
+    $("#beginDT").val(firstDay);
+     //获取最后一天
+    myDate = new Date(year,month,0);
+    var lastDay = year+"-"+month+"-"+myDate.getDate();
+    $("#endDT").val(lastDay);
+
+});
+</script>
+
+
+</head>
+
+
+<body>
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">年份</td>
+		<td class="form_text_right">
+            <input type="text" id="beginDT" onfocus="WdatePicker()" />  ~
+            <input type="text" id="endDT" onfocus="WdatePicker()" />
+	</tr>
+	<tr>
+	    <td class="form_text_left">合同类型</td>
+	    <td class="form_text_right">
+			<input type="checkbox" name="orderType" value="销售合同" id="type01"  />
+			<label for="type01"> 销售合同</label>
+			<input type="checkbox" name="orderType" value="服务合同" id="type02" />
+			<label for="type02"> 服务合同</label>
+            <input type="checkbox" name="orderType" value="租赁合同" id="type03" />
+			<label for="type03"> 租赁合同</label>
+			<input type="checkbox" name="orderType" value="研发合同" id="type04" />
+			<label for="type04"> 研发合同</label>
+        </td>
+    </tr>
+	<tr>
+	    <td class="form_text_left">所属区域</td>
+	    <td class="form_text_right">
+	       <input type="text"  class="txt" id="areaName" />
+           <input type="hidden"  id="areaCode" />
+        </td>
+    </tr>
+    <tr>
+	    <td class="form_text_left">合同负责人</td>
+	    <td class="form_text_right">
+	       <input type="text" class="txt" id="principal" />
+	       <input type="hidden" id="principalId" />
+	    </td>
+    </tr>
+    <tr>
+	    <td class="form_text_left">客户名称</td>
+	    <td class="form_text_right">
+	       <input type="text" class="txt" id="customerName" />
+	       <input type="hidden" id="customerId" />
+	    </td>
+    </tr>
+     <tr>
+         <td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+			<select class="select" id="customerType">
+			   <option></option>
+			</select>
+         </td>
+     </tr>
+     <tr>
+          <td class="form_text_left">是否完工</td>
+		<td class="form_text_right">
+			<select class="select" name="complete" id="complete">
+			   <option></option>
+			   <option value="是">是</option>
+			   <option value="否">否</option>
+	 		</select>
+         </td>
+     </tr>
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+		   <input  type="button" class="txt_btn_a" value="关   闭 " onclick="history.go(-1)" />
+		</td>
+</tr>
+
+</table>
+
+</body>
+
+</html>

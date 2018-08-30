@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>新增物料</title>
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+</script>
+<script type="text/javascript"
+	src="view/template/stock/productinfo/js/producttype-info-combotree.js"></script>
+<script type="text/javascript"
+	src="view/template/stock/productinfo/js/productinfo-stockinfo-combogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript"
+	src="view/template/stock/productinfo/js/productinfo-product-combogrid.js"></script>
+<script type="text/javascript" src="view/template/stock/productinfo/js/productinfoAdd-add.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+<title>新增物料</title>
+<style>
+legend {
+	color:#06c;
+	font-weight:800; 
+	background:#fff;
+	border:#b6b6b6 solid 1px;
+	padding:3px 6px;
+} 
+fieldset {
+	padding:3px;
+	margin:3px;
+	color:#333; 
+	border:#8F8F8F double 1px;
+} 
+</style>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_stock_product_info_temp"//业务模块编码，一般取表名
+	});
+}); 
+
+</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">
+物料信息 </span></div>
+<form id="form1" method="post" onsubmit="return checkSubmit(); ">
+  <fieldset> 
+  <legend><b>基本信息<img src="images/icon/info_up.gif" id="baseImg" onclick="baseControl()"></img></b></legend> 
+	<table  id="baseinfo" class="form_main_table" >
+	<tr>
+		<td class="form_text_left" style="color:blue">物料类型</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" readOnly id="proType" name="productinfoAdd[proType]" value="{proType}" />
+			<input type="hidden" id="proTypeId" name="productinfoAdd[proTypeId]" value="{proTypeId}" />
+		</td>
+
+		<td class="form_text_left">状态</td>
+		<td class="form_text_right"><select class="select"
+			name="productinfoAdd[ext1]">
+			{ext1}
+		</select></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left" style="color:blue">物料编码</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="productCode" name="productinfoAdd[productCode]" value="{productCode}" />
+			
+			<div id="productCodeTip"></div>
+		</td>
+		<td class="form_text_left" style="color:blue">物料名称</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="productName" name="productinfoAdd[productName]" class="required" />
+			
+			<div id="productNameTip"></div>
+		</td>
+
+	</tr>
+
+		<tr>
+		<td class="form_text_left" style="color:blue">型号/版本号</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			id="pattern" name="productinfoAdd[pattern]" />
+			</td>
+		<td class="form_text_left" style="color:blue">保修期(月)</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="warranty" name="productinfoAdd[warranty]" />
+			
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交货周期(天)</td>
+		<td class="form_text_right">
+			<input type="text" class="txt"	id="arrivalPeriod" name="productinfoAdd[arrivalPeriod]" value="{arrivalPeriod}" />
+		</td>
+		<td class="form_text_left" style="color:blue">采购周期(天)</td>
+		<td class="form_text_right">
+			<input type="text" class="txt"	id="purchPeriod" name="productinfoAdd[purchPeriod]" />
+			
+			<div id="purchPeriodTip"></div>
+		</td>		
+
+	</tr>
+<tr>
+		<td class="form_text_left">采购负责人</td>
+		<td class="form_text_right">
+			<input type="hidden" id="purchUserCode" name="productinfoAdd[purchUserCode]"  readOnly="readonly" />
+			<input type="text" class="txt" id="purchUserName" name="productinfoAdd[purchUserName]" readOnly="readonly"  />
+		</td>
+		
+		<td class="form_text_left">物料属性</td>
+		<td class="form_text_right">
+			<select class="select"	name="productinfoAdd[properties]">
+				{properties}
+			</select>
+		</td>
+</tr>
+	<tr>
+		<!--
+		<td class="form_text_left">单价</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			id="priCost" name="productinfoAdd[priCost]"
+			onkeypress="return event.keyCode&gt;=48&amp;&amp;event.keyCode&lt;=57">
+		</td>
+	 -->
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right">
+			<select class="select"	name="productinfoAdd[unitName]">
+			{unitName}
+			</select>
+		</td>
+		<td class="form_text_left">品牌</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="brand" name="productinfoAdd[brand]" />
+		</td>		
+	</tr>
+	<tr>
+		<td class="form_text_left">封装</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" class="txt" id="packageInfo" style="width:600px;" name="productinfoAdd[packageInfo]" />
+		</td>		
+	</tr>	
+	<tr>
+		<td class="form_text_left" style="color:blue">K3编码</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="ext2" name="productinfoAdd[ext2]" /><div id="ext2Tip"></div></td>
+		<td class="form_text_left" style="color:blue">物料成本</td>
+		<td class="form_text_right">
+			<input type="text" id="priCost" class="txt" name="productinfoAdd[priCost]" />
+		</td>
+	</tr>
+</table>
+</fieldset>
+<fieldset> 
+<legend><b>扩展信息<img src="images/icon/info_right.gif" id="extImg" onclick="extControl()"></img></b></legend> 			
+<table class="form_main_table" id="extinfo"  style="display: none;">	
+	<tr>
+		<td class="form_text_left">辅助单位</td>
+		<td class="form_text_right">
+		<select class="select"	name="productinfoAdd[aidUnit]">
+			{aidUnit}
+		</select>
+		</td>
+		<td class="form_text_left">换算率</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="productinfoAdd[converRate]" /></td>
+	</tr>	
+	<tr>
+		<td class="form_text_left">替代物料编码</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="changeProductCode" name="productinfoAdd[changeProductCode]" />
+			<input type="hidden" id="changeProductId" name="productinfoAdd[changeProductId]" />
+		</td>
+		<td class="form_text_left">替代物料名称</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="changeProductName" name="productinfoAdd[changeProductName]"  />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">最小包装量</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="leastPackNum" name="productinfoAdd[leastPackNum]" />
+		</td>
+		<td class="form_text_left">最小订单量</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="leastOrderNum" name="productinfoAdd[leastOrderNum]"  />
+		</td>
+	</tr>	
+	<tr>
+		<td class="form_text_left">材料</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="material" name="productinfoAdd[material]" />
+		</td>
+		<td class="form_text_left">颜色</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="color" name="productinfoAdd[color]"  />
+		</td>
+	</tr>
+
+	<tr>
+
+		<td class="form_text_left">质检方式</td>
+		<td class="form_text_right" ><select class="select"
+			name="productinfoAdd[checkType]">
+			{checkType}
+		</select></td>	
+		<td class="form_text_left">归属类型</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="productinfoAdd[ext3]" /></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">会计科目代码</td>
+		<td class="form_text_right">
+		<select class="select"	name="productinfoAdd[accountingCode]">
+			{accountingCode}
+		</select>
+		</td>
+		<td class="form_text_left">统计类型</td>
+		<td class="form_text_right">
+			<select id="statType" class="select" name="productinfoAdd[statType]" >{statType}
+			</select>
+		</td>
+	</tr>
+
+<!--
+	<tr>
+		<td class="form_text_left">默认仓库代码</td>
+		<td class="form_text_right"><input type="text" id="stockCode"
+			class="txt" name="productinfoAdd[stockCode]" /> <input type="hidden"
+			id="stockId" name="productinfoAdd[stockId]" /></td>
+		<td class="form_text_left">默认仓库名称</td>
+		<td class="form_text_right"><input type="text" id="stockName"
+			class="readOnlyTxtNormal" name="productinfoAdd[stockName]" /></td>
+	</tr>
+ -->
+	<tr>
+
+		<td class="form_text_left">加密配置</td>
+		<td class="form_text_right">
+			<input type="checkbox" id="encrypt" class="" name="productinfoAdd[encrypt]" />
+		</td>
+		<td class="form_text_left">工程可用</td>
+		<td class="form_text_right">
+			<input type="checkbox" class="" name="productinfoAdd[esmCanUse]" value="1"/>
+		</td>
+	</tr>
+
+				
+	<tr>
+		<td class="form_text_left">厂家信息</td>
+		<td class="form_text_right" colspan="3"><input type="text"
+			class="txt" style="width:600px;" name="productinfoAdd[supplier]" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关闭原因</td>
+		<td class="form_text_right" colspan="3"><input type="text"
+			class="txt" style="width:600px;" name="productinfoAdd[closeReson]" /></td>
+	</tr>	
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="txt_txtarea_font" id="remark" style="width:600px;" name="productinfoAdd[remark]"></textarea>
+		</td>
+	</tr>
+	<tr>
+	<td class="form_text_left">附件</td>
+		<td class="form_text_right">	
+		<div class="upload">
+		<div  class="upload" id="fsUploadProgress"></div>
+			<div class="upload">
+				<span id="swfupload"></span> 
+		 		<input id="btnCancel" type="button"
+					value="中止上传" onclick="cancelQueue(uploadfile);"
+					disabled="disabled" /> <br />
+			</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+		</td>
+	</tr>
+</table>
+</fieldset>
+<table id="itemConfigTable" class='form_main_table'>
+	<tr>
+		<td colspan="5" align="left" class="form_header">&nbsp; 物料配置信息:&nbsp;</td>
+	</tr>
+	<tr class="main_tr_header">
+	    <th>
+			<img  src="images/add_item.png" align="absmiddle" onclick="addConfig();"  title="新增物料配置" alt="新增物料配置" />
+	        <input type="hidden" id="configCount" value="0"/>
+		</th>
+		<th>序号</th>
+		<th>配置名称</th>
+		<th>数量</th>
+		<th>说明</th>
+	</tr>
+	<tbody id="itemConfigBody">
+	</tbody>
+</table>
+<table id="itemAccessTable" class='form_main_table'>
+	<tr>
+		<td colspan="7" align="left" class="form_header">&nbsp; 物料配件清单:&nbsp;</td>
+	</tr>
+	<tr class="main_tr_header">
+	    <th>
+			<img  src="images/add_item.png" align="absmiddle" onclick="addAccess();"  title="新增物料配件" alt="新增物料配件" />
+	        <input type="hidden" id="accessCount" value="{accessCount}"/>
+		</th>
+		<th>序号</th>
+		<th>配件编码</th>
+		<th>配件名称</th>
+		<th>型号/版本号</th>
+		<th>数量</th>
+		<th>说明</th>
+	</tr>
+	<tbody id="itemAccessBody">
+		{itemAccessBody}
+	</tbody>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td colspan="5">
+			<input type="submit" class="txt_btn_a" id="submitSave" value=" 保 存 " />
+			<input type="submit" class="txt_btn_a" id="submitStatus" value=" 提 交 " />
+			<input type="button" class="txt_btn_a" value=" 返 回 " onclick="self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

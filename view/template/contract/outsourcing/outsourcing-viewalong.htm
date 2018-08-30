@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看外包合同</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<script type="text/javascript" src="{#jsPath#}/outsourcing-projectrental.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/outsourcing-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/outsourcing-view.js" ></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script>
+		$(document).ready(function() {
+			var isNeedPayapplyObj = $("#isNeedPayapply");
+			if(isNeedPayapplyObj.val() == 1){
+				isNeedPayapplyObj.attr('checked',true);
+				$(".payapplyInfo").show();
+			};
+		});
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看外包合同信息
+    </span>
+</div>
+<table class="form_main_table">
+    <tr>
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>基 本 信 息</b></legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">鼎利合同号</td>
+						<td class="form_text_right_three">
+							{orderCode}
+						</td>
+						<td class="form_text_left_three">合同名称</td>
+						<td class="form_text_right_three">
+							{orderName}
+						</td>
+						<td class="form_text_left_three">外包合同号</td>
+						<td class="form_text_right_three">
+							{outContractCode}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">签约公司</td>
+						<td class="form_text_right_three">
+							{signCompanyName}
+						</td>
+						<td class="form_text_left_three">公司省份</td>
+						<td class="form_text_right_three">
+							{proName}
+						</td>
+						<td class="form_text_left_three">合同负责人</td>
+						<td class="form_text_right_three">
+							{principalName}
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">合同金额</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{orderMoney}</span>
+						</td>
+						<td class="form_text_left_three">签约日期</td>
+						<td class="form_text_right_three">
+							{signDate}
+						</td>
+						<td class="form_text_left_three">部门名称</td>
+						<td class="form_text_right_three">
+							{deptName}
+						</td>
+				    </tr>
+				    <tr>
+				   		<td class="form_text_left_three">开始日期</td>
+						<td class="form_text_right_three">
+							{beginDate}
+						</td>
+						<td class="form_text_left_three">结束日期</td>
+						<td class="form_text_right_three">
+							{endDate}
+						</td>
+						<td class="form_text_left_three">外包方式</td>
+						<td class="form_text_right_three">
+							{outsourcingName}
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">外包性质</td>
+						<td class="form_text_right_three">
+							{outsourceTypeName}
+						</td>
+						<td class="form_text_left_three">项目编号</td>
+						<td class="form_text_right_three">
+							{projectCode}
+						</td>
+						<td class="form_text_left_three">项目名称</td>
+						<td class="form_text_right_three">
+							{projectName}
+						</td>
+				    </tr>
+				    <tr>
+				   		<td class="form_text_left_three">联 系 人</td>
+						<td class="form_text_right_three">
+							{linkman}
+						</td>
+						<td class="form_text_left_three">联系电话</td>
+						<td class="form_text_right_three">
+							{phone}
+						</td>
+						<td class="form_text_left_three">付款方式</td>
+						<td class="form_text_right_three">
+							{payTypeName}
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">需要盖章</td>
+						<td class="form_text_right_three">
+							{isNeedStamp}
+						</td>
+						<td class="form_text_left_three">盖章类型</td>
+						<td class="form_text_right_three">
+							{stampType}
+						</td>
+						<td class="form_text_left_three">已经盖章</td>
+						<td class="form_text_right_three">
+							{isStamp}
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">申 请 人</td>
+						<td class="form_text_right_three">
+							{createName}
+						</td>
+						<td class="form_text_left_three">录入日期</td>
+						<td class="form_text_right_three">
+							{createDate}
+						</td>
+						<td class="form_text_left_three">增值税发票税点</td>
+						<td class="form_text_right_three">
+							{addInvoiceCount}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">归属公司</td>
+						<td class="form_text_right_three" colspan="5">
+							 {businessBelongName}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">联系地址</td>
+						<td class="form_text_right_three" colspan="5">
+							<textarea class="textarea_read" readonly="readonly" rows="5">{address}</textarea>
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">付款条件</td>
+						<td class="form_text_right_three" colspan="5">
+							<textarea class="textarea_read" readonly="readonly" rows="5">{payCondition}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">内容描述</td>
+						<td class="form_text_right_three" colspan="5">
+							<textarea class="textarea_read" readonly="readonly" rows="5">{description}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">备注说明</td>
+						<td class="form_text_right_three" colspan="5">
+							<textarea class="textarea_read" readonly="readonly" rows="5">{outRemark}</textarea>
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+						<td class="form_text_right_three" colspan="5">
+							<div class="upload">
+								<div id="uploadfileList" class="upload">{file}</div>
+							</div>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+    </tr>
+    <tr>
+		<td colspan="6"></td>
+    </tr>
+    <tr style="display:none" id="projectrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>整 包/分 包</b></legend>
+				<div id="projectRentalTb"></div>
+			</fieldset>
+		</td>
+    </tr>
+    <tr style="display:none" id="personrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>人 员 租 赁</b></legend>
+				<div id="itemTable"></div>
+			</fieldset>
+		</td>
+    </tr>
+    <tr>
+		<td colspan="6"></td>
+    </tr>
+    <tr>
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>付 款 信 息</b></legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">申请付款</td>
+						<td class="form_text_right" colspan="5">
+							<input type="checkbox" id="isNeedPayapply" disabled="disabled" value="{isNeedPayapply}" onclick="showPayapplyInfo(this)"/>
+						</td>
+				    </tr>
+					<tr class="payapplyInfo" style="display:none">
+						<td class="form_text_left_three">申请金额</td>
+						<td class="form_text_right_three" >
+							 <span class="formatMoney">{applyMoney}</span>
+						</td>
+						<td class="form_text_left_three">期望付款日期</td>
+						<td class="form_text_right_three" >
+							{formDate}
+						</td>
+						<td class="form_text_left_three">费用归属部门</td>
+						<td class="form_text_right_three" >
+							{feeDeptName}
+						</td>
+					</tr>
+					<tr class="payapplyInfo" style="display:none">
+						<td class="form_text_left_three">收款银行</td>
+						<td class="form_text_right_three" >
+							{bank}
+						</td>
+						<td class="form_text_left_three">收款账号</td>
+						<td class="form_text_right_three" >
+							{account}
+						</td>
+						<td class="form_text_left_three">付款类型</td>
+						<td class="form_text_right_three">
+							{payFor}
+						</td>
+					</tr>
+					<tr class="payapplyInfo" style="display:none">
+						<td class="form_text_left_three">结算方式</td>
+						<td class="form_text_right_three">
+							{payType}
+						</td>
+						<td class="form_text_left_three">款项用途</td>
+						<td class="form_text_right_three">
+							{remark}
+						</td>
+						<td class="form_text_left_three">付款币种</td>
+						<td class="form_text_right_three">
+							{currency}
+						</td>
+					</tr>
+					<tr class="payapplyInfo" style="display:none">
+						<td class="form_text_left_three">是否开据发票</td>
+						<td class="form_text_right_three">
+							{isInvoice}
+						</td>
+						<td class="form_text_left_three">是否已付款</td>
+						<td class="form_text_right_three" >
+							<span style="color:red">{isEntrust}</span>
+						</td>
+						<td class="form_text_left_three">汇入地点</td>
+						<td class="form_text_right_three" >
+							{place}
+						</td>
+					</tr>
+					<tr class="payapplyInfo" style="display:none">
+						<td class="form_text_left_three">款项说明</td>
+						<td class="form_text_right_three" colspan="5">
+							{payDesc}
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+    </tr>
+    <tr><td colspan="6"></td></tr>
+	<tr>
+		<td class="innerTd" colspan="6">
+			<table class="form_in_table">
+				<tr>
+					<td class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{id}"/>
+						<input type="hidden" id="itemType" value="oa_sale_outsourcing"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" id="id" value="{id}" />
+			<input type="hidden" id="outsourcing" value="{outsourcing}" />
+			<input type="hidden" id="hideBtn" value="{hideBtn}" />
+	      	<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</body>
+</html>

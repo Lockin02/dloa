@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑生产申请单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/produceapply-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/produceapply-edit-department.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=produce_apply_produceapply&action=editDepartment" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							编辑生产申请单
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left blue">源单类型</td>
+				<td class="form_text_right">
+					<select class="txt" id="relDocTypeCode" name="produceapply[relDocTypeCode]">
+						{relDocTypeCode}
+					</select>
+				</td>
+				<td class="form_text_left">期望交货日期</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="hopeDeliveryDate" onfocus="WdatePicker()" onchange="setPlanEndDate(this);" readOnly name="produceapply[hopeDeliveryDate]" value="{hopeDeliveryDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left blue">源单编号</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="relDocCode" name="produceapply[relDocCode]" value="{relDocCode}"/>
+					<input type="hidden" id="relDocId" name="produceapply[relDocId]" value="{relDocId}"/>
+				</td>
+				<td class="form_text_left">项目名称</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="projectName" name="produceapply[projectName]" value="{projectName}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">下单人</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="applyUserName" name="produceapply[applyUserName]" readOnly value="{applyUserName}"/>
+					<input type="hidden" id="applyUserId" name="produceapply[applyUserId]" value="{applyUserId}"/>
+				</td>
+				<td class="form_text_left">下单日期</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="applyDate" readOnly name="produceapply[applyDate]" value="{applyDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备  注</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="txt_txtarea_font" style="width:700px;" id="remark" name="produceapply[remark]">{remark}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_right" colspan="4">
+					<div id="items"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="id" name="produceapply[id]" value="{id}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

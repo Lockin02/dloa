@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script>
+   $(function() {
+	temp = $('#productNumber').val();
+	for(var i=1;i<=temp;i++){
+	$("#productNo").yxcombogrid_product({
+		hiddenId : 'productId',
+		gridOptions : {
+			showcheckbox : false,
+				event : {
+					'row_dblclick' : function(i){
+						return function(e, row, data) {
+							$("#productName").val(data.productName);
+							$("#productModel").val(data.pattern);
+							$("#unitName").val(data.unitName);
+                            $("#warrantyPeriod").val(data.warranty);
+						}
+					}(i)
+				}
+			}
+		});
+		}
+});
+$(function() {
+	temp = $('#productNumber').val();
+	for(var i=1;i<=temp;i++){
+	$("#productName").yxcombogrid_productName({
+		hiddenId : 'productId',
+		gridOptions : {
+			showcheckbox : false,
+				event : {
+					'row_dblclick' : function(i){
+						return function(e, row, data) {
+							$("#productNo").val(data.productCode);
+							$("#productModel").val(data.pattern);
+							$("#unitName").val(data.unitName);
+                            $("#warrantyPeriod").val(data.warranty);
+						}
+					}(i)
+				}
+			}
+		});
+	}
+});
+
+/**
+ * license
+ * @type
+ */
+
+function License(licenseId){
+	var licenseVal = $("#" + licenseId ) .val();
+	if( licenseVal == ""){
+		//如果为空,则不传值
+		showThickboxWin('?model=yxlicense_license_tempKey&action=toSelect'
+		    + '&focusId=' + licenseId
+			+ '&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=900');
+	}else{
+		//不为空则传值
+		showThickboxWin('?model=yxlicense_license_tempKey&action=toSelect'
+		    + '&focusId=' + licenseId
+			+ '&licenseId=' + licenseVal
+			+ '&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=900');
+	}
+}
+
+//反写id
+function setLicenseId(licenseId,thisVal){
+	$('#' + licenseId ).val(thisVal);
+}
+
+function tempedit(){
+     var productName = $("#productName").val();
+    if(productName == ''){
+        alert("请选择物料！");
+       return false;
+    }
+    return true;
+}
+</script>
+
+<body>
+
+<form id="form1" method="post" action="?model=stock_productinfo_productinfo&action=tempProedit" onsubmit="return tempedit();">
+<table class="form_main_table">
+
+<tr>
+   <td>
+      <b>请选择需要替换自定义清单的物料</b>
+   </td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="10" class="form_header">产品清单</td>
+			  <input type="hidden" id="productNumber" value="1" />
+		</tr>
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="8%">产品编号</td>
+			<td style="text-align:center" width="16%">产品名称</td>
+			<td style="text-align:center" width="9%">型号/版本</td>
+			<td style="text-align:center" width="8%">数量</td>
+			<td style="text-align:center" width="8%">单价</td>
+			<td style="text-align:center" width="8%">金额</td>
+			<td style="text-align:center" width="8%">计划交货日期</td>
+			<td style="text-align:center" width="8%">保修期(月)</td>
+			<td style="text-align:center" width="8%">加密配置</td>
+			<td style="text-align:center" width="4%">合同内</td>
+		</tr>
+	</thead>
+	<tbody >
+		<tr>
+			<td>
+			  <input type="hidden" name="productinfo[unitName]" id="unitName" />
+			  <input type="text" name="productinfo[productNo]" id="productNo" class="txtshort" />
+			 </td>
+			<td>
+			  <input type="hidden" id="productId" name="productinfo[productId]" />
+			  <input type="text" name="productinfo[productName]" id="productName" class="txt" /></td>
+			<td>
+			    <input type="text" name="productinfo[productModel]" id="productModel" class="txtshort" /></td>
+			<td><input type="text" name="productinfo[number]" id="number" class="txtshort" onblur="FloatMul('number','price','money')" value="{number}"/></td>
+			<td><input type="text" name="productinfo[price]"  id="price" class="txtshort formatMoney" onblur="FloatMul('number','price','money')" value="{price}"/></td>
+			<td><input type="text" name="productinfo[money]"  id="money" class="txtshort formatMoney" onblur="FloatMul('number','price','money')" value="{money}"/></td>
+			<td><input class="txtshort" type="text" name="productinfo[projArraDate]" id="projArraDate" onfocus="WdatePicker()" value="{projArraDT}"/></td>
+			<td nowrap width="8%">
+			    <input type="text" class="txtshort" name="productinfo[warrantyPeriod]" id="warrantyPeriod"/>
+			</td>
+			<td>
+				<input type="hidden" id="cuslicenseId1" name="productinfo[license]" value="{license}"/>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License('cuslicenseId1');"/>
+		 	</td>
+			<td width="4%">
+			  <input type="checkbox" name="productinfo[isSell]" id="isSell" checked="checked" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input type="hidden" name="productinfo[tempId]" value="{tempId}"/>
+		<input type="hidden" name="productinfo[type]" value="{type}" />
+		<input type="submit" class="txt_btn_a" value=" 保  存 " />
+		<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

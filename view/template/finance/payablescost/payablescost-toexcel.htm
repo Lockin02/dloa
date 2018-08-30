@@ -1,0 +1,67 @@
+<html>
+<title>导入EXCEL数据</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/payablescost/js/payablescost-excel.js"></script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            导入费用分摊信息
+      </span>
+</div>
+<form action="?model=finance_payablescost_payablescost&action=excelIn" ENCTYPE="multipart/form-data" method="POST" id="form1" onsubmit="return checkform();">
+<input type="hidden" name="leadExcel" value="true">
+<input type="hidden" name="isCheck" id="isCheck" value="1">
+
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">
+			<label for="file">更新字段:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="radio" name="checkType" value="1" checked="checked"/>付款申请id
+            <input type="radio" name="checkType" value="2">付款申请编号
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label for="file">上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txtlong" name="inputExcel" id="inputExcel"/>
+            <input type="submit" class="txt_btn_a" onclick="changeIsCheck(1)" value=" 导 入">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label for="file">模版下载</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="button" class="txt_btn_a" value="下载模版" onclick="location='upfile/付款申请费用分摊.xls'">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right">
+		</td>
+		<td class="form_text_right">
+			注：<br/>
+			<span class="blue">1.导入目前只能针对审批完成的付款申请</span><br/>
+			<span class="blue">2.单条款付款申请费用分摊的总金额不能大于单据金额</span><br/>
+			<span class="blue">3.如果分摊对象是项目，请输入项目编号</span><br/>
+
+			<br/>
+			导入之前请确保excel格式与模板格式保持一致。<br/>
+			<span class="red">导入功能暂不支持单元格公式计算。</span>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>物料序列号选择</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/layout/jquery.layout-latest.js"></script>
+<style>
+#parent{
+	height:550px;
+	width:700px;
+	border:0px solid #C0C0C0;
+}
+#left{
+	width:350px;
+	height:550px;
+	background-color:white;
+	float:left;
+	border:0px solid #C0C0C0;
+}
+#right{
+	border:1px solid #C0C0C0;
+	width:300px;
+	height:550px;
+	float:left;
+	overflow-y:auto;
+	overflow-x:hidden
+}
+</style>
+<script>
+function initItems(){//初始化列表
+	var serialnoIdStr="{serialnoId}";
+	var serialnoNameStr="{serialnoName}";
+	var serialnoIdArr=serialnoIdStr.split(",");
+	var serialnoNameArr=serialnoNameStr.split(",");
+	for(var i=0;i<serialnoIdArr.length;i++){
+		var serialnoIdVal=serialnoIdArr[i];
+		var serialnoNameVal=serialnoNameArr[i];
+		var stStr='<tr height="27px"><td> '+(i+1)+'. <input type="hidden"  id="serialnoId'+serialnoIdVal+'" value="'+serialnoIdVal+'" /><input type="text" readOnly class="readOnlyTxtNormal"  id="serialnoName'+serialnoIdVal+'"  value="'+serialnoNameVal+'" /></td></tr>';
+		if(serialnoIdVal!=""&&serialnoIdVal!="undefined"){
+			$("#itembody").append(stStr);
+			//已选中的加上背景颜色
+			//frames["list"].$("#tr_"+serialnoIdVal).css("background-color","#D6D6D6");
+			//setGreyAtChoice();
+			//alert(stStr);
+		}
+	}
+}
+
+/**
+ * 给选中的加上颜色
+ */
+function setGreyAtChoice(){
+	$("input[id^='serialnoId']").each(function(){
+		//已选中的加上背景颜色
+		frames["list"].$("#tr_"+$(this).val()).css("background-color","#D6D6D6");
+	})
+}
+
+function setSequence(){//设置序列号信息到出库表单上
+	var serialnoIdArr=[];
+	var serialnoNameArr=[];
+	var sequenceIsNull=true;
+	$("input[id^='serialnoId']").each(function(){
+		serialnoIdArr.push($(this).val());
+	})
+	$("input[id^='serialnoName']").each(function(){
+		serialnoNameArr.push($(this).val());
+	})
+
+	if(sequenceIsNull){
+		window.parent.$("#productInfo_cmp_serialId"+'{elNum}').val(serialnoIdArr);
+		window.parent.$("#productInfo_cmp_serialName"+'{elNum}').val(serialnoNameArr);
+		closeFun();
+	}
+}
+
+/**
+ * 序列号全选
+ */
+function selectAll(){
+    frames["list"].$("tr[id^='tr_']").each(function(){
+        if($(this).css("background-color") != "rgb(214, 214, 214)"){
+            $(this).trigger('click');
+        }
+    });
+}
+
+/**
+ * 添加序列号
+ */
+function addSerialNo(){
+	showThickboxWin("?model=stock_serialno_serialno&action=toAddTempForRe&productId={productId}&relDocCode={relDocCode}"
+            + "&relDocId={relDocId}&relDocType={relDocType}"
+			+ "&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=450")
+}
+
+/**
+ * 刷新序列号列表
+ */
+function reloadSerialList(){
+	$("#serialnolist").attr("src","?model=stock_serialno_serialno&action=toChoose&productId={productId}&stockName={stockName}&seqStatus=0&relDocId={relDocId}&relDocType={relDocType}&relDocCode={relDocCode}");
+}
+
+/**
+ * 设置Excel序列号到界面上
+ */
+function setExcelSequence(sequenceIds,sequenceStr){
+	var serialnoIdArr=sequenceIds.split(",");
+	var serialnoNameArr=sequenceStr.split(",");
+
+	for(var i=0;i<serialnoIdArr.length;i++){
+		var serialnoIdVal=serialnoIdArr[i];
+		var serialnoNameVal=serialnoNameArr[i];
+		frames["list"].$("#tr_"+serialnoIdVal).trigger("click");
+	}
+}
+
+$(document).ready(function (){
+	initItems();
+	var docType=parent.$("#docType").val();
+	if(parent.$("#isRed").val()=="1"){//根据单据类型及红蓝字加载不同数据
+		if(docType=="CKSALES"||docType=="CKPICKING"||docType=="CKOTHER"){
+			$("#serialnolist").attr("src","?model=stock_serialno_serialno&action=toChoose&productId={productId}&stockName={stockName}&seqStatus=0");
+		}
+	}
+});
+
+</script>
+</head>
+<body>
+	<div id="parent">
+	<div id="left">
+		<iframe onload="setGreyAtChoice()" width="100%" height="550px" id="serialnolist" name="list"
+                src="?model=stock_serialno_serialno&action=toChoose&productId={productId}&stockName={stockName}&seqStatus=0&relDocId={relDocId}&relDocType={relDocType}&relDocItemId={relDocItemId}&ignoreSerialnoId={ignoreSerialnoId}"
+                marginwidth="0" marginheight="1" scrolling="Auto" frameborder="0" noresize framespacing="1" ></iframe>
+	</div>
+	<div style="float:left;padding-left:1px;padding-top:40%"><img src="images/arrow_large_right.png" alt="向右" title="向右" /></div>
+		<div id="right" >
+			<table class="main_table" id="itemtable">
+				<thead>
+		          	<tr height="10px">
+		          		<td align="left">
+                            <input type="button" class="txt_btn_a" value=" 全  选 " onclick="selectAll()"/>
+				 		   	<input type="button" class="txt_btn_a" value=" 确认选择 " onclick="setSequence()"/>
+							<input type="button" class="txt_btn_a" value=" 新  增 " onclick="addSerialNo()"/>
+		          		</td>
+	          		</tr>
+		          	<tr height="10px">
+		          		<th bgcolor="#C6E2FF">
+		          			<b>已选择序列号</b>
+		          		</th>
+	          		</tr>
+			    </thead>
+			    <tbody id="itembody" >
+
+			    </tbody>
+			</table>
+		</div>
+	</div>
+	<div align="center"></div>
+</body>
+</html>

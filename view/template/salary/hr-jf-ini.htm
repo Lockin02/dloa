@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="zh_cn" />
+    <meta name="GENERATOR" content="Zend Studio" />
+    <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+    <script type="text/javascript" src="js/general.js"></script>
+    <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+    <title>对比</title>
+    <script>
+        function changeCtrFun(){
+            var rand=Math.random()*100000;
+            var ckt=$('#ckt').val();
+            if(confirm('更新数据，将会以导入数据为基础，对OA数据进行更新，确定更新？')){
+                $.post('?model=salary&action=hr_jf_ini_in',{
+                    rand:rand,ckt:ckt
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        location.reload();
+                    }
+                )
+            }
+        }
+    </script>
+  </head>
+  <body>
+<form action="?model=salary&action=hr_jf_ini" method="post" enctype="multipart/form-data">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+      <tr>
+          <td>
+              导入数据：<input type="file" name="ctr_file" id="ctr_file" />&nbsp;
+              <input type="submit" id="subctr" name="subctr" value="导入" />
+              <input type="button" id="changectr" name="changectr" value="提交" onclick="changeCtrFun()" title="">
+              <input type="hidden" value="{ckt}" name="ckt" id="ckt" />
+          </td>
+          <td>
+              <table border="0" cellpadding="1" >
+                  <tr>
+                      <td>颜色：</td></tr>
+                  <tr><td style="background-color: green;color: #FFFFFF;">可导入</td>
+                      <td style="background-color: #000000;color: #FFFFFF;">不可导入</td></tr>
+              </table>
+          </td>
+      </tr>
+    </table>
+</form>
+    <table border="1" width="98%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        <tr class="tableheader">
+            <td align="center">序号</td>
+            <td align="center"  width="15%">员工号</td>
+            <td align="center"  width="8%">员工</td>
+            <td align="center" >公司</td>
+            <td align="center" >部门</td>
+            <td align="center" >月份</td>
+            <td align="center" >公司公积金</td>
+            <td align="center" >公司社保费</td>
+        </tr>
+        {data_list}
+    </table>
+  </body>
+</html>

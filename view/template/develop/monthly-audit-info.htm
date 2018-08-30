@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>提交{LAST_MONTH}月份月报</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	.table {
+	border-collapse: collapse;
+	border:1px solid #000000;
+	text-align:center;
+	word-break:break-all;
+}
+.table td {
+	border:1px solid #000000;
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+input[type=text]
+{
+	background-color:#e1e1e1;
+}
+textarea {background-color:#e1e1e1;}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		if ($('input[name=score]:checked').val()=='优')
+		{
+			$('#tr_explain').css('display','');
+		}else{
+			$('#tr_explain').css('display','none');
+		}
+	});
+	function check()
+	{
+		
+		var last_lead = $('form .last_lead option:selected').get();
+		var last_explain = $('form .last_explain').get();
+		for (var i=0;i<last_lead.length;i++)
+		{
+			if (last_lead[i].value=='优' && last_explain[i].value=='')
+			{
+				alert('请填写评分说明！');
+				last_explain[i].focus();
+				return false;
+			}
+		}
+		
+		var other_lead = $('form .other_lead option:selected').get();
+		var other_explain = $('form .other_explain').get();
+		for (var i=0;i<other_lead.length;i++)
+		{
+			if (other_lead[i].value=='优' && other_explain[i].value=='')
+			{
+				alert('请填写评分说明！');
+				other_explain[i].focus();
+				return false;
+			}
+		}
+		var score = $('input[name=score]:checked').val();
+		var score_explain = $('#score_explain').val();
+		if (score=='优' && score_explain=='')
+		{
+			alert('请填写评优说明！');
+			$('#score_explain').focus();
+			return false;
+		}
+		var radio = $('input[type=radio][name=score]:checked').get();
+		if (radio.length < 1)
+		{
+			alert('请选择上月总体工作质量及工作总量得分！');
+			return false;
+		}
+		if ($('#improve').val()=='')
+		{
+			alert('上级总体评价及改善不能为空！');
+			$('#improve').focus();
+			return false;
+		}
+		return true;
+	}
+	function show_explain(str)
+	{
+		if (str=='优')
+		{
+			$('#tr_explain').css('display','');
+		}else{
+			$('#tr_explain').css('display','none');
+		}
+	}
+	
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model=develop_monthly&action=audit&id={t_id}&key={t_key}" onsubmit="return check();">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td width="4%">姓名</td>
+		<td width="8%">{user_name}</td>
+		<td width="30%">所在部门:{dept_name}</td>
+		<td colspan="4">所在项目组：{project}</td>
+		<td colspan="2">审批领导:{audit_name}</td>
+		<td colspan="2">提交时间:{date}</td>
+	</tr>
+	<tr>
+		<td colspan="11" align="left"><b>
+		一、上月工作总结（{month}月）</b></td>
+	</tr>
+	<tr>
+		<td width="4%" id="task_num" rowspan="{rowspan}"><b>
+		上月工作计划完成情况</b></td>
+		<td width="31%" colspan="3" rowspan="2">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td width="6%" rowspan="2">
+		<p align="center"><b>优先级</b></td>
+		<td  width="9%" rowspan="2">
+		<p align="center"><b>要求完成时间</b></td>
+		<td  width="10%" rowspan="2">
+		<p align="center"><b>是否按时完成</b></td>
+		<td  width="40%" colspan="4">
+		<p align="center"><b>完成的质量<br>
+		</b>（优/良/中/差）</td>
+	</tr>
+	<tr>
+		<td align="center" width="3%">自评</td>
+		<td align="center" width="15%">自评说明</td>
+		<td align="center" width="6%">上级评分</td>
+		<td align="center" width="16%">评分说明</td>
+	</tr>
+	{LAST_MONTH_TASK}
+	<tr>
+		<td width="4%" id="other_task_num" rowspan="{other_num}"><b>
+		计划外工作</b></td>
+		<td width="37%" colspan="4" rowspan="2">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td  width="19%" colspan="2" rowspan="2">
+		<p align="center"><b>完成时间</b></td>
+		<td  width="40%" colspan="4">
+		<p align="center"><b>完成的质量<br>
+		</b>（优/良/中/差）</td>
+	</tr>
+	<tr>
+		<td align="center" width="3%">自评</td>
+		<td align="center" width="15%">自评说明</td>
+		<td align="center" width="6%">上级评分</td>
+		<td align="center" width="16%">评分说明</td>
+	</tr>
+	{OTHER_TASK}
+	<tr>
+		<td width="96%"  colspan="11">
+		<p align="left"><b>上级评价：上月总体工作质量及工作总量得分：</b>
+		<input type="radio" {you_checked} name="score" onclick="show_explain(this.value);" value="优">优&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="radio" {lang_checked} name="score" onclick="show_explain(this.value);" value="良">良&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="radio" {zhong_checked} name="score" onclick="show_explain(this.value);" value="中">中&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="radio" {cha_checked} name="score" onclick="show_explain(this.value);" value="差">差</td>
+	</tr>
+	<tr id="tr_explain">
+		<td><b>评优说明</b></td>
+		<td colspan="10" width="92%" align="left">{score_explain}</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="11">
+		<p align="left"><b>
+		二、下月工作计划（{last_month}月）</b></td>
+	</tr>
+	<tr>
+		<td width="35%"  colspan="4">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td width="6%" >
+			<b>优先级</b></td>
+		<td  width="9%"><b>要求完成时间</b></td>
+		<td  width="50%" colspan="5"><b>
+		完成的标准和要求</b></td>
+	</tr>
+	{NEXT_MONTH_TASK}
+	<tr>
+		<td width="96%"  colspan="11">
+		<p class="MsoNormal" align="left"><b>
+		三、工作中存在的问题及解决的办法；可以和其它同事分享的经验；其它建议或想法：</b><br />
+		{share}
+		</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="11">
+		<p class="MsoNormal" align="left"><b>
+		四、上月学习的内容及成果：</b><br />
+		{study}
+		</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="11" align="left">
+		{improve_text}
+		</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="11" height="108"> {submit} {return_button} <input type="button" onclick="self.parent.location.reload();" value=" 关闭返回 "></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

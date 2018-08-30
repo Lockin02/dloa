@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>打回生产申请原因</title>
+	{#commonInclude#}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var backReasonStr = '{backReason}';
+			backReasonArr = backReasonStr.split('<breakpoint>');
+			for (var i = backReasonArr.length - 1 ;i >= 0 ;i--) {
+				var htmlArr = backReasonArr[i].split('<br>');
+				var htmlStr = htmlArr[0] + '（第 ' + (i + 1) + ' 次打回）<br /><textarea class="textarea_read" readonly>' + htmlArr[1] + '</textarea><br /><br />';
+				$("#backReason").append(htmlStr);
+			};
+		});
+	</script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+					<span class="main_head_title">
+						打回生产申请原因
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">单据编号</td>
+			<td class="form_text_right_three">
+				{docCode}
+			</td>
+			<td class="form_text_left_three">源单编号</td>
+			<td class="form_text_right_three">
+				{relDocCode}
+				<input type="hidden" id="relDocId" value="{relDocId}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">最后一次打回者</td>
+			<td class="form_text_right_three">
+				{backUser}
+			</td>
+			<td class="form_text_left_three">最后一次打回时间</td>
+			<td class="form_text_right_three">
+				{backDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">打回原因</td>
+			<td class="form_text_right_three" colspan="3">
+				<div style="display:none" id="backReasonStr">{backReason}</div>
+				<div id="backReason"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" id="id" name="produceapply[id]" value="{id}"/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

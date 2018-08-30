@@ -1,0 +1,84 @@
+<html>
+<HEAD>
+    <TITLE>借用统计表</TITLE>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gbk">
+    <script src="webreport/CreateControl.js" language="javascript"></script>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script>
+        var search = function(){
+            location ='?model=projectmanagent_orderreport_orderreport&action=borrowReport'
+                + "&searchType=" + $("#searchType").val()
+                + "&countType=" + $("#countType").val()
+                + "&limit=" + $("#limit").val();
+        }
+
+        $(function(){
+            setSelect('searchType');
+            setSelect('countType');
+        });
+
+        //响应内容行双击事件，打开当前行对应的明细报表
+        function OnContentCellDblClick(Sender){
+            //演示超链接功能，在这里做打开链接任务，这里用弹出消息框代替
+            var ReportViewer = document.getElementById("ReportViewer");
+            var Report = ReportViewer.Report;
+            var searchKey = Report.FieldByName("查询类型").AsString;
+            showModalWin('?model=projectmanagent_orderreport_orderreport&action=borrowDetailReport'
+                + "&searchKey=" + searchKey
+                + "&searchType=" + $("#searchType").val()
+                + "&countType=" + $("#countType").val()
+            ,1);
+        }
+    </script>
+</HEAD>
+<BODY>
+<table style="width: 100%;height: 100%;">
+    <tr>
+        <td style="width: 30%;">
+            查询类型：
+            <select id="searchType" class="txt">
+                <option value="customer">客户</option>
+                <option value="sales">借用人</option>
+                <option value="product">产品</option>
+                <option value="saleman">销售员</option>
+            </select>
+            <input type="hidden" id="searchTypeHidden" value="{searchType}"/>
+        </td>
+        <td style="width: 30%;">
+            统计类型：
+            <select id="countType" class="txt">
+                <option value="money">金额</option>
+                <option value="num">数量</option>
+                <!--<option value="time">时间</option>-->
+            </select>
+            <input type="hidden" id="countTypeHidden" value="{countType}"/>
+        </td>
+        <td>
+            查询前
+            <input type="text" class="txtshort" id="limit" value="{limit}"/>
+            条数据<span class="blue"> (当此数值小于等于0时,显示全部记录) </span>
+            <input type="button" class="txt_btn_a" onclick="search();" value="查询"/>
+        </td>
+    </tr>
+    <tr style="width: 100%;height: 100%;" width="100%;">
+        <td colspan="4">
+            <script language="javascript">
+                //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+                CreateDisplayViewerEx("100%", "100%",
+                    "view/template/projectmanagent/orderreport/orderreport-borrowreport.grf",
+                    "view/template/projectmanagent/orderreport/orderreport-borrowreport.php"
+                            + "?searchType=" + $("#searchTypeHidden").val()
+                            + "&countType=" + $("#countTypeHidden").val()
+                            + "&limit=" + $("#limit").val()
+                    ,
+                    true,
+                    "<param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+            </script>
+        </td>
+    </tr>
+</table>
+</BODY>
+</HTML>

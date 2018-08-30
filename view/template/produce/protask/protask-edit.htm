@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>修改生产任务书</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <!-- 主题css，可切换 -->
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+        <script type="text/javascript" src="view/template/produce/protask/js/protask-add-formValidator.js">
+        </script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="view/template/produce/protask/js/protask-edit.js">
+</script>
+<script>
+		$(document).ready(function(){
+		    $("#issuedDeptName").yxselect_dept({
+				hiddenId : 'issuedDeptId'
+			});
+		    $("#execDeptName").yxselect_dept({
+				hiddenId : 'execDeptId'
+			});
+		    $("#issuedman").yxselect_user({
+				hiddenId : 'issuedmanId'
+			});
+		});
+</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=produce_protask_protask&action=edit" name="form1">
+	<table class="form_main_table">
+		<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">修改生产任务书</font>
+			    </span>
+			</div>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">生产任务编号</td>
+					<td class="form_text_right" colspan="3">
+						<input type="hidden" id="id" class="txt" name="protask[id]" value="{id}" />
+						<input type="text" id="taskCode" class="readOnlyTxtNormal" readonly name="protask[taskCode]" value="{taskCode}"/>
+						<input type="hidden" id="relDocType" class="txt" name="protask[relDocType]" value="{relDocType}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">源单编号</td>
+					<td class="form_text_right">
+						<input type="hidden" id="relDocId" class="txt" name="protask[relDocId]" value="{relDocId}" />
+						<input type="text" id="relDocCode" class="readOnlyTxtNormal" readonly name="protask[relDocCode]" value="{relDocCode}" />
+					</td>
+					<td class="form_text_left">源单名称</td>
+					<td class="form_text_right">
+						<input type="text" id="relDocName" class="readOnlyTxtNormal" readonly name="protask[relDocName]" value="{relDocName}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">下单部门</td>
+					<td class="form_text_right">
+						<input type="text" id="issuedDeptName" class="txt" name="protask[issuedDeptName]" value="{issuedDeptName}" />
+						<input type="hidden" id="issuedDeptId" class="txt" name="protask[issuedDeptId]" value="{issuedDeptId}" />
+			            <span class="red">
+			                [*]
+			            </span>
+			            <div id="issuedDeptNameTip" class="tipShortTxt">
+			            </div>
+					</td>
+					<td class="form_text_left">执行部门</td>
+					<td class="form_text_right">
+						<input type="text" id="execDeptName" class="txt" name="protask[execDeptName]" value="{execDeptName}"/>
+						<input type="hidden" id="execDeptId" class="txt" name="protask[execDeptId]" value="{execDeptId}"/>
+			            <span class="red">
+			                [*]
+			            </span>
+			            <div id="execDeptNameTip" class="tipShortTxt">
+			            </div>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right">
+						<input type="hidden" id="customerId" class="txt" name="protask[customerId]" value="{customerId}" />
+						<input type="text" id="customerName" class="txt" name="protask[customerName]" value="{customerName}" />
+					</td>
+					<td class="form_text_left">交货日期</td>
+					<td class="form_text_right">
+						<input type="text" id="referDate" class="txt" name="protask[referDate]" onfocus="WdatePicker()" onblur="referDateFun();" value="{referDate}"/>
+						<span class="red">
+			                [*]
+			            </span>
+			            <div id="referDateTip" class="tipShortTxt">
+			            </div>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">验证类型</td>
+					<td class="form_text_right">
+						<input type="text" id="qualityType" class="txt" name="protask[qualityType]" value="{qualityType}"/>
+					</td>
+					<td class="form_text_left">性质</td>
+					<td class="form_text_right">
+						<input type="text" id="taskType" class="txt" name="protask[taskType]" value="{taskType}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">下达人</td>
+					<td class="form_text_right" colspan="3">
+						<input type="text" id="issuedman" class="txt" name="protask[issuedman]" value="{issuedman}"/>
+						<input type="hidden" id="issuedmanId" class="txt" name="protask[issuedmanId]" value="{issuedmanId}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">备注</td>
+					<td class="form_text_right" colspan="3">
+						<textarea name="protask[remark]" class="txt_txtarea_font" id="remark">{remark}</textarea>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table" id="mytable">
+			    <thead>
+			        <tr align="left">
+			            <td colspan=10">
+			                物料清单
+			            </td>
+			            <td align="center" width="4%">
+			                <input type="hidden" id="invnumber" value="1" />
+			                <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+			                <!--  img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/-->
+			             </td>
+			        </tr>
+			    </thead>
+			    <tbody id="invbody">
+			        <tr class="main_tr_header">
+			            <th>
+			                序号
+			            </th>
+<!-- 			            <th>
+			                产品线
+			            </th> -->
+			            <th>
+			                产品编号
+			            </th>
+			            <th>
+			                产品名称
+			            </th>
+			            <th>
+			                规格型号
+			            </th>
+			            <!-- th>
+			                出货仓库名称
+			            </th> -->
+			            <th>
+			                单位
+			            </th>
+			            <th>
+			                合同数量
+			            </th>
+			            <th>
+			                已下达生产数量
+			            </th>
+			            <th>
+			                本次计划生产数量
+			            </th>
+			            <th>
+			                配置
+			            </th>
+			            <th>
+			               计划交货时间
+			            </th>
+			            <th>
+			                操作
+			            </th>
+			        </tr>
+			        {products}
+			    </tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table">
+				<tr>
+						<td class="txt_btn" colspan="4">
+						   <input id="issuedBtn" type="submit" onclick="issuedFun()" class="txt_btn_a" value="下  达"/>
+						   <input  type="submit" class="txt_btn_a" value="保  存"/>
+						   <input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+						</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+</form>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增招聘管理-面试评估表</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/interview-deptadd.js" ></script>
+</head>
+<style>
+.divChangeLine{
+		height : 80px;
+	}
+</style>
+<body>
+<form id="form1" method="post" action="?model=hr_recruitment_interview&action=add" >
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+            <div class="main_head">
+				<span class="main_head_title">
+               		用人部门面试评估表
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<fieldset><legend><b>基本信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left">姓  名</td>
+						<td class="form_text_right" width="30%">
+							{userName}
+							<input type="hidden" id="userName"  name="interview[userName]"  value="{userName}"/>
+
+						</td>
+						<td class="form_text_left">性  别</td>
+						<td class="form_text_right">
+							{sexy}
+							<input type="hidden" id="sexy" name="interview[sexy]" value="{sexy}" />
+
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">应聘岗位</td>
+						<td class="form_text_right">
+							{positionsName}
+							 <input type="hidden" id="positionsName"  name="interview[positionsName]"  value="{positionsName}"/>
+							 <input type="hidden" id="positionsId"  name="interview[positionsId]"  value="{positionsId}" />
+						</td>
+						<td class="form_text_left">用人部门</td>
+						<td class="form_text_right">
+							{deptName}
+							 <input type="hidden" id="deptName"  name="interview[deptName]"  value="{deptName}"/>
+							 <input type="hidden" id="deptId"  name="interview[deptId]"  value="{deptId}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">所在项目组</td>
+						<td class="form_text_right" colspan="3">
+							{projectGroup}
+			 				<input type="hidden" id="projectGroup"  name="interview[projectGroup]"  value="{projectGroup}"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<fieldset><legend><b>用人部门意见</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left">笔试评价</td>
+						<td class="form_text_right divChangeLine" colspan="3">
+							<table>{useWriteEva}</table>
+							<!--<textarea id="useWriteEva"  name="interview[useWriteEva]" class="txt_txtarea_owin"></textarea>-->
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">面试评价</td>
+						<td class="form_text_right divChangeLine" colspan="3">
+							<table>{useInterviewEva}</table>
+							<!--<textarea id="useInterviewEva"  name="interview[useInterviewEva]" class="txt_txtarea_owin"></textarea>-->
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">面试结果</td>
+						<td class="form_text_right">
+							<select id="useInterviewResult" name="interview[useInterviewResult]" class="select">
+								<option></option>
+								<option value="立即录用">立即录用</option>
+								<option value="储备人才">储备人才</option>
+							</select>
+
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">录用形式</td>
+						<td class="form_text_right">
+							<select id="useHireType" name="interview[useHireType]" class="select">
+								{useHireType}
+							</select>
+						</td>
+						<td class="form_text_left">人员归属</td>
+						<td class="form_text_right">
+							<select id="useAreaName"  name="interview[useAreaName]">
+								{selectName}
+							</select>
+							<!--<input type="text" class="txt" id="useAreaName"  name="interview[useAreaName]"/>
+							<input type="hidden" id="useAreaId"  name="interview[useAreaId]"/>-->
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">试用期基本工资</td>
+						<td class="form_text_right">
+							<input type="text" class="txt formatMoney" id="useTrialWage"  name="interview[useTrialWage]"/>
+						</td>
+						<td class="form_text_left">转正基本工资</td>
+						<td class="form_text_right">
+							<input type="text" class="txt formatMoney" id="useFormalWage"  name="interview[useFormalWage]"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">办公电脑需求设备类型</td>
+						<td class="form_text_right">
+							<select id="useDemandEqu" name="interview[useDemandEqu]" class="select">
+								<option></option>
+								<option value="手提电脑">手提电脑</option>
+								<option value="台式电脑">台式电脑</option>
+								<option value="自备电脑">自备电脑</option>
+							</select>
+						</td>
+						<td class="form_text_left">签订《竞业限制协议》</td>
+						<td class="form_text_right">
+							<select id="useSign" name="interview[useSign]" class="select">
+								<option></option>
+								<option value="是">是</option>
+								<option value="否" selected>否</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">确认人</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="useManager"  name="interview[useManager]" readonly="readonly"/>
+							<input type="hidden" id="useManagerId"  name="interview[useManagerId]"/>
+						</td>
+						<td class="form_text_left">确认日期</td>
+						<td class="form_text_right">
+							<input type="text" class="txt Wdate" id="useSignDate" onfocus="WdatePicker()" name="interview[useSignDate]"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+   		    <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+   		    <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+   		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

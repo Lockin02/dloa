@@ -1,0 +1,140 @@
+
+<html>
+<head>
+<title>查看研发设备采购</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+<link type="text/css" href="js/jquery/style/yxwindow.css" media="screen" rel="stylesheet" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+<!-- 日期控件 -->
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<!-- 核心组件 -->
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<!-- 弹窗组件 -->
+<script type="text/javascript" src="js/thickbox.js"></script>
+
+<!-- 表格组件 -->
+<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxtreegrid.js"></script>
+
+<!-- 树形组件 -->
+<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+
+<!-- 下拉组件 -->
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombotext.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+
+<!-- tab组件 -->
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+
+	<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+	<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-rdproject.js"></script>
+<script type="text/javascript" src="view/template/purchase/plan/js/basic-rd-view.js"></script>
+<script type="text/javascript" src="js/common/approval.js"></script>
+<script >
+$(document).ready(function(){
+	if($("#isRd").val()==0){
+	  $("#isRdHtml").html("是");
+	}else{
+	  $("#isRdHtml").html("否");
+	}
+})
+</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 研发设备采购申请
+</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">申请部门</td>
+		<td class="form_view_right">
+			{department}
+		</td>
+		<td class="form_text_left">申请日期</td>
+		<td class="form_view_right">
+			{sendTime}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申请人名称</td>
+		<td class="form_view_right">
+			{sendName}
+		</td>
+		<td class="form_text_left">申请人电话</td>
+		<td class="form_view_right">
+			{phone}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">是否属于研发专项设备</td>
+		<td class="form_text_right" colspan="3" id="isRdHtml">
+		</td>
+	</tr>
+	<tr id="hiddenA">
+		<td class="form_text_left">研发专项项目名称</td>
+		<td class="form_view_right">
+			{projectName}
+		</td>
+		<td class="form_text_left">研发专项编号</td>
+		<td class="form_view_right">
+			{sourceNumb}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">设备用途</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read_blue"  >{remark}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">特殊事项</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read_blue" >{instruction}</textarea>
+		</td>
+	</tr>
+</table>
+
+<div id="RDProductTable"></div>
+
+<table class="form_main_table">
+	<tr>
+		<td colspan="6" class="td_table" id="approvalView">
+			<input type="hidden" id="pid" value="{id}"/>
+			<input type="hidden" id="itemType" value="oa_purch_plan_basic"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden"  id="isRd" value="{isRd}" />
+			<input type="hidden"  id="id" value="{id}" />
+			<input type="hidden" id="readType" value="{readType}">
+			<input type="button" id="actType" value="返  回" class="txt_btn_a" onclick="closeFun();">
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>

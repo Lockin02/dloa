@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/general.js"></script>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <title></title>
+        <script type="text/javascript">
+            function ck(){
+                if($('#ctr_file').val()==''){
+                    alert('请导入对比数据');
+                    return false;
+                }
+                return true;
+            }
+            function changeCtrFun(){
+                location.href='?model=salary&action=hr_exp_count_out&ckt={ckt}';
+            }
+        </script>
+    </head>
+    <body>
+    <form action="?model=salary&action=hr_exp_count" method="post" onsubmit="return ck();" enctype="multipart/form-data">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+          <tr>
+              <td>
+                  导入：<input type="file" name="ctr_file" id="ctr_file" />&nbsp;
+                  <input type="submit" id="subctr" name="subctr" value="导入" />
+                  <input type="button" id="changectr" name="changectr" value="提交" onclick="changeCtrFun()" title="提交"/>
+                  <br/>
+              </td>
+          </tr>
+        </table>
+    </form>
+    <table border="1" width="98%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        <tr class="tableheader">
+            <td align="center">序号</td>
+            <td align="center">员工号</td>
+            <td align="center">名字</td>
+            <td align="center">工资</td>
+            <td align="center">年终奖</td>
+            <td align="center">扣税</td>
+            <td align="center">实发金额</td>
+        </tr>
+        {data_list}
+    </table>
+    </body>
+</html>

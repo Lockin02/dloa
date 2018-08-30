@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="GBK">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>工作流审批</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .container{max-width:650px !important;padding-top:10px;padding-bottom:10px;}
+        table,tr,td,th{
+            border:1px solid black !important;
+        }
+        thead>.title{background-color: #D3E5FA;}
+        tbody>tr{background-color: #F3F3F3;}
+        tbody>.arrow{background-color:white;}
+
+        td{
+            padding: 5px !important;
+        }
+        .wrapbox{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <!-- 选中的审批流ID -->
+    <input type="hidden" id="selectedFlowId" value="{selectedFlowId}">
+
+    <form id="form1" name="form1" method="post">
+        <!-- 第一步 -->
+        <div class="row">
+            <div class="col-xs-12">
+                <h4><img src="images/sys_config.gif" width="22" height="20">
+                    <b><font color="#000000">第一步:选择审批流程</font></b>
+                </h4>
+            </div>
+
+            <!-- 审批流选项 -->
+            <div class="col-xs-12 wrapbox">
+                <select class="form-control" name="flowId" id="flowOpt" title="审批流程" onchange="selectWft(this);">
+                </select>
+            </div>
+
+            <!-- 审批流步骤 -->
+            <div class="col-xs-12 wrapbox">
+                <table class="table table-bordered" align="center">
+                    <thead>
+                    <tr class="title">
+                        <td nowrap="" align="center"><b>步骤号</b></td>
+                        <td nowrap="" align="center"><b>审批类型</b></td>
+                        <td nowrap="" align="center"><b>步骤名称</b></td>
+                        <td nowrap="" align="center"><b>审批者</b></td>
+                    </tr>
+                    </thead>
+                    <tbody id="processView"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 第二步 -->
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>
+                    <img src="images/sys_config.gif" width="22" height="20">
+                    <b><font color="#000000">第二步:提交</font></b>
+                </h4>
+                <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;提示:提交后将进入审批流程,费用明细将不可修改,请在提交前检查报销费用明细的填写是否正确.</font>
+            </div>
+            <!-- 选择是否发邮件 -->
+            <div class="col-xs-12 text-center">
+                <div>
+                    <br>发送邮件通知第1个审批者：
+                    <input type="radio" name="isSendNotify" value="y" checked="">是
+                    <input type="radio" name="isSendNotify" value="n">否<br>
+                </div>
+                <hr width="100%">
+            </div>
+            <!-- 操作按钮 -->
+            <div class="col-xs-12">
+                {hiddenParam}
+                <div align="center">
+                    <input type="button" name="sub" id="submitBtn" value="提交" align="center"   class="BigButton" style="width:80px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" name="back" id="back" value="返回" align="center"   class="BigButton" style="width:80px" onclick="history.go(-1)">
+                </div>
+            </div>
+        </div>
+    </form>
+</div> <!-- /container -->
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript">
+    // ajax提交方法
+    function ajaxSubmit(toUrl,param){
+        var backData = $.ajax({
+            type : "POST",
+            data : param,
+            url : toUrl,
+            dataType : 'json',
+            async : false
+        }).responseText;
+        var data = eval("(" + backData + ")");
+        return data;
+    };
+
+    // 提交后页面刷新
+    function reload(self){
+        if(self.parent.show_page){
+            self.parent.tb_remove();
+            self.parent.show_page();//刷新表格树
+        }else if(window.opener){
+            self.close();
+            self.opener.show_page();
+        }else{
+            reload(self.parent);
+        }
+    };
+
+    //获取前段数据
+    function getParams(){
+        var param = {};
+        if($('.dftData').length > 0){
+            $('.dftData').each(function(){
+                param[$(this).attr('name')] = $(this).val();
+            });
+        }
+        return param;
+    }
+
+    //获取可审核流程获取
+    function getFlow(){
+        var url = "?model=common_workflow_workflow&action=getFlow";
+        var param = getParams();
+//        param['formName'] = '特别事项审批';
+//        param['billId'] = 41;
+//        param['flowMoney'] = 200;
+//        param['examCode'] = 'oa_general_specialapply';
+//        param['examTb'] = 'oa_general_specialapply';
+//        param['billDept'] = 264;
+//        param['billCompany'] = 'dl';
+//        param['userIds'] = 'quanzhou.luo,hao.yuan';
+//        param['testFun'] = 1;
+        var arr = ajaxSubmit(url,param);
+        return arr;
+//        console.log(arr);
+    };
+
+    // 带出审批步骤
+    function getProcess(flow_id){
+        var url = "?model=common_workflow_workflow&action=getProcessViewJson";
+        var param = {"process[flowId]" : flow_id};
+        var pageParams = getParams();
+
+        // 拼接页面信息
+        $.each(pageParams,function(key,item){
+            param["process["+key+"]"] = item;
+        });
+
+//        console.log(param);
+        var arr = ajaxSubmit(url,param);
+//        console.log(arr);
+        if(arr.msg == 'ok'){
+            var processObj = arr.data;
+            return processObj.steps;
+        }else{
+            return false;
+        }
+    };
+
+    // 选择审批流
+    function selectWft(obj){
+        var flowId = $(obj).val();
+        buildProcess('', '', flowId);
+    }
+
+    // 构建对应流程的步骤
+    function buildProcess(g, p, flowId){
+        var processList = getProcess(flowId);
+//        console.log(processList);
+        var processSteps = '';var processSteps = '';
+        if(processList.length > 0){
+            for(i = 0 ;i < processList.length ;i++) {
+                var stepAttr = processList[i]['stepType'];
+                var stepName = processList[i]['stepName'];
+                var stepUser = processList[i]['stepUser'];
+                var stepNum = processList[i]['stepId'];
+                var stepInfo = '';
+                // 加入每个处理流程的信息
+                $.each(processList[i],function(key,value) {
+                    stepInfo += '<input type="hidden" name="steps['+stepNum+']['+key+']" value="'+value+'"/>';
+                });
+                processSteps +='<tr class="TableLine1">'+
+                        '<td nowrap="" align="center">第<b><font color="red">'+stepNum+'</font></b>步</td>'+
+                        '<td align="center">'+stepAttr+'</td>'+
+                        '<td align="center">'+stepName+'</td>'+
+                        '<td nowrap="" align="center">'+stepUser+stepInfo+'</td>'+
+                        '</tr>'+
+                        '<tr class="TableLine2 arrow">'+
+                        '<td nowrap="" align="center" colspan="4">'+
+                        '<img border="0" src="images/arrow_down.gif" width="11" height="13">'+
+                        '</td>'+
+                        '</tr>';
+            }
+        }
+        var html = '<tr class="TableLine1">'+
+                '<td nowrap="" align="center" colspan="6"><b>开始</b></td>'+
+                '</tr>'+
+                '<tr class="TableLine2 arrow">'+
+                '<td nowrap="" align="center" colspan="4">'+
+                '<img border="0" src="images/arrow_down.gif" width="11" height="13">'+
+                '</td>'+
+                '</tr>'+
+                processSteps+
+                '<tr class="TableLine1">'+
+                '<td nowrap="" align="center" colspan="6"><b>结束</b></td>'+
+                '</tr>';
+        $('#processView').html(html);
+
+    }
+
+    // 页面初始化时执行脚本
+    $(function(){
+        var defaultFId = '';
+        //获取可审核流程获取
+        var flowOptArr = getFlow();
+        if(flowOptArr.length > 0){
+            var obj = $('#flowOpt');
+            var str = '';var selected = '';var i = 1;
+            $.each(flowOptArr,function(index,item){
+                if(i==1){
+                    selected = 'selected';
+                    defaultFId = item['flowId'];
+                }
+
+                str += '<option value="'+item['flowId']+'" '+selected+'>'+item['flowName']+'</option>';
+                i++;selected = '';
+            });
+            obj.html(str);
+        }
+
+        //构建对应流程的步骤
+        var stepsHtml = buildProcess('','',defaultFId);
+
+        // 提交表单
+        $('#submitBtn').click(function(){
+            var url = "?model=common_workflow_workflow&action=saveAudit";
+            var param = $('#form1').serialize();
+            var resultArr = ajaxSubmit(url,param);
+            alert(resultArr.data['result']);
+            if(resultArr.msg == 'ok'){
+                if(resultArr.data['sendToURL'] == ''){
+                    reload(self);
+                }else{
+                    location.replace(resultArr.data['sendToURL']);
+                }
+            }else{
+                window.location='javascript:history.back()';
+            }
+        });
+    });
+</script>
+</body>
+</html>

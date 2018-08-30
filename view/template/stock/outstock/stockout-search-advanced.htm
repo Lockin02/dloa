@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>出库单搜索</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+  	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script>
+function confirm(){
+	var gridId="";
+	if("{docType}"=="CKSALES")
+		gridId="stockoutGrid";
+	if("{docType}"=="CKPICKING")
+		gridId="stockoutGrid";
+	if("{docType}"=="CKOTHER")
+		gridId="stockoutGrid";		
+	var listGrid= parent.$("#"+gridId)
+	.data('yxsubgrid');
+	
+	var docStartDate=$("#docStartDate").val();//开始时间结
+	var docEndDate=$("#docEndDate").val();//结束时间
+	var productCode=$("#productCode").val();//物料代码
+	var productName=$("#productName").val();//物料名称
+	var pattern=$("#pattern").val();//规格型号
+	var serialnoName=$("#serialnoName").val();//序列号
+	
+	listGrid.options.extParam['beginDate'] = docStartDate;
+	listGrid.options.extParam['endDate'] = docEndDate;	
+	listGrid.options.extParam['productCode'] = productCode;
+	listGrid.options.extParam['productName'] = productName;
+	listGrid.options.extParam['pattern'] = pattern;
+	listGrid.options.extParam['serialnoName'] = serialnoName;			
+	
+	listGrid.reload();
+	self.parent.tb_remove();
+}
+
+function refresh(){
+	var gridId="";
+	if("{docType}"=="CKSALES")
+		gridId="stockoutGrid";
+	if("{docType}"=="CKPICKING")
+		gridId="stockoutGrid";
+	if("{docType}"=="CKOTHER")
+		gridId="stockoutGrid";		
+	var listGrid= parent.$("#"+gridId)
+	.data('yxsubgrid');
+	
+	listGrid.options.extParam['beginDate']="";
+	listGrid.options.extParam['endDate'] = "";
+	listGrid.options.extParam['productCode'] = "";
+	listGrid.options.extParam['productName'] = "";
+	listGrid.options.extParam['pattern'] = "";
+	//listGrid.options.param['serialnoName'] = "";	
+	listGrid.reload();
+	self.parent.tb_remove();
+	
+}
+</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	高级搜索
+    </span>
+</div>
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">开始日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="docStartDate" id="docStartDate" onfocus="WdatePicker()" />
+		</td>
+		<td class="form_text_left">截止日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="docEndDate" id="docEndDate" onfocus="WdatePicker()" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">物料代码</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productCode"  />
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productName" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="serialnoName"  />
+		</td>
+			
+		<td class="form_text_left">物料规格型号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="pattern"  />
+		</td>
+</tr>        
+
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+		   <input  type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+</tr>
+</table>
+</body>
+</html>

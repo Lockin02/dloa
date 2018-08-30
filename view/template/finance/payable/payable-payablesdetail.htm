@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<TITLE>Web报表(B/S报表)演示 - 查询显示控件展现报表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script>
+	function searchBtn(){
+		window.open("?model=finance_payable_payable&action=payablesDetailSearch"
+			+ "&beginYear=" + document.getElementById("beginYear").value
+			+ "&beginMonth=" + document.getElementById("beginMonth").value
+			+ "&endYear=" + document.getElementById("endYear").value
+			+ "&endMonth=" + document.getElementById("endMonth").value
+			+ "&objCode=" + document.getElementById("objCode").value
+			+ "&objType=" + document.getElementById("objType").value
+			+ "&supplierName=" + document.getElementById("supplierName").value
+			+ "&payContent=" + document.getElementById("payContent").value
+			+ "&salesman=" + document.getElementById("salesman").value
+			+ "&salesmanId=" + document.getElementById("salesmanId").value
+			+ "&deptName=" + document.getElementById("deptName").value
+			+ "&deptId=" + document.getElementById("deptId").value
+			+ "&amount=" + document.getElementById("amount").value
+		,'newwindow','height=500,width=800');
+	}
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td>
+			<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%">
+			<table width="100%">
+				<tr>
+					<td width="25%">
+						单据日期 ： <span>{beginYear}</span>年
+						<span>{beginMonth}</span>月  至
+						<span>{endYear}</span>年
+						<span>{endMonth}</span>月
+					</td>
+					<td width="25%">
+						业 务 员 ： <span>{salesman}</span>
+					</td>
+					<td width="25%">
+						申请部门 ： <span>{deptName}</span>
+					</td>
+					<td width="25%">
+						单据金额 ： <span>{amount}</span>
+					</td>
+				</tr>
+				<tr>
+				    <td width="25%">
+						源单类型 ： <span>{objType}</span>
+					</td>
+				    <td width="25%">
+						源单编号 ： <span>{objCode}</span>
+					</td>
+					<td width="25%">
+						供应商/收款单位 ： <span>{supplierName}</span>
+					</td>
+					<td width="25%">
+						付款明细 ： <span>{payContent}</span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="beginYear" value="{beginYear}"/>
+			<input type="hidden" id="beginMonth" value="{beginMonth}"/>
+			<input type="hidden" id="endYear" value="{endYear}"/>
+			<input type="hidden" id="endMonth" value="{endMonth}"/>
+			<input type="hidden" id="objCode" value="{objCode}"/>
+			<input type="hidden" id="objType" value="{objType}"/>
+			<input type="hidden" id="supplierName" value="{supplierName}"/>
+			<input type="hidden" id="payContent" value="{payContent}"/>
+			<input type="hidden" id="salesman" value="{salesman}"/>
+			<input type="hidden" id="salesmanId" value="{salesmanId}"/>
+			<input type="hidden" id="deptName" value="{deptName}"/>
+			<input type="hidden" id="deptId" value="{deptId}"/>
+			<input type="hidden" id="amount" value="{amount}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/finance/payable/payable-payablesdetail.grf"
+				,"view/template/finance/payable/payable-payablesdetail.php"
+				+ "?beginYear=" + document.getElementById("beginYear").value
+				+ "&beginMonth=" + document.getElementById("beginMonth").value
+				+ "&endYear=" + document.getElementById("endYear").value
+				+ "&endMonth=" + document.getElementById("endMonth").value
+				+ "&objCode=" + document.getElementById("objCode").value
+				+ "&objType=" + document.getElementById("objType").value
+				+ "&supplierName=" + document.getElementById("supplierName").value
+				+ "&payContent=" + document.getElementById("payContent").value
+				+ "&deptName=" + document.getElementById("deptName").value
+				+ "&deptId=" + document.getElementById("deptId").value
+				+ "&salesman=" + document.getElementById("salesman").value
+				+ "&salesmanId=" + document.getElementById("salesmanId").value
+				+ "&amount=" + document.getElementById("amount").value
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</HTML>

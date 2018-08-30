@@ -1,0 +1,535 @@
+﻿Object Report
+	Version='5.8.0.5'
+	Title='你的报表标题'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	ExportBeginScript='Sender.AsE2XLSOption.SameAsPrint=0;//是否保持与打印页面一致\r\nSender.AsE2XLSOption.ExportPageBreak=0;//是否导出页间分隔行\r\nSender.AsE2XLSOption.ExportPageHeaderFooter=0;//是否导出页眉页脚\r\nSender.AsE2XLSOption.OnlyExportDetailGrid=0;//是否只导出明细网格\r\nSender.AsE2XLSOption.ColumnTitleForbidRepeat=0;//是否禁止明细网格的标题行重复输出\r\nSender.AsE2XLSOption.OnlyExportPureText=0;//是否只导出纯文本数据\r\nSender.AsE2XLSOption.SupressEmptyLines=0;//是否压缩空白行\r\nSender.AsE2XLSOption.ColumnAsDetailGrid=1;//是否列按明细网格生成(保持一致)\r\nSender.AsE2XLSOption.ExpandRowHeight=0;//是否增大行高适应多选文字完整显示'
+	Object Printer
+	End
+	Object DetailGrid
+		IsCrossTab=T
+		FixCols=3
+		PrintAdaptMethod=ToNewPage
+		Object Recordset
+			ConnectionString='Provider=MSDASQL.1;Persist Security Info=False;Data Source=myServer;Extended Properties="DSN=myServer;"'
+			QuerySQL='select\r\n	l.thisYearMonth,l.thisYear,l.thisMonth,sum(l.CostMoney) as CostMoney,c.CostTypeName,l.isNew,\r\n	if(l.CostBelongDeptId is null or l.CostBelongDeptId = '',d.DEPT_ID,l.CostBelongDeptId) as CostBelongDeptId,\r\n	if(l.CostBelongDeptName is null or l.CostBelongDeptName = '',d.DEPT_NAME,l.CostBelongDeptName) as CostBelongDeptName,\r\n	if(d.parentDeptId is null or d.parentDeptId = '',l.CostBelongDeptId,d.parentDeptId) as parentDeptId,\r\n	if(d.parentDeptId is null or d.parentDeptId = '',l.CostBelongDeptName,d.parentDeptName) as parentDeptName from\r\n	(\r\n		select\r\n			date_format(l.PayDT,'%Y%m') as thisYearMonth,year(l.PayDT) as thisYear,month(l.PayDT) as thisMonth,l.isNew,\r\n			'' as CostBelongDeptId,\r\n			d.CostTypeID,sum(d.CostMoney * d.days) as CostMoney,\r\n			CostBelongtoDeptIds as CostBelongDeptName,\r\n			l.CostBelongComId,\r\n			l.CostBelongCom\r\n		from cost_summary_list l inner join cost_detail d on l.BillNo = d.BillNo\r\n		where isProject = 0 and l.`Status` = '完成'  and date_format(l.PayDT,'%Y%m') >= '201301' and date_format(l.PayDT,'%Y%m') <= '201310'\r\n		group by l.CostBelongtoDeptIds,d.CostTypeID,date_format(l.PayDT,'%Y%m')\r\n		union all\r\n		select\r\n			date_format(l.PayDT,'%Y%m') as thisYearMonth,year(l.PayDT) as thisYear,month(l.PayDT) as thisMonth,l.isNew,\r\n			if(left(l.ProjectNo,2) = 'PK','-2','-1') as CostBelongDeptId,\r\n			d.CostTypeID,sum(d.CostMoney * d.days) as CostMoney,\r\n			if(left(l.ProjectNo,2) = 'PK','PK项目','工程项目(服务线)') as CostBelongDeptName,\r\n			l.CostBelongComId as CostBelongComId,\r\n			l.CostBelongComId as CostBelongCom\r\n		from cost_summary_list l inner join cost_detail_project d on l.BillNo = d.BillNo\r\n		where l.isProject = 1 and l.isNew = 0 and l.`Status` = '完成'\r\n		group by if(left(l.ProjectNo,2) = 'PK','-2','-1'),d.CostTypeID,date_format(l.PayDT,'%Y%m')\r\n	) l\r\n	left join\r\n	(\r\n	select\r\n		c.CostTypeID,c.CostTypeName,c2.CostTypeID as ParentCostTypeID,c2.CostTypeName as ParentTypeName,c.orderNum,c2.orderNum as parentOrder\r\n	from\r\n		cost_type c inner join cost_type c2 on c.ParentCostTypeID = c2.CostTypeID\r\n	where\r\n		c.ParentCostTypeID <> 1\r\n	) c on c.CostTypeID = l.CostTypeID\r\n	left join\r\n	(\r\n	select\r\n		d1.DEPT_NAME,if(d2.DEPT_NAME is null,d1.DEPT_NAME,d2.DEPT_NAME) as parentDeptName,if(d2.DEPT_ID is null,d1.DEPT_ID,d2.DEPT_ID) as parentDeptId,\r\n		d1.DEPT_ID as DEPT_ID\r\n	from\r\n		department d1 left join department d2 on d1.PARENT_ID = d2.DEPT_ID\r\n		order by d2.Depart_x\r\n	) d on if(l.CostBelongDeptId = '' or l.CostBelongDeptId is null,d.DEPT_NAME = l.CostBelongDeptName,d.DEPT_ID = l.CostBelongDeptId)\r\ngroup by if(l.CostBelongDeptId is null or l.CostBelongDeptId = '',d.DEPT_ID,l.CostBelongDeptId),c.CostTypeName,l.thisYearMonth\r\norder by l.thisYearMonth asc'
+			Items Field
+				Item
+					Name='CostTypeID'
+				End
+				Item
+					Name='CostBelongDeptName'
+				End
+				Item
+					Name='CostMoney'
+					Type=Currency
+					Format='#,##0.00'
+				End
+				Item
+					Name='thisMonth'
+				End
+				Item
+					Name='thisYear'
+				End
+				Item
+					Name='CostTypeName'
+				End
+				Item
+					Name='parentDeptName'
+				End
+				Item
+					Name='CostBelongDeptId'
+				End
+				Item
+					Name='parentDeptId'
+				End
+				Item
+					Name='ParentTypeName'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='明细部门'
+			End
+			Item
+				Name='费用类型'
+			End
+			Item
+				Name='月份'
+				Width=2
+			End
+			Item
+				Name='年份'
+				Width=2
+				Visible=F
+			End
+			Item
+				Name='一级部门'
+			End
+			Item
+				Name='合计'
+			End
+			Item
+				Name='明细部门id'
+				Width=2
+				Visible=F
+			End
+			Item
+				Name='一级部门id'
+				Width=2
+				Visible=F
+			End
+			Item
+				Name='分组小计'
+				Visible=F
+			End
+		End
+		Object ColumnContent
+			Height=0.6
+			Items ColumnContentCell
+				Item
+					Column='明细部门'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='CostBelongDeptName'
+				End
+				Item
+					Column='费用类型'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					FreeCell=T
+					Items Control
+						Item
+							Type=FieldBox
+							Name='金额'
+							Dock=Fill
+							Cursor=Magnify
+							TextAlign=MiddleRight
+							DataField='CostMoney'
+						End
+					End
+				End
+				Item
+					Column='月份'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='thisMonth'
+				End
+				Item
+					Column='年份'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='thisYear'
+				End
+				Item
+					Column='一级部门'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='parentDeptName'
+				End
+				Item
+					Column='合计'
+					BackColor=0097ECB3
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					Cursor=Magnify
+					DataField='CostMoney'
+				End
+				Item
+					Column='明细部门id'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='CostBelongDeptId'
+				End
+				Item
+					Column='一级部门id'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='parentDeptId'
+				End
+				Item
+					Column='分组小计'
+					FreeCell=T
+					Items Control
+						Item
+							Type=FieldBox
+							Name='FieldBox3'
+							BackColor=0099FFFF
+							BackStyle=Normal
+							Width=2.98979
+							Height=0.608542
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleRight
+							DataField='CostMoney'
+						End
+					End
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=1.38
+			RepeatStyle=OnPage
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='一级部门'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='一级部门'
+				End
+				Item
+					GroupTitle=F
+					Column='一级部门id'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='一级部门id'
+				End
+				Item
+					GroupTitle=F
+					Column='明细部门'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='明细部门'
+				End
+				Item
+					GroupTitle=F
+					Column='明细部门id'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='明细部门id'
+				End
+				Item
+					GroupTitle=F
+					Column='年份'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='年份'
+				End
+				Item
+					GroupTitle=F
+					Column='月份'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='月份'
+				End
+				Item
+					GroupTitle=T
+					Name='Column1'
+					Items ColumnTitleCell
+						Item
+							GroupTitle=F
+							Column='费用类型'
+							BackColor=LtGray
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							FreeCell=T
+							Items Control
+								Item
+									Type=FieldBox
+									Name='FieldBox1'
+									BackColor=White
+									Anchor=[Left|Bottom]
+									Dock=Bottom
+									Height=0.661458
+									CanGrow=T
+									WordWrap=T
+									TextAlign=MiddleCenter
+									DataField='CostTypeName'
+								End
+								Item
+									Type=FieldBox
+									Name='FieldBox5'
+									BackColor=DkGray
+									Dock=Fill
+									DataField='CostTypeName'
+								End
+							End
+						End
+					End
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=105000,0
+						Bold=T
+						Charset=134
+					End
+					FreeCell=T
+					Items Control
+						Item
+							Type=FieldBox
+							Name='FieldBox4'
+							BackStyle=Normal
+							Dock=Fill
+							Object Font
+								Name='微软雅黑'
+								Size=90000,0
+								Bold=T
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							DataField='ParentTypeName'
+						End
+					End
+				End
+				Item
+					GroupTitle=F
+					Column='分组小计'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=105000,0
+						Bold=T
+						Charset=134
+					End
+					FreeCell=T
+					Items Control
+						Item
+							Type=MemoBox
+							Name='MemoBox1'
+							BackColor=DkGray
+							BackStyle=Normal
+							Dock=Fill
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='小计\r\n[#ParentTypeName#]'
+						End
+					End
+				End
+				Item
+					GroupTitle=F
+					Column='合计'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='合计'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='总计'
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					BackColor=LtGray
+					Height=0.635
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					Items Control
+						Item
+							Type=StaticBox
+							Name='StaticBox2'
+							BackColor=White
+							BorderStyles=[DrawLeft|DrawRight]
+							AlignColumnEx='月份'
+							Left=11.9856
+							Width=2.03729
+							Height=0.608542
+							TextAlign=MiddleCenter
+							Text='总计'
+						End
+					End
+				End
+			End
+			Item
+				Name='合并一级部门'
+				ByFields='parentDeptName'
+				Object GroupHeader
+					Height=0
+					OccupyColumn=T
+					IncludeFooter=T
+					OccupiedColumns='一级部门'
+					VAlign=Middle
+				End
+				Object GroupFooter
+					Height=0
+				End
+			End
+			Item
+				Name='小计'
+				ByFields='CostBelongDeptName'
+				Object GroupHeader
+					Height=0
+					OccupyColumn=T
+					IncludeFooter=T
+					OccupiedColumns='明细部门'
+					VAlign=Middle
+				End
+				Object GroupFooter
+					BackColor=Silver
+					Height=0.5
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					Items Control
+						Item
+							Type=StaticBox
+							Name='StaticBox1'
+							BackColor=White
+							BorderStyles=[DrawLeft|DrawRight]
+							AlignColumnEx='月份'
+							Left=11.9856
+							Width=2.03729
+							Height=0.608542
+							TextAlign=MiddleCenter
+							Text='小计'
+						End
+					End
+				End
+			End
+		End
+		Object CrossTab
+			PercentFormat='0.##%'
+			HTotalAtFirst=T
+			HCrossFields='ParentTypeName;CostTypeName'
+			VCrossFields='parentDeptName;parentDeptId;CostBelongDeptName;CostBelongDeptId;thisYear;thisMonth'
+			ListCols=6
+			TotalCols=1
+			SubtotalCols=1
+		End
+	End
+	Items Section
+		Item
+			Type=PageHeader
+			Height=1.2
+		End
+		Item
+			Type=PageFooter
+			Height=1.2
+		End
+		Item
+			Type=ReportHeader
+			Name='ReportHeader1'
+			Height=1.3
+			Items Control
+				Item
+					Type=StaticBox
+					Name='MainTitleBox'
+					Center=Horizontal
+					Left=5.00063
+					Top=0.211667
+					Width=6
+					Height=0.9
+					Object Font
+						Name='宋体'
+						Size=157500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='费用汇总表'
+				End
+			End
+		End
+	End
+End

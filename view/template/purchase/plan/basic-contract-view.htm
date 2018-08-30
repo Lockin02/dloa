@@ -1,0 +1,224 @@
+<html>
+<head>
+    <title>查看采购申请</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/common/approval.js"></script>
+    <script type="text/javascript" src="view/template/purchase/plan/js/basic-execute-view.js"></script>
+    <script>
+        $().ready(function () {
+            if ($('#readType').val() != "") {
+                $('#actType').hide();
+            }
+
+            if ($('#sourceNumb').val() != "") {
+                $('#showContract').show();
+            }
+        });
+
+        function clickFun() {
+            showThickboxWin("controller/common/readview.php?itemtype={purchType}&pid={sourceID}&formType=blue&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=800");
+        }
+    </script>
+
+</head>
+<body scroll="auto">
+<div class="main_head">
+		<span class="main_head_title">
+			查看采购申请
+		</span>
+    <span id='viewChangeLog'></span>
+</div>
+<div class="main_wraper">
+    <input type="hidden" id="isTemp" value="{isChange}">
+    <input type="hidden" id="ExaStatus" value="{ExaStatus}">
+    <input type="hidden" id="readType" value="{readType}">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">采购申请编号</td>
+            <td class="form_text_right">
+                {planNumb}
+            </td>
+            <td class="form_text_left">申请类型</td>
+            <td class="form_text_right">
+                {purchTypeCName}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">源单据号</td>
+            <td class="form_text_right">
+                <a target="_bank" href="index1.php?model={contractdao}&action=init&perm=view&id={sourceID}&skey={skey}"
+                   title="查看合同信息">{sourceNumb}</a>
+                <input type="hidden" id="sourceNumb" value="{sourceNumb}"/>
+            </td>
+            <td class="form_text_left">合同业务编号</td>
+            <td class="form_text_right">
+                <a target="_bank" href="index1.php?model={contractdao}&action=init&perm=view&id={sourceID}&skey={skey}"
+                   title="查看合同信息">{rObjCode}</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">合同名称</td>
+            <td class="form_text_right">
+                {contractName}
+            </td>
+            <td class="form_text_left">申请日期</td>
+            <td class="form_text_right">
+                {sendTime}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">期望完成日期</td>
+            <td class="form_text_right">
+                {dateHope}
+            </td>
+            <td class="form_text_left">申请部门</td>
+            <td class="form_text_right">
+                {department}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请人名称</td>
+            <td class="form_text_right">
+                {sendName}
+            </td>
+            <td class="form_text_left">电话</td>
+            <td class="form_text_right">
+                {phone}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                归属公司
+            </td>
+            <td class="form_text_right">
+                {businessBelongName}
+            </td>
+            <td class="form_text_left">采购部门</td>
+            <td class="form_text_right">
+                {purchDepart}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">采购说明</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="instruction" class="textarea_read_blue" name="basic[instruction]"
+                          readonly>{instruction}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="remark" class="textarea_read_blue" name="basic[remark]" readonly>{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">关闭原因</td>
+            <td class="form_text_right" colspan="3">
+                <textarea class="textarea_read_blue" readonly>{closeRemark}</textarea>
+            </td>
+        </tr>
+        <tr>
+
+            <th colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="13" class="form_header">采购申请清单
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th width="3%">序号</th>
+                        <th width="15%">物料名称</th>
+                        <th width="7%">规格型号</th>
+                        <th width="7%">单位</th>
+                        <th width="7%">采购属性</th>
+                        <th width="7%">检验方式</th>
+                        <th width="7%">申请数量</th>
+                        <th width="7%">原申请数量</th>
+                        <th width="7%">已下达数量</th>
+                        <th width="8%">申请日期</th>
+                        <th width="8%">希望交货期</th>
+                        <th width="8%">实际完成时间</th>
+                        <th width="10%">备注</th>
+                    </tr>
+                    </thead>
+                    {list}
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="td_table" id="approvalView">
+                <input type="hidden" id="pid" value="{id}"/>
+                <input type="hidden" id="itemType" value="oa_purch_plan_basic"/>
+                <input type="hidden" id="isChange" value="1"/>
+            </td>
+        </tr>
+        <tr id="executeView">
+            <td colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="8" class="form_header">采购执行情况
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th width="4%">序号</th>
+                        <th width="28%">物料编号/物料名称</th>
+                        <th width="8%">申请数量</th>
+                        <th width="60%" class="td_table">
+                            <table width="100%" class="main_table_nested" frame=void>
+                                <tr>
+                                    <th width="20%">任务负责人</th>
+                                    <th width="15%">任务数量</th>
+                                    <th width="15%">询价数量</th>
+                                    <th width="50%" class="td_table">
+                                        <table width="100%" class="main_table_nested" frame=void>
+                                            <tr>
+                                                <th width="20%">订单数量</th>
+                                                <th width="30%">预计到货日期</th>
+                                                <th width="30%">实际到货日期</th>
+                                                <th width="20%">入库数量</th>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+                    </thead>
+                    {listEquExecute}
+                </table>
+            </td>
+        </tr>
+        <tr align="center" class="footform" height="28">
+            <td colspan="4">
+                <input type="button" id="actType" value=" 返  回 " class="txt_btn_a" onclick="closeFun();">
+            </td>
+        </tr>
+    </table>
+    <br>
+</div>
+</body>
+<script>
+    var isTemp = $("#isTemp").val();
+    if (isTemp == 1) {
+        $b = $("<input type='button' value='查看变更历史' class='txt_btn_a' />");
+        $b.click(function () {
+            if ($('#readType').val() != "") {
+                window.open("?model=common_changeLog&action=toPlanList&logObj=purchaseplan&originalId={id}&objId={originalId}");
+
+            } else {
+                window.open("?model=common_changeLog&action=toPlanList&logObj=purchaseplan&originalId=&objId={id}");
+            }
+        });
+        $("#viewChangeLog").append($b);
+    }
+</script>
+</html>

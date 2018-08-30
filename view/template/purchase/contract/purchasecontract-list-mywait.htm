@@ -1,0 +1,181 @@
+<html>
+
+<head>
+<title>我的采购合同--待提交审批</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+	$(function() {
+            document.onkeydown = function(e){
+                var ev = document.all ? window.event : e;
+                if(ev.keyCode==13) {
+		          	  document.getElementById("searchBtn").click();
+		            //  search();
+		          }
+			 }
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+        var h=document.body.clientHeight;
+        if(h<200){
+            setTimeout( function(){
+                var h=document.body.clientHeight;
+                $("#bodyDiv").attr("style","height:"+(h-130)+"px;overflow-y:scroll;");
+                $("th[id^='th']").each(function(){
+                    var id=$(this).attr('id');
+                    var ththObj=$("td[name^='td"+id+"']");
+                    if(ththObj.length > 0){
+                        var w=ththObj.eq(0).width();
+                        $(this).width(w);
+                    }
+                });
+            }, 1 * 200 );
+        }else{
+            $("#bodyDiv").attr("style","height:"+(h-132)+"px;overflow-y:scroll;");
+            $("th[id^='th']").each(function(){
+                var id=$(this).attr('id');
+                var ththObj=$("td[name^='td"+id+"']");
+                if(ththObj.length > 0){
+                    var w=ththObj.eq(0).width();
+                    $(this).width(w);
+                }
+            });
+        }
+
+			var searchCol=$('#searchCol').val();
+			$("select[id='searchCondition'] option").each(function(){
+				if($(this).val()==searchCol){
+					$(this).attr("selected","selected");
+				}
+			});
+		});
+	</script>
+
+<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+<style>
+    .tdPadding{ padding-left:5px; }
+</style>
+<script language="javascript">
+        var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+        var imgExpanded = "images/expanded.gif" //减号图路径
+
+        var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+        var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+        var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+        var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+       var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+        var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+        var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+        var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+        var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+           function show_page(page){
+				this.location="?model=purchase_contract_purchasecontract&action=myWaitList";
+			}
+
+		//搜索
+		function search(){
+			var searchCol=$('#searchCondition').val();
+			var searchvalue=$('#applyNumb').val();
+			location="?model=purchase_contract_purchasecontract&action=myWaitList&searchvalue="+searchvalue+"&searchCol="+searchCol;
+		}
+
+		//清空
+		function clearNum(){
+			location="?model=purchase_contract_purchasecontract&action=myWaitList";
+		}
+
+		//起草采购订单
+		function addOrder(){
+			parent.location="?model=purchase_contract_purchasecontract&action=toAddOrder&addType=order";
+		}
+
+
+</script>
+<script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-list-mywait.js"></script>
+</head>
+
+<body scroll="no">
+<div class="main_wraper">
+<table class="main_table"   style="width:97.5%">
+<thead>
+	<tr  class="main_table_search">
+		<td colspan="15" align="left">&nbsp;
+			<select class="" id="searchCondition">
+			    <option value="seachApplyNumb,suppName,productNumb,productName">所有</option>
+			    <option value="seachApplyNumb">采购订单编号</option>
+			    <option value="suppName">供应商名称</option>
+			    <option value="productNumb">物料编号</option>
+			    <option value="productName">物料名称</option>
+		  	</select>
+		<input type="text" class="txt" name="applyNumb" id="applyNumb" value="{applyNumb}">
+			<input type="hidden" id="searchCol" value="{searchCol}">
+		<input type="button" value="搜 索" id="searchBtn" class="txt_btn_a" onclick="search();">
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearNum();">
+		    <input type="button" value=" 起草采购订单" class="txt_btn_a" onclick="addOrder();">
+		</td>
+	</tr>
+	<tr class="main_tr_header">
+		<th width="4%" id="th01">
+			<p class="allImg">序号 <br />
+			<img src="images/expanded.gif" /></p>
+		</th>
+		<th id="th02">
+			<p class="checkAll">
+				采购订单编号
+			</p>
+		</th>
+		<th width="20%" id="th03">预计到 <br />
+			货时间
+		</th>
+		<th width="8%" id="th04">供应商</th>
+		<th id="th05">状态</th>
+		<th width="50%" class="td_table">
+			<table class="main_table_nested">
+				<tr>
+					<th colspan="5">采购订单-物料信息</th>
+				</tr>
+				<tr>
+					<th width="45%" id="th10">物料编号 <br>
+						名称
+					</th>
+					<th width="10%" id="th11">采购类型</th>
+					<th width="10%" id="th12">订单数量</th>
+					<th width="10%" id="th13">入库数量</th>
+					<th width="10%" id="th14">收料数量</th>
+					<th width="20%" id="th15">含税单价</th>
+					<!--
+					<th width="25%">备注</th> -->
+				</tr>
+			</table>
+		</th>
+		<th id="th16">操作</th>
+	</tr>
+</thead>
+</table>
+    <div id="bodyDiv">
+    <table class="main_table" >
+    <tbody >
+    {list}
+    </tbody>
+	</table>
+	</div>
+{pageDiv}
+</div>
+</body>
+
+</html>

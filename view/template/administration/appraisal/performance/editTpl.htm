@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<title></title>
+</head>
+<style type="text/css">
+    body{
+        margin:0px;padding:0px;border:0px;width:100%;height:100%;overflow:hidden;
+    }
+    </style>
+<body>
+<div class="mini-fit" id="form" >
+<fieldset>
+<legend  class="legend" onclick="showAndHideDiv('asImg','asInfo')">模板设置
+	<img id="asImg" src="images/icon/info_up.gif"><input name="keyId"  id="keyId" type="text" value="{keyId}"  class="mini-hidden"/>
+</legend>
+    <table id="asInfo" border="0" cellpadding="0" cellspacing="0" align="center" class="tables" style="width:100%;height:auto">
+      <tr>
+        <td  class="form_text_left_con">模板名称：</td>
+        <td class="form_text_right_con"><input name="tplName"  id="tplName" type="text" value="{tplName}"  class="mini-textbox"  style="width:170px;" required="true"/>
+        </td>
+        <td class="form_text_left_con">归属部门：</td>
+        <td class="form_text_right_con"><input name="deptId" id="deptId" type="text" value="{deptId}" class="mini-treeselect" style="width:170px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择归属部门"  allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData" onvaluechanged="onValueChangedHidden"/> <input name="deptIdName"  id="deptIdName"  type="text"  value="{deptName}" class="mini-hidden"/></td>
+         <td  class="form_text_left_con">考核年份 ：</td>
+        <td class="form_text_right_con"><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="tplYear" id="tplYear" style="width:170px;"  value="{tplYear}" required="true" /></td>
+      </tr>
+       <tr>
+        <td class="form_text_left_con">考核周期：</td>
+        <td class="form_text_right_con"><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="tplStyle" id="tplStyle"  style="width:170px;"  value="{tplStyle}" required="true" /></td>
+        <td  class="form_text_left_con">是否自评：</td>
+        <td class="form_text_right_con"><div  name='isAss' id='isAss'  value="{isAss}" onvaluechanged="isAss" repeatItems="1" class="mini-radiobuttonlist" required="true"  data="isAssData" textField="text"  valueField="id" ></div></td>
+        <td  class="form_text_left_con">自评分比例(%)：</td>
+        <td class="form_text_right_con"> <input id="asPers" name="asPers"  value="{asPers}" class="mini-spinner"  style="width:170px;"  minValue="0" maxValue="100"/></td>
+
+        
+      </tr>
+      
+      <tr>
+      <td class="form_text_left_con">考核分比例(%)：</td>
+       <td class="form_text_right_con"> <input id="asAss" name="asAss"  value="{asAss}" class="mini-spinner" required="true" style="width:170px;"   minValue="0" maxValue="100" /></td>
+        <td class="form_text_left_con">审核分比例(%)：</td>
+        <td class="form_text_right_con" colspan="3"> <input id="asAudit" name="asAudit"  value="{asAudit}" required="true" class="mini-spinner"style="width:170px;"   minValue="0" maxValue="100"  /></td>
+                
+      </tr>
+      <tr>
+        <td class="form_text_left_con">模板类型：</td>
+        <td class="form_text_right_con"  colspan="3"><div  name="tplStyleFlag"  value="{tplStyleFlag}" id="tplStyleFlag"  repeatItems="1" class="mini-radiobuttonlist" required="true"   data="tplTypeData" textField="text" valueField="id" ></div></td>
+     
+         <td  class="form_text_left_con">备   注：</td>
+        <td  class="form_text_right_con" ><textarea name="remark"  id="remark" class="mini-textarea" emptyText="请输入备注" style="width:84%; height:35px;">{remark}</textarea></td>
+      </tr>
+<tr>
+       <td  class="form_text_left_con">人员设置：</td>
+        <td  class="form_text_right_con" colspan="5">
+<div id="grid" class="mini-datagrid" style="width:100%;height:auto"  dField="id" showFooter="false"  allowSortColumn="false" multiSelect="true" url= "?model=administration_appraisal_performance_item&action=getGridUserListData&keyId={keyId}">
+    <div property="columns">
+             <div type="removecolumn" headerAlign="center" width="30"></div>
+             <div type="indexcolumn" headerAlign="center" width="30"></div>
+             <div field="assess"  name="assess" width="100"    headerAlign="center" >考 核 人
+                    <div property="editor" class="mini-autocomplete" style="width:100%;" id="assess" name="assess" valueFromSelect="true"  popupWidth="280"  textField="text" valueField="id" onvaluechanged="onValueChanged"   url="?model=administration_appraisal_performance_item&action=userData" showNullItem="false">     
+                    <div property="columns">
+                        <div header="部门" width="40" field="deptName"></div>
+                        <div header="姓名" field="text"></div>
+                    </div>
+                </div>
+            </div>
+            <div field="assessName"  name="assessName" headerAlign="center"  width="30"> <input property="editor" type="text"   class="mini-hidden"/></div> 
+            <div field="auditName"   name="auditName" headerAlign="center"  width="30"> <input property="editor" type="text"   class="mini-hidden"/></div>
+            <div field="userStrName"  name="userStrName" headerAlign="center"  width="30"> <input property="editor" type="text"  class="mini-hidden"/></div>     
+            <div field="audit" name="audit" width="100"   headerAlign="center" >审 核 人
+                <div property="editor" class="mini-autocomplete" id="audit" name="audit"  valueFromSelect="true" required="true" style="width:100%;"  popupWidth="280" textField="text" valueField="id"  onvaluechanged="onValueChanged" url="?model=administration_appraisal_performance_item&action=userData" showNullItem="false" >     
+                <div property="columns">
+                    <div header="部门" field="deptName"></div>
+                    <div header="姓名" field="text"></div>
+                </div>
+            </div>
+             </div>
+            <div field="userType" name="userType" width="70"   headerAlign="center" >人员类型
+               <input property="editor"  class="mini-combobox"  data="userTypeData" emptyText="请选择" name="userType" id="userType" style="width:100%;" required="true" />
+            </div>
+            <div field="userStr" name="userStr" width="100%"   headerAlign="center" >人 员
+         <input  property="editor"id="userStr" name="userStr" class="mini-buttonedit searchbox" style=" width:100%;" showClose="true"  onbuttonclick="onEnterClick" selectOnFocus="true" emptyText="请选择-->" required="true" allowInput="false"   onenter="onEnterClick" oncloseclick="onCloseClick"/>
+            </div>          
+    </div>
+</div>
+        </td>
+      </tr>      
+    </table>
+ </fieldset>   
+<fieldset>
+<legend  class="legend">录入模板类型设置
+	<img id="linkmanImg" src="images/icon/info_up.gif">
+</legend>
+<table id="asInfo" border="0" cellpadding="0" cellspacing="0" align="center" class="tables" style="width:98%;height:auto">
+      <tr>
+      <td width="50%" valign="top">
+<div id="grid1" class="mini-datagrid" style="width:100%;height:auto"  dField="id"  showFooter="false"  allowSortColumn="false" multiSelect="true" url="?model=administration_appraisal_performance_item&action=getGridProjectNameData&keyId={keyId}">
+    <div property="columns">
+             <div type="removecolumn" headerAlign="center" width="30"></div>
+             <div type="indexcolumn" headerAlign="center" width="30"></div>
+             <div field="projectName" width="100%"   headerAlign="center" >考核大项名称
+                <input property="editor" class="mini-textbox" style="width:100%;" onvalidation="isrequired" minHeight="80"/>
+            </div>            
+    </div>
+</div>
+</td><td width="50%" valign="top">
+<div id="grid2" class="mini-datagrid" style="width:100%;height:auto"  dField="id" showFooter="false"  allowSortColumn="false" multiSelect="true" url="?model=administration_appraisal_performance_item&action=getGridColumnsNameData&keyId={keyId}">
+    <div property="columns">
+             <div type="removecolumn" headerAlign="center" width="30"></div>
+             <div type="indexcolumn" headerAlign="center" width="30"></div>
+             <div field="columnsName" width="100%"  headerAlign="center" >考核尺度名称
+                <input property="editor" class="mini-textbox" style="width:100%;" onvalidation="isrequired" minHeight="80"/>
+            </div>            
+    </div>
+</div>
+</td>
+      </tr>
+    </table>
+</fieldset>
+</div>
+<div class="mini-toolbar" style="text-align:center;margin:0px; border-bottom:0px; border-left:0px; border-right:0px;" > <a class="mini-button" style="width:60px;" onclick="submitForm()">确定</a> <span style="display:inline-block;width:25px;"></span> <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a></div>
+<script type="text/javascript"> 
+ var isAssData=[{ "id": "1", "text": "是" },{ "id": "2", "text": "否" }]; 
+ var userTypeData=[{ "id": "1", "text": "人 员" },{ "id": "2", "text": "职 位" }];
+ //var tplTypeData=[{ "id": "1", "text": "录入型模板" },{ "id": "2", "text": "HTML型模板" },{ "id": "3", "text": "EXCEL导入型模板" }];
+ var tplTypeData=[{ "id": "1", "text": "录入型模板" },{ "id": "3", "text": "EXCEL导入型模板" }];
+ mini.parse();
+function onEnterClick(e){
+			var row = grid.getEditorOwnerRow(e.sender);
+            var userType= grid.getCellEditor("userType", row);
+			var userStrName= grid.getCellEditor("userStrName", row);
+			var userStr= grid.getCellEditor("userStr", row);
+			userTypes=userType.getValue();
+			userStrValue=userStr.getValue();
+			if(!userTypes){
+			 alert("请选人员类型");
+			 return false;	
+			}
+			if(userTypes==1){
+				url="?model=deptuser_user_user&action=selectuser&mode=check&showDialog=1&isOnlyCurDept=false&deptIds=&formCode=stampConfig&userVal="+userStrValue;
+				revalue=showModalDialog(url,'','dialogWidth:650px;dialogHeight:470px;');
+				if(revalue){
+				  userStr.setValue(revalue.val);
+				  userStr.setText(revalue.text);
+				  userStrName.setValue(revalue.text);
+				}
+			}else if(userTypes==2){
+			   mini.open({
+					url:"?model=deptuser_user_user&action=selectuser&mode=check&showDialog=1&isOnlyCurDept=false&deptIds=&formCode=stampConfig",    
+					title: "选择人员",
+					width: 700,
+					height: 530,
+					ondestroy: function (action) {
+						if (action == "ok") {
+							var iframe = this.getIFrameEl();
+							var data = iframe.contentWindow.GetData();
+							data = mini.clone(data);
+							btnEdit.setValue(data.id);
+							btnEdit.setText(data.text);
+						}
+					}
+				});
+			}
+		}
+var grid = mini.get("grid");
+var grid1 = mini.get("grid1");
+var grid2 = mini.get("grid2");
+grid.load();grid1.load();grid2.load();
+grid.hideColumn("assessName");
+grid.hideColumn("auditName");
+grid.hideColumn("userStrName");
+grid.unmask() ;
+grid1.unmask() ;
+grid2.unmask() ;
+grid.on("load",function()
+ {
+	var gridData =grid.getData();
+	for(var i=0;i<gridData.length;i++){
+		var row=gridData[i];
+	   grid.beginEditRow(row);
+	   var assess= grid.getCellEditor("assess", row);
+	   var assessName= grid.getCellEditor("assessName",row);
+	   var audit= grid.getCellEditor("audit",row);
+	   var auditName= grid.getCellEditor("auditName",row);
+	   var userStrName= grid.getCellEditor("userStrName",row);
+	   var userStr= grid.getCellEditor("userStr",row);
+	   var userStrValue=userStrName.getValue();
+	   userStr.setText(userStrValue);
+	   var assessValue=assessName.getValue();
+	   assess.setText(assessValue);
+	   var auditValue=auditName.getValue();
+	   audit.setText(auditValue);  
+	}
+});
+	
+grid1.on("load",function()
+ {
+	var gridData1 =grid1.getData(true);
+	for(var i=0;i<gridData1.length;i++){
+	   var row = gridData1[i];
+	   grid1.beginEditRow(row);
+	}
+	});
+	
+grid2.on('load',function()
+ {
+	var gridData2 =grid2.getData(true);
+	for(var i=0;i<gridData2.length;i++){
+	   var row = gridData2[i];
+	   grid2.beginEditRow(row);
+	}
+	});
+function editGrids(){
+	var gridData1 =grid1.getData(true);
+	for(var i=0;i<gridData1.length;i++){
+	   var row = gridData1[i];
+	   grid1.beginEditRow(row);
+	}
+	var gridData2 =grid2.getData(true);
+	for(var i=0;i<gridData2.length;i++){
+	   var row = gridData2[i];
+	   grid2.beginEditRow(row);
+	}
+}
+function addRow(gid) {
+	var regrid = mini.get(gid);
+	var row = {};
+   regrid.addRow(row);
+   regrid.beginEditRow(row);
+}
+ function removeRow(gid) {
+	var regrid = mini.get(gid);
+	var rows = regrid.getSelecteds();
+	if (rows.length > 0) {
+		regrid.removeRows(rows, true);
+	}
+}
+
+function isrequired(e) {
+	if (e.isValid) 
+	{
+		var tplType = mini.get('tplStyleFlag').getValue();
+		if(tplType==1&&e.value==''){
+			e.errorText = "不能为空";
+			e.isValid=false;					
+		}
+	 }
+}
+
+function submitForm() {
+	 var form = new mini.Form("#form");
+		form.validate();
+	if (form.isValid() == false) return false;
+	var isAss = mini.get('isAss').getValue();
+	var asPers = mini.get('asPers').getValue();
+	var asAss = mini.get('asAss').getValue();
+	var asAudit = mini.get('asAudit').getValue();
+	if(isAss==1&&(asPers+asAss+asAudit)!=100){
+		alert("评分比例不为100%");
+		return false;
+	}else if(isAss==2&&(asAss+asAudit)!=100){
+		alert("评分比例不为100%");
+		return false;
+	}
+	var formData = form.getData();
+	 grid.commitEdit();
+	 grid1.commitEdit();
+	 grid2.commitEdit();
+	var gridData =grid.getChanges();
+	var grid1Data =grid1.getChanges();
+	var grid2Data =grid2.getChanges();
+	var infoData = mini.encode(formData);
+	var userData = mini.encode(gridData);
+	var projectData = mini.encode(grid1Data);
+	var columnsData = mini.encode(grid2Data);
+	//alert(infoData);alert(projectData);alert(columnsData);  
+	//return false;
+	$.ajax({
+		url: "?model=administration_appraisal_performance_item&action=editTpl",
+		type: "post",
+		data: { infoData:infoData,userData:userData,projectData:projectData,columnsData:columnsData},
+		success: function (text) {
+			if(text==2){
+				alert('编辑成功！');
+				CloseWindow("save");
+				//grid.reload();
+			}else{
+				alert('编辑失败！');
+				editGrids();	
+			}
+		}
+	});
+}
+function onCloseClick(e){
+	  var o= mini.get(e.sender.id);
+		o.setValue("");
+		o.setText("");	  
+  }
+
+function CloseWindow(action) {
+   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	else window.close();          
+	window.parent.grid.load();  
+}
+function onCancel(e) {
+	CloseWindow("cancel");
+}
+function onValueChanged(e){
+	var combo = e.sender;
+	var items = e.selected;
+	var row = grid.getEditorOwnerRow(combo);
+	if (items) { 
+	  var setObj = grid.getCellEditor(e.sender.name+'Name', row);
+	      setObj.setValue(items.text);
+	}else{
+	 var setObj = grid.getCellEditor(e.sender.name+'Name', row);
+	      setObj.setValue('');
+	}
+}
+isAss();
+function isAss(){
+	var asPers = mini.get('asPers');
+	var isAss = mini.get('isAss').getValue();
+	if(isAss==1){
+		asPers.enable();
+	}else{
+		asPers.disable();
+	}
+}
+function onValueChangedHidden(e){
+	var combo = e.sender;
+	if (e.sender.text) { 
+	  var setObj = mini.get(e.sender.name+'Name');
+	  setObj.setValue(e.sender.text);
+	}
+}
+</script>
+</body>
+</html>

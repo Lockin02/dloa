@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>固定资产盘盈盘亏表搜索</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+ <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+ <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-checktask.js"></script>
+ <script type="text/javascript" src="view/template/asset/checktask/js/check-search.js"></script>
+
+
+</head>
+<script type="text/javascript">
+	function confirm() {
+		var taskNo=$("#taskNo").val();
+		var dept=$("#dept").val();
+		var deptId=$("#deptId").val();
+
+        if(taskNo==""){
+            alert("请输入任务编号!");
+			return;
+        }
+         if(dept==""){
+            alert("请输入盘点部门!");
+			return;
+        }
+		this.opener.location = "?model=asset_checktask_check&action=toReport&taskNo="+taskNo+"&dept="+dept+"&deptId="+deptId;
+		this.close();
+	}
+	function refresh(){
+		$("#taskNo").val("");
+		$("#dept").val("");
+		$("#deptId").val("");
+	}
+</script>
+<body>
+<div class="main_head"><span class="main_head_title"> 资产搜索
+</span></div>
+<table class="form_main_table">
+
+	<tr>
+		<td class="form_text_left">任务编号</td>
+		<td class="form_text_right >
+           <input id="taskId" type="hidden" />
+		   <input type="text" id="taskNo"  value="{taskNo}"	class="txt" />
+		</td>
+    </tr>
+	<tr>
+		<td class="form_text_left">盘点部门</td>
+		<td class="form_view_right">
+            <input id="deptId" type="hidden" />
+		    <textarea class="txt_txtarea_font" rows="5" readOnly id="dept" style="width:80%"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+			<input type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

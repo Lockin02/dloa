@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model=product_demand&action=edit&id={id}&key={rand_key}" onsubmit="return check();" enctype="multipart/form-data">
+<input type="hidden" id="delfile" name="delfile" value="0" /> 
+<table class="table" width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr class="tableheader">
+    <td colspan="3" align="center"><strong>产品需求提交</strong></td>
+  </tr>
+  <tr>
+    <td width="200" align="right">所属产品：</td>
+    <td align="left" colspan="2">
+    	<select id="product_id" name="product_id">
+    		{typelist}
+		</select>
+		<span id="_product_id">*</span>
+	</td>
+  </tr>
+  <tr>
+    <td align="right">需求紧急程度：</td>
+    <td align="left" colspan="2">
+	    <select name="degree" id="degree">
+	        <option {selected_1} value="1">普通</option>
+	        <option {selected_2} value="2">紧急</option>
+	     </select>    
+	</td>
+  </tr>
+  <tr>
+    <td align="right">产品需求描述<br>（含需求实现目的及客户建议方式）</td>
+     <td align="left" colspan="2">
+    		<input type="hidden" id="description" name="description" value="{description}"/>
+			<input type="hidden" id="body___Config" value=""  />
+			<iframe id="body___Frame" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=description&amp;Toolbar=MyDesign" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
+	</td>
+  </tr>
+  <!--<tr>
+    <td align="right">客户建议的实现方式：</td>
+    <td align="left"><textarea name="realize" id="realize" style="width:70%;" rows="5">{realize}</textarea></td>
+  </tr>-->
+  <tr>
+    <td align="right">需求实现步骤：</td>
+    <td align="left" width="70%">
+    	<textarea name="step" id="step" style="width:100%;" rows="5">{step}</textarea>
+	</td>
+	<td align="left">
+		{upfile}<br />
+		上传附件：<input type="file" name="upfile" value="" />
+	</td>
+  </tr>
+  <tr>
+    <td align="right">需求实现算法：</td>
+    <td align="left" colspan="2"><textarea name="algorithm" id="algorithm" style="width:70%;" rows="5">{algorithm}</textarea></td>
+  </tr>
+  <tr>
+    <td align="right">需求提出单位：</td>
+    <td align="left" colspan="2"><input type="text" size="40" name="unit" id="unit" value="{unit}" /></td>
+  </tr>
+  <tr>
+    <td align="right">需求提出人：</td>
+    <td align="left" colspan="2"><input type="text" size="40" name="contact" id="contact" value="{contact}" /></td>
+  </tr>
+  <tr>
+    <td align="right">需求提出人手机：</td>
+    <td align="left" colspan="2"><input type="text" size="40" name="mobile" id="mobile" value="{mobile}" /></td>
+  </tr>
+  <tr>
+    <td align="right">需求提出人Email：</td>
+    <td align="left" colspan="2"><input type="text" size="40" name="email" id="email" value="{email}" /></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><input type="submit" name="button" id="button" value=" 修改申请 " /> </td>
+  </tr>
+</table>
+</form>
+<script type="text/javascript">
+	
+	function check()
+	{
+		oEditor = FCKeditorAPI.GetInstance("description");
+		if ($('#product_id').val()=='')
+		{
+			$('#product_id').html('请选择产品类型！');
+			$('#product_id').focus();
+			return false;
+		}else{
+			$('#_product_id').html('*');
+		}
+		if (oEditor.GetHTML()=='')
+		{
+			$('#_description').html('请填写产品需求描述！');
+			$('#description').focus();
+			return false;
+		}
+		var filepath = $('input[type=file][name=upfile]').val();
+		if (filepath!='')
+		{
+			if (/^.*?\.(php|asp|aspx|jsp|exe|dll|js)$/.test(filepath)) 
+			{
+				alert('您要上传的附件系统限制上传，请更换其他类型的文件！！');
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	function delfile()
+	{
+		if (confirm('您确定要删除该附件吗？'))
+		{
+			$('#delfile').val('1');
+			$('#file_link').remove();
+		}
+	}
+</script>
+</body>
+</html>

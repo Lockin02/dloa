@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>编辑产品基本信息</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/goodsbaseinfo-edit.js"></script>
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+    <script type="text/javascript" src="swfupload/handlers.js"></script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ("{isMature}" == "on") {
+                $("#isMature").attr("checked", true);
+            }
+            if ("{isEncrypt}" == "on") {
+                $("#isEncrypt").attr("checked", true);
+            }
+            var uploadfile;
+            uploadfile = createSWFUpload({
+                "serviceType": "oa_goods_base_info",
+                "serviceId": "{id}"
+            });
+        })
+
+    </script>
+    <!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=goods_goods_goodsbaseinfo&action=edit">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+                    <span class="main_head_title">
+                        编辑产品基本信息
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">所属分类</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" readOnly id="goodsTypeName" name="goodsbaseinfo[goodsTypeName]"
+                       value="{goodsTypeName}"/>
+                <input type="hidden" id="goodsTypeId" name="goodsbaseinfo[goodsTypeId]" value="{goodsTypeId}"/>
+
+            </td>
+            <td class="form_text_left">产品分类</td>
+            <td class="form_text_right">
+                <select class="select" id="goodsTypeCode" name="goodsbaseinfo[goodsTypeCode]">
+                    {goodsTypeCode}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">状态</td>
+            <td class="form_text_right">
+                <select class="select" id="useStatus" name="goodsbaseinfo[useStatus]">
+                    {useStatus}
+                </select>
+            </td>
+            <td class="form_text_left">是否需要加密</td>
+            <td class="form_text_right">
+                <input type="checkbox" class="txt" id="isEncrypt" name="goodsbaseinfo[isEncrypt]"/>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="form_text_left">是否成熟产品</td>
+            <td class="form_text_right">
+                <input type="checkbox" class="txt" id="isMature" name="goodsbaseinfo[isMature]"/>
+            </td>
+            <td class="form_text_left">产品名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" readOnly id="goodsName" name="goodsbaseinfo[goodsName]"
+                       value="{goodsName}"  onblur="setOsGoodName()"/><span
+                    class="red"> [*] </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">单位</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="unitName" name="goodsbaseinfo[unitName]" value="{unitName}"/>
+            </td>
+             <td class="form_text_left">产品线</td>
+            <td class="form_text_right">
+                <select id="exeDeptCode" name="goodsbaseinfo[exeDeptCode]" class="select">
+                    {exeDeptCode}
+                </select>
+                <span class="red"> [*] </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">执行区域</td>
+            <td class="form_text_right">
+                <input type="hidden" id="auditDeptCode" name="goodsbaseinfo[auditDeptCode]" value="{auditDeptCode}"/>
+                <input type="text" class="txt" id="auditDeptName" name="goodsbaseinfo[auditDeptName]"
+                       value="{auditDeptName}" readonly/>
+            </td>
+            <td class="form_text_left">海外产品名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="osGoodsName" name="goodsbaseinfo[osGoodsName]"  value="{osGoodsName}"/>
+                <span class="red"> [*] </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea style="width:600px;" class="txt_txtarea_font" name="goodsbaseinfo[remark]">{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">说明</td>
+            <td class="form_text_right" colspan="3">
+                <textarea style="width:600px;" class="txt_txtarea_font"
+                          name="goodsbaseinfo[description]">{description}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">附件</td>
+            <td class="form_text_right" colspan="3">
+                <div class="upload">
+                    <div class="upload" id="fsUploadProgress"></div>
+                    <div class="upload">
+                        <span id="swfupload"></span>
+                        <input id="btnCancel" type="button"
+                               value="中止上传" onclick="cancelQueue(uploadfile);"
+                               disabled="disabled"/> <br/>
+                    </div>
+                    <div id="uploadfileList" class="upload">{file}</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="id" name="goodsbaseinfo[id]" value="{id}"/>
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

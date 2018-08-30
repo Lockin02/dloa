@@ -1,0 +1,61 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>项目任务信息</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/contextmenu.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="{jsUrl}"></script>
+
+<script type="text/javascript">
+
+            $(document).ready(function() {
+                //添加鼠标经过行颜色改变
+                rowsColorChange();
+                topTabShow(arrayTop, "pjTask","{pjId}");
+            });
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toProjectTaskPage";
+			}
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				this.location="?model=rdproject_task_rdtask&action=toProjectTaskPage&projectId="+$("#projectId").val()+"&"+searchfield+"="+searchvalue;
+			}
+
+		/*
+		*改变视图src
+		*/
+	function changeFrame(type){
+
+		if(type=="list")
+			$("#taskframe").attr("src","?model=rdproject_task_rdtask&action=toProTkManagePage&jsUrl={jsUrl}&pjId={pjId}");
+		if(type=="process")
+			$("#taskframe").attr("src","?model=rdproject_task_rdtask&action=toProTkProcessPage&jsUrl={jsUrl}&pjId={pjId}");
+		if(type=="deviation")
+			$("#taskframe").attr("src","?model=rdproject_task_rdtask&action=toProTkDeviationPage&jsUrl={jsUrl}&pjId={pjId}");
+
+	}
+</script>
+
+
+</head>
+<div class="tab_options"></div>
+<div class="main_head">
+<span class="main_head_title"> 项目任务信息 </span></div>
+<div>
+	<INPUT type=radio name="task" CHECKED onclick="changeFrame('list')">任务视图
+	<INPUT type=radio name="task" onclick="changeFrame('process')">进展视图
+	<INPUT type=radio name="task" onclick="changeFrame('deviation')">偏差视图
+</div>
+<iframe id="taskframe" FRAMEBORDER="0" src="?model=rdproject_task_rdtask&action=toProTkManagePage&jsUrl={jsUrl}&pjId={pjId}" width="98%" height="80%" align="center"></iframe>
+
+</html>

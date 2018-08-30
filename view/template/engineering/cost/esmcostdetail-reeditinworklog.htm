@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑费用明细</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-expensemodel.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-exceptionapply.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmcostdetail-addinworklog.js" ></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=engineering_cost_esmcostdetail&action=reeditInWorklog" onsubmit="return checkform();">
+	<table class="form_main_table" style="width:1110px;margin:auto;align:center" align="center">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						编辑费用明细
+					</span>
+				</div>
+			</td>
+		</tr>
+        <tr>
+			<td>
+				<fieldset><legend class="legend">基 本 信 息
+					<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+				</legend>
+				<table class="form_in_table" id="baseTbl">
+			        <tr>
+			      		<td class="form_text_left">日志日期</td>
+			      		<td class="form_text_right" >
+			      			{executionDate}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">项目名称</td>
+			      		<td class="form_text_right" >
+			      			{projectName}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">任务名称</td>
+			      		<td class="form_text_right" >
+			      			{activityName}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">超权限申请</td>
+			      		<td class="form_text_right" >
+			      			<input type="text" class="txtlong" id="excApplyCode" name="esmcostdetail[worklog][excApplyCode]" value="{excApplyCode}" readonly="readonly"/>
+			      			<input type="hidden" id="excApplyId" name="esmcostdetail[worklog][excApplyId]" value="{excApplyId}"/>
+			      			<input type="hidden" id="createId" value="{createId}"/>
+			      			<input type="hidden" name="esmcostdetail[worklog][id]" value="{id}"/>
+			      			<input type="hidden" name="esmcostdetail[worklog][activityId]" value="{activityId}"/>
+			      			<input type="hidden" name="esmcostdetail[worklog][projectId]" value="{projectId}"/>
+			      			<input type="hidden" id="isEdit" value="1"/>
+			      		</td>
+			        </tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="6">
+				<fieldset><legend class="legend"><b>费 用 信 息</b>
+					<img src="images/icon/info_up.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl')"/>
+				</legend>
+				<img id="imgLoading" src="images/loading1.gif" style="display:none"/>
+				<table class="form_in_table">
+					<thead>
+						<tr class="main_tr_header">
+							<th width="12%">费用大类</th>
+							<th width="12%">费用小类</th>
+							<th width="12%">费用金额</th>
+							<th width="9.7%">发票类型</th>
+							<th width="8.6%">发票金额</th>
+							<th width="8.6%">发票数量</th>
+							<th>操 作</th>
+							<th width="29%">备 注</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						{detail}
+					</tbody>
+					<tr class="tr_count">
+						<td>合计</td>
+						<td></td>
+						<td><input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="expense[Amount]" id="countMoney" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:93px" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="expense[invoiceMoney]" id="invoiceMoney" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:80px" name="expense[invoiceNumber]" id="invoiceNumber" readonly="readonly"/></td>
+						<td><input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/></td>
+						<td></td>
+					</tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+      			<input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      			<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

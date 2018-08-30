@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>签收租车合同</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-vehiclesupp.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rentalcar.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentcar-provin-city.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentcar-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentcar-change.js"></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_contract_rentcar",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+
+<form id="form1" method="post" action="?model=outsourcing_contract_rentcar&action=sign">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="6">
+				<div class="main_head">
+					<span class="main_head_title">
+						签收租车合同信息
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="6">
+				<fieldset>
+					<legend class="legend">基 本 信 息</legend>
+					<table class="form_in_table">
+						<tr>
+							<td class="form_text_left_three">合同性质</td>
+							<td class="form_text_right_three">
+								<input type="hidden" id="contractNature" name="rentcar[contractNature]" value="{contractNature}"/>
+								<input type="hidden" id="contractNatureCode" name="rentcar[contractNatureCode]" value="{contractNatureCode}"/>
+								<b>{contractNature}</b>
+							</td>
+							<td class="form_text_left_three">合同类型</td>
+							<td class="form_text_right_three">
+								<input type="hidden" id="contractType" name="rentcar[contractType]" value="{contractType}"/>
+								<input type="hidden" id="contractTypeCode" name="rentcar[contractTypeCode]" value="{contractTypeCode}"/>
+								<b>{contractType}</b>
+							</td>
+							<td class="form_text_left_three">租车申请单号</td>
+							<td class="form_text_right_three">
+								<input type="hidden" class="txt" name="rentcar[rentalcarCode]" value="{rentalcarCode}"/>
+								<input type="hidden" class="txt" id="rentalcarId" name="rentcar[rentalcarId]" value="{rentalcarId}"/>
+								<input type="hidden" class="txt" id="suppIds"/>
+								<b>{rentalcarCode}</b>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">项目编号</td>
+							<td class="form_text_right_three">
+								<b>{projectCode}</b>
+							</td>
+							<td class="form_text_left_three">项目名称</td>
+							<td class="form_text_right_three">
+								<b>{projectName}</b>
+							</td>
+							<td class="form_text_left_three">项目类型</td>
+							<td class="form_text_right_three">
+								<b>{projectType}</b>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">鼎利合同编号</td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal" id="orderCode" name="rentcar[orderCode]" readonly value="{orderCode}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">合同名称</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="orderName" name="rentcar[orderName]" value="{orderName}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">合同负责人</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="principalName" name="rentcar[principalName]" value="{principalName}" readonly/>
+								<input type="hidden" class="txt" id="principalId" name="rentcar[principalId]" value="{principalId}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">签约公司</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="signCompany" name="rentcar[signCompany]" value="{signCompany}" readonly/>
+								<input type="hidden" class="txt" id="signCompanyId" name="rentcar[signCompanyId]" value="{signCompanyId}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">公司省份</span></td>
+							<td class="form_text_right_three">
+								<input type="hidden" class="txt" id="companyProvince" name="rentcar[companyProvince]" val="{companyProvince}"/>
+								<select class="txt" id="companyProvinceCode" name="rentcar[companyProvinceCode]"></select>
+							</td>
+							<td class="form_text_left_three">负责人部门</td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal" id="deptName" name="rentcar[deptName]" value="{deptName}" readonly/>
+								<input type="hidden" class="txt" id="deptId" name="rentcar[deptId]" value="{deptId}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">合同金额</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt formatMoney" id="orderMoney" name="rentcar[orderMoney]" value="{orderMoney}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">公司城市</span></td>
+							<td class="form_text_right_three">
+								<input type="hidden" class="txt" id="companyCity" name="rentcar[companyCity]" val="{companyCity}"/>
+								<select class="txt" id="companyCityCode" name="rentcar[companyCityCode]"></select>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">联系人</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="linkman" name="rentcar[linkman]" value="{linkman}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">归属公司</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="ownCompany" name="rentcar[ownCompany]" readonly value="{ownCompany}"/>
+								<input type="hidden" class="txt" id="ownCompanyCode" name="rentcar[ownCompanyCode]" value="{ownCompanyCode}"/>
+								<input type="hidden" class="txt" id="ownCompanyId" name="rentcar[ownCompanyId]" value="{ownCompanyId}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">租赁费用(元/月/辆)</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt formatMoney" id="rentUnitPrice" name="rentcar[rentUnitPrice]" value="{rentUnitPrice}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">联系电话</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="phone" name="rentcar[phone]" value="{phone}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">签约日期</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" id="signDate" onfocus="WdatePicker()" readOnly name="rentcar[signDate]" value="{signDate}"/>
+							</td>
+							<td class="form_text_left_three" style="display:none" id="oilPriceTd1"><span style="color:blue">油价(元/升)</span></td>
+							<td class="form_text_right_three" style="display:none" id="oilPriceTd2">
+								<input type="text" class="txt formatMoney" id="oilPrice" name="rentcar[oilPrice]" value="{oilPrice}"/>
+							</td>
+							<td class="form_text_left_three" style="display:none" id="fuelChargeTd1"><span style="color:blue">燃油费(元/公里)</span></td>
+							<td class="form_text_right_three" style="display:none" id="fuelChargeTd2">
+								<input type="text" class="txt formatMoney" id="fuelCharge" name="rentcar[fuelCharge]" value="{fuelCharge}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">联系地址</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_biglong" id="address" name="rentcar[address]">{address}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span id="fundConditionSpan">款项条件</span></td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_biglong" id="fundCondition" name="rentcar[fundCondition]">{fundCondition}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">合同内容</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_biglong" id="contractContent" name="rentcar[contractContent]">{contractContent}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">签收说明</span></td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="txt_txtarea_biglong" id="changeReason" name="rentcar[changeReason]"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">附  件</td>
+							<td class="form_text_right_three" colspan="5">
+								<div class="upload">
+									<div class="upload" id="fsUploadProgress"></div>
+									<div class="upload">
+										<span id="swfupload"></span>
+										<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+									</div>
+									<div id="uploadfileList" class="upload">{file}</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="6">
+				<input type="hidden" name="rentcar[ExaStatus]" value="{ExaStatus}" />
+				<input type="hidden" name="rentcar[ExaDT]" value="{ExaDT}" />
+				<input type="hidden" name="rentcar[isStamp]" value="{isStamp}" />
+				<input type="hidden" name="rentcar[isNeedStamp]" value="{isNeedStamp}" />
+				<input type="hidden" name="rentcar[stampType]" value="{stampType}" />
+				<input type="hidden" name="rentcar[oldId]" value="{id}"/>
+				<input type="submit" class="txt_btn_a" value=" 签  收 "/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

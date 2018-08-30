@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>
+			日志列表
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css"  href="js/thickbox.css" media="screen"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="view/template/rdproject/worklog/js/rdworklog-list-topTab.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+		<script>
+			$(document).ready(function() {
+				topTabShow(myWeeklog, "myWeeklog");
+
+				var option = {
+					width: 150,
+					items: [{
+						text: "打开",
+						alias: "1-1",
+						icon: oa_cMenuImgArr['read'],
+						action: function(row) {
+							location='?model=rdproject_worklog_rdweeklog&action=read&id='+row.title;
+						}
+					},
+					{
+						text: "添加备注",
+						icon: oa_cMenuImgArr['edit'],
+						alias: "1-2",
+						action: function(row) {
+							showThickboxWin('?model=rdproject_worklog_rdweeklog&action=addremark&id=' + row.title + '&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=800');
+						}
+					}],
+					onContextMenu: BeforeContextMenu
+				};
+
+				$(".tr_even,.tr_odd").contextmenu(option);
+
+				//右键触发前操作
+				function BeforeContextMenu() {
+					return true;
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				我的工作日志
+			</span>
+			<!--input name="goBack" type="button" class="main_head_btn" value="返 回"
+			/-->
+		</div>
+		<div class="tab_options">
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						<input title=" 录入" type="button" value=" 添加 " class="thickbox txt_btn_a"
+						alt="?model=rdproject_worklog_rdworklog&action=toAdd&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=850"
+						/>
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							序号
+						</th>
+						<th>
+							名称
+						</th>
+						<th width="18%">
+							所属部门
+						</th>
+						<th width="20%">
+							最近更新时间
+						</th>
+						<th width="20%">
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+	</body>
+
+</html>

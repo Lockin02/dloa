@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增合同不开票金额</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/uninvoice-add.js" ></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=contract_uninvoice_uninvoice&action=add" onsubmit="return checkform();">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						新增合同不开票金额
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同编号</td>
+      		<td class="form_text_right" >
+				{objCode}
+				<input type="hidden" name="uninvoice[objType]" id="objType" value="{objType}"/>
+				<input type="hidden" name="uninvoice[objCode]" id="objCode" value="{objCode}"/>
+				<input type="hidden" name="uninvoice[objId]" id="objId" value="{objId}"/>
+
+				<!-- 为操作记录提供的单据信息 -->
+				<input type="hidden" name="uninvoice[extRecord][contractMoney]" id="contractMoney" value="{contractMoney}"/>
+				<input type="hidden" name="uninvoice[extRecord][invoiceMoney]" id="invoiceMoney" value="{invoiceMoney}"/>
+				<input type="hidden" name="uninvoice[extRecord][incomeMoney]" id="incomeMoney" value="{incomeMoney}"/>
+				<input type="hidden" name="uninvoice[extRecord][uninvoiceMoney]" value="{uninvoiceMoney}"/>
+				<input type="hidden" name="uninvoice[extRecord][canUninvoiceMoney]" value="{canUninvoiceMoney}"/>
+			</td>
+      		<td class="form_text_left">合同金额</td>
+      		<td class="form_text_right" >
+      			<span class="formatMoney">{contractMoney}</span>
+      		</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">开票金额</td>
+      		<td class="form_text_right" >
+      			<span class="formatMoney">{invoiceMoney}</span>
+      		</td>
+			<td class="form_text_left">到款金额</td>
+      		<td class="form_text_right" >
+      			<span class="formatMoney">{incomeMoney}</span>
+      		</td>
+       </tr>
+		<tr>
+			<td class="form_text_left">已录不开票金额</td>
+      		<td class="form_text_right" >
+      			<span class="formatMoney">{uninvoiceMoney}</span>
+				<input type="hidden" id="uninvoiceMoney" value="{uninvoiceMoney}"/>
+      		</td>
+			<td class="form_text_left">可录不开票金额</td>
+      		<td class="form_text_right" >
+      			<span class="formatMoney">{canUninvoiceMoney}</span>
+				<input type="hidden" id="canUninvoiceMoney" value="{canUninvoiceMoney}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span class="blue">不开票金额</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt formatMoney" name="uninvoice[money]" id="money"/>
+      		</td>
+      		<td class="form_text_left">是否红字</td>
+      		<td class="form_text_right">
+      			 <select class="select" name="uninvoice[isRed]" id="isRed">
+      			 	<option value="0">否</option>
+      			 	<option value="1">是</option>
+      			 </select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">描述信息</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea class="txt_txtarea_800" name="uninvoice[descript]"></textarea>
+      		</td>
+       </tr>
+		<tr>
+	   		<td class="form_text_left">邮件通知
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="uninvoice[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+				<input type="radio" name="uninvoice[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+				<span class="blue">
+					邮件会将描述信息发送至邮件接收人
+				</span>
+			</td>
+		</tr>
+	   	<tr id="maildiv">
+	   		<td class="form_text_left">接 收 人
+	       	</td>
+	       	<td colspan="3" class="form_text_right">
+			    <input type="text" name="uninvoice[email][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly" value="{sendName}"/>
+	    		<input type="hidden" name="uninvoice[email][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+		    </td>
+	   	</tr>
+		<tr>
+      		<td class="form_text_left">功能说明</td>
+      		<td class="form_text_right" colspan="3">
+				<span class="blue">
+					1.如果不需要开票，则录入不开票金额，是否红字一栏选择<span class="red">“否”</span><br/>
+					2.如果要取消不开票金额，则录入不开票金额，是否红字一栏选择<span class="red">“是”</span>
+				</span>
+      		</td>
+        </tr>
+		<tr>
+      		<td class="txt_btn" colspan="4">
+				<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

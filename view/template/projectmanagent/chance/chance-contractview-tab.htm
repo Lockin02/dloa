@@ -1,0 +1,121 @@
+
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var id = $("#id").val();
+		var originalId = $("#originalId").val();
+        var orderCode = $("#contractCode").val();
+        var contractType = $("#contractType").val();
+        var skeyStr = "&skey={skey_}";
+ 	var tabArr = [
+                  "?model=contract_contract_contract&action=init&perm=view&id="+id + skeyStr,
+                  "?model=contract_stamp_stamp&action=viewForContract&id=" + id + "&contractType=HTGZYD-04",
+                  "?model=contract_contract_contract&action=toInvoiceApplyTab&obj[objType]=KPRK-12&obj[objCode]="+orderCode + "&obj[objId]=" + id + skeyStr,
+                  "?model=contract_contract_contract&action=toInvoiceTab&obj[objType]=KPRK-12&obj[objCode]="+orderCode + "&obj[objId]=" + id + skeyStr,
+                  "?model=contract_contract_contract&action=toIncomeTab&obj[objType]=KPRK-12&obj[objCode]="+orderCode + "&obj[objId]=" + id + skeyStr,
+                  "?model=common_changeLog&action=toOrderList&logObj=contract&originalId="+ "&objId=" + id + "&orderCode="+ orderCode + skeyStr,
+                  "?model=common_changeLog&action=toOrderSignin&logObj=contractSign&originalId="+ "&objId=" + id + "&orderCode="+ orderCode + skeyStr,
+                  "?model=contract_contract_contract&action=toCloseInfo&id="+id + skeyStr,
+                  "?model=stock_outplan_outplan&action=listByOrderId&id=" + id + "&objType=oa_contract_contract" + skeyStr,
+                  "?model=purchase_plan_basic&action=toListByContractId&contractId=" + id + "&purchType=" + contractType  + skeyStr,
+                  "?model=mail_mailinfo&action=listByOrderId&id=" + id + "&type=oa_contract_contract" + skeyStr,
+                  "?model=projectmanagent_present_present&action=presentOrder&type=oa_sale_order&id="+id + skeyStr,
+                  "?model=stock_outstock_stockout&action=relDocOutPage&docId="+ id + "&relDocType=XSCKDLHT" + "&docType=oa_contract_contract" + skeyStr,
+                  "?model=projectmanagent_return_return&action=returnByContractlist&contractId="+id+skeyStr,
+                  "?model=projectmanagent_exchange_exchange&action=exchangeByContractlist&contractId="+id+skeyStr,
+                  "?model=projectmanagent_borrow_borrow&action=toBocomeCon&contractId="+id+skeyStr,
+                  "?model=contract_deduct_deduct&action=deductTolist&contractId="+id,
+                  "?model=contract_contract_contract&action=contractExelist&contractId="+id
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{contractType}" id="contractType" />
+<input type="hidden" value="{contractId}" id="id" />
+<input type="hidden" value="{originalId}" id="originalId" />
+<input type="hidden" value="{orderCode}" id="orderCode" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">盖章记录</a></li>
+	<li><a href="#tab3">开票申请记录</a></li>
+	<li><a href="#tab4">开票记录</a></li>
+	<li><a href="#tab5">到款记录</a></li>
+	<li><a href="#tab6">变更历史</a></li>
+	<li><a href="#tab7">签收修改历史</a></li>
+    <li><a href="#tab8">关闭信息</a></li>
+    <li><a href="#tab9">发货计划</a></li>
+    <li><a href="#tab10">采购申请</a></li>
+    <li><a href="#tab11">邮寄信息</a></li>
+    <li><a href="#tab12">赠送信息</a></li>
+    <li><a href="#tab13">发货记录</a></li>
+    <li><a href="#tab14">退货申请</a></li>
+    <li><a href="#tab15">换货申请</a></li>
+    <li><a href="#tab16">转销售借用源单</a></li>
+	<li><a href="#tab17">扣款记录</a></li>
+	<li><a href="#tab18">合同执行状态表</a></li>
+
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe8" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe9" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe10" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe11" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe12" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe13" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe14" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe15" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe16" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe17" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe18" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

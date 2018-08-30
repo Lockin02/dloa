@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>修改联系信息</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/personnel-mycontact-edit.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city2.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city6.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_personnel_personnel&action=editMyContact" >
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							修改联系信息
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>联系方式（家庭）</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left">员工编号</td>
+								<td class="form_text_right">{userNo}</td>
+								<td class="form_text_left">姓名</td>
+								<td class="form_text_right">{userName}</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">固定电话</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[telephone]" value="{telephone}" />
+								</td>
+								<td class="form_text_left"><span style="color:blue">移动电话</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="mobile" name="contact[mobile]" value="{mobile}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">个人电子邮箱</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="personEmail" name="contact[personEmail]" value="{personEmail}" onchange="checkmail(this);"/>
+								</td>
+								<td class="form_text_left">公司邮箱</td>
+								<td class="form_text_right">
+									<input type="text" class="readOnlyText" id="" name="contact[compEmail]" value="{compEmail}"  readonly/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">QQ</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="QQ" name="contact[QQ]" value="{QQ}" />
+								</td>
+								<td class="form_text_left">MSN</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[MSN]" value="{MSN}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">飞信</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[fetion]" value="{fetion}" />
+								</td>
+								<td class="form_text_left">其他联系方式</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[information]" value="{information}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">家庭电话</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[homePhone]" value="{homePhone}" />
+								</td>
+								<td class="form_text_left"><span style="color:blue">紧急联系人</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="emergencyName" name="contact[emergencyName]" value="{emergencyName}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">紧急联系人电话</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="emergencyTel" name="contact[emergencyTel]" value="{emergencyTel}" />
+								</td>
+								<td class="form_text_left">关系</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="" name="contact[emergencyRelation]" value="{emergencyRelation}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">现住地址</td>
+								<td class="form_text_right" colspan="3">
+									<select class="selectmiddel" name="" id="province" val="{nowPlacePro}"></select>
+									<input type="hidden" name="contact[nowPlacePro]" id="provinceName" />
+									<select class="selectmiddel" name="" id="city" val="{nowPlaceCity}"></select>
+									<input type="hidden" name="contact[nowPlaceCity]" id="cityName" />
+									<input type="text" class="txtlong" id="nowAddress" name="contact[nowAddress]" value="{nowAddress}" />&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="nowPost" name="contact[nowPost]" value="{nowPost}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">家庭详细地址</span></td>
+								<td class="form_text_right" colspan="3">
+									<select class="selectmiddel" name="" id="province2" val="{homeAddressPro}"></select>
+									<input type="hidden" name="contact[homeAddressPro]" id="provinceName2" />
+									<select class="selectmiddel" name="" id="city2"  val="{homeAddressCity}"></select>
+									<input type="hidden" name="contact[homeAddressCity]" id="cityName2"/>
+									<input type="text" class="txtlong" id="homeAddress" name="contact[homeAddress]" value="{homeAddress}"/>&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="homePost" name="contact[homePost]" value="{homePost}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">本人指定邮寄通信地址</td>
+								<td class="form_text_right" colspan="5">
+									<select class="selectmiddel" name="" id="appointPro" val="{appointPro}"></select>
+									<input type="hidden" name="contact[appointPro]" id="appointProName" value="{appointPro}"/>
+									<select class="selectmiddel" name="" id="appointCity"  val="{appointCity}"></select>
+									<input type="hidden" name="contact[appointCity]" id="appointCityName" value="{appointCity}"/>
+									<input type="text" class="txtlong" id="appointAddress" name="contact[appointAddress]" value="{appointAddress}"/>&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="appointPost" name="contact[appointPost]" value="{appointPost}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<fieldset><legend><b>联系方式（单位）</b></legend>
+						<table cellpadding="1" width="100%">
+							<tr>
+								<td class="form_text_left">单位电话</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="unitPhone" name="contact[unitPhone]" value="{unitPhone}" />
+								</td>
+								<td class="form_text_left">分机号</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="extensionNum" name="contact[extensionNum]" value="{extensionNum}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">单位传真</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="unitFax" name="contact[unitFax]" value="{unitFax}" />
+								</td>
+								<td class="form_text_left">手机</td>
+								<td class="form_text_right">
+									<input type="text" class="readOnlyText" id="mobilePhone" name="contact[mobilePhone]" value="{mobilePhone}" readonly />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">短号</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="shortNum" name="contact[shortNum]" value="{shortNum}" />
+								</td>
+								<td class="form_text_left">其他手机</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="otherPhone" name="contact[otherPhone]" value="{otherPhone}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">其他号码</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="otherPhoneNum" name="contact[otherPhoneNum]" value="{otherPhoneNum}" />
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="id" name="contact[id]" value="{id}" />
+					<input type="hidden" id="" name="contact[userAccount]" value="{userAccount}" />
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

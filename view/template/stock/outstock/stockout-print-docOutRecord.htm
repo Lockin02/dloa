@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>打印销售出库单</title>
+	<style media=print>
+		　　.Noprint {
+			display: none;
+		}
+
+		　　.PageNext {
+			page-break-after: always;
+		}
+		　　</style>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jqprint/jquery.jqprint-0.3.js"></script>
+</head>
+<body>
+<div>
+	<h3 style="text-align: center;">出库调拨单</h3>
+	<div id="header1" style="padding:0 5px;">
+		<span>单位: {customerName}</span>
+		<span style="float: right">{outDate}</span>
+	</div>
+	<div id="content1" style="margin: 5px 0;">
+		<table border="1" cellspacing="0" cellpadding="0" style="width:100%;text-align: center">
+			<thead>
+			<tr>
+				<th style="width:4%;"><input class='chkAll' id="chkAll" data-isCheckAll="0" value='' type='checkbox'></th>
+				<th style="width:9%;">编号</th>
+				<th style="width:40%;">名称规格</th>
+				<th style="width:10%;">单位</th>
+				<th style="width:9%;">数量</th>
+				<th style="width:14%;">单价</th>
+				<th style="width:14%;">金额</th>
+			</tr>
+			</thead>
+			<tbody>
+			{detailStr}
+			</tbody>
+			<tfoot>
+			<tr>
+				<td><span> </span></td>
+				<td style="text-align: left;padding-left: 5px;">合计:</td>
+				<td><span> </span></td>
+				<td><span> </span></td>
+				<td>{totalNum}</td>
+				<td><span> </span></td>
+				<td><span> </span></td>
+			</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div id="footer1" style="padding:0 5px;">
+		<span>审核: {auditMan}</span>
+		<span style="float: right">制单: {createMan}</span>
+	</div>
+</div>
+
+<div style="display: none;">
+	<div id="printArea" style="padding: 15px;">
+		<div>
+			<h3 style="text-align: center;">出库调拨单</h3>
+			<div id="header" style="padding:0 5px;">
+				<span>单位: {customerName}</span>
+				<span style="float: right">{outDate}</span>
+			</div>
+			<div id="content" style="margin: 5px 0;">
+				<table border="1" cellspacing="0" cellpadding="0" style="width:100%;text-align: center">
+					<thead>
+					<tr>
+						<th style="width:9%;">编号</th>
+						<th style="width:42%;">名称规格</th>
+						<th style="width:10%;">单位</th>
+						<th style="width:9%;">数量</th>
+						<th style="width:15%;">单价</th>
+						<th style="width:15%;">金额</th>
+					</tr>
+					</thead>
+					<tbody id="printTbBody">
+					</tbody>
+					<tfoot>
+					<tr>
+						<td></td>
+						<td style="text-align: left;padding-left: 5px;">合计:</td>
+						<td></td>
+						<td id="totalNum"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div id="footer" style="padding:0 5px;">
+				<span>审核: {auditMan}</span>
+				<span style="float: right">制单: {createMan}</span>
+			</div>
+		</div>
+	</div>
+	<div id="printAllArea" style="padding: 15px;"></div>
+	<div id="printTmpArea">
+		<div>
+			<h3 style="text-align: center;">出库调拨单</h3>
+			<div id="headerTmp" style="padding:0 5px;">
+				<span>单位: {customerName}</span>
+				<span style="float: right">{outDate}</span>
+			</div>
+			<div id="contentTmp" style="margin: 5px 0;">
+				<table border="1" cellspacing="0" cellpadding="0" style="width:100%;text-align: center">
+					<thead>
+					<tr>
+						<th style="width:9%;">编号</th>
+						<th style="width:42%;">名称规格</th>
+						<th style="width:10%;">单位</th>
+						<th style="width:9%;">数量</th>
+						<th style="width:15%;">单价</th>
+						<th style="width:15%;">金额</th>
+					</tr>
+					</thead>
+					<tbody id="printTbBodyTmp">
+					</tbody>
+					<tfoot>
+					<tr>
+						<td></td>
+						<td style="text-align: left;padding-left: 5px;">合计:</td>
+						<td></td>
+						<td id="totalNumTmp"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div id="footerTmp" style="padding:0 5px;">
+				<span>审核: {auditMan}</span>
+				<span style="float: right">制单: {createMan}</span>
+			</div>
+		</div>
+	</div>
+</div>
+<table class="form_main_table"  style="border: 0px !important;">
+	<tr>
+		<td class="txt_btn" colspan="4" style="padding:30px 0 0 25px;border: 0px !important;">
+			<span style="color:red;display:inline-block;margin-bottom: 10px;">提示: 勾选打印的物料,每次只允许勾选10条记录。</span><br>
+			<input type="button" class="txt_btn_a" id="printAll" value="全部打印"/>
+			<input type="button" class="txt_btn_a" id="printContent" value="打印选中"/>
+			<input type="button" class="txt_btn_a" value="关闭" onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+<script>
+	$(function(){
+		var maxChkNum = 10;// 限制最大可选数量
+		$(".chkToPrint").click(function(){
+			var index = $(".chkToPrint:checked").length;
+			if(index >= maxChkNum){
+				$.each($(".chkToPrint"),function(){
+					if($(this)[0].checked == false){
+						$(this).attr('disabled', true);
+					}
+				});
+				$("#chkAll").attr("checked",true);
+				$("#chkAll").attr("data-isCheckAll",1);
+			}else if(index < maxChkNum){
+				$(".chkToPrint").attr('disabled', false);
+				$("#chkAll").attr("checked",false);
+				$("#chkAll").attr("data-isCheckAll",0);
+			}
+			return true;
+		});
+
+		// 全选控制,这里只选前10条
+		$("#chkAll").click(function(){
+			var chkedNum = $(".chkToPrint:checked").length;
+			var avlbNum = maxChkNum - chkedNum;
+			if($(this).attr("data-isCheckAll") == "1"){
+				$.each($(".chkToPrint"),function(){
+					$(this).attr('checked', false);
+					$(this).removeAttr('disabled');
+				});
+				$("#chkAll").attr("data-isCheckAll",0);
+			}else{
+				var processNum = 0;
+				$.each($(".chkToPrint"),function(){
+					if(processNum < avlbNum){
+						if($(this)[0].checked == false){
+							$(this).attr('checked', true);
+							processNum += 1;
+						}
+					}else{
+						if($(this)[0].checked == false){
+							$(this).attr('disabled', true);
+						}
+					}
+				});
+				$("#chkAll").attr("data-isCheckAll",1);
+			}
+		});
+
+		// 打印协议
+		$("#printContent").click(function(){
+			var checkStr = "";
+			var index = 0;
+			var totalNum = 0;
+			$.each($(".chkToPrint"),function(){
+				if($(this)[0].checked == true){
+					index += 1;
+					var chkVal = $(this).val();
+					var chkValObj = chkVal.split("|");
+					totalNum += Number(chkValObj[2]);
+					var rowStr = "<tr>"
+							+"<td>"+index+"</td>"
+							+"<td style='text-align: left;padding-left: 5px;'>"+chkValObj[0]+"</td>"
+							+"<td>"+chkValObj[1]+"</td>"
+							+"<td>"+chkValObj[2]+"</td>"
+							+"<td></td><td></td></tr>";
+					checkStr += rowStr;
+				}
+			});
+			$("#printTbBody").html(checkStr);
+			$("#totalNum").text(totalNum);
+
+			if($("#printTbBody").children("tr").length > 0){
+				$("#printArea").jqprint({ operaSupport: false });
+			}else{
+				alert("至少选中一条打印的记录。");
+			}
+
+		});
+
+		// 打印全部
+		$("#printAll").click(function(){
+			var perPageNum = 10;// 分页打印,每页最多打印的数量
+			var countNum = pageNum = 0;
+			var catchArr = [];
+
+			$.each($(".chkToPrint"),function(){
+				countNum += 1;
+				var chkVal = $(this).val();
+				$(this)[0].checked = false;
+				if(countNum <= $(".chkToPrint").length){
+					catchArr[pageNum] = (catchArr[pageNum])? catchArr[pageNum] : [];
+					if(countNum % perPageNum == 0){
+						catchArr[pageNum].push(chkVal.split("|"));
+						pageNum += 1;
+					}else{
+						catchArr[pageNum].push(chkVal.split("|"));
+					}
+				}
+			});
+
+			var printArea = "";
+			var catchTmp = $("#printTmpArea").html();
+			$.each(catchArr, function(i,itemArr){
+				$("#printTmpArea").html(catchTmp);
+				if(catchArr[i]){
+					var pageTotalNum = 0;
+					var pageStr = pageTableStr = "";
+					$.each(itemArr, function(index,item){
+						pageTotalNum += Number(item[2]);
+						var rowStr = "<tr>"
+								+"<td>"+(index + 1)+"</td>"
+								+"<td style='text-align: left;padding-left: 5px;'>"+item[0]+"</td>"
+								+"<td>"+item[1]+"</td>"
+								+"<td>"+item[2]+"</td>"
+								+"<td></td><td></td></tr>";
+						pageTableStr += rowStr;
+					});
+					$("#printTbBodyTmp").html(pageTableStr);
+					$("#printTbBodyTmp").attr("id","printTbBody"+i);
+					$("#totalNumTmp").text(pageTotalNum);
+					$("#totalNumTmp").attr("id","totalNum"+i);
+					printArea += (i+1 == catchArr.length)? $("#printTmpArea").html() : $("#printTmpArea").html()+'<div style="page-break-after:always;"></div>';
+				}
+			});
+//			console.log(printArea);
+			$("#printAllArea").html(printArea);
+			$("#printAllArea").jqprint({ operaSupport: false });
+		});
+//
+//		$("#showModel").on("click",function(){
+//			$('#myModal').modal({
+//				keyboard : false,
+//				backdrop : 'static',
+//				show     : true
+//			})
+//		});
+//
+//		$(".emptyType").each(function(){
+//			$(this).hide();
+//		});
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,1289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<!-- <script type="text/javascript" src="js/thickbox.js">  -->
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        
+        </style>
+		<script type="text/javascript">
+		var open_tabs = false;
+		var admin = '{admin}';
+		var canImport = '{canImport}';
+		var canExport = '{canExport}';
+        $(function(){
+            $('#tt').datagrid({
+            	view: detailview,
+				detailFormatter:function(index,row){
+					return '<div id="ddv-' + index + '" class="ddv"></div>';
+				},onExpandRow: function(index,row){
+					$('#ddv-'+index).panel({
+						border:false,
+						cache:false,
+						href:'?model={t_model}&action=related_product&id='+row.id,
+						onLoad:function(){
+							$('#tt').datagrid('fixDetailRowHeight',index);
+						}
+					});
+					$('#tt').datagrid('fixDetailRowHeight',index);
+				},
+                title: '双击列表中的记录可以查看项目详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:40,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=managerListData',
+                columns: [[ {
+                    field: 'name',
+                    title: '项目名称',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'number',
+                    title: '项目编码',
+                    width: 60,
+                    align: 'left',
+                    editor: 'text'
+                }, {
+                    field: 'ipo_name',
+                    title: '募投项目',
+                    width: 150,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'zf_name',
+                    title: '政府项目',
+                    width: 150,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'project_type_name',
+                    title: '项目类型',
+                    width: 60,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'begin_date',
+                    title: '立项时间',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'manager_name',
+                    title: '项目经理',
+                    width: 60,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'dept_name',
+                    title: '所属部门',
+                    width: 100,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'status',
+                    title: '项目状态',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	var status = "";
+        				if(value== 0){
+        					return '进行中';
+        				}else if(value == 1){
+        					return '未开始';
+        				}else if(value == 2){
+        					return '已完成';
+        				}else if(value == 3){
+        					return '已取消';
+        				}else if(value == 4){
+        					return '未审核';
+        				}else if(value == 5){
+        					return '已审核';
+        				}else if(value == 6){
+        					return '已关闭';
+        				}
+                    	
+                    	
+                    }
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 100,
+                    align: 'center',
+                    formatter: function(value, row, index){
+						
+                    	/*
+                    	var a = '<a href="#" onclick="show_info(' + index + ')">查看</a> ';
+                    	if (admin =='true')
+                    	{
+                    		var e = '<a href="#" onclick="edit(' + index + ')">修改</a> ';
+                            var d = '<a href="#" onclick="del(' + index + ')">删除</a>';
+                            return a+e+d;
+                    	}else{
+                    		return a;
+                    	}
+                    	*/
+                    	
+                    	var str = '';
+                    	str += '<a href="#" onclick="show_info(' + index + ')">查看</a> ';
+                    	//str += '<a href="#" onclick="show_audit(' + index + ')">审核</a> ';
+                    	if(admin =='true'){
+                    		str += '<a href="#" onclick="edit(' + index + ')">修改</a> ';
+                    		str += '<a href="#" onclick="del(' + index + ')">删除</a>';
+                    	}
+                    	return str;
+                    	
+                          
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+            if (admin == 'true')
+        	{
+            	if(canImport == 'true'){
+		            $('#tt').datagrid('getPager').pagination({
+		                buttons: [
+		                          	{
+					                    iconCls: 'icon-add',
+					                    text: '添加项目',
+					                    handler: function(){
+					                        insert();
+					                    }
+		                			},
+		                			{
+					                    iconCls: 'icon-export',
+					                    text: '导出',
+					                    handler: function(){
+					                    	export_file();
+					                    }
+		                			},
+		                			{
+					                    iconCls: 'icon-import',
+					                    text: '导入',
+					                    handler: function(){
+					                    	import_file();
+					                    }
+		                			}
+		                          ]
+		            });
+            	}else{
+            		$('#tt').datagrid('getPager').pagination({
+		                buttons: [
+		                          	{
+					                    iconCls: 'icon-add',
+					                    text: '添加项目',
+					                    handler: function(){
+					                        insert();
+					                    }
+		                			},
+		                			{
+					                    iconCls: 'icon-export',
+					                    text: '导出',
+					                    handler: function(){
+					                    	export_file();
+					                    }
+		                			}
+		                          ]
+		            });
+            	}
+        	}else{
+        		if(canExport == 'true'){
+        			$('#tt').datagrid('getPager').pagination({
+		                buttons: [
+		                			{
+					                    iconCls: 'icon-export',
+					                    text: '导出',
+					                    handler: function(){
+					                    	export_file();
+					                    }
+		                			}
+		                          ]
+		            });
+        		}
+        	}
+          //绑定项目经理输入框
+            $("#manager_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            });
+          
+          //绑定项目助理输入框
+            $("#assistant_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: true,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+            });
+          
+          //绑定项目成员输入框
+            $("#developer_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+            });
+        });
+		function updateActions(){
+				var rowcount = $('#tt').datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#tt').datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			var model='{t_model}';
+			$.messager.confirm('确认提示','你确定要删除该项目吗？',function(r){
+				if (r){
+					$('#tt').datagrid('selectRow',index);
+					var row = $('#tt').datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model='+model+'&action=del',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}
+						})
+					}
+					$('#tt').datagrid('deleteRow', index);
+					updateActions(id);
+				}
+			});
+		}
+	
+	function saverow(index) {
+		$('#tt').datagrid('endEdit', index);
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		id = row.id ? row.id : '';
+		type = row.id ? 'edit' : 'add';
+		$.post('?model={t_model}&action=save', {
+			type:type,
+			project_name : row.project_name,
+			id : id,
+			description : row.description,
+			rand : Math.random(0, 9999)
+		}, function(data) {
+			if (data == 1) {
+				$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			} else {
+
+				$.messager.show({
+					title : '提示',
+					msg : '操作失败！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+			}
+		});
+	}
+	function cancelrow(index) {
+		$('#tt').datagrid('cancelEdit', index);
+	}
+	/*添加*/
+	function insert() {
+		$('#id').val('');
+		$('#name').val('');
+		$('#number').val('');
+		$('#ipo_id').attr('value','');
+		$('#zf_id').attr('value','');
+		$('#status').attr('value','0');
+		$('#manager_name').val('');
+		$('#assistant_name').val('');
+		$('#dept_id').attr('value','');
+		$('#priority').attr('value','3');
+		$('#begin_date').val('');
+		$('#end_date').val('');
+		$('#developer_name').val('');
+		$('#product_id_str').find('option').attr('selected','');
+		$('#description').val('');
+		$('#project_type').val('');
+		//$('#approval_date').val('');
+		$('#member_info_table').html("");
+		removeAllMemberInfo();
+		
+		$('#add').window('open');
+		
+	}
+	/*修改*/
+	function edit(index)
+	{
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		$('#product_id_str').find('option').attr('selected','');
+		$('#zf_id').find('option').attr('selected','');
+		for(k in row)
+		{
+			if (k=='product_id_str')
+			{
+				if (row[k])
+				{
+					arr = row[k].split(',');
+					for (var i=0;i<arr.length;i++){
+						$('#'+k+' option[value='+arr[i]+']').attr('selected','selected');
+					}
+				}
+			}else if (k == 'zf_id'){
+				
+				if (row[k]){
+					var arr = row[k].split(',');
+					for(var i = 0; i < arr.length; i++){
+						$('#'+k+' option[value='+arr[i]+']').attr('selected','selected'); 
+					}
+					
+				}
+				
+			}else{
+				$('#'+k).val('');
+				$('#'+k).val(row[k]);
+			}
+			
+		}
+		
+		$.post('?model={t_model}&action=member_table',{id:row['id']},function(data){
+			$('#member_info_table').html(data);
+		});
+		removeAllMemberInfo();
+		
+		$.post('?model={t_model}&action=get_dev_options',{id:row['id']},function(data){
+			$('#selected_user_list').append(data);
+		});
+		$('#add').window({title:'修改项目'});
+		$('#add').window('open');
+	}
+	
+	/*显示详细*/
+	function show_info(index)
+	{
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		for(k in row)
+		{
+			if (k=='product_id_str')
+			{
+				$('#_product_id_str').html('');
+				if (row[k])
+				{
+					arr = row[k].split(',');
+					var product_list ='';
+					for (var i=0;i<arr.length;i++){
+						product_list += $('#'+k+' option[value='+arr[i]+']').text()+'<br />';
+					}
+					$('#_'+k).html(product_list);
+				}
+			}else if (k == 'status'){
+				//var status = row[k]== 0 ? '进行中' : (row[k]==1 ? '未开始' : '已完成');
+				var status = "";
+				if(row[k]== 0){
+					status = '进行中';
+				}else if(row[k]== 1){
+					status = '未开始';
+				}else if(row[k]== 2){
+					status = '已完成';
+				}else if(row[k]== 3){
+					status = '已取消';
+				}else if(row[k]== 4){
+					status = '未审核';
+				}else if(row[k]== 5){
+					status = '已审核';
+				}else if(row[k]== 6){
+					status = '已关闭';
+				}
+				
+				
+				$('#_'+k).html(status);
+			}else if (k == 'priority'){
+				var str = row[k]==1 ? '低' : (row[k]==2 ? '中' : '高');
+				$('#_'+k).html(str);
+			}else{
+				$('#_'+k).html(row[k] ? row[k] : '&nbsp;');
+			}
+				
+		}
+		$.post('?model={t_model}&action=view_member_table',{id:row['id']},function(data){
+			$('#_member_info_table').html(data);
+		});
+		$('#show_info').dialog('open');
+	}
+	/*保存数据*/
+	function save()
+	{
+		var id = $('#id').val();
+		var name = $('#name').val();
+		var number = $('#number').val();
+		var ipo_id = $('#ipo_id').val();
+		var zf_id = $('#zf_id').val();
+		
+		
+		var status = $('#status').val();
+		var manager_name = $('#manager_name').val();
+		var assistant_name = $('#assistant_name').val();
+		var dept_id = $('#dept_id').val();
+		var priority = $('#priority').val();
+		
+		var begin_date = $('#begin_date').val();
+		var end_date = $('#end_date').val();
+		var product_id_str = $('#product_id_str').val() ? $('#product_id_str').val().join(",") : '';
+		var description = $('#description').val();
+		var msg = '';
+		
+		/* add at 2012-08-29 */
+		var project_type = $('#project_type').val();
+		
+		var memberId = document.getElementsByName('memberId');
+		var addtime = document.getElementsByName('addtime');
+		var leavetime = document.getElementsByName('leavetime');
+		var percent = document.getElementsByName('percent');
+		var member_function = document.getElementsByName('member_function');
+		
+		var memberStr = "";
+		var addTimeStr = "";
+		var leaveTimeStr = "";
+		var percentStr = "";
+		var developer_name = "";
+		var functionStr = "";
+		for(var i = 0; i < memberId.length; i++){
+			memberStr += memberId[i].value + "|";
+			addTimeStr += addtime[i].value + "|";
+			leaveTimeStr += leavetime[i].value + "|";
+			percentStr += percent[i].value + "|";
+			functionStr += member_function[i].value + "|";
+			developer_name += memberId[i].value + ",";
+		}
+		developer_name = developer_name.substring(0,developer_name.length - 1);
+		if (name == '') msg += '- 请填写项目名称！\r\n';
+		/*
+		if (ipo_id == '') msg += '- 请选择募投项目！\r\n';
+		if (manager_name == '') msg +='- 请填写项目经理姓名！\r\n';
+		if (dept_id == '') msg +='- 请选择所属部门！\r\n';
+		*/
+		if (begin_date == '') msg +=' - 请选择项目开始日期！\r\n';
+		if (end_date == '') msg +=' - 请选择项目结束日期\r\n';
+		if (msg !='')
+		{
+			alert(msg);
+		}else{
+			$.post('?model={t_model}&action=save',
+				{	id:id,
+					name:name,
+					number:number,
+					ipo_id:ipo_id,
+					zf_id:zf_id,
+					status:status,
+					manager_name:manager_name,
+					assistant_name:assistant_name,
+					dept_id:dept_id,
+					priority:priority,
+					developer_name:developer_name,
+					begin_date:begin_date,
+					end_date:end_date,
+					product_id_str:product_id_str,
+					description:description,
+					rand:Math.random(),
+					
+					/* add at 2012-08-29 */
+					//approval_date:approval_date,
+					project_type:project_type,
+					memberId:memberStr,
+					addTime:addTimeStr,
+					leaveTime:leaveTimeStr,
+					percent:percentStr,
+					member_function:functionStr
+				},
+				function(data){
+					if (data == 1)
+        			{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        				$('#add').window('close');
+        				$('#tt').datagrid('reload');
+        			}else{
+        				$.messager.alert('提示','操作失败，请与OA管理员联系！');
+        			}
+				});
+		}
+	}
+	//删除
+	function del(index)
+	{
+		$('#tt').datagrid('selectRow', index);
+		var row = $('#tt').datagrid('getSelected');
+		$.messager.confirm('删除确认','您确定要删除该项目吗？',function(r){
+        	if (r)
+        	{
+        		$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random(0,9999)},function(data){
+        			if (data == 1)
+        			{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '删除成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        				$('#tt').datagrid('reload');
+        			}else{
+        				$.messager.alert('提示','删除失败，请与OA管理员联系！');
+        			}
+        		});
+        	}
+        });
+	}
+	//搜索
+	function GetSearch()
+	{
+		var keyword = $('#keyword').val();
+		var projectType = $('#s_project_type').val();
+		var ipoType = $('#s_project_ipo_type').val();
+		var zfType = $('#s_zf_type').val();
+		var projectStatus = $('#s_project_status').val();
+		
+		$('#tt').datagrid({
+            url: '?model={t_model}&action=managerListData&keyword=' + keyword + '&rand=' + Math.random(0, 999) + '&projectType=' + projectType + '&ipoType=' + ipoType + '&zfType=' + zfType + '&projectStatus=' + projectStatus
+        });
+        $('#tt').datagrid('reload');
+        if (admin == 'true')
+    	{
+        	if(canImport == 'true'){
+	            $('#tt').datagrid('getPager').pagination({
+	                buttons: [
+	                          	{
+				                    iconCls: 'icon-add',
+				                    text: '添加项目',
+				                    handler: function(){
+				                        insert();
+				                    }
+	                			},
+	                			{
+				                    iconCls: 'icon-export',
+				                    text: '导出',
+				                    handler: function(){
+				                    	export_file();
+				                    }
+	                			},
+	                			{
+				                    iconCls: 'icon-import',
+				                    text: '导入',
+				                    handler: function(){
+				                    	import_file();
+				                    }
+	                			}
+	                          ]
+	            });
+        	}else{
+        		$('#tt').datagrid('getPager').pagination({
+	                buttons: [
+	                          	{
+				                    iconCls: 'icon-add',
+				                    text: '添加项目',
+				                    handler: function(){
+				                        insert();
+				                    }
+	                			},
+	                			{
+				                    iconCls: 'icon-export',
+				                    text: '导出',
+				                    handler: function(){
+				                    	export_file();
+				                    }
+	                			}
+	                          ]
+	            });
+        	}
+    	}else{
+    		if(canExport == 'true'){
+    			$('#tt').datagrid('getPager').pagination({
+	                buttons: [
+	                			{
+				                    iconCls: 'icon-export',
+				                    text: '导出',
+				                    handler: function(){
+				                    	export_file();
+				                    }
+	                			}
+	                          ]
+	            });
+    		}
+    	}
+	}
+	
+	/**
+	* 导出
+	*/
+	function export_file(){
+		var keyword = $('#keyword').val();
+		var projectType = $('#s_project_type').val();
+		var ipoType = $('#s_project_ipo_type').val();
+		var zfType = $('#s_zf_type').val();
+		var projectStatus = $('#s_project_status').val();
+		$('#export_keyword').val(keyword);
+		$('#export_projectType').val(projectType);
+		$('#export_ipoType').val(ipoType);
+		$('#export_zfType').val(zfType);
+		$('#export_projectStatus').val(projectStatus);
+		$('#export_rand').val(Math.random(0, 999));
+		/*
+		var url = '?model={t_model}&action=export';
+		document.write('<form id="export_frm" name="export_frm" action="' + url + '" method="post" target="_self" >');
+		document.write('<input type="hidden" id="keyword" name="keyword" value="' + keyword + '" />');
+		document.write('<input type="hidden" id="rand" name="rand" value="' + Math.random(0, 999) + '" />');
+		document.write('<input type="hidden" id="projectType" name="projectType" value="' + projectType + '" />');
+		document.write('<input type="hidden" id="ipoType" name="ipoType" value="' + ipoType + '" />');
+		document.write('<input type="hidden" id="zfType" name="zfType" value="' + zfType + '" />');
+		document.write('<input type="hidden" id="projectStatus" name="projectStatus" value="' + projectStatus + '" />');
+		document.write('</form>');
+		*/
+		document.getElementById('export_frm').submit();
+	}
+	
+	/**
+	* 导入
+	*/
+	function import_file(){
+		$('#upfile').val('');
+		$('#import_div').dialog('open');
+	}
+	
+	function showList(){
+		$('#show_list').dialog('open');
+	}
+	
+	function removeAllMemberInfo(){
+		$("#dept_for_member").find("option[text='请选择部门']").attr("selected",true);
+		$('#selected_user_list').find("option").remove();
+		$('#user_list').find("option").remove();
+	}
+	
+	/**
+	*	保存成员
+	*/
+	function save_member(){
+		var pid = $('#id').val();
+		$('#selected_user_list').find("option").attr("selected",true);
+		
+		var members = $('#selected_user_list').val();
+		var table = $('#member_tab tbody');
+		table.html("");
+		if(members != null){
+			var count = members.length;
+			var len = table.length;
+			for(var i = 0; i < count; i++){
+				var total = len + i;
+				var users = members[i].split("_");
+				
+				$.post('?model={t_model}&action=get_member_info',{pid:pid,member:users[1],memberAccount:users[0],total:i},function(data){
+					$("#member_tab").append(data);
+				});
+			}
+		} 
+		$('#show_list').window('close');
+	}
+	
+	function getMemberInfo(pid, member){
+		$.post('?model={t_model}&action=get_member_info',{pid:pid,member:member},function(data){
+			return data;
+		});
+	}
+	
+	/**
+	* 动态获取个部门人员
+	*/
+	function getDeptId(){
+		var deptId = $('#dept_for_member').val();
+		var id = $('#id').val();
+		if(id == ''){
+			id = 'NaN';
+		}
+		$.post('?model={t_model}&action=user_list',{deptId:deptId,id:id},function(data){
+			$('#user_list').html(data);
+		});
+	}
+	
+	
+	/*
+	function show_audit(index){
+		$('#tt').datagrid('selectRow', index);
+    	var row = $('#tt').datagrid('getSelected');
+    	$('#audit_id').val(row.id);
+    	$('#remark').val('');
+    	$('#audit').window('open');
+	}
+	function save_audit(){
+		var id = $('#audit_id').val();
+		var remark
+	}
+	*/
+	
+	$(document).ready(function(){  
+        $('#add_member_to').click(function(){  
+            var $options = $('#user_list option:selected');
+            var $remove = $options.remove();
+            $remove.appendTo('#selected_user_list');
+        });  
+          
+        $('#remove_member_to').click(function(){  
+            var $removeOptions = $('#selected_user_list option:selected');  
+            $removeOptions.appendTo('#user_list');
+        });  
+          
+        $('#add_all_member_to').click(function(){  
+            var $options = $('#user_list option');  
+            $options.appendTo('#selected_user_list');  
+        });  
+          
+        $('#remove_all_member_to').click(function(){  
+            var $options = $('#selected_user_list option');  
+            $options.appendTo('#user_list');  
+        });  
+          
+        $('#user_list').dblclick(function(){  
+            var $options = $('option:selected', this);
+            $options.appendTo('#selected_user_list');  
+        });  
+          
+        $('#selected_user_list').dblclick(function(){  
+            $('#selected_user_list option:selected').appendTo('#user_list');  
+        }); 
+        
+        /*
+        $('#zf_id').changed(function(){
+        	if()
+        });
+        */
+        
+    });
+	
+	//导入信息反馈
+	function importResult(msg){
+		if (msg == -1)
+    	{
+    		$.messager.show({
+				title : '提示',
+				msg : '操作失败，请与OA管理员联系！',
+				timeout : 3000,
+				showType : 'show'
+			});
+			$('#tt').datagrid('reload');
+    	}else if (msg == 1){
+    		$.messager.show({
+				title : '提示',
+				msg : '操作成功！',
+				timeout : 3000,
+				showType : 'show'
+			});
+			$('#tt').datagrid('reload');
+			$('#import_div').window('close');
+    	}
+	}
+	
+	//提交导入
+	function uploadMethod(){
+		document.import_form.submit();
+	}
+</script>
+	<style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; height:25px; width:80px;}
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:left; padding-left:4px; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p { margin:0px; padding:0px; width:600px; float:left; line-height: 25px;}
+			#info span {width:220px; display:block; float:left; text-align: left;}
+			#info i {color:red;}
+       </style>
+    </head>
+    <body>
+    	<iframe name="updata" style="display: none;"></iframe>
+		<form id="export_frm" name="export_frm" action="?model={t_model}&action=export" method="post" >
+			<input type="hidden" id="export_keyword" name="export_keyword" value="" />
+			<input type="hidden" id="export_rand" name="export_rand" value="" />
+			<input type="hidden" id="export_projectType" name="export_projectType" value="" />
+			<input type="hidden" id="export_ipoType" name="export_ipoType" value="" />
+			<input type="hidden" id="export_zfType" name="export_zfType" value="" />
+			<input type="hidden" id="export_projectStatus" name="export_projectStatus" value="" />
+		</form>
+		<table id="tt" toolbar="#tb"></table>
+		<div id="tb" style="padding:5px;height:auto;">
+			<div>
+				搜索关键字：<input type="text" id="keyword" name="keyword" value="" style="width: 100px;"/>
+				
+				项目类型: <select id='s_project_type' >
+							<option value="" selected >请选择</option>
+							{project_option}
+						</select>
+						
+				募投类型: <select id="s_project_ipo_type">
+							<option value="" selected >请选择</option>
+							{ipo_option}
+						</select>
+				
+				政府项目类型：<select id="s_zf_type">
+							<option value="" selected >请选择</option>
+							{zf_option}
+						</select>		
+						
+				项目状态：<select id='s_project_status' >
+							<option value="" selected >请选择</option>
+							<option value="0">进行中</option>
+							<option value="1">未开始</option>
+							<option value="2">已完成</option>
+							<option value="3">已取消</option>
+							<!-- <option value="4">未审核</option>  -->
+							<!-- <option value="5">已审核</option>  -->
+							<option value="6">已关闭</option>
+							</select>
+						</select>
+						
+				
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search">search</a>
+				
+				
+			</div>
+		</div>
+		<div id="add" class="easyui-window" title="添加项目" iconCls="icon-edit" modal="false" closed="true" style="width:630px;height:530px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+			<input type="hidden" name="id" id="id" value="" />
+				<p>
+					<label>项目名称：</label>
+					<span style="width:400px;">
+						<input type="text" size="50" name="name" id="name" value="" /><i>*</i>
+					</span>
+				</p>
+				<p>
+					<label>项目编码：</label>
+					<span style=" margin-top: 5px;">
+						<input type="text" id="number" name="number" value="" />
+					</span>
+					<label>募投项目：</label>
+					<span>
+						<select id=ipo_id name="ipo_id">
+							<option value="">请选择募投项目</option>
+							{ipo_option}
+						</select>
+						<!-- <i>*</i> -->
+					</span>
+				</p>
+				<p>
+					<label>政府项目：</label>
+					<span>
+						<select id=zf_id name="zf_id"  multiple="multiple">
+							<!-- <option value="">请选择政府项目</option>  -->
+							{zf_option}
+						</select>
+						<!-- <i>*</i>  -->
+					</span>
+					<label>项目状态：</label>
+					<span>
+						<select id="status" name="status">
+							<option value="0">进行中</option>
+							<option value="1">未开始</option>
+							<option value="2">已完成</option>
+							<option value="3">已取消</option>
+							<!-- <option value="4">未审核</option>  -->
+							<!-- <option value="5">已审核</option>  -->
+							<option value="6">已关闭</option>
+						</select>
+					</span>
+				</p>
+				<p>
+					
+					<label>项目经理：</label>
+					<span>
+						<input type="text" id="manager_name" name="manager_name" value="" /><!-- <i>*</i>  -->
+					</span>
+					<label>项目助理：</label>
+					<span>
+						<input type="text" id="assistant_name" name="assistant_name" value="" />
+					</span>
+				</p>
+				<p>
+					<label>所属部门：</label>
+					<span>
+						<select id="dept_id" name="dept_id">
+							<option value="">请选择部门</option>
+							{dept_option}
+						</select>
+						<!-- <i>*</i> -->
+					</span>
+					<label>优先级：</label>
+					<span>
+						<select id="priority" name="priority">
+							<option value="1">低</option>
+							<option value="2">中</option>
+							<option selected="selected" value="3">高</option>
+						</select>
+					</span>
+				</p>
+				<p>
+					
+					<label>开始日期：</label>
+					<span>
+						<input type="text" readonly onClick="WdatePicker();" class="Wdate" id="begin_date" name="begin_date" value="" /><i>*</i>
+					</span>
+					<label>结束日期：</label>
+					<span>
+						<input type="text" readonly onClick="WdatePicker({minDate:'#F{$dp.$D(\'begin_date\')}'});" class="Wdate" id="end_date" name="end_date" value="" /><i>*</i>
+					</span>
+				</p>
+				<!-- add at 2012-08-29 -->
+				<p>
+					<label>项目类型：</label>
+					<span>
+						<select id="project_type" name="project_type">
+							<option value="">请选择项目类型</option>
+							{project_option}
+						</select>
+						<!-- <i>*</i> -->
+					</span>
+				</p>
+				<!-- 
+				<p style="height:30px;">
+					<label style="height:30px;line-height: 30px;">项目成员：</label>
+					<input type="text" style="margin-top: 5px;" size="65" name="developer_name" id="developer_name" value="" />
+				</p>
+				 -->
+				 <div style="width:100%;"> 
+					<div style="float:left; width:40%;">
+						<label style=" line-height: 160px;">关联产品：</label>
+						<select name="product_id_str" id="product_id_str" style="width:150px; height: 150px;" multiple="multiple">
+						<option value=""></option>
+						{product_option}
+						</select>
+					</div>
+					<div style="float:left; width:60%; height:150px; overflow-y:scroll; overflow-x:visible;" >
+					<table id="member_tab" class="table" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+						<thead>
+						<tr bgcolor="#D3E5FA">
+							<td align="center" colspan="4">项目人员</td>
+							<td colspan="1" >
+								<!--  <input type="button" onclick="LoadWindows('UserId','UserName')" title="添加成员" class="thickbox" value="添加成员" />  --> 
+								<input type="button" onclick="showList();" title="添加成员" class="thickbox" value="添加成员" />
+							</td>
+						</tr>
+						<tr class="tableheader">
+							<td width="60px" >成员</td>
+							<td width="80px" >进入</td>
+							<td width="80px" >离开</td>
+							<td width="50px" >占比</td>
+							<td width="50px" >职能</td>
+							<!-- <td>操作</td>  -->
+						</tr>
+						</thead>
+						<tbody id="member_info_table">
+							
+						</tbody>
+						
+					</table>
+					</div>
+				</div>
+				
+				<!--  
+				<input type="hidden" name="UserId" id="UserId" value="">
+				<textarea name="UserName" id="UserName" rows=4 cols="50" wrap="yes" readonly></textarea> -->
+				<!-- </p>  -->
+				<p style="height:80px;">
+					<label style=" line-height: 90px;">项目描述：</label>
+					<textarea style="width:80%;height:80px;" id="description" name="description"></textarea>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+		<div id="show_info" class="easyui-dialog" title="查看项目详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:450px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+				<p>
+					<label>项目名称：</label><span id="_name"></span>
+					<label>项目编码：</label><span id="_number"></span>
+				</p>
+				<p>
+					<label>募投项目：</label><span id="_ipo_name"></span>
+					<label>项目状态：</label><span id="_status"></span>
+				</p>
+				<p>
+					<label>产品经理：</label><span id="_manager_name"></span>
+					<label>项目助理：</label><span id="_assistant_name"></span>
+				</p>
+				<p>
+					<label>所属部门：</label><span id="_dept_name"></span>
+					<label>优先级：</label><span id="_priority"></span>
+				</p>
+				<p>
+					
+					<label>开始日期：</label>
+					<span id="_begin_date"></span>
+					<label>结束日期：</label>
+					<span id="_end_date"></span>
+				</p>
+				<p>
+					<label>项目类型：</label><span id="_project_type_name"></span>
+				</p>
+				<!-- 
+				<p style="height:30px;">
+					<label style=" line-height: 25px;">项目成员：</label>
+					<span style="width:400px;" id="_developer_name"></span>
+				</p>
+				 -->
+				 
+				 
+				<div style="width:100%;"> 
+					<div style="float:left; width:40%;">
+						<label style=" line-height: 110px;">关联产品：</label>
+						<div style="float:left; width:40%;">
+						<span id="_product_id_str"></span>
+						</div>
+				</div>
+				<div style="float:left; width:60%; height:150px; overflow-y:scroll; overflow-x:visible;" >
+					<table id="_member_tab" class="table" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+						<thead>
+						<tr bgcolor="#D3E5FA">
+							<td align="center" colspan="4">项目人员</td>
+							<td colspan="1" >
+								<!-- <input type="button" onclick="LoadWindows('UserId','UserName')" title="添加成员" class="thickbox" value="添加成员" />  --> 
+								<!-- <input type="button" onclick="showList();" title="添加成员" class="thickbox" value="添加成员" />  -->
+							</td>
+						</tr>
+						<tr class="tableheader">
+							<td width="60px" >成员</td>
+							<td width="80px" >进入</td>
+							<td width="80px" >离开</td>
+							<td width="50px" >占比</td>
+							<td width="50px" >职能</td>
+							<!-- <td>操作</td>  -->
+						</tr>
+						</thead>
+						<tbody id="_member_info_table"></tbody>
+						
+					</table>
+					</div>
+				</div>
+				
+				
+				<p style="height:60px;">
+					<label style=" line-height: 70px;">描述：</label>
+					<span id="_description"></span>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show_info').dialog('close');" value=" 关闭返回 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+		<!-- 人员列表  -->
+		<div id="show_list" class="easyui-dialog" title="查看项目详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:450px;padding:5px;">
+			<div class="easyui-layout" fit="true">
+				<div id="info" region="center" border="false" style="margin-left: 25px; margin-top: 5px;">
+					<div style="width:40%; float:left;">
+						<select id="dept_for_member" name="dept_for_member" onchange="getDeptId();">
+								<option value="">请选择部门</option>
+								{dept_option}
+						</select>
+						<select name="user_list" id="user_list" style="width:180px;height:250px;" multiple="multiple"></select>
+					</div>
+					<div style="width:20%; float:left;" >
+						<input type="button" name="add_member_to" id="add_member_to" value="加入"  >
+						<input type="button" name="remove_member_to" id="remove_member_to" value="移除" >
+						<input type="button" name="add_all_member_to" id="add_all_member_to" value="全部加入"  >
+						<input type="button" name="remove_all_member_to" id="remove_all_member_to" value="全部移除" >
+					</div>
+					<div style="float:left;">
+					<select name="selected_user_list" id="selected_user_list" style="width:180px;height:270px;" multiple="multiple"></select>
+					</div>
+				</div>
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save_member();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#show_list').dialog('close');" value=" 关闭返回 " />
+			</div>
+			</div>
+		</div>
+		
+		<!-- 导入 -->
+		<div id="import_div" class="easyui-dialog" title="导入" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:250px;padding:5px;">
+			<div id="import_file_div" style="text-align: center; height: 30px; line-height: 30px">
+ 				<form id="import_form" name="import_form" method="post" action="?model={t_model}&action=import" enctype="multipart/form-data" target="updata" >
+ 				<br/>
+ 				<table align="center" >	
+ 					<tr>
+ 						<td>
+ 							<span>导入文件:</span><input type="file" id="upfile" name="upfile">
+ 						</td>
+ 						<!-- 
+ 						<td>
+ 							<a href="./attachment/demo/demo.xlsx">DEMO文件下载</a>
+ 						</td>
+ 						 -->
+ 					</tr>
+ 					
+ 					<tr>
+ 						<td colspan="2">
+ 							<input type="button" id="import_submit" name="import_submit" value="上传" onclick="uploadMethod();">
+ 						</td>
+ 					</tr>
+ 				</table>
+				</form>
+       		</div>
+		</div>
+		
+		<!-- 审核  -->
+		<!-- 
+		<div id="audit" class="easyui-dialog" title="查看项目详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:450px;padding:5px;">
+			<div class="easyui-layout" fit="true">
+				<div id="info" region="center" border="false">
+					<div style="margin-left: 100px; margin-top: 50px;">
+						<div style="width:100%;float:left; align-text:center;" >
+						<label>审核：</label>
+						<span>
+						<input type="hidden" id="audit_id" name="audit_id" value="" />
+						<input type="radio" checked onclick="set_remark_title(this);" name="status" value="1" /> 通过 
+	       				<input type="radio" name="status" onclick="set_remark_title(this);" value="-1" /> 打回 
+	       				</span>
+	       				</div>
+	       				<div style="width:100%;float:left; align-text:center;" >
+	       				<label>备注说明：</label>
+	       				<span>
+		       				<textarea rows="6" style="width:300px;height: 60px;" id="remark" name="remark">
+							</textarea>
+						</span>
+						</div>
+						
+					</div>
+				</div>
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save_audit();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#audit').dialog('close');" value=" 关闭返回 " />
+				</div>
+			</div>
+		</div>
+		 -->
+    </body>
+</html>

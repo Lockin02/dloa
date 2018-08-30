@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript">
+            function ck(){
+                if($('#ctr_file').val()==''){
+                    alert('请导入对比数据');
+                    return false;
+                }
+                return true;
+            }
+            function changeCtrFun(){
+                var rand=Math.random()*100000;
+                var upType=$('#upType').val();
+                var uploadedFile=$('#uploadedFile').val();
+                if(confirm('确定提交以下数据信息？')){
+                    $.post('?model=module_report&action=upExcel',{
+                        rand:rand,upType:upType,uploadedFile:uploadedFile
+                        },
+                        function (data)
+                        {                         
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $('#newuserSub').attr('disabled',false);
+                                return false;
+                            }else{
+                                alert('提交成功！');
+                            }
+                             
+                        }
+                    )
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <form action="#" method="post" onsubmit="return ck();" enctype="multipart/form-data">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+          <tr>
+              <td>
+                  数据导入：<input type="file" name="upObj" id="upObj" size="46"/>&nbsp;
+                  <input type="submit" id="subctr" name="subctr" value="导入检查" />
+                  <input type="button" id="changectr" name="changectr" value="提交数据" onclick="changeCtrFun()" title="提交数据"/>
+                  <input type="hidden" id="upType" value="{upType}" />
+                  <input type="hidden" id="uploadedFile" value="{uploadedFile}" />
+              </td>
+          </tr>
+        </table>
+    </form>
+    <table border="1" width="100%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        {error_list}
+        <tr class="tableheader">
+            <td align="center">姓名</td>
+            <td align="center">代购方</td>
+            <td align="center">部门</td>
+            <td align="center">付费方</td>
+            <td align="center">基本工资</td>
+            <td align="center">公积金</td>
+            <td align="center">社保费</td>
+            <td align="center">企业公积金</td>
+            <td align="center">企业社保</td>
+            <td align="center">调配费</td>
+            <td align="center">残障费</td>
+            <td align="center">管理费</td>
+            <td align="center">账号</td>
+            <td align="center">开户行</td>
+            <td align="center">身份证</td>
+            <td align="center">备注</td>
+            <td align="center">数据状态</td>
+        </tr>
+        {data_list}
+    </table>
+    </body>
+</html>

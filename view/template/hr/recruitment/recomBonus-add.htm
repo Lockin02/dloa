@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增内部推荐奖金</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/recomBonus-add.js" ></script>
+   <!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType" : "oa_hr_recommend_bonus"
+				});
+			});
+		</script>
+	<style>
+		#important{
+			color:#0000FF;
+		}
+	</style>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_recruitment_recomBonus&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增内部推荐奖金
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left" id="">填表人</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="formManName" name="recomBonus[formManName]" value="{formManName}" readonly/>
+      			 <input type="hidden" id="formManId" name="recomBonus[formManId]" value="{formManId}" />
+      		</td>
+      		<td class="form_text_left" id="">填表时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="formDate" name="recomBonus[formDate]" value="{formDate}" readonly/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left" id="">被荐人</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="isRecommendName" name="recomBonus[isRecommendName]" value="{isRecommendName}" readonly/>
+      		</td>
+      		<td class="form_text_left" id="">简历编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="resumeCode" name="recomBonus[resumeCode]" value="{resumeCode}" readonly/>
+      			 <input type="hidden" id="resumeId" name="recomBonus[resumeId]" value="{resumeId}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left" >职位小类</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="developPositionName" name="recomBonus[developPositionName]" />
+      			 <input type="hidden" class="txt" id="developPositionId" name="recomBonus[developPositionId]" />
+      		</td>
+      		<!-- <td class="form_text_left" id="important">预计转正日期</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="beBecomDate" onfocus="WdatePicker()" readOnly  name="recomBonus[beBecomDate]" />
+      		</td> -->
+       		<td class="form_text_left" id="important">职位类型</td>
+      		<td class="form_text_right" >
+      			 <select  name="recomBonus[job]" class="select">
+			   		{job}
+			 	</select>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="form_text_left" id="important">入职日期</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="entryDate" onfocus="WdatePicker()" readOnly  name="recomBonus[entryDate]" />
+      		</td>
+      		<td class="form_text_left" id="important">转正日期</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="becomeDate" onfocus="WdatePicker()" readOnly  name="recomBonus[becomeDate]" />
+      		</td>
+
+       </tr>
+       <tr>
+			<td class="form_text_left" id="">推荐人</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="recommendName" name="recomBonus[recommendName]" value="{recommendName}" readonly/>
+      			 <input type="hidden" class="readOnlyText" id="recommendId" name="recomBonus[recommendId]" value="{recommendId}"/>
+      		</td>
+      		<td class="form_text_left" id="important">奖金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="bonus" name="recomBonus[bonus]" onblur="calculate();"/>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="form_text_left" id="important">第一次待发时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="firstGrantDate" onfocus="WdatePicker({'dateFmt':'yyyy-M'})" readOnly  name="recomBonus[firstGrantDate]" />
+      		</td>
+      		<td class="form_text_left" id="important">第一次待发奖金</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="firstGrantBonus" name="recomBonus[firstGrantBonus]" readonly/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left" id="important">第二次待发时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="secondGrantDate" onfocus="WdatePicker({'dateFmt':'yyyy-M'})" readOnly  name="recomBonus[secondGrantDate]" />
+      		</td>
+      		<td class="form_text_left" id="important">第二次待发奖金</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="secondGrantBonus" name="recomBonus[secondGrantBonus]" readonly/>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="form_text_left" id="important">已发比例</td>
+      		<td class="form_text_right">
+      			 <select class="select" id="bonusProprotion" name="recomBonus[bonusProprotion]" >
+      			 	<option value="0">0%</option>
+      			 	<option value="50">50%</option>
+      			 	<option value="100">100%</option>
+      			 </select>
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">需求部门</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="deptName" name="recomBonus[deptName]"  readonly/>
+      			 <input type="hidden" class="txt" id="deptId" name="recomBonus[deptId]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left" >附件</td>
+      		<td  class="form_text_right" colspan="3">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">{file}</div>
+					</div></td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="4">
+      			 <textarea class="txt_txtarea_font" id="remark" name="recomBonus[remark]"></textarea>
+      		</td>
+       </tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="hidden"  name="recomBonus[parentId]" value="{parentId}"/>
+      		   <input  type="hidden"  name="recomBonus[recommendReason]" value="{recommendReason}"/>
+      		   <input  type="hidden" name="recomBonus[recommendCode]" value="{recommendCode}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		  <input  type="button" class="txt_btn_a" value=" 提  交" onclick="Post();"/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

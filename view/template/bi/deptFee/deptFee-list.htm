@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>部门费用统计</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <link type="text/css" href="css/yxstyle.css" media="screen" rel="stylesheet"/>
+    <link type="text/css" href="js/thickbox.css" media="screen" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+    <script type="text/javascript" src="js/jeasyui_newest/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <!-- 日期控件 -->
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript" src="view/template/bi/deptFee/js/deptFee-list.js"></script>
+</head>
+<body>
+<table id="searchTbl" class="main_table_search" style="width: 100%;">
+    <tr>
+        <td class="form_text_right">
+            统计年份：
+            <input type="text" class="txtmin" id="beginYear" value="{year}"
+                   onclick="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'2099'})"/> 年
+            <input type="text" class="txtmin" id="beginMonth" value="{month}"
+                   onclick="WdatePicker({dateFmt:'M'})"/> 月 至
+            <input type="text" class="txtmin" id="endYear" value="{year}"
+                   onclick="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'2099'})"/> 年
+            <input type="text" class="txtmin" id="endMonth" value="{month}"
+                   onclick="WdatePicker({dateFmt:'M'})"/> 月
+            <input type='button' id="search" value=' 查 询 ' class="txt_btn_a"/>
+            <input type='hidden' id="deptLevel" value='{deptLevel}'/>
+            <input type='button' id="export" value=' 导 出 ' class="txt_btn_a" style="display: none;"/>
+            <input type='button' id="toExportDetail" value=' 导出明细 ' class="txt_btn_a" style="display: none;"/>
+            <span><img id="loading" style="display:none;vertical-align:middle;"
+                       src="js/jquery/images/grid/load.gif"/></span>
+        </td>
+    </tr>
+</table>
+<div id="grid"></div>
+<div id="detailWindow" style="display: none;">
+    <table class="form_in_table">
+        <tbody>
+        <tr class="tr_even" style="text-align: left;">
+            <td>范围：</td>
+            <td>
+                <input type="text" class="txtmin" id="exportYear" value="{year}"
+                       onclick="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'2099'})"/> 年
+                <input type="text" class="txtmin" id="exportMonth" value="{month}"
+                       onclick="WdatePicker({dateFmt:'M'})"/> 月
+            </td>
+        </tr>
+        <tr class="tr_even" style="text-align: left;">
+            <td>类型：</td>
+            <td>
+                <input type="checkbox" id="feeType_person" value="person" checked>
+                <label for="feeType_person">人力</label>
+                <input type="checkbox" id="feeType_expense" value="expense" checked>
+                <label for="feeType_expense">报销</label>
+                <input type="checkbox" id="feeType_pay" value="pay" checked>
+                <label for="feeType_pay">支付</label>
+                <input type="checkbox" id="feeType_pk" value="pk" checked>
+                <label for="feeType_pk">PK</label>
+            </td>
+        </tr>
+        <tr class="tr_even" style="text-align: left;">
+            <td colspan="2">
+                <input type='button' id="exportDetail" value=' 导出明细 ' class="txt_btn_a" style="display: none;"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

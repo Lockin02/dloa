@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>查看项目周报</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gbk"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<script type="text/javascript" src="view/template/engineering/project/js/statusreport-common.js"></script>
+	<script type="text/javascript" src="view/template/engineering/project/js/statusreport-view.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+</head>
+<body>
+<table class="form_main_table" style="width:1150px;margin:auto;align:center" align="center">
+	<tr>
+		<td colspan="6">
+			<div class="main_head2">
+			    <span class="main_head_title">
+			      	项目周报
+			    </span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">基 本 信 息</legend>
+                <table class="form_in_table">
+                    <tr>
+                        <td class="form_text_left_three">项目名称：</td>
+                        <td class="form_text_right_three">
+                            {projectName}
+                        </td>
+                        <td class="form_text_left_three">项目编号：</td>
+                        <td class="form_text_right_three">
+                            <a href='javascript:void(0)' onclick="viewProject();">{projectCode}</a>
+                        </td>
+                        <td class="form_text_left_three">项目经理：</td>
+                        <td class="form_text_right_three">
+                            {managerName}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_three">周 次：</td>
+                        <td class="form_text_right_three">
+                            {weekNo}
+                            <input type="hidden" id="weekNo" value="{weekNo}"/>
+                            <input type="hidden" id="id" value="{id}"/>
+                            <input type="hidden" id="projectId" value="{projectId}"/>
+                        </td>
+                        <td class="form_text_left_three">周报开始日期：</td>
+                        <td class="form_text_right_three">
+                            {beginDate}
+                        </td>
+                        <td class="form_text_left_three">周报结束日期：</td>
+                        <td class="form_text_right_three">
+                            {endDate}
+                        </td>
+                    </tr>
+                </table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 预 警</legend>
+				<div id="weekWarning"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">关 键 指 标</legend>
+				<div id="weekStatus"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 汇 报</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">进 展 描 述</td>
+						<td class="form_text_right" colspan="5">
+							{description}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">下 周 计 划</td>
+						<td class="form_text_right" colspan="5">
+							{nextPlan}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">销 售 机 会</td>
+						<td class="form_text_right" colspan="5">
+							{saleChance}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">竞争对手动向</td>
+						<td class="form_text_right" colspan="5">
+							{competitorTrends}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">研 发 反 馈</td>
+						<td class="form_text_right" colspan="5">
+							{memberStatus}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">周 报 评 分</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">
+							考核分数
+						</td>
+						<td class="form_text_right" colspan="5">
+							{score}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="6">
+			<table class="form_in_table">
+				<tr>
+					<td class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{id}"/>
+						<input type="hidden" id="itemType" value="oa_esm_project_statusreport"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</body>
+</html>

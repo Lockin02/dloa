@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>入库单搜索</title>
+	 {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js" ></script>   
+<script>
+
+$(document).ready(function(){
+	$("#productCode").yxcombogrid_product({
+		hiddenId : 'productId',
+		nameCol : 'productCode',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(i) {
+					
+				}
+			}
+		}
+	})
+	$("#productName").yxcombogrid_product({
+		hiddenId : 'productId',
+		nameCol : 'productName',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(i) {
+					
+				}
+			}
+		}
+	})
+})
+function refresh(){
+	$("#productId").val("");
+	$("#productCode").val("");
+	$("#productName").val("");
+	$("#serilnoName").val("");
+	$("#productId").val("");
+	$("#pattern").val("");
+	
+}
+
+function exportExcel(){
+	window.open("?model=service_repair_repairapply&action=toExportExcel&productId="+$("#productId").val()
+			+"&serilnoName="+$("#serilnoName").val(),
+	 "", "width=200,height=200,top=200,left=200");
+}
+
+
+</script>
+
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	高级搜索
+    </span>
+</div>
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productCode"  />
+			 <input type="hidden" id="productId"  />
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productName" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="serilnoName"  />
+		</td>
+			
+		<td class="form_text_left">物料规格型号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="pattern"  />
+		</td>
+</tr> 
+
+<tr>
+		<td class="txt_btn" colspan="4">
+	<!-- 		   <input  type="button" class="txt_btn_a" value="搜 索" onclick="confirm();" />
+	 -->	 
+		   <input  type="button" class="txt_btn_a" value="导 出" onclick="exportExcel();" />
+		   <input  type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+</tr>
+</table>
+</body>
+</html>

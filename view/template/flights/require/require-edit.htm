@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			编辑订票需求
+		</title>
+		{#commonInclude#}
+		<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+
+		<script type="text/javascript" src="{#jsPath#}/require-common.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/require-edit.js"></script>
+		<!-- 引入公用费用归属部分 -->
+		<script type="text/javascript" src="view/template/finance/expense/js/costtype-init.js"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=flights_require_require&action=edit">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								编辑订票需求
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								申请人信息
+								<img src="images/icon/info_up.gif" id="baseImg_a" onclick="showAndHide('baseImg_a','baseTbl_a');"/>
+							</legend>
+							<table class="form_in_table" id="baseTbl_a">
+								<tr>
+									<td class="form_text_left">
+										申请人
+									</td>
+									<td class="form_text_right">
+										<input type="hidden" id="requireId" name="require[requireId]" value="{requireId}"/>
+										<input type="text" class="readOnlyTxtNormal" id="requireName" name="require[requireName]" value="{requireName}" readonly="readonly"/>
+									</td>
+									<td class="form_text_left">
+										申请日期
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="requireTime" name="require[requireTime]"
+										value="{requireTime}" readonly="readonly"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										所在公司
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="companyName" name="require[companyName]"
+										value="{companyName}" readonly="readonly"/>
+									</td>
+									<td class="form_text_left">
+										所在部门
+									</td>
+									<td class="form_text_right">
+										<input type="hidden" id="deptId" name="require[deptId]" value="{deptId}"/>
+										<input type="text" class="readOnlyTxtNormal" id="deptName" name="require[deptName]"
+										value="{deptName}" readonly="readonly"/>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								乘机人信息
+								<img src="images/icon/info_up.gif" id="baseImg_b" onclick="showAndHide('baseImg_b','baseTbl_b');"/>
+							</legend>
+							<div id="itemTable"></div>
+							<table class="form_in_table" id="baseTbl_b" style="display:none;">
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											乘机人
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="airName" name="require[airName]" value="{airName}" readonly="readonly"/>
+										<input type="hidden" id="airId" name="require[airId]" value="{airId}"/>
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											手机号码
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{airPhone}" id="airPhone" name="require[airPhone]"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											证件类型
+										</span>
+									</td>
+									<td class="form_text_right">
+										<select id="cardType" class="txt" name="require[cardType]">
+											{cardType}
+										</select>
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											证件号码
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="cardNo" name="require[cardNo]" value="{cardNo}" readonly="readonly"/>
+										<input type="hidden" id="cardNoHidden" name="require[cardNoHidden]" value="{cardNoHidden}"/>
+									</td>
+								</tr>
+								<tr style="display:none;" class="cardAppendInfoShow">
+									<td class="form_text_left">
+										<span style="color:blue;">
+											证件有效期
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{validDate}" id="validDate" name="require[validDate]" onfocus="WdatePicker()" />
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											出生日期
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{birthDate}" id="birthDate" name="require[birthDate]" onfocus="WdatePicker()" />
+									</td>
+								</tr>
+								<tr style="display:none;" class="cardAppendInfoShow">
+									<td class="form_text_left">
+										<span style="color:blue;">
+										国籍
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="nation" name="require[nation]" value="{nation}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										常旅卡机构
+									</td>
+									<td class="form_text_right">
+										<select class="txt" id="tourAgency" name="require[tourAgency]">
+											{tourAgency}
+										</select>
+									</td>
+									<td class="form_text_left">
+										常旅客卡号
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{tourCardNo}" id="tourCardNo" name="require[tourCardNo]"/>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								订票要求
+								<img src="images/icon/info_up.gif" id="ReqImg_d" onclick="showAndHide('ReqImg_d','ReqTbl_d');"/>
+							</legend>
+							<table class="form_in_table" id="ReqTbl_d">
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											机票类型
+										</span>
+									</td>
+									<td class="form_text_right">
+										&nbsp;
+										<input type="radio" name="require[ticketType]" value="10" onclick="changeType(this.value)"/>
+										单程 &nbsp;&nbsp;
+										<input type="radio" name="require[ticketType]" value="11" onclick="changeType(this.value)"/>
+										往返 &nbsp;&nbsp;
+										<input type="radio" name="require[ticketType]" value="12" onclick="changeType(this.value)"/>
+										联程
+
+										<input type="hidden" id="ticketTypeHidden" value="{ticketType}"/>
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											区域类型
+										</span>
+									</td>
+									<td class="form_text_right">
+										<select class="select" name="require[districtType]" id="districtType">
+											{districtType}
+										</select>
+									</td>
+								</tr>
+								<!-- 单程 -->
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											出发城市:
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{startPlace}" id="startPlace" name="require[startPlace]"
+										/>
+									</td>
+									<td class="form_text_left" id="startTimes_a">
+										<span style="color:blue;">
+											出发日期
+										</span>
+									</td>
+									<td class="form_text_right" id="startTimes_b">
+										<input type="text" class="txt" value="{startDate}" name="require[startDate]"
+										id="startDate" onfocus="WdatePicker()" onblur="getDay()" />
+									</td>
+								</tr>
+								<tr id="middles" style="display:none;">
+									<td class="form_text_left">
+										<span style="color:blue;">
+											中转城市
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{middlePlace}" id="middlePlace"
+										name="require[middlePlace]" />
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											第二天中转日期
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{twoDate}" id="twoDate" name="require[twoDate]"
+										onfocus="WdatePicker()" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											到达城市
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{endPlace}" id="endPlace" name="require[endPlace]"
+										/>
+									</td>
+									<td class="form_text_left" id="hlTimes_a" style="display:none;">
+										<span style="color:blue;">
+											返回日期
+										</span>
+									</td>
+									<td class="form_text_right" id="hlTimes_b" style="display:none;">
+										<input type="text" class="txt" value="{comeDate}" value="" id="comeDate"
+										name="require[comeDate]" onfocus="WdatePicker()" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left" style="color:blue">
+										出行事由
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_font" id="outReason" name="require[outReason]" style="width:848px;">{outReason}</textarea>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left" id="reason" style="color:black">
+										未提前三天申请原因
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_font" id="requireReason" name="require[requireReason]" style="width:848px;">{requireReason}</textarea>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								特殊需求
+								<img src="images/icon/info_up.gif" id="baseImg_c" onclick="showAndHide('baseImg_c','baseTbl_c');"/>
+							</legend>
+							<table class="form_in_table" id="baseTbl_c">
+								<tr>
+									<td class="form_text_left">
+										期望出发时间段
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txtshort" id="flyStartTime" name="require[flyStartTime]" value="{flyStartTime}"/>
+										&nbsp;到&nbsp;
+										<input type="text" class="txtshort" id="flyEndTime" name="require[flyEndTime]" value="{flyEndTime}"/>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								费用归属
+								<img src="images/icon/info_up.gif" id="feeImg_c" onclick="showAndHideDiv('feeImg_c','feeTbl_c');"/>
+							</legend>
+							<div class="form_in_table" id="feeTbl_c">
+							</div>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td>
+					<span class="blue">提示：</span><br />
+					<span class="blue">1.提交申请后，请及时通知下一位领导审批，如需帮助，请拨打订票专线!</span>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td class="txt_btn" colspan="4">
+						<input type="hidden" id="id" name="require[id]" value="{id}" />
+                        <input type="hidden" id="deptIsNeedProvince" value="{deptIsNeedProvince}"/>
+                        <input type="hidden" id="deptIsNeedCustomerType" value="{deptIsNeedCustomerType}"/>
+						<input type="submit" class="txt_btn_a" onclick="setAudit('audit');" value="提交审批"/>
+						<input type="submit" class="txt_btn_a" onclick="setAudit('save');" value=" 保  存 "/>
+						<input type="hidden" id="auditType" name="require[auditType]" value="save"/>
+						<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

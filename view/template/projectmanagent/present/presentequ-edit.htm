@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>赠送物料清单确认</title>
+{#commonInclude#}
+<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+<script type="text/javascript" src="{#jsPath#}/presentequ-common.js"></script>
+<script type="text/javascript" src="{#jsPath#}/presentequ-edit.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+<script type="text/javascript" src="js/util.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post"
+	action="?model=projectmanagent_present_presentequ&action=equEdit">
+<table class="form_main_table ">
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title">赠送物料清单确认</span></div>
+		</td>
+	</tr>
+	<table width="100%"
+		style="bcontract-collapse:collapse;background-color:#F3F6FA;"
+		class="form_main_table">
+	    <tr>
+			<td  class="form_text_left">编号</td>
+			<td class="form_view_right">
+				{Code}
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right">
+				{orderCode}
+			</td>
+			<td  class="form_text_left">源单名称</td>
+			<td class="form_view_right">
+				{orderName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">客户名称</td>
+			<td class="form_view_right">
+				{customerName}
+			</td>
+			<td class="form_text_left">交货日期</td>
+			<td class="form_view_right">
+				{deliveryDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_con">归属区域:</td>
+			<td class="form_text_right_con">
+				{areaName}
+			</td>
+			<td class="form_text_left_con">区域负责人:</td>
+			<td class="form_text_right_con">
+				{areaPrincipal}
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">申请人</td>
+			<td class="form_view_right">
+				{salesName}
+			</td>
+			<td  class="form_text_left">申请日期</td>
+			<td class="form_text_right">
+				{createTime}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">客户类型</td>
+			<td class="form_view_right">{customTypeName}</td>
+			<td class="form_text_left">省份</td>
+			<td class="form_text_right">{province}</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">归属板块</td>
+			<td class="form_view_right">{moduleName}</td>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right">{businessBelongName}</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">费用承担人</td>
+			<td class="form_view_right">{feeMan}</td>
+			<td  class="form_text_left">赠送成本概算</td><!-- (含税) -->
+			<td class="form_text_right">
+				<span id="costEstimates_view">{costEstimates}</span>
+				<input type="hidden" name="present[costEstimates]" id="costEstimates" value="{costEstimates}" />
+				<input type="hidden" name="present[costEstimatesTax]" id="costEstimatesTax" value="{costEstimatesTax}" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请理由</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="textarea_read" readonly="readonly">{reason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="textarea_read" readonly="readonly">{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">计划发货日期</td>
+			<td class="form_text_right">{deliveryDate}</td>
+			<td class="form_text_left">标准交货期</td>
+			<td class="form_text_right"><input type="text"
+				class="readOnlyTxtNormal" id="standardDate"
+				name="borrow[standardDate]" value="{standardDate}" readonly /></td>
+		</tr>
+	</table>
+	<table class="form_main_table" id="mytable">
+		<thead>
+			<tr align="left">
+				<td colspan=6">产品清单&nbsp;&nbsp;&nbsp;</td>
+				<td align="center" width="4%"><input type="hidden"
+					id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+					onclick="dis('invbody')" title="缩放" /></td>
+			</tr>
+		</thead>
+		<tbody id="invbody">
+			<tr class="main_tr_header">
+				<th>序号</th>
+				<!--                        <th>
+                            产品线
+                        </th>-->
+				<!--					<th>产品编号</th>-->
+				<th>产品名称</th>
+				<th>产品描述</th>
+				<th>数量</th>
+				<th>单位</th>
+				<th>加密配置</th>
+				<th>产品配置</th>
+			</tr>
+			{products}
+		</tbody>
+	</table>
+	<table class="form_main_table" id="mytable">
+		<tr id="equ.H" style="display:none;text-align:left;">
+			<td><b onclick="hideList('equ');">新增物料</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">新增物料</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+	</table>
+	<table class="form_main_table" colspan="7">
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" name="present[id]" id="presentId" value="{id}" />
+				<input type="hidden" id="docType" value="{docType}" />
+				<input type="submit" class="txt_btn_a" value=" 保  存 " />
+				<input type="submit" class="txt_btn_a" value=" 确 认 " onclick="toEditAudit()" />
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+		</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

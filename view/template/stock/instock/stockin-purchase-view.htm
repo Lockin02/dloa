@@ -1,0 +1,148 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>查看外购入库单</title>
+    {#commonInclude#}
+    <script>
+        $(document).ready(function () {
+            if ("{isRed}" == "0") {
+                $(".main_head_title").html('<span class="blue">外购入库单</span>');
+            } else {
+                $(".main_head_title").html('<span class="red">外购入库单>>>红色</span>');
+                $("#itemtable tbody tr").each(function () {
+                    $(this).css("color", "red");
+                });
+            }
+        });
+        function viewPurCode(purOrderId) {
+            $.ajax({
+                type: "POST",
+                url: "?model=purchase_contract_purchasecontract&action=md5RowAjax",
+                data: {"id": purOrderId},
+                async: false,
+                success: function (data) {
+                    var url = "index1.php?model=purchase_contract_purchasecontract&action=init&perm=view&id=" + purOrderId + "&skey=" + data;
+                    showModalWin(url, 1);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      外购入库单
+    </span>
+</div>
+<table class="form_main_table">
+    <tr>
+        <td class="form_text_left">单据编号</td>
+        <td class="form_text_right">
+            {docCode}
+        </td>
+        <td class="form_text_left">单据日期</td>
+        <td class="form_text_right" width="30%">
+            {auditDate}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">源单类型</td>
+        <td class="form_text_right">
+            {relDocType}
+        </td>
+        <td class="form_text_left">源单编号</td>
+        <td class="form_text_right">
+            {relDocCode}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">采购方式</td>
+        <td class="form_text_right">
+            {purchMethod}
+        </td>
+        <td class="form_text_left">往来科目</td>
+        <td class="form_text_right">
+            {accountingCode}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">供 应 商</td>
+        <td class="form_text_right">
+            {supplierName}
+        </td>
+        <td class="form_text_left">付款日期</td>
+        <td class="form_text_right">
+            {payDate}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">采购订单号</td>
+        <td class="form_text_right">
+            <a href="#" onclick='viewPurCode("{purOrderId}")'>{purOrderCode}</a>
+        </td>
+        <td class="form_text_left">采 购 员</td>
+        <td class="form_text_right">
+            {purchaserName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">收料仓库</td>
+        <td class="form_text_right">
+            {inStockName}
+        </td>
+        <td class="form_text_left">制单</td>
+        <td class="form_text_right">
+            {createName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">审核人</td>
+        <td class="form_text_right" colspan="3">
+            {auditerName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">备注</td>
+        <td class="form_text_right" colspan="3">
+            <textarea class="textarea_read">{remark}</textarea>
+        </td>
+    </tr>
+</table>
+<table class="main_table" id="itemtable">
+    <thead>
+    <tr>
+        <td colspan="15" class="form_header">
+            物料清单
+        </td>
+    </tr>
+    <tr class="main_tr_header">
+        <th>序号</th>
+        <th>物料编码</th>
+        <th>物料分类</th>
+        <th>K3编码</th>
+        <th>物料名称</th>
+        <th>规格型号</th>
+        <th>单位</th>
+        <th>应收数量</th>
+        <th>实收数量</th>
+        <th>批次号</th>
+        <th>序列号</th>
+        <th>单价</th>
+        <th>金额</th>
+        <th>保修期（月）</th>
+        <th>收料仓库</th>
+    </tr>
+    </thead>
+    <tbody>
+        {stockinItems}
+    </tbody>
+</table>
+<table class="main_table">
+    <tr>
+        <td colspan="4">
+            <input type="button" value=" 关 闭 " class="txt_btn_a" onclick="closeFun();">
+        </td>
+    </tr>
+</table>
+</body>
+</html>

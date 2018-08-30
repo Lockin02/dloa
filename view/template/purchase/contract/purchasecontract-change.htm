@@ -1,0 +1,485 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>申请变更采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+    <link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+	
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-bankinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-suppAccount.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-add.js" ></script>
+	<script type="text/javascript" src="view/template/purchase/change/js/equipmentchange-add.js" ></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/puchasecontract-supplier-combo.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script type="text/javascript" src="js/common/changejudge.js"></script>
+
+	<script>
+		var uploadfile;
+		$(function() {
+
+			var searchCol=$('#signStatus').val();
+			$(":radio").each(function(){
+				if($(this).val()==searchCol){
+					$(this).attr("checked","checked");
+				}
+			});
+
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_purch_apply_basic",
+				"serviceId": "{id}"
+			},{"isSyn2Server":false});
+
+
+			var paymentCondition=$("#paymentCondition").val();
+			if(paymentCondition=="YFK"){
+				$("#payRatio").show();
+			}else{
+				$("#payRatio").hide();
+			}
+
+			var payRatio=$("#ratio").val();
+			for(i=5;i<101;i++){
+				$("#payRatio").append('<option id="payRatio'+i+'" value="'+i+'%">'+i+'%</option>');
+				var ratio=i+"%";
+				if(ratio==payRatio){
+					$("#payRatio"+i).attr("SELECTED","SELECTED");
+				}
+				i=i+4;
+			}
+
+			$("#paymentCondition").bind("change",function(){
+				var paymentCondition=$("#paymentCondition").val();
+				if(paymentCondition=="YFK"){
+					$("#payRatio").show();
+				}else{
+					$("#payRatio").val("");
+					$("#payRatio").hide();
+				}
+			});
+
+             /**
+              * 发票类型改变事件
+              */
+            $("#billingType").bind("change",function(){
+               var taxRate=$(this).find("option:selected").attr("e1");
+                $(".taxRate").each(function(){
+                    $(this).val(moneyFormat2(taxRate));
+                    var numFlag=$(this).attr("numFlag");
+                    sumPrice(numFlag);
+                });
+                sumAllMoney();
+            });
+			
+ 			//币种初始化
+			var currencyCodeObj = $("#currencyCode");
+			if(currencyCodeObj.length > 0){
+				// 金额币别
+				$("#currency").yxcombogrid_currency({
+					hiddenId : 'currencyCode',
+					valueCol : 'currencyCode',
+					isFocusoutCheck : false,
+					gridOptions : {
+						showcheckbox : false,
+						event : {
+							'row_dblclick' : function(e, row, data) {
+								$("#rate").val(data.rate);
+								// 根据汇率计算本币
+								conversion();
+							}
+						}
+					}
+				});
+			}
+			
+			validate({
+				"currency" : {
+					required : true
+				}
+ 			});
+			
+			//根据汇率计算本币
+			conversion();
+		});
+		
+		//根据汇率计算本币
+		function conversion() {
+			var allMoneyCur = $("#allMoney").val() * $("#rate").val();
+		    $("#allMoneyCur").val(allMoneyCur);
+		    $("#allMoneyCur_v").val(moneyFormat2(allMoneyCur))
+		}
+
+		// 表单检查
+		function formSubmitChk(){
+			// 检查订单金额是否允许变更
+			var allMoney = $("#allMoney").val();
+			var oldId = $("#oldId").val();
+			var resultStr = $.ajax({
+				type : "POST",
+				url : '?model=purchase_contract_purchasecontract&action=chkChangeForm',
+				data : {
+					oldId : oldId,
+					allMoney : allMoney,
+				},
+				async : false
+			}).responseText;
+			var resultObj = eval("("+resultStr+")");
+			if(resultObj.chkResult == 'No'){
+				alert(resultObj.msg);
+				return false;
+			}else{
+				return checkModification();;
+			}
+		}
+	</script>
+
+	<!-- 附件上传结束 -->
+</head>
+<body scroll="yes" onload="myload();initFileds()">
+	<div class="main_head">
+	   	<span class="main_head_title">申请变更采购订单</span>
+	</div>
+	<div class="main_wraper">
+<form method="post" action="?model=purchase_contract_purchasecontract&action=change" id="form1" onsubmit="return formSubmitChk()" onkeypress="javascript:return NoSubmit(event);">
+	<input type="hidden" id="oldId" name="contract[oldId]" value="{id}"/>
+	<input type="hidden" name="contract[hwapplyNumb]" value="{hwapplyNumb}"/>
+	<input type="hidden" id="signStatus" value="{signStatus}"/>
+ 	<input type="hidden" class="txt" id="taxRate" name="" value='{taxRate}'/>
+	<input type="hidden" value="{payRatio}" id="ratio"/>
+
+	<table class="form_main_table">
+	<!--
+			<tr>
+				<td colspan="4" class="form_header">
+					<font >采购订单</font>
+				</td>
+               	<td class="tableheader form_text_left">
+                       单据编号
+                   </td>
+                   <td  class="form_text_right">
+                      &nbsp;
+                      {applyNumb}
+                   </td>
+			</tr> -->
+            <tr>
+				<td class="form_text_left">
+					采购订单编号
+				</td>
+				<td class="form_text_right">
+					{hwapplyNumb}
+				</td>
+				<td class="form_text_left">订单总金额</td>
+				<td class="form_text_right ">&nbsp;
+                      <input type="text" class="readOnlyText formatMoney" id="allMoneyView"  value="{allMoney}" readonly/>
+                      <input type="hidden"  id="allMoney" name="contract[allMoney]" value="{allMoney}" readonly/>
+                </td>
+			</tr>
+			<tr>
+               	<td class="form_text_left">付款币种</td>
+				<td class="form_text_right">
+					<input id="currency" type="text" name="contract[currency]" class="txt" value="{currency}" readonly="readonly"/>
+					<input id="currencyCode" type="hidden" name="contract[currencyCode]" value="{currencyCode}"/>
+					<span class="red">[*]</span>
+				</td>
+				<td class="form_text_left">本位币金额<span id="cur1"></span></td>
+			    <td class="form_text_right">&nbsp;
+			        <input type="readOnlyText" class="readOnlyText formatMoney" name="contract[allMoneyCur]" id="allMoneyCur"
+			               onblur="conversion();" value="{allMoneyCur}" readonly/>
+			    </td>
+			</tr>
+			<tr >
+				<td class="form_text_left">汇率</td>
+			    <td class="form_text_right">
+			        <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="contract[rate]" id="rate" value="{rate}"
+			               onblur="conversion();"/>
+			    </td>
+				<td class="form_text_left">
+					采购员
+				</td>
+				<td class="form_text_right">
+					{createName}
+					<input type="hidden" name="contract[createName]" value="{createName}" />
+					<input type="hidden" name="contract[createId]" value="{createId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left" >
+					供应商名称
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" id="supplierId" name="contract[suppId]" value="{suppId}" />
+					<input type="text" id="supplierName" class="txt" name="contract[suppName]" value="{suppName}" />
+
+				</td>
+				<td class="form_text_left">
+					预计到货日期
+				</td>
+				<td class="form_text_right">
+					&nbsp;<input type="text" class="txt" name="contract[dateHope]" value="{dateHope}" onfocus="WdatePicker()" readonly>
+				</td>
+				<!--
+				<td class="form_text_left" >
+					期望完成时间
+				</td>
+				<td class="form_text_right">
+					&nbsp;<input type="text" class="txt" name="contract[dateFact]" value="{dateFact}" onfocus="WdatePicker()" readonly/>
+				</td> -->
+			</tr>
+			<tr>
+				<td class="form_text_left" >
+					发票类型
+				</td>
+				<td class="form_text_right">
+					&nbsp;<select class="select" id="billingType" name="contract[billingType]">
+						{billingType}
+					</select>
+				</td>
+               	<td class="form_text_left">付款条件</td>
+               	<td class="form_text_right">
+                       &nbsp;
+					<select class="select" id="paymentCondition" name="contract[paymentCondition]">
+						{paymentCondition}
+					</select>
+                       &nbsp;
+                       <select class="selectmiddel" id="payRatio" name="contract[payRatio]">
+					</select>
+               	</td>
+			</tr>
+			<tr>
+				<td class="form_text_left" >
+					付款类型
+				</td>
+				<td class="form_text_right">
+					&nbsp;<select class="select" id="paymetType" name="contract[paymetType]">
+						{paymetType}
+					</select>
+				</td>
+				<td class="form_text_left" >
+					供应商账号
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="suppAccount1" class="txt" name="contract[suppAccount]" value="{suppAccount}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left" >
+					开户银行
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" id="suppBankName"  name="contract[suppBankName]"   value="{suppBankName}" readonly/>
+					<input type="hidden" class="txt" id="suppBank" name="contract[suppBank]"  value="{suppBank}"/>
+				</td>
+				<td class="form_text_left" >
+					联系电话
+				</td>
+				<td class="form_text_right"  colspan="3">
+					<input type="text" class="txt" id="suppTel" name="contract[suppTel]" value="{suppTel}">
+				</td>
+			</tr>
+			<tr >
+				<td class="form_text_left" >
+					供应商地址
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" id="suppAddress" class="txtlong" name="contract[suppAddress]" value="{suppAddress}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" class="td_table">
+					<table class="main_table_nested">
+						<tr class="form_header">
+							<td  class="form_header">
+								采购订单清单
+							</td>
+							<td width="10%">
+				 				<input type="hidden" id="TraNumber" name="TraNumber" value="{TraNumber}" />
+								<img id="addLine" src="images/collapsed.gif" onclick="equ_add('mytra','TraNumber','basicNumb');" title="添加行" />
+				 			</td>
+						</tr>
+					</table>
+					<table class="main_table" id="mytra">
+						<tr class="main_tr_header">
+							<th >
+								序号
+							</th>
+							<th >
+								物料编号
+							</th>
+							<th>
+								物料名称
+							</th>
+							<th>
+								规格型号
+							</th>
+							<th>
+								单位
+							</th>
+							<th>
+								订单数量
+							</th>
+							<th>
+								已入库数量
+							</th>
+							<th>
+								预计到货时间
+							</th>
+							<th>
+								入库时间
+							</th>
+							<th>
+								单价
+							</th>
+							<th>
+								含税单价
+							</th>
+							<th>
+								税率(%)
+							</th>
+							<th>
+								金额
+							</th>
+							<th>
+								采购用途
+							</th>
+		                    <th>申请部门</th>
+		                    <th>源单编号</th>
+		                    <th>源单业务编号</th>
+							<th>
+								备注
+							</th>
+						</tr>
+			<tbody id="invbody">
+                {list}
+			</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					变更原因
+				</td>
+				<td colspan="3" class="form_text_right">
+					<textarea rows="5" id="changereason" name="contract[changeReason]" cols="136"></textarea>
+				</td>
+			</tr>
+			<tr >
+				<td class="form_text_left">
+					采购说明
+				</td>
+				<td colspan="3" class="form_text_right">
+					<textarea rows="5" id="instruction" name="contract[instruction]" cols="136">{instruction}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注
+				</td>
+				<td colspan="3" class="form_text_right">
+					<textarea rows="5" id="remark" name="contract[remark]" cols="136">{remark}</textarea>
+				</td>
+			</tr>
+			<tr align="center" >
+					<td class="tableheader form_text_left">
+						签约状态
+					</td>
+					<td class="form_text_right">
+						<input type="radio" name="contract[signStatus]" value="0">
+						未签约
+						<input type="radio" name="contract[signStatus]" value="1">
+						已签约
+						<!--
+						<input type="radio" name="contract[signStatus]" value="2"/>
+						已拿到纸质合同
+						 -->
+						<input type="radio" name="contract[signStatus]" value="3">
+						已提交纸质合同
+					</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">合同附件</td>
+				<td colspan="3" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">
+							{file}
+						</div>
+					</div>
+				</td>
+			</tr>
+			<!--
+			<tr>
+		   		<td class="form_text_left">是否发送邮件
+		       	</td>
+		   		<td colspan="3" class="form_text_right">
+		   			<input type="radio" name="contract[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+		      		<input type="radio" name="contract[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+				</td>
+			</tr>
+		   	<tr>
+		   		<td class="form_text_left">邮件发送至
+		       	</td>
+		       	<td colspan="3" id="maildiv" class="form_text_right">
+		    		<input type="hidden" name="contract[email][TO_ID]" id="TO_ID" readonly="readonly"/>
+				    <input type="text" class="txtlong" name="contract[email][TO_NAME]" id="TO_NAME" readonly="readonly"/>
+				    <input type="button" class="txt_btn_a" value="选 择" onclick="OpenUserWindow()" title="选择"/>
+				    <input type="button" class="txt_btn_a" value="清 空" onclick="clearTO()" title="清空"/>
+			    </td>
+		   	</tr> -->
+			<tr align="center" class="TableHeader" height="28">
+				<td colspan="6"class="footform">
+					<input type="submit" value=" 变 更 " class="txt_btn_a" >&nbsp;
+					<!--
+					<input type="submit" value=" 提交审批 " class="txt_btn_a" onclick="commitToApproval()">&nbsp;
+					 -->
+					<input type="button" value=" 返  回 " class="txt_btn_a" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+</form>
+		<br>
+		</div>
+	</body>
+</html>

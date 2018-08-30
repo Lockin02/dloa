@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>编辑采购申请</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-rdproject.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-dept.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-user.js"></script>
+
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/purchase/external/js/external-add-delete.js"> </script>
+<script type="text/javascript"
+	src="view/template/purchase/external/js/external-asset-common.js"> </script>
+<script type="text/javascript"
+	src="view/template/purchase/plan/js/basic-asset-confirm.js"> </script>
+<script type="text/javascript"
+	src="view/template/purchase/external/js/external-add-validator.js"> </script>
+<script>
+
+		$(document).ready(function(){
+
+			$("#productSureUserName").yxselect_user({
+				hiddenId : 'productSureUserId',
+				formCode:"productSureUser"
+			});
+
+		});
+
+</script>
+
+</head>
+
+<body scroll="auto">
+
+<div class="main_head"><span class="main_head_title">
+研发采购申请分配 </span></div>
+<div class="main_wraper">
+<form id='form1' name='form1'
+	action="?model=purchase_plan_basic&action=confirmProductUser" method="post">
+<input type='hidden' id='purchType' name=basic[purchType]
+	value="rdproject" /> <input type='hidden' id='purchType'
+	name=basic[planNumb] value="{planNumb}" /> <input type='hidden'
+	id='purchType1' name=external[purchType] value="" /> <input
+	type='hidden' id='sourceId1' value="{sourceId}" /> <input type='hidden'
+	id='sourceName1' value="{sourceName}" /> <input type='hidden' id='id'
+	name="basic[id]" value="{id}" /> <input type="hidden"
+	name="basic[objAssId]" value="" /> <input type="hidden"
+	name="basic[objAssName]" value="研发采购" /> <input type="hidden"
+	name="basic[objAssType]" value="rdproject" /> <input type="hidden"
+	name="basic[objAssCode]" value="" /> <input type="hidden"
+	name="basic[equObjAssType]" value="rdproject_equ" />
+<table class="form_main_table">
+	<!--
+	<tr >
+		<td colspan="4" class="form_header">
+			<font class="form_header">采购申请</font>
+		</td>
+	</tr>  -->
+	<tr>
+		<td class="form_text_left">采购申请编号</td>
+		<td class="form_text_right">{planNumb}</td>
+
+		<td class="form_text_left">申请类型</td>
+		<td class="form_text_right">{purchTypeCName}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">项目编号</td>
+		<td class="form_text_right">{sourceNumb}</td>
+		<td class="form_text_left">项目名称</td>
+		<td class="form_text_right">{projectName}</td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">申请日期</td>
+		<td class="form_text_right">{sendTime}</td>
+		<td class="form_text_left">期望完成日期</td>
+		<td class="form_text_right">{dateHope}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">使用人</td>
+		<td class="form_text_right">{sendName}</td>
+		<td class="form_text_left">使用部门</td>
+		<td class="form_text_right">{department}</td>
+	</tr>
+	<tr>
+		<!--
+		<td class="form_text_left">采购部门</td>
+		<td class="form_text_right">
+			<input type="hidden" id="purchDepartId" name="basic[purchDepartId]" value="{purchDepartId}"/>
+			<input type="text" class="txt" id="purchDepart" name="basic[purchDepart]" value="{purchDepart}" readonly/>
+			<span class="red">[*]</span>
+			<br />
+			<div id="purchDepartTip" class="tipShortTxt" ></div>
+		</td>  -->
+		<td class="form_text_left">申请人</td>
+		<td class="form_text_right">{createName}</td>
+		<td class="form_text_left">电话</td>
+		<td class="form_text_right">{phone}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">采购说明</td>
+		<td class="form_text_right" colspan="3">
+		<div class='divChangeLine'>{instruction}</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+		<div class='divChangeLine'>{remark}</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">分配采购员</td>
+		<td class="form_text_right" colspan="3"><input type="hidden"
+			id="productSureUserId" name="basic[productSureUserId]" value="{productSureUserId}" /> <input
+			type="text" class="txt" id="productSureUserName"
+			name="basic[productSureUserName]"  value="{productSureUserName}" readonly /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">打回原因</td>
+		<td class="form_text_right" colspan="3">
+			<textarea  id="backReason" class="txt_txtarea_font" name="basic[backReason]" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="9">
+		<table id="mytable" class="form_main_table">
+			<thead>
+				<tr>
+					<td colspan="11" class="form_header">采购申请清单(<font color='red'>红色代表需要物料确认</font>)</td>
+					<td align="center"><input type="hidden" id="invnumber"
+						value="{invnumber}" /> <img src="images/verpic_open.gif"
+						onclick="dis('invbody')" title="缩放" /></td>
+				</tr>
+				<tr class="main_tr_header">
+					<th>序号</th>
+					<th>物料类别</th>
+					<th>是否生产物料</th>
+					<th>采购物料名称</th>
+					<th>规格型号</th>
+					<th>单位</th>
+					<th>采购申请数量</th>
+					<th>已下达数量</th>
+					<th>申请日期</th>
+					<th>希望交货期</th>
+					<th>备注</th>
+					<th>是否打回</th>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				{list}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6"><input type="button" id="confirmUserButton"
+			value=" 下 达" class="txt_btn_a" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input
+			type="button" id="backButton" value="打 回" class="txt_btn_a" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="button" value="返  回" class="txt_btn_a"
+			onclick="history.back(-1);" /></td>
+	</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

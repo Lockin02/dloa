@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"> </script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+    <script type="text/javascript" src="js/jquery/woo.js"></script>
+    <script type="text/javascript" src="js/jquery/component.js"></script>
+    <script type="text/javascript" src="js/jquery/dump.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+    <script type="text/javascript" src="js/validate.js"> </script>
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+    <script type="text/javascript" src="swfupload/handlers.js"></script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+    <script>
+        var uploadfile;
+        $(function() {
+            uploadfile=createSWFUpload({
+                "serviceType":$("#serviceType").val()
+            });
+        });
+        function toApp() {
+            var handle = $("#handle").val();
+            if(handle=="1"){
+                document.getElementById('form1').action = "index1.php?model=stock_outplan_outplan&action=uploadfile&handle=1";
+            }else{
+                document.getElementById('form1').action = "index1.php?model=stock_outplan_outplan&action=uploadfile";
+            }
+        }
+
+
+    </script>
+    <style>
+        #uploadfileList .historyFiles{padding:5px 10px;margin: 5px 10px 10px 0;border: 1px solid #aaa;width:95%;height:auto;float: left;position: relative;}
+        #uploadfileList .historyFiles>div{float: left;margin-right:10px}
+        #uploadfileList .historyFiles>label{float: left;margin-right:15px}
+    </style>
+    <!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=stock_outplan_outplan&action=uploadfile"  >
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">附件文件</td>
+            <td class="form_text_right">
+                <div class="upload">
+                    <div class="upload" id="fsUploadProgress"></div>
+                    <div class="upload"><span id="swfupload"></span>
+                        <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>
+                    </div>
+                    <div id="uploadfileList" class="upload">
+                        <div class="historyFiles"><label>已传附件:</label>{files}</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <table class="form_main_table">
+            <tr>
+                <td class="txt_btn" colspan="2">
+                    <input type="hidden" name="outplan[serviceId]" id="serviceId" value="{serviceId}" />
+                    <input type="hidden" name="outplan[serviceType]" id="serviceType" value="{serviceType}" />
+                    <input type="hidden" id="handle" value="{handle}" />
+                    <input type="submit" class="txt_btn_a" value=" 保  存 "  onclick="toApp();"/>
+                </td>
+            </tr>
+        </table>
+    </table>
+</form>
+</body>
+</html>

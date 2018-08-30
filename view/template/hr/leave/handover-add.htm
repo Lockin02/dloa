@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增离职交接清单</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/handover-add.js" ></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-handoverscheme.js"></script>
+      <style type="text/css">
+		.txtarea_custom{
+		    border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: medium none;
+			text-align:left;
+			line-height : 1.5em;
+		}
+		 .rimless_textA {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: medium none;
+					font-family: Courier;
+					height:18px;
+					width:120px;
+				}
+		 .rimless_textB {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:120px;
+				}
+		.tableA{
+			margin:0px;
+			padding:1px;
+			width:80%;
+			border:1px solid #CAD0E4;
+			border-collapse:collapse;
+			text-align:center;
+		}
+		.tableA td{
+		   padding:5px;
+		   border:1px solid #5B5B5B;
+		}
+		.td_left{
+			width:10%;
+			line-height:16px;
+			padding:1px 0px 0px 0px;
+			margin:5px 0px;
+		}
+
+		.td_right{
+			width:15%;
+			line-height:16px;
+			padding:1px 0px 0px 0px;
+			margin:5px 0px;
+		}
+   </style>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_leave_handover&action=add" >
+      <div align="center" cellpadding="5" >
+         <table class="tableA">
+      	<tr>
+      		<td colspan="6" bgcolor="#ECECFF">
+             <span>
+               	  <h3>新增离职交接清单</h3>
+             </span>
+            </td>
+         </tr>
+       <tr>
+      		<td class="td_left">员工姓名</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="userName" name="handover[userName]" value="{userName}"/>
+      			 <input type="hidden" class="txt" id="userAccount" name="handover[userAccount]" value="{userAccount}"/>
+      		</td>
+      		<td class="td_left">部门名称</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="deptName" name="handover[deptName]" value="{deptName}"/>
+      			 <input type="hidden" class="txt" id="deptId" name="handover[deptId]" value="{deptId}"/>
+      		</td>
+      		<td class="td_left">职位</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="jobName" name="handover[jobName]" value="{jobName}"/>
+      			 <input type="hidden" class="txt" id="jobId" name="handover[jobId]" value="{jobId}"/>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="td_left">员工编号</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" id="userNo" readonly  name="handover[userNo]" value="{userNo}"/>
+      		</td>
+      		<td class="td_left">员工电话</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" id="mobile"  readonly  value="{mobile}"/>
+      		</td>
+      		<td class="td_left">员工邮箱</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA"  id="personEmail" value="{personEmail}" readonly/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="td_left">入职日期</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" id="entryDate" readonly  name="handover[entryDate]" value="{entryDate}"/>
+      		</td>
+      		<td class="td_left">离职日期</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" id="quitDate"  readonly  name="handover[quitDate]" value="{comfirmQuitDate}"/>
+      		</td>
+      		<td class="td_left">离职类型</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA"  id="quitTypeName" name="handover[quitTypeName]"   value="{quitTypeName}" readonly/>
+      			 <input type="hidden" id="quitTypeCode" name="handover[quitTypeCode]"   value="{quitTypeCode}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="td_left">离职原因</td>
+      		<td colspan="3">
+      			 <textarea name="handover[quitReson]" id="quitReson"  class="txtarea_custom" cols="60">{quitReson}</textarea>
+      		</td>
+
+   		    <td class="td_left">编制</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="companyName" name="handover[companyName]" value="{companyName}"/>
+      			 <input type="hidden" class="txt" id="companyId" name="handover[companyId]" value="{companyId}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="td_left">离职交接清单方案</td>
+       		<td class="td_right" colspan="5" align="left">
+				<input type="text" class="txt" id="schemeName"  name="handover[schemeName]" />
+				<input type="hidden"  id="schemeId"  name="handover[schemeId]" value="{schemeId}"/>
+			</td>
+       </tr>
+       {fromworkList}
+       <div id="appendList"></div>
+  </table>
+
+  <table class="tableA">
+
+          <tr>
+      		<td class="txt_btn" colspan="6">
+      		   <input type="hidden" class="txt" id="leaveId" name="handover[leaveId]" value="{leaveId}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 发起确认 "/>&nbsp;&nbsp;
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+      </div>
+   </form>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>增员申请取消原因</title>
+	{#commonInclude#}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var cancelContentStr = $("#cancelContentStr").val();
+			cancelContentArr = cancelContentStr.split('<breakpoint>');
+			for (var i = cancelContentArr.length - 2 ;i >= 0 ;i--) {
+				var htmlArr = cancelContentArr[i].split('<br>');
+				var htmlStr = htmlArr[0] + '<br /><textarea class="textarea_read" readonly>' + htmlArr[1] + '</textarea><br /><br />';
+				$("#cancelContent").append(htmlStr);
+			};
+		});
+	</script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+					<span class="main_head_title">
+						增员申请取消原因
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">单据编号</td>
+			<td class="form_text_right_three">
+				{formCode}
+			</td>
+			<td class="form_text_left_three">状  态</td>
+			<td class="form_text_right_three">
+				{stateName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">取消原因</td>
+			<td class="form_text_right_three" colspan="3">
+				<input type="hidden" id="cancelContentStr" value="{cancelContent}"/>
+				<div id="cancelContent"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" id="id" name="produceapply[id]" value="{id}"/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

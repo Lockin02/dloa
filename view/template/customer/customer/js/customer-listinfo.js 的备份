@@ -1,0 +1,103 @@
+var show_page = function(page) {
+	$(".CustmoerInfo").yxgrid("reload");
+};
+$(function() {
+	// var proIdValue = parent.document.getElementById("proId").value;
+
+	$(".CustmoerInfo").yxgrid({
+		// 如果传入url，则用传入的url，否则使用model及action自动组装
+
+
+		model : 'customer_customer_customer',
+		/**
+		 * 是否显示查看按钮/菜单
+		 */
+		isViewAction : false,
+		/**
+		 * 是否显示修改按钮/菜单
+		 */
+		isEditAction : false,
+		/**
+		 * 是否显示删除按钮/菜单
+		 */
+		isDelAction : true,
+		/**
+		 * 是否显示添加按钮
+		 */
+		isAddAction : true,
+		//是否显示工具栏
+        isToolBar : true,
+	     //是否显示checkbox
+	     showcheckbox : true,
+
+		// 扩展右键菜单
+
+       menusEx : [
+
+		{
+			text : '查看',
+			icon : 'view',
+
+			action : function(row) {
+				showThickboxWin('?model=customer_customer_customer&action=viewTab&id='
+						+ row.id
+						+ '&placeValuesBefore&TB_iframe=true&modal=false&height=800&width=900');
+			}
+
+		}, {
+			text : '编辑',
+			icon : 'edit',
+
+			action : function(row) {
+				showThickboxWin('?model=customer_customer_customer&action=init&id='
+						+ row.id
+						+ '&placeValuesBefore&TB_iframe=true&modal=false&height=800&width=900');
+			}
+
+		}],
+
+		// 表单
+		colModel : [{
+			display : 'id',
+			name : 'id',
+			sortable : true,
+			hide : true
+		}, {
+			display : '客户名称',
+			name : 'Name',
+			sortable : true,
+			width : 150
+		}, {
+			display : '区域负责人',
+			name : 'AreaLeader',
+			sortable : true,
+
+			width : 150
+		}, {
+			display : '销售工程师',
+			name : 'SellMan',
+			sortable : true,
+			width : 150
+		}, {
+			display : '客户类型',
+			name : 'TypeOne',
+			sortable : true,
+			width : 150
+		}, {
+			display : '省份',
+			name : 'Prov',
+			sortable : true,
+			width : 150
+		}],
+
+		/**
+		 * 快速搜索
+		 */
+		searchitems : [{
+			display : '客户名称',
+			name : 'Name'
+		}],
+		sortorder : "ASC",
+		title : '客户信息'
+	});
+});

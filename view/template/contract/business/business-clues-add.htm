@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>新建线索</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<script type="text/javascript" src="js/jquery.js"> </script>
+<script type="text/javascript" src="js/util.js"> </script>
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js" > </script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/ext/ext-base.js"> </script>
+<script type="text/javascript" src="js/ext/ext-all.js"> </script>
+<script type="text/javascript" src="js/ext/common-ext.js"> </script>
+<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"> </script>
+<script type="text/javascript" src="js/ext/ux/combox/MyGridComboBox.class.js"> </script>
+<script type="text/javascript" src="view/template/common/combogrid/ProductinfoComboGrid.js"> </script>
+<script type="text/javascript" src="view/template/common/combogrid/CustomerLinkManComboGrid.js"> </script>
+<script type="text/javascript" src="view/template/common/combogrid/CustomerComboGrid.js"> </script>
+<script type="text/javascript" src="js/ext/ux/tree/TreeCheckNodeUI.class.js"> </script>
+<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"> </script>
+<script type="text/javascript" src="js/ext/ux/combox/ComboBoxCheckTree.class.js"> </script>
+<script type="text/javascript" src="js/ext/ux/form/MultiSelect.class.js"> </script>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="view/template/contract/business/js/business-new.js"></script>
+<script type="text/javascript" src="view/template/contract/business/js/business-new-js.js"> </script>
+
+
+</head>
+<body>
+	<table>
+		<tr>
+			<td>
+				<img src="images/sys_config.gif"/>
+				<b>
+					新建线索
+				</b>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<form action="?model=contract_sales_sales&action=add" method="post" id="form1" onsubmit="return CheckForm()" onkeypress="return NoSubmit(event);">
+		<table class='form_main_table'>
+			<tr>
+				<td class="form_text_left" >
+					线索名称
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txtlong" name="sales[formalNo]" id="formalNo" onblur="check_code(this.value);"/>
+					<span id="_formalNo" class="red">
+						[*]
+					</span>
+				</td>
+
+			</tr>
+
+
+			<tr>
+				<td class="form_text_left">
+					注册时间
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[deliveryDate]" id="deliveryDate"
+					onfocus="WdatePicker()"/ value="{deliveryDate}">
+					<span id="_deliveryDate" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					线索跟踪人
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" name="sales[principalId]" id="principalId" value="{principalId}"/>
+					<input type="text" class="txt" name="sales[principalName]" id="principalName"
+					readonly value="{principalName}"/>
+					<input type="button" class="txt_btn_a" value="选 择" class="SmallButton"
+					onclick="loadOrgWindow('principalId','principalName')" title="选择人员" name="button"/>
+					<input type="button" class="txt_btn_a" value="清 空" class="SmallButton"
+					title="清空人员" onclick="clearOrgInfo('principalId','principalName')"/>
+					<span id="_money" class="red">
+						[*]
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					客户名称
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="customerName" name="sales[customerName]"/>
+					<input type="hidden" name="sales[customerId]" id="customerId" />
+					<span id="_customerId" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					客户类型
+				</td>
+				<td class="form_text_right">
+					<select class="select" name="sales[customerType]" id="customerType">
+					</select>
+				</td>
+			</tr>
+			<tr>
+			    <td class="form_text_left">
+					客户联系人
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="sales[customerLinkman]" id="customerLinkman"
+					class="txt" maxlength="100" />
+				</td>
+
+
+				<td class="form_text_left">
+					客户所属省份
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[province]" id="provincecity" class="text" maxlength="10"/>
+				    <input type="hidden" name="sales[provinceId]" id="provinceId"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="form_text_left">
+					电话
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="sales[customerTel]" id="customerTel" class="txt"
+					maxlength="50" />
+				</td>
+				<td class="form_text_left">
+					邮箱
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[customerEmail]" id="customerEmail"
+					class="red" maxlength="50"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					收货地址
+				</td>
+				<td class="form_text_right" colspan="3">
+					<textarea name="sales[address]" id="address" class="all" style="width: 100%"></textarea>
+				</td>
+			</tr>
+		</table>
+		<table class="main_table" id="equ" width="100%" cellspacing='1' cellpadding="0">
+			<tr>
+				<td colspan="8" class="form_header">
+						产品清单
+				</td>
+				<td align="center" width="5%">
+					<input type="hidden" id="EquNum" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('myequ')" title="缩放"/>
+					<img src="images/collapsed.gif"  title="添加行"/>
+				</td>
+			</tr>
+		</table>
+		<table id="myequ" width="100%" class="form_main_table">
+			<tr class="main_tr_header"	>
+
+							<td style="text-align:center" width="5%">
+								序号
+							</td>
+
+							<td style="text-align:center" width="10%">
+								产品编号
+							</td>
+							<td style="text-align:center" width="16%">
+								产品名称
+							</td>
+							<td style="text-align:center" width="9%">
+								型号/版本
+							</td>
+							<td style="text-align:center" width="8%">
+								数量
+							</td>
+							<td style="text-align:center" width="8%">
+								单价
+							</td>
+							<td style="text-align:center" width="8%">
+								金额
+							</td>
+
+							<td style="text-align:center" width="5%">
+								操作
+							</td>
+
+			        </tr>
+			        <tr>
+
+							<td width="5%">
+								1
+                            </td>
+
+							<td width="10%">
+								<input class="txtshort" type="text" name="sales[equipment][1][productNumber]"
+								id="EquId1" size="10"/>
+								<input class="txtshort" type="hidden" name="sales[equipment][1][ptype]"
+								value="soft" />
+							</td>
+							<td width="16%">
+								<input type="text" name="sales[equipment][1][productName]"
+								id="EquName1" size="20"/>
+								<input class="txtshort" type="hidden" name="sales[equipment][1][productId]"
+								id="ProductId1"/>
+							</td>
+							<td nowrap width="9%">
+								<input class="txtshort" type="text" name="sales[equipment][1][productModel]"
+								id="EquModel1" size="9"/>
+							</td>
+							<td nowrap width="8%">
+								<input class="txtshort" type="text" name='sales[equipment][1][amount]'
+								id='EquAmount1' size="8" onblur="FloatMul('EquAmount1','EquPrice1','EquAllMoney1',2)"
+								/>
+							</td>
+							<td nowrap width="8%">
+								<input class="txtshort formatMoney" type="text" name='sales[equipment][1][price]'
+								id='EquPrice1' size="8" onblur="FloatMul('EquAmount1','EquPrice1','EquAllMoney1',2)"
+								/>
+							</td>
+							<td nowrap width="8%">
+								<input class="txtshort formatMoney" type="text" name='sales[equipment][1][countMoney]'
+								id='EquAllMoney1' size="8" />
+							</td>
+
+							<td nowrap width="5%">
+								<img src="images/closeDiv.gif" onclick="equmydel(this,'myequ')" title="删除行">
+
+				</td>
+			</tr>
+         </table>
+         <table class='form_main_table'>
+             <tr class="main_foot_wraper" >
+				<td colspan="12">
+                    <input class="txt_btn_a" type="submit" value="提交审批" />
+					<input type="submit" class="txt_btn_a" value=" 保 存 " onclick="saveContract();"
+					/>
+				</td>
+			</tr>
+
+         </table>
+
+	</form>
+</body>
+</html>

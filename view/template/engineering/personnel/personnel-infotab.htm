@@ -1,0 +1,54 @@
+
+<html>
+<head>
+    <title></title>
+   <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+     <LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+    <script type="text/javascript">
+
+
+
+$(function() {
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=engineering_personnel_personnel&action=page",
+    			"?model=engineering_personnel_personnel&action=tab",
+    			];
+	//绑定事件(待抽出来)
+    $("#tabs1").tabs(".panes > iframe",{
+    		history: true,onClick:function(i,e) {
+   		 	var actTabId="#iframe" + (parseInt(e) + 1);
+            if($(actTabId).attr("src") == ""){
+	   			$(actTabId).attr("src",tabArr[e]);
+	   		}
+
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body>
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1">员工状态</a></li>
+        <li><a href="#tab2">分布状态</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+        <iframe class="pane"  id="iframe1" scrolling="no" src="" height="95%"  frameborder= "0" >
+        </iframe>
+        <iframe class="pane"  id="iframe2" scrolling="no" src="" height="95%"  frameborder= "0">
+        </iframe>
+    </div>
+
+</div>
+
+
+</body>
+</html>

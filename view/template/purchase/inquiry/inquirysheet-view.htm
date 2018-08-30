@@ -1,0 +1,298 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<title>查看采购询价单</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+			<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+     <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="view/template/purchase/inquiry/js/inquirysheet-read.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script>
+			$(document).ready(function(){
+				//审批表单隐藏关闭按钮
+				if("{actType}"=="audit"){
+					$("input[name='close']").hide();
+				}
+			})
+		</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看采购询价单
+    </span>
+</div>
+
+<div class="form_main">
+<form id="form1" method="post" action="">
+	 <input type="hidden" id="parentId" name="inquirysheet[id]" value="{id}"/>
+	 <input type="hidden" id="suppNumb"  value="{suppNumb}"/>
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">采购询价单编号</td>
+			<td class="form_text_right" colspan="3">
+            	{inquiryCode}
+            </td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购部门</td>
+			<td class="form_text_right">
+ 				采购部
+			</td>
+			<td class="form_text_left">采购员</td>
+			<td class="form_text_right">
+			    {purcherName}
+			</td>
+
+		</tr>
+		<tr>
+			<td class="form_text_left">询价日期</td>
+			<td class="form_text_right">
+				{inquiryBgDate}
+			</td>
+		    <td class="form_text_left">报价截止日期</td>
+			<td class="form_text_right">
+				{inquiryEndDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">生效日期</td>
+			<td class="form_text_right">
+				{effectiveDate}
+			</td>
+		    <td class="form_text_left">失效日期</td>
+			<td class="form_text_right">
+				{expiryDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="from_text_right" colspan="3">
+				<textarea  class="textarea_read_blue" readonly>{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附  件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+	</table>
+
+	<div class="form_mian">
+	<table class="main_table">
+		<thead>
+			<tr>
+				<td colspan="7" class="form_header">采购询价清单
+				</td>
+			</tr>
+
+	       <tr class="main_tr_header">
+         	<th>序号</th>
+	         <th>物料编号/名称</th>
+	         <th>规格型号</th>
+	         <th>单位</th>
+	         <th  width="10%">询价<br>总数量</th>
+			<th class="td_table" width="50%">
+				<table  class="main_table_nested" frame=void>
+						<th width="30%">
+							任务编号
+						</th>
+						<th width="30%">
+							采购类型
+						</th>
+						<th  width="10%">
+							询价数量
+						</th>
+						<th  width="20%">
+							备注
+						</th>
+				</table>
+			</th>
+	       </tr>
+     </thead>
+     <tbody>
+     {productLidt}
+     </tbody>
+     </table>
+     </div>
+     <!--
+        <div class="form_main">
+			<table class="main_table">
+		     <thead>
+		       <tr class="main_tr_header">
+		         <th>序号</th>
+		         <th>供应商名称</th>
+		         <th>主营产品</th>
+		         <th>报价总额</th>
+		         <th>报价详情</th>
+		       </tr>
+		     </thead>
+		     <tbody>
+		     {supplierList}
+			 </tbody>
+		     </table>
+     </div>
+      -->
+
+
+    <div class="form_mian">
+	<table class="main_table">
+     <thead>
+   		<tr>
+			<td colspan="7" class="form_header">询价明细
+			</td>
+		</tr>
+       <tr class="main_tr_header">
+         <th width="15%"></th>
+         <th  class="supHtml1" width="15%">供应商A&nbsp;&nbsp;<img id="supp1" src="images/icon/view.gif" title="查看报价详细" onclick="quoteRead(1);"/></th>
+         <th class="supHtml2" width="15%">供应商B&nbsp;&nbsp;<img id="supp2" src="images/icon/view.gif" title="查看报价详细" onclick="quoteRead(2);"/></th>
+         <th  class="supHtml3" width="15%">供应商C&nbsp;&nbsp;<img id="supp3" src="images/icon/view.gif" title="查看报价详细" onclick="quoteRead(3);"/></th>
+         <th   width="13%">历史价格&nbsp;&nbsp;</th>
+         <th  width="15%">历史价格备注&nbsp;&nbsp;</th>
+		 <th  width="12%">参考价格&nbsp;&nbsp;</th>
+       </tr>
+     </thead>
+     <tbody>
+		<tr>
+		    <td>供应商名称</td>
+			<td class="supHtml1">
+				<div id="supplier1"/></div>
+				<input type="hidden" id="supplierName1" name="inquirysheet[inquirysupp][1][suppName]"  readonly/>
+				<input type="hidden" id="suppId1" />
+			</td>
+			<td  class="supHtml2">
+				<div id="supplier2"/></div>
+				<input type="hidden" id="supplierName2" name="inquirysheet[inquirysupp][1][suppName]"  readonly/>
+				<input type="hidden" id="suppId2" />
+			</td>
+			<td  class="supHtml3">
+				<div id="supplier3"/></div>
+				<input type="hidden" id="supplierName3" name="inquirysheet[inquirysupp][1][suppName]"  readonly/>
+				<input type="hidden" id="suppId3" />
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+
+	    <tr>
+		    <td>主营产品</td>
+			<td  class="supHtml1">
+				<div id="product1"/></div>
+				<input type="hidden" id="products1" name="inquirysheet[inquirysupp][1][suppTel]" readonly/>
+			</td>
+			<td class="supHtml2">
+				<div id="product2"/></div>
+				<input type="hidden" id="products2" name="inquirysheet[inquirysupp][2][suppTel]" readonly/>
+			</td>
+			<td  class="supHtml3">
+				<div id="product3"/></div>
+				<input type="hidden" id="products3" name="inquirysheet[inquirysupp][3][suppTel]" readonly/>
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+		    <td>报价总额</td>
+			<td  class="supHtml1">
+				<div id="quoteAll1"/></div>
+				<input type="hidden" id="quote1" class="formatMoney" name="inquirysheet[inquirysupp][1][quote]" readonly/>
+			</td>
+			<td  class="supHtml2">
+				<div id="quoteAll2"/></div>
+				<input type="hidden" id="quote2" class="formatMoney" name="inquirysheet[inquirysupp][2][quote]" readonly/>
+			</td>
+			<td  class="supHtml3">
+				<div id="quoteAll3"/></div>
+				<input type="hidden" id="quote3" class="formatMoney" name="inquirysheet[inquirysupp][3][quote]" readonly/>
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+		    <td>付款条件</td>
+			<td  class="supHtml1">
+				<div id="paymentCondition1"/></div>
+			</td>
+			<td  class="supHtml2">
+				<div id="paymentCondition2"/></div>
+			</td>
+			<td  class="supHtml3">
+				<div id="paymentCondition3"/></div>
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+		    <td>备注</td>
+			<td  class="supHtml1">
+				<div id="remark1"/></div>
+			</td>
+			<td  class="supHtml2">
+				<div id="remark2"/></div>
+			</td>
+			<td  class="supHtml3">
+				<div id="remark3"/></div>
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+		    <td colspan="6" align="left">报价详情(<font color=blue ><b>含税单价</b></font><税率>):</td>
+		</tr>
+	   {listSee}
+
+
+     </table>
+     </div>
+
+     <div class="form_main">
+       <table class="form_main_table">
+        <tr>
+			    <td class="form_text_left">指定供应商</td>
+				<td class="form_text_right" colspan="4">{suppName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">指定人</td>
+				<td class="form_text_right">
+					{amaldarName}
+				</td>
+				<td class="form_text_left">指定日期</td>
+				<td class="form_text_right">
+					{amaldarDate}
+				</td>
+			</tr>
+			 <tr>
+	        	<td class="form_text_left">备注</td>
+	        	<td class="form_text_right" colspan="4">
+	        		<textarea  class="textarea_read" readonly>{amaldarRemark}</textarea>
+	        	</td>
+	        </tr>
+         <tr>
+            <td colspan="4">
+                <input type="button" name="close" class="txt_btn_a" value=" 返 回 " onclick="closeFun();"/>
+            </td>
+         </tr>
+       </table>
+     </div>
+</form>
+</div>
+</body>
+</html>

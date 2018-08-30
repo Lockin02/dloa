@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>打印出库调拨单</title>
+	<style media=print>
+　　.Noprint{display:none;}
+　　.PageNext{page-break-after: always;}
+　　</style>
+<script language="javascript" type="text/javascript" src="js/Lodop/printer.js"></script>
+<script language="javascript" type="text/javascript" src="js/Lodop/LodopFuncs.js"></script>
+<object  id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+</object>
+
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/stockout-sales-printcarry.js"></script>
+</head>
+<script>
+var LODOP=getLodop(document.getElementById('LODOP'),document.getElementById('LODOP_EM'));
+</script>
+<body>
+<form id="table1">
+<table class="form_main_table">
+<tr><td align="center" colspan="4"><h3>出库调拨单</h3></td></tr>
+<tr>
+	<td class="form_text_right" colspan="4">
+		单位 ; {customerName}
+	</td>
+</tr>
+<tr><td colspan="4">
+<table class="main_table" id="itemtable">
+			<thead>
+              <tr class="main_tr_header">
+                  <th class="hiddenAction">
+					<input type="checkbox" name="hiddenAction" id="checkAll" onclick="checkAllBtn();"/>
+                  </th>
+                  <th>
+                      编号
+                  </th>
+                  <th>
+                      名称规格
+                  </th>
+                  <th>
+                      单位
+                  </th>
+                  <th>
+                      数量
+                  </th>
+                  <th>
+                      单价
+                  </th>
+                  <th>
+                      金额
+                  </th>
+              </tr>
+              </thead>
+			<tbody>
+			{stockoutItems}
+			</tbody>
+</table>
+</td></tr>
+<tr>
+	<td class="form_text_right" colspan="4">
+		审核 : {auditerName} <span style="float:right;margin:2px 5px 0px 0px;">制单 : {createName}</span>
+	</td>
+</tr>
+</table>
+</form>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="button" class="txt_btn_a" onclick="print();" value="打印预览"/>
+			<input type="button" class="txt_btn_a" onclick="window.location.reload();" value="重置单据"/>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

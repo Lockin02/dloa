@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>  
+	<head>  
+	    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />  
+	    <title>BOM领料记录</title>  
+	    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+		<link rel="stylesheet" type="text/css" href="view/template/stock/material/css/material-management.css" />
+		<script type="text/javascript" src="js/jeasyui_newest/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jeasyui_newest/datagrid/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="view/template/stock/material/js/manage-send-list.js" ></script>
+		<script>
+			var attributeNameStr = "{attributeNameStr}";
+			var publicUrl = "?model={t_model}";
+		</script>
+		<style>
+			.sf_td{border-color: #ccc;border-style: dotted;border-width: 0 1px 1px 0;}
+			.sf_bg{background: linear-gradient(to bottom, #f9f9f9 0px, #efefef 100%) repeat-x scroll 0 0 rgba(0, 0, 0, 0);}
+		</style>
+	</head>  
+	<body>
+		<input type="hidden" id="current_list_id" value="" />
+		<div id="columns_box" class="easyui-dialog" data-options="closed:true">
+			<form id="columns_form" action="" target="_blank" method="post"></form>
+		</div>
+	
+		<div id="loading" class="hidden">
+			<div class="loading"></div>
+		</div>
+	
+		<div id='background_div' style="display:none; background-color:#000000; position:fixed; left:0; top:0; opacity:0.8; filter:alpha(opacity=80); width:100%; height:970px; z-index:9000; ">&nbsp;</div>
+    	<!-- public dialog -->
+    	 <div id="public_dialog" class="easyui-dialog" title="" data-options="iconCls:'icon-save', closed:true" style="width:400px;height:200px;padding:10px; z-index:10000;">
+	    	<div id='dialog_data_board' style='width: 100%;'></div>
+	    	<div id='dialog_data'></div>
+	    </div>
+	    
+	    <div id="stocklist_dialog" class="easyui-dialog" title="" data-options="iconCls:'icon-save', closed:true" style="width:400px;height:200px;padding:10px; z-index:10000;">
+	    	<div id='stocklist_dialog_data'></div>
+	    </div>
+	    
+	    <div id="moreProductConfig_dialog" class="easyui-dialog" title="" data-options="iconCls:'icon-save', closed:true" style="width:400px;height:200px;padding:10px; z-index:10000;">
+	    	<div id='moreProductConfig_dialog_data'>
+				<div class='product_tree'>
+					<span style='padding:5px; font-size:14px; color:red;'>请选择要生成的产品：</span>
+					<ul id='materials_moreProductConfig_tree'></ul>
+				</div>
+				<div class='product_chose_box'>
+					<table class='box_table' cellspacing="0" cellpadding="0">
+						<thead>
+							<tr>
+								<th style='width:160px;'>
+									产品名称
+								</th>
+								<th style='width:60px;'>
+									操作
+								</th>
+							</tr>
+						</thead>
+						<tbody id='product_name_data'>
+							<tr>
+								<td colspan="2">
+									配置单名: <input id="moreProductConfigName" value="" type="text" />
+								</td>
+							</tr>
+							<tr>
+								<td colspan='2' align='center'>
+									<input onclick='goMuchProduct()' type='button' value='生成配置单'/><input onclick='closeProduct();' type='button' value='返回'/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+	    	</div>
+	    </div>
+	    
+	    <!-- only for config list -->
+	    <div id="config_list_dialog" class="easyui-dialog" title="" data-options="iconCls:'icon-save', closed:true" style="width:400px;height:200px;padding:10px; z-index:10000;">
+	    	<div id='config_list_board' style='width: 100%;'></div>
+	    </div> 
+	    <div id='main'>
+	    	<div id='left'>
+	    		<ul id="materials_tree" ></ul>
+	    	</div>
+	    	<div id='right'>
+	    		<div id='product_div' style="width: 100%; display: block;">
+	    			 <table id='configuration_table' style='width: auto;'></table>
+	    			 <div id="bom_detail_box"></div>
+	    		</div>
+	    		<div id='product_sheet' style="width:100%"></div>
+	    		<div style='width:100%'>
+	    			<div id='div_statistics' style="width:100%"></div>
+					<div id='r_button' class="dialog-button"  style="width:99%;border-color: #95b8e7;border-style: solid;border-width:0px 1px 1px 1px;display: none;">
+						<!-- 
+						<a class="l-btn" href="javascript:void(0)">
+						<span class="l-btn-left">
+						<span id='but' class="l-btn-text icon-ok l-btn-icon-left" >统计用料</span>
+						</span>
+						</a> 
+						
+						<a class="l-btn" href="javascript:void(0)">
+						<span class="l-btn-left">
+						<span id='picking' class="l-btn-text icon-redo l-btn-icon-left" >导出</span>
+						</span>
+						</a>-->
+						<a class="l-btn" href="javascript:void(0)">
+						<span class="l-btn-left">
+						<span id='picking' class="l-btn-text icon-ok l-btn-icon-left" >补料</span>
+						</span>
+						</a>
+						<a class="l-btn" href="javascript:void(0)">
+						<span class="l-btn-left">
+						<span id='purchase' class="l-btn-text icon-ok l-btn-icon-left" >采购</span>
+						</span>
+						</a>
+						<!-- <a class="l-btn" href="javascript:void(0)">
+						<span class="l-btn-left">
+						<span id='butRemove'  >删除</span>
+						</span>
+						</a> -->
+					</div>
+	    		</div>
+	    	</div> 
+	    </div>
+	    
+	    <!-- 
+	    <div id="vv" class="easyui-draggable" data-options="handle:'#cc'" style="width:100px;height:100px;">  
+    		<div id="cc">  
+			<table id="purchaseTable" style="width:700px;height:250px" title='采购清单' singleselect="true" fitcolumns="true">        
+			</table>
+			</div>
+		</div>  
+		-->
+		 
+	    <form action='' target='public_iframe' id='public_submit_form' name='public_submit_form' method='post' >
+	    	<input type='hidden' id='current_product_id' name='current_product_id' value='' />
+	    </form>
+	    <iframe id='public_iframe' name='public_iframe' style='display: none;' ></iframe>
+	    
+	    <script type="text/template" id="columnExportTemplate">
+	    <label for="column_export_{field}">
+			<input type="checkbox" checked="" id="column_export_{field}" name="columns[]" value="{field}" />
+			{title}
+		</label>
+	    </script>
+	</body>
+</html>

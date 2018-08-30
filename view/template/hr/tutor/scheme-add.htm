@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增导师考核表</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/scheme-add.js" ></script>
+   <script type="text/javascript" src="js/common/email.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-tutorscheme.js"></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_tutor_scheme&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="7">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增导师考核表
+             </span>
+            </div>
+            </td>
+         </tr>
+      		<input type="hidden" class="txt" id="tutorId" value="{id}" name="scheme[tutorId]" />
+      		<input type="hidden" class="txt" id="jobId" value="{jobId}" name="scheme[jobId]" />
+      		<input type="hidden" class="txt" id="deptId" value="{deptId}" name="scheme[deptId]" />
+			<input type="hidden" class="txt" id="deptName" value="{deptName}" name="scheme[deptName]" />
+			<input type="hidden" class="txt" id="jobName" value="{jobName}" name="scheme[jobName]" />
+       <tr>
+			<td class="form_text_left_three">新员工部门</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="studentDeptName" value="{studentDeptName}" name="scheme[studentDeptName]" readonly/>
+				<input type="hidden" class="txt" id="studentDeptId" value="{studentDeptId}" name="scheme[studentDeptId]" />
+      		</td>
+      		<td class="form_text_left_three">新员工</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="studentName" value="{studentName}" name="scheme[studentName]" readonly/>
+      			<input type="hidden" class="txt" id="studentNo" value="{studentNo}" name="scheme[studentNo]" />
+      			<input type="hidden" class="txt" id="studentAccount" value="{studentAccount}" name="scheme[studentAccount]" />
+      		</td>
+      		<td class="form_text_left_three">新员工职务</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="studentJob" value="{studentJob}"  name="scheme[studentJob]" readonly/>
+      			<input type="hidden" class="txt" id="studentJobId"  name="scheme[studentJobId]" />
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three">导师姓名</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="userName" value="{userName}" name="scheme[userName]" readonly/>
+      			<input type="hidden" class="txt" id="userNo" value="{userNo}" name="scheme[userNo]" />
+      			<input type="hidden" class="txt" id="userAccount" value="{userAccount}" name="scheme[userAccount]" />
+      		</td>
+      		<td class="form_text_left_three">试用开始日期</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="tryBeginDate" value="{beginDate}"  name="scheme[tryBeginDate]" readonly/>
+      		</td>
+      		<td class="form_text_left_three">试用结束日期</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyText" id="tryEndDate" value="{endDate}"  name="scheme[tryEndDate]" readonly/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three"><span style="color:blue">评分权重占比</span></td>
+      		<td class="form_text_right_three" colspan="5">
+      		      &nbsp&nbsp<b>导师自评占比 </b> <input style="width:50px"type="text" id="tutProportion" name="scheme[tutProportion]" class="rimless_text60" />%
+      		      &nbsp&nbsp&nbsp<b>部门负责人评分占比</b>  <input style="width:50px"type="text" id="deptProportion" name="scheme[deptProportion]" class="rimless_text60" />%
+      		      &nbsp&nbsp&nbsp<b>人力资源部评分占比</b>   <input style="width:50px"type="text" id="hrProportion" name="scheme[hrProportion]" class="rimless_text60" />%
+      		      &nbsp&nbsp&nbsp<b>新员工评分占比</b>  <input style="width:50px"type="text" id="stuProportion" name="scheme[stuProportion]" class="rimless_text60" />%
+      			  <span style="color:red">[*权重为0时即不参与考核总分计算]</span>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three">导师考核方案</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt"   id="tutorScheme" value="" name="scheme[schemeName]"/>
+				<input type="hidden" class="txt" id="tutorSchemeId"  name="scheme[tutorSchemeId]" />
+      		</td>
+       </tr>
+       </table>
+       <div id="schemeTable"></div>
+       <table  class="form_main_table" id="tb1" border="1px">
+       		       <tr>
+   		<td class="form_text_left">是否邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="scheme[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="scheme[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr id="maildiv">
+   		<td class="form_text_left">收件人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" style="width:300px" class="txt800" name="scheme[email][TO_NAME]" value="{userName},{studentName},{studentSuperior}" id="TO_NAME" readonly="readonly"/>
+    		<input type="hidden" name="scheme[email][TO_ID]" value="{userAccount},{studentAccount},{studentSuperiorId}" id="TO_ID"/>
+	    </td>
+   	</tr>
+   	<tr id="mailccdiv">
+   		<td class="form_text_left">抄送
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" style="width:300px" class="txt800" name="scheme[email][ADDNAMES]" id="ADDNAMES" readonly="readonly" />
+    		<input type="hidden"  name="scheme[email][ADDIDS]" id="ADDIDS" />
+	    </td>
+   	</tr>
+			<tr>
+      		<td class="txt_btn" colspan="7">
+      		   <input  type="submit" class="txt_btn_a" value=" 发起考核 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

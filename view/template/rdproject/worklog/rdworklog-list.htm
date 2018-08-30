@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>日志列表</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen"/>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript">
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				var weekId=$('#weekId').val();
+				var projectId=$('#projectId').val();
+				if(projectId == ""){
+					this.location="?model=rdproject_worklog_rdworklog&action=logList&weekId="+weekId+"&"+searchfield+"="+searchvalue;
+				}else{
+					this.location="?model=rdproject_worklog_rdworklog&action=logList&weekId="+weekId+"&"+searchfield+"="+searchvalue + "&projectId=" + projectId;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				详细日志列表
+			</span>
+			<input name="goBack" type="button" class="main_head_btn" value="返  回"
+			onclick="history.back();" />
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						输入关键字：
+						<input type="text" id="searchvalue" class="txt" name="searchvalue" />
+						按
+						<select id="searchfield" class="select">
+							<option value="s_projectName">
+								项目名称
+							</option>
+							<option value="s_taskName">
+								任务名称
+							</option>
+						</select>
+						<input type="button" value=" 搜索 " class="txt_btn_a" onclick="search()"/>
+						<input type="hidden" id="weekId" value="{weekId}"/>
+						<input type="hidden" id="projectId" value="{projectId}"/>
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							序号
+						</th>
+						<th width="22%">
+							项目名称
+						</th>
+						<th>
+							任务名称
+						</th>
+						<th width="8%">
+							总体完成率
+						</th>
+						<th width="8%">
+							偏差率
+						</th>
+						<th width="8%">
+							当日投入工作量
+						</th>
+						<th width="8%">
+							预计剩余工作量
+						</th>
+						<th width="10%">
+							预计完成时间
+						</th>
+						<th width="10%">
+							执行日期
+						</th>
+						<th width="12%">
+							填写日期
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+	</body>
+
+</html>

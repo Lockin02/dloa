@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>外购入库单关联订单</title>
+	{#commonInclude#}
+
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-arrival.js" ></script>
+</head>
+<script type="text/javascript">
+function delItem(obj){
+	var itemtable = document.getElementById("itemtable");
+	if (confirm('确定要删除该行？')) {
+		var rowNo = obj.parentNode.parentNode.rowIndex;
+		itemtable.deleteRow(rowNo);
+	}
+}
+function checkForm(){
+	if (confirm('确定要进行收料通知单与入库单关联吗？')) {
+		return true;
+	}else{
+		return false;
+	}
+}
+$(document).ready(function() {
+	$("#arrivalCode").yxcombogrid_arrival({
+		hiddenId : 'arrivalId',
+		gridOptions : {
+			param : {
+				'state' : '0'
+			},
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+					$("#purchaserName").val(data.purchManName);
+					$("#purchaserCode").val(data.purchManId);
+					$("#supplierName").val(data.supplierName);
+					$("#purOrderCode").val(data.purchaseCode);
+					$("#purOrderId").val(data.purchaseId);
+					$("#arrivalDate").val(data.arrivalDate);
+					
+					$.post(
+									"?model=purchase_arrival_arrival&action=getItemModel",
+									{
+										arrivalId : data.id
+									}, function(result) {
+										if (result != "") {
+											$("#itembody").html("");
+											$("#itembody").append(result);
+										}else{
+											alert("收料通知单没有相关物料!")
+										}
+									})
+				}
+			}
+		}
+	})
+})
+</script>
+<body>
+<form action="?model=stock_instock_stockin&action=unionArrival" id="form1"
+	method="post" onsubmit="return checkForm();" />
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+		<div class="main_head">
+			<span class="main_head_title"> 
+				<font color="blue">外购入库单</font> </span></div>
+		</td>
+	</tr>
+	<tr>
+		<td  class="form_text_left">单据编号</td>
+		<td class="form_text_right">
+			{docCode}
+		</td>
+		<td  class="form_text_left">单据日期</td>
+		<td class="form_text_right">
+			{auditDate}
+		</td>		
+	</tr>
+	<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right" >
+			 {supplierName}
+		</td>
+		<td class="form_text_left">采购员名称</td>
+		<td class="form_text_right" >
+			 {purchaserName}
+		</td>			
+	</tr>
+	<tr>
+		<td class="form_text_left">采购订单</td>
+		<td class="form_text_right" >
+			 {purOrderCode}
+		</td>
+	</tr>		
+	<tr>
+		<td colspan="4">
+		<table class="main_table" id="itemtable1">
+			<thead>
+				<tr>
+					<td colspan="12" class="form_header">入库单物料清单</td>
+				</tr>
+                            <tr class="main_tr_header">
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    物料编码
+                                </th>
+                                <th>
+                                    物料名称
+                                </th>
+                                <th>
+                                    规格型号
+                                </th>
+                                <th>
+                                    单位
+                                </th>
+                                <th>
+                                    应收数量
+                                </th>
+                                <th>
+                                    实收数量
+                                </th>
+                                <th>
+                                   序列号
+                                </th>                                
+                                <th>
+                                    单价
+                                </th>
+                                <th>
+                                    金额
+                                </th>
+                                <th>
+                                    收料仓库
+                                </th>
+						</tr>
+			</thead>
+			<tbody id="itembody1">
+				{stockinItems}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title"> <font
+			color="blue">收料通知单</font> 
+			</span></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">收料通知单编号</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="arrivalCode" name="stockin[arrivalCode]" /> 
+			<input type="hidden" id="arrivalId" name="stockin[arrivalId]" />
+		</td>
+		<td class="form_text_left">采购员名称</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="purchaserName" name="stockin[purchaserName]" readOnly />
+			<input type="hidden" id="purchaserCode" name="stockin[purchaserCode]"  />
+		 </td>
+	</tr>
+	<tr>
+	<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="supplierName" readOnly />
+		 </td>
+		<td class="form_text_left">订单名称</td>		 
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="purOrderCode" name="stockin[purOrderCode]" readOnly />
+			<input type="hidden" id="purOrderId" name="stockin[purOrderId]"  />
+		 </td>		 
+	</tr>
+	<tr>
+	<td class="form_text_left">收料日期</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="arrivalDate" readOnly />
+		</td>	 
+	</tr>	
+	<tr>
+		<td colspan="4">
+		<table class="main_table" id="itemtable">
+			<thead>
+				<tr>
+					<td colspan="11" class="form_header">已选择关联的物料清单</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th></th>
+					<th>序号</th>
+					<th>物料编码</th>
+					<th>物料名称</th>
+					<th>规格型号</th>
+					<th>单位</th>
+					<th>收料数量</th>
+					<th>已入库数量</th>
+					<th>单价</th>
+					<th>金额</th>
+					<th>关联数量</th>
+				</tr>
+			</thead>
+			<tbody id="itembody">
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+		<table class="form_main_table">
+
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" class="txt" id="id" name="stockin[id]" value="{id}" />				
+					<input type="submit"	value=" 确认 " class="txt_btn_a" /> 
+					<input type="button" value=" 返 回 " class="txt_btn_a" onclick="closeFun()" />
+				</td>
+			</tr>
+
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+</form>
+</body>
+</html>

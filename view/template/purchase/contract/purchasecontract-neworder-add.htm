@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>起草采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/checkImage.js"></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-taskorder-add.js" ></script>
+
+
+</head>
+
+<body scroll="auto" onload="myload();">
+    <div class="main_head">
+     	<span class="main_head_title">采购订单</span>
+ 	</div>
+	<div class="form_main">
+	    <form id='form1' name='form1' action="?model=purchase_contract_purchasecontract&action=addOrder" method="post" onsubmit="return checkAllData();">
+	            <table class="form_main_table">
+
+               <tr >
+               	 <td class="tableheader form_text_left_three">订单编号</td>
+                   <td class="form_text_right_three">
+               	 <input type="text" class="readOnlyText" name="" value=""/>
+                   </td>
+               	<td class="tableheader form_text_left_three">
+                       单据日期
+                   </td>
+                   <td align="left">
+                      <input type="text" class="readOnlyText" id="formDate" name="contract[formDate]" value="{formDate}"/>
+                   </td>
+               	<td class="tableheader form_text_left_three">
+                       采购员
+                   </td>
+                   <td align="left">
+                      <input type="text" class="readOnlyText" id="sendName" name="contract[sendName]" value="{sendName}"/>
+                      <input type="hidden" id="sendUserId" name="contract[sendUserId]" value="{sendUserId}" />
+                   </td>
+               </tr>
+	       <tr>
+	       <td colspan="6"  class="td_table">
+			<table id="mytable" class="main_table_nested">
+						<thead>
+							<tr class="tablecontrol form_header">
+			                    <td colspan="12" class="form_header">
+				                            采购订单清单
+				                    </td>
+								<td align="center">
+										<input type="hidden" id="invnumber" value="0" />
+									</td>
+							</tr>
+							<tr class="main_tr_header">
+								<th>
+			                        <p class="allImg">
+			                           序号
+			                        </p>
+			                    </th>
+			                    <th>
+			                        物料编号
+			                    </th>
+			                    <th>
+			                        物料名称
+			                    </th>
+			                    <th>规格型号</th>
+			                    <th>单位</th>
+                    			<th width="5%">库存数量</th>
+			                    <th>订单数量</th>
+                    			<th>采购用途</th>
+			                    <th>申请部门</th>
+			                    <th>源单编号</th>
+			                    <th>源单业务编号</th>
+			                    <th>备注</th>
+			                    <th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="invbody">
+						{list}
+						</tbody>
+			</table>
+		</td>
+		</tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left_three">
+                        采购说明
+                    </td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea id="instruction" name="contract[instruction]" class="txt_txtarea_biglong" >{instruction}</textarea>
+                    </td>
+                </tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left_three">
+                        备注
+                    </td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea id="remark" name="contract[remark]" class="txt_txtarea_biglong" >{remark}</textarea>
+                    </td>
+                </tr>
+                <tr align="center" class="TableHeader" >
+                    <td colspan="6">
+						<input type="hidden" id="formBelong" class="txt" name="contract[formBelong]"   value="{formBelong}" readonly />
+						<input type="hidden" id="formBelongName" class="txt" name="contract[formBelongName]"   value="{formBelongName}" readonly />
+						<input type="hidden" id="businessBelong" class="txt" name="contract[businessBelong]"   value="{businessBelong}" readonly />
+						<input type="hidden" id="businessBelongName" class="txt" name="contract[businessBelongName]"   value="{businessBelongName}" readonly />
+                        <input type="submit" id="saveButton" value=" 下一步 " class="txt_btn_a" />
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="button" value=" 返  回 "  class="txt_btn_a" onclick="history.back(-1);"/>
+                    </td>
+                </tr>
+            </table>
+	        </form>
+	 </div>
+</body>
+
+</html>

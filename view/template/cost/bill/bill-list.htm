@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.form.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{
+                font-size: 90%;
+            }
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+            .ui-jqgrid-sortable {
+                padding-top: 3px;
+                font-weight:normal;
+                font-size:12px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                $('#tt').tabs({
+                });
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','报销单号','发票单号','报销人','部门','项目','金额','状态','提交日期'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:60, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'billno',index:'l.billno', width:60, align:'center'},
+                        {name:'costno',index:'bl.billno', width:60, align:'center'},
+                        {name:'username',index:'u.user_name', width:40, align:'center'},
+                        {name:'deptname',index:'d.dept_name', width:60, align:'center'},
+                        {name:'pro',index:'x.projectno', width:100, align:'center'},
+                        {name:'amount',index:'l.amount', width:60, align:'right'},
+                        {name:'sta',index:'l.status', width:60, align:'center'},
+                        {name:'updt',index:'l.dt', width:90, align:'center'}
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 'l.billno',
+                    sortorder: "desc",
+                    width:ww-10,
+                    height:(wh-130+2*((wh-500)/50)),
+                    rownumbers: true,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: '{user_capt}',
+                    afterInsertRow: function(rowid, rowData){
+                        var be='<input style="height:22px;" class="btn-class" \n\
+                type="button" value="整理" title="整理" onclick=\'addTab("'+rowData.key+'")\' /><input style="height:22px;" class="btn-class" \n\
+                type="button" value="打回" title="打回" onclick=\'backClickFun("'+rowData.key+'")\' />';
+                        var cl='#000000';
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true,search:false});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns');
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_area:"required",
+                        user_email:{
+                            required:true,
+                            email:true
+                        }
+                    },
+                    messages:{
+                        user_area:"请输入区域",
+                        user_email:{
+                            required:'请输入email地址',
+                            email:'请输入正确的email地址'
+                        }
+                    }
+                });
+            });
+            //整理
+            function dealClickFun(id){
+                tb_show('整理票据 -- '+id, '?key='+id+'{deal_url}');
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            //导航搜索
+            function gridNavSeaFun(){
+                var seabn = jQuery("#seabn").val();
+                var seasn = jQuery("#seasn").val();
+                var seaman = jQuery("#seaman").val();
+                var seaam = jQuery("#seaam").val();
+                var seact = jQuery('#seact').val();
+                var seabt = jQuery('#seabt').val();
+                jQuery("#rowedgrid").jqGrid('setGridParam'
+                    ,{url:"{user_list}&seabn="+seabn+"&seasn="+seasn+"&seaman="+seaman+"&seaam="+seaam+"&seact="+seact+"&seabt="+seabt,page:1}).trigger("reloadGrid");
+            }
+            //
+            function addTab(key){
+                if($('#tt').tabs('exists',key)){
+                    $('#tt').tabs('select',key);
+                    return false;
+                }
+                $('#tt').tabs('add',{
+                    title:key,
+                    content:'<iframe scrolling="yes" frameborder="0"  src="?model=cost_bill_billcheck&action=deal&key='+key+'" style="width:100%;height:'+($('#firstTab').height())+'px;">\n\
+                    </iframe>',
+                    iconCls:'icon-save',
+                    closable:true
+                });
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <div id="tt" style="overflow:hidden;">
+            <div title="报销单列表" style="padding:2px;" id="firstTab">
+                <div id="listd" >
+                    <input type="hidden" id="user_key" value="" ></input>
+                    <table id="rowedgrid" border="0" width="100%" cellpadding="0" cellspacing="0"></table>
+                    <div id="pgtoolbar"></div>
+                    <div id="prowedgrid"></div>
+                    <div id="hr_xls_out" class="ui-searchFilter" style="display: none; left: 0px; top: 0px;" >
+                        <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                            <tr>
+                                <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                                    导出信息
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tl" style="padding-top:5px;"> 导出年月：</td>
+                                <td >
+                                    {xls_list}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <input type="button" id="newspeSub" onclick="xlsClickFun()" value="导出"/>
+                                    <input type="button" id="newspeClo" onclick="paCloseFun('hr_xls_out');"  value="关闭"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

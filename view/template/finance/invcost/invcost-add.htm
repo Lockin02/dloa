@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			新增费用发票
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"media="screen" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-add.js"></script>
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-combo.js"></script>
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-add-formValidator.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				新增费用发票
+			</span>
+		</div>
+		<form id="form1" action="?model=finance_invcost_invcost&action=add" method="post">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						供货单位(供应商)
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input type="hidden" id="supplierId"  name="invcost[supplierId]"/>
+						<input type="text" id="supplierName" class="txt" name="invcost[supplierName]"
+						/>
+						<span class="red">
+							[*]
+						</span>
+						<span id="supplierNameTip" class="tipShortTxt"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						发票号码
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input type="text" id="objNo" class="txt" name="invcost[objNo]" />
+						<span class="red">
+							[*]
+						</span>
+						<span id="objNoTip" class="tipShortTxt"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						采购方式
+					</td>
+					<td class="form_text_right">
+						<select name="invcost[purType]" class="select">
+							{purType}
+						</select>
+					</td>
+					<td class="form_text_left">
+						付款日期
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="payDate" class="txt" name="invcost[payDate]" onfocus="WdatePicker()" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						纳税登记号
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="taxNo" class="txt" name="invcost[taxNo]" />
+					</td>
+					<td class="form_text_left">
+						往来科目
+					</td>
+					<td class="form_text_right">
+						<select class="select" name="invcost[subjects]">
+							{subjects}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						开户银行
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="bank" class="txt" name="invcost[bank]" />
+					</td>
+					<td class="form_text_left">
+						币别
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="currency" class="txt" name="invcost[currency]"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						汇率
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="excRate" class="txt" name="invcost[excRate]" value="0"/>
+					</td>
+					<td class="form_text_left">
+						记账
+					</td>
+					<td class="form_text_right">
+						<input type="text" id="acount" class="txt" name="invcost[acount]" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						部门
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" id="departmentsId" name="invcost[departmentsId]"/>
+						<input type="text" id="departments" class="txt" name="invcost[departments]" readonly="readonly"/>
+						<input type="button" value="选 择" title="选择人员" onclick="loadOrgWindowDept('departmentsId','departments');" class="txt_btn_a" />
+						<input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('departmentsId','departments');" class="txt_btn_a" />
+					</td>
+					<td class="form_text_left">
+						业务员
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" id="salesmanId" name="invcost[salesmanId]"/>
+						<input type="text" id="salesman" class="txt" name="invcost[salesman]" readonly="readonly"/>
+						<input type="button" value="选 择" title="选择人员" onclick="loadOrgWindow('salesmanId','salesman');" class="txt_btn_a" />
+						<input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('salesmanId','salesman');" class="txt_btn_a" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						地址
+					</td>
+					<td class="form_text_right" colspan="3">
+						<textarea name="invcost[adress]" class="txt_txtarea_font"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						总金额
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input type="text" id="allAmount" class="txt formatMoney" name="invcost[amount]" readonly="readonly"/>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table" id="mytable">
+				<thead>
+					<tr align="left">
+						<td colspan="8">
+							发票明细
+						</td>
+						<td align="center">
+							<input type="hidden" id="invnumber" value="1" />
+							<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+							<img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行" />
+						</td>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					<tr class="main_tr_header">
+						<th>
+							序号
+						</th>
+						<th>
+							费用代码
+						</th>
+						<th>
+							费用名称
+						</th>
+						<th>
+							费用类型
+						</th>
+						<th>
+							计量单位
+						</th>
+						<th>
+							数量
+						</th>
+						<th>
+							单价
+						</th>
+						<th>
+							金额
+						</th>
+						<th>
+							操作
+						</th>
+					</tr>
+					<tr align="center">
+						<td>
+							1
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][costCode]" id="costCode1" class="txtshort"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][costName]" id="costName1" class="txtmiddle"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][costType]" id="costType1" class="txtshort"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][unit]" id="unit1" class="txtshort"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][number]" id="number1" class="txtshort formatMoney"
+							onclick='countDetail(this);' onblur="FloatMul('number1','price1','amount1',2);countDetail(this);"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][price]" id="price1" class="txtshort formatMoney"
+							onclick='countDetail(this);' onblur="FloatMul('number1','price1','amount1',2);countDetail(this);"/>
+						</td>
+						<td>
+							<input type="text" name="invcost[invcostDetail][1][amount]" id="amount1" class="txtshort formatMoney"
+							onclick='countDetail(this);' onblur="FloatMul('number1','price1','amount1',2);countDetail(this);"/>
+						</td>
+						<td>
+							<img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td>
+						<input type="submit" class="txt_btn_a" value="保 存" />
+						<input type="button" class="txt_btn_a" value="返 回" onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+
+</html>

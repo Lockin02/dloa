@@ -1,0 +1,85 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>归还设备列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<!--startprint-->
+<form method="POST" action="?model=device_borrow&action=save_return_list" onSubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+<input type="hidden" id="area" name="area" value="{areaid}" />
+<input type="hidden" id="operatorid" name="operatorid" value="{operatorid}" />
+<input type="hidden" id="email" name="email" value="{email}" />
+<input type="hidden" id="createDate" name="createDate" value="{createDate}" />
+{hidden}
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" id="mytable">
+	<tr>
+		<td>归还人：{username}
+		</td>
+		<td>所属部门：{dept_name}</td>
+	</tr>
+	<tr>
+		<td>办理人：{USERNAME}</td>
+		<td>归还库存：{area}</td>
+	</tr>
+</table>
+<br />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" class="YesPrint">
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;" >归还人签名：</td>
+		<td style="border:0px;">代办人签字：</td>
+	</tr>
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;">日期：</td>
+		<td style="border:0px;">日期：</td>
+	</tr>
+</table>
+<!--endprint-->
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" style="border:0px;" class="noprint">
+<tr>
+		<td colspan="10" style="border:0px;text-align:center;">
+		<input type="submit" id="save" value=" 提交保存记录 " />
+		<input type='button' class="BigInput" value='直接打印' onClick="printClick(1)">   
+		<input type='button' class="BigInput" value='打印预览' onClick="printClick()">
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+var myprint = false;
+function check()
+{
+	if (myprint==false)
+	{
+		if (confirm('您还没有打印该借用记录，确定要提交吗？'))
+		{
+			$('#save').attr('disabled',true);
+			return true;
+		}else{
+			return false;
+		}
+	}
+	$('#save').attr('disabled',true);
+}
+function printClick(type)
+{
+	var wh = $('.YesPrint').width();
+	if (type==1)
+	{
+		myprint = true;
+		window.open("?model=print", "newwin", "width="+wh+",toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}else{
+		myprint = false;
+		window.open("?model=print", "newwin", "width="+wh+",toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}
+}
+</script>
+</body>
+</html>

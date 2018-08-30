@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增销售退货</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-order.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+
+    <script type="text/javascript" src="view/template/projectmanagent/return/js/return-add.js"></script>
+
+    <script>
+        function submitR(){
+             var returnCode = $("#returnCode").val();
+             if(returnCode == ''){
+                 alert("退货单编号不能为空！");
+                 return false;
+             }
+                 return true;
+        }
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	添加销售退货
+    </span>
+</div>
+<form id="form1" method="post" action="?model=projectmanagent_return_return&action=add" name="form1" onsubmit="return submitR();">
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">退货单编号</td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="txt" name="return[renturnCode]" id="returnCode"/>
+			 <span class="red">[*]</span>
+		</td>
+
+
+</tr>
+<tr>
+        <td class="form_text_left">源单名称</td>
+		<td class="form_text_right" >
+		     <input type="text" class="txt" name="return[orderName]" id="orderName"  value="{orderName}"/>
+			 <input type="hidden" class="txt" name="return[orderCode]" id="orderCode" value="{orderCode}"/>
+			 <input type="hidden" name="return[orderId]" id="orderId"  value="{orderId}"/>
+		</td>
+		<td class="form_text_left">合同负责人</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" name="return[prinvipalName]" id="prinvipalName" readonly="readonly" value="{prinvipalName}"/>
+		</td>
+
+</tr>
+<tr>
+		<td class="form_text_left">销售方式</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="return[saleWay]" />
+		</td>
+
+		<td class="form_text_left">收货仓库</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="return[storage]" id="storage"/>
+			 <input type="hidden" name="return[storageId]" id="storageId"/>
+		</td>
+</tr>
+
+<tr>
+        <td class="form_text_left">创建时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="return[createTime]" onfocus="WdatePicker()" value="{createTime}"/>
+		</td>
+		<td class="form_text_left">创建人</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="return[createName]" value="{createName}"/>
+			 <input type="hidden" class="txt" name="return[createId]" value="{createId}"/>
+		</td>
+
+
+</tr>
+<tr>
+
+		<td class="form_text_left">退料原因</td>
+		<td class="form_text_right" colspan="3">
+		      <textarea cols="100" rows="3" name="return[returnCause]"></textarea>
+
+		</td>
+</tr>
+<table class="form_main_table" id="equ">
+		   <thead>
+			<tr>
+				<td colspan="9" class="form_header">
+					产品清单
+				</td>
+				<td width="5%">
+					<input type="hidden" id="EquNum" value="{Num}"/>
+					<img src="images/verpic_open.gif" onclick="dis('myequ')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="soft_add('myequ','EquNum')" title="添加行"/>
+				</td>
+			</tr>
+            <tr class="main_tr_header">
+				<th width="5%"> 序号 </th>
+				<th width="10%"> 产品编号 </th>
+				<th width="16%"> 产品名称 </th>
+				<th width="16%"> 型号/版本 </th>
+				<th width="8%" title="双击输入框选择输入序列号"> 数量<span class="red">※</span></th>
+				<th width="5%"> 已执行数量 </th>
+				<th width="16%"> 单位 </th>
+				<th width="8%"> 单价 </th>
+				<th width="8%"> 金额 </th>
+				<th width="5%"> 操作 </th>
+        	</tr>
+        	</thead>
+
+        	<tbody id="myequ">
+                {equ}
+			</tbody>
+		</table>
+<table class="form_main_table" >
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="hidden" name="return[ExaStatus]" value="未审批" />
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

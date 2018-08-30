@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<title>重启备货申请审核 </title>
+     {#commonInclude#}
+<script>
+
+function selAllback(objType){
+ 	 isFlag=true;
+	 $("."+objType+" input").each(function(){
+		 if(!$(this).attr("checked")){
+			 isFlag=false;
+		 }
+	 });
+	 $("#"+objType).attr("checked",isFlag==false?false:true);
+}
+function checkAll(){ 
+	if($("#isClose").attr("checked")==true){
+		 $(".isClose input").each(function(){
+			$(this).attr("checked",true);
+		 });
+	}else{
+		 $(".isClose input").each(function(){
+			$(this).attr("checked",false);
+		 });  
+	}  
+}
+function checkForm(){
+	 isTure=false;
+	 $(".isClose input").each(function(){
+		if($(this).attr("checked")==true){
+		   isTure=true;	
+		}
+	 });
+	 if(isTure==false){
+		alert('请选择重启的单据！');
+		 isTure=false;
+	 }
+	 return isTure;	
+}
+function showLink(url,type,id){
+	var skey = "";
+	$.ajax({
+		type: "POST",
+		url: "?model="+type+"&action=md5RowAjax",
+		data: { "id" : id },
+		async: false,
+		success: function(data){
+		   skey = data;
+		}
+	});
+	showModalWin(url+ skey ,1);
+}		
+function checkSearch(){
+	keywords=$("#keyWords").val();
+	if(keywords==''){
+		//alert("关键字不能为空！");
+		//return false;
+	}
+}		
+function showType(){
+	try{
+	  appType=$("#appType").val();
+	  window.location="?model=stockup_apply_apply&action=toProAppList&appType="+appType;
+	}catch(e){
+	}
+	
+}
+function backUrl(){
+	  this.location="?model=stockup_apply_apply&action=closeList";
+}
+function submits(){	
+	if(checkForm()){
+	$("#forms").submit();
+	}
+}		
+</script>
+</head>
+
+<body scroll="auto">
+<table class="main_table">
+      <tr>
+        <td colspan="6">
+<div style="margin:0 auto">
+<div class="main_head"  style="padding:0px 15px 0px 15px;"> <span class="main_head_title">
+ <form action="?model=stockup_apply_apply&action=closeList" method="post" onsubmit="return checkSearch();">
+关键字：
+<select name="keyType" class="selectauto" style="font-size:14px">
+{keyType}
+</select>
+<input type="text" value="{keyWords}" name="keyWords" id="keyWords" class="txt" title="22">&nbsp;&nbsp;<input type="submit"  value=" 搜 索 "  class="txt_btn_a" style="font-size:14px; height:24px;line-height:24px; cursor:pointer;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" class="txt_btn_a" value="清 空"  onclick="backUrl();" style="font-size:14px; height:24px;line-height:24px; cursor:pointer;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"  onclick="submits()" value=" 确认操作 "  class="txt_btn_a" style="font-size:14px; height:24px; line-height:24px; cursor:pointer;">
+</form>
+</span> </div>
+</div>
+</td>
+</tr>
+</table>
+<div class="main_wraper">
+  <form id='forms' name='forms' action="?model=stockup_apply_apply&action=inAppCloseList" method="post" onsubmit="return checkForm();">
+    <table class="main_table">
+      <tr>
+        <td colspan="6" style="width:99%; padding:0px;"><table id="mytable"  class="main_table" >
+            <thead>
+              <tr class="main_tr_header"  >
+              	<th width="5%" >序号</th>
+                <th width="10%" >产品名称 </th>
+                <th width="10%" > 申请编号 </th>
+                <th  width="10%"> 申请部门 </th>
+                <th  width="10%"> 申请人 </th>
+                <th  width="5%"> 申请时间 </th>
+                <th  width="5%"> 申请数量</th>
+                <th width="20%" > 配置要求</th>
+                <th width="5%" > 期望发货时间 </th>
+                <th  width="5%"> 重启关闭<br/>
+                  <input type="checkbox" class="txtshort"  id="isClose" onclick="checkAll()" style="width:40px;"  /> </th>
+              </tr>
+            </thead>
+            <tbody id="invbody">
+            
+            {appList}
+              </tbody>
+            
+          </table></td>
+      </tr>
+      <tr>
+        <td colspan="6"><input type="submit"  value=" 确认操作 "  class="txt_btn_a" style="font-size:14px; height:24px;line-height:24px; cursor:pointer;" /></td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

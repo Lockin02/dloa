@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','员工号','姓名','公司','类型','部门','级别', '入职日期', '入职基本工资'
+                        , '入职岗位工资', '入职绩效工资','入职项目绩效奖金','入职项目管理补贴','入职项目住宿补贴','入职项目通信补贴','入职项目电脑补贴'
+                        , '入职当月工资','入职补贴发放部分','地区','身份证','账号','开户行','邮箱','录入日期'
+                        ,'录入人','状态','可否修改','compt'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:80, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'usercard',index:'h.usercard', width:80, align:'center'},
+                        {name:'username',index:'u1.user_name', width:60, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'company',index:'u.company', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'expflag',index:'h.expflag', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'olddept',index:'d.dept_name', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'level',index:'h.userlevel', width:60,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'comedt',index:'s.comedt', width:70, align:'right',editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationam',index:'s.probationam', width:60, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'gwam',index:'s.gwam', width:60, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'jxam',index:'s.jxam', width:60, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'jjam',index:'s.jjam', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'gljtam',index:'s.gljtam', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'lszsam',index:'s.lszsam', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'txjt',index:'s.txjt', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'qtjtam',index:'s.qtjtam', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationnowam',index:'s.probationnowam', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'expenCeiling',index:'s.expenCeiling', width:120, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'oldarea',index:'s.oldarea', width:60, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'idcard',index:'s.idcard', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'acc',index:'s.acc', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'accbank',index:'s.accbank', width:160, align:"right",editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'email',index:'s.email', width:160, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationdt',index:'s.probationdt', width:140, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'probationuser',index:'s.probationuser', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'usersta',index:'s.usersta', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'ck',index:'',hidden:true ,key:true ,width:40 },
+                        {name:'compt',index:'',hidden:true ,key:true ,width:40 }
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-136+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        if(rowData.usersta=='新入职'||rowData.usersta=='冻结'){
+                            cl='green';
+                        }else{
+                            cl="#FF9900";
+                        }
+                        if(rowData.level!='非管理层'){
+                            cl="blue";
+                        }
+                        switch(rowData.ck){
+                            case 'yes':
+                                if(rowData.usersta=='冻结'||rowData.usersta=='已恢复'){
+                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='恢复' title='恢复信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                }else{
+                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='入职' title='入职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                }
+                                break;
+                            case 'no':
+                                be ="-";
+                                break;
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "导出",
+                    title: "导出信息",
+                    onClickButton : function (){
+                        $('#lui_rowedgrid').css('display', 'block');
+                        $('#hr_xls_out').css('display', 'block');
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_name:{
+                            required:true
+                        },
+                        user_pro:{
+                            required:true,
+                            number:true
+                        },
+                        user_dept:"required",
+                        user_idcard:{
+                            isIdCardNo:true,
+                            required:true
+                        },
+                        user_acc:{
+                            number:true,
+                            required:true
+                        },
+                        //user_accbank:"required",
+                        user_email:{
+                            required:true,
+                            email:true
+                        }
+                    },
+                    messages:{
+                        user_name:{
+                            required:'请输入员工名字'
+                        },
+                        user_pro:{
+                            required:'请输入金额',
+                            number:'请输入正确的金额'
+                        },
+                        user_dept:"请输入部门",
+                        user_idcard:{
+                            isIdCardNo:'请输入正确身份证',
+                            required:'请输入身份证'
+                        },
+                        user_acc:{
+                            number:'请输入正确银行账号',
+                            required:'请输入银行账号'
+                        },
+                        //user_accbank:"请输入开户行",
+                        user_email:{
+                            required:'请输入email地址',
+                            email:'请输入正确的email地址'
+                        }
+                    }
+                });
+            });
+            //新入职
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').val(rowData.username);
+                $('#user_pro').val(rowData.probationam);
+                $('#user_gw').val(rowData.gwam);
+                $('#user_jx').val(rowData.jxam);
+                $('#user_dept').val(rowData.olddept);
+                $('#user_area').val(rowData.oldarea);
+                $('#user_idcard').val(rowData.idcard);
+                $('#user_acc').val(rowData.acc);
+                $('#user_accbank').val(rowData.accbank);
+                $('#user_email').val(rowData.email);
+                $('#user_cdt').val(rowData.comedt);
+                $('#user_com').val(rowData.compt);
+                if(rowData.level=='非管理层'){
+                    $('#tr_user_pro').css('display','');
+                }else{
+                    $('#tr_user_pro').css('display','none');
+                    $('#user_pro').val(0);
+                }
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var username=$('#user_name').val();
+                var prob=$('#user_pro').val();
+                var gwam=$('#user_gw').val();
+                var jxam=$('#user_jx').val();
+                
+                var dept=$('#user_dept').val();
+                var area=$('#user_area').val();
+                var idcard=$('#user_idcard').val();
+                var acc=$('#user_acc').val();
+                var accbank=$('#user_accbank').val();
+                var email=$('#user_email').val();
+                var cdt =$('#user_cdt').val();
+                var compt =$('#user_com').val();
+                if(idcard){
+                    $.post('?model=salary&action=ck_idcard',{
+                        id:id,rand:rand,idcard:idcard
+                        },
+                        function (data){
+                            if(data=='1'){
+                                $.post('?model=salary&action=hr_join_in',{
+                                    id:id,prob:prob,dept:dept,area:area,idcard:idcard,acc:acc
+                                    ,accbank:accbank,email:email,username:username,cdt:cdt,rand:rand,compt:compt
+                                    ,gwam:gwam,jxam:jxam
+                                    },
+                                    function (data)
+                                    {
+                                        var msg=eval('(' + data + ')');
+                                        if(msg&&msg['error']){
+                                            alert('错误：'+msg['error']);
+                                            return false;
+                                        }else{
+                                            alert('操作成功！');
+                                        }
+                                        paCloseFun('hr_user_new');
+                                        jQuery("#rowedgrid").trigger("reloadGrid");
+                                    }
+                                )
+                            }else{
+                                alert('身份证重复请检查！');
+                            }
+                        }
+                    );
+                }else{
+                    alert('身份证不予许为空！');
+                }
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function xlsClickFun(){
+                var sy=$('#xls_year').val();
+                var sm=$('#xls_mon').val();
+                location.href='?model=salary&action=hr_xls_out&flag=join&sy='+sy+'&sm='+sm;
+            }
+            function gridNavSeaFun(){
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{data_list}&seadept="+seadept+"&seaname="+seaname,page:1}).trigger("reloadGrid");
+            }
+            function showNewExcel(){
+                tb_show('入职导入', '?model=salary&action=hr_join_xls&TB_iframe=true&height=650');
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;overflow:auto;" >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 506px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            员工信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 姓名：</td>
+                        <td> <input id="user_name" name="user_name" type="text" style="display: inline;" /></td>
+                    </tr>
+                    <tr >
+                        <td class="tl">日期：</td>
+                        <td><input id="user_cdt" name="user_cdt" type="text" style="display: inline;" class="Wdate default vdata" 
+                                   readonly onClick="WdatePicker({dateFmt:'yyyyMMdd'})"/></td>
+                    </tr>
+                    <tr id="tr_user_pro">
+                        <td class="tl">基本工资：</td>
+                        <td><input id="user_pro" name="user_pro" type="text" style="display: inline;" class="default vdata"/></td>
+                    </tr>
+                    <tr id="tr_user_gw">
+                        <td class="tl">岗位工资：</td>
+                        <td><input id="user_gw" name="user_gw" type="text" style="display: inline;" class="default vdata"/></td>
+                    </tr>
+                    <tr id="tr_user_jx">
+                        <td class="tl">绩效工资：</td>
+                        <td><input id="user_jx" name="user_jx" type="text" style="display: inline;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td> <input id="user_dept" name="user_dept" type="text" style="display: inline;" class="default vdata" /></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 地区：</td>
+                        <td> <input id="user_area" name="user_area" type="text" style="display: inline;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 身份证：</td>
+                        <td> <input id="user_idcard" name="user_idcard" type="text" style="display: inline;" size="35" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 账号：</td>
+                        <td> <input id="user_acc" name="user_acc" type="text" style="display: inline;" size="35" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 开户行：</td>
+                        <td> <input id="user_accbank" name="user_accbank" type="text" style="display: inline;" size="48" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 邮箱：</td>
+                        <td> <input id="user_email" name="user_email" type="text" style="display: inline;" size="48" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newuserSub" value="提交"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                            <input type="hidden" id="user_com" value=""/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="hr_xls_out" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        导出信息
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top:5px;"> 导出年月：</td>
+                    <td >
+                        {xls_list}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" id="newspeSub" onclick="xlsClickFun()" value="导出"/>
+                        <input type="button" id="newspeClo" onclick="paCloseFun('hr_xls_out');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

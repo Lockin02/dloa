@@ -1,0 +1,55 @@
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+     var proId = $("#proId").val();
+     var proRemarkId = $("#proRemarkId").val();
+     var orderId = $("#orderId").val();
+     var type = $("#type").val();
+     var view = $("#view").val();
+ 	var tabArr = [
+                  "?model=projectmanagent_order_order&action=proRemark&proRemarkId=" + proRemarkId + "&proId=" + proId + "&orderId=" + orderId + "&type=" + type +"&view=" + view,
+                  "?model=stock_productinfo_configuration&action=viewConfig&productId=" + proId
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">备注信息</a></li>
+	<li><a href="#tab2">配置信息</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<input type="hidden" id="view" value="{view}" />
+<input type="hidden" id="proId" value="{proId}" />
+<input type="hidden" id="proRemarkId" value="{proRemarkId}" />
+<input type="hidden" id="orderId" value="{orderId}" />
+<input type="hidden" id="type" value="{type}"/>
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+    <head>
+        <title>新增续签信息</title>
+        {#commonInclude#}
+        <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js">
+        </script>
+        <script type="text/javascript" src="{#jsPath#}/recontract-addInformStaff.js">
+        </script>
+    </head>
+    <script>
+        $(document).ready(function()
+        {
+            $('#conNum').val('{conNum}');
+            $('#conState').val('{conState}');
+            $('#signCompany').val('{signCompany}');
+			 $('#signCompany').click();
+        });
+        function selectCS(obj)
+        {
+            if (obj.value == 1) 
+            {
+                $('#conState').val('{conState}');
+                $('#csh').css('display', 'none');
+                
+            }
+            else 
+            {
+                $('#csh').css('display', 'block');
+            }
+            
+        }
+        
+        function selectCN(obj)
+        {
+            if (obj.value == 1) 
+            {
+                $('#conNum').val('{conNum}');
+                $('#cnh').css('display', 'none');
+                $('#conNum').click();
+            }
+            else 
+            {
+                $('#cnh').css('display', 'block');
+            }
+            
+        }
+        var checkSubmitFlag=true;
+        function toApp()
+        {
+         if(true==checkSubmitFlag)
+		  {
+			  checkSubmitFlag = false;   
+			  $("#form1").attr("action", "?model=hr_recontract_recontractApproval&action=add&act=app");
+		  }
+		  else
+		  {
+			alert("你已经提交了表单，请勿重复提交。");
+		   
+		  }
+            
+            // document.getElementById('form1').action =
+            // "index1.php?model=hr_recontract_recontractApproval&action=add&act=app";
+        }
+        
+        function agree(obj)
+        {
+            init();
+            if (obj.value == 1) 
+            {
+                $('#idlist1').css('display', '');
+                $('#idlist2').css('display', '');
+                $('#idlist3').css('display', '');
+                
+            }
+            else 
+            {
+                $('#idlist1').css('display', 'none');
+                $('#idlist2').css('display', 'none');
+                $('#idlist3').css('display', 'none');
+            }
+        }
+        
+        function init()
+        {
+            $('#conNum').val('{conNum}');
+            $('#conState').val('{conState}');
+            $('#conNum').click();
+            $('#cnh').css('display', 'none');
+            $('#csh').css('display', 'none');
+            $("input[name=cn]:eq(0)").attr("checked", 'checked');
+            $("input[name=cs]:eq(0)").attr("checked", 'checked');
+        }
+    </script>
+    <body>
+        <form id="form1" method="post" action="?model=hr_recontract_recontractApproval&action=addInformStaff">
+            <table class="form_main_table" style='border: 0px;'>
+                <tr>
+                    <td colspan="4" style='border: 0px;'>
+                        <div class="main_head" style='width: 99%;'>
+                            <span class="main_head_title">续 签 员工 确 认</span>
+                            <b>当前步骤：
+                                <font color="red">
+                                    员 工 确 认 
+                                </font>
+                            </b>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="innerTds" colspan="4" style='border: 0px;'>
+                        <fieldset>
+                            <legend class="legend">
+                                基 本 信 息
+                            </legend>
+                            <table class="form_in_table">
+                                <tr>
+                                    <td class="form_text_left">
+                                        员工姓名
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{userName}" name="recontractApproval[userName]" /><input type="hidden" class="txt" id="userAccount" value="{userAccount}" name="recontractApproval[userAccount]" /><input type="hidden" class="txt" id="recontractId" value="{pid}" name="recontractApproval[recontractId]" />
+                                    </td>
+                                    <td class="form_text_left">
+                                        员工编号
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{userNo}" name="recontractApproval[userNo]" id="userNo" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        部门
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{deptName}" id="deptName" name="recontract[deptName]" /><input type="hidden" class="txt" id="deptId" value="{deptId}" name="recontract[deptId]" />
+                                    </td>
+                                    <td class="form_text_left">
+                                        职位
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{jobName}" id="jobName" name="recontract[jobName]" /><input type="hidden" class="txt" id="jobId" value="{jobId}" name="recontract[jobId]" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="innerTds" colspan="4" style='border: 0px;'>
+                        <fieldset>
+                            <legend class="legend">
+                                续 签 确 认
+                            </legend>
+                            <table class="form_in_table">
+                                <tr>
+                                     <td class="form_text_left">
+                                        是否同意续签
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        <input type="radio" name="recontractApproval[isFlag]" disabled value="1" {checked1} onclick="agree(this);" />同意<input type="radio" name="recontractApproval[isFlag]" {checked2} onclick="agree(this);" disabled value="2" />不同意
+                                    </td>
+                                    
+                                </tr>
+			<tr style="display:{disply};">
+                                	<td class="form_text_left">
+                                        续签合同签订方
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                    <select id="signCompany" class="readOnlyTxtNormal select" disabled name="recontractApproval[signCompany]" >
+                                                                      </select>
+                                </td>
+                                </tr>					
+                                <tr style="display:{disply};">
+                                    <td class="form_text_left">
+                                        用工方式
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{conStateName}" />
+                                    </td>
+                                    <td class="form_text_left">
+                                        续签年限
+                                    </td>
+                                    <td class="form_text_right" colspan="2">
+                                        <input type="text" readonly class="readOnlyTxtNormal" value="{conNumName}" />
+                                    </td>
+                                </tr>
+                                <tr style="display:{disply};">
+                                    <td class="form_text_left">
+                                        开始时间
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input id='beginDate' type="text" readOnly class="readOnlyTxtNormal" value="{beginDate}" name="recontractApproval[beginDate]" />
+                                    </td>
+                                    <td class="form_text_left">
+                                        结束时间
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input id='closeDate' type="text" readOnly class="readOnlyTxtNormal" value="{closeDate}" name="recontractApproval[closeDate]" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td class="form_text_left">
+                                    纸质劳动合同邮寄接收地址
+                                </td>
+                                <td class="form_text_right" colspan="3">
+                                    <input type="text"  readOnly class="readOnlyTxtNormal" name="recontractApproval[repaAddress]" id="repaAddress" value="{repaAddress}" /><br/>备注：1、短期内住址不固定的同事，请填写"地址不固定" 2、珠海总部的同事填写"珠海"即可
+                                </td>
+                            </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        签订意见
+                                    </td>
+                                    <td class="form_text_right" colspan="3">
+                                        <textarea class="txt_txtarea_font" name="recontractApproval[conContent]">{conContent}
+                                        </textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">
+                                        记录人
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" class="readOnlyTxtNormal" readonly name="recontractApproval[recorderName]" id="recorderName" value="{recorderName}" /><input type="hidden" class="txt" id="recorderId" name="recontractApproval[recorderId]" value="{recorderId}" />
+                                    </td>
+                                    <td class="form_text_left">
+                                        记录时间
+                                    </td>
+                                    <td class="form_text_right">
+                                        <input type="text" readonly class="readOnlyTxtNormal" name="recontractApproval[recordDate]" id="recordDate" value="{recordDate}" />
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
+            </fieldset>
+        </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

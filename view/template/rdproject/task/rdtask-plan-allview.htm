@@ -1,0 +1,65 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>项目任务进展视图</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/datePicker.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript">
+
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toViewPlanLoad";
+			}
+			function search(){
+				var chargeName=$('#chargeName').val();
+				var startDate=$("#startDate").val();
+				var endDate=$("#endDate").val();
+				if(startDate!=""&&endDate!=""){
+				    if(startDate<=endDate){
+						this.location="?model=rdproject_task_rdtask&action=toViewPlanLoad&chargeName="+chargeName+"&startDate="+startDate+"&endDate="+endDate;
+				    }else{
+					    alert("结束时间要大于开始时间");
+				    }
+				}else{
+				    alert("请输入起止时间");
+				}
+			}
+
+
+</script>
+
+
+</head>
+<body>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td colspan="2">
+			开始日期:<input type="text" class="txtshort" onfocus="WdatePicker()" id="startDate"/>
+			截止时间:<input type="text" class="txtshort" onfocus="WdatePicker()" id="endDate"/>
+			责任人： <input type="text" id="chargeName" class="txt" name="chargeName"/>
+	    	 <input type="button" value=" 搜索 " class="txt_btn_a" onclick="search()" />
+		</td>
+
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+	{tbhead}
+	</thead>
+</table>
+</div>
+{pageDiv}
+</body>
+
+</html>

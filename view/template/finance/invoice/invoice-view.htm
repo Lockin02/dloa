@@ -1,0 +1,289 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title>开票记录</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+		<script type="text/javascript" src="view/template/finance/invoice/js/invoice-view.js"></script>
+	</head>
+	<body>
+		<table class="form_main_table">
+			<tr class="main_head">
+				<td colspan="4">
+					开票记录
+					<span id="thisColor"></span>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="form_text_left">
+					开票单位
+				</td>
+				<td class="form_text_right">
+					{invoiceUnitName}
+				</td>
+		        <td class="form_text_left">
+					申请单号
+				</td>
+				<td class="form_text_right">
+					{applyNo}
+				</td>
+			</tr>
+			<tr>
+		        <td class="form_text_left">
+					源单类型
+				</td>
+				<td class="form_text_right">
+					{objTypeCN}
+				</td>
+				<td nowrap class="form_text_left">
+					源单编号
+				</td>
+				<td class="form_text_right" width="30%">
+					<a href="#" onclick="clickFun();">{objCode}</a>
+					<input id="objId" type="hidden" value="{objId}"/>
+					<input id="objType" type="hidden" value="{objType}"/>
+				</td>
+			</tr>
+			<tr>
+				<td nowrap class="form_text_left">
+					发票号码
+				</td>
+				<td class="form_text_right">
+					{invoiceNo}
+				</td>
+				<td nowrap class="form_text_left">
+					业务编号
+				</td>
+				<td class="form_text_right" width="30%">
+					{rObjCode}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					发票类型
+				</td>
+				<td class="form_text_right">
+					{invoiceType}
+				</td>
+				<td class="form_text_left">
+					开票日期
+				</td>
+				<td class="form_text_right">
+					{invoiceTime}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					业 务 员
+				</td>
+				<td class="form_text_right">
+					{salesman}
+				</td>
+				<td class="form_text_left">
+					部门名称
+				</td>
+				<td class="form_text_right">
+					{deptName}
+				</td>
+			</tr>
+			<tr>
+                <td nowrap class="form_text_left">
+                    合同单位
+                </td>
+                <td class="form_text_right">
+                    {contractUnitName}
+                </td>
+				<td class="form_text_left">
+					主管名称
+				</td>
+				<td class="form_text_right">
+					{managerName}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					客户类型
+				</td>
+				<td class="form_text_right">
+					{invoiceUnitType}
+				</td>
+				<td class="form_text_left">
+					 客户省份
+				</td>
+				<td class="form_text_right">
+					{invoiceUnitProvince}
+				</td>
+			</tr>
+			<tr>
+                <td class="form_text_left">
+                    开票金额
+                </td>
+                <td class="form_text_right formatMoney">
+                    {invoiceMoney}
+                </td>
+                <td class="form_text_left">
+                    开票币别
+                </td>
+                <td class="form_text_right">
+                    {currency}
+                </td>
+			</tr>
+            <tr id="currencyShow" style="display: none;">
+                <td class="form_text_left">
+                    开票金额({currency})
+                </td>
+                <td class="form_text_right formatMoney">
+                    {invoiceMoneyCur}
+                </td>
+                <td class="form_text_left">
+                    汇率
+                </td>
+                <td class="form_text_right">
+                    {rate}
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    归属公司
+                </td>
+                <td class="form_text_right">
+                    {businessBelongName}
+                </td>
+                <td class="form_text_left">租赁开始日期</td>
+				<td class="form_text_right">
+					{rentBeginDate}
+				</td>
+            </tr>
+		    <tr>
+				<td class="form_text_left">租赁结束日期</td>
+				<td class="form_text_right">
+					{rentEndDate}
+				</td>
+				<td class="form_text_left">租赁天数</td>
+				<td class="form_text_right">
+					{rentDays}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注信息
+				</td>
+				<td colspan="3" class="form_text_right">
+					{remark}
+				</td>
+			</tr>
+		</table>
+		<div style="width: 100%;">
+			<div style="width: 100%;overflow-x: scroll">
+				<table class="form_main_table">
+					<tr align="left">
+						<td colspan="15" class="form_header">
+							开票内容
+						</td>
+					</tr>
+					<tbody id="invbody">
+					<tr class="main_tr_header">
+						<th>序号</th>
+						<th>货品名称/服务项目</th>
+						<th>数量</th>
+						<th>软件金额</th>
+						<th>硬件金额</th>
+						<th>维修金额</th>
+						<th>服务金额</th>
+						<th>设备租赁金额</th>
+						<th>场地租赁金额</th>
+						<th>其他金额</th>
+						<th>代收电费金额</th>
+						<th>代收水费金额</th>
+						<th>房屋出租金额</th>
+						<th>安装服务金额</th>
+						<th>产品/服务类型</th>
+					</tr>
+					{invoiceDetail}
+					</tbody>
+					<tr class="tr_count">
+						<td colspan="2">合计</td>
+						<td class="formatMoney">{allAmount}</td>
+						<td class="formatMoney">{softMoney}</td>
+						<td class="formatMoney">{hardMoney}</td>
+						<td class="formatMoney">{repairMoney}</td>
+						<td class="formatMoney">{serviceMoney}</td>
+						<td class="formatMoney">{equRentalMoney}</td>
+						<td class="formatMoney">{spaceRentalMoney}</td>
+						<td class="formatMoney">{otherMoney}</td>
+						<td class="formatMoney">{dsEnergyCharge}</td>
+						<td class="formatMoney">{dsWaterRateMoney}</td>
+						<td class="formatMoney">{houseRentalFee}</td>
+						<td class="formatMoney">{installationCost}</td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+			<table class="form_main_table" id="invoiceDetailCurShow" style="display: none;">
+				<tr align="left">
+					<td colspan="15" class="form_header">
+						开票内容({currency})
+					</td>
+				</tr>
+				<tbody>
+				<tr class="main_tr_header">
+					<th width="5%">序号</th>
+					<th width="18%">货品名称/服务项目</th>
+					<th width="8%">数量</th>
+					<th width="8%">软件金额</th>
+					<th width="8%">硬件金额</th>
+					<th width="8%">维修金额</th>
+					<th width="8%">服务金额</th>
+					<th width="10%">设备租赁金额</th>
+					<th width="10%">场地租赁金额</th>
+					<th width="8%">其他金额</th>
+					<th width="5%">代收电费金额</th>
+					<th width="5%">代收水费金额</th>
+					<th width="5%">房屋出租金额</th>
+					<th width="5%">安装服务金额</th>
+					<th>产品/服务类型</th>
+				</tr>
+				{invoiceDetailCur}
+				</tbody>
+				<tr class="tr_count">
+					<td colspan="2">合计</td>
+					<td class="formatMoney">{allAmount}</td>
+					<td class="formatMoney">{softMoneyCur}</td>
+					<td class="formatMoney">{hardMoneyCur}</td>
+					<td class="formatMoney">{repairMoneyCur}</td>
+					<td class="formatMoney">{serviceMoneyCur}</td>
+					<td class="formatMoney">{equRentalMoneyCur}</td>
+					<td class="formatMoney">{spaceRentalMoneyCur}</td>
+					<td class="formatMoney">{otherMoneyCur}</td>
+					<td class="formatMoney">{dsEnergyChargeCur}</td>
+					<td class="formatMoney">{dsWaterRateMoneyCur}</td>
+					<td class="formatMoney">{houseRentalFeeCur}</td>
+					<td class="formatMoney">{installationCostCur}</td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<table class="form_main_table" id="checkTableShow" style="display: none;">
+			<tr>
+				<td colspan="4" class="innerTd">
+					<div id="checkTable"></div>
+				</td>
+			</tr>
+		</table>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<input id="isRed" type="hidden" value="{isRed}"/>
+                    <input id="currency" type="hidden" value="{currency}"/>
+					<input id="id" type="hidden" value="{id}"/>
+					<input type="button" class="txt_btn_a" onclick="closeFun();" value="关  闭" />
+				</td>
+			</tr>
+	 	</table>
+	</body>
+</html>

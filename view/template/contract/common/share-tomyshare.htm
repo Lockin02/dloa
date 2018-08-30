@@ -1,0 +1,48 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+    var userId = $("#userId").val();
+ 	var tabArr = [
+                  "?model=contract_common_share&action=myShareOrder&userId=" + userId,
+                  "?model=contract_common_share&action=toShareOrder&userId=" + userId
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{userId}" id="userId" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">我共享的合同</a></li>
+	<li><a href="#tab2">他人共享的合同</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

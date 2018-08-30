@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<title>产品备货申请 </title>
+     {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockupProducts.js"></script>
+   <script>
+   var objArr=[{matterJosn}];
+   </script>
+   <script type="text/javascript" src="view/template/stockup/apply/js/apply-showAppList.js"></script>
+</head>
+
+<body scroll="auto">
+<div class="main_wraper">
+  <form id='forms' name='forms' action="?model=stockup_application_application&action=add" method="post" >
+  <input  type="hidden" id="auditType" name="application[auditType]" value="" />
+  <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	产品备货申请
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">批次号</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="batchNum" name="application[batchNum]"value="" />
+      		</td>
+            <td class="form_text_left">申请日期</td>
+            <td class="form_text_right" >
+             	<input type="text" class="readOnlyTxtNormal" id="appDate" readonly="readonly"  name="application[appDate]" value="{appDate}" />
+      		</td>
+
+       </tr>
+         <tr id="rentList">
+			<td colspan="6" >
+				<fieldset >
+				  <legend class="legend" onclick="showAndHideDiv('rentImg','matterListInfo')">申请清单
+					<img src="images/icon/info_up.gif" id="rentImg" />
+				  </legend>
+				    <div id="matterListInfo"></div>
+				</fieldset>
+			</td>
+		</tr>
+     </table>
+    <table class="main_table">
+      <tr>
+        <td colspan="6" style="width:99%; padding:0px;">
+        <fieldset >
+				  <legend class="legend" onclick="showAndHideDiv('rentImg','mytable')">销售备货申请清单
+					<img src="images/icon/info_up.gif" id="rentImg" />
+				  </legend>
+        <table id="mytable"  class="main_table" >
+            <thead>
+              <tr class="main_tr_header"  >
+              	<th width="5%" >序号</th>
+                <th width="10%" >产品名称 </th>
+                <th width="10%" > 申请编号 </th>
+                <th  width="10%"> 申请部门 </th>
+                <th  width="10%"> 申请人 </th>
+                <th  width="5%"> 申请时间 </th>
+                <th  width="5%"> 申请数量</th>
+                <th width="20%" > 配置要求</th>
+                <th width="5%" > 期望发货时间 </th>
+               </tr>
+            </thead>
+            <tbody id="invbody">
+
+            {appList}
+              </tbody>
+
+          </table>	</fieldset></td>
+      </tr>
+         <tr>
+   		<td class="txt_btn" colspan="6">
+
+   		   <input  type="submit" class="txt_btn_a" value=" 保  存 "onclick="setAudit('save');"/>
+           <input  type="submit" class="txt_btn_a" value=" 提交审批 " onclick="setAudit('audit');"/>
+   		   <input  type="button" class="txt_btn_a" value=" 返  回 " onclick="history.go(-1)"/>
+   		</td>
+        </tr>
+      <!--
+      <tr>
+        <td colspan="6"><input type="submit"  value=" 确认以上操作 "  class="txt_btn_a" style="font-size:14px; height:24px;line-height:24px; cursor:pointer;" /></td>
+      </tr>
+      -->
+    </table>
+  </form>
+</div>
+</body>
+</html>

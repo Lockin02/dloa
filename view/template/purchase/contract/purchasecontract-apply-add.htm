@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>起草采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/checkImage.js" ></script>
+
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-bankinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-suppAccount.js"></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-add.js" ></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/order-add.js" ></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/puchasecontract-supplier-combo.js" ></script>
+	<script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-add-formvalidator.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_purch_apply_basic"
+			});
+
+			var paymentCondition=$("#paymentCondition").val();
+			if(paymentCondition=="YFK"){
+				$("#payRatio").show();
+			}else{
+				$("#payRatio").hide();
+			}
+
+			for(i=5;i<101;i++){
+				$("#payRatio").append('<option id="payRatio'+i+'" value="'+i+'%">'+i+'%</option>');
+				i=i+4;
+			}
+
+			$("#paymentCondition").bind("change",function(){
+				var paymentCondition=$("#paymentCondition").val();
+				if(paymentCondition=="YFK"){
+					$("#payRatio").show();
+				}else{
+					$("#payRatio").val("");
+					$("#payRatio").hide();
+				}
+			});
+		});
+
+	</script>
+</head>
+
+<body scroll="auto" onload="myload();">
+    <div class="main_head">
+     	<span class="main_head_title">起草采购订单</span>
+ 	</div>
+	<div class="form_main">
+	    <form id='form1' name='form1' action="?model=purchase_contract_purchasecontract&action=addAssetOrder&orderType={orderType}" method="post" onsubmit="return checkAllData();">
+                <input type="hidden" id="orderType" value="{orderType}" name="contract[orderType]"/>
+	            <table class="form_main_table">
+
+	                <tr >
+	                	 <td class="tableheader form_text_left">订单总金额</td>
+	                    <td colspan="3" class="form_text_right">
+	                       &nbsp;
+	                	 <input type="text" id="allMoneyView" class="readOnlyText" name="" value=""/>
+	                	 <input type="hidden" id="allMoney" class="readOnlyText" name="contract[allMoney]" value=""/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        采购员
+	                    </td>
+	                    <td align="left">
+	                        &nbsp;
+	                       <input type="text" class="readOnlyText" id="sendName" name="contract[sendName]" value="{sendName}">
+	                       <input type="hidden" id="sendUserId" name="contract[sendUserId]" value="{sendUserId}" />
+	                    </td>
+	                    <td class="tableheader form_text_left">
+	                        供应商名称
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                       <input type="text" class="txt" id="supplierName" name="contract[suppName]" value=""/>
+	                       <input type="hidden" id="supplierId" name="contract[suppId]" value="" />
+	                        <span class="red">[*]</span>
+						    <br/>
+							<div id="supplierNameTip" class="tipShortTxt"></div>
+	                    </td>
+	                </tr>
+	                <tr align="center">
+	                    <td class="tableheader form_text_left">
+	                        预计到货日期
+	                    </td>
+	                    <td align="left">
+	                        &nbsp;
+	                        <input type="text" class="txt" id="dateHope" name="contract[dateHope]" size="20" maxlength="20" onfocus="WdatePicker()" readonly />
+	                        <span class="red">[*]</span>
+						    <br/>
+							<div id="dateHopeTip" class="tipShortTxt"></div>
+	                    </td>
+	                    <!--
+	                    <td class="form_text_left" >
+							期望完成日期
+						</td>
+						<td class="form_text_right">
+							&nbsp;
+							<input type="text" class="txt" id="" name="contract[dateFact]" onfocus="WdatePicker();"  readonly  />
+							<span class="red">[*]</span>
+						    <br/>
+							<div id="dateFactTip" class="tipShortTxt"></div>
+						</td> -->
+	                    <td class="tableheader form_text_left">
+	                        发票类型
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                        <select class="select" id="billingType" name="contract[billingType]">
+	                        	{invoiceType}
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr align="center">
+	                	<td class="form_text_left">付款条件</td>
+	                	<td class="form_text_right">
+	                        &nbsp;
+							<select class="select" id="paymentCondition" name="contract[paymentCondition]">
+								{paymentCondition}
+							</select>
+	                        &nbsp;
+	                        <select class="selectmiddel" id="payRatio" name="contract[payRatio]">
+							</select>
+	                	</td>
+	                    <td class="tableheader form_text_left">
+	                        付款类型
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                        <select class="select" id="paymetType" name="contract[paymentType]">
+	                        	{paymentType}
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        供应商账号
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                        <input type="text" class="txt" id="suppAccount1" name="contract[suppAccount]" />
+	                    </td>
+	                    <td class="tableheader form_text_left">
+	                        开户银行
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+							<input type="text" class="txt" id="suppBankName"   name="contract[suppBankName]" />
+							<input type="hidden" class="txt" id="suppBank" name="contract[suppBank]" />
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="tableheader form_text_left">
+	                        联系电话
+	                    </td>
+	                    <td class="form_text_right" colspan="3">
+	                        &nbsp;
+	                        <input type="text" class="txt" id="suppTel" name="contract[suppTel]" value="">
+	                    </td>
+	                </tr>
+	                <tr>
+	                   	 <td class="tableheader form_text_left">
+	                        供应商地址
+	                    </td>
+	                    <td align="left" colspan="3">
+	                        &nbsp;
+	                        <textarea rows="3" cols="115" id="suppAddress" name="contract[suppAddress]" class="form_text_right"></textarea>
+	                    </td>
+	               </tr>
+	       <tr>
+	       <td colspan="4"  class="td_table">
+			<table id="mytable" class="main_table_nested">
+						<thead>
+							<tr class="tablecontrol form_header">
+			                    <td colspan="15" class="form_header">
+				                            采购订单清单
+				                        </font>
+				                    </td>
+								<td align="center">
+										<input type="hidden" id="invnumber" value="0" />
+										<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+										<!--
+										<img id="addLine" src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行" />
+										 -->
+									</td>
+							</tr>
+							<tr class="main_tr_header">
+								<th>
+			                        <p class="allImg">
+			                           序号
+			                        </p>
+			                    </th>
+			                    <th>
+			                        物料名称
+			                    </th>
+			                    <th>规格型号</th>
+			                    <th>单位</th>
+			                    <th>订单数量</th>
+			                    <th>预计到货时间</th>
+			                    <th>入库时间</th>
+			                    <th>单价</th>
+			                    <th>含税单价</th>
+			                    <th>税率</th>
+			                    <th>金额</th>
+                    			<th>采购用途</th>
+			                    <th>申请部门</th>
+			                    <th>源单编号</th>
+			                    <th>备注</th>
+			                    <th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="invbody">
+						{list}
+						</tbody>
+			</table>
+		</td>
+		</tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left">
+                        采购说明
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <textarea rows="5" id="instruction" name="contract[instruction]" class="form_text_right"  cols="123" ></textarea>
+                    </td>
+                </tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left">
+                        备注
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <textarea rows="5" id="remark" name="contract[remark]" class="form_text_right" cols="123"></textarea>
+                    </td>
+                </tr>
+                <tr align="center"  colspan="3">
+					<td class="tableheader form_text_left">
+						合同签约状态
+					</td>
+					<td class="form_text_right">
+						<input type="radio" name="contract[signStatus]" value="0" checked>
+						未签约
+						<input type="radio" name="contract[signStatus]" value="1">
+						已签约
+						<!--
+						<input type="radio" name="contract[signStatus]" value="2"/>
+						已拿到纸质合同
+						 -->
+						<input type="radio" name="contract[signStatus]" value="3">
+						已提交纸质合同
+					</td>
+				</tr>
+			    <tr>
+					<td class="form_text_left">需要盖章</td>
+					<td class="form_text_right" >
+			   			<input type="radio" name="contract[isNeedStamp]" value="1" id="isNeedStampYes" onclick="changeRadio()"/>是
+			      		<input type="radio" name="contract[isNeedStamp]" value="0" checked="checked" id="isNeedStampNo" onclick="changeRadio()"/>否
+					</td>
+					<td class="form_text_left">盖章类型</td>
+					<td class="form_text_right">
+						<select class="select" name="contract[stampType]" id="stampType">
+							{stampType}
+						</select>
+						<span class="red" style="display:none" id="radioSpan">[*]</span>
+					</td>
+			    </tr>
+				<tr>
+					<td class="form_text_left">附件</td>
+					<td colspan="3" class="form_text_right">
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress"></div>
+							<div class="upload">
+								<span id="swfupload"></span>
+								<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+								<br />
+							</div>
+							<div id="uploadfileList" class="upload"></div>
+						</div>
+					</td>
+				</tr>
+                <tr align="center" class="TableHeader" >
+                    <td colspan="6">
+                        <input type="submit" id="saveButton" value=" 保  存 " class="txt_btn_a" />
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="submit" id="submitApp" value=" 提交审批 " class="txt_btn_a" onclick="toSubmitByAssetTask()"/>
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="button" value=" 返  回 "  class="txt_btn_a" onclick="history.back(-1);"/>
+                    </td>
+                </tr>
+            </table>
+	        </form>
+	 </div>
+</body>
+
+	<script>
+		$(function() {
+			var tab = document.getElementById("invbody") ;
+		      //表格行数
+		    var rows = tab.rows.length ;
+			var allMoney=0;
+			for(var i=1;i<=rows;i++){
+				var thisAmount=$("#amountAll"+i).val();
+				var thisPrice=$("#applyPrice"+i).val();
+				if(thisAmount!=undefined&&thisAmount!=""&thisPrice!=undefined&&thisPrice!=""){
+					allMoney=accAdd(allMoney,accMul(thisAmount,thisPrice,6),6);
+				}
+			}
+			$("#allMoney").val(allMoney);
+			var quotes=moneyFormat2(allMoney);
+			$("#allMoneyView").val(quotes);
+		});
+
+	</script>
+
+</html>

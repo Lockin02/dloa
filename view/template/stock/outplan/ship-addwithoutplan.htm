@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增发货单</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <!-- 主题css，可切换 -->
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-logistics.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/ship-combowithoutplan.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/ship-add.js">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/ship-add-formValidator.js">
+        </script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script>
+				$(document).ready(function(){
+				    $("#outstockman").yxselect_user({
+						hiddenId : 'outstockmanId'
+					});
+				    $("#shipman").yxselect_user({
+						hiddenId : 'shipmanId'
+					});
+				    $("#auditman").yxselect_user({
+						hiddenId : 'auditmanId'
+					});
+				});
+		</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=stock_outplan_ship&action=add&act=indpt" name="form1">
+	<div>
+		<div>
+			<table class="form_main_table">
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	添加发货单
+			      	<input type="hidden" name="ship[docType]" id="docType" value="{docType}"/>
+			    </span>
+			</div>
+			<tr>
+					<td class="form_text_left">发货方式</td>
+					<td class="form_text_right" colspan="3">
+						 <input type="radio" name="ship[shipType]" id="order" value="order" />&nbsp;发货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="radio" name="ship[shipType]" id="borrow" value="borrow" />&nbsp;借用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="radio" name="ship[shipType]" id="lease" value="lease" />&nbsp;租用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="radio" name="ship[shipType]" id="trial" value="trial" />&nbsp;试用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="radio" name="ship[shipType]" id="change" value="change" />&nbsp;更换&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">鼎利合同号</td>
+					<td class="form_text_right" colspan="3">
+						 <input type="text" id="docCode" class="txt" name="ship[docCode]" value=""/>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right" >
+						 <input type="hidden" id="customerId" class="txt" name="ship[customerId]" />
+						 <input type="text" id="customerName" class="txt" name="ship[customerName]" />
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="customerNameTip" class="tipShortTxt">
+                        </div>
+					</td>
+					<td class="form_text_left">联系人</td>
+					<td class="form_text_right" >
+						 <input type="hidden" id="linkmanId" class="txt" name="ship[linkmanId]" />
+						 <input type="text" id="linkman" class="txt" name="ship[linkman]" />
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="linkmanTip" class="tipShortTxt">
+                        </div>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">手机号</td>
+					<td class="form_text_right">
+						 <input type="text" id="mobil" class="txt" name="ship[mobil]" />
+					</td>
+					<td class="form_text_left">物流公司</td>
+					<td class="form_text_right">
+						 <input type="hidden" id="companyId" class="txt" name="ship[companyId]"/>
+						 <input type="text" id="companyName" class="txt" name="ship[companyName]"/>
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="companyNameTip" class="tipShortTxt">
+                        </div>
+					</td>
+					<!-- td class="form_text_left">邮寄单号</td>
+					<td class="form_text_right" >
+						 <input type="text" id="mailCode" class="txt" name="ship[mailCode]" ondblclick="mailFun()"/>
+					</td -->
+			</tr>
+			<tr>
+					<td class="form_text_left">发货地址</td>
+					<td class="form_text_right" colspan="3">
+						 <input type="text" id="address" class="txtbiglong" name="ship[address]"/>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">备注</td>
+					<td class="form_text_right" colspan="3">
+						<textarea name="ship[remark]" class="txt_txtarea_font" id="remark""></textarea>
+					</td>
+			</tr>
+			<tr>
+			<td colspan="4">
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan="6">
+                            物料清单
+                        </td>
+                        <td align="center" width="4%">
+                            <input type="hidden" id="invnumber" value="1" />
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                            <img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+                         </td>
+                    </tr>
+                    <tr class="main_tr_header" id="details">
+                        <th>
+                            序号
+                        </th>
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            本次发货数量
+                        </th>
+                        <th>
+                           备注
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                	<tr id="product_1">
+                		<td>
+                			1
+                		</td>
+                		<td>
+                			<input type="text" class="txtmiddle" name="ship[productsdetail][1][productNo]" id="productNo1"/>
+                		</td>
+                		<td>
+                			<input type="hidden" class="txt" name="ship[productsdetail][1][productId]" id="productId1"/>
+                			<input type="text" class="txtmiddle" name="ship[productsdetail][1][productName]" id="productName1"/>
+                		</td>
+                		<td>
+                			<input type="text" class="txtmiddle" name="ship[productsdetail][1][productModel]" id="productModel1"/>
+                		</td>
+                		<td>
+                			<input type="text" class="txtshort formatMoney" name="ship[productsdetail][1][number]" id="number1"/>
+                		</td>
+                		<td>
+                			<input type="text" class="txtlong" name="ship[productsdetail][1][remark]" id="remard[1]"/>
+                		</td>
+                		<td>
+                			<img src='images/closeDiv.gif' onclick='mydel(this,"invbody")' title='删除行'/>
+                		</td>
+                	</tr>
+                </tbody>
+            </table>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="4">
+			<table class="form_main_table">
+			<tr>
+					<td class="form_text_left">出库人</td>
+					<td class="form_text_right" >
+						 <input type="text" id="outstockman" class="txt" name="ship[outstockman]" />
+						 <input type="hidden" id="outstockmanId" class="txt" name="ship[outstockmanId]" />
+					</td>
+					<td class="form_text_left">发货人</td>
+					<td class="form_text_right" >
+						 <input type="text" id="shipman" class="txt" name="ship[shipman]"  value="{shipman}"/>
+						 <input type="hidden" id="shipmanId" class="txt" name="ship[shipmanId]" value="{shipmanId}"/>
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="shipmanTip" class="tipShortTxt">
+                        </div>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">发货日期</td>
+					<td class="form_text_right" >
+						 <input type="text" id="shipDate" class="txt" name="ship[shipDate]" onfocus="WdatePicker()"/>
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="shipDateTip" class="tipShortTxt">
+                        </div>
+					</td>
+					<td class="form_text_left">审核人</td>
+					<td class="form_text_right" >
+						 <input type="text" id="auditman" class="txt" name="ship[auditman]" />
+						 <input type="hidden" id="auditmanId" class="txt" name="ship[auditmanId]" />
+                        <span class="red">
+                            [*]
+                        </span>
+                        <div id="auditmanTip" class="tipShortTxt">
+                        </div>
+					</td>
+			</tr>
+			<tr>
+					<td class="txt_btn" colspan="4">
+						<input  type="submit" class="txt_btn_a" onclick="mailFun();" value="保存并邮寄"/>
+						<input  type="submit" class="txt_btn_a" value="保  存"/>
+						<input  type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+					</td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+			</table>
+</form>
+</body>
+</html>

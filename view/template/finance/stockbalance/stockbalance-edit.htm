@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>修改期初余额</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+    <script type="text/javascript" src="view/template/finance/stockbalance/js/stockbalance-add.js"></script>
+    <script type="text/javascript" src="view/template/finance/stockbalance/js/stockbalance-add-va.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	修改存货余额信息
+    </span>
+</div>
+<form id="form1" method="post" action="?model=finance_stockbalance_stockbalance&action=edit">
+<table class="form_main_table">
+   <tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right" >
+			<input type="text" class="txt" id="stockName" name="stockbalance[stockName]" value="{stockName}" />
+			<input type="hidden" class="txt" id="stockCode" name="stockbalance[stockCode]" value="{stockCode}" />
+			<input type="hidden" class="txt" id="stockId" name="stockbalance[stockId]" value="{stockId}" />
+			<span class="red">[*]</span>
+			<div id="stockNameTip" class="dbcolumnTipTxt"></div>
+		</td>
+		<td class="form_text_left">日期</td>
+		<td class="form_text_right" >
+			<input type="text" class="txt" id="thisDate" name="stockbalance[thisDate]" value="{thisDate}" onfocus="WdatePicker()" onchange="thisChange(this.value)"/>
+			<input type="hidden" id="thisMonth" name="stockbalance[thisMonth]" value="{thisMonth}"/>
+			<input type="hidden" id="thisYear" name="stockbalance[thisYear]" value="{thisYear}"/>
+			<span class="red">[*]</span>
+			<div id="thisDateTip" class="dbcolumnTipTxt"></div>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right" >
+			<input type="text" class="txt" id="productNo" name="stockbalance[productNo]" value="{productNo}"/>
+			<span class="red">[*]</span>
+			<div id="productNoTip" class="dbcolumnTipTxt"></div>
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right" >
+			 <input type="hidden" id="productId" name="stockbalance[productId]" value="{productId}"/>
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="productName" name="stockbalance[productName]" value="{productName}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">规格型号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="productModel" name="stockbalance[productModel]" value="{productModel}"/>
+		</td>
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="units" name="stockbalance[units]" value="{units}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">计价方式</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="stockbalance[pricing]" value="{pricing}"/>
+		</td>
+		<td class="form_text_left">批次号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="stockbalance[batchNo]" value="{batchNo}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">辅助属性</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="stockbalance[property]" value="{property}"/>
+		</td>
+		<td class="form_text_left">结算数量</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt formatMoney" id="clearingNum" name="stockbalance[clearingNum]" value="{clearingNum}"/>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">结存金额</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt formatMoney" id="balanceAmount" name="stockbalance[balanceAmount]" value="{balanceAmount}"/>
+			 <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">结存成本差异金额</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="stockbalance[different]" value="{different}"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="4">
+        	<input type="hidden" name="stockbalance[id]" value="{id}" />
+		    <input type="submit" class="txt_btn_a" value="保  存"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

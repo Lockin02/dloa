@@ -1,0 +1,70 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>管理工程项目</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var id = $("#id").val();
+            var projectCode = $("#projectCode").val();
+            var isSubmit = $("#isSubmit").val();
+            if (isSubmit == 1) {
+                alert('当前项目有存在待提交的变更，请及时处理！');
+            }
+
+            //tabs处理
+            var tt = $('#tt');
+            var thisHeight = document.documentElement.clientHeight - 5;
+            tt.tabs({
+                height: thisHeight,
+                plain: true,
+                onSelect: function (title) {
+                    var tb = tt.tabs('getTab', title);
+                    var hc = tb.panel('options').headerCls;
+                    if (hc && hc != null) {
+                        tb.panel('options').thisUrl = hc;//保存一个值用于tab刷新
+                        tb.panel('options').headerCls = '';//清空之后才不会重新刷新
+                        tt.tabs('update', {
+                            tab: tb,
+                            options: {
+                                content: '<iframe fit="true" name="' + hc + '" scrolling="auto" frameborder="0"  src="' + hc + '" style="width:100%;height:100%;"></iframe>'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+</head>
+<body style="height:100%">
+<div id="tt">
+    <div title="项目概况" headerCls="?model=engineering_project_esmproject&action=toView&id={id}&skey={skey}"></div>
+    <div title="项目视图" headerCls="?model=engineering_project_statusreport&action=toProjectStatus&projectId={id}"></div>
+    <div title="项目计划" headerCls="?model=engineering_activity_esmactivity&action=toTreeList&projectId={id}"></div>
+    <div title="项目预决算" headerCls="?model=engineering_budget_esmbudget&action=manageTab&projectId={id}"></div>
+    <div title="项目设备"
+         headerCls="?model=engineering_resources_esmresources&action=projectTab&id={id}&projectCode={projectCode}"></div>
+    <div title="项目人员" headerCls="?model=engineering_role_esmrole&action=proMemberTreeTab&projectId={id}"></div>
+    <div title="项目外包" headerCls="?model=outsourcing_outsourcing_apply&action=viewTab&projectId={id}"></div>
+    <div title="项目租车" headerCls="?model=outsourcing_vehicle_rentalcar&action=viewVehicleTab&projectId={id}"></div>
+    <div title="项目日志" headerCls="?model=engineering_worklog_esmworklog&action=toProLogManageTab&projectId={id}"></div>
+    <div title="项目周报" headerCls="?model=engineering_project_statusreport&action=pageManage&projectId={id}"></div>
+    <div title="变更记录" headerCls="?model=engineering_change_esmchange&action=pageForProject&projectId={id}"></div>
+    <div title="项目文档" headerCls="?model=engineering_file_esmfile&action=pageForProject&projectId={id}"></div>
+    <div title="PK项目信息" headerCls="?model=engineering_project_esmproject&action=toPKList&id={id}"></div>
+    <div title="关闭信息" headerCls="?model=engineering_close_esmclose&action=toViewList&projectId={id}"></div>
+    <div title="项目执行轨迹" headerCls="?model=engineering_baseinfo_esmlog&projectId={id}"></div>
+</div>
+
+<input type="hidden" value="{isSubmit}" id="isSubmit"/>
+<input type="hidden" value="{id}" id="id"/>
+<input type="hidden" value="{projectCode}" id="projectCode"/>
+</body>
+</html>

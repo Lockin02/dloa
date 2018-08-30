@@ -1,0 +1,249 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+        </title>
+		<style type="text/css">
+		</style>
+ <script>
+
+           function dis(name) {
+					var temp = document.getElementById(name);
+					if (temp.style.display == '')
+						temp.style.display = "none";
+					else if (temp.style.display == "none")
+						temp.style.display = '';
+				}
+
+           $(document).ready(function() {
+/*S: ----------------任务---------------*/
+
+
+				//$(".task").click(function(){
+					if( $(".task").attr("checked")==true ){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusList&gpId={gpId}");
+					}
+				//1.
+				$("#taskStatus").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusList&gpId={gpId}");
+				})
+				//2.
+				$("#missiontype").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGTypeChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGTypeList&gpId={gpId}");
+				})
+				//3.任务偏差透视图
+				$("#missiondeviation").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGVariaChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGVariaList&gpId={gpId}");
+				})
+				//4.
+				$("#missioncomplete").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGQualityChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGQualityList&gpId={gpId}");
+				})
+				//5.
+				$("#missionduty").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGChargeChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGChargeList&gpId={gpId}");
+				})
+				//6.
+				$("#missionstate6").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActFinChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActFinList&gpId={gpId}");
+				})
+				//7.
+				$("#missionstate7").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActVarChart&gpId={gpId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActVarList&gpId={gpId}");
+				})
+				//});
+
+/*E: ----------------任务---------------*/
+
+				//工作量部分开始
+				$("#loadResource").click(function(){
+					$("#load_charts").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=GroupWorklogCharts&gpId={gpId}");
+					$("#load_table").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=GroupWorklogTable&gpId={gpId}");
+				})
+
+				$("#loadClick").toggle(
+					function () {
+    					$("#load").show();
+  					},function () {
+    					$("#load").hide();
+  					}
+				);
+
+				//工作量部分结束
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="form_main">
+                <table class="form_main_table">
+                    <tr class="form_header">
+                        <td colspan="2">
+                            组合基本信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            所属项目组合
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[parentName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            项目组合名称
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[groupName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            简称
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[simpleName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合编号
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[groupCode]}
+                        </td>
+                    </tr>
+                      <tr>
+                        <td class="form_text_left">
+                                              参与人数
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[turnout]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                                              需要工作日
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[needWorking]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合责任人
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[managerName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            所属部门
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[depName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合助理
+                        </td>
+                        <td class="form_view_right">
+                            {rdgroup[assistantName]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合描述
+                        </td>
+                        <td class="form_view_right">
+                        	<textarea  cols="80" class="textarea_read">{rdgroup[description]}</textarea>
+                        </td>
+                    </tr>
+                    <div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="taskClick" onclick="dis('task1')">任务状态透视 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="task1" style="display:none;">
+			<table class="main_table" >
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left" >
+							<input type="radio" name="task" value="" class="task" id="taskStatus" value="taskStatus" checked>任务状态透视图
+							<input type="radio" name="task" value="" class="task" id="missiontype" value="missiontype" >任务类型透视图
+							<input type="radio" name="task" value="" class="task" id="missiondeviation" value="missiondeviation" >任务偏差透视图
+							<input type="radio" name="task" value="" class="task" id="missioncomplete" value="missioncomplete" >任务完成质量透视图
+							<input type="radio" name="task" value="" class="task" id="missionduty" value="missionduty" >任务责任主体透视图
+							<input type="radio" name="task" value="" class="task" id="missionstate6" value="missionstate6" >成员任务进展透视图
+							<input type="radio" name="task" value="" class="task" id="missionstate7" value="missionstate7" >成员任务偏差透视图
+					</td>
+				</tr>
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left" >
+							<iframe src="#" width="50%" height="380px" frameborder=0 id="task_deviation_iframe" ></iframe >
+							<iframe src="#" width="50%" height="380px" frameborder=0 align="top" id="task_cycle_iframe" ></iframe >
+					</td>
+				</tr>
+			</table>
+			</div>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="loadClick">工作量投入透视图 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="load" style="display:none;">
+				<table class="main_table" >
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<input type="radio" id="loadResource" name="loadPerspective" class="load">人员投入工作量透视图
+						</td>
+					</tr>
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<iframe width="50%" height="380px" frameborder=0 id="load_charts" ></iframe >
+							<iframe width="50%" height="380px" frameborder=0 align="top" id="load_table" ></iframe >
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<br>
+     <center>
+                        	<input type="hidden" id="id" value="rdgroup[Id]">
+                            <input type="button" class="txt_btn_a" value="关 闭" onclick="window.close()">
+     </center>
+                </table>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>新增物料序列号台账</title>
+{#commonInclude#}
+</head>
+<body>
+<script type="text/javascript">
+Array.prototype.in_array = function(e) { // 判断一个元素是否在数组里面
+	for (i = 0; i < this.length; i++) {
+		if (this[i] == e)
+			return true;
+	}
+	return false;
+}
+String.prototype.trim=function(){
+    return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+
+function initItems() {// 初始化列表
+	var itemCount = $("#itemscount").val();
+	var sequenceStr = "{serialSequence}";
+	var remarkStr = "{serialRemark}";
+	var idStr = "{serialId}";
+	var sequenceArr = sequenceStr.split(",");
+	var remarkArr = remarkStr.split(",");
+	var idArr = idStr.split(",");
+
+	for ( var i = 0; i < itemCount; i++) {
+		var sequenceVal = "";
+		var remarkVal = "";
+		var idVal = "";
+
+		if (sequenceArr[i]) {
+			sequenceVal = sequenceArr[i];
+		}
+		if (remarkArr[i]) {
+			remarkVal = remarkArr[i];
+		}
+		if (idArr[i]) {
+			idVal = idArr[i];
+		}
+
+		var trStr = '<tr><td>' + (i + 1)
+				+ '</td><td> <input type="hidden" value="' + idVal + '" id="id'
+				+ i + '" /><input type="text" class="txt" value="'
+				+ sequenceVal + '" id="sequence' + i
+				+ '" /></td><td> <input id="remark' + i + '" value="'
+				+ remarkVal + '" type="text" class="txt"  /></td></tr>';
+		$("#itembody").append(trStr);
+	}
+}
+function setSequence() {// 设置序列号信息到入库表单上
+	var sequenceArr = [];
+	var remarkArr = [];
+	var sequenceIsNull = true;
+	$("input[id^='sequence']").each(function() {
+		var serialNoStr = $(this).val();
+		var serialIdStr = $(this).prev().val();
+
+		if (serialNoStr.trim()) {
+			// 后台进行重复性校验
+			$.ajax({
+				type : "POST",
+				async : false,
+				url : "?model=stock_serialno_serialno&action=checkRepeat",
+				data : {
+					serialNo : serialNoStr,
+					id : serialIdStr,
+					productCode : $("#productCode").val()
+				},
+				success : function(result) {
+					if (result == 0) {
+						alert("序列号《" + serialNoStr + "》库存中已存在!");
+						sequenceIsNull = false;
+						return false;
+					}
+				}
+			})
+
+			// 用户输入的序列号重复性校验
+			if (sequenceArr.in_array(serialNoStr)) {
+				sequenceIsNull = false;
+				alert("你重复输入序列号<" + serialNoStr + ">,请更改！")
+			}
+
+			sequenceArr.push($(this).val());
+		}
+	})
+	
+	$("input[id^='remark']").each(function() {
+		remarkArr.push($(this).val());
+	})
+	
+	if (sequenceIsNull) {
+		window.parent.$("#serialSequence" + '{elNum}').val(sequenceArr);
+		window.parent.$("#serialRemark" + '{elNum}').val(remarkArr);
+		closeFun();
+	}
+}
+
+/**
+ * 导入序列号
+ */
+function importSequence() {
+	showThickboxWin("?model=stock_serialno_serialno&action=toImportAtInstock"
+			+ "&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=500")
+}
+
+/**
+ * 设置Excel序列号到界面上
+ */
+function setExcelSequence(sequenceStr) {
+	var sequenceArr = sequenceStr.split(",");
+	var itemCount = $("#itemscount").val();
+	for ( var i = 0; i < itemCount; i++) {
+		if (sequenceArr[i]) {
+			$("#sequence" + i).val(sequenceArr[i]);
+		}
+	}
+}
+
+$(document).ready(function() {
+	initItems();
+})
+</script>
+<div class="main_head"><span class="main_head_title">
+物料序列号管理 </span></div>
+<form id="form1" method="post"
+	action="?model=stock_serialno_serialno&action=add" name="form1">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" name="serialno[productCode]" value="{productCode}" id="productCode" />
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" name="serialno[productName]" value="{productName}" id="productName" /> 
+			<input type="hidden" class="txt" name="serialno[productId]" value="{productId}" />
+		</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">规格型号</td>
+		<td class="form_text_right">
+			<input type="text"	class="readOnlyTxtNormal" name="serialno[pattern]" value="{pattern}" />
+		</td>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" name="serialno[stockName]" value="{stockName}" /> 
+			<input type="hidden" class="txt" name="serialno[stockCode]" value="{stockCode}" /> 
+			<input type="hidden" class="txt" name="serialno[stockId]" value="{stockId}" />
+		</td>
+	</tr>
+	<!-- 
+<tr>
+		<td class="form_text_left">保质期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[shelfLife]" />
+		</td>
+		<td class="form_text_left">生产（采购）日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[prodDate]" />
+		</td>
+</tr>        
+<tr>
+		<td class="form_text_left">有效期至</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[validDate]" />
+		</td>
+</tr>
+ -->
+	<tr>
+		<td colspan="4">
+		<div style="height: 320px; overflow-y: auto; overflow-x: hidden">
+		<table class="main_table" id="itemtable">
+			<thead>
+				<tr>
+					<td colspan="3" class="form_header">序列号编制
+						<input type="hidden" id="itemscount" value="{productNum}" />
+						<input type="button" class="txt_btn_a" value="导入序列号" onclick="importSequence();" />
+					</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th></th>
+					<th>序列号</th>
+					<th>说明</th>
+				</tr>
+			</thead>
+			<tbody id="itembody">
+				
+			</tbody>
+		</table>
+		</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" class="txt" name="serialno[seqStatus]" /> 
+			<input type="hidden" class="txt" name="serialno[batchNo]" />
+			<input type="hidden" class="txt" name="serialno[inDocId]" /> 
+			<input type="hidden" class="txt" name="serialno[inDocCode]" /> 
+			<input type="hidden" class="txt" name="serialno[inDocItemId]" />
+			<input type="hidden" class="txt" name="serialno[outDocCode]" />
+			<input type="hidden" class="txt" name="serialno[outDocId]" /> 
+			<input type="hidden" class="txt" name="serialno[outDocItemId]" /> 
+			<input type="button" class="txt_btn_a" value=" 确  定  " onclick="setSequence()" /> 
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

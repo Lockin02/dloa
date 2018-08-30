@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model=sell_clue&action=add_clue" onsubmit="return check()">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加销售线索</td>
+	</tr>
+	<tr>
+		<td align="right" width="150">客户单位名称:</td>
+		<td align="left">
+			<input type="text" id="unit" onblur="check_unit()" name="unit" value="" />
+			<span id="_unit">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">客户单位所属区域：</td>
+		<td align="left">
+			<select id="areaid" name="areaid">
+				<option value="">请选择区域</option>
+				{area_select}
+			</select>
+			<span id="_areaid">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">联系人姓名：</td>
+		<td align="left">
+			<input type="text" id="name" onblur="chekc_name()" name="name" value="" />
+			<span id="_name">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">联系人电话：</td>
+		<td align="left">
+			<input type="text" id="phone" onblur="check_phone()" name="phone" value="" />
+			<span id="_phone">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">销售线索的详细内容：</td>
+		<td align="left">
+			<textarea cols="60" rows="10" id="content" onblur="check_content()" name="content"></textarea>
+			<span id="_content">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 提交 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var post = true;
+	function check()
+	{
+		post = true;
+		check_unit();
+		check_area();
+		chekc_name();
+		check_phone();
+		check_content();
+		if (post==false)
+		{
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	function check_unit()
+	{
+		var name = $('#unit').val();
+		if (name=='')
+		{
+			$('#_unit').html('单位名称不能为空！');
+			post =  false;
+		}else{
+			$('#_unit').html('*');
+		}
+	}
+	
+	function check_area()
+	{
+		if ($('#areaid').val()=='')
+		{
+			$('#_areaid').html('请选择区域！');
+			post = false;
+		}else{
+			$('#_areaid').html('*');
+		}
+	}
+	function chekc_name()
+	{
+		var name = $('#name').val();
+		if (name=='')
+		{
+			$('#_name').html('联系人姓名不能为空！');
+			post = false;
+		}else{
+			$('#_name').html('*');
+		}
+	}
+	
+	function check_phone()
+	{
+		var num = $('#phone').val();
+		if (num=='')
+		{
+			$('#_phone').html('联系人电话不能为空！');
+			post = false;
+		}else{
+			$('#_phone').html('*');
+		}
+	}
+	
+	function check_content()
+	{
+		var str = $('#content').val();
+		if (str=='')
+		{
+			$('#_content').html('详细内容不能为空！');
+			post = false;
+		}else{
+			$('#_content').html('*');
+		}
+	}
+</script>
+</body>
+</html>

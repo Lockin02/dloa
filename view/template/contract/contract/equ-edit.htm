@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>编辑合同物料清单</title>
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+<script type="text/javascript" src="{#jsPath#}/contract-deploy.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-equcommon.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-equedit.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post"
+	action="?model=contract_contract_equ&action=equEdit">
+<table class="form_main_table ">
+	<tr>
+		<td colspan="6">
+		<div class="main_head"><span class="main_head_title">编辑合同物料清单</span></div>
+		</td>
+	</tr>
+	<table width="100%"
+		style="bcontract-collapse:collapse;background-color:#F3F6FA;"
+		class="form_main_table">
+		<tr>
+			<td class="form_text_left_three">合同类型 :</td>
+			<td class="form_text_right_three">{contractTypeName}</td>
+			<td class="form_text_left_three">合同编号:</td>
+			<td class="form_text_right_three">{contractCode}</td>
+			<td class="form_text_left_three">合同名称:</td>
+			<td class="form_text_right_three">{contractName}</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">客户名称:</td>
+			<td class="form_text_right_three">{customerName}</td>
+			<td class="form_text_left_three">客户类型:</td>
+			<td class="form_text_right_three">{customerType}</td>
+			<td class="form_text_left_three">客户地址:</td>
+			<td class="form_text_right_three">{address}
+		</tr>
+		<tr>
+			<td class="form_text_left_three">计划发货日期</td>
+			<td class="form_text_right_three">{deliveryDate}</td>
+			<td class="form_text_left_three">标准交货期</td>
+			<td class="form_text_right_three"><input type="text"
+				class="readOnlyTxtNormal" id="standardDate"
+				name="contract[standardDate]" value="{deliveryDate}" readonly /></td>
+            <td class="form_text_right_three" colspan="2">
+                <span id="calArea"></span>
+            </td>
+		</tr>
+        <tr>
+            <td class="form_text_left_three"><span style="color:blue">成本[概算]明细备注</span></td>
+            <td class="form_text_right" colspan="5">
+                <textarea class="txt_txtarea_font" name="contract[costRemark]" style="width:1041px;" id="costRemark">{costRemark}</textarea>
+            </td>
+        </tr>
+	</table>
+	<table class="form_main_table">
+		<thead>
+			<tr align="left">
+				<td colspan=6">产品清单&nbsp;&nbsp;&nbsp;</td>
+				<td align="center" width="4%"><input type="hidden"
+					id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+					onclick="dis('invbody')" title="缩放" /></td>
+			</tr>
+		</thead>
+		<tbody id="invbody">
+			<tr class="main_tr_header">
+				<th>序号</th>
+				<th>产品名称</th>
+				<th>产品描述</th>
+				<th>数量</th>
+				<th>单位</th>
+				<th>加密配置</th>
+				<th>产品配置</th>
+			</tr>
+			{products}
+		</tbody>
+	</table>
+	<table class="form_main_table" id="mytable">
+		<tr id="equ.H" style="display:none;text-align:left;">
+			<td><b onclick="hideList('equ');">新增及借用转销售物料</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">新增及借用转销售物料</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+	</table>
+	<table class="form_main_table" colspan=7">
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" name="contract[id]" id="contractId" value="{id}" />
+				<input type="hidden" id="specialProId" value="{specialProId}" />
+				<input type="submit" class="txt_btn_a" value=" 保   存 " />
+				<input type="hidden" id="docType" value="{docType}" />
+				<input type="submit" class="txt_btn_a" value=" 确 认 " onclick="toEditAudit()"/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+		</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

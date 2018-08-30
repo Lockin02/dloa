@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增销售商机</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-orderTempCode.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="view/template/projectmanagent/chance/js/chance-add-clue.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/chancelinker/js/chance-add-linker.js" ></script>
+    <script>
+      function toSave(){
+	          document.getElementById('form1').action = "index1.php?model=projectmanagent_chance_chance&action=chanceAdd";
+             }
+    </script>
+    <!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_sale_chance"//业务模块编码，一般取表名
+	});
+});
+
+
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=projectmanagent_chance_chance&action=chanceAdd" name="form1">
+ <input type="hidden" class="txt" id="role" name="" value='{role}'/>
+<table class="form_main_table">
+<div class="main_head">
+    <span class="main_head_title">
+      	添加商机
+    </span>
+</div>
+<tr>
+		<td class="form_text_left">商机编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="chance[chanceCode]" id="chanceCode" readonly="readonly"/>
+		</td>
+		<td class="form_text_left">商机名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="chance[chanceName]" id="chanceName" value="{cluesName}"/>
+			 <span class='red'>[*]</span>
+			 <div id="chanceNameTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">商机类型</td>
+	   <td class="form_text_right" >
+			 <select class="select" id="chanceType" name="chance[chanceType]" onchange="Type();">
+			 </select>
+			 <span class='red'>[*]</span>
+             <div id="chanceTypeTip" class="tipShortTxt"></div>
+		</td>
+</tr>
+<tr>
+	   <td class="form_text_left">商机等级</td>
+	   <td class="form_text_right" >
+			 <select class="select" id="chanceLevel" name="chance[chanceLevel]">
+			   </select>
+	   </td>
+	    <td class="form_text_left">类型属性</td>
+	   <td class="form_text_right" id="orderNature" colspan="3">
+	          <input type="hidden" name="chance[orderNatureName]" id="orderNatureName"/>
+             <select class="select"  name="chance[orderNature]" id="orderNatureXS" >
+             </select>
+	   </td>
+	   <!--<td class="form_text_left">商机阶段</td>
+	   <td class="form_text_right" >
+			 <select class="select" id="chanceStage" name="chance[chanceStage]">
+			   </select>
+	   </td>-->
+</tr>
+<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="chance[customerName]" id="customerName" value="{customerName}"/>
+			 <input type="hidden" name="chance[customerId]" id="customerId" value="{customerId}" />
+			 			 		   <span class="red">[*]</span>
+		   <div id="customerNameTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+		    <select class="txt" name="chance[customerType]" id="customerType">
+		     {customerType}
+		    </select></td>
+		<td class="form_text_left">客户所属省份</td>
+		<td class="form_text_right">
+ 			<input type="text" class="txt" name="chance[customerProvince]" id="customerProvince" value="{customerProvince}"/>
+ 			<input type="hidden" name="chance[provinceId]" id="provinceId" value="{provinceId}"/>
+		</td>
+</tr>
+
+<tr>
+         <td class="form_text_left">预计金额</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt formatMoney" name="chance[chanceMoney]" id="chanceMoney"/>
+        </td>
+        <td class="form_text_left">交货日期</td>
+		<td class="form_text_right" colspan="3">
+		   <input type="text" class="txt" name="chance[deliveryDate]" onfocus="WdatePicker()" id="deliveryDate" />
+		</td>
+
+</tr>
+<tr>
+       <td class="form_text_left">跟踪人</td>
+		<td class="form_text_right" colspan="5">
+			 <input type="text" class="txtlong"  name="chance[trackman]" id="trackman" value="{trackman}," readonly="readonly"/>
+			 <input type="hidden" name="chance[trackmanId]"  id="trackmanId" value="{trackmanId},"/>
+		</td>
+
+
+</tr>
+<tr>
+		<td class="form_text_left">客户需求</td>
+		<td class="form_text_right" colspan="5">
+			 <textarea cols="100" rows="3" name="chance[customerNeed]">{customerNeed}</textarea>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">客户地址</td>
+		<td class="form_text_right"  colspan="5">
+			 <textarea cols="100" rows="3" name="chance[address]">{address}</textarea>
+		</td>
+</tr>
+ <tr>
+				<td class="form_text_left">附件</td>
+				<td class="form_text_right" colspan="3">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span> <input
+					id="btnCancel" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+
+				</td>
+</tr>
+	<tr>
+	<td colspan="7">
+	<table class="form_main_table" id="link">
+	     <thead>
+				<tr>
+					<td colspan="6" class="form_header">
+						客户联系人
+					</td>
+					<td  width="5%">
+						<input type="hidden" id="linkNum" name="linkNum" value="{linkmanLeng}"/>
+						<img src="images/verpic_open.gif" onclick="dis('mylink')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="link_add('mylink','linkNum')" title="添加行"/>
+					</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th >序号</th>
+					<th >客户联系人</th>
+					<th >电话</th>
+					<th >邮件</th>
+					<th >角色</th>
+					<th >是否关键联系人</th>
+					<th width="5%">操作</th>
+				</tr>
+	      </thead>
+		<tbody id="mylink">
+		{linkmanList}
+		</tbody>
+	</table>
+	</td>
+	</tr>
+<tr>
+<td colspan="6" width="150%">
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="11" class="form_header">产品清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="productNumber" value="1" />
+			  <img src="images/verpic_open.gif"onclick="dis('myequ')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="dynamic_add('myequ','productNumber');" title="添加行" /></td>
+		</tr>
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="5%">序号</td>
+			<td style="text-align:center" width="10%">产品编号</td>
+			<td style="text-align:center" width="16%">产品名称</td>
+			<td style="text-align:center" width="9%">型号/版本</td>
+			<td style="text-align:center" width="7%">数量</td>
+			<td style="text-align:center" width="7%">单位</td>
+            <td style="text-align:center" width="7%">单价</td>
+			<td style="text-align:center" width="7%">金额</td>
+			<td style="text-align:center" width="7%">保修期（月）</td>
+			<td style="text-align:center" width="10%">计划交货日期</td>
+            <td style="text-align:center" width="5%">加密配置</td>
+			<td style="text-align:center" width="5%">操作</td>
+		</tr>
+	</thead>
+	<tbody id="myequ">
+		<tr id="equTab_1"><td>1</td>
+			<td><input type="text" name="chance[chanceequ][1][productNumber]" id="productNumber1" class="txtmiddle" /></td>
+			<td><input type="hidden" id="productId1" name="chance[chanceequ][1][productId]" />
+			    <input type="text" name="chance[chanceequ][1][productName]" id="productName1" class="txt" />&nbsp<img src="images/icon/icon105.gif" onclick="conInfo('productId1');" title="查看配置信息"/></td><td>
+			    <input type="text" name="chance[chanceequ][1][productModel]" id="productModel1" class="txtmiddle" /></td>
+			<td><input type="text" name="chance[chanceequ][1][amount]" id="amount1" class="txtshort " onblur="FloatMul('amount1','price1','money1')"/></td>
+            <td><input type="text" name="chance[chanceequ][1][unitName]"  id="unitName1" class="txtshort"/></td>
+            <td><input type="text" name="chance[chanceequ][1][price]" id="price1" class="txtshort formatMoney" onblur="FloatMul('amount1','price1','money1')" /></td>
+			<td><input type="text" name="chance[chanceequ][1][money]" id="money1" class="txtshort formatMoney" onblur="FloatMul('amount1','price1','money1')"/></td>
+			<td><input type="text" name="chance[chanceequ][1][warrantyPeriod]" id="warrantyPeriod1" class="txtshort" /></td>
+			<td><input class="txtshort" type="text" name="chance[chanceequ][1][projArraDate]" id="projArraDate1" onfocus="WdatePicker()" /></td>
+            <td><input type="hidden" id="chanEqulicenseId1" name="chance[chanceequ][1][license]"/>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License('chanEqulicenseId1');"/>
+			    <input type="hidden" name="chance[chanceequ][1][isCon]" id="isCon1" />
+			    <input type="hidden" name="chance[chanceequ][1][isConfig]" id="isConfig1" /></td>
+			<td><img src="images/closeDiv.gif" onclick="mydel(this,'myequ')" title="删除行" /></td>
+		</tr>
+	</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="main_table" id="pre" >
+            <thead>
+		<tr align="left">
+			<td colspan="10" class="form_header">自定义清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="PreNum" value="1" />
+			  <img src="images/verpic_open.gif" onclick="dis('mycustom')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="pre_add('mycustom','PreNum');" title="添加行" /></td>
+		</tr>
+        <tr class="main_tr_header">
+				<td style="text-align:center" nowrap width="5%">
+					序号
+				</td>
+				<td style="text-align:center" nowrap>
+					产品编号
+				</td>
+				<td nowrap style="text-align:center">
+					产品名称
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					产品型号
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					数量
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					单价
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					金额
+				</td>
+				<td nowrap style="text-align:center">
+					计划交货日期
+				</td>
+				<td nowrap width="15%" style="text-align:center">
+					备注
+				</td>
+				<td style="text-align:center" width="8%">加密配置</td>
+				<td nowrap width="5%" style="text-align:center">
+					操作
+				</td>
+			</tr>
+	</thead>
+		<tbody id="mycustom">
+			<tr align="center">
+				<td nowrap>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="chance[customizelist][1][productCode]" id="PequID1" />
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="chance[customizelist][1][productName]" id="PequName1" />
+				</td>
+				<td nowrap width="8%" align="center">
+					<input class="txtshort" type="text" name="chance[customizelist][1][productModel]" id="PreModel1" />
+				</td>
+				<td>
+					<input class="txtshort" type="text" name='chance[customizelist][1][number]' id='PreAmount1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name='chance[customizelist][1][price]' id='PrePrice1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')" size="8" maxlength="40" />
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="chance[customizelist][1][money]" id="CountMoney1"  />
+				</td>
+				<td align="center">
+					<input class="txtshort" type="text" name="chance[customizelist][1][projArraDT]" id="PreDeliveryDT1" onfocus="WdatePicker()"  />
+				</td>
+				<td>
+					<input class="txt" type="text" name="chance[customizelist][1][remark]" id="PRemark1" size="18" maxlength="100" />
+				</td>
+				<td>
+				<input type="hidden" id="chanCuslicenseId1" name="chance[customizelist][1][license]"/>
+<!--				<textarea id="chanCuslicenseId1" name="chance[customizelist][1][license]"></textarea>-->
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License('chanCuslicenseId1');"/>
+			    </td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mycustom')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+           <input type="hidden" id="status" name="chance[status]" value="5" />
+           <input type="hidden" name="chance[cluesId]" value="{cluesId}" />
+		   <input type="submit" class="txt_btn_a" value=" 保  存 " onclick="toSave();"/>&nbsp;
+<!--           <input type="submit" class="txt_btn_a" value=" 提交审批" onclick="toApproval();" />-->
+		   <input  type="button" class="txt_btn_a" value=" 关 闭 " onclick="closeFun()"/>
+		</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

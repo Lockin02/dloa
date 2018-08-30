@@ -1,0 +1,82 @@
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+	<HEAD>
+		<TITLE>已完成交付合同明细</TITLE>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+		<script src="webreport/CreateControl.js" type="text/javascript"></script>
+		<script src="webreport/GRInstall.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen"/>
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script src="js/DatePicker/WdatePicker.js" language="javascript"></script>
+		<style type="text/css">
+			tr {
+				text-align:right;
+			}
+			tr td{
+				padding-right:10px;
+				padding-left:10px;
+			}
+			select{
+				width:120px;
+			}
+		</style>
+		<script>
+			function searchBtn(){
+				location.href="?model=purchase_report_purchasereport&action=toFinishContractDeliveryDetail"
+				+ "&contractCode=" + $.trim($("#contractCode").val())
+				+ "&ExaDTOneStart=" + $.trim($("#ExaDTOneStart").val())
+				+ "&ExaDTOneEnd=" + $.trim($("#ExaDTOneEnd").val())
+			}
+
+			function reset(){
+				location.href = "?model=purchase_report_purchasereport&action=toFinishContractDeliveryDetail";
+			}
+		</script>
+	</HEAD>
+	<BODY style="margin:0" bgcolor="buttonface">
+		<table border="0" width="100%" height="100%" class="form_main_table">
+			<tr>
+				<td align="left">
+					搜索条件：
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table class="form_main_table">
+						<tr>
+							<td class="form_text_left_three">合同编号</td>
+							<td class="form_text_right_three">
+								<input class="txt" id="contractCode" name="contractCode" value="{contractCode}"/>
+							</td>
+							<td class="form_text_left_three">合同建立日期</td>
+							<td class="form_text_right_three">
+								<input class="txtshort" readonly id="ExaDTOneStart" name="ExaDTOneStart" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" value="{ExaDTOneStart}"/> ~
+								<input class="txtshort" readonly id="ExaDTOneEnd" name="ExaDTOneEnd" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" value="{ExaDTOneEnd}"/>
+							</td>
+							<td class="txt_btn" align="left">
+								<input type="button" class="txt_btn_a" onclick="searchBtn();" value=" 查  询 "/>&nbsp;&nbsp;
+								<input type="button" class="txt_btn_a" onclick="reset();" value=" 重  置 "/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr height="100%">
+				<td colspan="5" style="font-size:10pt;" height="100%">
+				<script language="javascript">
+				//用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEx("100%", "97%","view/template/purchase/report/purchasereport-finish-contract-delivery-detail.grf"
+					,"view/template/purchase/report/purchasereport-finish-contract-delivery-detail.php"
+					+ "?contractCode=" + $.trim($("#contractCode").val())
+					+ "&ExaDTOneStart=" + $.trim($("#ExaDTOneStart").val())
+					+ "&ExaDTOneEnd=" + $.trim($("#ExaDTOneEnd").val()),
+					true,
+					"<param name='OnContentCellDblClick' value='OnReportViewerContentCellDblClick'>"
+					)
+				</script>
+			</td>
+		</tr>
+	</table>
+</BODY>
+</HTML>

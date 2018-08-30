@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>借试用物料清单确认</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/borrowequ-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/borrowequ-add.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script>
+        $(function(){
+            if( $('#limitsVal').val()=='员工' ) {
+                $('.cus').hide();
+                $('.pro').show();
+            }else{
+                $('.cus').show();
+                $('.pro').hide();
+            }
+        })
+    </script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_borrow_borrow&action=confirmEqu">
+    <table class="form_main_table ">
+        <tr>
+            <td colspan="4">
+                <div class="main_head"><span class="main_head_title">借试用物料清单确认</span></div>
+            </td>
+        </tr>
+        <table width="100%" style="bcontract-collapse:collapse;background-color:#F3F6FA;" class="form_main_table">
+            <tr>
+                <td  class="form_text_left">编号</td>
+                <td class="form_view_right">
+                    <input type="hidden" id="limitsVal" value="{limits}" />
+                    {Code}
+                </td>
+                <td  class="form_text_left">类型</td>
+                <td class="form_view_right">
+                    {Type}
+                </td>
+            </tr>
+            <tr class="pro">
+                <td class="form_text_left">研发项目名称</td>
+                <td class="form_view_right">
+                    <div id="rdprojectName">{rdprojectName}</div>
+                </td>
+                <td class="form_text_left">研发专项编号</td>
+                <td class="form_view_right">
+                    <div id="rdprojectCode">{rdprojectCode}</div>
+                </td>
+            </tr>
+            <tr class="pro">
+                <td  class="form_text_left">申请人</td>
+                <td class="form_view_right">
+                    <div id="createName">{createName}</div>
+                </td>
+                <td  class="form_text_left">范围</td>
+                <td class="form_view_right">
+                    <div id="limits">{limits}</div>
+                </td>
+            </tr>
+            <tr class="pro">
+                <td  class="form_text_left">所在部门</td>
+                <td class="form_view_right">
+                    <div id="createSection">{createSection}</div>
+                </td>
+                <td  class="form_text_left" >续借次数</td>
+                <td class="form_view_right">
+                    <div style="color:red" title="点击查看续借明细列表" onclick="renewView();">{renew}次</div>
+                </td>
+            </tr>
+            <tr class="cus">
+                <td  class="form_text_left">源单类型</td>
+                <td class="form_view_right">
+                    <div id="SingleType">{SingleType}</div>
+                </td>
+                <td  class="form_text_left">源单编号</td>
+                <td class="form_view_right" id="single">
+                    <div id="singleCode">{singleCode}</div>
+                </td>
+            </tr>
+            <tr class="cus">
+                <td  class="form_text_left">客户名称</td>
+                <td class="form_view_right">
+                    {customerName}
+                </td>
+                <td  class="form_text_left">范围</td>
+                <td class="form_view_right">
+                    {limits}
+                </td>
+            </tr>
+            <tr class="cus">
+                <td  class="form_text_left">销售负责人</td>
+                <td class="form_view_right">
+                    {salesName}
+                </td>
+                <td  class="form_text_left">技术负责人</td>
+                <td class="form_text_right">
+                    {scienceName}
+                </td>
+            </tr>
+            <tr class="cus">
+                <td class="form_text_left">发货地址</td>
+                <td class="form_text_right" colspan="3">
+                    {shipaddress}
+                </td>
+            </tr>
+            <tr>
+                <td  class="form_text_left">开始日期</td>
+                <td class="form_text_right">
+                    {beginTime}
+                </td>
+                <td  class="form_text_left">截止日期</td>
+                <td class="form_text_right">
+                    {closeTime}
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">计划发货日期</td>
+                <td class="form_text_right">{deliveryDate}</td>
+                <td class="form_text_left">标准交货期</td>
+                <td class="form_text_right"><input type="text"
+                                                   class="readOnlyTxtNormal" id="standardDate"
+                                                   name="borrow[standardDate]" value="{deliveryDate}" readonly /></td>
+            </tr>
+            <tr class="pro">
+                <td class="form_text_left">申请理由</td>
+                <td class="form_text_right"  colspan="3">
+                    <div id="reason" class="divChangeLine" >{reason}</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">备注</td>
+                <td class="form_text_right">
+                    <div id="divChangeLine" class="divChangeLine" >{remark}</div>
+                </td>
+                <td class="form_text_left">物料成本概算</td>
+                <td class="form_text_right">
+                    <span class="formatMoney">{equEstimateTax}</span>
+                </td>
+            </tr>
+        </table>
+        <table class="form_main_table" id="mytable">
+            <thead>
+            <tr align="left">
+                <td colspan="4">产品清单&nbsp;&nbsp;&nbsp;</td>
+                <td align="center" width="4%"><input type="hidden"
+                                                     id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+                                                                                      onclick="dis('invbody')" title="缩放" /></td>
+            </tr>
+            </thead>
+            <tbody id="invbody">
+            <tr class="main_tr_header">
+                <th>序号</th>
+                <!--                        <th>
+                            产品线
+                        </th>-->
+                <!--					<th>产品编号</th>-->
+                <th>产品名称</th>
+                <th>产品描述</th>
+                <th>数量</th>
+                <!-- <th>单位</th>
+                <th>加密配置</th>-->
+                <th>产品配置</th>
+            </tr>
+            {products}
+            </tbody>
+        </table>
+        <table class="form_main_table" id="mytableNew">
+            <tr id="equ.H" style="display:none;text-align:left;">
+                <td><b onclick="hideList('equ');">新增物料</b>
+                    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+            </tr>
+            <tr id="equ">
+                <td colspan="6" class="innerTd">
+                    <fieldset style="width:200"><legend style="text-align:left">
+                        <b onclick="hideList('equ');">新增物料</b>
+                        <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+                        <div id="productInfo"></div>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+        <table class="form_main_table" colspan="7">
+            <tr>
+                <td class="txt_btn" colspan="4">
+                    <input type="hidden" id="isForSales" value="1" />
+                    <input type="hidden" name="equConfirm[needSalesConfirm]" id="needSalesConfirm" value="{needSalesConfirm}" />
+                    <input type="hidden" name="equConfirm[salesConfirmId]" id="salesConfirmId" value="{salesConfirmId}" />
+                    <input type="hidden" name="equConfirm[id]" id="borrowId" value="{id}" />
+                    <input type="hidden" name="equConfirm[confirmAct]" id="confirmAct" value="" />
+                    <input type="hidden" id="linkId" value="{linkId}" />
+                    <input type="hidden" id="borrowOldId" value="{borrowOldId}" />
+                    <input type="hidden" id="docType" value="{docType}" />
+                    <input type="submit" class="txt_btn_a" value=" 确 认 提 交" onclick="confirmEqu('audit')" />
+                    <input type="submit" class="txt_btn_a" value="打回物料确认" onclick="confirmEqu('back')" />
+                    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+            </tr>
+        </table>
+    </table>
+</form>
+<script type="text/javascript">
+    var confirmEqu = function(act){
+        $("#confirmAct").val(act);
+        $("#form1").submit();
+    }
+</script>
+</body>
+</html>

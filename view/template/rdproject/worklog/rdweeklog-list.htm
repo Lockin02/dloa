@@ -1,0 +1,149 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>
+			日志列表
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="view/template/rdproject/worklog/js/rdworklog-list-topTab.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+		<script>
+			function show_page(page){
+				window.location.href=window.location.href
+			}
+
+			$().ready(function() {
+				topTabShow(arrayTop, "basicMsg");
+				var option = {
+					width: 150,
+					items: [{
+						text: "打开",
+						icon: oa_cMenuImgArr['open'],
+						alias: "1-1",
+						action: function(row) {
+							location = '?model=rdproject_worklog_rdweeklog&action=view&id=' + row.title;
+						}
+					},
+					{
+						type: "splitLine"
+					},
+					{
+						text: "添加关注",
+						icon: oa_cMenuImgArr['focus'],
+						alias: "1-2",
+						action: function(row) {
+							showThickboxWin('?model=rdproject_worklog_rdweekfocus&action=makeSure&id=' + row.title + '&placeValuesBefore&TB_iframe=true&modal=false&height=150&width=300');
+						}
+					},
+					{
+						text: "添加备注",
+						icon: oa_cMenuImgArr['add'],
+						alias: "1-3",
+						action: function(row) {
+							showThickboxWin('?model=rdproject_worklog_rdweeklog&action=addremark&id=' + row.title + '&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=800');
+						}
+					}],
+					onShow: applyrule,
+					onContextMenu: BeforeContextMenu
+				};
+
+				$(".tr_even,.tr_odd").contextmenu(option);
+
+				//隐藏右键某些操作
+				function applyrule(menu) {
+					if (this.id == "kong") {
+						menu.applyrule({
+							name: "kong",
+							disable: true,
+							items: ["1-2", "1-3"]
+						});
+					} else {
+						menu.applyrule({
+							name: "all",
+							disable: true,
+							items: []
+						});
+					}
+				}
+
+				//右键触发前操作
+				function BeforeContextMenu() {
+					return true;
+				}
+
+			})
+
+			function search(){
+				var searchvalue=$('#searchvalue').val();
+				var searchfield=$('#searchfield').val();
+				var weekId=$('#weekId').val();
+				this.location = "?model=rdproject_worklog_rdweeklog&weekId="+weekId+"&"+searchfield+"="+searchvalue;
+			}
+       </script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				填报工作日志
+			</span>
+		</div>
+		<div class="tab_options">
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						输入关键字：
+						<input type="text" id="searchvalue" class="txt" name="searchvalue" />
+						按
+						<select id="searchfield" class="select">
+							<option>
+								请选择
+							</option>
+							<option value="createName">
+								用户名称
+							</option>
+						</select>
+						<input type="button" value=" 搜索 " onclick="search()" class="txt_btn_a" />
+						<input title=" 录入" type="button" value=" 添加 " class="thickbox txt_btn_a"
+						alt="?model=rdproject_worklog_rdworklog&action=toAdd&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=850"
+						/>
+						<input type="hidden" id="weekId" value="{id}" />
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							序号
+						</th>
+						<th>
+							名称
+						</th>
+						<th width="18%">
+							所属部门
+						</th>
+						<th width="20%">
+							最近更新时间
+						</th>
+						<th width="20%">
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+	</body>
+
+</html>

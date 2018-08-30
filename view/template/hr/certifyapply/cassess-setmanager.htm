@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增任职资格等级认证评价表</title>
+    {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<script>
+		$(function(){
+			$("#managerName").yxselect_user({
+				hiddenId : 'managerId',
+				formCode : 'cassessManager'
+			});
+
+			$("#memberName").yxselect_user({
+				hiddenId : 'memberId',
+				mode : 'check',
+				formCode : 'cassessMember'
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=hr_certifyapply_cassess&action=setManager">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="2">
+					<div class="main_head2">
+						<span class="main_head_title">
+							指定评委
+						</span>
+					</div>
+				</td>
+	        </tr>
+			<tr>
+	      		<td class="form_text_right" colspan="2">
+	      			<span class="blue">此操作将未以下人员指定评委：</span>{userName}
+	      		</td>
+	       </tr>
+	        <tr>
+	      		<td class="form_text_left_three">主审评委</td>
+	      		<td class="form_text_right_three">
+	      			<input type="text" class="txt" id="managerName" name="cassess[managerName]" readonly="readonly"/>
+	      			<input type="hidden" id="managerId" name="cassess[managerId]"/>
+	      		</td>
+	       </tr>
+	        <tr>
+	      		<td class="form_text_left_three">参与评委</td>
+	      		<td class="form_text_right_three">
+	      			<input type="hidden" id="memberId" name="cassess[memberId]"/>
+	      			<input type="text" class="txt" id="memberName" name="cassess[memberName]" readonly="readonly"/>
+	      		</td>
+	        </tr>
+			<tr>
+	      		<td colspan="2">
+	      			<input type="hidden" id="id" name="cassess[id]" value="{id}"/>
+	      		   	<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+	      		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

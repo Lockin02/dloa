@@ -1,0 +1,221 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加产品</title>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="images/style.css" type="text/css" />
+<style type="text/css"> 
+li {list-style:none;}
+#assistant_str,#manager_str,#project_str{width:450px;}
+td div li {list-style:none; width:90px;float:left;}
+</style>
+</head>
+<body>
+<form id="form" method="post" action="?model=product_demand&action=save_type&type=add" onsubmit="return check();">
+	<input type="hidden" id="manager" name="manager" value="" />
+<table class="table td_height_30" width="99%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加产品</td>
+	</tr>
+	<tr>
+		<td align="right" width="100">产品类型：</td>
+		<td align="left">
+			<select id="typeid" name="typeid">
+				<option value="">请选择产品类型</option>
+				{type_option}
+			</select>
+			<span id="_typeid">*</span>
+		</td>
+	<tr>
+		<td align="right">产品中文名称：</td>
+		<td align="left">
+			<input type="text" id="product_name" name="product_name" value="" />
+			<span id="_product_name">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">产品英文名称：</td>
+		<td align="left">
+			<input type="text" id="en_product_name" name="en_product_name" value="" />
+			<span id="_en_product_name">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">产品HASP号：</td>
+		<td align="left">
+			<input type="text" id="hasp" name="hasp" value="" />
+			<span id="_hasp">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">产品经理：</td>
+		<td align="left">
+			<input type="text" id="manager_name" name="manager_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right">产品助理：</td>
+		<td align="left">
+			<input type="text" size="55" id="assistant_name" name="assistant_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>产品描述：</td>
+		<td align="left">
+			<textarea style="width:98%;height: 100px;" id="description" name="description"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input  id="submit" type="submit" value=" 添加 "/></td>
+	</tr>
+</table>
+</form>
+<div id="sug"></div>
+<script type="text/javascript">
+	var project_id=Array();
+	var tid=0;
+	$(document).ready(function()
+	{
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+
+			};
+		function set_url(table,field,id)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		//产品经理
+		$("#manager_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						$('#manager').val(unescape(data));
+					}
+				}
+				);
+			}
+		});
+		//产品助理
+		$("#assistant_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+            multiple: true,
+            mustMatch: true,
+            width: 100,
+            max: 200,
+            //dataType: 'json',
+            parse: function(data){
+                var rows = [];
+                var row = eval(unescape(data));
+                for (var i = 0; i < row.length; i++) {
+                    rows[i] = {
+                        data: row[i],
+                        value: row[i].user_name,
+                        result: row[i].user_name
+                    }
+                }
+                //alert(rows.length);
+                return rows;
+            },
+            formatItem: function(row, i, n){
+                return row.user_name;
+            }
+		});
+
+		//项目
+	 	$("#project_name").autocomplete(set_url('project_info','name','project_name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var project_name = data;
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'xm',action:'get_project',field:'name',content:data},
+				function(data)
+				{
+					if (data)
+					{
+						data = unescape(data);
+						arr = data.split('|');
+						if (arr[0])
+						{
+							tid++;
+							$('#form').append('<input id="hi_'+tid+'" type="hidden" name="project_id[]" value="'+arr[0]+'" />');
+							$('#project_str').append('<div id="user_'+tid+'">'+project_name+'<a href="javascript:del(\'project\','+tid+')">删除</a></div>');
+							$("#project_name").val('').focus();
+						}
+					}
+				}
+				);
+			}
+		});
+	});
+	
+	//删除
+	function del(obj,id)
+	{
+		$('#user_'+id).remove();
+		$('#hi_'+id).remove();
+	}
+	function check()
+	{
+		var msg = '';
+		if ($('#typeid').val()=='') msg +='- 请选择产品类型！\r\n';
+		if ($('#product_name').val()=='') msg += '- 产品名称不能为空！\r\n';
+		if ($('#en_product_name').val()=='') msg +='- 产品名称不能为空！\r\n';
+		if ($('#manager').val()=='') msg +='- 请填选产品经理姓名！\r\n';
+		if ($('#assistant_name').val()=='') msg +='- 请填选产品助理！\r\n';
+		if (msg !='')
+		{
+			alert(msg);
+			return false;
+		}else{
+			return true;
+		}
+	}
+	function check_typename()
+	{
+		if ($('#product_name').val()=='')
+		{
+			$('#_product_name').html('产品名称不能为空！');
+			return false;
+		}else{
+			$('#_product_name').html('*');
+			return true;
+		}
+	}
+</script>
+</body>
+</html>

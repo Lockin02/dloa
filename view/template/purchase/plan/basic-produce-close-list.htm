@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<title> 补库/生产采购申请审批 </title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-batchnumb.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script>
+function selAll(){
+	if($("#checkbosAll").attr("checked")==true){
+		 $(".isClose input").each(function(){
+			$(this).attr("checked",true);
+		 });
+	}else{
+		 $(".isClose input").each(function(){
+			$(this).attr("checked",false);
+		 });
+	}
+		}
+function 	checkForm(){
+	 isTure=false;
+	 $(".isTrue input").each(function(){
+		if($(this).attr("checked")==true){
+		   isTure=true;
+		}
+	 });
+	  $(".isClose input").each(function(){
+		if($(this).attr("checked")==true){
+		   isTure=true;
+		}
+	 });
+	 if(isTure==false){
+		alert('请选择确认审批的单据！');
+		return false;
+	 }
+
+}
+function showLink(url,type,id){
+	var skey = "";
+	$.ajax({
+		type: "POST",
+		url: "?model="+type+"&action=md5RowAjax",
+		data: { "id" : id },
+		async: false,
+		success: function(data){
+		   skey = data;
+		}
+	});
+	showModalWin(url+ skey ,1);
+}
+function checkSearch(){
+	keywords=$("#keyWords").val();
+	if(keywords==''){
+		//alert("关键字不能为空！");
+		//return false;
+	}
+}
+function showType(){
+	try{
+	  appType=$("#appType").val();
+	  window.location="?model=purchase_plan_basic&action=toProAppCloseList&appType="+appType;
+	}catch(e){
+	}
+
+}
+
+function backList(){
+	  this.location="?model=purchase_plan_basic&action=toProAppCloseList";
+}
+
+function submits(){
+		$("#forms").submit();
+}
+</script>
+</head>
+
+<body scroll="auto">
+
+<table class="main_table">
+      <tr>
+        <td colspan="6">
+<div style="margin:0 auto">
+<div class="main_head"  style="padding:0px 15px 0px 15px;"> <span class="main_head_title">
+ <form action="?model=purchase_plan_basic&action=toProAppCloseList" method="post" onsubmit="return checkSearch();">
+审批类型：
+<select name="appType" id="appType" class="selectauto" onchange="showType()" style="font-size:14px">
+<option value="">所有&nbsp;&nbsp;</option>
+{appType}
+</select>&nbsp;&nbsp;&nbsp;&nbsp;
+关键字：
+<select name="keyType" class="selectauto" style="font-size:14px">
+{keyType}
+</select>
+<input type="text" value="{keyWords}" name="keyWords" id="keyWords" class="txt" title="22"/>&nbsp;&nbsp
+<input type="submit"  value=" 搜 索 "  class="txt_btn_a" />&nbsp;&nbsp;
+<input type="button" class="txt_btn_a" value="清 空"  onclick="backList();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" onclick="submits();"  value=" 确认操作 "  class="txt_btn_a"  />
+</form>
+</span> </div>
+</div>
+</td>
+</tr>
+</table>
+
+  <form id='forms' name='forms' action="?model=purchase_plan_basic&action=inProAppClose" method="post" onsubmit="return checkForm();">
+<div class="main_wraper">
+    <table class="main_table">
+      <tr>
+        <td colspan="6" style="width:99%; padding:0px;"><table id="mytable"  class="main_table" >
+            <thead>
+              <tr class="main_tr_header" >
+                <th width="5%" rowspan="2">序号</th>
+                <th  width="5%"rowspan="2">类型</th>
+                <th width="10%" rowspan="2">单据编号</th>
+                <th width="10%" rowspan="2">申请人</th>
+                <th width="10%" rowspan="2">申请时间</th>
+                <th width="45%" colspan="6"> 申请信息</th>
+                <th width="5%" colspan="4">操作</th>
+              </tr>
+              <tr class="main_tr_header"  >
+                <th width="10%" > 物料编码 </th>
+                <th width="20%" > 物料名称 </th>
+                <th  width="5%"> 申请数量 </th>
+                <th  width="5%"> 未审批数量 </th>
+                <th  width="5%"> 库存数量 </th>
+                <th  width="7%"> 在途总数量<br/>
+                  （补库） </th>
+                <th  width="10%"  style="width:40px;"> 重启<br/>
+                  <input type="checkbox" class="txtshort"  id="checkbosAll" onclick="selAll()" style="width:40px;"  /> </th>
+              </tr>
+            </thead>
+            <tbody id="invbody">
+
+            {appList}
+              </tbody>
+
+          </table></td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

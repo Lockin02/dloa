@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增法定节假日申请表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/apply-provin-city.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-add.js"></script>
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=hr_worktime_apply&action=add" onsubmit="return sub()">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							新增法定节假日申请表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">员工编号</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="userNo" name="apply[userNo]" readonly value="{userNo}"/>
+				</td>
+				<td class="form_text_left">员工姓名</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="userName" name="apply[userName]" readonly value="{userName}"/>
+					<input type="hidden" id="userAccount" name="apply[userAccount]" value="{userAccount}"/>
+					<input type="hidden" id="belongDeptId" name="apply[belongDeptId]" value="{belongDeptId}"/>
+					<input type="hidden" id="belongDeptName" name="apply[belongDeptName]" value="{belongDeptName}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">直属部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="deptName" name="apply[deptName]" readonly value="{deptName}"/>
+					<input type="hidden" id="deptId" name="apply[deptId]" value="{deptId}"/>
+					<!-- 所属部门 -->
+					<input type="hidden" name="apply[belongDeptName]" value="{belongDeptName}"/>
+					<input type="hidden" name="apply[belongDeptId]" value="{belongDeptId}"/>
+				</td>
+				<td class="form_text_left">二级部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="deptNameS" name="apply[deptNameS]" readonly value="{deptNameS}"/>
+					<input type="hidden" id="deptSId" name="apply[deptSId]" value="{deptIdS}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">三级部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="deptNameT" name="apply[deptNameT]" readonly value="{deptNameT}"/>
+					<input type="hidden" id="deptTId" name="apply[deptTId]" value="{deptIdT}"/>
+				</td>
+				<td class="form_text_left">四级部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="deptNameF" name="apply[deptNameF]" readonly value="{deptNameF}"/>
+					<input type="hidden" id="deptFId" name="apply[deptFId]" value="{deptIdF}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">职位</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="jobName" name="apply[jobName]" readonly value="{jobName}"/>
+					<input type="hidden" id="jobId" name="apply[jobId]" value="{jobId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">加班时间</span></td>
+				<td class="form_text_right" colspan="3">
+					<div id="applyHoliday"></div>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">天数</span></td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="dayNo" name="apply[dayNo]" readonly />
+					<!-- 工资级别 -->
+					<input type="hidden" id="wageLevelName" name="apply[wageLevelName]" readonly value="{wageLevelName}"/>
+					<input type="hidden" id="wageLevelCode" name="apply[wageLevelCode]" value="{wageLevelCode}"/>
+				</td>
+				<td class="form_text_left">工作省份</td>
+				<td class="form_text_right">
+					<select id="province" name="apply[workProvinceId]" class="select"></select>
+					<input type="hidden" id="provinceName" name="apply[workProvince]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">项目经理</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="projectManager" readonly name="apply[projectManager]"/>
+					<input type="hidden" id="projectManagerId" name="apply[projectManagerId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">上班处理工作内容</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="txt_txtarea_font" id="workContent" name="apply[workContent]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">使用说明</td>
+				<td class="form_text_right" colspan="3">
+					<p style="color:red">此申请仅限于法定节假日当天上班的情况。</p>
+					<p>举例：2014年4月5、6、7日放假共三天，4月5日是清明节，提交上班申请时应当只选择4月5日。</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="setId" value="{setId}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

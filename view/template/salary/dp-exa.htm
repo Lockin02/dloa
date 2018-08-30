@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .btn{
+                width: 80px;
+                height: 30px;
+            }
+            .divlist{
+                width: 98%;
+                padding-top: 10px;
+            }
+            .nbtn{
+                float: left;
+                margin-left: 10px;
+                margin-bottom: 3px;
+            }
+            .wbtn{
+                border: 1px red solid;
+                float: left;
+                margin-left: 10px;
+            }
+        </style>
+        <script type="text/javascript">
+            function newParentTab(url,ttl,tabi){
+                parent.setNewTabs(url,ttl,'tab-ext-'+tabi);
+            }
+            function expClick(url){
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_xls_out').css('display', 'block');
+                $('#expurl').val(url);
+            }
+            function expExcelOut(){
+                var sy=$('#xls_year').val();
+                var sm=$('#xls_mon').val();
+                var url=$('#expurl').val();
+                location.href=url+'&sy='+sy+'&sm='+sm;
+            }
+            function expClickOut(url){
+                location.href=url+'&sy=2012&sm=8';
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+        </script>
+    </head>
+    <body>
+        <div style="left: 0px; top: 0px;" >
+            {exa_list}
+        </div>
+        <div id="hr_xls_out" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        导出信息
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top:5px;"> 导出年月：</td>
+                    <td >
+                        {xls_list}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="hidden" id="expurl" value=""/>
+                        <input type="button" id="newspeSub" onclick="expExcelOut()" value="导出"/>
+                        <input type="button" id="newspeClo" onclick="paCloseFun('hr_xls_out');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

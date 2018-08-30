@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增退料通知单信息</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-arrival.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+   <script type="text/javascript" src="view/template/purchase/delivered/js/delivered-add.js"></script>
+   <script type="text/javascript" src="view/template/purchase/delivered/js/delivered-add-delete.js"></script>
+   <script type="text/javascript" src="view/template/purchase/delivered/js/delivered-formvilidator.js"></script>
+	<script>
+			$(document).ready(function(){
+				var act=$("#hidebutton").val();
+				if(act!=""){
+					$("#back").hide();
+				}
+			});
+	</script>
+</head>
+<body>
+<input type="hidden" id="hidebutton" value="{act}"/>
+<div class="main_head">
+    <span class="main_head_title">
+      	下达退料通知单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=purchase_delivered_delivered&action=add&type=external" name="form1">
+<div>
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">源单类型</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" name="delivered[returnType]" value="收料通知单" readonly/>
+		</td>
+		<td class="form_text_left">源单编号</td>
+		<td class="form_text_right" >
+			 <input type="hidden" class="txt" id="sourceId" name="delivered[sourceId]" />
+			 <input type="text" class="txt" id="sourceCode"  name="delivered[sourceCode]" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right" >
+			 <input type="hidden" id="supplierId" class="txt" name="delivered[supplierId]" />
+			 <input type="text" id="supplierName" class="txt" name="delivered[supplierName]"/>
+			 <!--
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="supplierNameTip" class="tipShortTxt"></div> -->
+		</td>
+		<td class="form_text_left">退料仓库名称</td>
+		<td class="form_text_right" >
+			 <input type="hidden" id="stockId" class="txt" name="delivered[stockId]" />
+			 <input type="text" id="stockName" class="txt" name="delivered[stockName]" />
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="stockNameTip" class="tipShortTxt"></div>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">退料日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="returnDate" name="delivered[returnDate]" onfocus="WdatePicker()" value="{returnDate}"/>
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="returnDateTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">采购员</td>
+		<td class="form_text_right">
+			 <input type="hidden" id="purchManId" class="txt" name="delivered[purchManId]" value="{purchManId}"/>
+			 <input type="text" id="purchManName" class="txt" name="delivered[purchManName]" value="{purchManName}"/>
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="purchManNameTip" class="tipShortTxt"></div>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">交货地点</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="deliveryPlace" name="delivered[deliveryPlace]" />
+		</td>
+		<td class="form_text_left">采购方式</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="purchMode" name="delivered[purchMode]"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="txtlong" name="delivered[remark]" />
+		</td>
+</tr>
+	<tr>
+	<td colspan="5">
+	<table id="mytable" class="form_main_table">
+				<thead>
+					<tr>
+						<td colspan="7" class="form_header">退料通知单清单
+						</td>
+						<td align="center">
+								<input type="hidden" id="invnumber" value="0" />
+								<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+								<img id="addLine" src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行" />
+							</td>
+					</tr>
+					<tr class="main_tr_header">
+						<th>序号</th>
+						<th>物料编号</th>
+						<th>物料名称</th>
+						<th>规格型号</th>
+						<th>单位</th>
+						<th>批次号</th>
+						<th>数量</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+				</tbody>
+	</table>
+	</td>
+	</tr>
+		<tr>
+				<td class="txt_btn" colspan="4">
+				   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+				   <input  type="submit" class="txt_btn_a" value=" 提交审批 " onclick="submitAudit();"/>
+				</td>
+		</tr>
+</table>
+</div>
+</form>
+</body>
+</html>

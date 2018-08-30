@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑费用类型</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	{#commonInclude#}
+
+	<script type="text/javascript" src="{#jsPath#}/costtype-common.js" ></script>
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=finance_expense_costtype&action=edit" onsubmit="return checkForm();">
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">编辑费用类型</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span class="blue">类型名称</span></td>
+		<td class="form_text_right">
+			<input type="text" class='txt' name="costtype[CostTypeName]" id="CostTypeName" value="{CostTypeName}"/>
+		</td>
+		<td class="form_text_left">上级名称</td>
+		<td class="form_text_right">
+			<input type="text" class='readOnlyTxtNormal' name="costtype[ParentCostType]" id="ParentCostType" value="{ParentCostType}" readonly="readonly"/>
+			<input type="hidden" name="costtype[ParentCostTypeID]" id="ParentCostTypeID" value="{ParentCostTypeID}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">K3类型编码</td>
+		<td class="form_text_right">
+			<input type="text" class='txt' name="costtype[k3Code]" id="k3Code" value="{k3Code}"/>
+		</td>
+		<td class="form_text_left">K3类型名称</td>
+		<td class="form_text_right">
+			<input type="text" class='txt' name="costtype[k3Name]" id="k3Name" value="{k3Name}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span id="invoiceTypeInfo">默认发票类型</span></td>
+		<td class="form_text_right">
+			<select class="select" name="costtype[invoiceType]" id="invoiceType" onchange="setInvoiceTypeName(this.value)">
+				<option value=""></option>
+				{invoiceType}
+			</select>
+			<input type="hidden" name="costtype[invoiceTypeName]" id="invoiceTypeName" value="{invoiceTypeName}"/>
+		</td>
+		<td class="form_text_left">显示天数</td>
+		<td class="form_text_right">
+			<select class="select" id="showDays" name="costtype[showDays]">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+			<input type="hidden" id="showDaysHidden" value="{showDays}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">允许替票</td>
+		<td class="form_text_right">
+			<select class="select" id="isReplace" name="costtype[isReplace]" onchange="canReplace();">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+			<input type="hidden" id="isReplaceHidden" value="{isReplace}"/>
+		</td>
+		<td class="form_text_left">录入物料清单</td>
+		<td class="form_text_right">
+			<select class="select" id="isEqu" name="costtype[isEqu]">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+			<input type="hidden" id="isEquHidden" value="{isEqu}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">是否补贴</td>
+		<td class="form_text_right">
+			<select class="select" id="isSubsidy" name="costtype[isSubsidy]" onchange="setIsSubsidy();">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+			<input type="hidden" id="isSubsidyHidden" value="{isSubsidy}"/>
+		</td>
+		<td class="form_text_left">排 序 号</td>
+		<td class="form_text_right">
+			<input type="text" class='txt' name="costtype[orderNum]" id="orderNum" value="{orderNum}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">是否关闭</td>
+		<td class="form_text_right">
+			<select class="select" id="isClose" name="costtype[isClose]" onchange="selClose();">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+			<input type="hidden" id="isCloseHidden" value="{isClose}"/>
+		</td>
+		<td class="form_text_left" title="该功能用于工程项目预算中,将不同报销类型合并到同一个类型中">工程统计别称</td>
+		<td class="form_text_right">
+			<input type="text" class='txt' name="costtype[esmCountName]" id="esmCountName" value="{esmCountName}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注信息</td>
+		<td class="form_text_right" colspan="3">
+			<textarea id="Remark" name="costtype[Remark]" class="txt_txtarea_800">{Remark}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="hidden" name="costtype[CostTypeID]" id="CostTypeID" value="{CostTypeID}"/>
+			<input type="submit" value=" 保存 " class="txt_btn_a"/>
+			<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

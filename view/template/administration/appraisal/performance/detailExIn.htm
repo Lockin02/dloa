@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<title></title>
+</head>
+<style type="text/css">
+body {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+/*
+     input[type=text] { background-color:#e1e1e1; }
+	 .table td {border-collapse:collapse; border: 1px solid #000000;}
+	  .table table {border-collapse:collapse;border: 1px solid #000000;font-size:12px;}
+	 textarea {background-color:#e1e1e1;}
+	 */
+.table {
+	width: 99.4%;
+	border: 2px solid #000;/*#D3E5FA;
+	/*border:1px solid #DDDDDD;*/
+	border-collapse: collapse;
+}
+.table td {
+	padding: 3px;
+	font-size: 12px;
+	line-height: 16px;
+	white-space: normal;
+	border: 1px solid #000;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	/*border-collapse: collapse;
+	
+	border-top-style:none;
+	border-left-style:none;*/
+	font-family: "宋体", "微软雅黑", Verdana;
+}
+.table td div {
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
+<body>
+<div class="mini-fit"  style="margin:10px;">
+<form id="form" action="?model=administration_appraisal_performance_list&action=perExInSubmit"method="post"  enctype="multipart/form-data">
+  <table border="0"  cellspacing="0" cellpadding="0" >
+    <tr>
+      <td align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="8" height="40" align="center"><span style="font-size: 22px"><strong>{tplName}</strong></span></td>
+          </tr>
+          <tr>
+            <td align="left"><strong>姓名：</strong></td>
+            <td align="left">{userName}</td>
+            <td align="left"><strong>部门：</strong></td>
+            <td align="left">{userDeptName}</td>
+            <td align="left"><strong>职位：</strong></td>
+            <td>{userJobName}</td>
+            <td align="right"><strong>考核周期：</strong></td>
+            <td align="left">{tplWeek}</td>
+          </tr>
+        </table></td>
+    </tr>
+    <tr>
+      <td><table width="100%"  class="table" border="0" cellspacing="0" cellpadding="0">
+          {strList} 
+        </table></td>
+    </tr>
+  </table>
+ </form>
+</div>
+<script type="text/javascript"> 
+mini.parse();
+function submitForm(flag) {
+	var forms = new mini.Form("#form");
+	forms.validate();
+	if(forms.isValid() == false) return false;
+	if(flag){
+	 $('#isConfim').val(flag); 
+	}
+	$('#form').submit();
+}
+
+function setEvals(){
+	var val=getValue();
+	if(val==0){
+	 val='';
+	}
+	$('#asPersFra').val(val);
+	$('#perAssConts').html(val);
+	getCount();
+}
+function setAsEvals(){
+	var val=getValue();
+	if(val==0){
+	 val='';
+	}
+	$('#asAssFra').val(val);
+	$('#assConts').html(val);
+	getCount();
+}
+
+function setAuditEvals(){
+	var val=getValue();
+	if(val==0){
+	 val='';
+	}
+	$('#asAuditFra').val(val);
+	$('#auditConts').html(val);
+	getCount();
+}
+
+function setPevals(){
+	var val=getValue();
+	if(val==0){
+	 val='';
+	}
+	$('#asPevFra').val(val);
+    $('#pAssConts').html(val);
+	
+}
+
+function getValue(){
+	var inputs = $('.perAss input[type=hidden]').get();
+	var values=0;
+	if (inputs.length > 1) {
+		for ( var i = 0; i < inputs.length; i++) {
+			var isAss = Number(mini.get('kpiRight'+inputs[i].id.replace('$value','')).getValue());
+			values += toDecimal(Number(inputs[i].value)*isAss)
+		
+		}
+		values=toDecimal(values/10)
+	}
+	return 	values;
+}
+getCount();
+function getCount(){
+	var a=$('#asAuditFra').val();
+	var b=$('#asAssFra').val();
+	var c=$('#asPersFra').val();
+	
+	var d=$('#asPers').val();
+	var e=$('#asAudit').val();
+	var f=$('#asAss').val();
+	count=toDecimal((Number(a)*e+Number(b)*f+Number(c)*d)/100);
+	if(count==0){
+	 count='';
+	}
+	$('#countFraction').val(count);
+	$('#contAll').html(count);
+}
+
+function CloseWindow(action) {
+   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	else window.close();          
+}
+function onCancel(e) {
+	CloseWindow("cancel");
+}
+ function toDecimal(x) {  
+            var f = parseFloat(x);  
+            if (isNaN(f)) {  
+                return;  
+            }  
+            f = Math.round(x*100)/100;  
+            return f;  
+        }  
+
+function upFile(cId,index)
+{
+	index++;
+	var flag=1;
+	box=$('#upFile'+cId+' input').get();
+	if(box.length>0){
+	  for(i=0;i<box.length;i++){
+		  if(box[i].value==''){
+			 flag=2;  
+		  }
+	  }	
+	}
+	
+	if(flag==1){
+	  $('#upFile'+cId).append('<div id="upFile_'+cId+'_'+index+'" style="width:100%;">'
+								+'<input type="file" size="1" onchange="upFile('+cId+','+index+');" name="upFile['+cId+'][]"/>'
+								+'<img onclick="delUpFile('+cId+','+index+')" src="js/extui/themes/dloa/images/bgs/delete.png"'
+								+' style="border:0px;cursor:pointer;"></div>');
+	}
+}
+function delUpFile(cId,index)
+{
+    if($('#upFile_'+cId+'_'+index+' input').val()!=''){
+	   $('#upFile_'+cId+'_'+index).remove();
+	}
+}
+function delAtt(aId){
+	if(aId){
+		if (confirm('您确定要删除当前附件吗？')) 
+		{								
+			$.post('?model=administration_appraisal_performance_list&action=delAtt',{key:aId},
+				function (data)
+				{
+					if(data)
+					{
+						$("#attDel"+aId).remove();
+						 alert("删除成功！");
+					}else{
+					     alert("删除失败！");
+					}
+				 }
+				);
+			}
+	}
+}
+
+</script>
+</body>
+</html>

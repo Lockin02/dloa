@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>编辑外包申请表</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/apply-edit.js" ></script>
+   <link rel="stylesheet" type="text/css" href="css/apply.css" />
+    <!--<script type="text/javascript" src="{#jsPath#}/apply-add.js" ></script>-->
+    <script type="text/javascript" src="{#jsPath#}/apply-arithmetic.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/apply-changeType.js?i=2"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=outsourcing_outsourcing_apply&action=edit" >
+    <table class="form_main_table">
+                <tr>
+                    <td colspan="6">
+                        <div class="main_head">
+                           <span class="main_head_title">
+                              编辑人员租借详细信息
+                           </span>
+                       </div>
+                    </td>
+                 </tr>
+                <tr>
+                    <td colspan="6">
+                        <fieldset><legend class="legend">原因类型 <img src="images/info_up.gif" id="baseImg"  onclick="showAndHide('baseImg', 'baseTbl');" /> </legend>
+                            <table class="form_in_table" id="baseTbl">
+                                <tr>
+                                    <td class="" colspan="3" align="center">
+                                        <input type="hidden" name="apply[id]" value="{id}" />
+                                        <input {notEnough} type="checkbox" name="apply[notEnough]" id="notEnough" class="" value="1" />人手不足 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input {notSkill} type="checkbox" name="apply[notSkill]" id="notSkill" class="" value="1"/>非专长技术领域 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input {notCost} type="checkbox" name="apply[notCost]" id="notCost" class="" value="1"/>成本优势 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input {notMart} type="checkbox" name="apply[notMart]" id="notMart" class="" value="1" />市场扩展 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input {notElse} type="checkbox" name="apply[notElse]" id="notElse" class="" value="1" />其他(需描述)
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left1">详细描述:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="3">
+                                        <textarea name="apply[whyDescription]" id="whyDescription" class="txt_txtarea_font"/>{whyDescription}</textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan = "6">
+                        <fieldset>
+                            <legend class="legend">基本信息
+                                <img src="images/info_up.gif" id="baseImg_d" onclick="showAndHide('baseImg_d', 'baseTbl_d');"/>
+                            </legend>
+                            <table class="form_in_table" id="baseTbl_d">
+                                <tr class = "content_all">
+                                    <td class = "form_text_left">项目名称 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projecttName]" type="text" class="txt" value="{projecttName}" />
+                                    </td>
+                                    <td class = "form_text_left">项目编号 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projectCode]" type="text" class="txt" value="{projectCode}" />
+                                    </td>
+                                </tr>
+                                <tr class = "content_all">
+                                    <td class = "form_text_left">实施地 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projectAddress]" type="text" class="txt" value="{projectAddress}" />
+                                    </td>
+                                    <td class = "form_text_left">客户类型 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projectClientType]" type="text" class="txt" value="{projectClientType}" />
+                                    </td>
+                                </tr>
+                                <tr class = "content_all">
+                                    <td class = "form_text_left">实施周期 :</td>
+                                    <td class = "form_text_right">
+                                        <input value="{projectStartTime}" type="text" name="apply[projectStartTime]" class="txtshort" onfocus="WdatePicker()" id="predictExeDate" />&nbsp;&nbsp;至 &nbsp;&nbsp;<input value="{projectEndTime}" name="apply[projectEndTime]" type="text" onfocus="WdatePicker()" class=txtshort id="predictExeDate" />
+                                    </td>
+                                    <td class = "form_text_left">长/短期 :</td>
+                                    <td class = "form_text_right">
+                                        <select name="apply[projectCycle]" id="period" class="txt">
+                                            <option {projectCyclen} name="period[]" value="">- - - -请选择- - - -</option>
+                                            <option {projectCycled} name="period[]" value="短期">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;短    期</option>
+                                            <option {projectCyclec} name="period[]" value="长期">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长    期</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class = "content_all">
+                                    <td class = "form_text_left">项目负责人 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projectCharge]" type="text" class="txt" value="{projectCharge}" />
+                                    </td>
+                                    <td class = "form_text_left">联系电话 :</td>
+                                    <td class = "form_text_right">
+                                        <input name="apply[projectChargeTel]" type="text" class="txt" value="{projectChargeTel}" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="6">
+                        <fieldset>
+                            <legend class="legend">外包方式
+                                <img src="images/info_up.gif" id="baseImg3" onclick="showAndHide('baseImg3', 'baseTb3');" />
+                            </legend>
+                            <table class="form_in_table" id="baseTb3">
+                                <tr>
+                                    <td class="" colspan="6" align="center">
+                                        <input class="otypename" {outType1} type ="radio" name = "apply[outType]" value = "1" onclick="changeType(this.value)" />整包&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="otypename" {outType2} type ="radio" name = "apply[outType]" value = "2" onclick="changeType(this.value)" />分包&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="otypename" {outType3} type ="radio" name = "apply[outType]" value = "3" onclick="changeType(this.value)" />人员租赁&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id='zb'>
+                                <tr>
+                                    <td class="form_text_left">(预计)合同额:</td>
+                                    <td class="form_text_right">
+                                        <input name="apply[contractBudget]" type="text"  class="txt ty1" value="{contractBudget}" />
+                                    </td>
+                                    <td class="form_text_left">内部预算:</td>
+                                    <td class="form_text_right">
+                                        <input value="{inBudget}" name="apply[inBudget]" type="text" id='nbys' onblur="ob(this.id)" class="txt ty1" />
+                                    </td>
+                                    <td class="form_text_left">预计毛利率:</td>
+                                    <td class="form_text_right">
+                                        <input value="{inBudgetGrossMargin}"  name="apply[inBudgetGrossMargin]" type="text" id='yjmll' onblur="obr(this.id)" class="txt ty1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">风险级别:</td>
+                                    <td class="form_text_right">
+                                        <select name="apply[riskLevel]" id="riskLevel" class="txt">
+                                            <option {riskLevelN} name="riskLevel[]" value="">- - - -请选择- - - -</option>
+                                            <option {riskLevelG} name="riskLevel[]" value="高">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高</option>
+                                            <option {riskLevelZ} name="riskLevel[]" value="中">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中</option>
+                                            <option {riskLevelD} name="riskLevel[]" value="低">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;低</option>
+                                        </select>
+                                    </td>
+                                    <td class="form_text_left">计划整包金额:</td>
+                                    <td class="form_text_right">
+                                        <input name="apply[outBudget]" type="text" id='jhzbje' onblur="calculate('nbys', 'jhzbje', 'cbcy')"  class="txt" value="{outBudget}" />
+                                    </td>
+                                    <td class="form_text_left">预计毛利率:</td>
+                                    <td class="form_text_right">
+                                        <input value="{outBudgetGrossMargin}" name="apply[outBudgetGrossMargin]" type="text" id='yjmll2' onblur="percentageCalculate('yjmll', 'yjmll2', 'mlycy2')" id='yjmll2' class="txt"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left2" id='costing' colspan="3">成本差异(正值:增加 负值:减小):</td>
+                                    <td class="form_text_right">
+                                        <input value="{inOutBudgetDifference}" name="apply[inOutBudgetDifference]" type="text" class="txt" id='cbcy' readonly="readonly" style="color: red;" />
+                                    </td>
+                                    <td class="form_text_left">毛利率差异:</td>
+                                    <td class="form_text_right">
+                                        <input value="{inOutGrossMarginDifference}" name="apply[inOutGrossMarginDifference]" type="text" class="txt" id='mlycy2' readonly="readonly" style="color: red;" />
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">合同范围及工作量描述:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[workloadDescription]" class="txt_txtarea_font1"/>{workloadDescription}</textarea>
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">项目整包要求:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[projectRequest]" class="txt_txtarea_font1"/>{projectRequest}</textarea>
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">风险估计:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[riskAssess]" class="txt_txtarea_font1"/>{riskAssess}</textarea>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- 分包  -->
+                            <table id='fb'>
+                                <tr>
+                                    <td class="form_text_left">(预计)合同金额:</td>
+                                    <td class="form_text_right">
+                                        <input name="apply[contractBudget]" type="text" onblur="ob(this.id)"  class="txt" value="{contractBudget}" />
+                                    </td>
+                                    <td class="form_text_left">分包合同额:</td>
+                                    <td class="form_text_right">
+                                        <input value="{parContactBudget}" name="apply[parContactBudget]" type="text" id='fbhte' onblur="ob(this.id)" class="txt" />
+                                    </td>
+                                    <td class="form_text_left">分包比例:</td>
+                                    <td class="form_text_right">
+                                        <input value="{partProportion}" name="apply[partProportion]" type="text" id='fbbl' onblur="obr(this.id)" class="txt" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left">风险级别:</td>
+                                    <td class="form_text_right">
+                                        <select name="apply[riskLevel]" id="riskLevel" class="txt">
+                                            <option {riskLevelN} name="riskLevel[]" value="">- - - -请选择- - - -</option>
+                                            <option {riskLevelG} name="riskLevel[]" value="高">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高</option>
+                                            <option {riskLevelZ} name="riskLevel[]" value="中">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中</option>
+                                            <option {riskLevelD} name="riskLevel[]" value="低">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;低</option>
+                                        </select>
+                                    </td>
+                                    <td class="form_text_left">内部预算:</td>
+                                    <td class="form_text_right">
+                                        <input value="{inBudget}" name="apply[inBudget]" type="text" id='fblbys' onblur="ob(this.id)"  class="txt" />
+                                    </td>
+                                    <td class="form_text_left">预计毛利率:</td>
+                                    <td class="form_text_right">
+                                        <input value="inBudgetGrossMargin" name="apply[inBudgetGrossMargin]" type="text" id='fbyjmly1' onblur="obr(this.id)" class="txt"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left2" colspan="3">分包预算:</td>
+                                    <td class="form_text_right">
+                                        <input value="{outBudget}" name="apply[outBudget]" type="text" onblur="calculate('fblbys', 'fbys', 'fbcbcy')" class="txt" id='fbys'/>
+                                    </td>
+                                    <td class="form_text_left">预计毛利率:</td>
+                                    <td class="form_text_right">
+                                        <input value="{outBudgetGrossMargin}" name="apply[outBudgetGrossMargin]" onblur="percentageCalculate('fbyjmly1', 'fbyjmly2', 'fbmlycy')" type="text" class="txt" id='fbyjmly2'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left2" id="costVariance" colspan="3">成本差异(正值:增加 负值:减小):</td>
+                                    <td class="form_text_right">
+                                        <input value="{inOutBudgetDifference}" name="apply[inOutBudgetDifference]" type="text" class="txt" id='fbcbcy'  readonly="readonly" style="color: red;" />
+                                    </td>
+                                    <td class="form_text_left">毛利率差异:</td>
+                                    <td class="form_text_right">
+                                        <input value="{inOutGrossMarginDifference}" name="apply[inOutGrossMarginDifference]" type="text" class="txt" id='fbmlycy' readonly="readonly" style="color: red;" />
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">工作量描述:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[workloadDescription]" class="txt_txtarea_font1"/>{workloadDescription}</textarea>
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">项目分包要求:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[projectRequest]" class="txt_txtarea_font1"/>{projectRequest}</textarea>
+                                    </td>
+                                </tr>
+                                <tr class="content_all">
+                                    <td class="form_text_left">风险估计:&nbsp;&nbsp;</td>
+                                    <td class="form_text_right" colspan="5">
+                                        <textarea name="apply[riskAssess]" class="txt_txtarea_font1"/>{riskAssess}</textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id="ryzza">
+                                <tr >
+                                    <th>级别/职位编码</th>
+                                    <th>数量</th>
+                                    <th colspan="2">预计使用时间</th>
+                                    <th>部门人力成本</th>
+                                    <th>外包（预计）价格</th>
+                                    <th>人员技能描述</th>
+                                </tr>
+                                <tr class="line">
+                                    <td><input type="text" name="appjb0" /></td>
+                                    <td><input onblur="changeSl()" type="text" name="appsl0" /></td>
+                                    <td><input onfocus="WdatePicker()" type="text" name="appta0" /></td>
+                                    <td><input onfocus="WdatePicker()" type="text" name="apptb0" /></td>
+                                    <td><input onblur="changeCB()" type="text" name="appcb0" /></td>
+                                    <td><input onblur="changeWB()" type="text" name="appwb0" /></td>
+                                    <td><input type="text" name="appjn0" /></td>
+                                    <td><button onclick="deleteline($(this));return false;">删除</button></td>
+                                </tr>
+                                <tr class="linenext">
+                                    <td colspan="8"><button onclick="addline();return false;">添加一行</button></td>
+                                </tr>
+                                <tr >
+                                    <td>合计</td>
+                                    <td>
+                                        <input value="{personSum}" name="apply[personSum]" type="text" id="total" size="8" readonly="readonly" style="background-color: #EEEEEE; text-decoration: none; border: 1px solid #C0C2CF; height: 20px;"/>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        <input value="{inBudget}" name="apply[inBudget]" type="text" id=total2 size="15"  readonly="readonly" style="background-color: #EEEEEE; text-decoration: none; border: 1px solid #C0C2CF; height: 20px;"/>
+                                    </td>
+                                    <td>
+                                        <input value="{outBudget}" name="apply[outBudget]" type="text" id="total3" size="15"  readonly="readonly" style="background-color: #EEEEEE; text-decoration: none; border: 1px solid #C0C2CF; height: 20px;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        <samp style="color: blue;">成本变化</samp>
+                                    </td>
+                                    <td>
+                                        <input name="apply[costChange]" value="{costChange}" type="text" id="costingc" size="12" readonly="readonly" style="background-color: #EEEEEE; text-decoration: none; border: 1px solid #C0C2CF; height: 20px; color: red;"/>
+                                    </td>
+                                    <td>
+                                        <samp style="color: blue;">差异</samp>
+                                    </td>
+                                    <td>
+                                        <input value="{inOutBudgetDifference}" name="apply[inOutBudgetDifference]" type="text" id="diversity" size="15" readonly="readonly" style="background-color: #EEEEEE; text-decoration: none; border: 1px solid #C0C2CF; height: 20px; color: red;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>人员应用计划</td>
+                                    <td colspan="5">
+                                        <input value="{staffApplicationsProgram}" name="apply[staffApplicationsProgram]" type="text" size="140"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="6">
+                        <fieldset><legend class="legend">申请人信息 <img    src="images/info_up.gif" id="baseImg" onclick="showAndHide('baseImg', 'baseTb4');" /> </legend>
+                            <table class="form_in_table" id="baseTb4">
+                                <tr>
+                                    <td class="form_text_left" colspan="3">申请人:</td>
+                                    <td class="form_text_right">
+                                        <input name="apply[createName]" type="text" class="txt" value="{createName}" />
+                                    </td>
+                                    <td class="form_text_left" colspan="3">申请时间:</td>
+                                    <td class="form_text_right">
+                                        <input name="apply[createTime]" type="text" class="txt" onfocus="WdatePicker()" value="{createTime}"/>
+                                    </td>
+                                </tr>
+                                <!--
+                                <tr>
+                                        <td class="form_text_left">审批人:</td>
+                                                <td class="form_text_right">
+                                                <input type="text" class="txt" value="" />
+                                        </td>
+                                                <td class="form_text_left">审批日期:</td>
+                                                <td class="form_text_right">
+                                                        <input type="text" onfocus="WdatePicker()" class="txt" />
+                                        </td>
+                                </tr>
+                                -->
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="txt_btn" colspan="6">
+                        <input type="submit" class="txt_btn_a" value="保存" />&nbsp;&nbsp;
+<!--                        <input type="button" class="txt_btn_a" value="提交成功" onclick="javascript:alert('审批成功');
+                                self.parent.closeWin();" />&nbsp;&nbsp;-->
+                        <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.closeWin();" />
+                    </td>
+                </tr>
+
+            </table>
+  </form>
+ </body>
+</html>

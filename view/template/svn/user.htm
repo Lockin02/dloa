@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; width:120px;}
+       		.show_info p {margin:0px; padding:0px; width:600px; float:left; height:25px;}
+			.show_info span {width:200px; display:block; float:left;}
+        	a {text-decoration:none;}
+        </style>
+		<script type="text/javascript">
+        $(function(){
+            $('#tt').datagrid({
+                title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=user_list_data',
+                columns: [[/*{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'left'
+                }, */{
+                    field: 'username',
+                    title: '姓名',
+                    width: 200,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                    field: 'svn_username',
+                    title: 'SVN用户名',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'svn_password',
+                    title: 'SVN密码',
+                    width: 150,
+                    align: 'left',
+                    editor: 'text',
+					hidden: true
+
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                    	var str = '';
+                    	str += '<a href="#" onclick="edit(' + index + ')">修改</a>';
+                    	str += ' | <a href="#" onclick="deleterow(' + index + ')">删除</a>';
+                    	return str;
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				}
+            });
+          //绑定负责人输入框
+    		$("#username").autocomplete(
+    						'ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',
+    						{
+    							multiple : false,
+    							mustMatch : true,
+    							width : 100,
+    							max : 200,
+    							//dataType: 'json',
+    							parse : function(data) {
+    								var rows = [];
+    								var row = eval(unescape(data));
+    								for ( var i = 0; i < row.length; i++) {
+    									rows[i] = {
+    										data : row[i],
+    										value : row[i].user_name,
+    										result : row[i].user_name
+    									}
+    								}
+    								//alert(rows.length);
+    								return rows;
+    							},
+    							formatItem : function(row, i, n) {
+    								return row.user_name;
+    							}
+
+    						}).result(function(evnet, data, formatted){
+    			                if (data) {
+    			                    $('#user_id').val(data.user_id);
+    			                }
+    			                else {
+    			                    $('#user_id').val('');
+    			                }
+    			            });
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '添加用户',
+                    handler: function(){
+                        add();
+                    }
+                }]
+            });
+        });
+		function updateActions(){
+				var rowcount = $('#tt').datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#tt').datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			$.messager.confirm('确认提示','您确定要删除该用户吗?',function(r){
+				if (r){
+					$('#tt').datagrid('selectRow',index);
+					var row = $('#tt').datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model={t_model}&action=del_user',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}
+						})
+					}
+					$('#tt').datagrid('deleteRow', index);
+					updateActions();
+				}
+			});
+		}
+		function save(index){
+			var id = $('#id').val();
+			var user_id = $('#user_id').val();
+			var username = $('#username').val();
+			var svn_username = $('#svn_username').val();
+			var svn_password = $('#svn_password').val();
+			var svn_password_hidden = $('#svn_password_hidden').val();
+			var is_admin = $('input[type=radio]:checked').val();
+			var filter_keywords = $('#filter_keywords').val();
+			if (user_id=='' || username=='')
+			{
+				alert('姓名错误或没有填写！');
+				return false;
+			}
+			
+			if (svn_username == '')
+			{
+				alert('请填写SVN登录用户名！');
+				return false;
+			}
+			
+			if (svn_password == ''&&svn_password_hidden=='')
+			{
+				alert('请填写SVN登录密码！');
+				return false;
+			}
+			var msg = '添加';
+			if(id != '')
+			{
+				msg = '修改';
+			}
+			$.post('?model={t_model}&action=save_user',{id:id,user_id:user_id,username:username,svn_username:svn_username,svn_password:svn_password,svn_password_hidden:svn_password_hidden,is_admin:is_admin,filter_keywords:filter_keywords,rand:Math.random(0,99999)},function(data){
+				if (data ==1)
+				{
+					$.messager.show({
+	                        title: '提示',
+	                        msg: msg+'成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+						$('#add').dialog('close');
+						$('#tt').datagrid('reload');
+				}else{
+					$.messager.show({
+	                        title: '提示',
+	                        msg: msg+'失败！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+						$('#tt').datagrid('reload');
+				}
+			})
+			
+		}
+
+		function edit(index)
+		{
+			$('#tt').datagrid('selectRow',index);
+			var row = $('#tt').datagrid('getSelected');
+			$('#id').val(row.id);
+			$('#user_id').val(row.user_id);
+			$('#username').val(row.username);
+			$('#svn_username').val(row.svn_username);
+			$('#svn_password_hidden').val(row.svn_password);
+			$('#svn_password').val('');
+			$('input[type=radio]').attr('checked','');
+			$('input[type=radio][value='+row.is_admin+']').attr('checked','checked');
+			$('#filter_keywords').val(row.filter_keywords);
+			$('#add').window({title:'修改用户'});
+			$('#add').window('open');
+		}
+
+		function add(){
+			$('#id').val('');
+			$('#user_id').val('');
+			$('#username').val('');
+			$('#svn_username').val('');
+			$('#svn_password').val('');
+			$('#svn_password_hidden').val('');
+			$('input[type=radio]').attr('checked','');
+			$('input[type=radio][value=0]').attr('checked','checked');
+			$('#filter_keywords').val('');
+			$('#add').window({title:'添加SVN更新用户'});
+			$('#add').window('open');
+		}
+		</script>
+    </head>
+    <body>
+        <table id="tt"></table>
+		<div id="add" class="easyui-window" title="添加SVN更新用户" iconCls="icon-edit" modal="false" closed="true" style="width:620px;height:450px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<input type="hidden" id="id" name="id" value="" />
+				<input type="hidden" id="user_id" name="user_name" value="" />
+				<input type="hidden" id="svn_password_hidden" name="svn_password_hidden" value="" />
+				<p><label>姓名：</label><span><input type="text" name="username" id="username" value="" /></span></p>
+				<p><label>SVN登录用户名：</label><span><input type="text" name="svn_username" id="svn_username" value="" /></span></p>
+				<p><label>SVN登录密码：</label><span><input type="text" name="svn_password" id="svn_password" value="" /></span></p>
+				<p>
+						<label>超级管理员 ：</label><span><input type="radio" name="is_admin" value="1" />是 <input type="radio" checked="checked" name="is_admin" value="0" />否</span>
+					</p>
+				<p><b>审核关键字：</b><span>每个关键字使用"|"符号分隔。</span>
+					<textarea style="height: 200px; width: 98%" id="filter_keywords" name="filter_keywords"></textarea>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		<div id="show" region="center" border="false" class="easyui-window" closed="true" style="width:650px;height: 400px;padding: 5px;">
+	        <div class="easyui-layout" fit="true">
+		        <div class="show_info" region="center" border="false">
+		        	<p>
+						<label>中文类型名称 ：</label><span id="_typename"></span>
+						<label>英文类型名称 ：</label><span id="_en_typename"></span>
+					</p>
+					<p>
+						<label>归属部门 ：</label><span id="_dept_id"></span>
+					</p>
+					<p>
+						<label>超级管理员 ：</label><span id="is_admin"></span>
+					</p>
+					<p style="height:60px;">
+						<label style=" line-height: 70px;">产品描述：</label>
+						<span id="_description" style="width: 80%; float: left; line-height: 25px;"></span>
+					</p>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

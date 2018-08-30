@@ -1,0 +1,415 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+li {list-style:none;}
+#producmanager_str,#productassistant_str,#manager_str,#teamleader_str,#developer_str,#testleader_str,#tester_str,#qc_str {width:500px;}
+td div li {list-style:none; width:100px;float:left;}
+</style>
+<script type="text/javascript">
+	var producmanager_userid = Array();
+	var productassistant_userid = Array();
+	var manager_userid = Array();
+	var teamleader_userid = Array();
+	var developer_userid = Array();
+	var testleader_userid = Array();
+	var tester_userid = Array();
+	var qc_userid = Array();
+	var tid = 0
+	$(document).ready(function()
+	{
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+ 
+			};
+		function set_url(table,field,id)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		//产品经理
+		$("#producmanager_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						producmanager_userid[tid] = unescape(data);
+						$('#producmanager_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'producmanager\','+tid+')">删除</a></li>');
+						tid++;
+						$('#producmanager_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//产品助理
+		$("#productassistant_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						productassistant_userid[tid] = unescape(data);
+						$('#productassistant_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'productassistant\','+tid+')">删除</a></li>');
+						tid++;
+						$('#productassistant_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//项目经理
+		$("#manager_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						manager_userid[tid] = unescape(data);
+						$('#manager_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'manager\','+tid+')">删除</a></li>');
+						tid++;
+						$('#manager_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//项目队长
+		$("#teamleader_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						teamleader_userid[tid] = unescape(data);
+						$('#teamleader_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'teamleader\','+tid+')">删除</a></li>');
+						tid++;
+						$('#teamleader_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//开发人员
+		$("#developer_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						developer_userid[tid] = unescape(data);
+						$('#developer_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'developer\','+tid+')">删除</a></li>');
+						tid++;
+						$('#developer_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//测试组长
+		$("#testleader_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						testleader_userid[tid] = unescape(data);
+						$('#testleader_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'testleader\','+tid+')">删除</a></li>');
+						tid++;
+						$('#testleader_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//测试人员
+		$("#tester_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						tester_userid[tid] = unescape(data);
+						$('#tester_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'tester\','+tid+')">删除</a></li>');
+						tid++;
+						$('#tester_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+		//检验人员
+		$("#qc_name").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						qc_userid[tid] = unescape(data);
+						$('#qc_str').append('<li id="user_'+tid+'">'+username+'<a href="javascript:del(\'qc\','+tid+')">删除</a></li>');
+						tid++;
+						$('#qc_name').val('').focus();
+					}
+				}
+				);
+			}
+		});
+	});
+	//删除
+	function del(obj,id)
+	{
+		$('#user_'+id).remove();
+		var userid = eval(obj+'_userid');
+		eval('delete '+obj+'_userid['+id+']');
+		var temp = Array();
+		for(key in userid)
+		{
+			if (userid[key] && userid[key]!='undefined')
+			{
+				temp[key] = userid[key];
+			}
+		}
+		eval(obj+'_userid=temp');
+	}
+	//提交前检查
+	function check()
+	{
+		for (var a in producmanager_userid)
+		{
+			$('#form').append('<input type="hidden" name="producmanager[]" value="'+producmanager_userid[a]+'" />');
+		}
+		for (var g in productassistant_userid)
+		{
+			$('#form').append('<input type="hidden" name="productassistant[]" value="'+productassistant_userid[g]+'" />');
+		}
+		for (var b in manager_userid)
+		{
+			$('#form').append('<input type="hidden" name="manager[]" value="'+manager_userid[b]+'" />');
+		}
+		for (var c in teamleader_userid)
+		{
+			$('#form').append('<input type="hidden" name="teamleader[]" value="'+teamleader_userid[c]+'" />');
+		}
+		for (var d in developer_userid)
+		{
+			$('#form').append('<input type="hidden" name="developer[]" value="'+developer_userid[d]+'" />');
+		}
+		for (var e in testleader_userid)
+		{
+			$('#form').append('<input type="hidden" name="testleader[]" value="'+testleader_userid[e]+'" />');
+		}
+		for (var e in tester_userid)
+		{
+			$('#form').append('<input type="hidden" name="tester[]" value="'+tester_userid[e]+'" />');
+		}
+		for (var f in qc_userid)
+		{
+			$('#form').append('<input type="hidden" name="qc[]" value="'+qc_userid[f]+'" />');
+		}
+		
+		if ($('#name').val()=='')
+		{
+			alert('项目名称不能为空！');
+			$('#name').focus();
+			return false;
+		}
+		
+		if ($('#manager_str').html()=='')
+		{
+			alert('项目经理不能为空！');
+			$('#manager_name').focus();
+			return false;
+		}
+		
+		return true;
+	}
+</script>
+</head>
+<body>
+<br />
+<form id="form" method="post" action="?model={t_model}&action=add" onSubmit="return check();">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加项目</td>
+	</tr>
+	<tr>
+		<td width="100">项目名称：</td>
+		<td align="left"><input type="text" id="name" name="name" value="" /><span>*</span></td>
+	</tr>
+	<tr>
+		<td>项目编码：</td>
+		<td align="left"><input type="text" id="number" name="number" value="" /></td>
+	</tr>
+	<tr>
+		<td>募投项目</td>
+		<td align="left">
+			<select id="ipo_id" name="ipo_id">
+				<option value="">选择募投项目</option>
+				{select_ipo}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>关联产品：</td>
+		<td align="left">
+			<select id="product_id_str[]" name="product_id_str[]" multiple="multiple" style="height: 150px; width: 300px;">
+				{select_product}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>归属部门：</td>
+		<td align="left">
+			<select id="dept_id" name="dept_id">
+				{select_dept}
+			</select>
+		</td>
+	</td>
+	</tr>
+	<tr>
+		<td>产品经理：</td>
+		<td align="left">
+			<div id="producmanager_str"></div>
+			<hr />
+			<input type="text" id="producmanager_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>产品助理：</td>
+		<td align="left">
+			<div id="productassistant_str"></div>
+			<hr />
+			<input type="text" id="productassistant_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>项目经理：</td>
+		<td align="left">
+			<div id="manager_str"></div>
+			<hr />
+			<input type="text" id="manager_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>项目队长：</td>
+		<td align="left">
+			<div id="teamleader_str"></div>
+			<hr />
+			<input type="text" id="teamleader_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>开发人员：</td>
+		<td align="left">
+			<div id="developer_str"></div>
+			<hr />
+			<input type="text" id="developer_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>测试组长：</td>
+		<td align="left">
+			<div id="testleader_str"></div>
+			<hr />
+			<input type="text" id="testleader_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>测试人员：</td>
+		<td align="left">
+			<div id="tester_str"></div>
+			<hr />
+			<input type="text" id="tester_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>检验人员：</td>
+		<td align="left">
+			<div id="qc_str"></div>
+			<hr />
+			<input type="text" id="qc_name" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td>项目描述：</td>
+		<td align="left"><textarea rows="5" cols="50"></textarea></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 确认添加 " /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

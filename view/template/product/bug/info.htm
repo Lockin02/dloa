@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	table td.wrap{
+		white-space:normal; word-break:break-all;
+		table-layout:fixed;
+	}
+</style>
+</head>
+<body>
+<br />
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<th width="110" align="right">所属产品：</th>
+		<td align="left">{typename}</td>
+	</tr>
+	<tr>
+		<th align="right">产品版本号：</th>
+		<td align="left">{version}</td>
+	</tr>
+	<tr>
+		<th align="right">Bug详细描述：</th>
+		<td align="left" class="wrap">
+			{description}
+		</td>
+	</tr>
+	<tr>
+		<th align="right">Bug截图：</th>
+		<td align="left">{file_str}</td>
+	</tr>
+	<tr>
+		<th align="right">Bug数据路径：</th>
+		<td align="left" class="wrap">{data_info}</td>
+	</tr>
+	<tr>
+		<th align="right">提出单位：</th>
+		<td align="left">{unit}</td>
+	</tr>
+	<tr>
+		<th align="right">提出人：</th>
+		<td align="left">{contact}</td>
+	</tr>
+	<tr>
+		<th align="right">提出人手机：</th>
+		<td align="left">{mobile}</td>
+	</tr>
+	<tr>
+		<th align="right">提出人Emial：</th>
+		<td align="left">{email}</td>
+	</tr>
+	<tr>
+		<th align="right">Bug状态：</th>
+		<td align="left" class="wrap">{status}</td>
+	</tr>
+	{status_button}
+	<tr>
+		<td colspan="2">
+			{audit_button}
+			<input type="button" onclick="parent.location.reload();" value=" 关闭返回 " />
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	function set_status(id,key)
+	{
+		if (id && key)
+		{
+			if (confirm('您确定要把Bug状态设置为已解决吗？'))
+			{
+				$.post('ajax.php',{model:'{t_model}',action:'set_status',id:id,key:key,rand:Math.random(0,99999)},
+					function (data)
+					{
+						if (data==1)
+						{
+							location.reload();
+						}else
+						{
+							alert('设置失败，请与管理员联系！');
+						}
+					}
+				);
+			}
+		}
+	}
+</script>
+</body>
+</html>

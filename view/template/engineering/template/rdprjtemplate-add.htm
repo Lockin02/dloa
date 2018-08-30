@@ -1,0 +1,107 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script>
+	$(document).ready(function(){
+		$.formValidator.initConfig({
+			formid : "form1",
+			onerror : function(msg) {
+			},
+			onsuccess : function() {
+				return true;
+			}
+		});
+
+		$("#milestoneplanTemplateName").formValidator({
+			onshow:"请输入里程碑计划模板名称",
+			onfocus:"模板名称请不要输入多于25个汉字",
+			oncorrect:"您输入的模板名称不可用"
+		}).inputValidator({
+			min:1,
+			max:50,
+			empty:{
+				leftempty:false,
+				rightempty:false,
+				emptyerror:"模板名称两边不能有空符号"
+			},
+			onerror:"您输入的模板名称不符合要求，请检查"
+		});
+	});
+
+</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_template_rdprjtemplate&action=addTemplate" onsubmit="return check_all()">
+<table class="form_main_table">
+<!--
+
+	<tr>
+		<td class="form_text_left">项目类型</td>
+		<td class="form_text_right">
+		<!--
+		<select name="rdprjtemplate[projectType]" id="projectType" class="select" onchange="selectType(this.value)">
+		 -->
+		 <!--
+			<select name="rdprjtemplate[projectType]" id="projectType" class="select">
+				<option value="-1">请选择项目类型</option>
+				{projectType}
+			</select>
+		</td>
+	</tr>
+	-->
+	<tr>
+		<td class="form_text_left">里程碑计划模板名称</td>
+		<td class="form_text_right">
+		<!--
+		<input type="hidden" id="templateNumb" name="rdprjtemplate[templateNumb]" value="{templateNumb}">
+		-->
+			<input type="text" class="txt" id="milestoneplanTemplateName" name="rdprjtemplate[milestoneplanTemplateName]" /> <span>[*]</span>
+			<div id="milestoneplanTemplateNameTip" class="tipShortTxt"></div>
+		</td>
+	</tr>
+	<!--tr>
+		<td class="form_text_left">默认里程碑点</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="milestoneplanTemplateName" name="rdprjtemplate[milestoneplanTemplateName]" value="立项" /> <span>[*]</span>
+			<div id="milestoneplanTemplateNameTip" class="tipShortTxt"></div>
+		</td>
+	</tr-->
+<!--
+	<tr>
+		<td class="form_text_left">前置模板名称</td>
+		<td class="form_text_right"><select
+			name="rdprjtemplate[exTemplate]" id="exTemplate">
+			<option>请选择</option>
+			{exTemplate}
+		</select>
+		</td>
+	</tr>
+-->
+	<input type="hidden" id="numb" name="rdprjtemplate[numb]" value='{numb}' />
+
+	<tr>
+		<td class="form_text_left">描述</td>
+		<td class="form_text_right" colspan="2">
+			<textarea class="txt_txtarea_font" id="plantemplateDescription" name="rdprjtemplate[plantemplateDescription]"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input name="save" type="submit" class="txt_btn_a" value=" 保存 " />
+		<input name="" type="button" class="txt_btn_a" value=" 关闭 " onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</form>
+
+</body>
+</html>

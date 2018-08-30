@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/validate.js"></script>
+        <title>各部门统计表</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            function excelOut(){
+                window.location.href='{excel_out}';
+            }
+            function excelOtherOut(){
+                parent.setNewTabs('{dept_other}','其他部门产生费用','dept_other');
+            }
+            function disInfo(id){
+                if($('.dis_'+id).css('display')=='none'){
+                    $('.dis_'+id).css('display', '');
+                    $('#total_'+id).html('');
+                    $('#img_'+id).attr('src','images/work/sub.png');
+                }else{
+                    $('.dis_'+id).css('display', 'none');
+                    $('#total_'+id).html($('#head_'+id).html());
+                    $('#img_'+id).attr('src','images/work/plus.png');
+                }
+            }
+            function newParentTab(mon){
+                parent.setNewTabs('{detail_url}&seam='+mon,'部门费用明细','month-'+mon);
+            }
+            function changeUrl(){
+                location.href='{url_list}'+'&seay='+$('#seay').val()+'&seacom='+$('#seacom').val();
+            }
+        </script>
+        <div class="ui-state-default ui-jqgrid-hdiv" style="border-top: 0px;">
+            <table style="text-align: left;font-size: 12px; background-color: #ffffff" width="122%" cellpadding="0" cellspacing="0" border="0" >
+                <tr>
+                    <td>
+                        {select_list}
+                        <input type="button" value="Excel导出" onclick="excelOut()" />&nbsp;&nbsp;
+                        <input type="button" value="其他部门产生费用" onclick="excelOtherOut()" />
+                    </td>
+                </tr>
+            </table>
+            <table class="ui-jqgrid-btable" align="center" style="text-align: right;font-size: 12px; background: #000000" width="150%" cellpadding="0" cellspacing="1" border="0" >
+            {data_list}
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>离职指引-发送邮件</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/leave-mailguide.js" ></script>
+<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_leave_email",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_leave_leave&action=sendEmailguide" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               离职指引-发送邮件
+             </span>
+         </div>
+      </td>
+   </tr>
+
+       <tr>
+      		<td class="form_text_left"><span >收件人:</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txtlong" id="receiver" name="mail[receiver]"  value="{personEmail}"/>
+      		<!--	 <input type="text" class="txt" id="TO_ID" name="mail[TO_ID]" value="{userAccount}"/>  -->
+      		</td>
+
+    	</tr>
+    	<tr>
+      		<td class="form_text_left"><span >抄送人:</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txtlong" id="TO_CC" name="mail[TO_CC]"  value="{userName}" readonly/>
+      			 <input type="hidden" class="txt" id="TO_CCID" name="mail[TO_CCID]" value="{userAccount}"/>
+      		</td>
+
+    	</tr>
+		<tr>
+			<td class="form_text_left">附件</td>
+				<td class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div>
+			</td>
+		</tr>
+    	<tr>
+      		<td class="form_text_left" >邮件内容:</td>
+      		<td class="form_text_right" colspan="2">
+                  <textarea rows="15" cols="80"  id="mailContent" name="mail[mailContent]"></textarea>
+      		</td>
+		</tr>
+           <tr>
+   		<td class="txt_btn" colspan="4">
+        <input  type="hidden" id="id" name="mail[id]" value="{id}" />
+         <!-- 带出员工姓名和部门用作邮件标题 -->
+         <input  type="hidden" id="userName" name="mail[userName]" value="{userName}" />
+          <input  type="hidden" id="deptName" name="mail[deptName]" value="{deptName}" />
+   		   <input  type="submit" class="txt_btn_a" value=" 发  送 "/>
+   		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+   		</td>
+        </tr>
+     </table>
+  </form>
+ </body>
+</html>

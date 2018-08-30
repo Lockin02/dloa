@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看租车合同</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/rentcar-view.js"></script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="6">
+				<div class="main_head">
+					<span class="main_head_title">
+						查看租车合同信息
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="6">
+				<fieldset>
+					<legend class="legend">基 本 信 息</legend>
+					<table class="form_in_table">
+						<tr>
+							<td class="form_text_left_three">合同性质</td>
+							<td class="form_text_right_three">
+								{contractNature}
+							</td>
+							<td class="form_text_left_three">合同类型</td>
+							<td class="form_text_right_three">
+								{contractType}
+								<input type="hidden" class="txt" id="contractTypeCode" value="{contractTypeCode}"/>
+							</td>
+							<td class="form_text_left_three">租车申请单号</td>
+							<td class="form_text_right_three">
+                                <a href="#" onclick="showModalWin('?model=outsourcing_vehicle_rentalcar&action=toView&id={rentalcarId}','1')">{rentalcarCode}</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">项目编号</td>
+							<td class="form_text_right_three">
+								{projectCode}
+							</td>
+							<td class="form_text_left_three">项目名称</td>
+							<td class="form_text_right_three">
+								{projectName}
+							</td>
+							<td class="form_text_left_three">项目类型</td>
+							<td class="form_text_right_three">
+								{projectType}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">鼎利合同编号</td>
+							<td class="form_text_right_three">
+								{orderCode}
+							</td>
+							<td class="form_text_left_three">合同名称</td>
+							<td class="form_text_right_three">
+								{orderName}
+							</td>
+							<td class="form_text_left_three">合同负责人</td>
+							<td class="form_text_right_three">
+								{principalName}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">签约公司</td>
+							<td class="form_text_right_three">
+								{signCompany}
+							</td>
+							<td class="form_text_left_three">公司省份</td>
+							<td class="form_text_right_three">
+								{companyProvince}
+							</td>
+							<td class="form_text_left_three">负责人部门</td>
+							<td class="form_text_right_three">
+								{deptName}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">合同金额</td>
+							<td class="form_text_right_three">
+								{orderMoney}
+							</td>
+							<td class="form_text_left_three">公司城市</td>
+							<td class="form_text_right_three">
+								{companyCity}
+							</td>
+							<td class="form_text_left_three">联系人</td>
+							<td class="form_text_right_three">
+								{linkman}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">是否需要盖章</td>
+							<td class="form_text_right_three">
+								{isNeedStamp}
+							</td>
+							<td class="form_text_left_three">盖章类型</td>
+							<td class="form_text_right_three">
+								{stampType}
+							</td>
+							<td class="form_text_left_three">联系电话</td>
+							<td class="form_text_right_three">
+								{phone}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">计费方式</td>
+							<td class="form_text_right_three">
+								{rentUnitPriceCalWay}
+							</td>
+							<td class="form_text_left_three">{rentUnitPriceLabel}</td>
+							<td class="form_text_right_three">
+								{rentUnitPrice}
+							</td>
+							<td class="form_text_left_three">归属公司</td>
+							<td class="form_text_right_three">
+								{ownCompany}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">合同开始日期</td>
+							<td class="form_text_right_three">
+								{contractStartDate}
+							</td>
+							<td class="form_text_left_three">合同结束日期</td>
+							<td class="form_text_right_three">
+								{contractEndDate}
+							</td>
+							<td class="form_text_left_three">签约日期</td>
+							<td class="form_text_right_three">
+								{signDate}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">是否使用油卡</td>
+							<td class="form_text_right_three">
+								{isUseOilcard}
+								<input type="hidden" id="isUseOilcardVal" value="{isUseOilcardVal}"/>
+							</td>
+							<td class="form_text_left_three" style="display:none" id="oilcardMoneyTd1">油卡金额(元)</td>
+							<td class="form_text_right_three" style="display:none" id="oilcardMoneyTd2">
+								{oilcardMoney}
+							</td>
+							<td class="form_text_left_three" style="display:none" id="oilPriceTd1">油价(元/升)</td>
+							<td class="form_text_right_three" style="display:none" id="oilPriceTd2">
+								{oilPrice}
+							</td>
+							<td class="form_text_left_three" style="display:none" id="fuelChargeTd1">燃油费(元/公里)</td>
+							<td class="form_text_right_three" style="display:none" id="fuelChargeTd2">
+								{fuelCharge}
+							</td>
+							<td class="form_text_left_three">合同用车天数</td>
+							<td class="form_text_right_three">
+								{contractUseDay}
+							</td>
+						</tr>
+						<!--<tr>-->
+							<!--<td class="form_text_left_three">付款银行</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payBankName}-->
+							<!--</td>-->
+							<!--<td class="form_text_left_three">付款账号</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payBankNum}-->
+							<!--</td>-->
+							<!--<td class="form_text_left_three">付款人</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payMan}-->
+							<!--</td>-->
+						<!--</tr>-->
+						<!--<tr>-->
+							<!--<td class="form_text_left_three">付款条件</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payConditions}-->
+							<!--</td>-->
+							<!--<td class="form_text_left_three">付款方式</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payType}-->
+							<!--</td>-->
+							<!--<td class="form_text_left_three">付款申请人</td>-->
+							<!--<td class="form_text_right_three">-->
+								<!--{payApplyMan}-->
+							<!--</td>-->
+						<!--</tr>-->
+						<tr>
+							<td class="form_text_left_three">租赁车辆状况</td>
+							<td class="form_text_right_three" colspan="5">
+								<div id="vehicleInfo"></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">合同附加费用</td>
+							<td class="form_text_right_three" colspan="3">
+								<div id="feeInfo"></div>
+							</td>
+							<td class="form_text_right_three" colspan="2">
+								<span style="color:red">此费用在租车登记选择后会累加到租赁费用里面</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">付款信息</td>
+							<td class="form_text_right_three" colspan="5">
+								<div id="payInfoWrap">
+									<table class="form_main_table">
+										<tbody>
+										{payInfoStr}
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">联系地址</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="textarea_read" readonly rows="4">{address}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">款项条件</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="textarea_read" readonly rows="4">{fundCondition}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">合同内容</td>
+							<td class="form_text_right_three" colspan="5">
+								<textarea class="textarea_read" readonly rows="4">{contractContent}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">附  件</td>
+							<td colspan="5" class="form_text_right">
+								{file}
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">申请人</td>
+							<td class="form_text_right_three">
+								{createName}
+							</td>
+							<td class="form_text_left_three">录入时间</td>
+							<td class="form_text_right_three">
+								{createTime}
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" id="id" value="{id}"/>
+				<input type="hidden" id="hideBtn" value="{hideBtn}"/>
+				<input type="button" id="closeBtn" class="txt_btn_a" {closeBtnStyle} value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

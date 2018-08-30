@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑盖章申请表(oa_sale_stampapply)</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig2.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-usematters.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stampapply-edit.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_sale_stampapply",
+                 "serviceId" : {id}
+             });
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=contract_stamp_stampapply&action=edit" onsubmit="return checkForm();">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+             		<span class="main_head_title">
+						编辑盖章申请表
+
+						<img src="images/icon/view.gif"/>
+						<a href="javascript:void(0)" title="申请说明" taget="_blank" id="fileId" onclick="window.open('{docUrl}','_blank ');">申请说明</a>
+					</span>
+				</div>
+			</td>
+		</tr>
+        <tr>
+      		<td class="form_text_left">申 请 人</td>
+      		<td class="form_text_right" width="30%">
+      			 <input type="text" class="readOnlyTxtNormal" id="applyUserName" name="stampapply[applyUserName]" value="{applyUserName}" readonly="readonly"/>
+      			 <input type="hidden" id="applyUserId" name="stampapply[applyUserId]" value="{applyUserId}"/>
+      			 <input type="hidden" id="deptName" name="stampapply[deptName]" value="{deptName}"/>
+      			 <input type="hidden" id="deptId" name="stampapply[deptId]" value="{deptId}"/>
+      		</td>
+      		<td class="form_text_left">申请日期</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" name="stampapply[applyDate]" value="{applyDate}"/>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left"><span class="blue">盖章文件名</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="stampapply[fileName]" id="fileName" value="{fileName}"/>
+      		</td>
+      		<td class="form_text_left"><span class="blue">文件发往单位</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="stampapply[signCompanyName]" id="signCompanyName" value="{signCompanyName}"/>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left"><span class="blue">印章类型</span></td>
+      		<td class="form_text_right" >
+				<input type="text" class="txt" name="stampapply[stampType]" id="stampType" readonly="readonly" value="{stampType}"/>
+				<input type="hidden" class="txt" name="stampapply[stampIds]" id="stampIds" readonly="readonly" value="{stampIds}"/>
+				<input type="hidden" class="txt" name="stampapply[legalPersonUsername]" id="legalPersonUsername" value="{legalPersonUsername}"/>
+				<input type="hidden" class="txt" name="stampapply[legalPersonName]" id="legalPersonName" value="{legalPersonName}" />
+				<input type="hidden" class="txt" name="stampapply[businessBelongId]" id="businessBelongId" value="{stampCompanyId}" />
+      		</td>
+      		<td class="form_text_left"><span class="blue">盖章性质</span></td>
+      		<td class="form_text_right" >
+      			<select class="select" name="stampapply[stampExecution]" id="stampExecution">
+      				{stampExecution}
+      			</select>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left">文件类型</td>
+      		<td class="form_text_right">
+      			<input type="text" class="readOnlyTxtNormal" value="{contractTypeCN}" readonly="readonly"/>
+				<input type="hidden" id="contractType" name="stampapply[contractType]" value="{contractType}"/>
+      		</td>
+			<td class="form_text_left"><span style="color:blue">是否双面印刷</span></td>
+			<td colspan="3" class="form_text_right">
+				<select class="select" name="stampapply[printDoubleSide]" id="printDoubleSide">
+					{printDoubleSide}
+				</select>
+			</td>
+        </tr>
+
+		<tr>
+			<td class="form_text_left">
+				<span class="red tips" style="display:none" id="fileNumTip">* 请填写正整数！&nbsp;&nbsp;</span>
+				<span class="blue">文件份数</span>
+			</td>
+			<td class="form_text_right" >
+				<input type="number" class="txt" name="stampapply[fileNum]" id="fileNum" value="{fileNum}"/>
+			</td>
+			<td class="form_text_left">
+				<span class="red tips" style="display:none" id="filePageNumTip">* 请填写正整数！&nbsp;&nbsp;</span>
+				<span class="blue">每份页数</span>
+			</td>
+			<td class="form_text_right" >
+				<input type="number" class="txt" name="stampapply[filePageNum]" id="filePageNum" value="{filePageNum}"/>
+			</td>
+		</tr>
+        <tr>
+        	<td class="form_text_left">合同编号</td>
+      		<td class="form_text_right" >
+				<input type="text" class="txt" name="stampapply[contractCode]" value="{contractCode}"/>
+				<input type="hidden" id="contractId" name="stampapply[contractId]" value="{contractId}"/>
+      		</td>
+      		<td class="form_text_left"><span class="blue">业务经办人</span></td>
+      		<td class="form_text_right">
+				<input type="text" id="attn" class="txt" name="stampapply[attn]" value="{attn}"/>
+				<input type="hidden" name="stampapply[attnId]" id="attnId" value="{attnId}"/>
+				<input type="hidden" name="stampapply[attnDept]" id="attnDept" value="{attnDept}"/>
+				<input type="hidden" name="stampapply[attnDeptId]" id="attnDeptId" value="{attnDeptId}"/>
+      		</td>
+        </tr>
+        <tr>
+		    <td class="form_text_left"><span style="color:blue">盖章类别:</span></td>
+		    <td class="form_text_right">
+		        <select class="select" name="stampapply[categoryId]" id="categoryId">
+      				{categoryId}
+		        </select>
+		    </td>
+			<td class="form_text_left"><span class="blue">使用事项</span></td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" name="stampapply[useMatters]" id="useMatters" value="{useMatters}" readonly="readonly"/>
+				<input type="hidden" id="useMattersId" name="stampapply[useMattersId]" value="{useMattersId}"/>
+			</td>
+        </tr>
+	    <tr>
+			<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+			<td class="form_text_right_three" colspan="3">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+				</div>
+			</td>
+	    </tr>
+        <tr>
+      		<td class="form_text_left">说明</td>
+      		<td class="form_text_right" colspan="3">
+      			<textarea class="txt_txtarea_800" name="stampapply[remark]" id="remark">{remark}</textarea>
+      		</td>
+        </tr>
+        <tr>
+	   		<td class="form_text_left">是否发送邮件
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="stampapply[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+	      		<input type="radio" name="stampapply[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+	   	<tr id="maildiv">
+	   		<td class="form_text_left">邮件接收人
+	       	</td>
+	       	<td colspan="3" class="form_text_right">
+			    <input type="text" name="stampapply[email][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly"/>
+	    		<input type="hidden" name="stampapply[email][TO_ID]" id="TO_ID" readonly="readonly" />
+		    </td>
+	   	</tr>
+		<tr>
+      		<td class="txt_btn" colspan="4">
+      			<input type="hidden" id="id" name="stampapply[id]" value="{id}"/>
+      			<!--<input type="hidden" id="businessBelong" value="{businessBelong}"/>-->
+                <input type="hidden" id="businessBelong" name="stampapply[businessBelong]" value="{businessBelong}"/>
+      		   	<input  type="submit" class="txt_btn_a" onclick="auditEdit('audit')" value=" 提  交 "/>
+      		   	<input  type="submit" class="txt_btn_a" onclick="auditEdit()" value=" 保  存 "/>
+				<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+        </tr>
+	</table>
+	</form>
+</body>
+</html>

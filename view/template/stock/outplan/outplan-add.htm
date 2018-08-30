@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+  <head>
+	<title>录入发货计划</title>
+	{#commonInclude#}
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-add.js">
+        </script>
+<!--         <script type="text/javascript" src="view/template/stock/outplan/js/outplan-combo.js">-->
+<!--        </script>-->
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-BToOEqu-add.js">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+<!--        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-add-formValidator.js">-->
+<!--        </script>-->
+		<script>
+			$(function(){
+				if( $('#docType').val() == "oa_borrow_borrow" ){
+					$('.borrowhide').hide();
+					$('#planType').val('FHXZ-JY');
+				}else{
+					$('.borrowdisplay').hide();
+				}
+				//发货类型非换货需求的，不显示保修状况
+				if($('#docType').val() != "oa_contract_exchangeapply"){
+					$('#isWarranty').parent('td').parent('tr').hide();
+				}
+			});
+		</script>
+</head>
+<body>
+<form id="form1" name="form1" method="post" action="?model=stock_outplan_outplan&action=add" onsubmit="return checkDate();">
+	<table class="form_main_table">
+		<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">录入发货计划</font>
+					<input type="hidden" id="pageAction" value="{pageAction}"/>
+			    </span>
+			</div>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table">
+				<tr>
+						<td class="form_text_left borrowhide">源单号</td>
+						 <td class="form_text_left borrowdisplay">借用需求编号</td>
+						<td class="form_text_right" >
+							 <input type="hidden" id="rObjCode" class="txt" name="outplan[rObjCode]" value="{objCode}"/>
+							 <input type="hidden" id="docType" class="txt" name="outplan[docType]" value="{docType}"/>
+							 <input type="hidden" id="contractType" class="txt" name="outplan[contractType]" value="{contractType}"/>
+							 <input type="hidden" id="contractTypeName" class="txt" name="outplan[contractTypeName]" value="{contractTypeName}"/>
+							{docCode}{docview}
+							 <input type="hidden" class="txt" readonly name="outplan[docId]" id="docId" value="{docId}" />
+							 <input type="hidden" class="readOnlyTxtNormal" readonly name="outplan[docCode]" value="{docCode}" />
+						</td>
+						<td class="form_text_left borrowhide">源单名称</td>
+						<td class="form_text_right borrowhide" >
+							{docName}
+							 <input type="hidden" class="readOnlyTxtNormal" readonly name="outplan[docName]" value="{docName}" />
+						</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right" >{customerName}
+						 <input type="hidden" class="txt" id="customerName" readonly name="outplan[customerName]" value="{customerName}"/>
+						 <input type="hidden" class="txt" id="customerId" readonly name="outplan[customerId]" value="{customerId}"/>
+					</td>
+					<td class="form_text_left">所属单位</td>
+					<td class="form_text_right">
+						<div id="sysCompanyDiv" name="outplan" val="{sysCompanyCode}"></div>
+					</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">周次</td>
+						<td class="form_text_right" >
+							 <input type="text" class="readOnlyTxtNormal" id="week" readonly name="outplan[week]" />
+						</td>
+						<td class="form_text_left">性质</td>
+						<td class="form_text_right" >
+							<select name="outplan[type]" class="select" id="planType">
+							{type}
+							</select>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货仓库</td>
+						<td class="form_text_right">
+							 <input type="hidden" class="txt" id="stockId" name="outplan[stockId]" />
+							 <input type="hidden" class="txt" id="stockCode" name="outplan[stockCode]" />
+							 <input type="text" class="txt" id="stockName" name="outplan[stockName]" />
+						</td>
+						<td class="form_text_left">计划发货日期</td>
+						<td class="form_text_right" >
+							 <input type="text" class="txt" id="shipPlanDate" name="outplan[shipPlanDate]" onchange="changeDate();" onfocus="checkOutplan();WdatePicker()" />
+	                        <span class="red">
+	                            [*]
+	                        </span>
+	                        <div id="shipPlanDateTip" class="tipShortTxt">
+	                        </div>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货地址</td>
+						<td class="form_text_right" colspan="3">
+							 <input type="text" id="address" class="txtbiglong" name="outplan[address]" value="{address}"/>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">保修状况</td>
+						<td class="form_text_right" colspan="3">
+		 					<select class="select" name="outplan[isWarranty]" id="isWarranty" >
+		 						{isWarranty}
+		 					</select>
+		 					<input type="hidden" id="isWarrantyName" name="outplan[isWarrantyName]" value="{isWarrantyName}"/>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">采购人员关注重点</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[purConcern]" class="txt_txtarea_font" id="purConcern"></textarea>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货人员关注</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[shipConcern]" class="txt_txtarea_font" id="shipConcern">{remark}</textarea>
+						</td>
+				</tr>
+				<tr id="overTimeRea">
+						<td class="form_text_left"><span style="color:blue">超期发货原因</span></td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_font" name="outplan[overTimeReason]" id="overTimeReason"></textarea>
+						</td>
+				</tr>
+				<tr class="Feedback">
+						<td class="form_text_left">是否发货</td>
+						<td class="form_text_right" >
+				            <input type="radio" name="outplan[isShipped]" value="1"/>&nbsp;是
+				            <input type="radio" name="outplan[isShipped]" value="0" checked/>&nbsp;否
+						</td>
+						<td class="form_text_left">是否按时发货</td>
+						<td class="form_text_right" >
+				            <input type="radio" name="outplan[isOnTime]" value="1"/>&nbsp;是
+				            <input type="radio" name="outplan[isOnTime]" value="0" checked/>&nbsp;否
+						</td>
+				</tr>
+				<tr class="Feedback">
+						<td class="form_text_left">延期原因归类</td>
+						<td class="form_text_right" >
+							 <input type="text" class="txt" name="outplan[delayType]" />
+						</td>
+				</tr>
+				<tr class="Feedback">
+						<td class="form_text_left">未发具体原因</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[delayReason]" class="txt_txtarea_font" id="delayReason"></textarea>
+						</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr id="borrowTr">
+			<td>
+<div id="BToOEqu">
+</div>
+			</td>
+		</tr>
+		 <!--  <tr>
+			<td>
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan=11">
+                            物料清单
+                        </td>
+                        <td align="center" width="4%">
+                            <input type="hidden" id="invnumber" value="1" />
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                           img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+                         </td>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                    <tr class="main_tr_header">
+                        <th>
+                            序号
+                        </th>
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                        <th>
+                            出货仓库名称
+                        </th>
+                        <th>
+                            合同数量
+                        </th>
+                        <th>
+                            已退数量
+                        </th>
+                        <th>
+                            可下达数量
+                        </th>
+                        <th>
+                            本次计划发货数量
+                        </th>
+                        <th>
+                            即时库存
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                    {products}
+                </tbody>
+            </table>
+            </td>
+          </tr> -->
+          </table>
+          <div id="itemTable"></div>
+            <table class="form_main_table">
+				<tr>
+						<td class="txt_btn" colspan="4">
+							<input type="hidden" id="isNeedConfirm" name="outplan[isNeedConfirm]"></input>
+							<input type="hidden" id="docType" value="{docType}"/>
+							<input type="hidden" id="contractId" value="{id}"/>
+							<input type="hidden" id="equIds" value="{equIds}"/>
+							<input type="hidden" id="docApplicant" name="outplan[docApplicant]" value="{docApplicant}"/>
+							<input type="hidden" id="docApplicantId" name="outplan[docApplicantId]" value="{docApplicantId}"/>
+							<input type="hidden" name="outplan[contractId]" value="{contractId}"/>
+							<input type="hidden" name="outplan[contractCode]" value="{contractCode}"/>
+						    <input id="issuedBtn" type="submit" onclick="issuedFun()" class="txt_btn_a" value="下  达"/>
+						    <input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+						</td>
+				</tr>
+			</table>
+</form>
+</body>
+</html>

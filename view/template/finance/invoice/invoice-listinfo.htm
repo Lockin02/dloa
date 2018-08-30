@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<TITLE>开票查询</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script src="webreport/CreateControl.js" language="javascript"></script>
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="view/template/finance/invoice/js/invoice-listinfo.js"></script>
+<script>
+var Report;
+var ReportViewer;
+function OnReportViewerContentCellDblClick(Sender){
+	if (Sender.Column.Name == "发票号码")
+    {
+        //演示超链接功能，在这里做打开链接任务，这里用弹出消息框代替
+        if(!ReportViewer){
+			ReportViewer = document.getElementById("ReportViewer");
+			Report = ReportViewer.Report;
+        }
+        var formId = Report.FieldByName("id").AsString;
+        var skey = "";
+        $.ajax({
+		    type: "POST",
+		    url: "?model=finance_invoice_invoice&action=md5RowAjax",
+		    data: { "id" : formId },
+		    async: false,
+		    success: function(data){
+		   	   skey = data;
+			}
+		});
+		showModalWin("?model=finance_invoice_invoice&action=init&perm=view&id=" + formId +"&skey=" + skey ,1);
+    }
+}
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td>
+			<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%">
+			<table width="100%">
+				<tr>
+					<td width="30%">
+						日期 ： <span>{beginYear}</span>年
+						<span>{beginMonth}</span>月  至
+						<span>{endYear}</span>年
+						<span>{endMonth}</span>月
+					</td>
+					<td width="30%">
+						销售区域 ： <span>{areaName}</span>
+					</td>
+					<td width="40%">
+						客户单位 ： <span>{customerName}</span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="beginYear" value="{beginYear}"/>
+			<input type="hidden" id="beginMonth" value="{beginMonth}"/>
+			<input type="hidden" id="endYear" value="{endYear}"/>
+			<input type="hidden" id="endMonth" value="{endMonth}"/>
+
+			<input type="hidden" id="customerId" value="{customerId}"/>
+			<input type="hidden" id="customerName" value="{customerName}"/>
+			<input type="hidden" id="areaName" value="{areaName}"/>
+			<input type="hidden" id="invoiceNo" value="{invoiceNo}"/>
+			<input type="hidden" id="customerProvince" value="{customerProvince}"/>
+			<input type="hidden" id="salesmanId" value="{salesmanId}"/>
+			<input type="hidden" id="salesman" value="{salesman}"/>
+			<input type="hidden" id="customerType" value="{customerType}"/>
+			<input type="hidden" id="objCodeSearch" value="{objCodeSearch}"/>
+			<input type="hidden" id="signSubjectName" value="{signSubjectName}"/>
+			<script language="javascript">
+				//初始化权限
+				var areaNameLimit = $.ajax({
+					url : 'index1.php?model=finance_invoice_invoice&action=getRegionLimit',
+					type : "POST",
+					async : false
+				}).responseText;
+
+				//初始化权限
+				var deptLimit = $.ajax({
+					url : 'index1.php?model=finance_invoice_invoice&action=getDeptLimit',
+					type : "POST",
+					async : false
+				}).responseText;
+				
+				//归属公司权限
+				var comLimit = $.ajax({
+					url : 'index1.php?model=finance_invoice_invoice&action=getComLimit',
+					type : "POST",
+					async : false
+				}).responseText;
+
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEvent("view/template/finance/invoice/invoice-listinfo.grf"
+				,"view/template/finance/invoice/invoice-listinfo.php"
+				+ "?beginYear="  + $("#beginYear").val()
+				+ "&endYear="  + $("#endYear").val()
+				+ "&beginMonth="  + $("#beginMonth").val()
+				+ "&endMonth="  + $("#endMonth").val()
+				+ "&customerId="  + $("#customerId").val()
+				+ "&objCodeSearch="  + $("#objCodeSearch").val()
+				+ "&invoiceNo="  + $("#invoiceNo").val()
+				+ "&customerType="  + $("#customerType").val()
+				+ "&areaName="  + $("#areaName").val()
+				+ "&customerProvince="  + $("#customerProvince").val()
+				+ "&salesmanId="  + $("#salesmanId").val()
+				+ "&signSubjectName="  + $("#signSubjectName").val()
+				+ "&areaNameLimit=" + areaNameLimit
+				+ "&deptLimit=" + deptLimit
+				+ "&comLimit=" + comLimit,
+				 "<param name=RowSelection value=false>"
+	            + "<param name='OnContentCellDblClick' value='OnReportViewerContentCellDblClick'>"
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

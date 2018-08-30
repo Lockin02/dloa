@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+  <head>
+	<title>关闭发货物料</title>
+	{#commonInclude#}
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-closeoutmat.js">
+        </script>
+<!--         <script type="text/javascript" src="view/template/stock/outplan/js/outplan-combo.js">-->
+<!--        </script>-->
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-BToOEqu-add.js">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+<!--        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-add-formValidator.js">-->
+<!--        </script>-->
+		<script>
+			$(function(){
+				if( $('#docType').val() == "oa_borrow_borrow" || $('#docType').val() == "oa_present_present" ){
+					$('.borrowhide').hide();
+					$('#planType').val('FHXZ-JY');
+				}else{
+					$('.borrowdisplay').hide();
+				}
+				//发货类型非换货需求的，不显示保修状况
+				if($('#docType').val() != "oa_contract_exchangeapply"){
+					$('#isWarranty').parent('td').parent('tr').hide();
+				}
+			});
+		</script>
+</head>
+<body>
+<form id="form1" name="form1" method="post" action="?model=contract_contract_equ&action=closeOpen" >
+	<table class="form_main_table">
+		<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">关闭发货物料</font>
+					<input type="hidden" id="pageAction" value="{pageAction}"/>
+			    </span>
+			</div>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table">
+				<tr>
+						<td class="form_text_left borrowhide">源单号</td>
+						 <td class="form_text_left borrowdisplay">借用需求编号</td>
+						<td class="form_text_right" >
+							 <input type="hidden" id="rObjCode" class="txt" value="{objCode}"/>
+							 <input type="hidden" id="docType" class="txt"  value="{docType}"/>
+							 <input type="hidden" id="contractType" class="txt" value="{contractType}"/>
+							 <input type="hidden" id="contractTypeName" class="txt"  value="{contractTypeName}"/>
+							{docCode}{docview}
+							 <input type="hidden" class="txt" readonly  id="docId" value="{docId}" />
+							 <input type="hidden" class="readOnlyTxtNormal" readonly  value="{docCode}" />
+						</td>
+						<td class="form_text_left borrowhide">源单名称</td>
+						<td class="form_text_right borrowhide" >
+							{docName}
+							 <input type="hidden" class="readOnlyTxtNormal" readonly  value="{docName}" />
+						</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right" >{customerName}
+						 <input type="hidden" class="txt" id="customerName" readonly  value="{customerName}"/>
+						 <input type="hidden" class="txt" id="customerId" readonly  value="{customerId}"/>
+					</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货地址</td>
+						<td class="form_text_right" colspan="3">
+							{address}
+						</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr id="borrowTr">
+			<td>
+<div id="BToOEqu">
+</div>
+			</td>
+		</tr>
+		 <!--  <tr>
+			<td>
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan=11">
+                            物料清单
+                        </td>
+                        <td align="center" width="4%">
+                            <input type="hidden" id="invnumber" value="1" />
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                           img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+                         </td>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                    <tr class="main_tr_header">
+                        <th>
+                            序号
+                        </th>
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                        <th>
+                            出货仓库名称
+                        </th>
+                        <th>
+                            合同数量
+                        </th>
+                        <th>
+                            已退数量
+                        </th>
+                        <th>
+                            可下达数量
+                        </th>
+                        <th>
+                            本次计划发货数量
+                        </th>
+                        <th>
+                            即时库存
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                    {products}
+                </tbody>
+            </table>
+            </td>
+          </tr> -->
+          </table>
+          <div id="itemTable"></div>
+            <table class="form_main_table">
+				<tr>
+						<td class="txt_btn" colspan="4">
+							<input type="hidden" id="isNeedConfirm"></input>
+							<input type="hidden" id="docType" name="outplan[docType]" value="{docType}"/>
+							<input type="hidden" id="contractId"  name="outplan[contractId]" value="{id}"/>
+							<input type="hidden" id="equIds" value="{equIds}"/>
+							<input type="hidden" id="docApplicant" value="{docApplicant}"/>
+							<input type="hidden" id="docApplicantId" value="{docApplicantId}"/>
+						   <input id="issuedBtn" type="submit" onclick="issuedFun()" class="txt_btn_a" value="保  存"/>
+						   <input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+						</td>
+				</tr>
+			</table>
+</form>
+</body>
+</html>

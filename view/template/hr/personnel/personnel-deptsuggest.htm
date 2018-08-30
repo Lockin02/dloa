@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>基本信息</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-deptsuggest.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_personnel_personnel&action=deptSuggest" onsubmit="return checkForm();">
+		<table cellpadding="2" width="100%" class="form_main_table">
+      		<tr>
+	      		<td colspan=4">
+		            <div class="main_head2">
+						<span class="main_head_title">
+		               		录入部门建议
+						</span>
+		            </div>
+	            </td>
+         	</tr>
+			<tr class="deptsuggestPositive">
+				<td class="form_text_left">员工姓名</td>
+				<td class="form_text_right">
+					{userName}
+				</td>
+				<td class="form_text_left">所属部门</td>
+				<td class="form_text_right">
+					{deptName}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span class="blue">部门建议</span></td>
+				<td class="form_text_right" colspan="3">
+					<select class="select" name="personnel[deptSuggest]" id="deptSuggest" onchange="changeSuggest(this.value)">
+						{deptSuggest}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span class="blue">建议描述</span></td>
+				<td class="form_text_right" colspan="3">
+					<textarea name="personnel[suggestion]" id="suggestion" class="txt_txtarea_800"></textarea>
+				</td>
+			</tr>
+			<tr class="deptsuggestPositive">
+				<td class="form_text_left"><span class="blue">计划转正日期</span></td>
+				<td class="form_text_right">
+				    <input type="text" name="trialdeptsuggest[permanentDate]" id="permanentDate" class="txt Wdate" onfocus="WdatePicker()" readonly="readonly" value="{becomeDate}"/>
+				</td>
+				<td class="form_text_left"><span class="blue">部门建议工资</span></td>
+				<td class="form_text_right">
+				    <input type="text" name="trialdeptsuggest[afterSalary]" id="afterSalary" class="txt formatMoney" value="{afterSalary}"/>
+				    <input type="hidden" name="trialdeptsuggest[beforeSalary]" id="beforeSalary" class="txt formatMoney" value="{beforeSalary}"/>
+				</td>
+			</tr>
+			<tr class="deptsuggestPositive">
+				<td class="form_text_left"><span class="blue">转正后职位</span></td>
+				<td class="form_text_right">
+				    <input type="text" name="trialdeptsuggest[afterPositionName]" id="afterPositionName" class="txt" value="{jobName}"/>
+		    		<input type="hidden" name="trialdeptsuggest[afterPositionId]" id="afterPositionId" value="{jobId}"/>
+				</td>
+				<td class="form_text_left">面试评估工资</td>
+				<td class="form_text_right formatMoney">{beforeSalary}</td>
+				<!--td class="form_text_left"><span class="blue">转正后职级</span></td>
+				<td class="form_text_right">
+				    <input type="text" name="trialdeptsuggest[levelName]" id="levelName" class="txt" value="{jobLevel}"/>
+				</td-->
+			</tr>
+			<tr class="deptsuggestPositive">
+				<td class="form_text_left"><span class="blue">技术等级</span></td>
+				<td class="form_text_right" colspan="3">
+				    <input type="text" name="trialdeptsuggest[personLevel]" id="personLevel" class="txt" readonly="readonly" value="{personLevel}"/>
+		    		<input type="hidden" name="trialdeptsuggest[personLevelId]" id="personLevelId" value="{personLevelId}"/>
+		    		<input type="hidden" name="trialdeptsuggest[beforePersonLv]" id="beforePersonLv" value="{personLevel}"/>
+		    		<input type="hidden" name="trialdeptsuggest[beforePersonLvId]" id="beforePersonLvId" value="{personLevelId}"/>
+				</td>
+			</tr>
+			<tr class="deptsuggestDismiss">
+		   		<td class="form_text_left">邮件通知
+		       	</td>
+		   		<td colspan="3" class="form_text_right">
+		   			<input type="radio" name="personnel[mail][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+		      		<input type="radio" name="personnel[mail][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		      		<span class="blue">邮件通知会将建议描述发送到邮件接收人</span>
+				</td>
+			</tr>
+			<tr class="deptsuggestDismiss" id="maildiv">
+		   		<td class="form_text_left">邮件接收人
+		       	</td>
+		       	<td colspan="3" class="form_text_right">
+				    <input type="text" name="personnelp[mail][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly" value="{sendName}"/>
+		    		<input type="hidden" name="personnel[mail][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+			    </td>
+		   	</tr>
+			<tr>
+		   		<td class="txt_btn" colspan="4">
+					<input type="hidden" name="personnel[id]" value="{id}"/>
+
+					<input type="hidden" name="personnel[userName]" value="{userName}"/>
+					<input type="hidden" name="personnel[userAccount]" value="{userAccount}"/>
+					<input type="hidden" name="personnel[userNo]" value="{userNo}"/>
+
+					<input type="hidden" name="trialdeptsuggest[userName]" value="{userName}"/>
+					<input type="hidden" name="trialdeptsuggest[userAccount]" value="{userAccount}"/>
+					<input type="hidden" name="trialdeptsuggest[userNo]" value="{userNo}"/>
+					<input type="hidden" name="trialdeptsuggest[deptName]" value="{deptName}"/>
+					<input type="hidden" name="trialdeptsuggest[deptId]" id="deptId" value="{deptId}"/>
+					<input type="hidden" name="trialdeptsuggest[jobId]" value="{jobId}"/>
+					<input type="hidden" name="trialdeptsuggest[jobName]" value="{jobName}"/>
+
+		   		    <input type="submit" class="txt_btn_a deptsuggestDismiss" value=" 确  认 "/>
+		   		    <!--input type="submit" class="txt_btn_a deptsuggestPositive" onclick="audit('audit')" value="提交审批"/>
+		   		    <input type="submit" class="txt_btn_a deptsuggestPositive" onclick="audit('save')" value=" 保  存 "/-->
+		   		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		   		</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

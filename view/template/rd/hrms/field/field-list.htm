@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <style type="text/css"></style>
+		<script type="text/javascript">
+			var dept_id;
+			var dept_select;
+			var jobs_select;
+			var dept = eval('{dept}');
+			var jobs = eval('{jobs}');
+			var temp = [{'jobs_id':'55','jobs_name':'niuzi'}];
+			var RowIndex = 0;
+			$(function(){
+				$('#tt').datagrid({
+					title:'部门员工档案字段管理',
+					iconCls:'icon-edit',
+					pagination:true,
+					singleSelect:true,
+					idField:'id',
+					url:'?model=rd_hrms_field&action=list_data',
+					columns:[[
+						{field:'id',title:'ID',width:100},
+						{field:'dept_id',title:'所属部门',width:200,
+							formatter:function(value){
+								for(var i=0; i<dept.length; i++){
+									if (dept[i].DEPT_ID == value) return dept[i].DEPT_NAME;
+								}
+								return value;
+							},
+							editor: {
+								type: 'combobox',
+								options: {
+									valueField: 'DEPT_ID',
+									textField: 'DEPT_NAME',
+									data: dept,
+									required: true,
+									editable:false,
+									onSelect:function(record)
+									{
+										var row = $('#tt').datagrid('getSelected');
+										var index = $('#tt').datagrid('getRowIndex', row);
+										var editors = $('#tt').datagrid('getEditors', index);
+										var jobs_obj = editors[1];
+										jobs_obj.target.combobox({
+											width:200,
+											listWidth:200,
+											valueField:'jobs_id',
+											textField: 'jobs_name',
+											required: true,
+											editable:false,
+											url:'?model=rd_hrms_field&action=get_jobs&dept_id='+record.DEPT_ID
+											
+											});
+									}
+								}
+							}
+						},
+						{field:'jobs_id',title:'所属职位',width:200,
+							formatter:function(value){
+								for(var i=0; i<jobs.length; i++){
+									if (jobs[i].jobs_id == value) return jobs[i].jobs_name;
+								}
+								return value;
+							},
+							editor: {
+								type: 'combobox',
+								options: {
+									valueField: 'jobs_id',
+									textField: 'jobs_name',
+									data: jobs,
+									required: true,
+									editable:false
+								}
+							}
+						},
+						{field:'field_name',title:'字段名称',width:150,editor: {
+							type: 'validatebox',
+							options: {
+								
+								required:true}
+											
+						}},
+						{field:'action',title:'操作',width:80,align:'center',
+						formatter:function(value,row,index){
+							if (row.editing){
+								var s = '<a href="#" onclick="saverow('+index+')">保存</a> ';
+								var c = '<a href="#" onclick="cancelrow('+index+')">取消</a>';
+								return s+c;
+							} else {
+								var e = '<a href="#" onclick="editrow('+index+')">修改</a> ';
+								var d = '<a href="#" onclick="deleterow('+index+')">删除</a>';
+								return e+d;
+							}
+						}
+					}
+					]],
+					onBeforeEdit:function(index,row){
+						row.editing = true;
+						updateActions();
+					},
+					onAfterEdit:function(index,row){
+						var ac = 'add';
+						var msg = '添加';
+						if (row.id)
+						{
+							ac = 'edit';
+							msg = '修改';
+						}else{
+							ac = 'add';
+							msg = '添加';
+						}
+						
+						$.post('?model=rd_hrms_field&action='+ac,{id:row.id,dept_id:row.dept_id,jobs_id:row.jobs_id,field_name:row.field_name},function(data){
+							if (data == 1)
+							{
+								row.editing = false;
+								updateActions();
+								$('#tt').datagrid('reload');
+									$.messager.show({
+									title: '提示',
+									msg: msg+'成功！',
+									timeout: 3000,
+									showType: 'show'
+								});
+							}else{
+								$.messager.alert('提示','操作失败，请与OA管理员联系！');
+							}
+						});
+					},
+					onCancelEdit:function(index,row){
+						row.editing = false;
+						updateActions();
+					}
+
+				});
+				$('#tt').datagrid('getPager').pagination({
+					buttons:[{
+						iconCls:'icon-add',
+						text:'添加字段',
+						handler:function(){
+							insert();
+						}
+					}],
+					onBeforeRefresh:function(ageNumber,pageSize)
+					{
+						return true;
+					}
+				});
+				
+				dept_select = $('#dept_select').combobox({
+					url:"?model=rd_hrms_files&action=dept_data",
+					valueField:'dept_id',
+					textField:'dept_name',
+					onSelect:function(data){
+						var keyword = $('#keyword').val();
+						$('#tt').datagrid({url:'?model=rd_hrms_field&action=list_data&dept_id='+data.dept_id});
+						$('#tt').datagrid('reload');
+						dept_id = data.dept_id;
+						jobs_select.combobox({url:"?model=rd_hrms_field&action=get_jobs&type=list&dept_id="+dept_id});
+
+					}
+				});
+				
+				jobs_select = $('#jobs_select').combobox({
+							url:"?model=rd_hrms_field&action=get_jobs&type=list",
+							valueField:'jobs_id',
+							textField:'jobs_name',
+							editable:false,
+							onSelect: function(data){
+								$('#tt').datagrid({url:'?model=rd_hrms_field&action=list_data&dept_id'+dept_id+'&jobs_id='+data.jobs_id});
+								$('#tt').datagrid('reload');
+							}
+							});
+			});
+		function updateActions(){
+			var rowcount = $('#tt').datagrid('getRows').length;
+			for(var i=0; i<rowcount; i++){
+				$('#tt').datagrid('updateRow',{
+					index:i,
+					row:{action:''}
+				});
+			}
+		}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			$.messager.confirm('确认提示','您确定要删除该字段吗？',function(r){
+				if (r){
+					$.messager.confirm('确认提示','您确认要删除该字段的所有记录？',function(rr){
+					if (rr)
+					{
+						$('#tt').datagrid('selectRow',index);
+						var row = $('#tt').datagrid('getSelected');
+						if (row.id)
+						{
+							$.post('?model=rd_hrms_field&action=del',{id:row.id,rand:Math.random()},function(data){
+								var msg;
+								if (data == 1)
+								{
+									msg = '删除成功';
+									$('#tt').datagrid('deleteRow', index);
+									updateActions();
+								}else{
+									msg = '删除失败，请与OA管理员联系！';
+								}
+								$('#tt').datagrid('reload');
+										$.messager.show({
+										title: '提示',
+										msg: msg,
+										timeout: 3000,
+										showType: 'show'
+								});
+							});
+						}
+					}
+					});
+				}
+			});
+		}
+		function saverow(index){
+			$('#tt').datagrid('endEdit', index);
+		}
+		function cancelrow(index){
+			$('#tt').datagrid('cancelEdit', index);
+		}
+
+		/**
+		 * 添加
+		 */
+		function insert(){
+			var row = $('#tt').datagrid('getSelected');
+			if (row){
+				var index = $('#tt').datagrid('getRowIndex', row);
+			} else {
+				index = 0;
+			}
+			if (index < 0)
+			{
+				index = 0;
+			}
+			$('#tt').datagrid('insertRow', {
+				index: index,
+				row:{file_name:'字段名称'}
+			});
+			$('#tt').datagrid('selectRow',index);
+			$('#tt').datagrid('beginEdit',index);
+		}
+		</script>
+    </head>
+    <body>
+        <table id="tt" toolbar="#tb"></table>
+		<div id="tb" style="padding:5px;height:auto">
+		<div>
+			部门: 
+			<input id="dept_select"/>
+			职位：
+			<select id="jobs_select" style="width:200px;"  name="jobs_id">
+				<option selected="selected" value="">所有职位</option>
+			</select>
+		</div>
+	</div>
+    </body>
+</html>

@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>销售线索列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	table td{
+		white-space:normal; word-break:break-all;
+		table-layout:fixed;
+	}
+</style>
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>筛选区域：
+			<select id="areaid" name="areaid" onchange="select_area(this.value)">
+				<option value="">全部区域</option>
+				{area_select}
+			</select>
+			筛选审核状态：
+			<select id="status" name="status" onchange="select_status(this.value)">
+				<option value="">全部状态</option>
+				<option value="0">待审核</option>
+				<option value="1">已通过审核</option>
+				<option value="-1">被打回</option>
+			</select>
+			筛选合同转化：
+			<select id="contract" name="contract" onchange="select_contract(this.value)">
+				<option value="">所有状态</option>
+				<option value="0">未设置</option>
+				<option value="1">成功</option>
+				<option value="-1">失败</option>
+			</select>
+			按提交人筛选：
+			<input type="text" id="username" name="username" onblur="get_userid(this.value)" value="{username}" />
+		</td>
+		<td>
+			<input type="button" alt="?model=sell_clue&action=add_clue&placeValuesBefore&TB_iframe=true&modal=false&height=350&width=720" class="thickbox" title="添加新线索" value="添加新线索" />
+		</td>
+		<td>
+			<input type="button" onclick="export_data();" value="导出当前数据" />
+		</td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="11">销售线索列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>序号</td>
+		<td>提交日期</td>
+		<td>提交人</td>
+		<td>客户单位名称</td>
+		<td>客户单位所属区域</td>
+		<td>联系人姓名</td>
+		<td>联系人电话</td>
+		<td nowrap width="30%">销售线索的详细内容</td>
+		<td>审核状态</td>
+		<td>转化为合同</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	set_selected('areaid');
+	set_selected('status');
+	set_selected('contract');
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function select_area(id)
+	{
+		var status = $('#status').val();
+		var contract = $('#contract').val();
+		var username = $('#username').val();
+		var userid = '';
+		if (username=='')
+		{
+			location.href='?model={t_model}&action={t_action}&areaid='+id+'&status='+status+'&contract='+contract;
+		}else{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href='?model={t_model}&action={t_action}&status='+status+'&areaid='+id+'&userid='+data+'&username='+username+'&contract='+contract;
+				}else{
+					alert('提交人姓名不正确！');
+					$('#username').focus();
+				}
+			}
+			);
+			
+		}
+		
+	}
+	function select_status(id)
+	{
+		var areaid = $('#areaid').val();
+		var contract = $('#contract').val();
+		var username = $('#username').val();
+		if (username=='')
+		{
+			location.href='?model={t_model}&action={t_action}&status='+id+'&areaid='+areaid+'&contract='+contract;
+		}else{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href='?model={t_model}&action={t_action}&status='+id+'&areaid='+areaid+'&userid='+data+'&username='+username+'&contract='+contract;
+				}else{
+					alert('提交人姓名不正确！');
+					$('#username').focus();
+				}
+			}
+			);
+		}
+		
+	}
+	
+	function select_contract(id)
+	{
+		var areaid = $('#areaid').val();
+		var status = $('#status').val();
+		var username = $('#username').val();
+		if (username=='')
+		{
+			location.href='?model={t_model}&action={t_action}&status='+status+'&areaid='+areaid+'&contract='+id;
+		}else{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href='?model={t_model}&action={t_action}&status='+status+'&contract='+id+'&areaid='+areaid+'&userid='+unescape(data)+'&username='+username;
+				}else{
+					alert('提交人姓名不正确！');
+					$('#username').focus();
+				}
+			}
+			);
+		}
+	}
+	function get_userid(username)
+	{
+		var areaid = $('#areaid').val();
+		var status = $('#status').val();
+		var contract = $('#contract').val();
+		if (username)
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href='?model={t_model}&action={t_action}&status='+status+'&areaid='+areaid+'&userid='+unescape(data)+'&username='+username+'&contract='+contract;
+				}else{
+					alert('提交人姓名不正确！');
+					$('#username').focus();
+				}
+			}
+			);
+		}else{
+			location.href='?model={t_model}&action={t_action}&areaid='+areaid+'&status='+status+'&contract='+contract;
+		}
+	}
+	function export_data()
+	{
+		var status = $('#status').val();
+		var areaid = $('#areaid').val();
+		var contract = $('#contract').val();
+		var username=$('#username').val();
+		if (username=='')
+		{
+			location.href='?model={t_model}&action=export&type=list&status='+status+'&areaid='+areaid+'&contract='+contract;
+		}else{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href='?model={t_model}&action=export&type=list&status='+status+'&areaid='+areaid+'&userid='+unescape(data)+'username='+username+'&contract='+contract;
+				}else{
+					alert('提交人姓名不正确！');
+					$('#username').focus();
+				}
+			}
+			);
+		}
+		
+	}
+</script>
+</body>
+</html>

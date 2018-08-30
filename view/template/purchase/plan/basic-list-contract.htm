@@ -1,0 +1,165 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+	<!-- meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script-->
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue=$('#planNumb').val();
+			var purchType=$('#purchType').val();
+			var contractId=$('#contractId').val();
+			location="?model=purchase_plan_basic&action=toListByContractId&planNumb="+searchvalue+"&purchType="+purchType+"&contractId="+contractId;
+		}
+
+		//清空
+		function clearNum(){
+			var purchType=$('#purchType').val();
+			var contractId=$('#contractId').val();
+			location="?model=purchase_plan_basic&action=toListByContractId&purchType="+purchType+"&contractId="+contractId;
+		}
+
+		function selectButton(obj,id){
+			var purchType=$('#purchType').val();
+			var checkStr="&skey="+$('#check'+id).val();
+			//TODO:
+			//alert(obj.value);
+			var objVal = $(obj).attr('value');
+			if( objVal == "read" ){
+				parent.location.href = "?model=purchase_plan_basic&action=read&id="+id+"&purchType="+purchType+checkStr;
+			}
+
+		}
+    </script>
+
+</head>
+<body scroll="yes">
+<div class="main_wraper">
+<table class="main_table_search">
+  <tr>
+		<td>
+			&nbsp;采购申请编号：<input type="text" name="planNumb" id="planNumb" value="{planNumb}">
+			<input type="button" class="txt_btn_a" value="搜 索"  onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+			<input type="hidden" id="purchType" value="{purchType}">
+			<input type="hidden" id="contractId" value="{contractId}">
+    </td>
+  </tr>
+</table>
+<table class="main_table">
+	<thead>
+	    <tr class="main_tr_header">
+	        <th width="4%">
+	        	<p class="allImg">序号<br/>
+	            	<img src="images/expanded.gif" />
+        	</p>
+	        </th>
+	        <th >
+	        	<p class="checkAll">采购申请编号<br/>
+	            	<input type="checkbox" />
+            </p>
+	        </th>
+	        <th width="8%">
+           申请人
+	        </th>
+	        <th width="8%">
+            采购类型
+	        </th>
+	        <th width="6%">
+            采购状态
+	        </th>
+	        <th width="50%" class="td_table">
+	            <table class="main_table_nested" frame=void>
+            	<tr>
+	            		<th colspan="4">
+            			采购申请-物料信息
+	            		</th>
+            	</tr>
+            	<tr>
+	            		<th >
+			            物料编号<br>名称
+				        </th>
+				        <th  width="13%">
+			            申请<br>数量
+				        </th>
+				        <th  width="13%">
+			            未下达<br>数量
+				        </th>
+				        <th  width="13%">
+			            库存<br>数量
+				        </th>
+				        <th  width="20%">
+			            希望<br>完成日期
+				        </th>
+            	</tr>
+            </table>
+	        </th>
+	        <th width="80">
+			操作
+			</th>
+    </tr>
+	  </thead>
+    {list}
+	</table>
+</div>
+{pageDiv}
+</body>
+</html>

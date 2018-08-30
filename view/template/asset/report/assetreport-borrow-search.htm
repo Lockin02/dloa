@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>借用资产统计表搜索</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js">
+</script>
+<script type="text/javascript">
+	$(function(){
+	    $("#deptName").yxselect_dept({
+			hiddenId : 'deptId'
+		});
+	    $("#borrowName").yxselect_user({
+			hiddenId : 'borrowId'
+		});
+	    $("#assetName").yxcombogrid_asset({
+			hiddenId : 'assetId',
+			gridOptions : {
+				event : {
+					row_dblclick : (function(e,row, rowData) {
+						$("#assetCode").val(rowData.assetCode)
+					})
+				}
+			}
+		});
+	});
+	function confirm() {
+		var beginDate=$("#beginDate").val();
+		var endDate=$("#endDate").val();
+
+		this.opener.location = "?model=asset_report_assetreport&action=toProBorrowReport&beginDate="+beginDate
+		+"&endDate="+endDate
+		+"&assetId="+$('#assetId').val()
+		+"&assetCode="+$('#assetCode').val()
+		+"&assetName="+$('#assetName').val()
+		+"&deptId="+$('#deptId').val()
+		+"&deptName="+$('#deptName').val()
+		+"&reposeManId="+$('#reposeManId').val()
+		+"&reposeManName="+$('#reposeManName').val();
+		this.close();
+	}
+
+	function refresh(){
+		$(".clearType input").val("");
+	}
+
+</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 资产搜索
+</span></div>
+<table class="form_main_table">
+	<tr class="clearType">
+		<td class="form_text_left">开始日期</td>
+		<td class="form_text_right">
+			<input type="text" id="beginDate" onfocus="WdatePicker()" value="{beginDate}"	class="txt" />
+		</td>
+	</tr>
+	<tr class="clearType">
+		<td class="form_text_left">结束日期</td>
+		<td class="form_text_right">
+			<input type="text" id="endDate"  onfocus="WdatePicker()" value="{endDate}"	class="txt" />
+		</td>
+	</tr>
+	<tr class="clearType">
+		<td class="form_text_left">资产名称</td>
+		<td class="form_text_right">
+			<input type="text" id="assetName" value="{assetName}"	class="txt" />
+			<input type="hidden" id="assetCode" value="{assetCode}"	class="txt" />
+			<input type="hidden" id="assetId" value="{assetId}"	class="txt" />
+		</td>
+	</tr>
+	<tr class="clearType">
+		<td class="form_text_left">借用部门</td>
+		<td class="form_text_right">
+			<input type="hidden" id="deptId" value="{deptId}" class="txt" />
+			<input type="text" id="deptName" value="{deptName}" class="txt" />
+		</td>
+	</tr>
+	<tr class="cleanType">
+		<td class="form_text_left">借用人</td>
+		<td class="form_text_right">
+			<input type="hidden" id="reposeManId" value="{reposeManId}" class="txt"/>
+			<input type="text" id="reposeManName" value="{reposeManName}" class="txt"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+			<input type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

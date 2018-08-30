@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加用户或职位的访问区域</title>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+<form method="POST" action="?model=purview&action=save_edit_pv&tid={tid}&typeid={typeid}&id={id}" onsubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<tr>
+		<td width="70">控制对象：</td>
+		<td>
+			<input type="radio" {checked_1} name="type" onclick="show_user();" value="1">用户 
+			<input type="radio" {checked_2} name="type" onclick="show_dept();" value="2" />职位 
+			<input type="radio" {checked_3} name="type" onclick="show_dept();" value="3" />部门 
+			<input type="radio" {checked_4} name="type" onclick="show_all_user();" value="4"/>所有人
+		</td>
+	</tr>
+	<tr id="user">
+		<td>用户姓名：</td>
+		<td>
+			<input type="text" onblur="get_userid();" id="username" name="username" value="{username}" />
+			<span id="_username">*</span>
+		</td>
+	</tr> 
+	<tr id="dept" style="display:none;">
+		<td>选择部门：</td>
+		<td>
+		<select id="dept_id" name="dept_id" onchange="show_jobs()">
+		
+		</select>
+		<span id="_dept_id">*</span>
+		</td>
+	</tr>
+	<tr id="jobs" style="display:none;">
+		<td>选择职位：</td>
+		<td>
+			<select id="jobsid" name="jobsid" onchange="check_jobs(this.value);">
+		
+			</select>
+			<span id="_jobsid">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><HR /></td>
+	</tr>
+	<tr>
+		<td>控制内容：</td>
+		<td>{list}</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align:center;">
+                    <input type="submit" value=" 修改 " />
+                    <input type="button" alt="?model=purview&action=show_delete_pv&id={id}&placeValuesBefore&TB_iframe=true&modal=false&height=150&width=200" 
+                           title="删除" class="thickbox" value=" 删除 " />
+</td>
+	</tr>
+</form>
+</table>
+<script type="text/javascript">
+var jobs = false;
+var user = false;
+var dept = false;
+var tid = {tid};
+var typeid = {typeid};
+//====================
+var _userid = '{userid}';
+var _username = '{username}';
+var _jobsid = '{jobsid}';
+var _dept_id = '{dept_id}';
+var _deptid = '{deptid}';
+var _type = '{type}';
+$(document).ready(function() {
+	if (_type=='1')
+	{
+		show_user();
+	}else if (_type=='2'){
+		show_dept(_dept_id);
+		show_jobs(_dept_id);
+	}else if (_type=='3'){
+		show_dept(_deptid);
+	}else
+	{
+		show_all_user();
+	}
+}
+);
+function check()
+{
+	var checked = $('input[name=type]:checked').val();
+	if (checked==1)
+	{
+		if (user == true)
+		{
+			$('#_username').html('该用户已经存在该控制类别中！');
+			return false;
+		}
+		if ($('#userid').val()=='')
+		{
+			$('#_username').html('用户名不能为空！');
+			return false;
+		}
+	}else if (checked==2){
+		if ($('#dept_id').val()=='' || $('#dept_id').val()==null)
+		{
+			$('#_dept_id').html('请选择部门！');
+			return false;
+		}else{
+			$('#_dept_id').html('*');
+			if ($('#jobsid').val()=='' || $('#jobsid').val()==null)
+			{
+				$('#_jobsid').html('请选择职位！');
+				return false;
+			}else{
+				if (jobs == true)
+				{
+					$('#_jobsid').html('您选择的位置已经存在列表中！');
+					return false;
+				}
+				$('#_jobsid').html('*');
+			}
+		}
+	}else if (checked==3){
+		if ($('#dept_id').val()=='' || $('#dept_id').val()==null)
+		{
+			$('#_dept_id').html('请选择部门！');
+			return false;
+		}
+	}
+	return true;
+}
+function allcheckbox()
+{
+	var checked = $('input[type=checkbox]').eq(0).attr("checked");
+	$('input[type=checkbox]').attr('checked',checked);
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username=='')
+	{
+		$('#_username').html('用户姓名不能为空！');
+		return false;
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				check_user(unescape(data));
+			}else{
+				$('#_username').html('该用户姓名不存在！');
+				$('#username').focus();
+			}
+		}
+		)
+	}
+}
+function check_user(userid)
+{
+	if (userid && userid!=_userid)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_user',tid:tid,typeid:typeid,userid:userid,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 0)
+			{
+				$('#_username').html('该用户已经存在该控制类别中！');
+				$('#username').focus();
+				user = true;
+			}else{
+				user = false;
+				$('#userid').val(userid);
+				$('#_username').html('*');
+			}
+		}
+		)
+	}
+}
+function check_jobs(jobsid)
+{
+	if (jobsid)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_jobs',tid:tid,typeid:typeid,jobsid:jobsid,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 1)
+			{
+				$('#_jobsid').html('该职位已经存在列表中！');
+				jobs = true;
+			}else{
+				jobs = false;
+				$('#_jobsid').html('*');
+			}
+		}
+		)
+	}
+}
+function check_dept(dept_id)
+{
+	if (dept_id)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_dept',tid:tid,typeid:typeid,dept_id:dept_id,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 1)
+			{
+				$('#_dept_id').html('该部门已经存在列表中！');
+				dept = true;
+			}else{
+				dept = false;
+				$('#_dept_id').html('*');
+			}
+		}
+		)
+	}
+}
+function show_dept(deptid)
+{
+	$('#jobs').css('display','none');
+	$('#user').css('display','none');
+	$('#dept').css('display','');
+
+	var rand=Math.random()*100000;
+	$.post('ajax.php',{model:'depart',action:'dept_select',dept_id:deptid,rand:rand},
+	function (data)
+	{
+		if (data)
+		{
+			$('#dept_id').html('<option value="">请选择部门</option>'+unescape(data));
+		}
+	}
+	);
+}
+function show_jobs(dept_id)
+{
+	if (!dept_id) var dept_id = $('#dept_id').val();
+	if($('input[name=type]:checked').val()=='2')
+	{
+		$('#jobs').css('display','');
+		$('#user').css('display','none');
+		//$('#dept').css('display','none');
+		var rand=Math.random()*100000;
+		if (dept_id)
+		{
+			$.post('ajax.php',{model:'jobs',action:'jobs_select',departid:dept_id,jobsid:_jobsid,rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					$('#jobsid').html(unescape(data));
+				}
+			}
+			);
+		}
+	}else{
+		check_dept(dept_id);
+	}
+}
+function show_user()
+{
+	$('#jobs').css('display','none');
+	$('#user').css('display','');
+	$('#dept').css('display','none');
+}
+
+function show_all_user()
+{
+	$('#jobs').css('display','none');
+	$('#user').css('display','none');
+	$('#dept').css('display','none');
+}
+</script>
+</body>
+</html>

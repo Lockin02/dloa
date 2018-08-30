@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+<script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		//tabs处理
+		var tt = $('#tt');
+		var thisHeight = document.documentElement.clientHeight - 5;
+	    tt.tabs({
+			height : thisHeight,
+			plain : true,
+			onSelect:function(node){
+                var tb=tt.tabs('getTab',node);
+                var hc=tb.panel('options').headerCls;
+                if(hc&&hc!=null){
+                    tb.panel('options').headerCls='';//清空之后才不会重新刷新
+                    tt.tabs('update', {
+                        tab: tb,
+                        options:{
+                            content:'<iframe fit="true" name="'+hc+'" scrolling="auto" frameborder="0"  src="'+hc+'" style="width:100%;height:100%;"></iframe>'
+                        }
+                    });
+                }
+            }
+		});
+	});
+</script>
+</head>
+<body style="height:100%">
+<div id="tt">
+	<div title="基本信息" headerCls="?model=contract_contract_contract&action=init&perm=view&id={id}&skey={skey}"></div>
+	<div title="合同执行状态表" headerCls="?model=contract_contract_contract&action=contractExelist&contractId={id}"></div>
+	<div title="合同执行轨迹" headerCls="?model=contract_contract_contract&action=exeStatusView&cid={id}"></div>
+	<div title="变更历史" headerCls="?model=common_changeLog&action=toOrderList&logObj=contract&originalId=&objId={id}&orderCode={contractCode}"></div>
+	<div title="开票申请记录" headerCls="?model=contract_contract_contract&action=toInvoiceApplyTab&obj[objType]=KPRK-12&obj[objCode]={contractCode}&obj[objId]={id}"></div>
+	<div title="开票记录" headerCls="?model=contract_contract_contract&action=toInvoiceTab&obj[objType]=KPRK-12&obj[objCode]={contractCode}&obj[objId]={id}"></div>
+	<div title="到款记录" headerCls="?model=contract_contract_contract&action=toIncomeTab&obj[objType]=KPRK-12&obj[objCode]={contractCode}&obj[objId]={id}"></div>
+	<div title="发货计划" headerCls="?model=stock_outplan_outplan&action=listByOrderId&id={id}&objType=oa_contract_contract"></div>
+	<div title="采购申请" headerCls="?model=purchase_plan_basic&action=toListByContractId&contractId={id}&purchType={contractType}"></div>
+	<div title="邮寄信息" headerCls="?model=mail_mailinfo&action=listByOrderId&id={id}&type=oa_contract_contract"></div>
+    <div title="赠送信息" headerCls="?model=projectmanagent_present_present&action=presentOrder&type=oa_sale_order&id={id}"></div>
+    <div title="发货记录" headerCls="?model=stock_outstock_stockout&action=relDocOutPage&docId={id}&relDocType=XSCKDLHT&docType=CKSALES"></div>
+<!--    <div title="退货申请" headerCls="?model=projectmanagent_return_return&action=returnByContractlist&contractId={id}"></div>-->
+<!--    <div title="换货申请" headerCls="?model=projectmanagent_exchange_exchange&action=exchangeByContractlist&contractId={id}"></div>-->
+    <div title="关闭信息" headerCls="?model=contract_contract_contract&action=toCloseInfo&id={id}"></div>
+    <div title="盖章记录" headerCls="?model=contract_stamp_stamp&action=viewForContract&id={id}"></div>
+    <div title="转销售借用源单" headerCls="?model=projectmanagent_borrow_borrow&action=toBocomeCon&contractId={id}"></div>
+    <div title="扣款坏账记录" headerCls="?model=contract_deduct_deduct&action=deductTolist&contractId={id}"></div>
+    <div title="签收修改历史" headerCls="?model=common_changeLog&action=toOrderSignin&logObj=contractSign&originalId=&objId={id}&orderCode={contractCode}"></div>
+    <div title="售后出库" headerCls="?model=stock_outstock_stockout&action=relDocOutPage&docId={id}&relDocType=XSCKDLHT&docType=CKOTHER"></div>
+</div>
+</body>
+</html>
+

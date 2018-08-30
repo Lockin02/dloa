@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $('input[type=checkbox][disabled=false]').attr('checked', true);
+		$("#xm_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=project_info&field=name&return_field=id,name,number,manager',{
+				multiple: false,
+				mustMatch: false,
+				width: 358,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					$('#project_id').val('');
+		        	$('#managerid').val('');
+					$('#manager_name').val('');
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].name,
+							result:row[i].name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.name+'（'+row.number+'）';
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						$('#project_id').val(data.id);
+						if (data.manager) $('#managerid').val(data.manager);
+		                if (data.number) $('#xm_no').val(data.number);
+		                if (data.manager)
+						{
+							$.post('ajax.php',{model:'user',action:'get_username',userid:data.manager,rand:Math.random(0,9999)},function (manager)
+							{
+								if (manager)
+								{
+									$('#manager_name').html("项目经理："+unescape(manager));
+								}
+							})
+						}
+					}
+		});
+		});
+	function check()
+	{
+		if ($('#managerid').val()=='')
+		{
+			alert('请填写对应的项目。');
+			return false;
+		}
+		if ($('#userid').val()!=$('#managerid').val())
+		{
+			alert('转换对象必须为对应的项目经理！');
+			return false;
+		}else
+		{
+			return true;
+		}
+	}
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=rutn&orderid={t_orderid}" onsubmit="return check();">
+	<input type="hidden" id="managerid" name="managerid" value="{manager}" />
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+	<input type="hidden" id="area" name="area" value="{area}" />
+	<input type="hidden" id="target" name="target" value="{target}" />
+	<input type="hidden" id="orderid" name="orderid" value="{t_orderid}" />
+	<input type="hidden" id="operatorid" name="operatorid" value="{operatorid}" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center">以下设备由　<span>{self}</span>　转 　<span>{To}</span>　归属</td>
+	</tr>
+</table>
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center"><input type="submit" value=" 确定 " /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

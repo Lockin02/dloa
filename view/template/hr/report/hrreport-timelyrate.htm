@@ -1,0 +1,196 @@
+
+<HTML  xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>增员申请招聘及时率报表</TITLE>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<script src="webreport/CreateControl.js" type="text/javascript"></script>
+	<script src="webreport/GRInstall.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script src="js/DatePicker/WdatePicker.js" language="javascript"></script>
+<style type="text/css">
+	tr {
+		text-align:right;
+	}
+	tr td{
+		padding-right:10px;
+		padding-left:10px;
+	}
+	select{
+		width:120px;
+	}
+</style>
+<script>
+	var Report;
+	var ReportViewer;
+	function OnReportViewerContentCellDblClick(Sender){
+		if (Sender.Column.Name == "单据编号")
+	    {
+	        //演示超链接功能，在这里做打开链接任务，这里用弹出消息框代替
+	        if(!ReportViewer){
+				ReportViewer = document.getElementById("ReportViewer");
+				Report = ReportViewer.Report;
+	        }
+	        var formId = Report.FieldByName("id").AsString;
+	        $.ajax({
+			    type: "POST",
+			    url: "?model=hr_recruitment_apply&action=md5RowAjax",
+			    data: { "id" : formId },
+			    async: false
+			});
+			showModalWin("?model=hr_recruitment_apply&action=toTabView&id=" + formId,1);
+	    }
+	}
+
+	function searchBtn(){
+		location.href="?model=hr_report_hrreport&action=toTimelyRateReport"
+			+ "&startDate=" + $.trim($("#startDate").val())
+			+ "&endDate=" + $.trim($("#endDate").val())
+			+ "&postType=" +  $.trim($("#postType").val())
+			+ "&deptName=" +  $.trim($("#deptName").val())
+			+ "&applyType=" + $.trim($("#applyType").val())
+			+ "&recruitManName=" + $.trim($("#recruitManName").val())
+	}
+
+	function reset(){
+		location.href="?model=hr_report_hrreport&action=toTimelyRateReport";
+	}
+
+	//选择网优类型职位时，加载数据字典内容
+	function initLevelWY(){
+	var dataArr=[];
+	var data=$.ajax({
+					url:'?model=engineering_baseinfo_eperson&action=pageJson&sort=orderNum&dir=ASC',
+					type:'post',
+					dataType:'json',
+					async:false
+				}).responseText;
+				data=eval("("+data+")");
+				data=data.collection;
+				var positionLevel=$("#positionLevel");
+				positionLevel.empty();
+				$("<option value=''></option").appendTo(positionLevel);
+				for(i=0;i<data.length;i++){
+					var option=$("<option></option");
+					option.val(data[i].personLevel);
+					option.text(data[i].personLevel);
+					option.appendTo(positionLevel);
+				}
+	}
+
+	function initPostType(){
+		if($("#postType").val()=='YPZW-WY'){
+			initLevelWY();
+		}else{
+			var options='<option value=""></option> <option value="初级">初级</option><option value="中级">中级</option><option value="高级">高级</option>';
+			var positionLevel=$("#positionLevel");
+			positionLevel.empty();
+			positionLevel.html(options);
+		}
+	}
+	$(function(){
+		initPostType();
+		$("#postType").change(function(){
+			initPostType();
+		});
+		var positionLevelHidden=$("#positionLevelHidden").val();
+		$("#positionLevel").val(positionLevelHidden);
+		var stateVal=$("#stateVal").val();
+		$("#state").val(stateVal);
+	})
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+
+<table border="0" width="100%" height="100%" class="form_main_table">
+		<tr>
+			<td align="left">
+				搜索条件：
+			</td>
+		</tr>
+		<tr>
+		<td>
+		<table class="form_main_table">
+				<tr>
+					<td class="form_text_left_three">
+						需求部门
+					</td>
+					<td class="form_text_right_three">
+						<input class="txtmiddle" name="deptName" id="deptName" value="{deptName}">
+					</td>
+					<td class="form_text_left_three">
+						下达时间
+					</td>
+					<td class="form_text_right_three" colspan="3">
+						<input class="txtmiddle" id="startDate" value="{startDate}"   onfocus="WdatePicker()" />
+						&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;
+						<input class="txtmiddle" id="endDate" value="{endDate}"  onfocus="WdatePicker()" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three">
+						职位类型
+					</td>
+					<td class="form_text_right_three">
+						<input type="hidden" id="postTypeName" value="{postTypeName}"/>
+						<select id="postType" name="postType" >
+      			 			<option value=""></option>
+      			 			{postType}
+      			 		</select>
+					</td>
+					<td class="form_text_left_three">
+						增员类型
+					</td>
+					<td class="form_text_right_three">
+						<input id="addTypeCodeHidden" value='{addType}' type="hidden"/>
+						<select id="applyType" name="applyType" >
+      			 			<option value=""></option>
+      			 			{addTypeCode}
+      					 </select>
+					</td>
+					<td class="form_text_left_three">
+						招聘负责人
+					</td>
+					<td class="form_text_right_three" colspan="5">
+						<input class="txtmiddle" id="recruitManName" name="recruitManName" value="{recruitManName}">
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="6" align="center">
+						<input type="button" class="txt_btn_a" onclick="searchBtn();" value=" 查 询 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" class="txt_btn_a" onclick="reset();" value=" 重 置 "/>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="recommendName" value="{postTypeName}"/>
+			<input type="hidden" id="deptName" value="{deptName}"/>
+			<input type="hidden" id="positionName" value="{positionName}"/>
+			<input type="hidden" id="recruitManName" value="{recruitManName}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEx("100%", "97%","view/template/hr/report/hrreport-timelyrate.grf"
+				,"view/template/hr/report/hrreport-timelyrate.php"
+			+ "?startDate=" + $.trim($("#startDate").val())
+			+ "&endDate=" + $.trim($("#endDate").val())
+			+ "&postType=" +  $.trim($("#postType").val())
+			+ "&deptName=" +  $.trim($("#deptName").val())
+			+ "&applyType=" + $.trim($("#applyType").val())
+			+ "&recruitManName=" + $.trim($("#recruitManName").val()),
+				true,
+	             "<param name='OnContentCellDblClick' value='OnReportViewerContentCellDblClick'>"
+
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

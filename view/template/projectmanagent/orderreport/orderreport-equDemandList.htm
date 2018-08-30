@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<TITLE>物料需求明细表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+{#commonInclude#}
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script>
+ $(function() {
+	$("#productName_b").yxcombogrid_product({
+		nameCol : 'productName',
+		isShowButton : false,
+		height : 200,
+		width : 600,
+		gridOptions : {
+			showcheckbox : false,
+			event :{
+				row_dblclick : function(e,row,data){
+					$("#productName").val(data.productName);
+				}
+			}
+		}
+	});
+});
+    function searchBtn(){
+		location.href="?model=projectmanagent_orderreport_orderreport&action=equDemandList"
+			+ "&productName=" + $("#productName").val()
+	}
+
+	function reset(){
+		location.href="?model=projectmanagent_orderreport_orderreport&action=equDemandList";
+	}
+</script>
+</HEAD>
+<BODY style="margin: 0" bgcolor="buttonface">
+
+<table border="0" width="100%" height="100%">
+	<tr height="100%">
+	    <tr>
+			<td>
+				  <b>选择物料：</b>
+				  	<input type="text" class="txt toClear" id="productName_b" readonly="readonly" />
+			      &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查 询 "/>
+				  <input type="button" class="txt_btn_a" id="searchBtn" onclick="reset();" value=" 重 置 "/>
+			</td>
+	    </tr>
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+		<input type="hidden" class="txt toClear" id="productName" readonly="readonly" value="{productName}"/>
+		<script language="javascript">
+			CreateDisplayViewer("view/template/projectmanagent/orderreport/equdemandlist.grf",
+					"view/template/projectmanagent/orderreport/equdemandSql.php"
+					+ "?productName="+$("#productName").val()
+				);
+		</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

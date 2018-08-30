@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			下达发货任务
+		</title>
+		{#commonInclude#}
+		<!-- 引入EASYUI -->
+		<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/task-add.js"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=engineering_resources_task&action=add" onsubmit="return checkForm();">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								下达发货任务
+							</span>
+							<input type="button" class="main_head_btn" value=" 关 闭 " onclick="window.close();"/>
+							<input type="submit" class="main_head_btn" value=" 确认下达 " />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<fieldset>
+							<legend class="legend" onclick="showAndHide('baseImg','baseInfo')">
+								基 本 信 息
+								<img src="images/icon/info_up.gif" id="baseImg" />
+							</legend>
+							<table id="baseInfo" class="form_in_table">
+								<tr>
+									<td class="form_text_left">
+										申请单号
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" readonly id="applyNo"
+										name="task[applyNo]" value="{formNo}" />
+										<input type="hidden" id="applyId" name="task[applyId]" value="{id}"/>
+									</td>
+									<td class="form_text_left">
+										申 请 人
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="applyUser" name="task[applyUser]" value="{applyUser}" readonly/>
+										<input type="hidden" id="applyUserId" name="task[applyUserId]" value="{applyUserId}"/>								
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										申请部门
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="deptName" name="task[deptName]" value="{deptName}" readonly/>
+										<input type="hidden" id="deptId" name="task[deptId]" value="{deptId}"/>	
+									</td>
+									<td class="form_text_left">
+										申请日期
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="applyDate" name="task[applyDate]" value="{applyDate}" readonly/>									
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										申请类型
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="applyTypeName" name="task[applyTypeName]" value="{applyTypeName}" readonly/>									
+									</td>
+									<td class="form_text_left">
+										项目编号
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="projectCode" name="task[projectCode]" value="{projectCode}" readonly/>
+										<input type="hidden" id="projectId" name="task[projectId]" value="{projectId}" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										项目名称
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="projectName" name="task[projectName]" value="{projectName}" readonly/>
+									</td>
+									<td class="form_text_left">
+										项目经理
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="managerName" name="task[managerName]" value="{managerName}" readonly/>
+										<input type="hidden" id="managerId" name="task[managerId]" value="{managerId}" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										发货区域
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="areaName" name="task[areaName]" value="{areaName}" readonly/>
+										<input type="hidden" id="areaId" name="task[areaId]" value="{areaId}" />
+									</td>
+									<td class="form_text_left">
+										设备使用地
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="place" name="task[place]" value="{place}" readonly/>
+									</td>
+								</tr>
+								<tr>								
+									<td class="form_text_left">
+										<span class="blue">接 收 人</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="receiverName" name="task[receiverName]" value="{applyUser}" readonly/>
+										<input type="hidden" id="receiverId" name="task[receiverId]" value="{applyUserId}"/>
+									</td>
+									<td class="form_text_left">
+										领用方式
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" id="getTypeName" name="task[getTypeName]" value="{getTypeName}" readonly/>
+									</td>
+								</tr>
+								<tr>								
+									<td class="form_text_left">
+										联系电话
+									</td>
+									<td class="form_text_right" colspan="3">
+										<input type="text" class="readOnlyTxtNormal" id="mobile" name="task[mobile]" value="{mobile}" readonly/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										申请原因
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_900" style="width:731px;" id="reason" name="task[reason]" readonly>{reason}</textarea>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										备注信息
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_900" style="width:731px;" id="remark" name="task[remark]" readonly>{remark}</textarea>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										邮寄地址
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_900" style="width:731px;" id="address" name="task[address]" readonly>{address}</textarea>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<fieldset>
+							<legend class="legend" onclick="showAndHideDiv('detailImg','detailInfo')">
+								申请设备详情
+								<img src="images/icon/info_up.gif" id="detailImg" />
+							</legend>
+							<div id="detailInfo"></div>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<fieldset>
+							<legend class="legend" onclick="showAndHideDiv('taskImg','taskInfo')">
+								任务分配详情
+								<img src="images/icon/info_up.gif" id="taskImg" />
+							</legend>
+							<div id="taskInfo"></div>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="dealTaskWin"></div>
+	</body>
+</html>

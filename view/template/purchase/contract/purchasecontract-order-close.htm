@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>关闭采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+	<script>
+		function checkReason(){
+				var closeReason=$.trim($("#closeReason").val());
+				if(closeReason==""){
+					alert("请输入关闭原因");
+					return  false;
+				}else{
+					return true;
+				}
+		}
+
+	</script>
+</head>
+
+<body scroll="auto">
+    <div class="main_head">
+     	<span class="main_head_title">关闭采购订单</span>
+ 	</div>
+	<div class="form_main">
+	    <form id='form1' name='form1' action="?model=purchase_contract_purchasecontract&action=closeOrder" method="post" onsubmit="return checkReason()">
+                <input type="hidden" name="contract[id]" value="{id}" />
+	            <table class="form_main_table">
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        采购订单编号
+	                    </td>
+	                    <td align="left" colspan="3">
+	                       &nbsp;
+	                       <input type="text" value="{hwapplyNumb}" class="readOnlyText" readonly/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                	<td class="tableheader form_text_left">
+	                        关闭申请人
+	                    </td>
+	                    <td align="left">
+	                       &nbsp;
+	                       <input type="text" class="readOnlyText" name="contract[closeMan]" value="{closeMan}" readonly/>
+	                       <input type="hidden" name="contract[closeManId]" value="{closeManId}" />
+	                    </td>
+	                    <td class="tableheader form_text_left">
+	                       关闭申请时间
+	                    </td>
+	                    <td class="form_text_right">
+	                        &nbsp;
+	                       <input type="text" class="readOnlyText"  name="contract[closeDate]" value="{closeDate}" readonly/>
+	                    </td>
+	                </tr>
+                <tr align="center" >
+                    <td class="tableheader form_text_left">
+                       关闭原因
+                    </td>
+                    <td class="form_text_right"  colspan="3">
+	                        &nbsp;
+                        <textarea rows="5" id="closeReason" name="contract[closeReason]" class="txt_txtarea_font" ></textarea>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr align="center" class="TableHeader" >
+                    <td colspan="6">
+                        <input type="submit" id="" value=" 提交审批 " class="txt_btn_a"/>
+                        &nbsp; &nbsp; &nbsp;
+                        <input type="button" value=" 返 回 "  class="txt_btn_a" onclick="history.back(-1);"/>
+                    </td>
+                </tr>
+            </table>
+	        </form>
+	 </div>
+</body>
+
+</html>

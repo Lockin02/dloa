@@ -1,0 +1,374 @@
+<html>
+	<meta name="GENERATOR" content="Zend Studio" />
+	<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+	<title>归还设备列表</title>
+	<script type="text/javascript" src="js/jquery.js">
+	</script>
+	<script type="text/javascript" src="js/thickbox.js">
+	</script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="images/style.css" type="text/css">
+	<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js">
+	</script>
+	<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+	</head>
+	<body>
+		<br/>
+		<form method="POST" action="?model=device_borrow&action=show_return_list" onsubmit="return check();">
+			<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+			<input type="hidden" id="userid" name="userid" value="" /><input type="hidden" id="dept_id" name="dept_id" value="" /><input type="hidden" id="operatorid" name="operatorid" value="{operatorid}" />
+			<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+				<tr>
+					<td>
+						归还人：<input type="text" onblur="get_userid();" id="username" name="username" value="" /><span id="_username">*</span>
+					</td>
+					<td>
+						所属部门：<input type="text" readonly id="dept_name" name="dept_name" value="" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						办理人：<input type="text" readonly id="operator" name="operator" value="{USERNAME}" />
+					</td>
+					<td>
+						归还库存：{area}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						邮件接收人：<input type="text" id="tousername" name="tousername" value="" /><span id="_tousername">（真实姓名）</span>
+					</td>
+					<td>
+						邮件列表：
+						<textarea cols="50" id="email" name="email" rows="5"></textarea>
+						<span id="_email">每行一个邮件地址</span>
+					</td>
+				</tr>
+			</table>
+			<br/>
+			{list}
+			<table class="table" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+			<tr>
+				<td style="text-align:center;">
+					<input type="submit" value=" 下一步 " />
+				</td>
+			</tr>
+		</form>
+		</table>
+		<div id="sug">
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function()
+			{
+			    $('input[type=checkbox][disabled=false]').attr('checked', true);
+			    var s = $('#list input[type=checkbox][name=box[]]').get();
+			    for (var i = 0; i < s.length; i++) 
+			    {
+			        if (s[i].disabled == true) 
+			        {
+			            s[i].checked = false;
+			        }
+			    }
+			    function options(width)
+			    {
+			        return {
+			            multiple: false,
+			            mustMatch: true,
+			            width: (width ? width : 150),
+			            max: 200,
+			            parse: function(data)
+			            {
+			                data = unescape(data).split(',');
+			                var rows = [];
+			                for (var i = 0; i < data.length; i++) 
+			                {
+			                    rows[i] = {
+			                        data: data[i],
+			                        value: data[i],
+			                        result: data[i]
+			                    };
+			                }
+			                return rows;
+			            },
+			            formatItem: function(row, i, n)
+			            {
+			                return row
+			            },
+			            formatResult: function(row)
+			            {
+			                return row;
+			            }
+			            
+			        };
+			    }
+			    function set_url(table, field, return_field)
+			    {
+			        return "ajax.php?model=autocomplete&action=GetField&table=" + table + "&field=" + field + "&return_field=" + return_field;
+			    }
+			    $("#username").autocomplete(set_url('user', 'user_name', 'username'), options()).result(function(evnet, data, formatted)
+			    {
+			        if (data) 
+			        {
+			            var username = unescape(data);
+			            rand = Math.random(0, 99999);
+			            $.post('ajax.php', 
+			            {
+			                model: 'user',
+			                action: 'get_userid',
+			                username: username,
+			                rand: rand
+			            }, function(data)
+			            {
+			                if (data) 
+			                {
+			                    $('#userid').val(unescape(data));
+			                    get_dept(unescape(data));
+			                    get_email(username)
+			                }
+			            });
+			        }
+			    });
+			    $("#xm_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=project_info&field=name&return_field=id,name,number,manager', 
+			    {
+			        multiple: false,
+			        mustMatch: false,
+			        width: 418,
+			        max: 200,
+			        //dataType: 'json',
+			        parse: function(data)
+			        {
+			            $('#project_id').val('');
+			            $('#manager').val('');
+			            var rows = [];
+			            var row = eval(unescape(data));
+			            for (var i = 0; i < row.length; i++) 
+			            {
+			                rows[i] = 
+			                {
+			                    data: row[i],
+			                    value: row[i].name,
+			                    result: row[i].name
+			                }
+			            }
+			            //alert(rows.length);
+			            return rows;
+			        },
+			        formatItem: function(row, i, n)
+			        {
+			            return row.name + '（' + row.number + '）';
+			        }
+			        
+			    }).result(function(evnet, data, formatted)
+			    {
+			        if (data) 
+			        {
+			            $('#project_id').val(data.id);
+			            if (data.manager) 
+			                $('#managerid').val(data.manager);
+			            if (data.number) 
+			                $('#xm_no').val(data.number);
+			            if (data.manager) 
+			            {
+			                $.post('ajax.php', 
+			                {
+			                    model: 'user',
+			                    action: 'get_username',
+			                    userid: data.manager,
+			                    rand: Math.random(0, 9999)
+			                }, function(manager)
+			                {
+			                    if (manager) 
+			                    {
+			                        $('#manager').val(unescape(manager));
+			                    }
+			                })
+			            }
+			        }
+			    });
+			    $("#tousername").autocomplete(set_url('user', 'user_name', 'username'), options()).result(function(evnet, data, formatted)
+			    {
+			        if (data) 
+			        {
+			            var username = unescape(data);
+			            get_email(username);
+			        }
+			    });
+			    
+			});
+			function check()
+			
+			{
+			    var inputs = $('input[type=checkbox][name=id[]]:checked').get();
+			    if (inputs.length < 1) 
+			    {
+			        alert('最少要选择一样设备才可以归还！');
+			        return false;
+			    }
+			    else 
+			    {
+			        for (var i = 0; i < inputs.length; i++) 
+			        {
+			            var tid = inputs[i].id;
+			            if ($('input[type=text][name=return_num[' + tid + ']]').val() == '' || $('input[type=text][name=return_num[' + tid + ']]').val() == 0) 
+			            {
+			                alert('请填写归还数量！');
+			                $('input[type=text][name=return_num[' + tid + ']]').focus();
+			                return false;
+			            }
+			        }
+			    }
+			    if ($('#userid').val() == '') 
+			    {
+			        $('#_username').html('您填写的用户名不正确！');
+			        $('#username').focus();
+			        return false;
+			    }
+			    else 
+			    {
+			        $('#_username').html('*');
+			    }
+				/*
+			    var amount = $('input[type=text][name=amount[]]').get();
+			    for (var i = 0; i < amount.length; i++) 
+			    {
+			        if (amount[i].value == '') 
+			        {
+			            alert('归还数量不能为空！');
+			            amount[i].focus();
+			            return false;
+			        }
+			    }
+			    */
+			}
+			
+			function set_all(checked, id)
+			{
+			    $('#type_' + id + ' input[type=checkbox]:[disabled=false]').attr('checked', checked);
+			}
+			
+			function box()
+			{
+			    var che = $('#box input[type=checkbox]').attr('checked');
+			    $('#mytable input[type=checkbox][name=id[]]').attr('checked', che);
+			    
+			}
+			
+			function get_userid()
+			{
+			    var username = $('#username').val();
+			    if (username == '') 
+			    {
+			        $('#_username').html('归还人姓名不能为空！');
+			    }
+			    else 
+			    {
+			        var rand = Math.random() * 100000;
+			        $.post('ajax.php', 
+			        {
+			            model: 'user',
+			            action: 'get_userid',
+			            username: username,
+			            rand: rand
+			        }, function(data)
+			        {
+			            if (data) 
+			            {
+			                $('#userid').val(unescape(data));
+			                $('#_username').html('*');
+			                get_dept(unescape(data));
+			            }
+			            else 
+			            {
+			                $('#_username').html('姓名不正确！');
+			                $('#userid').val('');
+			                $('#dept_id').val('');
+			                $('#dept_name').val('');
+			            }
+			        })
+			    }
+			}
+			
+			function get_dept(userid)
+			{
+			    if (userid) 
+			    {
+			        $.post('ajax.php', 
+			        {
+			            model: 'user',
+			            action: 'get_dept',
+			            userid: userid
+			        }, function(data)
+			        {
+			            if (data) 
+			            {
+			                data = unescape(data);
+			                arr = data.split('|');
+			                $('#dept_id').val(arr[0]);
+			                $('#dept_name').val(arr[1]);
+			            }
+			        })
+			    }
+			}
+			
+			function get_email(username)
+			{
+			    //username = $('#tousername').val();
+			    if (username != '') 
+			    {
+			        var rand = Math.random() * 100000;
+			        $.post('ajax.php', 
+			        {
+			            model: 'user',
+			            action: 'get_email',
+			            username: username,
+			            rand: rand
+			        }, function(data)
+			        {
+			            if (data) 
+			            {
+			                var emaillist = $('#email').val();
+			                var re = "\/" + unescape(data) + "\\n\/";
+			                emaillist = emaillist.replace(eval(re), '');
+			                $('#email').val(emaillist + unescape(data) + "\r\n");
+			                $('#tousername').val('');
+			                $('#_tousername').html('（真实姓名）');
+			            }
+			            else 
+			            {
+			                $('#_tousername').html('该用户姓名不存在！');
+			            }
+			        });
+			    }
+			}
+			
+			function quite(id)
+			{
+			    var num = $('#num_' + id).val();
+			    var amounit = $('#amount_' + id).val();
+			    if (Number(amounit) > Number(num)) 
+			    {
+			        alert('您输入的数量大于可归还数量，请重新输入！');
+			        $('#amount_' + id).val('').focus();
+			    }
+			    else if (Number(amounit) < 0) 
+			    {
+			        alert('请输入要整数！');
+			        $('#amount_' + id).val('').focus();
+			    }
+			}
+			
+			function checkmax(id, obj)
+			{
+			    if (obj.value != '') 
+			    {
+			        if (obj.value > ($('#borrow_' + id).html() - $('#return_' + id).html())) 
+			        {
+			            alert('归还数量不能大于借用数量！');
+			            obj.value = '';
+			            return false;
+			        }
+			    }
+			}
+		</script>
+	</body>
+</html>

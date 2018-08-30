@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增资产需求申请</title>
+   {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/requirement-common.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/requirement-add.js" ></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=asset_require_requirement&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增资产需求申请
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+<!--      		<td class="form_text_left">需求编号</td>-->
+<!--      		<td class="form_text_right" >-->
+<!--      			 <input type="text" class="txt" id="requireCode"  name="requirement[requireCode]" />-->
+<!--      		</td>-->
+      		<td class="form_text_left">申请日期</td>
+      		<td class="form_text_right">
+      			 <input type="hidden" class="txt" id="applyDate" onfocus="WdatePicker()" name="requirement[applyDate]" value="{applyDate}"/>
+      			 {applyDate}
+      		</td>
+      		<td class="form_text_left"><span class="blue">使用类型</span></td>
+      		<td class="form_text_right" >
+      			<select id="requireType" name="requirement[requireType]" class="txt">
+      				<option value=""></option>
+      				<option value="0">短期</option>
+      				<option value="1">长期</option>
+      			</select>
+      		</td>
+       </tr>
+<!--       <tr>-->
+<!--      		<td class="form_text_left">资产用途</td>-->
+<!--      		<td class="form_text_right" >-->
+<!--      			<select id="useCode" name="requirement[useCode]" class="txt">-->
+<!--      				<option value=""></option>-->
+<!--     				{useType}-->
+<!--      			 <input type="hidden" class="txt" id="useName" name="requirement[useName]" />-->
+<!--      			 <span class="red"> [*] </span>-->
+<!--      		</td>-->
+<!--       </tr>-->
+       <tr>
+      		<td class="form_text_left"><span class="blue">使用人</span></td>
+      		<td class="form_text_right userTr" >
+      			 <input type="hidden" class="txt" id="userId" name="requirement[userId]" value="{signId}"/>
+      			 <input type="text" class="txt" readonly id="userName" name="requirement[userName]" value="{signName}"/>
+      		</td>
+      		<td class="form_text_left"><span class="blue">使用部门</span></td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="userDeptId" name="requirement[userDeptId]" value="{signDeptId}"/>
+      			 <input type="text" class="txt" readonly id="userDeptName" name="requirement[userDeptName]" value="{signDeptName}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span class="blue">使用公司</span></td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="userCompanyCode" name="requirement[userCompanyCode]" value="{userCompanyCode}"/>
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="userCompanyName" name="requirement[userCompanyName]" value="{userCompanyName}" />
+      		</td>
+      		<td class="form_text_left"><span class="blue">使用人电话</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="userPhone" name="requirement[userPhone]" />
+      		</td>
+       </tr>
+<!--       <tr>-->
+<!--      		<td class="form_text_left">项目编号</td>-->
+<!--      		<td class="form_text_right" >-->
+<!--      			 <input type="hidden" class="txt" id="projectId" name="requirement[projectId]" />-->
+<!--      			 <input type="text" class="readOnlyTxtNormal" id="projectCode" name="requirement[projectCode]" readonly/>-->
+<!--      			 <span class="red myspan"> [*] </span>-->
+<!--      		</td>-->
+<!--       </tr>-->
+       <tr>
+      		<td class="form_text_left"><span class="blue">预计开始时间</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="beginDate" name="requirement[beginDate]" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+      		</td>
+      		<td class="form_text_left"><span class="blue">预计归还时间</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="returnDate" name="requirement[returnDate]" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span class="blue">申请人</span></td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="applyId" name="requirement[applyId]" value="{signId}"/>
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="applyName" name="requirement[applyName]" value="{signName}"/>
+      		</td>
+      		<td class="form_text_left"><span class="blue">申请部门</span></td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="applyDeptId" name="requirement[applyDeptId]" value="{signDeptId}"/>
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="applyDeptName" name="requirement[applyDeptName]" value="{signDeptName}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">预计金额</td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" class="txt formatMoney" id="expectAmount" name="requirement[expectAmount]" />
+      		</td>
+       </tr>
+<!--       <tr>-->
+<!--      		<td class="form_text_left">收货地址</td>-->
+<!--      		<td class="form_text_right" colspan="3">-->
+<!--      			 <textarea name="requirement[address]" class="txt_txtarea_font"></textarea>-->
+<!--      		</td>-->
+<!--       </tr>-->
+		<tr>
+			<td class="form_text_left">收货地址</td>
+			<td class="form_text_right" colspan="3">
+			   <div style="position: relative;">
+			    <label class="lable_textarea" for="addressInfo" id="addressLable">
+请输入收货地址。若不填收货地址，则默认珠海市地址。
+			    </label>
+			    <textarea class="txt_txtarea_font" id="addressInfo" name="requirement[address]" onfocus="focusin('addressInfo');" onblur="focusout('addressInfo');"></textarea>
+			   </div>
+			   <input type="hidden" id="addressFlag" name="requirement[addressFlag]" value="0"/>
+			</td>
+		</tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="requirement[remark]" class="txt_txtarea_font"></textarea>
+      		</td>
+       </tr>
+      </table>
+		<div id="itemTable"></div>
+      <table class="form_main_table">
+		<tr>
+	   		<td class="form_text_left">是否邮件通知
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="requirement[mailInfo][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+	      		<input type="radio" name="requirement[mailInfo][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+	   	<tr id="maildiv">
+	   		<td class="form_text_left">邮件接收人
+	       	</td>
+	       	<td colspan="3" class="form_text_right">
+			    <input type="text" name="requirement[mailInfo][TO_NAME]" id="TO_NAME" class="txtbiglong" readonly="readonly" value="{sendName}"/>
+	    		<input type="hidden" name="requirement[mailInfo][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+		    </td>
+	   	</tr>
+    	<tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 提  交 " onclick="confirmAudit();"/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

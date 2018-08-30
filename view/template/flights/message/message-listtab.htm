@@ -1,0 +1,44 @@
+<html>
+<head>
+    <title>订票信息</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <script type="text/javascript">
+
+$(function() {
+	//初始化tabsURL
+ 	var tabArr=[
+		"?model=flights_message_message&auditState=0", //未完成
+		"?model=flights_message_message&auditState=1", //完成
+		"?model=flights_message_message&auditState=2"   //全部
+	];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+});
+    </script>
+</head>
+<body>
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+   		 <li><a href="#tab1" >未核对订票信息</a></li>
+    	<li><a href="#tab2" >已核对订票信息</a></li>
+   		 <li><a href="#tab3" >已结算订票信息</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+		<iframe class="pane" id="iframe1"  src= "about:blank" height="96%" frameborder= "0">
+		</iframe>
+		 <iframe class="pane" id="iframe2"  src= "about:blank" height="96%" frameborder= "0">
+		</iframe>
+		 <iframe class="pane" id="iframe3"  src= "about:blank" height="96%" frameborder= "0">
+		</iframe>
+    </div>
+</div>
+</body>
+<html>

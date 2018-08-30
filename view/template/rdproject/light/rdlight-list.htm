@@ -1,0 +1,84 @@
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>
+            列表显示
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript">
+	            $(document).ready(function() {
+                //添加鼠标经过行颜色改变
+                rowsColorChange();
+            });
+	    	function show_page(page){
+				this.location="?model=rdproject_light_rdlight&action=tolightlist";
+			}
+
+	    </script>
+	    <script>
+		$().ready(function() {
+			 var option = {
+                    width: 150,
+                    items: [{
+                        text: "修改",
+                        icon: "images/icon/view.gif",
+                        alias: "1-1",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_light_rdlight&action=toEdit&id='
+								+ row.pid
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=900');
+                        }
+                    }],
+                    onContextMenu: BeforeContextMenu
+                };
+
+                $(".tr_even,.tr_odd").contextmenu(option);
+
+
+                //右键触发前操作
+                function BeforeContextMenu() {
+                    return true;
+                }
+
+               })
+       </script>
+	</head>
+    <body>
+        <div class="main_head">
+            <span class="main_head_title">
+                标识灯列表
+            </span>
+        </div>
+		<div class="main_wraper">
+			<table class="main_table">
+		        <thead>
+		            <tr class="main_tr_header">
+		                <th width="10%">
+		                    序号
+		                </th>
+		                <th width="30%">
+		                    标识灯颜色
+		                </th>
+		                <th>
+				            范围(上)
+				        </th>
+				        <th>
+				            范围(下)
+				        </th>
+		        </thead>
+		        <tbody>
+		        	{list}
+		        </tbody>
+		    </table>
+		</div>
+		{pageDiv}
+    </body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>审核公告</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<style type="text/css">
+.table {
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+hr{ height:1px;border:none;border-top:1px dashed #D3E5FA;}
+span { color:#000000;}
+</style>
+</head>
+<body>
+<br />
+<form name="form" id="form" method="post" action="?model=info_notice&action=set_audit&id={id}&rand_key={rand_key}">
+<input type="hidden" id="audit" name="audit" value="" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">审核公告</td>
+	</tr>
+	<tr>
+		<td style="width: 80px">公告标题：</td>
+		<td align="left">{title}</td>
+	</tr>
+	<tr>
+		<td>发稿名义：</td>
+		<td align="left">{nametype}</td>
+	</tr>
+	<!--  
+	<tr>
+		<td>生效日期：</td>
+		<td align="left">{start_date}</td>
+	</tr>
+	-->
+	<tr>
+		<td>查看权限：</td>
+		<td align="left">{limit}</td>
+	</tr>
+	<tr>
+		<td>邮箱提醒：</td>
+		<td align="left">{send_email}</td>
+	</tr>
+	<tr>
+		<td>已传附件：</td>
+		<td align="left">{filename_str}</td>
+	</tr>
+	<tr>
+		<td>公告内容：</td>
+		<td align="left" style="width:780px;word-break:break-all">{content}</td>
+	</tr>
+
+	
+</table>
+<div id="show_input" style="display:none">
+	<textarea style="width:100%" rows="10" cols="40" name="notse"></textarea>
+	<div style="text-align:center;">
+		<input type="button" onclick="submit_post();" value=" 确定 " />
+		
+		<input type="button"  onclick="tb_remove()" value=" 返回 " />
+	</div>
+</div>
+</form>
+<script type="text/javascript">
+	function set_audit(id)
+	{
+		$('#audit').val(id);
+	}
+	function show_input()
+	{
+		tb_show('打回理由','#TB_show_html?inlineId=show_input&width=300&height=200',false)
+	}
+	
+	function submit_post()
+	{
+		var text = $('#TB_ajaxContent textarea[name=notse]').val();
+		$('#show_input textarea[name=notse]').val(text);
+		form.submit()
+	}
+</script>
+</body>
+</html>

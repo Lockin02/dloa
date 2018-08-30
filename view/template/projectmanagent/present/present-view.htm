@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>查看赠送申请</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="js/common/approval.js"></script>
+<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/present/js/present-view-list.js"></script>
+<script>
+		$(function(){
+		    var changeReason = $("#changeReason").html();
+		    var temp = document.getElementById("changeReasonTR");
+		    if(changeReason == ''){
+                temp.style.display = "none";
+		    }else{
+		        temp.style.display = "";
+		    }
+		});
+		$(function(){
+		    var changeReason = $("#changeReason").html();
+		    var temp = document.getElementById("changeReasonTR");
+		    if(changeReason == ''){
+                temp.style.display = "none";
+		    }else{
+		        temp.style.display = "";
+		    }
+		});
+    </script>
+</head>
+<body>
+<table class="form_main_table">
+<input id="isTemp" type="hidden" value="{isTemp}">
+<input id="originalId" type="hidden" value="{originalId}">
+	<div class="main_head"><span class="main_head_title">赠送申请单</span></div>
+	<tr>
+		<td class="form_text_left">编号</td>
+		<td class="form_view_right" colspan='3'><input type="hidden" id="presentId"
+			value="{id}" /> {Code}</td>
+	</tr>
+
+	<tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+			     <div id="SingleType">{SingleType}</div>
+			</td>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right" id="single">
+                 <div id="singleCode">{singleCode}</div>
+			</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_view_right">{customerName}</td>
+		<td class="form_text_left">交货日期</td>
+		<td class="form_view_right">{deliveryDate}</td>
+	</tr>
+	<tr>
+	    <td class="form_text_left_con">归属区域:</td>
+			<td class="form_text_right_con">
+			   {areaName}
+		</td>
+		<td class="form_text_left_con">区域负责人:</td>
+			<td class="form_text_right_con">
+			    {areaPrincipal}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申请人</td>
+		<td class="form_view_right">{salesName}</td>
+		<td class="form_text_left">申请日期</td>
+		<td class="form_text_right">{createTime}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_view_right">{customTypeName}</td>
+		<td class="form_text_left">省份</td>
+		<td class="form_text_right">{province}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">归属板块</td>
+		<td class="form_view_right">{moduleName}</td>
+		<td class="form_text_left">归属公司</td>
+		<td class="form_text_right">{businessBelongName}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">费用承担人</td>
+		<td class="form_view_right">{feeMan}</td>
+		<td class="form_text_left">赠送成本概算</td><!-- (含税) -->
+		<td class="form_view_right">{costEstimatesTax}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申请理由</td>
+		<td class="form_text_right" colspan="3">
+		   <div id="reason" class="divChangeLine">{reason}</div>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+		   <div id="remark" class="divChangeLine">{remark}</div>
+	</tr>
+	<tr id="changeReasonTR">
+		<td class="form_text_left">变更原因</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read" readonly="readonly" id="changeReason">{changeReason}</textarea>
+		</td>
+	</tr>
+	<tr id="productH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('product');">产品清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('product');"
+			title="展开" alt="新增选项" /></td>
+	</tr>
+	<tr id="product">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('product');">产品清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('product');"
+			title="隐藏" alt="新增选项" /></legend>
+		<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="equH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('equ');">物料清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开"
+			alt="新增选项" /></td>
+	</tr>
+	<tr id="equ">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('equ');">物料清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏"
+			alt="新增选项" /></legend>
+		<div id="equinfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="td_table" id="approvalView"><input
+			type="hidden" id="type" value="present" /> <input type="hidden"
+			id="pid" value="{id}" /> <input type="hidden" id="itemType"
+			value="oa_present_present" /> <input type="hidden" id="isChange"
+			value="1" /></td>
+	</tr>
+</table>
+
+</body>
+</html>

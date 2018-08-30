@@ -1,0 +1,53 @@
+
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css"/>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <script type="text/javascript">
+
+$(function() {
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=engineering_worklog_esmworklogweek&action=assweeklogList",
+    			"?model=engineering_assessment_assIndex&action=toassIndlist",
+    			"?model=engineering_assessment_assLevel&action=toassLevlist",
+    			"?model=engineering_assessment_assPeopleLevel&action=toPeoLevList"
+    			];
+	//绑定事件(待抽出来)
+    $("#tabs1").tabs(".panes > iframe",{
+    		history: true,onClick:function(i,e) {
+   		 	var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body>
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1">周报考核信息</a></li>
+        <li><a href="#tab2">指标库管理</a></li>
+        <li><a href="#tab3">等级分值管理</a></li>
+        <li><a href="#tab4">人员等级指标配置</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+		<iframe class="pane" id="iframe1" src="" height="95%" frameborder="0"></iframe>
+		<iframe class="pane" id="iframe2" src="" height="95%" frameborder="0"></iframe>
+		<iframe class="pane" id="iframe3" src="" height="95%" frameborder="0"></iframe>
+		<iframe class="pane" id="iframe4" src="" height="95%" frameborder="0"></iframe>
+    </div>
+
+</div>
+
+
+</body>
+</html>

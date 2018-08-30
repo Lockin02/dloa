@@ -1,0 +1,191 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script language="javascript" type="text/javascript"
+	src="js/DatePicker/WdatePicker.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=add_overtime"
+	onsubmit="return check()"><input type="hidden" id="userid"
+	name="userid" value="{userid}" />
+<table class="table" width="98%" border="0" cellpadding="0"
+	cellspacing="0" align="center" id="list">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="6">晚上加班申请</td>
+	</tr>
+	<tr>
+		<td>日期</td>
+		<td>星期几</td>
+		<td>下班时间</td>
+		<td>是否用餐</td>
+        <td>备注</td>
+		<td>操作</td>
+	</tr>
+	<tr id="tr_0">
+		<td><input type="text" size="12" class="Wdate" readonly
+			onclick="WdatePicker({minDate:'%y-%M-%d',onpicking:function(dp){return SetDate(dp,0)}})"
+			name="date[]" value="{date}"></td>
+		<td id="week_0">星期{week}</td>
+		<td><select id="work_0" name="work[]">
+			{woption}
+			<option value="20:15">20:15</option>
+			<option value="21:30">21:30</option>
+		</select></td>
+		<td><select name="dining[]">
+			<option value="1">是</option>
+			<option value="0">否</option>
+		</select></td>
+		<td><textarea  rows="1" cols="20" name="remark[]"></textarea></td>
+        <td id="edit_0"><input type="button" onClick="copy(0)"
+			value=" 增加一天 "></td>
+
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0"
+	cellspacing="0" align="center" id="list">
+	<tr>
+		<td style="height: 50px;"><input type="submit" value=" 确定提交 " />
+		<input type="button" onClick="self.parent.location.reload()"
+			value=" 关闭返回 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var tid = 0;
+	function check()
+	{
+		$('select').attr('disabled',false);
+		var date = $('input[name=date[]]').get();
+		if (date.length > 0)
+		{
+			for(var i=0;i<date.length;i++)
+			{
+				if (date[i].value=='')
+				{
+					alert('请选择延迟下班日期！');
+					date[i].focus();
+					return false;
+				}else{
+					for (var j=0;j<date.length;j++)
+					{
+						if (i!=j && date[i].value==date[j].value)
+						{
+							alert('申请的日期不能为相同！');
+							date[j].focus();
+							return false;
+						}
+					}
+				}
+			}
+		}else{
+			alert('最少要填写一天的日期');
+			return false;
+		}
+		
+		if (confirm('您确定要申请 '+date.length+' 天延迟下班吗？'))
+		{
+			return true;
+		}else{
+			return false;
+		}
+		return false;
+	}
+	function copy(id)
+	{
+		var input_date = $('input[name=date[]]').get();
+			input_date = input_date[(input_date.length-1)].value;
+		tid++;
+		var html = $('#tr_'+id).html().replace('copy('+id+')','copy('+tid+')');
+			html = html.replace('del('+id+')','del('+tid+')');
+			html = html.replace('edit_'+id,'edit_'+tid);
+			html = html.replace('week_'+id,'week_'+tid);
+			html = html.replace('SetDate(dp,'+id+')','SetDate(dp,'+tid+')');
+			html = html.replace('work_'+id,'work_'+tid)
+		$('#list').append('<tr id="tr_'+tid+'">'+html+'</tr>');
+		if (input_date!='')
+		{
+			dateArr = input_date.split('-');
+			var date = new Date(dateArr[0]+'/'+dateArr[1]+'/'+dateArr[2]);
+			date.setDate(date.getDate()+1);
+			var month = (date.getMonth()+1) < 10 ? '0'+(date.getMonth()+1) : (date.getMonth()+1);
+			var day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
+			$('#tr_'+tid+' input[name=date[]]').val((date.getFullYear())+'-'+month+'-'+day);
+			$('#week_'+tid).html('星期'+('日一二三四五六').charAt(date.getDay()));
+			if (date.getDay()==6 || date.getDay()==0)
+			{
+				if($("#work_"+tid+" option[index='0']").val()!='17:30'){
+					$('#work_'+tid).prepend('<option id="opid" selected="selected" value="17:30"  >17:30</option>');
+					$('#opid').attr('selected','selected');
+				}
+				
+				//$('#work_'+tid).attr('disabled',true);
+			}else{
+				if($("#work_"+tid+" option[index='0']").val()=='17:30'){
+					$("#work_"+tid+" option[index='0']").remove(); 
+				}
+				//$('#work_'+tid).attr('disabled',false);
+			}
+		}
+		
+		if (tid==1)
+		{
+			$('#edit_'+id).append(' <input type="button" onclick="del('+id+')" value=" 删除 " />');
+			$('#edit_'+tid).append(' <input type="button" onclick="del('+tid+')" value=" 删除 " />');
+		}
+		
+	}
+	function SetDate(dp,id)
+	{
+		date=new Date();
+		var input_date = $('input[name=date[]]').get();
+		for (var i=0;i<input_date.length;i++)
+		{
+			if (input_date[i].value == dp.cal.getNewDateStr())
+			{
+				alert('该日期您已经选择过了！');
+				return true;
+			}
+		}
+		$('#week_'+id).html(dp.cal.getNewP('D'));
+		if (date.getDay()==6 || date.getDay()==0)
+		{
+			$('#work_'+id).get(0).selectedIndex = 0;
+			if($("#work_"+tid+" option[index='0']").val()!='17:30'){
+				$('#work_'+tid).prepend('<option value="17:30" selected>17:30</option>');
+			}
+			//$('#work_'+tid).attr('disabled',true);
+		}else{
+			if($("#work_"+tid+" option[index='0']").val()=='17:30'){
+				$("#work_"+tid+" option[index='0']").remove(); 
+			}
+			//$('#work_'+tid).attr('disabled',false);
+		}
+		
+	}
+	function del(id)
+	{
+		var date = $('input[name=date[]]').get();
+		if (date.length ==1 )
+		{
+			if (confirm('至少要填写一天才可以提交，您是否不想提交延迟下班？'))
+			{
+				parent.tb_remove();
+			}else{
+				return false;
+			}
+		}else{
+			$('#tr_'+id).remove();
+		}
+		
+	}
+</script>
+</body>
+</html>

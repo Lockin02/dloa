@@ -1,0 +1,924 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css"/>
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+<script src="js/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script  type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+
+<title></title>
+</head>
+<style>
+.ui-jqgrid-sortable {
+	font-weight:normal;
+	font-size:12px;
+	height:24px;
+}
+.ui-jqgrid-title {
+	clear:both;
+	font-size:12px;
+	height:24px;
+	line-height:20px;
+}
+.ui-helper-clearfix {
+	height:24px;
+}
+.ui-row-ltr td {
+	border-top:0px #DDDDDD solid;
+	border-left:0px #DDDDDD solid;
+	border-right:0px #DDDDDD solid;
+}
+...table td {
+	border:1px #DCEDF9 solid;
+}
+.ui-widget-content jqgrow ui-row-ltr{
+ 	border-left:0px #DDDDDD solid;
+}
+.ui-jqgrid tr.ui-row-ltr td {
+  border-right-color: inherit;
+  border-right-style:none;
+  border-right-width: 1px;
+}
+.ui-state-default ui-th-column ui-th-ltr{
+	border-right-style:hidden;
+	border-left:0px #DDDDDD solid;
+	}
+	
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	border-right-style:hidden;
+	border-right:0px #DDDDDD solid;
+	}
+.ui-jqgrid .ui-jqgrid-htable th div{
+	 height: 24px;
+    line-height: 24px;
+	
+	}
+table td{
+	 height: 26px;
+    line-height: 17px;
+	
+	}
+.ui-jqgrid tr.jqgrow td {
+    border-bottom-color: #C2D5E3;
+    border-bottom-style:dashed;
+    border-bottom-width: 1px;
+    font-weight: normal;
+    height: 32.5px;
+    overflow: hidden;
+    padding: 0 2px;
+    white-space: pre;
+}
+.ui-widget-content a {
+  color: #362B36;
+ 
+}
+.ui-widget-content a:link { text-decoration: none;}
+
+.ui-widget-content a:active { text-decoration:underline}
+
+.ui-widget-content a:hover { text-decoration:underline;color: red}
+
+.ui-widget-content a:visited { text-decoration: none;color: green} 
+
+.fwinmask { font-size:12px; }
+.fwinmask .t_l, .t_c, .t_r, .m_l, .m_r, .b_l, .b_c, .b_r
+{
+	height:5px;
+	width:5px;
+	overflow:hidden;
+	background:#000;
+	opacity:0.2;
+	filter:alpha(opacity=20);
+}
+.t_c, .b_c { height:8px; }
+.m_l, .m_r { width:8px; }
+body, input, button, select, textarea {
+  color: #444444;
+  font: 12px/1.5 Tahoma,Helvetica,mingliu,sans-serif,Hei;
+}
+.flb {
+  height: 20px;
+  line-height: 20px;
+  padding: 10px 10px 8px;
+}
+.flbc {
+  background: url("images/lore/cls.gif") no-repeat scroll 0 0 transparent;
+  float: left;
+  height: 20px;
+  overflow: hidden;
+  text-indent: -9999px;
+  width: 20px;
+}
+.flbc:hover {
+  background-position: 0 -20px;
+}
+.fwinmask{
+	background:url(images/lore/background.png) repeat-x; 
+}
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1em;
+}
+#k_favorite {
+  background-image: url("images/lore/fav.gif");
+}
+#favorite a {
+  background-color: #E5EDF2;
+  background-position: 5px 50%;
+  background-repeat: no-repeat;
+  border: 1px solid #C2D5E3;
+  margin: 0 2px;
+  padding: 5px 8px 5px 25px;
+}
+
+ .quote, .pl .blockcode {
+    margin: 0px 0;
+    padding: 0px 10px 0px 65px;
+}
+ .quote {
+    background: url("images/lore/icon_quote_s.gif") no-repeat scroll 20px 6px #F9F9F9;
+    padding-bottom: 5px;
+}
+ .quote blockquote {
+    background: url("images/lore/icon_quote_e.gif") no-repeat scroll 100% 100% transparent;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 65px 5px 0;
+}
+ .blockcode {
+    background: url("images/lore/codebg.gif") repeat-y scroll 0 0 #F7F7F7;
+    border: 1px solid #CCCCCC;
+    overflow: hidden;
+    padding: 0px 0 5px 10px;
+}
+.pipe{margin:0 5px;color:#CCC;}
+.locked {
+  background: url("images/lore/locked.gif") no-repeat scroll 6px 50% #FFFFFF;
+  border: 1px dashed #FF9A9A;
+  font-size: 12px;
+  margin: 10px 0;
+  padding: 8px 8px 8px 24px;
+}
+
+</style>
+<body>
+<div style="position: fixed; z-index: 201; left: 591px; top: 99px; display:none" class="fwinmask"  id="publishs">
+    <table class="fwin" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <td class="t_l"></td>
+          <td class="t_c" ondblclick="hideWindow('publishs')"></td>
+          <td class="t_r"></td>
+        </tr>
+        <tr>
+          <td class="m_l" ondblclick="hideWindow('publishs')">&nbsp;&nbsp;</td>
+          <td fwin="s" style="" class="m_c" id="s"><h3 style="cursor: move; width:100%" id="fctrl_publishs" class="flb">
+           <strong style="font-size:14px; float:left; width:20%">发布理由:</strong> <span style="float:right; width:20%; text-align:right " >
+           <a href="javascript:;" onclick="hideWindow('publishs');" class="flbc" title="关闭"></a></span> </h3>
+              <input name="publishskey" id="publishskey" value="" type="hidden" />
+              <input name="publishsid" id="publishsid" value="" type="hidden" />
+               <input name="publishsname" id="publishsname" value="" type="hidden" />
+              <div fwin="publishs46" class="c" id="return_publishs">
+                <div >
+			<!--<strong style="float:left; width:100%;text-align:left">发布理由:</strong><br />-->
+                    <textarea name="publishscount" cols="45" rows="8" class="pt" id="publishscount" fwin="publishs"></textarea>
+                    </div> 
+              </div>
+              <div class="fwinmask" align="center" style="margin-top:-1px; float:left; width:100%;">
+               <button  type="button" id="publishsubmit" value="true" name="publishsubmit" tabindex="23"><span>確定</span></button>
+               </div>
+              </td>
+          <td class="m_r" ondblclick="hideWindow('publishs')"></td>
+        </tr>
+        <tr>
+          <td class="b_l"></td>
+          <td class="b_c" ondblclick="hideWindow('publishs')"></td>
+          <td class="b_r"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+ 
+ <div style="position: fixed; z-index: 201; left: 591px; top: 99px; display:none" class="fwinmask"  id="repeals">
+    <table class="fwin" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <td class="t_l"></td>
+          <td class="t_c" ondblclick="hideWindow('repeals')"></td>
+          <td class="t_r"></td>
+        </tr>
+        <tr>
+          <td class="m_l" ondblclick="hideWindow('repeals')">&nbsp;&nbsp;</td>
+          <td fwin="s" style="" class="m_c" id="s"><h3 style="cursor: move; width:100%" id="fctrl_publishs" class="flb">
+           <strong style="font-size:14px; float:left; width:20%">打回理由:</strong> <span style="float:right; width:20%; text-align:right " >
+           <a href="javascript:;" onclick="hideWindow('repeals');" class="flbc" title="关闭"></a></span> </h3>
+              <input  name="repealsid" id="repealsid" value="" type="hidden" />
+              <input  name="repealskey" id="repealskey" value="" type="hidden" />
+               <input  name="repealsname" id="repealsname" value="" type="hidden" />
+              <div fwin="publishs46" class="c" id="return_publishs">
+                <div >
+			<!--<strong style="float:left; width:100%;text-align:left">打回理由:</strong><br />-->
+                    <textarea name="repealscount" cols="45" rows="8" class="pt" id="repealscount" fwin="publishs"></textarea>
+                    </div> 
+              </div>
+              <div class="fwinmask" align="center" style="margin-top:-1px; float:left; width:100%;">
+               <button  type="button" id="repealsubmit" value="true" name="repealsubmit" tabindex="23"><span>確定</span></button>
+              </div>
+              </td>
+          <td class="m_r" ondblclick="hideWindow('repeals')"></td>
+        </tr>
+        <tr>
+          <td class="b_l"></td>
+          <td class="b_c" ondblclick="hideWindow('repeals')"></td>
+          <td class="b_r"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="position: fixed; z-index: 201; left: 591px; top: 99px; display:none" class="fwinmask"  id="shields">
+    <table class="fwin" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <td class="t_l"></td>
+          <td class="t_c" ondblclick="hideWindow('shields')"></td>
+          <td class="t_r"></td>
+        </tr>
+        <tr>
+          <td class="m_l" ondblclick="hideWindow('shields')">&nbsp;&nbsp;</td>
+          <td fwin="s" style="" class="m_c" id="s"><h3 style="cursor: move; width:100%" id="fctrl_publishs" class="flb">
+           <strong style="font-size:14px; float:left; width:20%">屏蔽理由:</strong>
+            <span style="float:right; width:20%; text-align:right " >
+           <a href="javascript:;" onclick="hideWindow('shields');" class="flbc" title="关闭"></a></span> </h3>
+              <input  name="shieldsid" id="shieldsid" value="" type="hidden" />
+              <input  name="shieldskey" id="shieldskey" value="" type="hidden" />
+              <input  name="shieldsname" id="shieldsname" value="" type="hidden" />
+              
+                <div >
+			<!--<strong style="float:left; width:100%;text-align:left">屏蔽理由:</strong><br />-->
+                    <textarea name="shieldscount" cols="45" rows="8" class="pt" id="shieldscount" ></textarea>
+                    </div> 
+                   <div class="fwinmask" align="center" style="margin-top:-1px; float:left; width:100%;">
+                            <button  type="button" id="shieldsubmit" value="true" name="shieldsubmit" tabindex="23"><span>確定</span></button>
+                  </div>
+              </td>
+          <td class="m_r" ondblclick="hideWindow('shields')"></td>
+        </tr>
+        <tr>
+          <td class="b_l"></td>
+          <td class="b_c" ondblclick="hideWindow('shields')"></td>
+          <td class="b_r"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+   <div style="position: fixed; z-index: 201; left: 591px; top: 99px; display:none" class="fwinmask"  id="visibles">
+    <table class="fwin" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <td class="t_l"></td>
+          <td class="t_c" ondblclick="hideWindow('visibles')"></td>
+          <td class="t_r"></td>
+        </tr>
+        <tr>
+          <td class="m_l" ondblclick="hideWindow('visibles')">&nbsp;&nbsp;</td>
+          <td fwin="s" style="" class="m_c" id="s"><h3 style="cursor: move; width:100%" id="fctrl_publishs" class="flb">
+           <strong style="font-size:14px; float:left; width:20%">可见理由:</strong> <span style="float:right; width:20%; text-align:right " >
+           <a href="javascript:;" onclick="hideWindow('visibles');" class="flbc" title="关闭"></a></span> </h3>
+              <input  name="visiblesid" id="visiblesid" value="" type="hidden" />
+              <input  name="visibleskey" id="visibleskey" value="" type="hidden" />
+               <input  name="visiblesname" id="visiblesname" value="" type="hidden" />
+                <div >
+			<!--<strong style="float:left; width:100%;text-align:left">可见理由:</strong><br />-->
+                    <textarea name="visiblescount" cols="55" rows="8" class="pt" id="visiblescount" ></textarea>
+                    </div> 
+                    <div class="fwinmask" align="center" style="margin-top:-1px; float:left; width:100%;">
+               <button  type="button" id="visiblesubmit" value="true" name="visiblesubmit" tabindex="23"><span>確定</span></button>
+              </div></td>
+          <td class="m_r" ondblclick="hideWindow('visibles')"></td>
+        </tr>
+        <tr>
+          <td class="b_l"></td>
+          <td class="b_c" ondblclick="hideWindow('visibles')"></td>
+          <td class="b_r"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<div id="listd" style='float:left; width:98%; margin-left:10px;'>
+  <table  id="list" class="scroll"  border="0" width="100%" cellpadding="0" cellspacing="0" >
+  </table>
+  <div id="plist"></div>
+ </div>
+<script type="text/javascript">
+
+var rand=Math.random()*100000;
+var height = $(window).height()>650?$(window).height():650;
+jQuery(document).ready(function(){ 
+jQuery("#list").jqGrid({
+   	url:'?model=lore_index&action=approvaldata',
+	datatype: "json",
+    colNames:['','标 题','作 者','回复数 / 浏览数','状 态','操作','结束时间','会仪类型','操 作','操 作','start','id','class','pid'],
+  	colModel:[
+		{name:'pic',index:'pic',width:30,align:"center"},	
+		{name:'title',index:'title',width:550,editable:true, align:"left"},	
+   		{name:'creater',index:'creater', width:150, align:"center"},
+		{name:'see',index:'see', width:150, align:"center"},
+		{name:'sta',index:'status',width:100,align:"center"},
+		{name:'edit',index:'edit', width:300,align:"center"},
+		{name:'updatedt',index:'updatedt', width:150, align:"center",hidden:true},
+		{name:'ascount',index:'ascount', width:100, align:"center",hidden:true},
+   		{name:'browse',index:'browse', width:100, align:"center",hidden:true},		
+   		{name:'levels',index:'levels', width:100,align:"center",hidden:true},
+		{name:'status',index:'status',width:150,align:"center",hidden:true},
+		{name:'cid',index:'cid',width:150,align:"center",hidden:true},
+		{name:'classes',index:'class',width:150,align:"center",hidden:true}	,
+		{name:'pid',index:'pid',width:150,align:"center",hidden:true}
+   	],
+	rowNum:20,
+   	rowList:[20,30],
+   	height: height-98,
+	align:'center',
+   	pager: '#plist',
+	autowidth: true, 
+    viewrecords: true, 
+	rownumbers: true, 
+    sortorder: "asc",
+    sortname: 'status', 
+	//striped: true,
+	caption:"<span id='headname' style='height:24px;'><strong style='color:#2779AA'>管理中心</strong>"
+			 +"<img src='images/search.gif' alt='搜索' height='24' align='middle'/>"
+			 +"<span style='color:#2779AA;font-weight:normal'>标签：</span>"
+	         +"<select name='tagsall' id='tagsall'><option value='-1'>所有标签</option>{taglist}</select>"
+		     +"<span style='color:#2779AA;font-weight:normal'>&nbsp;&nbsp;发布时间：</span>"
+		     +"<input name='sdate' id='sdate' onclick=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+		     +"onfocus=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" " 
+		     +"style='cursor: hand;width:120px;' value=''/>&nbsp;<span style='color:#2779AA;font-weight:normal'> 至：</span>"
+		     +"<input name='edate' style='cursor: hand;width:120px;'id='edate' onclick=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+		     +" onfocus=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" value=''/>&nbsp; "
+		  // +"<span style='color:#2779AA;font-weight:normal'>发布人：</span>"
+		   //+"<input name='username' type='text' style='width:100px;' id='username' value=''  />"
+		     +"<span style='color:#2779AA;font-weight:normal'>关键字：</span>"
+		     +"<input name='keywords' type='text' style='width:200px;' id='keywords' value=''  />"
+		     +"&nbsp;<input type='button' id='subm' name='subm'  value=' 搜索  ' align='middle' /></span>"
+	         +"&nbsp;&nbsp;&nbsp;<input type='button' onclick=\"location='?model=lore_index&action=reportmanager'\" value='纠错管理'/>",
+		   // +"<span style='color:#2779AA;font-weight:normal;foat:left'>查看方式：</span>"
+	       //+"<select name='meetingtype' id='meetingtype'><option value='-1'>所有主题</option>{taglist}</select>", 
+
+       afterInsertRow:function (rowid, rowData){
+		 var be='';
+		 var startus='';
+		 var txt='';
+		 var stus='';
+     	 var img='<img src="images/lore/folder_new.gif" width="17" height="17" />';
+		 if(rowData.status==2){
+			be+= '<a style="color:#0000ff;" href="javascript: modify(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\',\''+rowData.pid+'\');">修改</a>&nbsp;|&nbsp;'
+				 +' <a style="color:#0000ff;" href="javascript:publishs(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\');">发布</a>&nbsp;|&nbsp;'
+				 +' <a style="color:#0000ff;" href="javascript:repealback(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\');">打回</a>'
+						//+' <a style="color:#0000ff;" href="javascript:disexamine(\''+rowid+'\',\''+rowData.title+'\');">不被查看</a>'
+						//+' <a style="color:#0000ff;" href="javascript:trash(\''+rowid+'\',\''+rowData.title+'\');">回收站</a>';
+		 stus+='待审核';
+		}else if(rowData.status==3){
+			be+= '<a style="color:#0000ff;" href="javascript: modify(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\',\''+rowData.pid+'\');">修改</a>&nbsp;|&nbsp;'
+				+' <a style="color:#0000ff;" href="javascript:shields(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\');">屏蔽</a>&nbsp;|&nbsp;';
+			if(rowData.pic==1){
+				be+= '<a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',2);">置顶</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',3);">公告</a>&nbsp;|&nbsp;';	
+			}else if(rowData.pic==2){
+				be+= '<a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',1);">普通</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',3);">公告</a>&nbsp;|&nbsp;';	
+			}else if(rowData.pic==3){
+				be+= '<a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',2);">置顶</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:comake(\''+rowid+'\',\''+rowData.title+'\',1);">普通&nbsp;|&nbsp;</a>';	
+			}
+			if(rowData.classes==1){
+				be+= '<a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',2);">精华</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',3);">重要</a>';	
+			}else if(rowData.classes==2){
+				be+= '<a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',1);">常用</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',3);">重要</a>';	
+			}else if(rowData.classes==3){
+				be+= '<a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',2);">精华</a>&nbsp;|&nbsp;'
+					  +' <a style="color:#0000ff;" href="javascript:makeleave(\''+rowid+'\',\''+rowData.title+'\',1);">常用</a>';	
+			}
+				
+		stus+='已审核';		
+		}else if(rowData.status==5){
+			be+= '<a style="color:#0000ff;" href="javascript: modify(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\',\''+rowData.pid+'\');">修改</a>&nbsp;|&nbsp;'
+						//+' <a style="color:#0000ff;" href="javascript:commit(\''+rowid+'\',\''+rowData.title+'\');">提交</a>&nbsp;|&nbsp;'
+						//+' <a style="color:#0000ff;" href="javascript:repeal(\''+rowid+'\',\''+rowData.title+'\');">撤销</a>&nbsp;|&nbsp;'
+				+' <a style="color:#0000ff;" href="javascript:visibles(\''+rowid+'\',\''+rowData.cid+'\',\''+rowData.title+'\');">可见</a>&nbsp;&nbsp;'
+						//+' <a style="color:#0000ff;" href="javascript:trash(\''+rowid+'\',\''+rowData.title+'\');">回收站</a>';
+		stus+='屏蔽';
+		}
+		if(rowData.pic==2){
+			img='<img src="images/lore/pin_1.gif" width="17" height="17" />';
+		}else if(rowData.pic==3){
+			img='<img src="images/lore/ann_icon.gif" width="17" height="17" />';
+		}
+		if(rowData.levels==3){
+			txt='<img src="images/lore/hot_1.gif" width="17" height="17" />';
+		}else if(rowData.levels==2){
+			txt='<img src="images/lore/recommend_1.gif" width="17" height="17" />';
+		}
+         jQuery("#list").jqGrid('setRowData',rowid,{pic:img})
+		 jQuery("#list").jqGrid('setRowData',rowid,{title:"<a href='?model=lore_index&action=viewthread&pid="+rowData.pid+"&key="+rowid+"&sby="+rowData.cid+"'>"+rowData.title+"</a>&nbsp;&nbsp;&nbsp;&nbsp;"+txt})
+		 jQuery("#list").jqGrid('setRowData',rowid,{edit:be});
+		  jQuery("#list").jqGrid('setRowData',rowid,{sta:stus});
+
+    }
+	
+})
+	jQuery("#list").jqGrid('navGrid','#plist',{add:false,edit:false,del:false,search:false});
+
+	$("#subm").bind("click", function(e){
+					submits();
+          });
+	
+	$("#meetingtype").bind("change", function(e){
+		 submits();
+     });
+		
+}); 
+    function modify(key,cid,name,pid){
+	   tb_show('修改'+name+'信息', '?model=lore_index&action=showapply&cid='+cid+'&rand_key='+key+'&pid='+pid
+			                        +'&so=so&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=900');
+	 }
+	
+	 function submits(){
+		var tagsearch=$("#tagsall").val();
+		var sdate=$("#sdate").val();
+		var edate=$("#edate").val();
+		var keyword= $("#keywords").val();
+    	jQuery("#list").jqGrid('setGridParam',{url:"?model=lore_index&action=managerdata&status="+tagsearch+"&sdate="+sdate+"&edate="+edate+"&keyword="+keyword,page:1}).trigger("reloadGrid");	
+	 }
+
+	function commit(key,name){
+		if(confirm('您要提交-'+name+'- 贴子吗？')){ 
+			$.post('?model=lore_index&action=operation',{rand_key:key,op:2,rand:rand},
+					function (data)
+					{
+						if(data)
+						{
+							alert(data);
+							$("#refresh_list").click();
+						}else{
+							alert("删除失败");
+						}
+					 }
+					)
+				 }
+	}
+	function trash(key,name){
+			if(confirm('您要放入-'+name+'-回收站吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:6,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+		}
+	function repeal(key,name){
+			if(confirm('您撤销 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:1,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+		}
+		function comake(key,name,op){
+			if(confirm('您操作 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=comake',{rand_key:key,op:op,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+			
+			
+		}
+		function makeleave(key,name,op){
+			if(confirm('您操作 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=makeleave',{rand_key:key,op:op,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click(); 
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+		
+		}
+		function publish123(key,name){
+			if(confirm('您发布 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("发布失败");
+							}
+						 }
+						)
+					 }
+			
+			
+			
+		}
+		function shield(key,name){
+			if(confirm('您要屏蔽-'+name+'-贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:5,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+		}
+		function visible(key,name){
+			if(confirm('您要可见-'+name+'-贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+					 }
+			
+			
+			
+		}
+	
+		
+$("#publishsubmit").bind("click", function(e){		   
+    var key=$("#publishskey").val();
+	var id=$("#publishsid").val();
+	var name=$("#publishsname").val();
+	var content=$('#publishscount').text();
+	if(key){
+	if(confirm('您发布 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								
+							  if(!content){
+								   hideWindow('publishs');
+								$("#publishskey").val('');
+								$("#publishsid").val('');
+								$("#publishsname").val('');
+								$('#publishscount').text('');
+								alert(data);
+							//window.location.reload();
+							  $("#refresh_list").click();
+							  }
+							}else{
+								alert("发布失败");
+							}
+						 }
+						)
+	 
+  	if(content){ 
+	     $.post('?model=lore_index&action=addmessage',{mcontent:content,key:id,mclass:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								 hideWindow('publishs');
+								$("#publishskey").val('');
+								$("#publishsid").val('');
+								$("#publishsname").val('');
+								$('#publishscount').text('');
+								alert(data);
+								$("#refresh_list").click();
+								// window.location.reload(); 
+							}else{
+								alert("发送失败");
+							}
+						 }
+					)
+
+	}
+  }
+	}
+   });
+$("#repealsubmit").bind("click", function(e){		   
+    var key=$("#repealskey").val();
+	var id=$("#repealsid").val();
+	var name=$("#repealsname").val();
+	var content=$('#repealscount').text();
+	if(key){
+	if(confirm('您打回 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:1,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+							  if(!content){
+								  hideWindow('repeals');
+								$("#repealskey").val('');
+								$("#repealsid").val('');
+								$("#repealsname").val('');
+								$('#repealscount').text('');
+								alert(data);
+								$("#refresh_list").click();
+							  }
+							}else{
+								alert("发布失败");
+							}
+						 }
+						)
+	
+  	if(content){ 
+	     $.post('?model=lore_index&action=addmessage',{mcontent:content,key:id,mclass:1,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								hideWindow('repeals');
+								$("#repealskey").val('');
+								$("#repealsid").val('');
+								$("#repealsname").val('');
+								$('#repealscount').text('');
+								alert(data);
+								$("#refresh_list").click();
+								//window.location.reload(); 
+							}else{
+								alert("发送失败");
+							}
+						 }
+					)
+
+	}
+  }
+	 }
+   });
+
+$("#visiblesubmit").bind("click", function(e){		   
+    var key=$("#visibleskey").val();
+	 var id=$("#visiblesid").val();
+	var name=$("#visiblesname").val();
+	var content=$('#visiblescount').text();
+	if(key){
+	if(confirm('您设 -'+name+'- 贴子可见吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+							  if(!content){
+								  hideWindow('visibles');
+								$("#visibleskey").val('');
+								$("#visiblesid").val('');
+								$("#visiblesname").val('');
+								$('#visiblescount').text('');
+								alert(data);
+								$("#refresh_list").click();
+							  }
+							}else{
+								alert("发布失败");
+							}
+						 }
+						)
+	 
+  	if(content){ 
+	     $.post('?model=lore_index&action=addmessage',{mcontent:content,key:id,mclass:3,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								hideWindow('visibles');
+								$("#visibleskey").val('');
+								$("#visiblesid").val('');
+								$("#visiblesname").val('');
+								$('#visiblescount').text('');
+								alert(data);
+								$("#refresh_list").click();
+							}else{
+								alert("发送失败");
+							}
+						 }
+					)
+
+	}
+  }
+	}
+   });
+
+
+$("#shieldsubmit").bind("click", function(e){		   
+    var key=$("#shieldskey").val();
+	 var id=$("#shieldsid").val();
+	var name=$("#shieldsname").val();
+	var content=$('#shieldscount').text();
+	if(key){
+	if(confirm('您屏蔽 -'+name+'- 贴子吗？')){ 
+				$.post('?model=lore_index&action=operation',{rand_key:key,op:5,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								
+							  if(!content){
+								  hideWindow('shields');
+								$("#shieldskey").val('');
+								$("#shieldsid").val('');
+								$("#shieldsname").val('');
+								$('#shieldscount').text('');
+								alert(data);
+								$("#refresh_list").click();
+							  }
+							}else{
+								alert("发布失败");
+							}
+						 }
+						)
+	
+  	if(content){ 
+	     $.post('?model=lore_index&action=addmessage',{mcontent:content,key:id,mclass:5,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								hideWindow('shields');
+								$("#shieldskey").val('');
+								$("#shieldsid").val('');
+								$("#shieldsname").val('');
+								$('#shieldscount').text('');
+								alert(data);
+								$("#refresh_list").click();
+															 //window.location.reload(); 
+							}else{
+								alert("发送失败");
+							}
+						 }
+					)
+
+	}
+  }
+	 }
+   });
+function hideWindow(id) {
+	//$("#"+id).fadeTo("slow", 0.66);
+	$("#"+id).fadeOut("slow"); 
+}
+function showWindow(id) {
+	$("#"+id).show();
+
+}
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#publishs").css("top"));
+		left=e.pageX-parseInt($("#publishs").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#publishs").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+ function publishs(key,id,name){
+		 $("#publishskey").val(key);
+		 $("#publishsid").val(id);
+		 $("#publishsname").val(name);
+		 $('#publishscount').text('');
+	  	 showWindow('publishs');		 
+	}
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#repeals").css("top"));
+		left=e.pageX-parseInt($("#repeals").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#repeals").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+ function repealback(key,id,name){
+		 $("#repealskey").val(key);
+		 $("#repealsid").val(id);
+		  $("#repealsname").val(name);
+		 $('#repealcount').text('');
+	  	 showWindow('repeals');		 
+	}
+	
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#shields").css("top"));
+		left=e.pageX-parseInt($("#shields").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#shields").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+ function shields(key,id,name){
+		 $("#shieldsid").val(id);
+		 $("#shieldskey").val(key);
+		 $("#shieldsname").val(name);
+		 $('#shieldscount').text('');
+	  	 showWindow('shields');		 
+	}
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#visibles").css("top"));
+		left=e.pageX-parseInt($("#visibles").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#visibles").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+ function visibles(key,id,name){
+		 $("#visibleskey").val(key);
+		  $("#visiblesid").val(id);
+		   $("#visiblesname").val(name);
+		 $('#visiblescount').text('');
+	  	 showWindow('visibles');		 
+	}
+
+
+</script>
+</body>
+</html>

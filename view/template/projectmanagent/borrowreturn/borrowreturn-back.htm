@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>打回归还申请</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript">
+	$(document).ready(function(){
+		//邮件渲染
+		$("#TO_NAME").yxselect_user({
+			hiddenId : 'TO_ID',
+			mode : 'check'
+		});
+		// 验证信息
+		validate({
+			"backReason" : {
+				required : true
+			}
+		});
+	})
+	//显示/隐藏打回原因
+	function showOrHideReason(obj) {
+		if (obj.value == "y") {
+			$('#backReason').parents('tr:first').show();
+			$('#backReason').addClass('validate[required]');
+		}else{
+			$('#backReason').parents('tr:first').hide();
+			$('#backReason').removeClass('validate[required]').val('');
+		}
+	}
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	打回归还申请
+    </span>
+</div>
+<form id="form1" method="post" action="?model=projectmanagent_borrowreturn_borrowreturn&action=disposeback">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">归还单编号</td>
+		<td class="form_text_right">
+			{Code}
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">借用单编号</td>
+		<td class="form_text_right">
+			{borrowCode}
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">设备责任人</td>
+		<td class="form_text_right">
+			{salesName}
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">操作人</td>
+		<td class="form_text_right">
+			{createName}
+		</td>
+    </tr>
+	</table>
+    <table class="form_main_table">
+    	<tr>
+	   		<td class="form_text_left">是否邮件通知
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="borrowreturn[mailInfo][issend]" value="y" checked="checked" onclick="checkEmailTA(this);showOrHideReason(this);"/>是
+	      		<input type="radio" name="borrowreturn[mailInfo][issend]" value="n" onclick="checkEmailTA(this);showOrHideReason(this);"/>否
+			</td>
+		</tr>
+	   	<tr id="maildiv">
+	   		<td class="form_text_left">邮件接收人
+	       	</td>
+	       	<td colspan="3" class="form_text_right">
+			    <input type="text" name="borrowreturn[mailInfo][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly" value="{sendName}"/>
+	    		<input type="hidden" name="borrowreturn[mailInfo][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+		    </td>
+	   	</tr>
+	    <tr>
+			<td class="form_text_left">
+				<span class="blue">打回原因</span>
+			</td>
+			<td class="form_text_right">
+				 <textarea class="txt_txtarea_font" name="borrowreturn[backReason]" id="backReason">{backReason}</textarea>
+				 <br />
+				 <span class="red">打回成功后会通过邮件将单号及打回原因发送到邮件接收人邮箱</span>
+			</td>
+	    </tr>
+	    <tr>
+			<td class="txt_btn" colspan="2">
+	         	<input type="hidden" name="borrowreturn[id]" value="{id}" />
+			   	<input type="submit" class="txt_btn_a" value="打  回"/>
+	         	<input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+			</td>
+	    </tr>
+	</table>
+</form>
+</body>
+</html>

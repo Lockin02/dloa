@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="view/template/engineering/project/js/esmproject-edit-formValidator.js"></script>
+        <!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+		<script>
+		var uploadfile;
+		$(function() {
+			$("#officeName").yxcombogrid_office();
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_esm_project",//业务模块编码，一般取表名
+				"serviceId":"{id}"
+			});
+		});
+
+		function changePlanDuration(sDayEl,eDayEl,el){//自动计算计划工期
+			var subday=plusDateInfo(sDayEl,eDayEl)
+			$("#"+el).val(subday);
+		}
+
+		</script>
+        <title>项目修改</title>
+    </head>
+    <body>
+        <form method="post" id="form1" action="?model=engineering_project_esmproject&action=openEdit">
+            <table class="form_main_table">
+                <tr>
+                    <td class="form_text_left">
+                        项目名称
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" id="projectName" name="esmproject[projectName]" value="{projectName}" />
+                        <span class='red'>[*]</span>
+                        <div id="projectNameTip" class="tipShortTxt"></div>
+                    </td>
+                    <td class="form_text_left">
+                        项目编号
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" id="projectCode" name="esmproject[projectCode]" value="{projectCode}" />
+                        <span class='red'>[*]</span>
+                        <div id="projectCodeTip" class="tipShortTxt"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        所属办事处
+                    </td>
+                    <td class="form_view_right">
+                    	<input type="text" id="officeName" name="esmproject[officeName]" value="{officeName}" class="txt"/>
+                    	<input type="hidden"  id="officeId" name="esmproject[officeId]" value="{officeId}"/>
+                    	<span class='red'>[*]</span>
+                        <div id="officeNameTip" class="tipShortTxt"></div>
+                    </td>
+                    <td class="form_text_left">
+                        项目类别
+                    </td>
+                    <td class="form_view_right">
+                    	<select class="select" id=projectType name="esmproject[projectType]">
+                    		<option ="">请选择</option>
+                        	{projectType}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        项目系数
+                    </td>
+                    <td class="form_view_right">
+                    	{projectPoint}
+                    </td>
+                    <td class="form_text_left">
+                        优先级
+                    </td>
+                    <td class="form_view_right">
+                        <select class="select" id="projectLevel" name="esmproject[projectLevel]">
+                        	<option ="">请选择</option>
+                            {projectLevel}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        主要网络
+                    </td>
+                    <td class="form_view_right">
+                        <select class="select" id="projectLevel" name="esmproject[mainNet]">
+                        	<option ="">请选择</option>
+                            {mainNet}
+                        </select>
+                    </td>
+                    <td class="form_text_left">
+                        长短期
+                    </td>
+                    <td class="form_view_right">
+                        <select class="select" id="projectLevel" name="esmproject[cycle]">
+                       		<option ="">请选择</option>
+                            {cycle}
+                        </select>
+                    </td>
+                <tr>
+                    <td class="form_text_left">
+                        (预计)开始
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" onfocus="WdatePicker()" onblur="changePlanDuration('planDateStart','planDateClose','appraiseWorkload')" id="planDateStart" name="esmproject[planDateStart]" value="{planDateStart}" readonly />
+                        <span class='red'>[*]</span>
+                        <div id="planDateStartTip" class="tipShortTxt"></div>
+                    </td>
+                    <td class="form_text_left">
+                        (预计)结束
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" onfocus="WdatePicker()" onblur="changePlanDuration('planDateStart','planDateClose','appraiseWorkload')" id="planDateClose" name="esmproject[planDateClose]" value="{planDateClose}" readonly />
+                        <span class='red'>[*]</span>
+                        <div id="planDateCloseTip" class="tipShortTxt"></div>
+                    </td>
+                </tr>
+				<tr>
+                    <td class="form_text_left">
+                        项目天数
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" id="appraiseWorkload" name="esmproject[appraiseWorkload]" value="{appraiseWorkload}" />
+                    </td>
+                    <td class="form_text_left">
+                        人天数
+                    </td>
+                    <td class="form_view_right">
+                        <input type="text" class="txt" name="esmproject[dayPerPeople]" value="{dayPerPeople}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        主管经理
+                    </td>
+                    <td class="form_view_right">
+                        <input type="hidden" id="mainManagerId" name="esmproject[mainManagerId]" value="{mainManagerId}"/>
+                           <input type="text" class="txt readonlyCmp"  id="mainManager" name="esmproject[mainManager]" value="{mainManager}" readonly/>
+                           <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('mainManagerId','mainManager')"/>
+                           <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('mainManagerId','mainManager')"/>
+                    </td>
+                    <td class="form_text_left">
+                        项目经理
+                    </td>
+                    <td class="form_view_right">
+                   		{managerName}
+                    </td>
+                </tr><tr>
+                    <td class="form_text_left">
+                        所属省
+                    </td>
+                    <td class="form_view_right" colspan="3">
+                        <input type="text" class="txt" name="esmproject[proName]" value="{proName}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        项目工作内容
+                    </td>
+                    <td class="form_view_right" colspan="3">
+                        <textarea name="esmproject[description]" rows="10" style="width:100%">{description}</textarea>
+                    </td>
+                </tr>
+                <tr>
+					<td class="form_text_left">项目附件</td>
+					<td class="form_text_right" colspan="3">
+					<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload"><span id="swfupload"></span> <input
+						id="btnCancel" type="button" value="中止上传"
+						onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+					</div>
+					</td>
+				</tr>
+                <tr>
+                    <td colspan="4">
+                    	<input type="hidden" id="id" name="esmproject[id]" value="{id}"/>
+                        <input type="submit" class="txt_btn_a" value="保 存"/>
+                        <input type="button" class="txt_btn_a" value="关 闭" onclick="self.parent.tb_remove();"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+
+</html>

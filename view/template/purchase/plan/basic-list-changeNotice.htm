@@ -1,0 +1,151 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue=$('#planNumb').val();
+			location="?model=purchase_plan_basic&action=planList&planNumb="+searchvalue+"&clickNumb=3";
+		}
+
+		//form提交判断
+		function purchForm(){
+			var idsArry = $(checkListIdStr).val();
+			if( idsArry==null||idsArry==""){
+				alert("请至少选择一条可下达采购物料信息");
+			}else{
+				location.href = "?model=purchase_plan_basic&action=toAdd&idsArry="+idsArry;
+			}
+		}
+
+		function selectButton(obj,id,numb){
+			var objVal = $(obj).attr('value');
+			if( objVal == "readReceive" ){
+				location.href = "?model=purchase_plan_basic&action=readReceive&id="+id+"&numb="+numb;
+			}
+
+		}
+    </script>
+</head>
+<body>
+<!--
+<table border="0" width="100%" cellspacing="0" cellpadding="3" class="small">
+  <tr>
+    <td class="Big"><img src="images/sys_config.gif"><b><font color="#000000"> 采购计划</font></b>
+    </td>
+  </tr>
+</table>
+{topPlan}
+ -->
+<div class="main_wraper">
+<table id="myTab" class="main_table_search">
+	<tr class="tablecontrol" height="28px">
+		<td colspan="15" align="left">
+			&nbsp;采购申请编号：<input type="text" name="planNumb" id="planNumb" value="{planNumb}">
+			<input type="button" class="txt_btn_a" value="搜索"  onclick="search();">
+		</td>
+	</tr>
+</table>
+<table class="main_table">
+    <tr height="28" class="main_tr_header">
+        <td  align="center"  height="30" width="4%">
+        	<p class="allImg">
+            	序号<br/>
+            	<img src="images/expanded.gif" />
+        	</p>
+        </td>
+        <td  align="center" >
+        	<p class="checkAll">
+            	采购申请编号
+            </p>
+        </td>
+        <td  align="center" width="8%">
+            申请人
+        </td>
+        <td  align="center" width="8%">
+            采购类型
+        </td>
+        <td  align="center" width="6%">
+            采购状态
+        </td>
+        <td width="50%">
+            <table width="100%"  align="center" frame=void>
+            	<tr>
+            		<td colspan="4">
+            			采购申请-物料信息
+            		</td>
+            	</tr>
+            	<tr>
+            		<td >
+			            物料编号<br>名称
+			        </td>
+			        <td  width="20%">
+			           申请<br>数量
+			        </td>
+			        <td  width="20%">
+			            未下达<br>数量
+			        </td>
+			        <td  width="20%">
+			            期望<br>完成日期
+			        </td>
+            	</tr>
+            </table>
+        </td>
+        <td width="80">
+			操作
+		</td>
+    </tr>
+    {list}
+</table>
+<input type="hidden" id="idsArry" name="idsArry" value="{idsArry}">
+<br>
+</div>
+</body>
+</html>

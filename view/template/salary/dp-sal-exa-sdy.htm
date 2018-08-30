@@ -1,0 +1,453 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','单号','员工','部门','节假日补贴','福利补贴','备注','当前步骤','状态' ,'提交人', '审批日期','可否修改'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:80, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'fs.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'fid',index:'f.id', width:50, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'username',index:'u1.user_name', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'olddept',index:'d.dept_name', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'sdymeal',index:'sp.sdymeal', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'sdyother',index:'sp.sdyother', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'remark',index:'f.remark', width:160, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'item',index:'fs.item', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'sta',index:'f.sta', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'createuser',index:'f.createuser', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'createdt',index:'f.createdt', width:140, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'ck',index:'f.id',hidden:true ,key:true ,width:40 }
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100,300,500],
+                    pager: '#prowedgrid',
+                    sortname: 'fs.id',
+                    width:ww-3,
+                    height:(wh-135+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "desc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    multiselect: true,
+                    multikey: "key",
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        var cs='#000000';
+                        switch(rowData.ck){
+                            case 'yes':
+                                cl='green';
+                                be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='审批' title='审批工资信息' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                break;
+                            case 'no':
+                                be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='详情' title='审批工资信息' onclick=\"infClickFun('"+rowData.key+"')\" />";
+                                cl="#FF9900";
+                                jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{cb:'已审'});
+                                break;
+                        }
+                        switch(rowData.sta){
+                            case '通过':
+                                cs='green';
+                                break;
+                            case '打回':
+                                cs='red';
+                                break;
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'sta','',{color:cs});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_pass:{
+                            required:true,
+                            number:true
+                        },
+                        user_passdt:{
+                            required:true
+                        }
+                    },
+                    messages:{
+                        user_pass:{
+                            required:'请输入转正工资',
+                            number:'请输入正确金额'
+                        },
+                        user_passdt:{
+                            required:'请输入转正日期'
+                        }
+                    }
+                });
+                jQuery("#all_sel").click( function() {
+                    var s;
+                    s = jQuery("#rowedgrid").jqGrid('getGridParam','selarrrow');
+                    if(s==''){
+                        alert('批量审批至少需要选择一项！');
+                    }else{
+                        var rand=Math.random()*100000;
+                        $.post('?model=salary&action=dp_sal_exa_ck',{
+                            id:s,rand:rand
+                            },
+                            function (data)
+                            {
+                                if(data!='1'){
+                                    alert('请选择待审项！');
+                                    return false;
+                                }else{
+                                    $('#user_key').val(s);
+                                    $('#lui_rowedgrid').css('display', 'block');
+                                    $('#dp_exa_all').css('display', 'block');
+                                    return true;
+                                }
+                            }
+                        )
+                    }
+                });
+                jQuery("#exaAllBtn").click( function() {
+                    var rand=Math.random()*100000;
+                    var id=$('#user_key').val();
+                    var res=$('input[type=radio][name=exa_res_all]:checked').val();
+                    var remark=$('#exa_remark').val();
+                    $('#exaAllBtn').attr('disabled',true);
+                    $.post('?model=salary&action=dp_sal_exa_in',{
+                        id:id,res:res,remark:remark,rand:rand,sub:'all'
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $('#exaAllBtn').attr('disabled',false);
+                                return false;
+                            }else{
+                                alert('操作成功！');
+                            }
+                            $('#exaAllBtn').attr('disabled',false);
+                            paCloseFun('dp_exa_all');
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    )
+                });
+            });
+            
+            //转正
+            function amClickFun(id){
+                var rand=Math.random()*100000;
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#exa_fid').html(rowData.fid);
+                $('#exa_user').html(rowData.username);
+                $('#exa_dept').html(rowData.olddept);
+                $('#exa_rmk').html(rowData.remark);
+                $('#exa_mam').html(rowData.sdymeal);
+                $('#exa_oam').html(rowData.sdyother);
+                $('#exa_eym').html(rowData.eym);
+                $('#exa_item').html(rowData.item);
+                $('#exa_ctu').html(rowData.createuser);
+                $('#exa_ctd').html(rowData.createdt);
+                $('#exa_info').html('');
+                $('#exa_remark').val('');
+                $('input[name=exa_res]').get(0).checked = true
+                $.post('?model=salary&action=dp_sal_exa_info',{id:rowData.key,rand:rand},
+                    function (data){
+                        $('#exa_info').html(data);
+                    }
+                )
+            }
+            function infClickFun(id){
+                var rand=Math.random()*100000;
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#dp_exa_inf').css('display', 'block');
+                $('#inf_fid').html(rowData.fid);
+                $('#inf_user').html(rowData.username);
+                $('#inf_dept').html(rowData.olddept);
+                $('#inf_rmk').html(rowData.remark);
+                $('#inf_am').html(rowData.changeam);
+                $('#inf_edt').html(rowData.createdt);
+                $('#inf_item').html(rowData.item);
+                $('#inf_ctu').html(rowData.createuser);
+                $('#inf_ctd').html(rowData.createdt);
+                $.post('?model=salary&action=dp_sal_exa_info',{id:rowData.key,rand:rand},
+                    function (data){
+                        $('#inf_info').html(data);
+                    }
+                )
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var res=$('input[type=radio][name=exa_res]:checked').val();
+                var remark=$('#exa_remark').val();
+                $('#newuserSub').attr('disabled',true);
+                $.post('?model=salary&action=dp_sal_exa_in',{
+                    id:id,res:res,remark:remark,rand:rand
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        paCloseFun('hr_user_new');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function gridNavSeaFun(){
+                var exa_sta = jQuery("#exa_sta").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{data_list}&exa_sta="+exa_sta,page:1}).trigger("reloadGrid");
+            }
+        </script>
+        <style type="text/css">
+            #newuserForm label.error {
+                margin-left: 10px;
+                width: auto;
+                display: inline;
+                color: red;
+            }
+            .table {
+                border-collapse: collapse;
+                border:1px solid #D3E5FA;
+                text-align:center;
+                word-break:break-all;
+            }
+            .table td {
+                border:1px solid #D3E5FA;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;overflow:auto;width: 620px;height:100%;"  >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all table" align="center" style="text-align: left;width: 608px;" cellpadding="0" cellspacing="1" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            审批信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 单号：</td>
+                        <td id="exa_fid"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 姓名：</td>
+                        <td id="exa_user"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td id="exa_dept"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 节假日补贴：</td>
+                        <td id="exa_mam"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 福利补贴：</td>
+                        <td id="exa_oam"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 备注：</td>
+                        <td id="exa_rmk"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 审批信息：</td>
+                        <td id="exa_info"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 审批：</td>
+                        <td>
+                            <input type="radio" name="exa_res" id="exa_res" value="yes" checked="checked" />同意
+                            <input type="radio" name="exa_res" id="exa_res" value="no" />打回
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 意见：</td>
+                        <td><textarea id="exa_remark" name="exa_remark" rows="5" cols="38"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newuserSub" value="审批"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="dp_exa_all" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 68px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 420px;" cellpadding="0" cellspacing="0" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        批量审批
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top: 5px;"> 审批：</td>
+                    <td>
+                        <input type="radio" name="exa_res_all" id="exa_res_all" value="yes" checked="checked" />同意
+                        <input type="radio" name="exa_res_all" id="exa_res_all" value="no" />打回
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl"> 意见：</td>
+                    <td><textarea id="exa_remark" name="exa_remark_all" rows="5" cols="38"></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" id="exaAllBtn" value="审批" />
+                        <input type="button" onclick="paCloseFun('dp_exa_all');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="dp_exa_inf" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all table" align="center" style="text-align: left;width: 608px;" cellpadding="0" cellspacing="1" >
+                <tr>
+                    <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        审批信息
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top:5px;"> 单号：</td>
+                    <td id="inf_fid"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 姓名：</td>
+                    <td id="inf_user"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 部门：</td>
+                    <td id="inf_dept"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 备注：</td>
+                    <td id="inf_rmk"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 金额：</td>
+                    <td id="inf_am"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 审批日期：</td>
+                    <td id="inf_edt"></td>
+                </tr>
+                <tr>
+                    <td class="tl"> 审批信息：</td>
+                    <td id="inf_info"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" onclick="paCloseFun('dp_exa_inf');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

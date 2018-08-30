@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看研发设备采购申请</title>
+    {#commonInclude#}
+    <script type="text/javascript"
+            src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/apply-rd-view.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            if ('{isRd}' == "0") {
+                return "是";
+                $("#isRd").text("是");
+            } else {
+                $("#isRd").text("否");
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看研发设备采购申请
+    </span>
+</div>
+<form id="form1" method="post" action="" name="form1">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">申请部门</td>
+            <td class="form_view_right">
+                {applyDetName}
+            </td>
+            <td class="form_text_left">申请日期</td>
+            <td class="form_view_right">
+                {applyTime}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请人名称</td>
+            <td class="form_view_right">
+                {applicantName}
+            </td>
+            <td class="form_text_left">申请人电话</td>
+            <td class="form_view_right">
+                {userTel}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">是否属于研发专项设备</td>
+            <td class="form_text_right" colspan="3" id="isRd">
+                {isRd}
+            </td>
+        </tr>
+        <tr id="hiddenA">
+            <td class="form_text_left">研发专项项目名称</td>
+            <td class="form_view_right">{projectName}</td>
+            <td class="form_text_left">研发专项编号</td>
+            <td class="form_view_right">{projectCode}</td>
+        </tr>
+        <tr>
+            <td class="form_text_left">设备用途</td>
+            <td class="form_text_right" colspan="3">
+                <textarea class="txt_txtarea_font" rows="4" readOnly>{assetUse}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">特殊事项</td>
+            <td class="form_text_right" colspan="3">
+                <textarea class="txt_txtarea_font" readOnly>{remark}</textarea>
+            </td>
+        </tr>
+    </table>
+    <div id="RDProductTable"></div>
+    <table class="form_main_table">
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="id" value="{id}"/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

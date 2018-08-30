@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script> 
+        <link rel="stylesheet" type="text/css" href="js/loadmask/jquery.loadmask.css"/>
+        <script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
+        
+        <title></title>
+        <script type="text/javascript">
+            var stabar= 0;
+            $(document).ready(function() {
+                $('#myForm').form({
+                    onSubmit:function(event) {
+                        
+                        if($('#file_obj').val()==''){
+                            alert('请导入对比数据');
+                            return false;
+                        }
+                        if (stabar < 99){
+                            stabar += Math.floor(Math.random() * 10);
+                            if(stabar>99){
+                                stabar=99;
+                            }
+                            $('#stabar').progressbar('setValue', stabar);
+                            setTimeout(arguments.callee, 200);
+                        }
+                    },
+                    success:function(data){
+                        
+                        stabar=100;
+                        $('#stabar').progressbar('setValue', stabar);
+                        //alert(php2js(data));
+                        $('#up_msg').html('导入的数据内容：');
+                        $('#up_list').html(php2js(data));
+                        
+                    }
+                });
+                //读取当前月数据
+                selectDim();
+            });
+            function php2js(str){
+                str = str.replace(new RegExp("&amp;",'gm'), '&');
+                str = str.replace(new RegExp("&amp;",'gm'), '&');
+                str = str.replace(new RegExp("&amp;",'gm'), '"');
+                str = str.replace(new RegExp("&#039;",'gm'), "'");
+                str = str.replace(new RegExp("&lt;",'gm'), '<');
+                str = str.replace(new RegExp("&gt;",'gm'), '>');
+                return str;
+            }
+            function changeCtrFun(){
+                $("#repdiv").mask("等待中......");
+                var rand=Math.random()*100000;
+                var repkey=$('#repkey').val();
+                var listid=$('#listid').val();
+                var uploadedFile=$('#uploadedFile').val();
+                if(uploadedFile==''||uploadedFile==undefined){
+                    alert('请先导入数据检查！');
+                    $("#repdiv").unmask();
+                    return false;
+                }
+                var astr='数据维度：';
+                var pstr='';
+                $(".dim").each(function(i){ 
+                    astr = astr +'\n'+ this.name +'：'+this.value  
+                    pstr = pstr +'&'+ this.id +'='+this.value
+                }); 
+                if(confirm(astr+'\n确定提交以下数据信息？')){
+                    $.post('?model=module_report&action=upExcelSub&'+pstr,{
+                        rand:rand,repkey:repkey,uploadedFile:uploadedFile,listid:listid
+                        },
+                        function (data)
+                        {        
+                            //alert(data);
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $('#newuserSub').attr('disabled',false);
+                                $("#repdiv").unmask();
+                                return false;
+                            }else{
+                                var listid=$('#listid').val();
+                                if(listid==''){
+                                    $('#listid').val(msg['listid']);
+                                }
+                                $("#repdiv").unmask();
+                                alert('提交成功！'+msg['listid']);
+                            }
+                             
+                        }
+                    )
+                }else{
+                    $("#repdiv").unmask();
+                }
+            }
+            function clearBar(){
+                stabar=0;
+                $('#stabar').progressbar('setValue', stabar);
+            }
+            
+            function selectDim(){
+                var rand=Math.random()*100000;
+                var repkey=$('#repkey').val();
+                var pstr='';
+                $(".dim").each(function(i){ 
+                    pstr = pstr +'&'+ this.id +'='+this.value
+                }); 
+                //alert(pstr);
+                $.post('?model=module_report&action=getRep&'+pstr,{
+                    rand:rand,repkey:repkey
+                    },
+                    function (data)
+                    {        
+                        //alert((data));
+                        if(data){
+                            $('#up_msg').html('已有的数据内容（<font color="red">双击数据单元格，可以修改数据</font>）：');
+                            $('#up_list').html(data);
+                        }else{
+                            $('#up_msg').html('暂无数据');
+                            $('#up_list').html('');
+                        }
+
+                    }
+                )
+            }
+            
+            function clearRep(){
+                var rand=Math.random()*100000;
+                var repkey=$('#repkey').val();
+                var pstr='';
+                $(".dim").each(function(i){ 
+                    pstr = pstr +'&'+ this.id +'='+this.value
+                }); 
+                //alert(pstr);
+                $.post('?model=module_report&action=delRep&'+pstr,{
+                    rand:rand,repkey:repkey
+                    },
+                    function (data)
+                    {        
+                        alert(data);
+                        $('#up_msg').html('暂无数据');
+                        $('#up_list').html('');
+                    }
+                )
+            }
+            
+            function outExcel(){
+                var rand=Math.random()*100000;
+                var repkey=$('#repkey').val();
+                var pstr='';
+                $(".dim").each(function(i){ 
+                    pstr = pstr +'&'+ this.id +'='+this.value
+                }); 
+                window.open('?model=module_report&action=excelRep&repkey='+repkey+'&rand='+rand+'&'+pstr);
+            }
+            
+            function changeTd(row,col){
+                var val=$('#td_'+row+'_'+col).html();
+                var input=$('#input_'+row+'_'+col).val();
+                
+                if(input==undefined){
+                    $('#td_'+row+'_'+col).html('<input type="text" name="td['+row+']['+col+']" id="input_'+row+'_'+col+'" class ="repdt" value="'+val+'" />');
+                }
+                var input=$('#saveTd').val();
+                if(input==undefined){
+                    $('#up_msg').html('<input type="button" id="saveTd" name="saveTd" onclick="saveTd()" value="保存修改" /> '+
+                                    '<input type="button" id="saveTd" name="saveTd" onclick="resetTd()" value="取消" />');
+                }
+            }
+            function saveTd(){
+                var rand=Math.random()*100000;
+                var repkey=$('#repkey').val();
+                var pstr='';
+                $(".dim").each(function(i){ 
+                    pstr = pstr +'&'+ this.id +'='+this.value
+                }); 
+                var dtstr='';
+                $(".repdt").each(function(i){ 
+                    dtstr = dtstr +'&'+ this.name +'='+this.value
+                }); 
+                $.post('?model=module_report&action=saveTd&'+pstr+'&'+dtstr,{
+                    rand:rand,repkey:repkey
+                    },
+                    function (data)
+                    {        
+                        alert(data);
+                        if(data=='1'){
+                            alert('数据已更新！');
+                            selectDim();
+                        }else{
+                            alert('数据更新失败！');
+                        }
+                    }
+                )
+            }
+            function resetTd(){
+                selectDim();
+            }
+        </script>
+        <style>
+            .repdt{
+                width:100px;
+            }
+            .reptd{
+            }
+        </style>
+    </head>
+    <body  id ="repdiv">
+        <div style="display:'{updis}' ; width:100% ">
+            <form action="{up_url}" method="post" name="myForm" id="myForm" enctype="multipart/form-data">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="ui-table" style="width:100% ;margin-bottom: 2px;">
+                    <tr>
+                        <th colspan="999" style="height:23px;">{repname}</th>
+                    </tr>
+                    <tr>
+                        {dim_list}
+                        <td>
+                            <div>
+                                <input type="hidden" id="repkey" value="{repkey}" />
+                                <input type="hidden" id="listid" value="{listid}" />
+                                <input type="file" style="display: {isGroup};" name="file_obj" id="file_obj" size="46"/>&nbsp;
+                                <input type="submit" style="display: {isGroup};" id="subctr" name="subctr" onclick="clearBar()" value="导入检查" />
+                                <input type="button" style="display: {isGroup};" id="changectr" name="changectr" value="提交数据" onclick="changeCtrFun()" title="提交数据"/>
+                                <input type="button" style="display: {isGroup};" id="delbt" name="delbt" onclick="clearRep()" value="清空" />
+                                <a style="display: {isGroup};" href="?model=module_report&action=writeRepFm&repkey={repkey}">模板</a>
+                                <input type="button" id="outbt" name="outbt" onclick="outExcel()" value="导出" />
+                            </div>
+                            <div id="stabar" class="easyui-progressbar progressbar" style="width:400px;display: {isGroup};"></div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div id="up_msg" style="width:100% ;font-size:12px;"></div>
+            <div id="up_list" style="width:100% ;font-size:10px;"></div>
+        </div>
+        <div style="display:'{wrdis}' ; width:100% ;margin-top: 3px;">
+            {wr_list}
+        </div>
+    </body>
+</html>

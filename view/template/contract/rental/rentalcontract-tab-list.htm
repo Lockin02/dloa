@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+    <head>
+        <title>
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+        <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+        <link rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+        <script type="text/javascript">
+            $(function() {
+                var parentId = $("#parentId").val();
+
+                //初始化tabsURL
+                var tabArr = [
+                			  "?model=contract_rental_rentalcontract&action=toWaitApp",
+                              "?model=contract_rental_rentalcontract&action=toApproval",
+                              "?model=contract_rental_rentalcontract&action=approvaled",
+                              "?model=contract_rental_rentalcontract&action=toChange",
+                              "?model=contract_rental_rentalcontract&action=toFinished"
+                              ];
+                //绑定事件(待抽出来)
+                $("#tabs1").tabs(".panes > iframe", {
+                    history: true,
+                    onClick: function(i, e) {
+                        var actTabId = "#iframe" + (parseInt(e) + 1);
+                        $(actTabId).attr("src", tabArr[e]);
+                    }
+                });
+
+            });
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <!-- the tabs -->
+            <ul class="tabs" id="tabs1">
+                <li>
+                    <a href="#tab1">待提交审批</a>
+                </li>
+                <li>
+                    <a href="#tab2">审批中</a>
+                </li>
+                <li>
+                    <a href="#tab3">执行中</a>
+                </li>
+                <li>
+                    <a href="#tab4">变更中</a>
+                </li>
+                <li>
+                    <a href="#tab5">已完成</a>
+                </li>
+            </ul>
+            <!-- tab "panes" -->
+            <div class="panes">
+                <iframe class="pane" id="iframe1" scrolling="auto" src="about:blank" height="660px" frameborder="0">
+                </iframe>
+                <iframe class="pane" id="iframe2" scrolling="auto" src="about:blank" height="600px" frameborder="0">
+                </iframe>
+                <iframe class="pane" id="iframe3" scrolling="auto" src="about:blank" height="600px" frameborder="0">
+                </iframe>
+                <iframe class="pane" id="iframe4" scrolling="auto" src="about:blank" height="600px" frameborder="0">
+                </iframe>
+                <iframe class="pane" id="iframe5" scrolling="auto" src="about:blank" height="600px" frameborder="0">
+                </iframe>
+            </div>
+            <input type="hidden" value="{parentId}" id="parentId" />
+            <input type="hidden" value="{parentCode}" id="parentCode" />
+        </div>
+    </body>
+
+</html>

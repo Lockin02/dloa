@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>查看采购订单</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var skeyStr="&skey={skey_}";
+		var id = $("#id").val();
+		var originalId = $("#originalId").val();
+		var applyNumb = $("#applyNumb").val();
+		var suppId = $("#suppId").val();
+		var suppName = $("#suppName").val();
+		var hwapplyNumb = $("#hwapplyNumb").val();
+		var inquiryId = $("#inquiryId").val();
+		var inquSkey = $("#inquSkey").val();
+		if(inquiryId==""){
+			$("#inquiry").hide();
+		}
+
+		//初始化tabsURL
+		var tabArr = [
+				"?model=purchase_contract_purchasecontract&action=init&perm=view&applyNumb="+applyNumb+"&id="+ id+skeyStr,
+				"?model=purchase_contract_purchasecontract&action=toReadRelationBill&id="+ id+skeyStr,
+				"?model=purchase_inquiry_inquirysheet&action=listForOrder&idArr="+ inquiryId
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+
+</head>
+<body>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">订单信息</a></li>
+	<li><a href="#tab2">订单关联单据</a></li>
+	<li id="inquiry"><a href="#tab3">采购询价</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="about:blank" height="800px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe2" src="about:blank" height="800px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="about:blank" height="600px" scrolling="auto" frameborder="0">
+	</iframe>
+</div>
+
+
+	<input type="hidden" value="{id}" id="id" />
+	<input type="hidden" value="{originalId}" id="originalId" />
+	<input type="hidden" value="{applyNumb}" id="applyNumb" />
+	<input type="hidden" value="{suppId}" id="suppId" />
+	<input type="hidden" value="{suppName}" id="suppName" />
+	<input type="hidden" value="{hwapplyNumb}" id="hwapplyNumb" />
+	<input type="hidden" value="{inquiryId}" id="inquiryId" />
+	<input type="hidden" value="{inquSkey}" id="inquSkey" />
+</div>
+
+</body>
+</html>

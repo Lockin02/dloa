@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css"/>
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+<script src="js/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script  type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+
+<title></title>
+</head>
+<style>
+.ui-jqgrid-sortable {
+	font-weight:normal;
+	font-size:12px;
+	height:24px;
+}
+.ui-jqgrid-title {
+	clear:both;
+	font-size:12px;
+	height:24px;
+	line-height:20px;
+}
+.ui-helper-clearfix {
+	height:24px;
+}
+.ui-row-ltr td {
+	border-top:0px #DDDDDD solid;
+	border-left:0px #DDDDDD solid;
+	border-right:0px #DDDDDD solid;
+}
+...table td {
+	border:1px #DCEDF9 solid;
+}
+.ui-widget-content jqgrow ui-row-ltr{
+ 	border-left:0px #DDDDDD solid;
+}
+.ui-jqgrid tr.ui-row-ltr td {
+  border-right-color: inherit;
+  border-right-style:none;
+  border-right-width: 1px;
+}
+.ui-state-default ui-th-column ui-th-ltr{
+	border-right-style:hidden;
+	border-left:0px #DDDDDD solid;
+	}
+	
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	border-right-style:hidden;
+	border-right:0px #DDDDDD solid;
+	}
+.ui-jqgrid .ui-jqgrid-htable th div{
+	 height: 24px;
+    line-height: 24px;
+	
+	}
+table td{
+	 height: 22px;
+    line-height: 15px;
+	
+	}
+.ui-jqgrid tr.jqgrow td {
+    border-bottom-color: #C2D5E3;
+    border-bottom-style:dashed;
+    border-bottom-width: 1px;
+	border-right-color: #C2D5E3;
+    border-right-style:dashed;
+    border-right-width: 1px;
+    font-weight: normal;
+    height: 24px;
+    overflow: hidden;
+    padding: 0 2px;
+    white-space: pre;
+}
+.ui-widget-content a {
+  color: #362B36;
+ 
+}
+.ui-widget-content a:link { text-decoration: none;}
+
+.ui-widget-content a:active { text-decoration:underline}
+
+.ui-widget-content a:hover { text-decoration:underline;color: red}
+
+.ui-widget-content a:visited { text-decoration: none;color: green} 
+</style>
+<body>
+<div id="listd" style='float:left; width:97%; margin:10px;'>
+  <table  id="list" class="scroll"  border="0" width="100%" cellpadding="0" cellspacing="0" >
+  </table>
+  <div id="plist"></div>
+ </div>
+<div id="sug" style="position: absolute;"></div>
+<script type="text/javascript"> 
+var rand=Math.random()*100000;
+var height=550;
+var height=$(window).height();
+height=$(window).height();
+jQuery(document).ready(function(){ 
+jQuery("#list").jqGrid({
+   	url:'?model=lore_index&action=reportmanagerdata',
+	datatype: "json",
+    colNames:['','标题','内容','纠错者','操作','查看','操 作','start','id','key','pid'],
+  	colModel:[
+		{name:'pic',index:'pic',width:30,align:"center"},	
+		{name:'title',index:'title',width:350,editable:true, align:"left"},
+		{name:'count',index:'count',width:350,editable:true, align:"left"},
+   		{name:'creater',index:'creater', width:150, align:"center"},
+		{name:'edit',index:'edit', width:250,align:"center"},
+		{name:'updatedt',index:'updatedt', width:150, align:"center",hidden:true},
+		{name:'levels',index:'levels', width:100,align:"center",hidden:true},
+		{name:'status',index:'status',width:150,align:"center",hidden:true},
+		{name:'cid',index:'cid',width:150,align:"center",hidden:true},
+		{name:'key',index:'key',width:150,align:"center",hidden:true},
+		{name:'pid',index:'pid',width:150,align:"center",hidden:true}
+   	],
+	rowNum:15,
+   	rowList:[15,30],
+   	height: height-270,
+	align:'center',
+   	pager: '#plist',
+	autowidth: true, 
+    viewrecords: true, 
+	rownumbers: true, 
+    sortorder: "asc",
+    sortname: 'pstatus', 
+	//striped: true,
+	caption:"<span id='headname' style='height:24px;'><strong style='color:#2779AA'>纠错管理</strong>"
+			 +"<img src='images/search.gif' alt='搜索' height='24' align='middle'/>"
+			// +"<span style='color:#2779AA;font-weight:normal'>标签：</span>"
+	      // +"<select name='tagsall' id='tagsall'><option value='-1'>所有标签</option>{taglist}</select>"
+		   +"<span style='color:#2779AA;font-weight:normal'>&nbsp;&nbsp;发布时间：</span>"
+		   +"<input name='sdate' id='sdate' onclick=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+		   +"onfocus=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" " 
+		   +"style='cursor: hand;width:120px;' value=''/>&nbsp;<span style='color:#2779AA;font-weight:normal'> 至：</span>"
+		   +"<input name='edate' style='cursor: hand;width:120px;'id='edate' onclick=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+		   +" onfocus=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" value=''/>&nbsp; "
+		  // +"<span style='color:#2779AA;font-weight:normal'>发布人：</span>"
+		   //+"<input name='username' type='text' style='width:100px;' id='username' value=''  />"
+		   +"<span style='color:#2779AA;font-weight:normal'>关键字：</span>"
+		   +"<input name='keywords' type='text' style='width:200px;' id='keywords' value=''  />"
+		   +"&nbsp;<input type='button' id='subm' name='subm'  value=' 搜索  ' align='middle' /></span>"
+	        +"&nbsp;&nbsp;&nbsp;<input type='button' onclick=\"location='?model=lore_index&action=manager'\"value='文章管理'/>",
+		   // +"<span style='color:#2779AA;font-weight:normal;foat:left'>查看方式：</span>"
+	       //+"<select name='meetingtype' id='meetingtype'><option value='-1'>所有主题</option>{taglist}</select>", 
+      afterInsertRow:function (rowid, rowData){
+		 var be='';
+		  var bc='';
+		 var startus='';
+		 var txt='';
+     	 var img='<img class="imgs" src="images/lore/folder_common.gif" width="17" height="17" />';
+		if(rowData.status==1){
+			be+= '<a style="color:#0000ff;" href="javascript: modify(\''+rowData.key+'\',\''+rowData.cid+'\',\''+rowData.title+'\',\''+rowData.pid+'\');">修改</a>&nbsp;|&nbsp;'
+			  +'<a style="color:#0000ff;" href="javascript: read(\''+rowid+'\',\''+rowData.title+'\');">设为已阅</a>&nbsp;'
+		}else if(rowData.status==2){
+			be+= '<span style="color:#0000ff;"">已阅</span>&nbsp;'
+		}
+	
+		if(rowData.pic==2){
+			img='<img class="imgs" src="images/lore/pin_1.gif" width="17" height="17" />';
+		}else if(rowData.pic==3){
+			img='<img class="imgs" src="images/lore/ann_icon.gif" width="17" height="17" />';
+		}
+		if(rowData.levels==3){
+			txt='<img class="imgs" src="images/lore/recommend_1.gif" width="17" height="17" />';
+		}else if(rowData.levels==2){
+			txt='<img class="imgs" src="images/lore/digest_1.gif" width="17" height="17" />';
+		}
+         jQuery("#list").jqGrid('setRowData',rowid,{pic:img})
+		 jQuery("#list").jqGrid('setRowData',rowid,{title:"<a href='?model=lore_index&action=viewthread&key="+rowData.key+"&sby="+rowData.cid+"'>"+rowData.title+"</a>&nbsp;&nbsp;&nbsp;&nbsp;"+txt})
+		 // jQuery("#list").jqGrid('setRowData',rowid,{count:"<a href='?model=lore_index&action=viewthread&key="+rowid+"&sby="+rowData.cid+"'>"+rowData.title+"</a>&nbsp;&nbsp;&nbsp;&nbsp;"})
+		 jQuery("#list").jqGrid('setRowData',rowid,{edit:be});
+		 $(".imgs").parent().css("border-right","0px");
+
+    }
+	
+})
+
+	jQuery("#list").jqGrid('navGrid','#plist',{add:false,edit:false,del:false,search:false});
+
+	$("#subm").bind("click", function(e){
+					submits();
+          });
+	
+	$("#meetingtype").bind("change", function(e){
+		 submits();
+     });
+		
+}); 
+
+	function modify(key,cid,name,pid){
+	   tb_show('修改'+name+'信息', '?model=lore_index&action=showapply&cid='+cid+'&rand_key='+key+'&pid='+pid
+			                        +'&so=so&placeValuesBefore&TB_iframe=true&modal=false&height=550&width=900');
+	 }
+	
+	 function submits(){
+		var tagsearch=$("#tagsall").val();
+		var sdate=$("#sdate").val();
+		var edate=$("#edate").val();
+		var keyword= $("#keywords").val();
+    	jQuery("#list").jqGrid('setGridParam',{url:"?model=lore_index&action=reportmanagerdata&status="+tagsearch+"&sdate="+sdate+"&edate="+edate+"&keyword="+keyword,page:1}).trigger("reloadGrid");	
+	 }
+	 function del(key,name){
+		if(confirm('您要删除-'+name+'- 贴子吗？')){ 
+			$.post('?model=lore_index&action=delfer',{rand_key:key,rand:rand},
+					function (data)
+					{
+						if(data)
+						{
+							alert(data);
+							window.location.reload(); 
+						}else{
+							alert("删除失败");
+						}
+					 }
+					)
+				 }
+	}
+	function read(key,name){
+		if(key&&name){ 
+			$.post('?model=lore_index&action=reportmanagerop',{rand_key:key,op:2,rand:rand},
+					function (data)
+					{
+						if(data)
+						{
+							alert(data);
+							window.location.reload(); 
+						}else{
+							alert("删除失败");
+						}
+					 }
+					)
+				 }
+	}
+	
+		
+</script>
+</body>
+</html>

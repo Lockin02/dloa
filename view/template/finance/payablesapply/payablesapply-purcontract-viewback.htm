@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看退款申请单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-common.js"></script>
+</head>
+<body>
+	<div id="payablesapply">
+	<table class="form_main_table">
+		<tr class="main_head">
+			<td colspan="4">退款申请单</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供 应 商</td>
+			<td class="form_text_right">
+				{supplierName}
+				<input type="hidden" id="supplierId" value="{supplierId}"/>
+				<input type="hidden" id="supplierSkey" value="{supplierSkey}"/>
+				<img src="images/icon/view.gif" title="查看供应商信息" onclick="clickFun(2);"/>
+				<input type="hidden" id="status" value="{status}" />
+			</td>
+			<td class="form_text_left">申请单号</td>
+			<td class="form_text_right">
+				{formNo}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">银行账号</td>
+			<td class="form_text_right">
+				{account}
+			</td>
+			<td class="form_text_left">单据日期</td>
+			<td class="form_text_right">
+				{formDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">开户银行</td>
+			<td class="form_text_right">
+				{bank}
+			</td>
+			<td class="form_text_left">结算方式</td>
+			<td class="form_text_right">
+				{payTypeCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请类型</td>
+			<td class="form_text_right">
+				<span class="red">{payForCN}</span>
+			</td>
+			<td class="form_text_left">源单类型</td>
+			<td class="form_text_right">
+				<b>{sourceTypeCN}</b>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_text_right">
+				{deptName}
+			</td>
+			<td class="form_text_left">申 请 人</td>
+			<td class="form_text_right" width="30%">
+				{salesman}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总 金 额</td>
+			<td class="form_text_right">
+				<span class="formatMoney">{payMoney}</span>
+			</td>
+			<td class="form_text_left">已退金额</td>
+			<td class="form_text_right">
+				<span class="formatMoney">{payedMoney}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总金额(大写)</td>
+			<td class="form_text_right">
+				<span id="chinseMoney"></span>
+				<input type="hidden" id="payMoney" value="{payMoney}"/>
+			</td>
+			<td class="form_text_left">已退金额(大写)</td>
+			<td class="form_text_right">
+				<span id="chinseMoneyPayed"></span>
+				<input type="hidden" id="payedMoney" value="{payedMoney}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">付款币种</td>
+			<td class="form_text_right">
+				<span id="currencyShow">{currency}</span>
+			</td>
+			<td class="form_text_left">打印次数</td>
+			<td class="form_text_right">
+				{printCount}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right" colspan="3">
+				{businessBelongName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">退款说明</td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_blue" name="payables[remark]" readonly="readonly">{remark}</textarea>
+			</td>
+		</tr>
+		<tr class="closeInfo" style="display:none">
+			<td class="form_text_left"><span class="green">关 闭 人</span></td>
+			<td class="form_text_right">
+				<span class="green">{closeUser}</span>
+			</td>
+			<td class="form_text_left"><span class="green">关闭日期</span></td>
+			<td class="form_text_right">
+				<span class="green">{closeDate}</span>
+			</td>
+		</tr>
+		<tr class="closeInfo" style="display:none">
+			<td class="form_text_left"><span class="green">关闭原因</span></td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_green" readonly="readonly">{closeReason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附 件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<thead>
+						<tr align="left">
+							<td colspan="15">
+								款项内容
+							</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>序号</th>
+							<th>源单编号</th>
+							<th title="采购订单金额">订单金额<span class="red">!</span></th>
+							<th title="本次申请金额">申请金额<span class="red">!</span></th>
+							<th title="订单内对应物料的可退金额">可退货款<span class="red">!</span></th>
+							<th title="订单内对应物料的可付余额">可付余额<span class="red">!</span></th>
+							<th title="订单内对应物料的价税合计">价税合计<span class="red">!</span></th>
+							<th>含税单价</th>
+							<th>订单数量</th>
+							<th title="订单内对应物料的已入库数量">入库数量<span class="red">!</span></th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>单位</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						{detail}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<tr>
+						<td colspan="4" class="td_table" id="approvalView">
+							<input type="hidden" id="pid" value="{exaId}"/>
+							<input type="hidden" id="itemType" value="{exaCode}"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="button" onclick="closeFun();" value=" 关闭 " class="txt_btn_a"/>
+			</td>
+		</tr>
+	</table>
+	</div>
+</body>
+</html>

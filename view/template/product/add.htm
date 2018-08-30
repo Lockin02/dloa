@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="module/htmledit/fckeditor/fckeditor.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model=product_demand&action=add" onsubmit="return check();" enctype="multipart/form-data">
+<table class="table" width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr class="tableheader">
+    <td colspan="2" align="center"><strong>产品需求提交</strong></td>
+  </tr>
+  <tr>
+    <td width="210" align="right"><strong>产品类型：</strong></td>
+    <td align="left">
+    	<select id="product_id" name="product_id">
+    		<option value="">请选择产品类型</option>
+    		{typelist}
+		</select>
+		<span id="_typeid">*</span>
+	</td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求紧急程度：</strong></td>
+    <td align="left">
+	    <select name="degree" id="degree">
+	        <option value="1">普通</option>
+	        <option value="2">紧急</option>
+	     </select>    
+	</td>
+  </tr>
+  <tr>
+    <td align="right"><strong>产品需求描述：<br>（含需求实现目的及客户建议方式）</strong></td>
+    <td align="left">
+    		<input type="hidden" id="description" name="description" value=""/>
+			<input type="hidden" id="body___Config" value=""  />
+			<iframe id="body___Frame" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=description&amp;Toolbar=MyDesign" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
+	</td>
+  </tr>
+  <!--<tr>
+    <td align="right"><strong>客户建议的实现方式：</strong></td>
+    <td align="left"><textarea name="realize" id="realize" style="width:70%;" rows="5"></textarea></td>
+  </tr>-->
+  <tr>
+    <td align="right"><strong>需求实现步骤：</strong></td>
+    <td align="left">
+    	<textarea name="step" id="step" style="width:60%;" rows="5"></textarea>
+		<span>附件：<input type="file" name="upfile" value="" /></span>
+	</td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求实现算法：</strong></td>
+    <td align="left"><textarea name="algorithm" id="algorithm" style="width:70%;" rows="5"></textarea></td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求提出单位：</strong></td>
+    <td align="left"><input type="text" size="40" name="unit" id="unit" /></td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求提出人：</strong></td>
+    <td align="left"><input type="text" size="40" name="contact" id="contact" /></td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求提出人手机：</strong></td>
+    <td align="left"><input type="text" size="40" name="mobile" id="mobile" /></td>
+  </tr>
+  <tr>
+    <td align="right"><strong>需求提出人Email：</strong></td>
+    <td align="left"><input type="text" size="40" name="email" id="email" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><input type="submit" name="button" id="button" value=" 提交申请 " /> </td>
+  </tr>
+</table>
+</form>
+<script type="text/javascript">
+	
+	function check()
+	{
+		oEditor = FCKeditorAPI.GetInstance("description");
+		if ($('#typeid').val()=='')
+		{
+			$('#_typeid').html('请选择产品类型！');
+			$('#typeid').focus();
+			return false;
+		}else{
+			$('#_typeid').html('*');
+		}
+		if (oEditor.GetHTML()=='')
+		{
+			alert('请填写产品需求描述！');
+			return false;
+		}
+		var filepath = $('input[type=file][name=upfile]').val();
+		if (filepath!='')
+		{
+			if (/^.*?\.(php|asp|aspx|jsp|exe|dll|js)$/.test(filepath)) 
+			{
+				alert('您要上传的附件系统限制上传，请更换其他类型的文件！！');
+				return false;
+			}
+		}
+		return true;
+	}
+</script>
+</body>
+</html>

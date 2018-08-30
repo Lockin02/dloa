@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>查看工程项目</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var id = $("#id").val();
+		var skey = "";
+		$.ajax({
+			type : "POST",
+			url : "?model=engineering_project_esmproject&action=md5RowAjax",
+			data : {
+				"id" : id
+			},
+			async : false,
+			success : function(data) {
+				skey = data;
+			}
+		});
+
+		skey = "&skey=" + skey;
+
+		var tabArr = [
+			"?model=engineering_project_esmproject&action=toViewAudit&id=" + id + skey,
+			"?model=engineering_charter_esmcharter&action=viewForProject&projectId=" + id,
+			"?model=engineering_project_statusreport&action=pageForProject&projectId=" + id,
+			"?model=engineering_activity_esmactivity&action=toViewList&projectId="+ id,
+			"?model=engineering_change_esmchange&action=pageForProject&projectId=" + id,
+			"?model=engineering_quality_esmquality&action=toViewList&projectId=" + id,
+			"?model=engineering_risk_esmrisk&action=toViewList&projectId=" + id,
+			"?model=engineering_resources_esmresources&action=toViewList&projectId=" + id,
+			"?model=engineering_project_statusreport&action=toProjectStatus&projectId=" + id
+		];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				if ($(actTabId).attr("src") == "") {
+					$(actTabId).attr("src", tabArr[e]);
+				}
+			}
+		});
+	});
+</script>
+
+</head>
+<body>
+
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">项目概况</a></li>
+	<li><a href="#tab2">项目章程</a></li>
+	<li><a href="#tab3">项目报告</a></li>
+	<li><a href="#tab4">项目计划</a></li>
+	<li><a href="#tab5">变更状况</a></li>
+	<li><a href="#tab6">项目质量</a></li>
+	<li><a href="#tab7">项目风险</a></li>
+	<li><a href="#tab8">资源计划</a></li>
+	<li><a href="#tab9">项目视图</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="" style="height:96%" frameborder="0"> </iframe>
+	<iframe class="pane" id="iframe2" src="" style="height:96%" frameborder="0"> </iframe>
+	<iframe class="pane" id="iframe3" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe4" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe5" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe6" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe7" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe8" src="" style="height:96%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe9" src="" style="height:96%" frameborder="0"></iframe>
+</div>
+</div>
+
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{showBtn}" id="showBtn" />
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=parent.document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:['项目','一月','二月','三月', '四月', '五月','六月','七月','八月','九月'
+                        ,'十月','十一月','十二月','合计'
+                    ],
+                    colModel:[
+                        {name:'type',index:'type', width:120, sortable:false ,search:false},
+                        {name:'m_1',index:'m_1', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_2',index:'m_2', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_3',index:'m_3', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_4',index:'m_4', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_5',index:'m_5', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_6',index:'m_6', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_7',index:'m_7', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_8',index:'m_8', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_9',index:'m_9', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_10',index:'m_10', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_11',index:'m_11', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_12',index:'m_12', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}},
+                        {name:'m_t',index:'m_t', width:80,align:"right",sortable:false, search:false,formatter:'currency',formatoptions:{thousandsSeparator: ","}}
+                    ],
+                    rowNum:10000,
+                    //rowList:[15,20,28,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-216,
+                    height:(wh-106+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    shrinkToFit:false,
+                    rownumbers: true,
+                    caption:'{select_list}'
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,search:false});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns');
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "Excel",
+                    title: "导出Excel报表",
+                    onClickButton : function (){
+                        excelOut();
+                    }
+                });
+            });
+            function excelOut(){
+                window.location.href='{excel_out}'+'&seacom='+$('#seacom').val();
+            }
+            function changeUrl(){
+                location.href='{url_list}'+'&seay='+$('#seay').val()+'&seacom='+$('#seacom').val();
+            }
+        </script>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: center;" >
+                <tr>
+                    <td id="hr_user_new_name" style="line-height: 20px;" class="ui-widget-header ui-corner-all">
+                    </td>
+                </tr>
+                <tr class="sf">
+                    <td style="padding-left:8px;padding-right: 8px;" >
+                        入职工资：
+                        <input id="user_new_am" type="text" style="display: inline;" class="default vdata"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" onclick="amSubmitFun();" value="提交"/>
+                        <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="hr_user_pass" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: center;" >
+                <tr>
+                    <td id="hr_user_pass_name" style="line-height: 20px;" class="ui-widget-header ui-corner-all">
+                    </td>
+                </tr>
+                <tr class="sf" id="tr_pass_am">
+                    <td style="padding-left:8px;padding-right: 8px;">
+                        转正工资：
+                        <input id="user_pass_am" type="text" style="display: inline;" class="default vdata"/>
+                    </td>
+                </tr>
+                <tr class="sf" >
+                    <td>
+                        转正日期：
+                        <input id="user_pass_dt" type="text" style="display: inline;color:#ccc"
+                               onfocus="if(this.value=='格式：0000-00-00'){this.value='';this.style.color='#333';}"
+                               onblur="if(this.value==''){this.value='格式：0000-00-00';this.style.color='#ccc';}"
+                               value="格式：0000-00-00"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" onclick="paSubmitFun();" value="提交"/>
+                        <input type="button" onclick="paCloseFun('hr_user_pass');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

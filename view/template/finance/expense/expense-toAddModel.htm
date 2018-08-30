@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+    <title>工作流配置页</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+
+    <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen">
+
+    <style type="text/css">
+        #costTypeWrap{height: 500px;overflow: scroll;}
+    </style>
+
+    <script src="js/jquery/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+
+    <!-- 自定义JS脚本 -->
+    <script type="text/javascript">
+        $(function(){
+            if($("#costTypeWrap").html() == ""){
+                $.ajax({
+                    type: "POST",
+                    url: "?model=finance_expense_costtype&action=getCostType",
+                    async: false,
+                    success: function(data){
+                        if(data != ""){
+                            $("#costTypeWrap").html(data);
+                            $('#costTypeWrap').masonry({
+                                itemSelector: '.box'
+                            });
+                            $('#costTypeWrap').css("height","350px");
+                        }else{
+                            alert('没有找到自定义的费用类型');
+                        }
+
+                    }
+                });
+            }
+        });
+    </script>
+    <script type="text/javascript" src="view/template/finance/expense/js/expense-BxModelList.js" ></script>
+</head>
+<body>
+
+<div id='main'>
+    <table class="form_main_table" style="width:100%;">
+        <tr>
+            <td class="form_text_left">模板名称: </td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="modelName"/><br>
+                <span class="blue">提示：请输入模板名称</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">包含费用类型: </td>
+            <td class="form_text_right">
+                <span id="includeCostTypes"></span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_right" colspan="2">
+                <fieldset>
+                    <legend class="legend" onclick="showAndHide('baseImg','costTypeWrapTb')">&nbsp;&nbsp;&nbsp;请 选 择 费 用 类 型
+                        <img src="images/icon/info_up.gif" id="baseImg"/>
+                    </legend>
+                    <table class="form_main_table" id="costTypeWrapTb" style="width:100%;">
+                        <tr>
+                            <td class="form_text_right">
+                                <div id="costTypeWrap"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="form_text_right" colspan="2" style="text-align: center">
+                <form id="modelForm" method="post" action="?model=finance_expense_expense&action=modifyModel">
+                    <input type="hidden" class="txt" id="isFormPage" value="1"/>
+                    <input type="hidden" class="txt" name="expenseModel[act]" value="add"/>
+                    <input type="hidden" class="txt" id="modelName_Input" name="expenseModel[templateName]"/>
+                    <input type="hidden" class="txt" id="includeCostTypeIds_Input" name="expenseModel[contentId]"/>
+                    <input type="hidden" class="txt" id="includeCostTypes_Input" name="expenseModel[content]"/>
+                    <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                    <input type="button" class="txt_btn_a" value=" 取  消 " onclick="javascript:parent.cleanPage();"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

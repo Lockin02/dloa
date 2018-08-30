@@ -1,0 +1,171 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="view/template/rdproject/project/js/rdproject-parent-group.js"></script>
+        <title>项目高级搜索</title>
+        <script>
+            $(document).ready(function() {
+                //topTabShow(arrayTop, "basicMsg");
+                $("#planDateStart").val(formatDate(new Date()));
+                $("#planDateClose").val(formatDate(new Date()));
+
+                document.getElementById('basicUrl').value = self.parent.location.href;
+            });
+
+            function submitForm(){
+            	$("#form1").attr('target',self.parent.name);
+            	$("#form1").submit();
+            }
+        </script>
+    </head>
+
+    <body>
+        <!-- div class="tab_options"></div-->
+        <div class="form_main">
+	        <form method="POST" id="form1" action="?model=rdproject_project_rdproject&action=rpSeachPage" >
+	            <table class="form_main_table">
+	                <tr>
+	                    <td colspan="4" class="form_header">
+	                        项目高级搜索
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        所属项目组合
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="groupSName" name="rdproject[groupSName]" value="" />
+							<input type="hidden" id="groupId" name="rdproject[groupId]" value="" />
+	                    </td>
+	                    <td class="form_text_left">
+	                        项目编号
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="projectCode" name="rdproject[projectCode]" />
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目名称
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="projectName" name="rdproject[projectName]" />
+	                    </td>
+	                    <td class="form_text_left">
+	                        简称
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="simpleName" name="rdproject[simpleName]" />
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目类别
+	                    </td>
+	                    <td class="form_view_right">
+	                        <select class="select" id="projectType" name="rdproject[projectType]" >
+	                        	<option value="">请选择</option>
+	                            {projectType}
+	                        </select>
+	                    </td>
+	                    <td class="form_text_left">
+	                        优先级
+	                    </td>
+	                    <td class="form_view_right">
+	                        <select class="select" id="projectLevel" name="rdproject[projectLevel]" >
+	                        	<option value="">请选择</option>
+	                            {projectLevel}
+	                        </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        计划启动日期>
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="planDateStartS" name="rdproject[planDateStartS]" onfocus="WdatePicker()" readonly />
+	                    </td>
+	                    <td class="form_text_left">
+	                        计划启动日期<
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="planDateStartB" name="rdproject[planDateStartB]" onfocus="WdatePicker()" readonly />
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        计划关闭日期>
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="planDateCloseS" name="rdproject[planDateCloseS]" onfocus="WdatePicker()" readonly />
+	                    </td>
+	                    <td class="form_text_left">
+	                        计划关闭日期<
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="text" class="txt" id="planDateCloseB" name="rdproject[planDateCloseB]" onfocus="WdatePicker()" readonly />
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目责任人
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="hidden" id="managerId" name="rdproject[managerId]">
+                            <input type="text" class="txt" id="managerName" name="rdproject[managerName]">
+                            <!-- 单选 -->
+                            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('managerId','managerName')">
+                            <!-- 多选 -->
+                            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('managerId','managerName')">
+	                    </td>
+	                    <td class="form_text_left">
+	                        项目助理
+	                    </td>
+	                    <td class="form_view_right">
+	                        <input type="hidden" id="assistantId" name="rdproject[assistantId]">
+                            <input type="text" class="txt"  id="assistantName" name="rdproject[assistantName]">
+                            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow2('assistantId','assistantName')">
+                            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('assistantId','assistantName')">
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目描述
+	                    </td>
+	                    <td class="form_view_right" colspan="3">
+	                        <textarea class="txt_txtarea_font" id="description" name="rdproject[description]"></textarea>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="4">
+	                    	<input type="hidden" id="basicUrl" name="basicUrl" value="">
+	                    	<input type="hidden" id="type" name="type" value="{type}">
+	                        <input type="button" class="txt_btn_a" value="搜索" onclick="submitForm();">
+	                        <input type="button" class="txt_btn_a" value="取消" onclick="self.parent.tb_remove();">
+	                    </td>
+	                </tr>
+	            </table>
+	        </form>
+        </div>
+    </body>
+
+</html>

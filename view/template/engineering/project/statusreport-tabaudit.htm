@@ -1,0 +1,44 @@
+<head>
+<title>项目周报审核</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var tabArr = [
+			"?model=engineering_project_statusreport&action=toAuditList",
+			"?model=engineering_project_statusreport&action=toAuditedList"
+		];
+
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				if ($(actTabId).attr("src") == "") {
+					$(actTabId).attr("src", tabArr[e]);
+				}
+			}
+		});
+	});
+</script>
+
+</head>
+<body>
+
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">待审核周报</a></li>
+	<li><a href="#tab2">已审核周报</a></li>
+</ul>
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="" style="height:92%" frameborder="0"></iframe>
+	<iframe class="pane" id="iframe2" src="" style="height:92%" frameborder="0"></iframe>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看合同主表</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-view.js" ></script>
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+
+</head>
+<body>
+
+<table class="form_main_table">
+<tr>
+		<td colspan="4">
+		   <div class="main_head"><span class="main_head_title">合同信息</span></div>
+		  <input type="hidden" id="contractId" value="{id}" />
+		  <input type="hidden" id="prinvipalId" value="{prinvipalId}" />
+		  <input type="hidden" id="createId" value="{createId}" />
+		  <input type="hidden" id="areaPrincipalId" value="{areaPrincipalId}" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset><legend style="text-align:left"> <b
+			onclick="hideList('contractinfo');">基本信息</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('contractinfo');"
+			title="隐藏" alt="新增选项" /></legend></legend>
+		<table cellpadding="2" width="100%" id="contractinfo"
+			style="bcontract-collapse:collapse;background-color:#F3F6FA;">
+			<tr>
+			    <td class="form_text_left_con">合同类型 :</td>
+				<td class="form_text_right_con">{contractType}</td>
+				</td>
+				<td class="form_text_left_con">合同性质 :</td>
+				<td class="form_text_right_con">{contractNature}</td>
+				<td class="form_text_left_con">合同赢率 :</td>
+				<td class="form_text_right_con" id="winRate">{winRate}</td>
+			</tr>
+			<tr id="signDateNone" style="display:none">
+				<td class="form_text_left_con">签约日期 :</td>
+				<td class="form_text_right_con">{signDate}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">签约公司:</td>
+				<td class="form_text_right_con">{signSubject}</td>
+				<td class="form_text_left_con" id="tempInfo">合同名称:</td>
+				<td class="form_text_right_con">{contractName}</td>
+<!--				<td class="form_text_left_con">开票类型:</td>-->
+<!--				<td class="form_text_right_con">{invoiceType}</td>-->
+			</tr>
+			<tr>
+			    <td class="form_text_left_con">开票类型:</td>
+				<td class="form_text_right_con" colspan="5">
+				     <input type="hidden" id="addedV" value="{added}"/>
+                    &nbsp <span id="added" >&nbsp增值税发票</span>
+                    <span id="addedHide" style="display:none"> : <input type="text" id="addedMoney" readonly="readonly" value="{addedMoney}"  class="rimless_text formatMoney" /></span>
+                    <input type="hidden" id="exportInvV" value="{exportInv}"/>
+                    &nbsp <span id="exportInv" >&nbsp出口发票</span>
+                    <span id="exportInvHide" style="display:none"> : <input type="text" id="exportInvMoney" readonly="readonly" value="{exportInvMoney}" class="rimless_text formatMoney" /></span>
+                    <input type="hidden" id="serviceInvV" value="{serviceInv}"/>
+                    &nbsp <span id="serviceInv" >&nbsp服务发票</span>
+                    <span id="serviceInvHide" style="display:none"> : <input type="text" id="serviceInvMoney" readonly="readonly" value="{serviceInvMoney}" class="rimless_text formatMoney" /></span>
+				</td>
+			</tr>
+			<tr>
+			    <td class="form_text_left_con" >合同付款条件:</td>
+				<td class="form_text_right_con" colspan="5">
+				    <span id="advance">{advance}</span>
+				    <span id="delivery">{delivery}</span>
+				    <span id="progresspayment">{progresspayment}</span>
+				    <span id="initialpayment">{initialpayment}</span>
+				    <span id="finalpayment">{finalpayment}</span>
+				    <input type="hidden" id="otherpaymentterm" value="{otherpaymentterm}" />
+				    <span id="otherpayment">{otherpayment}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con" id="tempInfo">合同编号:</td>
+				<td class="form_text_right_con">{contractCode}</td>
+				<td class="form_text_left_con">客户名称:</td>
+				<td class="form_text_right_con">{customerName}</td>
+				<td class="form_text_left_con">客户类型:</td>
+				<td class="form_text_right_con">{customerType}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">客户地址:</td>
+				<td class="form_text_right_con" colspan="5">
+				   <div id="address" class="divChangeLine">{address}</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">所属国家:</td>
+				<td class="form_text_right_con">{contractCountry}</td>
+				<td class="form_text_left_con">所属省份:</td>
+				<td class="form_text_right_con">{contractProvince}</td>
+				<td class="form_text_left_con">所属城市:</td>
+				<td class="form_text_right_con">{contractCity}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">合同开始日期:</td>
+				<td class="form_text_right_con">{beginDate}</td>
+				<td class="form_text_left_con">合同结束日期:</td>
+				<td class="form_text_right_con">{endDate}</td>
+				<td class="form_text_left_con">合同负责人:</td>
+				<td class="form_text_right_con">{prinvipalName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">金额币别:</td>
+				<td class="form_text_right_con"><span id="currency">{currency}</span>
+				</td>
+				<td class="form_text_left_con"><span id="contractMoney"></span>(￥):</td>
+				<td class="form_text_right_con"><span class="formatMoney">{contractMoney}</span>
+				</td>
+				<td class="form_text_left_con">归属区域:</td>
+				<td class="form_text_right_con">{areaName}</td>
+			</tr>
+			<tr id="currencyRate" style="display:none">
+				<td class="form_text_left_con">汇率</td>
+				<td class="form_text_right_con">{rate}</td>
+				<td class="form_text_left_con"><span id="contractMoneyA"></span><span id="cur1"></span></td>
+				<td class="form_text_right_con formatMoney">{contractMoneyCur}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">发货条件:</td>
+				<td class="form_text_right_con">{shipCondition}</td>
+				</td>
+				<td class="form_text_left_con">希望交货日期:</td>
+				<td class="form_text_right_con">{deliveryDate}</td>
+				<td class="form_text_left_con">区域负责人:</td>
+				<td class="form_text_right_con">{areaPrincipal}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">合同录入时间:</td>
+				<td class="form_text_right_con">{createTime}</td>
+				</td>
+				<td class="form_text_left_con">合同录入人:</td>
+				<td class="form_text_right_con">{createName}</td>
+				<td class="form_text_left_con">合同签署人:</td>
+				<td class="form_text_right_con">{contractSigner}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">需要盖章</td>
+				<td class="form_text_right_three">{isNeedStamp}</td>
+				<td class="form_text_left_three">盖章类型</td>
+				<td class="form_text_right_three">{stampType}</td>
+				<td class="form_text_left_three">已经盖章</td>
+				<td class="form_text_right_three">{isStamp}</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="2">附件 &nbsp;{file}</td>
+				<td align="center" colspan="2">合同文本&nbsp;{file2}</td>
+				<td class="form_text_left_three"><span id="radioSpan">维保时间（月）</span></td>
+				<td class="form_text_right_three" >
+                    {Maintenance}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">备注:</td>
+				<td class="form_text_right_con" colspan="5" id="remark">
+				  <div id="remark" class="divChangeLine" >{remark}</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">产品保修条款:</td>
+				<td class="form_text_right_con" colspan="5" id="warrantyClause">
+				   <div id="warrantyClause" class="divChangeLine" >{warrantyClause}</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">售后服务承诺:</td>
+				<td class="form_text_right_con" colspan="5" id="afterService">
+				   <div id="afterService" class="divChangeLine" >{afterService}</div>
+                </td>
+			</tr>
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="linkmanListH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('linkmanList');">客户联系人信息</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('linkmanList');"
+			title="展开" alt="新增选项" /></td>
+	</tr>
+	<tr id="linkmanList">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('linkmanList');">客户联系人信息</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('linkmanList');"
+			title="隐藏" alt="新增选项" /></legend>
+		<div id="linkmanListInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="productH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('product');">产品清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('product');"
+			title="展开" alt="新增选项" /></td>
+	</tr>
+	<tr id="product">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('product');">产品清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('product');"
+			title="隐藏" alt="新增选项" /></legend>
+		<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="borrowConEquH" style="display:none;text-align:left;">
+		<td><b onclick="hideList('borrowConEqu');">借试用转销售物料清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('borrowConEqu');"
+			title="展开" alt="新增选项" /></td>
+	</tr>
+	<tr id="borrowConEqu">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('borrowConEqu');">借试用转销售物料清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('borrowConEqu');"
+			title="隐藏" alt="新增选项" /></legend>
+		<div id="borrowConEquInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="equH" style="text-align:left;">
+		<td><b onclick="hideList('equ');">发货清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开"
+			alt="新增选项" /></td>
+	</tr>
+	<tr id="equ" style="display:none">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('equ');">发货清单</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏"
+			alt="新增选项" /></legend>
+		<div id="equInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+
+<!--	<tr id="invoiceListH" style="text-align:left;">-->
+<!--		<td><b onclick="hideList('invoiceList');">开票计划</b> <img-->
+<!--			src="images/icon/icon002.gif" onclick="hideList('invoiceList');"-->
+<!--			title="展开" alt="新增选项" /></td>-->
+<!--	</tr>-->
+<!--	<tr id="invoiceList" style="display:none">-->
+<!--		<td colspan="6" class="innerTd">-->
+<!--		<fieldset style="width:200"><legend style="text-align:left">-->
+<!--		<b onclick="hideList('invoiceList');">开票计划</b> <img-->
+<!--			src="images/icon/icon002.gif" onclick="hideList('invoiceList');"-->
+<!--			title="隐藏" alt="新增选项" /></legend>-->
+<!--		<div id="invoiceListInfo"></div>-->
+<!--		</fieldset>-->
+<!--		</td>-->
+<!--	</tr>-->
+<!--	<tr id="incomeListH" style="text-align:left;">-->
+<!--		<td><b onclick="hideList('incomeList');">收款计划</b> <img-->
+<!--			src="images/icon/icon002.gif" onclick="hideList('incomeList');"-->
+<!--			title="展开" alt="新增选项" /></td>-->
+<!--	</tr>-->
+<!--	<tr id="incomeList" style="display:none">-->
+<!--		<td colspan="6" class="innerTd">-->
+<!--		<fieldset style="width:200"><legend style="text-align:left">-->
+<!--		<b onclick="hideList('incomeList');">收款计划</b> <img-->
+<!--			src="images/icon/icon002.gif" onclick="hideList('incomeList');"-->
+<!--			title="隐藏" alt="新增选项" /></legend>-->
+<!--		<table>-->
+<!--			<tr>-->
+<!--				<td class="form_text_left_con"><b>支付条款:</b></td>-->
+<!--				<td class="form_text_right_con" colspan="8" id="remark"><input-->
+<!--					type="text" class="txtoverlength" name="contract[paymentterm]"-->
+<!--					value="{paymentterm}" readonly /></td>-->
+<!--			</tr>-->
+<!--		</table>-->
+<!--		<div id="incomeListInfo"></div>-->
+<!--		</fieldset>-->
+<!--		</td>-->
+<!--	</tr>-->
+	<tr id="trainListH" style="text-align:left;">
+		<td><b onclick="hideList('trainList');">培训计划</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('trainList');"
+			title="展开" alt="新增选项" /></td>
+	</tr>
+	<tr id="trainList" style="display:none">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b onclick="hideList('trainList');">培训计划</b> <img
+			src="images/icon/icon002.gif" onclick="hideList('trainList');"
+			title="隐藏" alt="新增选项" /></legend>
+		<div id="trainListInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="hidden"
+			id="contractId" value="{id}" /> <input type="hidden"
+			id="prinvipalId" value="{prinvipalId}" /> <input type="hidden"
+			id="createId" value="{createId}" /> <input type="hidden"
+			id="areaPrincipalId" value="{areaPrincipalId}" /> <!--	      <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>-->
+		</td>
+	</tr>
+	<tr id="app" >
+		<td colspan="4" class="td_table" id="approvalView">
+		   <input type="hidden" id="actType" value="{actType}" />
+		   <input type="hidden" id="type" value="contract" />
+		   <input type="hidden" id="pid" value="{id}" />
+		   <input type="hidden" id="itemType" value="oa_contract_contract" />
+		   <input type="hidden" id="isChange" value="1" /></td>
+	</tr>
+</table>

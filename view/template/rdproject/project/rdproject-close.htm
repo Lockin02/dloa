@@ -1,0 +1,180 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+        <title>项目关闭</title>
+        <script>
+            $(document).ready(function() {
+                $("#planDateStart").val(formatDate(new Date()));
+                $("#planDateClose").val(formatDate(new Date()));
+            });
+        </script>
+    </head>
+
+    <body>
+        <!-- div class="tab_options"></div-->
+        <div class="form_main">
+	        <form method="POST" id="form1" action="?model=rdproject_project_rdproject&action=rpClose">
+	            <table class="form_main_table">
+	                <tr>
+	                    <td colspan="4" class="form_header">
+	                        关闭项目
+	                    </td>
+	                </tr>
+	                <tr>
+	                	<td class="form_text_left">
+	                        项目名称
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[projectName]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        所属项目组合
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[groupSName]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目编号
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[projectCode]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        项目责任人
+	                    </td>
+	                    <td class="form_view_right">
+                            {rdproject[managerName]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        项目类别
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[projectTypeC]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        优先级
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[projectLevelC]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        计划启动日期
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[planDateStart]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        计划关闭日期
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[planDateClose]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        实际启动日期
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[actBeginDate]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        估计工作量
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[appraiseWorkload]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        完成率
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[effortRate]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        偏差率
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdproject[warpRate]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        关闭日期
+	                    </td>
+	                    <td class="form_view_right">
+							{dateTime}
+	                    </td>
+	                    <td class="form_text_left">
+	                        操作人
+	                    </td>
+	                    <td class="form_view_right">
+							{userName}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left" >
+	                        关闭类型
+	                    </td>
+	                    <td class="form_view_right">
+							<select name="closeType" >
+								<option value="0">正常项目完成</option>
+								<option value="1">异常强制关闭</option>
+							</select>
+	                    </td>
+	                    <td class="form_text_left" >
+	                        项目当前状态
+	                    </td>
+	                    <td class="form_view_right">
+							{rdproject[statusCN]}
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left" >
+	                        关闭说明
+	                    </td>
+	                    <td class="form_view_right" colspan="3">
+							<textarea rows="5" cols="85" name="closeText" ></textarea>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="4">
+	                    	<input type="hidden" class="txt_btn_a" name="id" value="{pjId}" >
+	                    	<input type="hidden" class="txt_btn_a" name="projectName" value="{rdproject[projectName]}" >
+	                        <input type="submit" class="txt_btn_a" value="提交" >
+	                        <input type="button" class="txt_btn_a" value="取消" onclick="self.parent.tb_remove();">
+	                    </td>
+	                </tr>
+	            </table>
+	        </form>
+        </div>
+    </body>
+
+</html>

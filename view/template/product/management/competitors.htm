@@ -1,0 +1,521 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>竞争对手技术专利</title>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        var administrator = '{administrator}';
+        var leixin_list = {fmzl:'发明专利',syxx:'实用新型',wgzl:'外观设计'};
+        $(function(){
+            $('#tt').datagrid({
+                title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, {
+                    field: 'leixin',
+                    title: '专利类型',
+                    width: 52,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return leixin_list[value];
+                    }
+                },{
+                    field: 'title',
+                    title: '专利名称',
+                    width: 320,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                	field: 'application_number',
+                	title:'申 请 号',
+                	width:140,
+                	align:'left'
+                },{
+                	field:'application_date',
+                	title:'申 请 日',
+                	width:80,
+                	align:'left'
+                },{
+                	field:'open_date',
+                	title:'公开日期',
+                	width:80,
+                	align:'left'
+                },{
+                	field: 'applicant',
+                	title:'申请(专利权)人',
+                	width:200,
+                	align:'left'
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 140,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                    	var a = '<a href="#" onclick="show_info(' + index + ')">查看</a> | ';
+                        var e = '<a href="#" onclick="edit(' + index + ')">修改</a> | ';
+                        var d = '<a href="#" onclick="del(' + index + ')">删除</a>';
+                        if (administrator!='')
+                        {
+                        	return a+e+d;
+                        }else{
+                        	return '<a href="#" onclick="show_info(' + index + ')">查看详细</a>';
+                        }
+                            
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+            if (administrator!='')
+            {
+	            $('#tt').datagrid('getPager').pagination({
+	                buttons: [{
+	                    iconCls: 'icon-add',
+	                    text: '添加专利信息',
+	                    handler: function(){
+	                        add();
+	                    }
+	                }]
+	            });
+            }
+        });
+        /**
+         *添加
+         */
+        function add()
+        {
+        	$('#submit_type').val('add');
+        	$('#leixin').attr('value','');
+        	$('#add_layout input[type=text]').val('');
+        	$('#add_layout textarea').val('');
+        	$('#add').window({title:'添加专利信息'});
+        	$('#add').window('open');
+        }
+        /**
+        *修改
+        */
+        function edit(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		
+        	$('#submit_type').val('edit');
+        	for (key in row)
+        	{
+        		if (key == 'leixin')
+        		{
+        			$('#leixin').attr('value',row[key]);
+        		}else{
+        			$('#'+key).val(row[key]);
+        		}
+        		
+        	}
+        	$('#add').window({title:'修改专利信息'});
+        	$('#add').window('open');
+        }
+        /**
+         *保存数据
+         */
+        function save_data()
+        {
+        	var id = $('#id').val();
+        	var submit_type = $('#submit_type').val();
+        	var leixin = $('#leixin').val();
+        	var title = $('#title').val();
+        	
+        	var application_number = $('#application_number').val();
+        	var application_date = $('#application_date').val();
+        	
+        	var open_number = $('#open_number').val();
+        	var open_date = $('#open_date').val();
+        	
+        	var main_type_number = $('#main_type_number').val();
+        	var times_type_number = $('#times_type_number').val();
+
+        	var filing_no = $('#filing_no').val();
+        	
+        	var certification_date = $('#certification_date').val();
+        	var priority = $('#priority').val();
+        	var applicant = $('#applicant').val();
+        	var address = $('#address').val();
+        	var inventor = $('#inventor').val();
+        	var international_application = $('#international_application').val();
+        	var international_publication = $('#international_publication').val();
+        	var to_enter_the_national_date = $('#to_enter_the_national_date').val();
+        	var agency = $('#agency').val();
+        	var agents = $('#agents').val();
+        	
+        	var summary = $('#summary').val();
+        	var description = $('#description').val();
+        	var remark = $('#remark').val();
+        	
+        	var msg = '';
+        	if (leixin=='') 				msg +='- 请选择专利类型！\r\n';
+        	if (title=='') 					msg +='- 请填写专利名称\r\n';
+        	if (application_number=='') 	msg +='- 请填写申请号\r\n';
+        	if (application_date == '') 	msg +='- 请填写申请日！\r\n';
+        	if (open_number == '')			msg +='- 请填写公开号\r\n';
+        	if (open_date=='') 				msg +='- 请填选公开日\r\n';
+        	if (applicant =='') 			msg +='- 请填写申请(专利权)人\r\n';
+        	if (summary == '') 				msg +='- 请填写专利摘要！\r\n';
+        	
+        	if (msg!='')
+        	{
+        		alert(msg);
+        		return false;
+        	}
+        	$.post('?model={t_model}&action='+submit_type+'&id='+id,{
+        		leixin				:	leixin,
+        		application_number	:	application_number,
+        		application_date	:	application_date,
+        		title				:	title,
+        		open_number			:	open_number,
+        		open_date			:	open_date,
+        		main_type_number	:	main_type_number,
+        		times_type_number	:	times_type_number,
+        		filing_no			:	filing_no,
+        		certification_date	:	certification_date,
+        		priority			:	priority,
+        		applicant			:	applicant,
+        		address				:	address,
+        		inventor			:	inventor,
+        		international_application	:	international_application,
+        		international_publication	:	international_publication,
+        		to_enter_the_national_date	:	to_enter_the_national_date,
+        		agency				:	agency,
+        		agents				:	agents,
+        		summary				:	summary,
+        		description			:	description,
+        		remark				:	remark,
+        		rand				:	Math.random(0,99999)
+        	},function(data){
+        		//alert(data);
+        		if (data == 1)
+        		{
+        			$.messager.show({
+						title : '提示',
+						msg : '操作成功！',
+						timeout : 3000,
+						showType : 'show'
+					});
+					$('#tt').datagrid('reload');
+					$('#add').window('close');
+        		}else{
+        			$.messager.show({
+						title : '提示',
+						msg : '操作失败！',
+						timeout : 3000,
+						showType : 'show'
+					});
+        		}
+        	});
+        	
+        	
+        }
+        
+        function show_info(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		
+        	for (key in row)
+        	{
+        		if (key == 'leixin')
+        		{
+        			$('#_leixin').html(leixin_list[row[key]]);
+        		}else{
+        			$('#_'+key).html(row[key] ? row[key] : '&nbsp');
+        		}
+        	}
+        	$('#show_info').window('open');
+        }
+        /**
+        *删除
+        */
+        function del(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		$.messager.confirm('删除确认', '您确定要删除该条专利记录吗？', function(r) {
+    		if (r) {
+		    		$.post('?model={t_model}&action=del&id='+row.id,{rand:Math.random(0,9999)},function(data){
+		    			if (data == 1)
+		    			{
+		    				$.messager.show({
+								title : '提示',
+								msg : '操作成功！',
+								timeout : 3000,
+								showType : 'show'
+							});
+							$('#tt').datagrid('reload');
+		    			}else{
+		    				$.messager.show({
+								title : '提示',
+								msg : '操作失败！',
+								timeout : 3000,
+								showType : 'show'
+							});
+							$('#tt').datagrid('reload');
+		    			}
+		    		});
+    			}
+    		});
+        }
+        </script>
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; width:110px;}
+			#info p {margin:0px; padding:0px; width:655px; float:left; height: 25px;}
+			#info .text {width:200px; display:block; float:left; text-align: left;}}
+        </style>
+    </head>
+    <body id="tabdiv" class="easyui-layout" border="false">
+    	<div region="center" border="false" style="padding:5px;">
+    		<table id="tt"></table>
+    	</div>
+    </body>
+    <div id="add" class="easyui-window" title="添加专利" iconCls="icon-edit" modal="false" closed="true" style="width:700px;height:500px;padding:5px;">
+		<div id="add_layout" class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+			<input type="hidden" id="submit_type" name="submit_type" value="" />
+			<input type="hidden" name="id" id="id" value="" />
+				<p>
+					<label>专利类型：</label>
+					<span class="text">
+						<select id="leixin" name="leixin">
+							<option value="">选择专利类型</option>
+							<option value="fmzl">发明专利</option>
+							<option value="syxx">实用新型专利</option>
+							<option value="wgzl">外观设计专利</option>
+						</select>
+					</span>
+				</p>
+				<p>
+					<label>专利名称：</label>
+					<span class="text" style="width:450px;">
+						<input style="width:450px;" type="text" name="title" id="title" value="" />
+					</span>
+				</p>
+				<p>
+					<label>申	请	号：</label>
+					<span class="text">
+						<input type="text" size="30" name="application_number" id="application_number" value="" />
+					</span>
+					<label>申请日期：</label>
+					<span class="text">
+						<input type="text" size="30" readonly onClick="WdatePicker();" class="Wdate" id="application_date" name="application_date" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>公开号：</label>
+					<span class="text">
+						<input type="text" size="30" name="open_number" id="open_number" value="" />
+					</span>
+					<label>公开日期：</label>
+					<span class="text">
+						<input type="text" size="30" readonly onClick="WdatePicker();" class="Wdate" id="open_date" name="open_date" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>主 分 类 号：</label>
+					<span class="text">
+						<input type="text" size="30" id="main_type_number" name="main_type_number" value=""/>
+					</span>
+					<label>案原申请号 ：</label>
+					<span class="text">
+						<input type="text" size="30" id="filing_no" name="filing_no" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>分	类	号：</label>
+					<span class="text" style="width:460px;">
+						<input style="width:450px;" type="text" name="times_type_number" id="times_type_number" value="" />
+					</span>
+				</p>
+				<p>
+					<label>优   先   权：</label>
+					<span class="text">
+						<input type="text" size="30" id="priority" name="priority" value=""/>
+					</span>
+					<label>颁   证     日：</label>
+					<span class="text">
+						<input type="text" size="30" readonly onClick="WdatePicker();" class="Wdate" id="certification_date" name="certification_date" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>申请(专利权)人： </label>
+					<span class="text" style="width:450px;">
+						<input style="width:440px;" type="text" name="applicant" id="applicant" value="" />
+					</span>
+				</p>
+				<p>
+					<label>地          址： </label>
+					<span class="text" style="width:450px;">
+						<input style="width:440px;" type="text" name="address" id="address" value="" />
+					</span>
+				</p>
+				<p>
+					<label>发 明 (设计)人：</label>
+					<span class="text">
+						<input type="text" size="30" id="inventor" name="inventor" value=""/>
+					</span>
+					<label>国  际 申 请：</label>
+					<span class="text">
+						<input type="text" size="30" id="international_application" name="international_application" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>国  际  公  布：</label>
+					<span class="text">
+						<input type="text" size="30" id="international_publication" name="international_publication" value=""/>
+					</span>
+					<label>进入国家日期：</label>
+					<span class="text">
+						<input type="text" size="30" readonly onClick="WdatePicker();" class="Wdate" id="to_enter_the_national_date" name="to_enter_the_national_date" value=""/>
+					</span>
+				</p>
+				<p>
+					<label>专利 代理 机构：</label>
+					<span class="text">
+						<input type="text" size="30" id="agency" name="agency" value=""/>
+					</span>
+					<label>代   理   人：</label>
+					<span class="text">
+						<input type="text" size="30" id="agents" name="agents" value=""/>
+					</span>
+				</p>
+				<p style="height:50px;">
+					<label style=" line-height: 60px;">专利摘要：</label>
+					<textarea style="width:80%;height:50px;" id="summary" name="summary"></textarea>
+				</p>
+				<p style="height:70px;">
+					<label style=" line-height: 80px;">专利描述：</label>
+					<textarea style="width:80%;height:70px;" id="description" name="description"></textarea>
+				</p>
+				<p style="height:40px;">
+					<label style=" line-height: 50px;">备注说明：</label>
+					<textarea style="width:80%;height:40px;" id="remark" name="remark"></textarea>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save_data();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#add').window('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+		<div id="show_info" class="easyui-window" title="查看专利信息" iconCls="icon-edit" modal="false" closed="true" style="width:700px;height:500px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+				<p>
+					<label>专利类型：</label>
+					<span class="text" id="_leixin"></span>
+				</p>
+				<p>
+					<label>专利名称：</label>
+					<span class="text" style="width:450px;" id="_title"></span>
+				</p>
+				<p>
+					<label>申	请	号：</label>
+					<span class="text" id="_application_number"></span>
+					<label>申请日期：</label>
+					<span class="text" id="_application_date"></span>
+				</p>
+				<p>
+					<label>公开号：</label>
+					<span class="text" id="_open_number"></span>
+					<label>公开日期：</label>
+					<span class="text" id="_open_date"></span>
+				</p>
+				<p>
+					<label>主 分 类 号：</label>
+					<span class="text" id="_main_type_number"></span>
+					<label>案原申请号 ：</label>
+					<span class="text" id="_filing_no"></span>
+				</p>
+				<p>
+					<label>分	类	号：</label>
+					<span class="text" style="width:460px;" id="_times_type_number"></span>
+				</p>
+				<p>
+					<label>优   先   权：</label>
+					<span class="text" id="_priority"></span>
+					<label>颁   证     日：</label>
+					<span class="text" id="_certification_date"></span>
+				</p>
+				<p>
+					<label>申请(专利权)人： </label>
+					<span class="text" style="width:450px;" id="_applicant"></span>
+				</p>
+				<p>
+					<label>地          址： </label>
+					<span class="text" style="width:450px;" id="_address"></span>
+				</p>
+				<p>
+					<label>发 明 (设计)人：</label>
+					<span class="text" id="_inventor"></span>
+					<label>国  际 申 请：</label>
+					<span class="text" id="_international_application"></span>
+				</p>
+				<p>
+					<label>国  际  公  布：</label>
+					<span class="text" id="_international_publication"></span>
+					<label>进入国家日期：</label>
+					<span class="text" id="_to_enter_the_national_date"></span>
+				</p>
+				<p>
+					<label>专利 代理 机构：</label>
+					<span class="text" id="_agency"></span>
+					<label>代   理   人：</label>
+					<span class="text" id="_agents"></span>
+				</p>
+				<p style="height:auto;">
+					<label>专利摘要：</label>
+					<span id="_summary" style="width: 80%; background:#E7E7D7; float: left; line-height: 25px;"></span>
+				</p>
+				<br />
+				<p style="height:auto;">
+					<label>专利描述：</label>
+					<span id="_description" style="width: 80%; background:#DFE7D7; float: left; line-height: 25px;"></span>
+				</p>
+				<p style="height:auto;">
+					<label>备注说明：</label>
+					<span id="_remark" style="width: 80%; float: left; line-height: 25px;"></span>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show_info').window('close');" value=" 关闭返回" />
+				</form>
+			</div>
+		</div>
+		</div>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>物料信息</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/productinfo-update.js"></script>
+</head>
+<body>
+
+<form id="productinfoForm"
+	action="?model=stock_productinfo_productinfo&action=updateProductinfo" method="post">
+<div>
+<table class='form_main_table'>
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title">更新物料关联业务信息
+		</span></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">更新方式</td>
+		<td class="form_view_right" >
+		<select name="updateType" class="select">
+			<option value="1">根据id更新</option>
+			<option value="2">根据名称更新</option>
+			<option value="3">根据编码更新</option>
+		</select></td>
+		<td class="form_view_right" colspan=2>
+			<font color='blue'>
+			注意：物料名称可能存在重复,按名称更新有一定风险,请确保物料名称唯一再执行操作
+			</font>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			id="productCode" name="productinfo[productCode]"
+			value="{productCode}" onchange="check();"/> <span id="codeTip" class="red">[*]</span>
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			id="productName" name="productinfo[productName]"
+			value="{productName}" /> <span id="nameTip" class="red">[*]</span>
+		<div id="productNameTip"></div>
+		</td>
+
+	</tr>
+		<tr>
+		<td class="form_text_left">型号/版本号</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			id="pattern" name="productinfo[pattern]"
+			value="{pattern}" />
+		</td>
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right">
+			<select class="select"	name="productinfo[unitName]">
+			{unitName}
+			</select>
+		</td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">更新开始时间</td>
+		<td class="form_view_right"><input type="text" class="txt"
+			name="productinfo[updateStartDate]" onfocus="WdatePicker()" /></td>
+		<td class="form_text_left">更新结束时间</td>
+		<td class="form_view_right"><input type="text" class="txt"
+			name="productinfo[updateEndDate]" onfocus="WdatePicker()" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">更新对象</td>
+		<td class="form_view_right" colspan="3">
+		<div id="objArr" style="white-space: normal; word-break: break-all;"></div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" class=""><input type="hidden" id="productId"
+			name="productinfo[id]" value="{id}" />
+		<input class="txt_btn_a" id="saveButton" type="button" value="确定" />
+		<input class="txt_btn_a" type="button" value="关闭"
+			onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</div>
+</form>

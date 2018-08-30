@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/general.js"></script>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <title></title>
+        <script type="text/javascript">
+            function ck(){
+                if($('#ctr_file').val()==''){
+                    alert('请导入对比数据');
+                    return false;
+                }
+                return true;
+            }
+            function changeCtrFun(){
+                var rand=Math.random()*100000;
+                if(confirm('确定提交以下补贴数据信息？')){
+                    $.post('?model=salary&action=hr_prod_xls_in',{
+                        rand:rand,sub:'xls'
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                return false;
+                            }else{
+                                alert('操作成功！');
+                            }
+                            location.href="?model=salary&action=hr_prod_xls";
+                        }
+                    )
+                }else{
+                    $("#repdiv").unmask();
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <form action="?model=salary&action=hr_prod_xls" method="post" onsubmit="return ck();" enctype="multipart/form-data">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+          <tr>
+              <td>
+                  导入补贴表单：<input type="file" name="ctr_file" id="ctr_file" />&nbsp;
+                  <input type="submit" id="subctr" name="subctr" value="导入" />
+                  <input type="button" id="changectr" name="changectr" value="提交" onclick="changeCtrFun()" title="提交"/>
+                  <br/>
+                  <span color="red">补贴表单格式：<a href="attachment/xls_model/salary_dp_prod.xls">项目奖明细模板</a>，导入时，请保持表单头部跟格式一致。
+                      <br/>数据导入后，请检查数据是否正确，然后点击提交，数据方才生效！
+                  </span>
+              </td>
+              <td style="width: 200px;">
+                  <table border="0" cellpadding="1" >
+                      <tr>
+                          <td>颜色表示：</td>
+                          <td style="background-color: green;">生效可导入</td>
+                          <td style="background-color: #ff9900;">错误不可导入</td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>
+        </table>
+    </form>
+    <table border="1" width="98%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        <tr class="tableheader">
+            <td align="center" width="20%">员工号</td>
+            <td align="center" width="15%">员工</td>
+            <td align="center">出差系数</td>
+            <td align="center">考核系数</td>
+
+            <td align="center">项目绩效</td>
+            <td align="center">项目管理补贴</td>
+
+            <td align="center">项目电脑补贴</td>
+            <td align="center">绩效奖惩</td>
+             <td align="center">项目住宿补贴</td>
+
+            <td align="center">备注</td>
+
+        </tr>
+        {data_list}
+    </table>
+    </body>
+</html>

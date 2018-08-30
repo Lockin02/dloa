@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<TITLE>Web报表(B/S报表)演示 - 查询显示控件展现报表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script>
+	function searchBtn(){
+		window.open("?model=finance_receviable_receviable&action=contractInOutSearch"
+			+ "&beginYear=" + document.getElementById("beginYear").value
+			+ "&beginMonth=" + document.getElementById("beginMonth").value
+			+ "&endYear=" + document.getElementById("endYear").value
+			+ "&endMonth=" + document.getElementById("endMonth").value
+			+ "&customerId=" + document.getElementById("customerId").value
+			+ "&orderId=" + document.getElementById("orderId").value
+			+ "&periodYear=" + document.getElementById("periodYear").value
+			+ "&periodMonth=" + document.getElementById("periodMonth").value
+		,'newwindow','height=500,width=800');
+	}
+
+	function reset(){
+		location.href = '?model=finance_receviable_receviable&action=contractInOut';
+	}
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td>
+			<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查 询 "/>
+			<input type="button" class="txt_btn_a" onclick="reset();" value=" 重 置 "/>
+		</td>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="beginYear" value="{beginYear}"/>
+			<input type="hidden" id="beginMonth" value="{beginMonth}"/>
+			<input type="hidden" id="endYear" value="{endYear}"/>
+			<input type="hidden" id="endMonth" value="{endMonth}"/>
+			<input type="hidden" id="customerId" value="{customerId}"/>
+			<input type="hidden" id="orderId" value="{orderId}"/>
+			<input type="hidden" id="periodYear" value="{periodYear}"/>
+			<input type="hidden" id="periodMonth" value="{periodMonth}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/finance/receviable/receviable-contractinout.grf"
+				,"view/template/finance/receviable/receviable-contractinout.php"
+				+ "?beginYear=" + document.getElementById("beginYear").value
+				+ "&beginMonth=" + document.getElementById("beginMonth").value
+				+ "&endYear=" + document.getElementById("endYear").value
+				+ "&endMonth=" + document.getElementById("endMonth").value
+				+ "&orderId=" + document.getElementById("orderId").value
+				+ "&customerId=" + document.getElementById("customerId").value
+				+ "&periodYear=" + document.getElementById("periodYear").value
+				+ "&periodMonth=" + document.getElementById("periodMonth").value
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</HTML>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<title>采购申请时效导出</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/util.js"></script>
+	<script>
+		/**
+		 * 验证信息
+		 */
+		$(function(){
+			validate({
+				"beginDate" : {
+					required : true
+				},
+				"endDate" : {
+					required : true
+				}
+			});
+		});
+
+		function exportFun(){
+//			if($("input:checkbox[name='basic[purchType][]'][checked]").length == 0){
+//				alert('请选择至少一种采购类型');
+//				return false;
+//			}
+			$('#exportForm').submit();
+		}
+	</script>
+<body>
+<form id="exportForm" action="?model=purchase_plan_basic&action=myPlanExportAging" method="post" name="form1">
+<table  class="form_main_table">
+	<tr>
+		<td colspan="2">
+			<div class="main_head">
+				<span class="main_head_title">
+					采购申请时效导出
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开始日期</td>
+		<td class="form_text_right" >
+			<input type="text" name="basic[beginDate]" id="beginDate" value="{beginDate}" class="txt" onfocus="WdatePicker()"/>
+			<span class="red">
+                [*]
+            </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">结束日期</td>
+		<td class="form_text_right" >
+			<input type="text" name="basic[endDate]" id="endDate" value="{endDate}" class="txt" onfocus="WdatePicker()"/>
+			<span class="red">
+                [*]
+            </span>
+		</td>
+	</tr>
+	<!--tr>
+		<td class="form_text_left">采购类型
+			<span class="red">
+                [*]
+            </span>
+        </td>
+		<td class="form_text_right" >
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_sale_order"/>&nbsp;销售合同采购&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_sale_lease"/>&nbsp;租赁合同采购&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_sale_service"/>&nbsp;服务合同采购&nbsp;&nbsp;&nbsp;<br/>
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_sale_rdproject"/>&nbsp;研发合同采购&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_borrow_borrow"/>&nbsp;借试用补库采购&nbsp;&nbsp;&nbsp;
+			<input type='checkbox' class="exeState" name="basic[purchType][]" value="oa_present_present"/>&nbsp;赠送补库采购&nbsp;&nbsp;&nbsp;
+		</td>
+	</tr-->
+	<tr>
+		<td class="txt_btn" colspan="2">
+		   <input type="button" class="txt_btn_a" value="导  出" onclick="exportFun();"/>&nbsp;&nbsp;
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

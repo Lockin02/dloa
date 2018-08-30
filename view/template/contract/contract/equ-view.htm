@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>查看合同物料清单</title>
+{#commonInclude#}
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+<script type="text/javascript" src="{#jsPath#}/contract-deploy.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-equcommon.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-equview.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=contract_contract_equ&action=equEdit">
+<input type="hidden" id="linkId" value="{linkId}">
+<input type="hidden" id="contractId" value="{id}">
+<input type="hidden" id="isTemp" value="{isTemp}">
+<input type="hidden" id="originalId" value="{originalId}">
+<input type="hidden" id="changeView" value="{changeView}">
+<input type="hidden" id="isShowDel" value="{isShowDel}">
+<table class="form_main_table " >
+	<tr>
+		<td colspan="6">
+		   <div class="main_head"><span class="main_head_title">查看合同物料清单
+		   <select id="selectChange">
+			<option value="1">只显示变更后合同值</option>
+			<option value="2">只显示变更前合同值</option>
+			<option value="3">对比显示</option>
+		</select><input type='checkbox' id='isShowDelCheckbox' />是否显示删除的物料</span>
+		   </div>
+		</td>
+	</tr>
+	<table width="100%" style="bcontract-collapse:collapse;background-color:#F3F6FA;" class="form_main_table">
+		<tr>
+			<td class="form_text_left_con">合同类型 :</td>
+			<td class="form_text_right_con">
+			   {contractTypeName}
+			</td>
+			<td class="form_text_left_con" id="tempInfo">合同编号:</td>
+			<td class="form_text_right_con">
+			    {contractCode}
+			</td>
+			<td class="form_text_left_con" id="tempInfo">合同名称:</td>
+			<td class="form_text_right_con">
+			     {contractName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_con">客户名称:</td>
+			<td class="form_text_right_con">
+           	     {customerName}
+			</td>
+			<td class="form_text_left_con">客户类型:</td>
+			<td class="form_text_right_con">
+			     {customerType}
+			</td>
+			<td class="form_text_left_con">客户地址:</td>
+			<td class="form_text_right_con">
+			    {address}
+		</tr>
+		<tr>
+			<td class="form_text_left_con">计划发货日期</td>
+			<td class="form_text_right_con">
+			    {deliveryDate}
+			</td>
+			<td class="form_text_left_con">标准交货期</td>
+			<td class="form_text_right_con">
+			   {standardDate}
+			</td>
+		</tr>
+	</table>
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan=6">产品清单&nbsp;&nbsp;&nbsp;</td>
+					<td align="center" width="4%"><input type="hidden"
+						id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+						onclick="dis('invbody')" title="缩放" /></td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th>序号</th>
+					<!--                        <th>
+                            产品线
+                        </th>-->
+<!--					<th>产品编号</th>-->
+					<th>产品名称</th>
+					<th>产品描述</th>
+					<th>数量</th>
+					<th>单位</th>
+					<th>加密配置</th>
+					<th>产品配置</th>
+				</tr>
+				{products}
+			</tbody>
+		</table>
+	<table class="form_main_table" id="mytable">
+		<tr id="equ.H" style="display:none;text-align:left;">
+			<td><b onclick="hideList('equ');">新增及借用转销售物料</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">新增及借用转销售物料</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

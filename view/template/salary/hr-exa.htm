@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .btn{
+                width: 80px;
+                height: 30px;
+            }
+            .divlist{
+                width: 98%;
+                padding-top: 10px;
+            }
+            .nbtn{
+                float: left;
+                margin-left: 10px;
+                margin-bottom: 3px;
+            }
+            .wbtn{
+                border: 1px red solid;
+                float: left;
+                margin-left: 10px;
+            }
+        </style>
+        <script type="text/javascript">
+            function newParentTab(url,ttl,tabi){
+                parent.setNewTabs(url,ttl,'tab-ext-'+tabi);
+            }
+        </script>
+    </head>
+    <body>
+        <div style="left: 0px; top: 0px;" >
+            <table align="left" style="text-align: left;width: 100%;" >
+                <tr>
+                    <td id="hr_user_pass_name" style="line-height: 20px;padding-left: 5px;" class="ui-widget-header ui-corner-all">
+                        待办列表
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="divlist">
+                            <div class="nbtn">
+                                <input type="button" value="员工入职" class="btn" onclick="newParentTab('{join_url}', '员工入职','1')" />
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="员工转正" class="btn" onclick="newParentTab('{pass_url}', '员工转正','2')"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="员工离职" class="btn" onclick="newParentTab('{leave_url}', '员工离职','3')"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="离职结算" class="btn" onclick="newParentTab('{leave_manager_url}', '离职结算','31')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button"  value="补发/扣除" class="btn" onclick="newParentTab('{bou_url}', '补发/扣除','4')"/>
+                            </div>
+                            <div class="nbtn" >
+                                <input type="button" value="请休假" class="btn" onclick="newParentTab('{hols_url}', '请休假','5')"/>
+                            </div>
+                            <div class="nbtn" >
+                                <input type="button" value="缴费信息" class="btn" onclick="newParentTab('{pay_url}', '缴费信息','6')"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="员工信息" class="btn" onclick="newParentTab('{user_url}', '员工信息','7')"/>
+                            </div>
+                            <!--
+                            <div class="nbtn">
+                                <input type="button" value="初始外派员工" class="btn" onclick="tb_show('初始外派员工', '?model=salary&action=hr_exp&TB_iframe=true&height=600');"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="初始子公司" class="btn" onclick="tb_show('初始子公司', '?model=salary&action=hr_sub_ini&TB_iframe=true&height=600');"/>
+                            </div>
+                            -->
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="员工补贴" class="btn" onclick="newParentTab('{sdy_url}', '员工补贴','8')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="未审核信息" class="btn" onclick="newParentTab('{wsh_url}', '未审核信息','9')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="年终奖导入" class="btn" onclick="newParentTab('{year_url}', '年终奖导入','10')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="年度调薪" class="btn" onclick="newParentTab('{mdf_url}', '年度调薪','11')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="工资计算" class="btn" onclick="tb_show('工资计算', '?model=salary&action=sal_tools&TB_iframe=true&width=550');"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="导入公司缴费信息" class="btn" onclick="tb_show('导入公司缴费信息', '?model=salary&action=hr_jf_ini&TB_iframe=true&height=600');"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="话费" class="btn" onclick="newParentTab('{hf_url}', '话费','10')"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="餐补" class="btn" onclick="newParentTab('{cb_url}', '餐补','11')"/>
+                            </div>
+                            <div class="nbtn">
+                                <input type="button" value="项目津贴" class="btn" onclick="newParentTab('{jt_url}', '项目津贴','12')"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="基本工资导入" class="btn"
+                                	onclick="tb_show('基本工资导入', '{jb_url}&TB_iframe=true&height=600');"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="岗位工资导入" class="btn"
+                                	onclick="tb_show('岗位工资导入', '{gw_url}&TB_iframe=true&height=600');"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="工程工资导入" class="btn"
+                                	onclick="tb_show('工程工资导入', '{gc_url}&TB_iframe=true&height=600');"/>
+                            </div>
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="通信津贴导入" class="btn"
+                                	onclick="tb_show('通信津贴导入', '{tx_url}&TB_iframe=true&height=600');"/>
+                            </div>
+
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="工程项目明细" class="btn"
+                                onclick="newParentTab('{prod_url}', '工程项目明细','81')"/>
+                            </div>
+
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="网优薪酬" class="btn"
+                                onclick="newParentTab('{pro_url}', '网优薪酬','810')"/>
+                            </div>
+                            
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="薪酬结构" class="btn"
+                                onclick="newParentTab('{user_salary_url}', '薪酬结构','811')"/>
+                            </div>
+							
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="用户调薪记录" class="btn"
+                                onclick="newParentTab('{user_adjust_url}', '用户调薪记录','812')"/>
+                            </div>
+							
+                            <div class="nbtn" style="display:{display}">
+                                <input type="button" value="月度调薪记录" class="btn"
+                                onclick="newParentTab('{mon_adjust_url}', '月度调薪记录','818')"/>
+                            </div>
+							
+							<div class="nbtn" style="display:{display}">
+                                <input type="button" value="生成预提" class="btn"
+                                onclick="newParentTab('{yuti_url}', '生成预提','813')"/>
+                            </div>
+							
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

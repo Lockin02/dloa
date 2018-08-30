@@ -1,0 +1,275 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('input[type=checkbox]').attr('checked',true);
+		var options = {
+				multiple: false,
+				width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+ 
+			};
+		function set_url(table,field)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		//部门
+		$("#deptname").autocomplete(set_url('department','dept_name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var dept_name = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'depart',action:'get_deptid',dept_name:dept_name,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						$('#dept_id').val(unescape(data));
+					}
+				}
+				);
+			}
+		});
+		//项目
+		$("#project").autocomplete(set_url('project_info','name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var project_name = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'xm',action:'get_projectid',project_name:project_name,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						$('#project_id').val(unescape(data));
+					}
+				}
+				);
+			}
+		});
+	});
+	function show_ls(val)
+	{
+		if (val==0)
+		{
+			$('#tr_dt').css('display','');
+			$('#tr_xm').css('display','none');
+		}else
+		{
+			$('#tr_dt').css('display','none');
+			$('#tr_xm').css('display','');
+		}
+	}
+	function get_dept(userid)
+	{
+        if (userid) 
+		{
+	        $.post('ajax.php', {
+	            model: 'user',
+	            action: 'get_dept',
+	            userid: userid
+	        }, function(data){
+	            if (data) {
+	                data = unescape(data);
+	                arr = data.split('|');
+	                $('#dept_id').val(arr[0]);
+	                $('#deptname').val(arr[1]);
+	            }
+	        });
+        }
+       }
+	function set_all(chekced,typeid)
+	{
+		$('#type_'+typeid+' input[type=checkbox]').attr('checked',chekced);
+	}
+	
+	function check()
+	{
+		var ls = $('input[type=radio]:checked').val();
+		if (ls==1)
+		{
+			if ($('#project').val()=='')
+			{
+				alert('请填写项目名称！');
+				$('#project').focus();
+				return false;
+			}else if ($('#project_id')=='')
+			{
+				alert('项目名称不正确！');
+				$('#project').focus();
+				return false;
+			}
+		}else
+		{
+			if ($('#deptname').val()=='')
+			{
+				alert('请填写借用部门！');
+				$('#deptname').focus();
+				return false;
+			}else if ($('#dept_id').val()=='')
+			{
+				alert('借用部门填写错误！');
+				$('#deptname').focus();
+				return false;
+			}
+		}
+		
+		var inputs = $('input[type=checkbox][name=id[]]:checked').get();
+		if (inputs.length < 1)
+		{
+			alert('最少要选择一样设备才可以申请！');
+			return false;
+		}
+		if ($('#target_date').val()=='')
+		{
+			alert('请选择预计归还时间！');
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * 取消申请
+	 * @param {Object} id
+	 * @param {Object} key
+	 */
+	function exit_apply(id,key)
+	{
+		if (id && key && confirm('您确定要取消该设备申请吗？'))
+		{
+			$.get('ajax.php',{model:'device_apply',action:'exit_apply',id:id,key:key,rand:Math.random()},
+			function(data)
+			{
+				if (data == 1)
+				{
+					alert('取消申请成功！');
+					parent.location.reload();
+				}else{
+					alert('取消失败，请与管理员联系！');
+				}
+			});
+		}
+	}
+	/**
+	 * 恢复申请
+	 * @param {Object} id
+	 * @param {Object} key
+	 */
+	function recovery_apply(id,key)
+	{
+		if (id && key && confirm('您确定要恢复该设备申请吗？'))
+		{
+			$.get('ajax.php',{model:'device_apply',action:'recovery_apply',id:id,key:key,rand:Math.random()},
+			function(data)
+			{
+				if (data == 1)
+				{
+					alert('恢复申请成功！');
+					parent.location.reload();
+				}else if (data == -2){
+					alert('您申请的设备存在被别人借用了。');
+					return fale;
+				}else{
+					alert('恢复失败，请与管理员联系！');
+				}
+			});
+		}
+	}
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=edit_order&orderid={t_orderid}&key={t_key}" onsubmit="return check();">
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+	<input type="hidden" id="project_id" name="project_id" value="{project_id}" />
+
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">申请借用设备</td>
+	</tr>
+	<tr>
+		<td width="100">申 请 人：</td>
+		<td align="left">{user_name}</td>
+	</tr>
+
+	<tr>
+		<td>借用归属：</td>
+		<td align="left">
+			<span style="float:left; color:#000;">
+			<input type="radio" {ls_checked_1} name="ls" onclick="show_ls(1)" value="1"> 项目</span>
+			<span style="display:{display};color:#000;">
+			<input type="radio" {ls_checked_0} onclick="show_ls(0)" name="ls" value="0" > 部门
+			</span>
+		</td>
+	</tr>
+
+	<tr id="tr_xm" >
+		<td>借用项目：</td>
+		<td align="left"><input type="text" size="40" id="project" name="project" value="{project_name}" /></td>
+	</tr>
+
+	<tr id="tr_dt" style="display:{dt_none}">
+		<td>借用部门：</td>
+		<td align="left"><input type="text" id="deptname" name="deptname" value="{dept_name}" /></td>
+	</tr>
+
+	<tr>
+		<td>预计归还时间：</td>
+		<td align="left">
+			<input type="text" size="15" id="target_date" name="target_date" readonly class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" value="{target_date}" />
+			<span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td>借用说明：</td>
+		<td align="left">
+			<textarea rows="5" cols="60" id="description" name="description">{description}</textarea>
+		</td>
+	</tr>
+</table>
+<br />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center">
+			{post_button} {exit_button} <input type="button" onclick="parent.tb_remove();" value=" 关闭返回 " /> 
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

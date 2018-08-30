@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>新增采购申请</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-add.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			//赋值给当前页面的资产用途
+			$('#useStatusCode').val('ZCYT-GC');
+			$('#assetUseCode').val('{useCode}');
+			if ($('#assetUseCode').val()) {
+				$('#assetUse').val($('#assetUseCode').get(0).options[$('#assetUseCode').get(0).selectedIndex].innerText);
+			}
+		});
+	</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 采购申请
+</span></div>
+<form id="form1" method="post"
+	  action="?model=asset_purchase_apply_apply&action=add" name="form1">
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">源单编号</td>
+			<td class="form_view_right" colspan=3>
+				<input type="hidden" name="apply[relDocId]" class="txt" id="relDocId" value="{requireId}"/>
+				<input type="hidden" name="apply[relDocCode]" class="readOnlyText" id="relDocCode"
+					   value="{requireCode}"/>{requireCodeURL}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">使用人名称</td>
+			<td class="form_view_right">
+				<input type="hidden" id="userId" name="apply[userId]" value="{userId}"/>
+				<input type="text" name="apply[userName]" class="readOnlyText" id="userName"
+					   value="{userName}" readOnly/>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">使用部门</td>
+			<td class="form_view_right">
+				<input type="hidden" id="useDetId" name="apply[useDetId]" value="{useDetId}"/>
+				<input type="text" name="apply[useDetName]" class="readOnlyText" id="useDetName"
+					   value="{useDetName}" readOnly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请人名称</td>
+			<td class="form_view_right">
+				<input type="hidden" id="applicantId" name="apply[applicantId]" value="{applicantId}"/>
+				<input type="text" name="apply[applicantName]" id="applicantName"
+					value="{applicantName}" class="txt"/>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">使用人电话</td>
+			<td class="form_view_right">
+				<input type="text" name="apply[userTel]" class="readOnlyText" id="userTel"
+					   value="{userTel}" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_view_right">
+				<input type="hidden" id="applyDetId"  name="apply[applyDetId]" value="{applyDetId}"/>
+				<input type="text" name="apply[applyDetName]" class="readOnlyText" value="{applyDetName}"
+					   id="applyDetName" readOnly/>
+			</td>
+			<td class="form_text_left">申请日期</td>
+			<td class="form_view_right">
+				<input type="text" name="apply[applyTime]" value="{applyTime}" class="txt"
+					   onfocus="WdatePicker()" id="applyTime"/>
+				<span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">资产用途</td>
+			<td class="form_view_right">
+				<select class="select" name="apply[assetUseCode]" id="assetUseCode"
+						onchange="javascript:$('#assetUse').val(this.options[this.selectedIndex].innerText);">
+					{useType}
+				</select><span
+					class="red">[*]</span>
+				<input type="hidden" class="txt" name="apply[assetUse]" id="assetUse"/>
+			</td>
+			<td class="form_text_left">预计金额</td>
+			<td class="form_view_right" colspan="3">
+				<input type="text" class="txt formatMoney" name="apply[amounts]" id="amounts"/><span
+					class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">确认金额</td>
+			<td class="form_view_right">
+				<input type="text" class="readOnlyText formatMoney" id="recognizeAmountShow" value="{recognizeAmount}"
+					   readonly/>
+				<input type="hidden" name="apply[recognizeAmount]" id="recognizeAmount" value="{recognizeAmount}"
+					   readonly/>
+			</td>
+			<td class="form_text_left">采购部门</td>
+			<td class="form_view_right">
+				<select class="select" name="apply[purchaseDept]" id="purchaseDept">
+					<option value="0">行政部</option>
+					<option value="1">交付部</option>
+					<option value="2">动悉行政部</option>
+				</select>
+				<!-- 弃用的行政区域字段，现在隐藏起来 -->
+				<!--<input type="hidden" class="txt" name="apply[agencyCode]" id="agencyCode"/>-->
+				<!--<input type="text" class="txt" name="apply[agencyName]" id="agencyName"/>-->
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收货地址</td>
+			<td class="form_text_right" colspan="3"><textarea
+					class="txt_txtarea_font" rows="4" name="apply[address]" cols="70">{address}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">特殊事项</td>
+			<td class="form_text_right" colspan="3"><textarea
+					class="txt_txtarea_font" rows="4" name="apply[remark]" cols="70"></textarea>
+			</td>
+		</tr>
+	</table>
+	<legend class="legend">资产需求申请的设备
+	</legend>
+	<div id="itemTable"></div>
+	<legend class="legend">已下达采购申请设备
+	</legend>
+	<div id="purchaseViewTable"></div>
+	<legend class="legend">本次下达采购的设备
+	</legend>
+
+	<div id="purchaseProductTable"></div>
+	<table class="form_main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" name="apply[ExaStatus]" value="待提交"/>
+				<input type="hidden" name="apply[state]" value="未提交"/>
+				<input type="button" class="txt_btn_a" value=" 提  交 " onclick="confirmAudit();"/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

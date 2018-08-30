@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/loadmask/jquery.loadmask.css"/>
+        <script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+            #edituserForm label.error {
+                margin-left: 10px;
+                width: auto;
+                display: inline;
+                color: red;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{user_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:['KEY','操作','姓名','部门','发薪月份','基本工资','公积金','社保费','浮动工资','补发','扣除','项目奖','其他补贴'
+                        ,'奖金','通信津贴','其他扣除','事假','病假','税金','实发工资', '入职日期', '地区','LEV'
+                        ,'账号','开户行','身份证','备注','邮箱','状态','扣税基数'
+                    ],
+                    colModel:[
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'doact',index:'s.rand_key', width:65, align:"center",search:false,hidden:true},
+                        {name:'username',index:'s.username', width:60, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'olddept',index:'s.olddept', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'pym',index:'s.pmon', width:60, align:"center",editable:true ,search:false},
+                        {name:'amount',index:'s.amount', width:65, align:"right",search:false},
+                        {name:'gjjam',index:'s.gjjam', width:60,align:"right",search:false,editable:true,editrules:{required:true,number:true,minValue:0}},
+                        {name:'shbam',index:'s.shbam', width:60, align:"right",editable:true ,search:false},
+                        {name:'floatam',index:'p.floatam', width:65,align:"right",search:false},
+                        {name:'sperewam',index:'p.sperewam', width:85, align:"right",search:false},
+                        {name:'spedelam',index:'p.spedelam', width:85, align:"right",search:false},
+                        {name:'proam',index:'p.proam', width:85, align:"right",search:false},
+                        {name:'otheram',index:'p.otheram', width:65,align:"right",search:false},
+                        {name:'bonusam',index:'p.bonusam', width:42, align:"right",search:false},
+                        {name:'txjt',index:'p.txjt', width:42, align:"right",search:false},
+                        {name:'othdelam',index:'p.othdelam', width:65,align:"right",search:false},
+                        {name:'perholsdays',index:'p.perholsdays', width:42, align:"right",search:false},
+                        {name:'sickholsdays',index:'p.sickholsdays', width:42,align:"right",search:false},
+                        {name:'paycesse',index:'p.paycesse', width:50, align:"right",search:false},
+                        {name:'paytotal',index:'p.paytotal', width:65,align:"right",search:false},
+                        {name:'comedt',index:'s.comedt', width:70, align:'right',editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'oldarea',index:'s.oldarea', width:60, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'lev',index:'h.joblevel',hidden:true,width:40 },
+                        {name:'acc',index:'s.acc', width:155,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'accbank',index:'s.accbank', width:150, align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'idcard',index:'s.idcard', width:150,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'remark',index:'p.remark', width:100, align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'email',index:'s.email', width:180,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'usersta',index:'s.usersta', width:50, align:"center",searchoptions:{sopt:['eq']},stype:'select',editoptions:{value:"0:新入职;1:试用期;2:已转正;3:离职"}},
+                        {name:'cessebase',index:'p.cessebase',hidden:true ,width:40 }
+                      
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-200+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        if(rowData.lev!='4'){
+                            var cl='#FF9900';
+                        }
+                        //be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='修改' title='信息编辑' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{doact:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#edituserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        amount:{
+                            required:true,
+                            number:true
+                        },
+                        gjjam:'number',
+                        shbam:'number',
+                        floatam:'number',
+                        sperewam:'number',
+                        spedelam:'number',
+                        proam:'number',
+                        otheram:'number',
+                        bonusam:'number',
+                        othdelam:'number',
+                        cessebase:'number'
+                    },
+                    messages:{
+                        amount:{
+                            required:'填入金额',
+                            number:'填入金额'
+                        },
+                        gjjam:'填入金额',
+                        shbam:'填入金额',
+                        floatam:'填入金额',
+                        sperewam:'填入金额',
+                        spedelam:'填入金额',
+                        proam:'填入金额',
+                        otheram:'填入金额',
+                        bonusam:'填入金额',
+                        othdelam:'填入金额',
+                        cessebase:'填入金额'
+                    }
+                });
+            });
+            function gridNavSeaFun(){
+                var seacompt= jQuery("#seacompt").val();
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{user_list}&seapy="
+                        +seapy+"&seapm="+seapm+"&seadept="+seadept+"&seaname="
+                        +seaname+"&seacompt="+seacompt,page:1}).trigger("reloadGrid");
+            }
+            function btnClick(ty,dy,dm){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seacompt = jQuery("#seacompt").val();
+                var rand=Math.random()*100000;
+                $("#repdiv").mask("等待中......");
+                if(ty==5){
+                    if(confirm('确定并发送邮件？因需要发送邮件，请等待几分钟，谢谢！'+"\n\n"+'提示：您发送邮件的时间点：'+seapy+' 年 '+seapm+' 月')){
+                        $.post('?model=salary&action=fn_xls'+'&ty='+ty+'&sy='+seapy+'&sm='+seapm+'&fn_exp='+seacompt,{rand:rand},
+                            function (data){
+                                if(data=='1'){
+                                    alert('工资邮件发送成功！');
+                                }else{
+                                    alert('发送邮件失败！'+data);
+                                }
+                                $("#repdiv").unmask();
+                            }
+                        )
+                    }else{
+                        $("#repdiv").unmask();
+                    }
+                }else{
+                    if(confirm('确定导出本月的工资信息？'+"\n\n"+'提示：您导出表单的时间点：'+seapy+' 年 '+seapm+' 月')){
+                        window.open('?model=salary&action=fn_xls'+'&ty='+ty+'&sy='+seapy+'&sm='+seapm+'&fn_exp='+seacompt);
+                        $("#repdiv").unmask();
+                    }else{
+                        $("#repdiv").unmask();
+                    }
+                }
+                
+                return false;
+            }
+            // 修改
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#username').val(rowData.username);
+                $('#pym').html(rowData.pym);
+                $('#amount').val(rowData.amount);
+                $('#gjjam').val(rowData.gjjam);
+                $('#shbam').val(rowData.shbam);
+                $('#floatam').val(rowData.floatam);
+                $('#sperewam').val(rowData.sperewam);
+                $('#spedelam').val(rowData.spedelam);
+                $('#proam').val(rowData.proam);
+                $('#otheram').val(rowData.otheram);
+                $('#bonusam').val(rowData.bonusam);
+                $('#othdelam').val(rowData.othdelam);
+                $('#cessebase').val(rowData.cessebase);
+                $('#paytotal').html(rowData.paytotal);
+                $('#comedt').val(rowData.comedt);
+                $('#oldarea').val(rowData.oldarea);
+                $('#acc').val(rowData.acc);
+                $('#accbank').val(rowData.accbank);
+                $('#idcard').val(rowData.idcard);
+                $('#email').val(rowData.email);
+            }
+            //修改提交
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var amount=$('#amount').val();
+                var gjjam=$('#gjjam').val();
+                var shbam=$('#shbam').val();
+                var floatam=$('#floatam').val();
+                var sperewam=$('#sperewam').val();
+                var spedelam=$('#spedelam').val();
+                var proam=$('#proam').val();
+                var otheram=$('#otheram').val();
+                var bonusam=$('#bonusam').val();
+                var othdelam=$('#othdelam').val();
+                var cessebase=$('#cessebase').val();
+                var comedt=$('#comedt').val();
+                var oldarea=$('#oldarea').val();
+                var acc=$('#acc').val();
+                var accbank=$('#accbank').val();
+                var idcard=$('#idcard').val();
+                var email=$('#email').val();
+                var username=$('#username').val();
+                if(idcard){
+                    $.post('?model=salary&action=ck_idcard',{
+                        id:id,rand:rand,idcard:idcard,flag:'stat'
+                        },
+                        function (data){
+                            if(data=='1'){
+                                if(confirm('修改员工工资信息，请再次确定是否修改？')){
+                                    $.post('?model=salary&action=fn_info_in',{
+                                        id:id,rand:rand,amount:amount,gjjam:gjjam,shbam:shbam,floatam:floatam,sperewam:sperewam
+                                        ,spedelam:spedelam,proam:proam,otheram:otheram,bonusam:bonusam,othdelam:othdelam,cessebase:cessebase
+                                        ,comedt:comedt,oldarea:oldarea,acc:acc,accbank:accbank,idcard:idcard,email:email,flag:'stat',username:username
+                                        },
+                                        function (data)
+                                        {
+                                            var msg=eval('(' + data + ')');
+                                            if(msg&&msg['error']){
+                                                alert('错误：'+msg['error']);
+                                                return false;
+                                            }else{
+                                                alert('操作成功！');
+                                            }
+                                            paCloseFun('hr_user_new');
+                                            jQuery("#rowedgrid").trigger("reloadGrid");
+
+                                        }
+                                    )
+                                }
+                            }else{
+                                alert('身份证重复请检查！');
+                            }
+                        }
+                    );
+                }
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function yTab(){
+                parent.setNewTabs('index1.php?model=salary&action=fn_yeb_fin','年终奖','年终奖');
+            }
+        </script>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="edituserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 628px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="4">
+                            员工信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 姓名：</td>
+                        <td ><input id="username" name="username" type="text" style="display: inline;width: 80px;text-align: right;" /></td>
+                        <td class="tl"> 发薪月份：</td>
+                        <td id="pym" ></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 基本工资：</td>
+                        <td >
+                            <input id="amount" name="amount" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 公积金：</td>
+                        <td >
+                            <input id="gjjam" name="gjjam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 社保费：</td>
+                        <td >
+                            <input id="shbam" name="shbam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 浮动工资：</td>
+                        <td >
+                            <input id="floatam" name="floatam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 补发：</td>
+                        <td >
+                            <input id="sperewam" name="sperewam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 扣除：</td>
+                        <td >
+                            <input id="spedelam" name="spedelam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 项目奖：</td>
+                        <td >
+                            <input id="proam" name="proam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 其他补贴：</td>
+                        <td >
+                            <input id="otheram" name="otheram" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 奖金：</td>
+                        <td >
+                            <input id="bonusam" name="bonusam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 其他扣除：</td>
+                        <td >
+                            <input id="othdelam" name="othdelam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 扣税基数：</td>
+                        <td >
+                            <input id="cessebase" name="cessebase" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 实发工资：</td>
+                        <td id="paytotal"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 入职日期：</td>
+                        <td >
+                            <input id="comedt" name="comedt" type="text" style="display: inline;width: 80px;" />
+                        </td>
+                        <td class="tl"> 地区：</td>
+                        <td >
+                            <input id="oldarea" name="oldarea" type="text" style="display: inline;width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 账号：</td>
+                        <td >
+                            <input id="acc" name="acc" type="text" style="display: inline;width: 200px;" />
+                        </td>
+                        <td class="tl"> 开户行：</td>
+                        <td >
+                            <input id="accbank" name="accbank" type="text" style="display: inline;width: 220px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 身份证：</td>
+                        <td >
+                            <input id="idcard" name="idcard" type="text" style="display: inline;width: 200px;" />
+                        </td>
+                        <td class="tl"> 邮箱：</td>
+                        <td >
+                            <input id="email" name="email" type="text" style="display: inline;width: 220px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="center">
+                            <input type="submit" id="newuserSub" value="提交"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

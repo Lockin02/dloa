@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>审核质检报告</title>
+    {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/qualityereport-confirm.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/qualityereport-common.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=produce_quality_qualityereport&action=confirm" onsubmit="return checkFormConfirm()" >
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">审核质检报告</span>
+			</div>
+		</td>
+	</tr>
+    <tr>
+  		<td class="form_text_left">单据编号</td>
+  		<td class="form_text_right" colspan="3">
+  			{docCode}
+  		</td>
+    </tr>
+    <tr>
+  		<td class="form_text_left">报 告 人</td>
+  		<td class="form_text_right" width="30%">
+  			{examineUserName}
+  		</td>
+   		<td class="form_text_left">报告日期</td>
+  		<td class="form_text_right">
+  			 {docDate}
+  		</td>
+    </tr>
+    <tr>
+  		<td class="form_text_left">质检方案</td>
+  		<td class="form_text_right" >
+  			 {qualityPlanName}
+  		</td>
+  		<td class="form_text_left">质检标准</td>
+  		<td class="form_text_right" >
+  			 {standardName}<span style="padding:0 10px;">{fileImage}</span>
+  		</td>
+    </tr>
+    <tr>
+  		<td class="form_text_left">质检方式</td>
+  		<td class="form_text_right" >
+  			{qualityTypeName}
+  		</td>
+  		<td class="form_text_left">抽检数量</td>
+  		<td class="form_text_right" >
+  			{checkNum}
+  		</td>
+    </tr>
+    <tr style="display:none;">
+  		<td class="form_text_left">报检数量</td>
+  		<td class="form_text_right">
+  			{supportNum}
+  		</td>
+  		<td class="form_text_left">合格数量</td>
+  		<td class="form_text_right">
+  			{qualitedNum}
+  		</td>
+    </tr>
+    <tr  style="display:none;">
+  		<td class="form_text_left">不合格数量</td>
+  		<td class="form_text_right" colspan="3">
+  			{produceNum}
+  		</td>
+    </tr>
+	<tr>
+ 		<td class="form_text_left"><span class="blue">审核结果</span></td>
+ 		<td class="form_text_right" colspan="3">
+ 		    <input type="hidden" id="relDocType" value="{relDocType}" name="qualityereport[relDocType]" />
+ 			<select name="qualityereport[auditStatus]" id="auditStatus" class="select" onchange="changeAuditStatus();">
+ 				<option value="BHG">不合格</option>
+ 				<option value="RBJS">让步接收</option>
+ 			</select>
+			<input type="hidden" id="auditStatusHidden" value="{auditStatus}"/>
+ 		</td>
+ 		<td style="display:none;" class="form_text_left"><span class="blue">正常接收数量</span></td>
+ 		<td style="display:none;" class="form_text_right" >
+ 			<input type="text" class="readOnlyTxtNormal" id="passNum" name="qualityereport[passNum]" value="{passNum}" readonly="readonly"/>
+ 		</td>
+	</tr>
+	<tr style="display:none;">
+ 		<td class="form_text_left"><span class="blue">让步接收数量</span></td>
+ 		<td class="form_text_right" >
+ 			<input type="text" class="readOnlyTxtNormal" id="receiveNum" name="qualityereport[receiveNum]" value="{receiveNum}" readonly="readonly"/>
+ 		</td>
+ 		<td class="form_text_left"><span class="blue">退回数量</span></td>
+ 		<td class="form_text_right" >
+ 			<input type="text" class="readOnlyTxtNormal" id="backNum" name="qualityereport[backNum]" value="{backNum}" readonly="readonly"/>
+ 		</td>
+	</tr>
+	<tr>
+ 		<td class="form_text_left">审核说明</td>
+ 		<td class="form_text_right" colspan="3">
+			 <textarea class="txt_txtarea_900" style="width:690px;" name="qualityereport[auditOpion]" ></textarea>
+ 		</td>
+	</tr>
+</table>
+<div id="ereportequitem"></div>
+<div id="itemTable"></div>
+<div id="failureItem"></div>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+            <input type="hidden" id="id" value="{id}" name="qualityereport[id]"/>
+   		    <input type="submit" id="submit_audit" class="txt_btn_a" value=" 确认审核 "/>&nbsp;&nbsp;
+   		    <input type="button" class="txt_btn_a" onclick="toRejectReport();" value=" 驳回报告 "/>&nbsp;&nbsp;
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();" />
+		</td>
+	</tr>
+</table>
+<div style="display:none;">
+	<div id="templateInfo">
+		<table class="form_in_table">
+			<tr>
+				<td class="form_text_left">
+					驳回原因：
+				</td>
+				<td class="form_text_right">
+			 		<textarea class="txt_txtarea_900" style="width:250px;" id="reason"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="blue">驳回原因会以邮件形式发送给报告人</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value=" 确 认 " onclick="rejectReport();" class="txt_btn_a"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="$('#templateInfo').dialog('close')"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</form>
+</body>
+</html>

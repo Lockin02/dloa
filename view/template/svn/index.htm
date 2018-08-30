@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>SVN文件列表</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript">
+        var admin = '{admin}';
+        var svn_username = '{svn_username}';
+        //绑定表格
+        $(function(){
+			$('#tt').treegrid({
+				title:'SVN文件列表',
+				url:'?model=svn_index&action=list_data',
+				treeField:'name',
+				nowrap: false,
+				rownumbers: false,
+				animate:true,
+				fit:true,
+				singleSelect: false,
+				loadMsg:'数据加载中请稍后……',
+				idField:'filenamepath',
+				treeField:'name',
+				columns:[[
+					{field:'ck',checkbox:true},
+					{field:'name',title:'名称',width:300},
+					{field:'status',title:'状态',width:100},
+					{field:'svn_revision',title:'SVN版本',width:60},
+					{field:'revision',title:'本地版本',width:60},
+					{field:'size',title:'大小(字节)',width:70},
+					{field:'author',title:'作者',width:120},
+					{field:'date',title:'日期',width:150,align: 'center'},
+					{field:'action',title:'操作',width: 150,align: 'center',formatter: function(value, row, index)
+						{
+							var html = '';
+							if (row.types == 'file')
+							{
+								html += '<a href="#" onclick="show_file(\''+row.filenamepath+'\');">查看</a>';
+								if (row.status)
+								{
+									html += ' | <a href="#" onclick="show_diff(\''+row.filenamepath+'\');">比较</a>';
+								}
+								if (admin == 1)
+								{
+									html +=' | <a href="#" onclick="Update(\''+row.filenamepath+'\','+row.svn_revision+');">更新</a>';
+								}else if(row.author == svn_username){
+									html +=' | <a href="#" onclick="Update(\''+row.filenamepath+'\','+row.svn_revision+');">更新</a>';
+								}
+							}else if (admin == 1){
+								html +=' <a href="#" onclick="Update(\''+row.filenamepath+'\','+row.svn_revision+');">更新</a>';
+							}
+							if ((row.types == 'dir' && row.author == svn_username) || admin == 1){
+								//if (html !='') html += ' | ';
+								//html +='<a href="#" onclick="checkout(\''+row.filenamepath+'\');">检出</a>';
+							}
+							return html;
+						}
+					}
+					
+				]],onBeforeLoad:function(row,param){
+					if (row){
+						$(this).treegrid('options').url = '?model=svn_index&action=list_data&dir='+row.path+'/'+row.name;
+					} else {
+						$(this).treegrid('options').url = '?model=svn_index&action=list_data';
+					}
+				},
+				onDblClickRow:function(row){
+					if (row.types == 'dir'){
+						$(this).treegrid('options').url = '?model=svn_index&action=list_data&dir='+row.path+'/'+row.name;
+					} else {
+						$(this).treegrid('options').url = '?model=svn_index&action=list_data';
+					}
+				}
+			});
+			});
+		//比较文件
+        function show_diff(name)
+        {
+        	$('#tt').treegrid('unselectAll');
+        	$('#tt').treegrid('select',name);
+			var row = $('#tt').treegrid('getSelected');
+			
+			var revision = row.svn_revision ? row.svn_revision : row.revision;
+			var sheight = screen.height-70;
+		    var swidth = screen.width-10;
+		    var winoption ="dialogHeight:"+sheight+"px;dialogWidth:"+ swidth +"px;status:yes;scroll:yes;resizable:yes;center:yes";
+			window.showModalDialog('?model={t_model}&action=diff&filenamepath='+row.filenamepath+'&revision='+revision,window,winoption);
+        }
+        //查看文件
+        function show_file(name)
+        {
+        	$('#tt').treegrid('unselectAll');
+        	$('#tt').treegrid('select',name);
+			var row = $('#tt').treegrid('getSelected');
+			var sheight = screen.height-70;
+		    var swidth = screen.width-10;
+			var revision = row.svn_revision ? row.svn_revision : row.revision;
+		    var winoption ="dialogHeight:"+sheight+"px;dialogWidth:"+ swidth +"px;status:yes;scroll:yes;resizable:yes;center:yes";
+			window.showModalDialog('?model={t_model}&action=cat&filenamepath='+row.filenamepath+'&revision='+revision,window,winoption);
+        }
+        //更新文件
+        function Update(filenamepath,revision)
+        {
+        	$('#apply').css('display','none');
+        	var file_list = '';
+        	var file_revision = '';
+        	if (filenamepath)
+        	{
+        		file_list = filenamepath;
+        		file_revision = revision;
+        	}else{
+        		var rows = $('#tt').treegrid('getSelections');
+	        	for(k in rows)
+	        	{
+	        		if (rows[k].filenamepath && rows[k].types == 'file')
+	        		{
+	        			file_list += rows[k].filenamepath+'|';
+	        			file_revision += rows[k].svn_revision+'|';
+	        		}
+	        	}
+        	}
+        	if (file_list == '')
+        	{
+        		alert('至少需要选择一个文件！');
+        		return false;
+        	}else
+			{
+			
+        		$.post('?model={t_model}&action=update_file',{file_list:file_list,file_revision:file_revision,rand:Math.random()},function(data){
+					if (data == '')
+        			{
+        				alert('操作成功！');
+        			}else
+					{
+						alert('操作失败！');
+        				$('#info').html(data);
+        				if ($('#error_file').val())
+        				{
+        					$('#apply').css('display','');
+        				}
+        				$('#msg').window('open');
+        			}
+        		});
+        	}
+        }
+        //检出
+        function checkout(path)
+        {
+        	$('#apply').css('display','none');
+        	$("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body"); 
+        	$("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2}); 
+        	$.post('?model={t_model}&action=checkout',{path:path,rand:Math.random()},function(data){
+        		$('.datagrid-mask').remove();
+        		$('.datagrid-mask-msg').remove();
+        		if (data)
+        		{
+        			$('#info').html(data);
+        			if ($('#error_file').val())
+    				{
+        				alert('您要检出的文件夹有需要审核的文件，需要申请审核通过后才可以检出。');
+    					$('#apply').css('display','');
+    				}
+        			$('#msg').window('open');
+        		}
+        	});
+        }
+        
+    	function apply()
+    	{
+    		var file_list = $('#error_file').val();
+    		var file_rows = $('#error_row').val();
+    		var file_revision = $('#error_rev').val();
+    		if (file_list && file_rows)
+    		{
+    			$.post('?model={t_model}&action=apply',{file_list:file_list,file_rows:file_rows,file_revision:file_revision,rand:Math.random()},function(data){
+    				if (data == 1)
+    				{
+    					$('#msg').window('close');
+    					$.messager.show({
+	                        title: '提示',
+	                        msg: '提交申请审批文件成功，请耐心等待 管理员审批！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+    				}else{
+    					alert(data);
+    				}
+    				
+    			})
+    		}
+    	}
+        </script>
+        <style type="text/css">
+			#info p {margin:0px; padding:0px; width:590px; float:left; height: 25px;}
+        </style>
+    </head>
+    <body class="easyui-layout" border="false">
+    	<div region="center" border="false" style="padding:5px;">
+    	<table id="tt" toolbar="#tb"></table>
+    	<div id="tb" style="padding:5px;height:auto;">
+			<div>
+				<a href="#" class="easyui-linkbutton" onclick="Update();" iconCls="icon-ok">更新选中</a>
+				<span>注意：非超级管理员不能更新目录，只能多选文件或单个文件更新。</span>
+			</div>
+			
+		</div>
+    	</div>
+    </body>
+    <div id="msg" class="easyui-dialog" title="SVN操作返回信息" modal="false" closed="true" style="width:620px;height:350px;padding:5px;">
+    	<div class="easyui-layout" fit="true">
+			<div id="info" region="center" border="false">
+			
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input id="apply" style="display: none;" type="button" onclick="apply();" value=" 提交申请审批文件 " />
+				<input type="button" onclick="$('#msg').window('close');" value=" 返回关闭 " />
+				</form>
+			</div>
+		</div>
+    </div>
+</html>

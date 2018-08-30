@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <title></title>
+        <script type="text/javascript">
+            function subClick(){
+                var rand=Math.random()*100000;
+                var totype=$('input[type=radio][name=totype]:checked').val();
+                var toarea=$('input[type=radio][name=toarea]:checked').val();
+                var tonamet=$('input[type=radio][name=tonamet]:checked').val();
+                var toname=$('#toname').val();
+                var totel=$('#totel').val();
+                var toadd=$('#toadd').val();
+                var topostcode=$('#topostcode').val();
+                var toremark=$('#toremark').val();
+                var pid=$('#pid').val();
+                if(!totype){
+                    alert('请选择领取方式！');
+                    return false;
+                }
+                if(totype=='com'){
+                    if(!toarea){
+                        alert('请选择领取区域！');
+                        return false;
+                    }
+                }else{
+                    if(tonamet=='home'){
+                        if(!$.trim(toname)){
+                            alert('请输入收件家人！');
+                            return false;
+                        }
+                    }
+                    if(!$.trim(totel)){
+                        alert('请输入收件人电话！');
+                        return false;
+                    }
+                    if(!$.trim(toadd)){
+                        alert('请输入收件人地址！');
+                        return false;
+                    }
+                    if(!$.trim(topostcode)){
+                        alert('请输入地址邮编！');
+                        return false;
+                    }
+                }
+                $.post('{ajax_url}',{rand:rand,pid:pid,toname:toname,totel:totel,
+                    toadd:toadd,topostcode:topostcode,toremark:toremark,totype:totype,toarea:toarea,tonamet:tonamet},
+                function (data)
+                {
+                    if (data!=1)
+                    {
+                        if(data==2){
+                            alert('修改成功！');
+                        }else{
+                            alert('非法ID或输入数据有误！'+data);
+                        }
+                    }else{
+                        alert('提交成功！');
+                        location.reload();
+                    }
+                }
+            )
+            }
+            function delClick(){
+                var rand=Math.random()*100000;
+                var pid=$('#pid').val();
+                if(!$.trim(pid)){
+                    alert('非法数据');
+                    return false;
+                }
+                if(!confirm('是否删除？')){
+                    return false;
+                }
+                $.post('{ajax_del_url}',{rand:rand,pid:pid},
+                function (data)
+                {
+                    if (data!=1)
+                    {
+                        alert('非法ID或输入数据有误！'+data);
+                    }else{
+                        alert('删除成功！');
+                        location.reload();
+                    }
+                }
+            )
+            }
+            function toTypeClick(obj){
+                if(obj.value=='com'){
+                    $('.com').css('display', '');
+                    $('.post').css('display', 'none');
+                }
+                if(obj.value=='post'){
+                    $('.com').css('display', 'none');
+                    $('.post').css('display', '');
+                }
+				if(obj.value=='project'){
+                    $('.com').css('display', 'none');
+                    $('.post').css('display', '');
+                }
+            }
+            function toNameClick(obj){
+                if(obj.value=='own'){
+                    $('#toname').css('display', 'none');
+                    if(!$('#pid').val){
+                        $('#toadd').val('');
+                    }
+                }
+                if(obj.value=='home'){
+                    $('#toname').css('display', '');
+                    if(!$('#pid').val){
+                        $('#toadd').val($('#hidename').val());
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        {admin}
+        <table border="0" width="580" class="iframetable" cellpadding="0" cellspacing="0" align="center" id="edit" style=" margin:0px auto;margin-top: 23px;" >
+            <tr>
+                <td colspan="2"  style="font-size:16px; font-weight:bolder; text-align:center;">中秋月饼领取
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><span id="info">{user_info}</span>
+                </td>
+            </tr>
+            <tr>
+                <td width="15%" class="tableleft">员工：</td>
+                <td>{user_name}</td>
+            </tr>
+            <tr>
+                <td width="15%" class="tableleft">领取方式：</td>
+                <td>
+                    <input type="radio" name="totype" id="totype1" value="com" onclick="toTypeClick(this)" {totype1} /> 本人在公司领取
+                           <input type="radio" name="totype" id="totype2" value="post" onclick="toTypeClick(this)" {totype2} /> 邮寄给家人
+                           <input type="radio" name="totype" id="totype3" value="project" onclick="toTypeClick(this)" {totype3} /> 邮寄到项目地址
+						   
+                           </td>
+                            </tr>
+                            <tr class="com" style="display:{dipcom};">
+                                <td class="tableleft">领取区域：</td>
+                                <td>
+                                    <input type="radio" name="toarea" id="toarea" value="珠海" {toarea1} /> 珠海<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="北京-财经" {toarea2} /> 北京办（财经）：北京市海淀区西三环北路87号国际财经中心C座701室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="北京-豪柏" {toarea3} /> 北京办（豪柏）：北京市海淀区西三环北路豪柏大厦C2座1601室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="沈阳" {toarea4} /> 沈阳办：沈阳市大东区广宜街21号明城国际大厦a座1108室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="广州" {toarea5} /> 广州办：广州市萝岗区科学城彩频路9号广东软件园B栋1001室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="南京" {toarea6} /> 南京办：南京市建邺区庐山路118号紫金西城中心1栋603室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="西安" {toarea7} /> 西安办：西安市高新区科技二路77号西安光电园409室<br/>
+                                           <input type="radio" name="toarea" id="toarea" value="上海" {toarea8} />上海办：上海市普陀区中江路106号北岸长风614室 <br/>
+                                           <!--<input type="radio" name="toarea" id="toarea" value="广州贝软" {toarea10} /> 广州贝软：广州市天河区科学城彩频路9号广东软件科学园B栋602A<br/>-->
+                                               </td>
+                                                </tr>
+                                                <tr class="post" style="display:{dippost};">
+                                                    <td class="tableleft">收件人姓名：</td>
+                                                    <td>
+                                                               <input type="text" class="biginput" name="toname" id="toname" value="{to_name}" />
+                                                                </td>
+                                                                </tr>
+                                                                <tr class="post" style="display:{dippost};">
+                                                                    <td class="tableleft">收件人手机号：</td>
+                                                                    <td><input type="text" class="biginput" name="totel" id="totel" value="{to_tel}"/>&nbsp;提醒必须是手机号码</td>
+                                                                </tr>
+                                                                <tr class="post" style="display:{dippost};">
+                                                                    <td class="tableleft">收件人地址：</td>
+                                                                    <td><input type="text" class="biginput" size="65" name="toadd" id="toadd" value="{to_add}"/><br>格式：**省**市**</td>
+                                                                </tr>
+                                                                <tr class="post" style="display:{dippost};">
+                                                                    <td class="tableleft">地址邮编：</td>
+                                                                    <td><input type="text" class="biginput" name="topostcode" id="topostcode"  value="{to_postcode}"/></td>
+                                                                </tr>
+                                                                <tr class="post" style="display:{dippost};">
+                                                                    <td class="tableleft">备注：</td>
+                                                                    <td><textarea class="biginput" name="toremark" id="toremark"  rows="3" cols="63">{to_remark}</textarea></td>
+                                                                </tr>
+                                                                <tr class="post" style="display:{dippost};">
+                                                                    <td colspan="2"><pre>
+注意：
+1、必须填写完整地址
+2、珠海市区地址不邮寄，需到公司领取
+                                                                    </pre></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2" align="center">
+                                                                        <input type="hidden" value="{pid}" name="pid" id="pid"/>
+                                                                        <input type="hidden" value="{to_add}" id="hidename" name="hidename" />
+                                                                        <input type="button" class="biginput" onclick="subClick()" value="提交"/>
+                                                                        <input type="button" class="biginput" onclick="delClick()" value="删除"/>
+                                                                    </td>
+                                                                </tr>
+                                                                </table>
+                                                                </body>
+                                                                </html>

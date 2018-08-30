@@ -1,0 +1,144 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>查看领料出库单</title>
+    {#commonInclude#}
+    <script>
+        $(document).ready(function () {
+            if ("{isRed}" == "0") {
+                $(".main_head_title").html('<span class="blue">领料出库单</span>');
+            } else {
+                $(".main_head_title").html('<span class="red">领料出库单>>>红色</span>');
+                $("#itemtable tbody tr").each(function () {
+                    $(this).css("color", "red");
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	领料出库单
+    </span>
+</div>
+<table class="form_main_table">
+    <tr>
+        <td class="form_text_left">单据编号</td>
+        <td class="form_text_right">
+            {docCode}
+        </td>
+        <td class="form_text_left">单据日期</td>
+        <td class="form_text_right" width="30%">
+            {auditDate}
+        </td>
+    </tr>
+    <td class="form_text_left">领料类型</td>
+    <td class="form_text_right">
+        {pickingType}
+    </td>
+    <td class="form_text_left">对方科目</td>
+    <td class="form_text_right">
+        {otherSubjects}
+    </td>
+    <tr>
+        <td class="form_text_left">源单类型</td>
+        <td class="form_text_right">
+            {relDocType}
+        </td>
+        <td class="form_text_left">源单编号</td>
+        <td class="form_text_right">
+            {relDocCode}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">领料人</td>
+        <td class="form_text_right">
+            {pickName}
+        </td>
+        <td class="form_text_left">发料人</td>
+        <td class="form_text_right">
+            {salesmanName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">领料部门</td>
+        <td class="form_text_right">
+            {deptName}
+        </td>
+        <td class="form_text_left">发料仓库</td>
+        <td class="form_text_right">
+            {stockName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">制单</td>
+        <td class="form_text_right">
+            {createName}
+        </td>
+        <td class="form_text_left">审核人</td>
+        <td class="form_text_right">
+            {auditerName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">所属板块</td>
+        <td class="form_text_right" colspan="3">
+            {moduleName}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">物料用途</td>
+        <td class="form_text_right" colspan="3">
+            {toUse}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">备注</td>
+        <td class="form_text_right" colspan="3">
+            <textarea class="textarea_read">{remark}</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <table class="main_table" id="itemtable">
+                <thead>
+                <tr>
+                    <td colspan="17" class="form_header">
+                        物料清单
+                    </td>
+                </tr>
+                <tr class="main_tr_header">
+                    <th>序号</th>
+                    <th>物料编码</th>
+                    <th>物料分类</th>
+                    <th>k3编码</th>
+                    <th>物料名称</th>
+                    <th>规格型号</th>
+                    <th>单位</th>
+                    <th>批次</th>
+                    <th>发料仓库</th>
+                    <th>申请数量</th>
+                    <th>实发数量</th>
+                    <th>序列号</th>
+                    <th>单价</th>
+                    <th>金额</th>
+                    <th>生产/采购日期</th>
+                    <th>保质期(天)</th>
+                    <th>有效期至</th>
+                </tr>
+                </thead>
+                <tbody>
+                {stockoutItems}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="txt_btn" colspan="4">
+            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

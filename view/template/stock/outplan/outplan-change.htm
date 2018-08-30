@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<title>发货计划变更</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <!-- 主题css，可切换 -->
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/dump.js">
+        </script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-contEqu.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-change.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-BToOEqu-change.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-add-formValidator.js">
+        </script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script>
+				$(function(){
+				    $("#TO_NAME").yxselect_user({
+						hiddenId : 'TO_ID',
+						mode : 'check'
+					})
+				});
+				function ismailFun(){
+					if( document.getElementsByName("outplan[ismail]")[1].checked ){
+						$('#mailTr').hide();
+					}else{
+						$('#mailTr').show();
+					}
+				}
+		</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=stock_outplan_outplan&action=change" name="form1" onsubmit="return checkDate();">
+	<table class="form_main_table">
+		<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">发货计划变更</font>
+					<input type="hidden" id="pageAction" value="{pageAction}"/>
+			    </span>
+			</div>
+		</tr>
+		<tr>
+			<td>
+			<table class="form_main_table">
+				<tr>
+						<td class="form_text_left">发货计划编号</td>
+						<td class="form_text_right" >
+							 <input type="hidden" class="txt" name="outplan[oldId]" id="id" value="{id}"/>
+							 <input type="hidden" class="txt" id="docType" name="outplan[docType]" value="{docType}"/>
+							 <input type="text" class="readOnlyTxtNormal" readonly name="outplan[planCode]" value="{planCode}"/>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">源单号</td>
+						<td class="form_text_right" >
+							 <input type="hidden" class="txt" readonly id="docId" name="outplan[docId]" value="{docId}" />
+							 {docCode}
+						</td>
+						<td class="form_text_left">源单名称</td>
+						<td class="form_text_right" >
+							 {docName}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">周次</td>
+						<td class="form_text_right" >
+							 <input type="text" class="readOnlyTxtNormal" readonly id="week" name="outplan[week]" value="{week}"/>
+						</td>
+						<td class="form_text_left">性质</td>
+						<td class="form_text_right">
+							{type}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货仓库</td>
+						<td class="form_text_right" >
+							 <input type="hidden" class="txt" id="stockId" name="outplan[stockId]" value="{stockId}"/>
+							 <input type="hidden" class="txt" id="stockCode" name="outplan[stockCode]" value="{stockCode}"/>
+							 <input type="text" class="txt" id="stockName" name="outplan[stockName]" value="{stockName}"/>
+						</td>
+						<td class="form_text_left">计划发货日期</td>
+						<td class="form_text_right" >
+							 <input type="text" class="txt" id="shipPlanDate" name="outplan[shipPlanDate]" onchange="changeDate();" onfocus="WdatePicker()" value="{shipPlanDate}"/>
+							 <span class="red">
+	                            [*]
+	                        </span>
+	                        <div id="shipPlanDateTip" class="tipShortTxt">
+	                        </div>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货地址</td>
+						<td class="form_text_right" colspan="3">
+							 <input type="text" id="address" class="txtbiglong" name="outplan[address]" value="{address}"/>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">采购人员关注重点</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[purConcern]" class="txt_txtarea_font" id="purConcern">{purConcern}</textarea>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货人员关注</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[shipConcern]" class="txt_txtarea_font" id="shipConcern">{shipConcern}</textarea>
+						</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr id="borrowTr">
+			<td>
+<div id="BToOEqu">
+</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan=12">
+                            物料清单
+                        </td>
+                        <td align="center" width="4%">
+                            <input type="hidden" id="invnumber" value="1" />
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                            <img src="images/collapsed.gif" onclick="dynamic_add('invbody','rowNum');" title="添加行"/>
+                         </td>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                    <tr class="main_tr_header">
+                        <th>
+                            序号
+                        </th>
+<!--                        <th>
+                            产品线
+                        </th>-->
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                        <th>
+                            出货仓库名称
+                        </th>
+                        <th>
+                            合同数量
+                        </th>
+                        <th>
+                      	已退数量
+                        </th>
+                        <th>
+                            可下达数量
+                        </th>
+                        <th>
+                            本次计划数量
+                        </th>
+                        <th>
+                            已出库数量
+                        </th>
+                        <th>
+                            即时库存
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                    {products}
+                </tbody>
+            </table>
+           	</td>
+       	</tr>
+       	<tr>
+       		<td>
+            <table class="form_main_table">
+				<tr>
+						<td class="form_text_left">变更原因</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[changeReason]" class="txt_txtarea_font" id="changeReason"></textarea>
+						</td>
+				</tr>
+		       	<tr>
+						<td class="form_text_left">是否发送邮件</td>
+						<td class="form_text_right" colspan="3">
+							 <input type="radio" name="outplan[ismail]" value="1" onclick="ismailFun();" checked/>&nbsp;是&nbsp;&nbsp;
+							 <input type="radio" name="outplan[ismail]" value="0" onclick="ismailFun();"/>&nbsp;否&nbsp;&nbsp;
+						</td>
+				</tr>
+				<tr id="mailTr">
+						<td class="form_text_left">邮件接收者</td>
+						<td class="form_text_right" colspan="3">
+							<input type="text" name="outplan[email][TO_NAME]" class="txtlong" id="TO_NAME" value="{TO_NAME}"/>
+							<input type="hidden" name="outplan[email][TO_ID]" class="text" id="TO_ID" value="{TO_ID}"/>
+						</td>
+				</tr>
+				<tr id="overTimeRea">
+						<td class="form_text_left"><span style="color:blue">超期发货原因</span></td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_font" name="outplan[overTimeReason]" id="overTimeReason"></textarea>
+						</td>
+				</tr>
+				<tr>
+						<td class="txt_btn" colspan="4">
+						   <input id ="isNeedConfirm" type="hidden" name="outplan[isNeedConfirm]" value="{isNeedConfirm}"></input>
+						   <input id="saveBtn" type="submit" class="txt_btn_a" value="变  更"/>
+						   <input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+						</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

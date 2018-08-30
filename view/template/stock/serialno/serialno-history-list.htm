@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+   <title>序列号跟踪查询</title>
+
+   <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+   <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+   <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+   <script type="text/javascript" src="js/jquery/woo.js"></script>
+   <script type="text/javascript" src="js/jquery/component.js"></script>
+   <script type="text/javascript" src="js/thickbox.js"></script>
+   <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+   <script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+   <script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+   <link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+   <link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" 	rel="stylesheet" />
+
+<script>
+	/**
+	*查看出库单详细信息
+	*/
+	function viewDocDetail(id){
+		
+		   var skey = "";
+	        $.ajax({
+			    type: "POST",
+			    url: "?model=stock_outstock_stockout&action=md5RowAjax",
+			    data: {"id" : id},
+			    async: false,
+			    success: function(data){
+			   	   skey = data;
+				}
+			});
+	        showThickboxWin("?model=stock_outstock_stockout&action=toView&id="
+					+id
+					+ "&docType=CKSALES&skey="
+					+skey
+					+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=900");
+	}
+	/**
+	*查看源单详细信息
+	*/
+	function viewRelDocDetail(id,contractType){		
+		   var skey = "";
+
+	        if(contractType=="oa_service_accessorder"){
+		        $.ajax({
+				    type: "POST",
+				    url: "?model=service_accessorder_accessorder&action=md5RowAjax",
+				    data: {"id" : id},
+				    async: false,
+				    success: function(data){
+				   	   skey = data;
+					}
+				});
+	        	showThickboxWin("?model=service_accessorder_accessorder&action=toView&id="
+						+id
+						+ "&skey="
+						+skey
+						+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=900");	        	
+	        }
+	        
+	        if(contractType=="oa_sale_order"){
+		        $.ajax({
+				    type: "POST",
+				    url: "?model=projectmanagent_order_order&action=md5RowAjax",
+				    data: {"id" : id},
+				    async: false,
+				    success: function(data){
+				   	   skey = data;
+					}
+				});
+	        	showThickboxWin("?model=projectmanagent_order_order&action=init&perm=view&id="
+						+id
+						+ "&skey="
+						+skey
+						+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=900");	        	
+	        }
+	        
+	        if(contractType=="oa_sale_service"){
+		        $.ajax({
+				    type: "POST",
+				    url: "?model=engineering_serviceContract_serviceContract&action=md5RowAjax",
+				    data: {"id" : id},
+				    async: false,
+				    success: function(data){
+				   	   skey = data;
+					}
+				});
+	        	showThickboxWin("?model=engineering_serviceContract_serviceContract&action=init&perm=view&id="
+						+id
+						+ "&skey="
+						+skey
+						+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=900");	        	
+	        }
+	        
+	        if(contractType=="oa_sale_rdproject"){
+		        $.ajax({
+				    type: "POST",
+				    url: "?model=rdproject_yxrdproject_rdproject&action=md5RowAjax",
+				    data: {"id" : id},
+				    async: false,
+				    success: function(data){
+				   	   skey = data;
+					}
+				});
+	        	showThickboxWin("?model=rdproject_yxrdproject_rdproject&action=init&perm=view&id="
+						+id
+						+ "&skey="
+						+skey
+						+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=900");	        	
+	        }
+		}
+</script>
+   
+</head>
+<body>
+              	<table class="main_table" >
+		        <thead>
+		        	<tr style="background-color:00BFFF;">
+		        		 <th bgcolor="#C6E2FF"><b>操作</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>物料编号</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>物料名称</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>型号</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>时间</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>出库单号</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>出库人</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>源单类型</b></th>
+		        		 <th bgcolor="#C6E2FF"><b>源单编号</b></th>
+		        	</tr>
+		        </thead>
+		        <tbody id="listbody">
+		        	{list}
+		        </tbody>
+		   	 </table>
+</body>
+</html>

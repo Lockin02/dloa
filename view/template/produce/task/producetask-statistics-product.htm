@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>物料汇总计算</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/producetask-statistics-product.js"></script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="6">
+				<div class="main_head">
+					<span class="main_head_title">
+						物料汇总计算
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">单据编号</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="docCode" name="producetask[docCode]"/>
+			</td>
+			<td class="form_text_left_three">单据日期</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="docDate" onfocus="WdatePicker()" name="producetask[docDate]" readonly/>
+			</td>
+			<td class="form_text_left_three">优先级</td>
+			<td class="form_text_right_three">
+				<select class="txt" id="urgentLevelCode" name="producetask[urgentLevelCode]">
+					{urgentLevelCode}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">物料编码</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="productCode" name="producetask[productCode]"/>
+			</td>
+			<td class="form_text_left_three">物料名称</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="productName" name="producetask[productName]"/>
+			</td>
+			<td class="form_text_left_three">生产批次</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="productionBatch" name="producetask[productionBatch]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">合同编号</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="relDocCode" name="producetask[relDocCode]"/>
+			</td>
+			<td class="form_text_left_three">客户名称</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="customerName" name="producetask[customerName]"/>
+			</td>
+			<td class="form_text_left_three">销售代表</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="saleUserName" name="producetask[saleUserName]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">责任人</td>
+			<td class="form_text_right_three">
+				<input type="text" class="txt" id="chargeUserName" name="producetask[chargeUserName]"/>
+			</td>
+			<td class="form_text_left_three">单据状态</td>
+			<td class="form_text_right_three" colspan="3">
+				<input type="checkbox" name="producetask[docStatus][]" checked value="0"/>未接收&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="checkbox" name="producetask[docStatus][]" checked value="1"/>已接收&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="checkbox" name="producetask[docStatus][]" checked value="2"/>已制定计划
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="6">
+				<input type="button" class="txt_btn_a" value=" 查  询 " onclick="toSearch();" />&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 计  算 " onclick="caculate();"/>
+				<input type="hidden" id="idStr" value="{idStr}"/>
+			</td>
+		</tr>
+	</table>
+	<div style="overflow-x:scroll;">
+		<table class="form_main_table">
+			<tr>
+				<td>
+					<div id="producetaskList"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

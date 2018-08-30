@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<title>编辑采购申请</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-batchnumb.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+<script>
+
+			function   setinfo(){
+				var invnumber=	$("#invnumber").val(); //数组长度
+				var appendHtml="";
+				for(i=0;i<invnumber+1;i++){
+					if($("#amountAll"+i).length >0){
+					var amountAll=$("#amountAll"+i).val();
+					var id=$("#id"+i).val();
+					var isPurchFlag=$("#isPurch"+i).attr('checked');
+					var isPurch=1;
+						if(amountAll!=''){
+							if(!isPurchFlag){
+								isPurch=0;
+							}
+							appendHtml+='<input type="hidden"  name="basic[equipment]['+i+'][amountAll]" value="'+
+								amountAll
+							+'"/>'+
+							'<input type="hidden"  name="basic[equipment]['+i+'][id]" value="'+
+								id
+							+'"/>'+
+							'<input type="hidden"  name="basic[equipment]['+i+'][isPurch]" value="'+
+								isPurch
+							+'"/>';
+						}
+					}
+				}
+				if($(window.parent.document.getElementById("appendHtml")).html()!=""){   //重新选择刚先把前一次追加的内容清空
+					$(window.parent.document.getElementById("appendHtml")).html("");
+				}
+				$(window.parent.document.getElementById("appendHtml")).append(appendHtml);
+	  }
+		$(window.parent.document.getElementById("sub")).bind("click",function(){
+		  	setinfo();
+			if($(window.parent.document.getElementById("appendHtml")).html()==""){
+						alert("请填写离职相关信息。");
+						return false;
+		  }
+		});
+</script>
+</head>
+
+<body scroll="auto">
+
+<div class="main_head">
+    <span class="main_head_title">
+      	采购申请
+    </span>
+</div>
+<div class="main_wraper">
+<form id='form1' name='form1' action="?model=purchase_external_external&action=edit" method="post">
+<input type='hidden' id='purchType' name=basic[purchType] value="produce"/>
+<input type='hidden' id='id' name="basic[id]" value="{id}"/>
+<table class="form_main_table">
+		<tr>
+				<td class="form_text_left">采购申请编号</td>
+				<td  class="form_text_right"  colspan="3">{planNumb}
+				<!-- <span id="showContract" style="display:none">
+					<img src="images/icon/view.gif" title="查看审批情况" onclick="clickFun();"/>
+				</span> -->
+
+				</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">批次号</td>
+			<td class="form_text_right">
+				{batchNumb}
+			</td>
+
+			<td class="form_text_left" >申请类型</td>
+			<td class="form_text_right">
+				{purchTypeCName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请日期</td>
+			<td class="form_text_right">
+				{sendTime}
+			</td>
+			<td class="form_text_left">期望完成日期</td>
+			<td class="form_text_right">
+				{dateHope}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_text_right" >
+				{department}
+			</td>
+			<td class="form_text_left">申请人名称</td>
+			<td class="form_text_right">
+				{sendName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购部门</td>
+			<td class="form_text_right">
+				{purchDepart}
+			</td>
+			<td class="form_text_left">电话</td>
+			<td class="form_text_right">
+				{phone}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请原因说明</td>
+			<td class="form_text_right" colspan="3">
+				<textarea  id="instruction" class="textarea_read_blue" name="" readonly>{applyReason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购说明</td>
+			<td class="form_text_right" colspan="3">
+				<textarea  id="" class="textarea_read_blue" name="" readonly>{instruction}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea  id="remark" class="textarea_read_blue" name="" readonly>{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附  件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+	<td colspan="6">
+<table id="mytable" class="form_main_table">
+			<thead>
+			<tr>
+				<td colspan="15" class="form_header">采购申请清单
+							<input type="hidden" id="invnumber" value="{invnumber}" />
+							</td>
+						</tr>
+				<tr class="main_tr_header">
+				<th width="4%">序号</th>
+				<th >物料编号/名称</th>
+                <th width="7%">物料类型</th>
+                <th width="7%">规格型号</th>
+				<th width="4%">单位</th>
+				<th width="5%">采购属性</th>
+                <th width="5%">库存数量</th>
+                <th width="6%">最小包装数</th>
+                <th width="6%">最小订单数</th>
+                <th width="7%">申请数量</th>
+                <!--<th width="7%">审批数量</th>-->
+				<th width="8%">希望交货期</th>
+				<!--<th width="5%">是否采购</th>-->
+				</tr>
+			</thead>
+			<tbody id="invbody">
+			{listWithType}
+			</tbody>
+</table>
+</td>
+</tr>
+	<tr>
+		<td  colspan="6"  id="historyApply"  class="td_table">
+			{batchEquList}
+		</td>
+	</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

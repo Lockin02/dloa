@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>添加收料通知单</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=GBK"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" media="screen"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="view/template/purchase/arrival/js/arrival-formvalidator.js"></script>
+
+	<script type="text/javascript" src="view/template/purchase/arrival/js/arrival-add.js"></script>
+	<script type="text/javascript" src="view/template/purchase/arrival/js/arrival-add-delete.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/**邮件发送到*/
+			$("#TO_NAME").yxselect_user({
+				hiddenId: 'TO_ID',
+				mode: 'check'
+			});
+		});
+	</script>
+</head>
+<body scroll="auto">
+<div class="main_head">
+    <span class="main_head_title">
+      	添加收料通知单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=purchase_arrival_arrival&action=add" name="form1">
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">收料类型</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyText" value="外购到货"/>
+				<input type="hidden" id="arrivalType" class="txt" value="{arrivalTypeName}"
+					   name="arrival[arrivalType]"/>
+			</td>
+			<td class="form_text_left">订单号</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyText" name="arrival[purchaseCode]" value="{purchaseCode}"/>
+				<input type="hidden" class="txt" name="arrival[purchaseId]" value="{purchaseId}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right">
+				<input type="text" id="supplierName" class="readOnlyText" name="arrival[supplierName]"
+					   value="{supplierName}"/>
+				<input type="hidden" id="supplierId" name="arrival[supplierId]" value="{supplierId}"/>
+			</td>
+			<td class="form_text_left">收料仓库名称</td>
+			<td class="form_text_right">
+				<input type="text" id="stockName" class="txt" name="arrival[stockName]"/>
+				<input type="hidden" id="stockId" class="txt" name="arrival[stockId]"/>
+				<input type="hidden" id="businessBelong" value="{businessBelong}"/>
+				<span class="red">[*]</span>
+				<br/>
+
+				<div id="stockNameTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购员</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="purchManName" name="arrival[purchManName]" value="{purchManName}"/>
+				<input type="hidden" id="purchManId" name="arrival[purchManId]" value="{purchManId}"/>
+				<span class="red">[*]</span>
+				<br/>
+
+				<div id="purchManNameTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">收料日期</td>
+			<td class="form_text_right">
+				<input type="text" id="arrivalDate" onfocus="WdatePicker()" value="{arrivalDate}" class="txt"
+					   name="arrival[arrivalDate]"/>
+				<span class="red">[*]</span>
+				<br/>
+
+				<div id="arrivalDateTip" class="tipShortTxt"></div>
+			</td>
+
+		</tr>
+		<tr>
+			<td class="form_text_left">采购方式</td>
+			<td class="form_text_right">
+				<select class="select" name="arrival[purchMode]">{purchaseType}</select>
+			</td>
+			<td class="form_text_left">交货地点</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="arrival[deliveryPlace]" value="鼎利"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="txt_txtarea_font" name="arrival[remark]"></textarea>
+			</td>
+		</tr>
+	</table>
+	<table id="mytable" class="form_main_table">
+		<thead>
+		<tr>
+			<td colspan="11" class="form_header">收料通知单清单
+			</td>
+			<td align="center">
+				<input type="hidden" id="invnumber" value="0"/>
+				<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+			</td>
+		</tr>
+		<tr class="main_tr_header">
+			<th>序号</th>
+			<th>物料编号</th>
+			<th>物料名称</th>
+			<th>规格型号</th>
+			<th>单位</th>
+			<th>采购属性</th>
+			<th>质检方式</th>
+			<th>批次号</th>
+			<th>数量</th>
+			<th>月份</th>
+			<th>收料日期</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="invbody">
+		{purchnotarripro}
+		</tbody>
+	</table>
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">是否发送邮件
+			</td>
+			<td colspan="3" class="form_text_right">
+				<input type="radio" name="arrival[email][issend]" value="y" checked="checked"
+					   onclick="checkEmailTA(this)"/>是
+				<input type="radio" name="arrival[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮件发送至
+			</td>
+			<td colspan="3" id="maildiv" class="form_text_right">
+				<input type="text" class="txtbiglong" name="arrival[email][TO_NAME]" value="{TO_NAME}" id="TO_NAME"
+					   readonly="readonly"/>
+				<input type="hidden" name="arrival[email][TO_ID]" value="{TO_ID}" id="TO_ID"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" name="arrival[formBelong]" value="{formBelong}" id="formBelong"/>
+				<input type="hidden" name="arrival[formBelongName]" value="{formBelongName}" id="formBelongName"/>
+				<input type="hidden" name="arrival[businessBelong]" value="{businessBelong}" id="businessBelong1"/>
+				<input type="hidden" name="arrival[businessBelongName]" value="{businessBelongName}" id="businessBelongName"/>
+				<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

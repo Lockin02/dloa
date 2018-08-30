@@ -1,0 +1,76 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>确认财务支付页面</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/payablesapply-confirm.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=finance_payablesapply_payablesapply&action=handUpPay2">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="2">
+                <div class="main_head2">
+					<span class="main_head_title">
+	               		确认财务支付
+					</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">付款单号</td>
+            <td class="form_text_right">
+                {id}
+                <input type="hidden" name="payablesapply[id]" value="{id}"/>
+                <input type="hidden" name="payablesapply[businessBelong]" value="{businessBelong}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">供应商名称</td>
+            <td class="form_text_right">
+                {supplierName}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请金额</td>
+            <td class="form_text_right">
+                <span class="formatMoney">{payMoney}</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">是否已线下支付</td>
+            <td class="form_text_right">
+                <input type="radio" name="payablesapply[isEntrust]" id="no" value="0" checked="checked"
+                       onchange="$('#isEntrustShow').hide();"/>否&nbsp;
+                <input type="radio" name="payablesapply[isEntrust]" id="yes" value="1" onchange="payFun();"/>是
+                <input type="hidden" id="isEntrustHidden" value="{isEntrust}"/>
+                <span id="isEntrustShow" style="display:none;"
+                      class="red">当前选项为【已线下支付】，付款申请单只通知财务补齐流程单据，【不】支付申请单中的款项。</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">支付说明</td>
+            <td class="form_text_right">
+                <input type="text" class="txtlong" name="payablesapply[email][instruction]" id="instruction"/>
+            </td>
+        </tr>
+        <tr id="maildiv">
+            <td class="form_text_left">邮件接收人
+            </td>
+            <td class="form_text_right">
+                <input type="text" name="payablesapply[email][TO_NAME]" id="TO_NAME" class="txtlong"
+                       value="{defaultUserName}" readonly="readonly"/>
+                <input type="hidden" name="payablesapply[email][TO_ID]" id="TO_ID" value="{defaultUserId}"
+                       readonly="readonly"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="2">
+                <input type="submit" class="txt_btn_a" value=" 提  交 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

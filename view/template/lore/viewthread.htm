@@ -1,0 +1,1055 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+<script src="js/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="js/jqgrid/rowcolspan.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<title></title>
+</head>
+<style>
+.ui-jqgrid-sortable
+{
+	font-weight:normal;
+	font-size:12px;
+	height:24px;
+}
+.ui-jqgrid-title
+{
+	clear:both;
+	font-size:12px;
+	height:24px;
+	line-height:20px;
+}
+.ui-helper-clearfix { height:24px; }
+.ui-row-ltr td
+{
+	border-top:0px #DDDDDD solid;
+	border-left:0px #DDDDDD solid;
+	border-right:0px #DDDDDD solid;
+}
+.table td { border:1px #DCEDF9 solid; }
+.ui-widget-content jqgrow ui-row-ltr
+{
+	border-left:0px #DDDDDD solid;
+	vertical-align:top
+}
+.ui-widget-content jqgrow ui-row-ltrs
+{
+	border-bottom-color: #C2D5E3;
+	border-bottom-style:solid;
+	border-bottom-width: 2px;
+	font-weight: normal;
+	height: 32.5px;
+	overflow: hidden;
+	padding: 0 2px;
+	white-space: normal
+}
+ui-jqgrid tr.ui-row-ltr td
+{
+	border-right-color: inherit;
+	border-right-style:none;
+	border-right-width: 1px;
+	vertical-align:top
+}
+.ui-state-default ui-th-column ui-th-ltr
+{
+	border-right-style:hidden;
+	border-left:0px #DDDDDD solid;
+}
+ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
+{
+	border-right-style:hidden;
+	border-right:0px #DDDDDD solid;
+}
+.ui-jqgrid .ui-jqgrid-htable th div
+{
+	height: 24px;
+	line-height: 24px;
+}
+.table td
+{
+	height: 26px;
+	line-height: 17px;
+	vertical-align:top;
+}
+/* 地下线*/
+.ui-jqgrid tr.jqgrow td
+{
+	border-bottom-color: #C2D5E3;
+	border-bottom-style:dashed;
+	border-bottom-width: 2px;
+	font-weight: normal;
+	height: 32.5px;
+	overflow: hidden;
+	padding: 0 2px;
+	white-space: normal
+}
+.ui-widget-content a { color: #362B36; }
+.ui-widget-content a:link { text-decoration: none; }
+.ui-widget-content a:active { text-decoration:underline }
+.ui-widget-content a:hover
+{
+	text-decoration:underline;
+	color: red
+}
+.ui-widget-content a:visited
+{
+	text-decoration: none;
+	color: green
+}
+.authi
+{
+	width:98%;
+	text-align:center;
+	margin-left:10px;
+	line-height:30px;
+	vertical-align:top;
+	height:30px;
+	border-bottom:1px dashed #CC0;
+}
+.content
+{
+	padding:0px 10px 0px 10px;
+	text-align:left;
+	width:98%;
+}
+.content .authi { text-align:left; }
+.content .contents
+{
+	width:100%;
+	min-height:80px;
+	margin:0px;
+	padding:0px;
+	overflow:hidden;
+}
+.content .foot
+{
+	float:left;
+	width:99%;
+	line-height:30px;
+	vertical-align:middle;
+	height:30px;
+	border-top:1px dashed #CC0;
+	vertical-align:bottom
+}
+.fwinmask
+{
+	font-size:12px;
+	border:1px solid #AED0EA
+}
+.fwinmask .t_l, .t_c, .t_r, .m_l, .m_r, .b_l, .b_c, .b_r
+{
+	height:1px;
+	width:1px;
+	overflow:hidden;
+	background:#D7EBF9;
+	opacity:0.8;
+	filter:alpha(opacity=0);
+}
+.t_c, .b_c { height:1px; }
+.m_l, .m_r { width:1px; }
+body, input, button, select, textarea
+{
+	color: #444444;
+	font: 12px/1.5 Tahoma, Helvetica, mingliu, sans-serif, Hei;
+}
+.flb
+{
+	height: 24px;
+	line-height:24px;
+	padding: 3px 3px 5px;
+}
+.flbc
+{
+	background: url("images/lore/cls.gif") no-repeat scroll 0 0 transparent;
+	float: left;
+	height: 20px;
+	overflow: hidden;
+	text-indent: -9999px;
+	width: 20px;
+}
+.flbc:hover { background-position: 0 -20px; }
+.fwinmask { background:url(images/lore/background.png) repeat-x; }
+h1, h2, h3, h4, h5, h6 { font-size: 1em; }
+#k_favorite { background-image: url("images/lore/fav.gif"); }
+#favorite a
+{
+	background-color: #E5EDF2;
+	background-position: 5px 50%;
+	background-repeat: no-repeat;
+	border: 1px solid #C2D5E3;
+	margin: 0 2px;
+	padding: 5px 8px 5px 25px;
+}
+#favorites a
+{
+	/*background-position: 5px 50%;*/
+	background-repeat: no-repeat;
+	border: 0px solid #C2D5E3;
+	margin: 0 2px;/*	padding: 5px 8px 5px 25px;*/
+}
+.quote, .pl .blockcode
+{
+	margin: 0px 0;
+	padding: 0px 10px 0px 65px;
+}
+.quote
+{
+	background: url("images/lore/icon_quote_s.gif") no-repeat scroll 20px 6px #F9F9F9;
+	padding-bottom: 5px;
+}
+.quote blockquote
+{
+	background: url("images/lore/icon_quote_e.gif") no-repeat scroll 100% 100% transparent;
+	line-height: 1.6;
+	margin: 0;
+	padding: 0 65px 5px 0;
+}
+.blockcode
+{
+	background: url("images/lore/codebg.gif") repeat-y scroll 0 0 #F7F7F7;
+	border: 1px solid #CCCCCC;
+	overflow: hidden;
+	padding: 0px 0 5px 10px;
+}
+.pipe
+{
+	margin:0 5px;
+	color:#CCC;
+}
+.locked
+{
+	background: url("images/lore/locked.gif") no-repeat scroll 6px 50% #FFFFFF;
+	border: 1px dashed #FF9A9A;
+	font-size: 12px;
+	margin: 10px 0;
+	padding: 8px 8px 8px 24px;
+}
+.herfwidth
+{
+	margin-left:10px;
+	float:left;
+	width:48%;
+	 
+}
+.herfwidths
+{
+	margin-left:10px;
+	float:left;
+	width:46%;
+	border-bottom:1px dashed #CCC
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
+{
+	/*background: url("images/ui-bg_glass_80_d7ebf9_1x400.png") repeat-x scroll 50% 50% #D7EBF9;
+  */
+  background:#F2F5F7;
+	border: 0px solid #AED0EA;
+	border-top: 0px solid #AED0EA;
+	color: #2779AA;
+	font-weight: bold;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight
+{
+	/*background: url("images/ui-bg_highlight-soft_25_ffef8f_1x100.png") repeat-x scroll 50% top #F2F5F7;
+  background:url("images/ui-bg_glass_100_e4f1fb_1x400.png") repeat-x scroll 50% 50% #E4F1FB;*/
+  background:url("images/ui-bg_glass_100_e4f1fb_1x400.png") repeat-x scroll 50% 50% #F2F5F7;
+	border: 1px solid #74B2E2;
+	color: #0070A3;
+}
+.pgb a
+{
+	background-image: url("images/lore/arw_l.gif");
+	background-position: 10px 50%;
+	padding-left: 25px;
+	background-repeat: no-repeat;
+	border: 0px solid #C2D5E3;
+	color: #333333;
+	display: inline;
+	float:right;
+	height: 26px;
+	line-height:26px;
+	margin-left:4px;
+	overflow: hidden;
+	text-decoration: none;
+	color: #006699;
+}
+.pgbs a
+{
+	background-image: url("images/lore/arw_l.gif");
+	background-position: 10px 50%;
+	padding-left:25px;
+	background-repeat: no-repeat;
+	border: 0px solid #C2D5E3;
+	color: #333333;
+	display: inline;
+	float:left;
+	height: 26px;
+	line-height:26px;
+	overflow: hidden;
+	text-decoration: none;
+	color: #006699;
+}
+strong a{
+	text-decoration: none;
+	color:#000;
+	}
+</style>
+<body >
+<div style="float:left; margin:7px !important; border:1px solid #AED0EA;">
+<div style="position: fixed; z-index: 201; left: 500px; top: 99px; display:none" class="fwinmask"  id="miscreport">
+  <table class="fwin" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="t_l"></td>
+        <td class="t_c" ondblclick="hideWindow('miscreport')"></td>
+        <td class="t_r"></td>
+      </tr>
+      <tr>
+        <td class="m_l" ondblclick="hideWindow('miscreport')">&nbsp;&nbsp;</td>
+        <td fwin="s" style="" class="m_c" id="s" width="380"><h3 style="cursor: move; " id="fctrl_miscreport" class="flb"><span style="font-size:14px; float:left;color:#000">纠错内容:</span> <span style="float:right;  text-align:right;padding-left:10px " > <a href="javascript:;" onclick="hideWindow('miscreport');" class="flbc" title="关闭" style="float:right; text-align:right; padding-right:2px;"></a></span> </h3>
+          <input name="reportid" value="" type="hidden" />
+          
+          <!--  <div id="return_reply"  style="float:left; width:100%;text-align:left; color:#000" ><strong>纠错内容:</strong></div>-->
+          
+          <div id="return_reply"  style="float:left; width:100%;text-align:left; color:#000" >
+            <textarea name="reportcount" id="reportcount"rows="5"style="width:380px;text-align:left"  ></textarea>
+          </div>
+          <div align="center" style="margin-top:-3px;float:left; width:100%;">
+            <button  type="button" id="repostsubmit" value="true" name="repostsubmit" tabindex="23" ><span>確定</span></button>
+          </div></td>
+        <td class="m_r" ondblclick="hideWindow('miscreport')"></td>
+      </tr>
+      <tr>
+        <td class="b_l"></td>
+        <td class="b_c" ondblclick="hideWindow('miscreport')"></td>
+        <td class="b_r"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div style="position: fixed; z-index: 201; left: 408.5px;display:none; top: 265.5px; width:400px;" class="fwinmask" id="favorites">
+  <table class="fwin" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="t_l"></td>
+        <td class="t_c" ondblclick="hideWindow('favorites')"></td>
+        <td class="t_r"></td>
+      </tr>
+      <tr>
+        <td class="m_l" ondblclick="hideWindow('favorites')">&nbsp;&nbsp;
+          <input name="favoritesid" value="" type="hidden" /></td>
+        <td fwin="k_favori" style="" class="m_c" id="ites"><h3 style="cursor: move;" id="vorites" class="flb"><span style="font-size:14px; float:left;color:#000 ">收藏说明:</span> <span style="float:right; text-align:right; padding-left:10px;"> <a href="javascript:;" onclick="hideWindow('favorites');" class="flbc" title="关闭" style="float:right; text-align:right; padding-right:2px;" > </a> </span></h3>
+          
+          <!--  <strong><span id="return_reply"  style="float:left; width:50%;text-align:left;color:#000">收藏说明:</span></strong>-->
+          
+          <div style="float:left; width:100%;text-align:left">
+            <textarea name="favoritescount"cols="50" rows="5"style="float:left; width:380px;text-align:left" id="favoritescount"></textarea>
+          </div>
+          <div  align="center" style="margin-top:-3px; float:left; width:100%;">
+            <button  type="button" id="favoritessubmit" value="true" name="favoritessubmit" tabindex="23"><span>確定</span></button>
+          </div></td>
+        <td class="m_r" ondblclick="hideWindow('favorites')"></td>
+      </tr>
+      <tr>
+        <td class="b_l"></td>
+        <td class="b_c" ondblclick="hideWindow('favorites')"></td>
+        <td class="b_r"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div style="position: fixed; z-index: 201; left: 200px; top: 200px; display:none" class="fwinmask" id="reply">
+  <table class="fwin" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="t_l"></td>
+        <td class="t_c" ondblclick="hideWindow('reply')"></td>
+        <td class="t_r"></td>
+      </tr>
+      <tr>
+        <td class="m_l" ondblclick="hideWindow('reply')">&nbsp;&nbsp;</td>
+        <td fwin="reply" style="white-space:normal;width:700px;" class="m_c" id="fwin_content_reply" ><h4 style="cursor:move;" id="fctrl_reply" class="flb"> <span id="return_reply"  style="float:left; text-align:left;color:#000" > 参与/回复主题</span> <a href="javascript:;" class="flbc" onclick="hideWindow('reply')" style="float:right; text-align:right" title="关闭"></a> </h4>
+          <h3 id='renovation'></h3>
+          <input type="hidden" id="skey" name="skey" value=""/>
+          <div class="area">
+            <input type="hidden" id="replycontent" name="replycontent" value=""/>
+            <input type="hidden" id="body___Config" value=""/>
+            <iframe id="replyFrame" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=replycontent&Toolbar=mytools" width="700" height="300" frameborder="0" scrolling="no"></iframe>
+          </div>
+          <div fwin="reply"  align="center" style="margin-top:-5px; width:100%" id="moreconf">
+            <button  type="button" id="replysubmit" value="true" name="replysubmit" tabindex="23"><span>参与/回复主题</span></button>
+          </div></td>
+        <td class="m_r" ondblclick="hideWindow('reply')"></td>
+      </tr>
+      <tr>
+        <td class="b_l"></td>
+        <td class="b_c" ondblclick="hideWindow('reply')"></td>
+        <td class="b_r"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div id="mdly" class="fwinmask" style="position:absolute; z-index: 201;display:none;">
+  <table cellspacing="0" cellpadding="0" class="fwin" width="200">
+    <tr>
+      <td class="t_l"></td>
+      <td class="t_c"></td>
+      <td class="t_r"></td>
+    </tr>
+    <tr>
+      <td class="m_l" width="">&nbsp;&nbsp;</td>
+      <td class="m_c" width="100%"><div class="f_c">
+          <div class="c">
+            <input type="hidden" id="listid" name="listid" value=""/>
+            <h3>选中&nbsp;<strong id="mdct" class="xi1"></strong>&nbsp;篇: </h3>
+            <div style="text-align:center"> <a href="javascript:;" onclick="modaction('banpost')">屏蔽</a><span class="pipe">|</span><a href="javascript:;" onclick="modaction('visible')">可见</a><span class="pipe">|</span><a href="javascript:;" onclick="modaction('delpost')">刪除</a><!--<span class="pipe">|</span><a href="javascript:;" onclick="modaction('stickreply')">置頂</a><span class="pipe">|</span>--></div>
+          </div>
+        </div></td>
+      <td class="m_r" width="5" >&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="b_l"></td>
+      <td class="b_c"></td>
+      <td class="b_r"></td>
+    </tr>
+  </table>
+</div>
+<div  style='float:left; width:100%; margin-left:0px; background:url(images/lore/titlebg.png) repeat-x'>
+  <div  style="width:100%; vertical-align:middle;height:30px; background:url(images/brainbank/bluebtbg4.png) repeat-x; 
+  line-height:24px; border:0px solid #DDDDDD;border-bottom:0px solid #DDDDDD ;">
+ <!-- <strong  class='pgbs' style="float:left; text-align:left;width:40%;color: #006699;">
+  <a href="?model=lore_index&action=list&pid={pid}" target="_self">返回文章列表</a></strong>-->
+  <strong style="float:left; text-align:left; padding-left:10px;line-height:30px;width:40%;color: #000; text-decoration: none;"> {titles}文章预览</strong>
+  <strong class='pgb' style="float:right; text-align:right; width:40%; line-height:26px;">
+  <a href="javascript:history.go(-1);" target="_self">返回&nbsp;&nbsp;&nbsp;</a></strong></div>
+  <div style='float:left; width:98.7%;'>
+  <table  id="list" class="scroll"  border="0" width="100%" cellpadding="0" cellspacing="0" >
+  </table>
+  <div id="plist"></div>
+  </div>
+  <a id="replenish"/>
+</div>
+<div style="float:left; width:100%; margin-left:0px; margin-top:20px;">
+  <table  id="list" class="ui-jqgrid-title"  border="0" width="100%" bordercolor="#DDDDDD" cellpadding="0" cellspacing="0"  style=" border:1px solid #DDDDDD">
+    <form method="post" action="?model=lore_index&action=addreview&key={key}">
+      <tr>
+        <td colspan="2" style=" height:30px; background-color:#F2F2F2; padding-left:10px; line-height:24px; border:1px solid #DDDDDD"><strong>快速补充</strong></td>
+      </tr>
+      <tr> 
+        <!--  <td  style="text-align: center; width:245px;border-right:1px solid #DDDDDD" ><div style=" margin-top:20px;"><img width="120" height="120" src="images/lore/noavatar_middle.gif" /> </div></td> -->
+        <td style="text-align: left; padding-left:10px; padding-top:3px;" title="" aria-describedby="list_title" role="gridcell"><input type="hidden" id="scontent" name="scontent" value=""/>
+          <input type="hidden" id="body___Config" value="Source=false"  />
+          <iframe id="body___Frames" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=scontent&Toolbar=mytools&model=oat" width="99%" height="150" frameborder="0" scrolling="no"></iframe>
+          <div align="center" style="margin-top:-2px !important; width:98.7%; border:1px solid #696969;border-top:0px solid #696969;background-color:#EFEFDE ">
+            <button name="send" id="send"  type="button"  value="true">发表</button>
+          </div></td>
+      </tr>
+    </form>
+  </table>
+</div>
+<!--
+<div style="float:left; width:98%; margin-left:10px; margin-top:20px;">
+  <table   class="ui-jqgrid-title"  width="100%" bordercolor="#E4F1FB" cellpadding="0" cellspacing="0"  style=" border:1px solid #DDDDDD">
+   <tr>
+   		<td style="padding-left:100px; vertical-align:middle;height:30px; background-color:#F2F2F2; padding-left:10px; line-height:24px; border:1px solid #DDDDDD "><strong>文章推荐:</strong></td>
+    </tr>
+   <tr>
+   		<td style="padding-left:100px;vertical-align:middle; line-height:30px; background-color:##F2F5F7 ">{listherf}</td>
+    </tr>
+  </table>
+</div>
+<div style="float:left; width:98%; margin-left:10px; margin-top:20px; height:30px;">
+</div>
+--> 
+</div>
+<script type="text/javascript">
+function hideWindow(id) {
+	//$("#"+id).fadeTo("slow", 0.66);
+	$("#"+id).fadeOut("slow"); 
+}
+function showWindow(id) {
+	$("#"+id).show();
+
+}
+
+ 
+
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#miscreport").css("top"));
+		left=e.pageX-parseInt($("#miscreport").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#miscreport").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+
+$(function(){
+	var top,left,move=false;
+	$("h4").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#reply").css("top"));
+		left=e.pageX-parseInt($("#reply").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#reply").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+$(function(){
+	var top,left,move=false;
+	$("h3").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#favorites").css("top"));
+		left=e.pageX-parseInt($("#favorites").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#favorites").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+var modclickcount = 0;
+var listid = '';
+function modclick(obj, pid) {
+	$("#miscreport").css('display','none');
+	$("#reply").css('display','none');
+	$("#favorites").css('display','none');
+	//$("#mdly").css('display','none');
+	if(obj.checked) {
+		modclickcount++;
+		listid+=pid+",";
+	} else {
+		listid=listid.substr(0,listid.length -(pid.length+3) );
+		modclickcount--;
+	}
+	$('#mdct').html(modclickcount);
+	if(modclickcount > 0) {
+		$('#listid').val(listid);
+		var offset = fetchOffset(obj);
+		$("#mdly").css("top",offset['top']-65);
+		$("#mdly").css("left",offset['left']-215);
+		$('#mdly').css('display','block');
+	} else {
+		$('#listid').val('');
+		$('#mdly').css('display','none');
+	}
+}
+
+function fetchOffset(obj, mode) {
+	var left_offset = 0, top_offset = 0, mode = !mode ? 0 : mode;
+	if(obj.getBoundingClientRect && !mode) {
+		var rect = obj.getBoundingClientRect();
+		var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+		var scrollLeft = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+		if(document.documentElement.dir == 'rtl') {
+			scrollLeft = scrollLeft + document.documentElement.clientWidth - document.documentElement.scrollWidth;
+		}
+		left_offset = rect.left + scrollLeft - document.documentElement.clientLeft;
+		top_offset = rect.top + scrollTop - document.documentElement.clientTop;
+	}
+	if(left_offset <= 0 || top_offset <= 0) {
+		left_offset = obj.offsetLeft;
+		top_offset = obj.offsetTop;
+		while((obj = obj.offsetParent) != null) {
+			position = getCurrentStyle(obj, 'position', 'position');
+			if(position == 'relative') {
+				continue;
+			}
+			left_offset += obj.offsetLeft;
+			top_offset += obj.offsetTop;
+		}
+	}
+	return {'left' : left_offset, 'top' : top_offset};
+}
+
+
+function getFckeditorContent(fckeditorNum)
+{
+return window.frames[fckeditorNum].window.frames[0].document.body.innerHTML;
+//return window.frames[最好用名称].window.frames[0].document.body.innerHTML;
+} 
+var temp = Array();
+var rand=Math.random()*100000;
+var height=550;
+var height=$(window).height();
+var width=$(window).width();
+jQuery(document).ready(function(){ 
+jQuery("#list").jqGrid({
+   	url:'?model=lore_index&action=viewthreaddata&key={key}',
+	datatype: "json",
+    colNames:['','标 题','作 者','查看','操作','结束时间','会仪类型','操 作','start','flag','num','favoritec','href','down','articles','uflag','auflag','assessment','createrid','createrid'],
+  	colModel:[
+		{name:'rclass',index:'rclass',width:100,align:"center"},	
+		{name:'rcontent',index:'rcontent',width:550,editable:true, align:"left"},	
+   		{name:'creater',index:'creater', width:5, align:"center",hidden:true},
+   		{name:'creatdt',index:'creatdt', width:5, align:"center",hidden:true},
+		{name:'ascount',index:'ascount', width:5,align:"center",hidden:true},
+		{name:'updatedt',index:'updatedt', width:5, align:"center",hidden:true},
+   		{name:'browse',index:'browse', width:5, align:"center",hidden:true},		
+   		{name:'levels',index:'levels', width:5,align:"center",hidden:true},
+		{name:'status',index:'status',width:5,align:"center",hidden:true},
+		{name:'flag',index:'flag', width:5,align:"center",hidden:true},
+		{name:'num',index:'num', width:5,align:"center",hidden:true},
+		{name:'favoritec',index:'favoritec', width:5,align:"center",hidden:true},
+		{name:'href',index:'href', width:5,align:"center",hidden:true},
+		{name:'down',index:'down', width:5,align:"center",hidden:true},
+		{name:'articles',index:'articles', width:5,align:"center",hidden:true},
+		{name:'uflag',index:'uflag', width:5,align:"center",hidden:true},
+		{name:'auflag',index:'auflag', width:5,align:"center",hidden:true},
+		{name:'assessment',index:'assessment', width:50,align:"center",hidden:true},
+		{name:'createrid',index:'createrid', width:5,align:"center",hidden:true},
+		{name:'cfg',index:'doctype', width:5,align:"center",hidden:true}
+   	],
+	rowNum:5,
+   	rowList:[5,10],
+   	//height: height+100,
+	height:'auto',
+	align:'center',
+   	pager: '#plist',
+	autowidth: true, 
+    viewrecords: true, 
+	//rownumbers: true, 
+    sortorder: "desc",
+    sortname: 'rclass', 
+	afterInsertRow:function (rowid, rowData){
+		temp[rowid]=rowData.rcontent;
+		 var startus='';
+		 var txt='';
+     	 var img='';
+		 var content='';
+		 var cnum='';
+		 var miscreportstr='';
+		 var asto='';
+		 var adminbtn='&nbsp;&nbsp;<input type="checkbox" id="manage'+rowid+'" onclick="modclick(this,\''+rowid+'\')" value="'
+			        +rowid+'" autocomplete="off" />管理';	
+		 var modifyuser='<a style="color:#0000ff;" href="javascript:edit(\''+rowid+'\',\''+rowData.creater+'\',\''+rowData.num+'\');">编缉</a>';
+		 if(!rowData.auflag){ modifyuser=''};	
+		 if(!rowData.uflag){ adminbtn=''};
+		 if(rowData.num=="A"){
+			$('.ui-jqgrid tr.jqgrow td').css('border-bottom-color','#C2D5E3');
+		    $('.ui-jqgrid tr.jqgrow td').css('border-top-style','solid');
+			$('.ui-jqgrid tr.jqgrow td').css('border-top-width','0px');
+			//$('.ui-jqgrid tr.jqgrow td').css('background-color','#E3ECF2');
+		 }else if(rowData.num=="H"){
+		   cnum="楼主";	 
+		   adminbtn='';
+		    $('.ui-jqgrid tr.jqgrow td').css('border-bottom-style','solid');
+			$('.ui-jqgrid tr.jqgrow td').css('border-bottom-width','1px');
+		
+			$('#list').append('<tr role="row" id="list483ghead_1" class="ui-row-ltrs"'
+							   +'style="width:100%;" aria-selected="true"><td colspan="2" valign="middle">'
+							   +' <table   width="100%" bordercolor="#E4F1FB" cellpadding="0" cellspacing="0"'
+							   +' style=" border:0px solid #DDDDDD"><tr><td style="padding-left:100px; vertical-align:middle;height:30px;'
+							   +' background-color:#F2F2F2; padding-left:20px; line-height:30px;border:0px solid #DDDDDD;border-bottom:1px solid #DDDDDD'
+							   +';color:006699;"><strong>文章推荐：</strong></td></tr><tr ><td style="padding-left:100px;vertical-align:middle;'
+							   +' line-height:30px; background-color:##F2F5F7;border-bottom:5px;">{listherf}</td></tr></table></td></tr>'); 
+			$('#list').append('<tr role="row" id="list483ghead_2" class=""'
+							   +'style="width:100%;" aria-selected="true"><td colspan="2" valign="middle" '
+							   +'style="border-top:1px solid #DDDDDD;background-color:#E3ECF2;border-bottom:1px solid #DDDDDD;">'
+							   +'<strong style="float:left;width:90%;vertical-align:middle; padding-left:20px;line-height:30px; height:30px;color:006699">'
+							   +' 补&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充：</strong></td></tr>'); 
+					
+							  
+			//$('.ui-jqgrid ui-widget ui-widget-content ui-corner-all').css('width',width+'30');
+			//$('#gbox_list').css('width',width+'30');
+			//$('.ui-jqgrid-bdiv').css('width',width-15);
+		   miscreportstr+='<font color="#000">你是否想</font><img src="images/lore/rhand.png" width="26" height="15" />&nbsp;'
+		                 if(rowData.cfg=='2'){
+				            	miscreportstr+='<font color="#FF0000">纠错</font>'
+						  }else{
+		                     miscreportstr+='<a onclick="miscreport(\''+rowid+'\');" href="javascript:;"><font color="#FF0000">纠错</font></a>'
+						  }
+						  miscreportstr+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a  href="#replenish"><font color="#FF0000">补充</font></a>';
+		 }else if(rowData.num=="1"){
+			 $('.ui-widget-content jqgrow ui-row-ltr').css('background-color','#FFF');
+		   cnum="沙发";	 
+		 }else if(rowData.num=="2"){
+		   cnum="板登";	 
+		 }else if(rowData.num=="3"){
+		   cnum="地板";	 
+		 }else{
+		    cnum='<em>'+rowData.num+'</em>&nbsp;<sup>#</sup>';
+		 }
+		favoliten='';
+		if(rowData.flag==2){
+			if(rowData.down){
+			 favoliten+='<div id="favorites" style="width:90%;float:left; padding-top:5px;padding-left:50px;min-height:24px;'
+			 +'text-align:left;vertical-align:middle; line-height:20px;"><span class="herfwidth" style="width:90%;float:left;color:#000;"><strong>附件：</strong></span>' +rowData.down+'</div>';
+			}
+			 favoliten+='<div id="favorite" style="width:100%; float:left;padding-top:5px; height:35px;text-align:center;vertical-align:middle; line-height:30px;">'
+			           +'<a  class="k_favorite" onclick="favorite(\''+rowid+'\');" id="k_favorite"'
+			           + 'href="javascript:;">收藏<span id="favoritenumber">('+rowData.favoritec+')</span></a></div>';
+		  if(rowData.href){
+			 favoliten+='<div id="favorites" style="width:90%; float:left;padding-top:5px;padding-left:50px;min-height:30px;'
+			 +'text-align:left;vertical-align:middle; line-height:26px;"><strong class="herfwidth" style="width:90%;float:left;">关联文章：</strong>'
+			 +rowData.href+'</div>';
+			}
+			
+		}else{
+			 asto='<div style="width:45%;float:left;"> <img src="images/lore/fastreply.gif" width="18" height="20" />'
+			  +'<a style="color:#0000ff;" href="javascript:reply(\''+rowid+'\',\''+rowData.creater+'\',\''+rowData.num+'\');">回复</a>'
+			  +'<img src="images/lore/repquote.gif" width="16" height="16" />'
+			  +'<a style="color:#0000ff;" href="javascript:requote(\''+rowid+'\',\''+rowData.creater+'\',\''+rowData.num+'\');">引用</a>'
+			  +'<img src="images/lore/edit.gif" width="16" height="16" />'+modifyuser+'</div>'
+			}
+		if((rowData.num!='H'&&rowData.status==2) || rowData.status==5){
+			rowData.rcontent='';
+			temp[rowid]='';
+		    txtcount='<div class="locked">提示: <em>该回复被管理员或版主屏蔽，只有管理员可见</em></div>';	
+		}else{
+			txtcount=temp[rowid];
+		}
+		var assesments=''
+		if(rowData.assessment=='NULL'){
+		   assesments="";
+		}else if(rowData.assessment){
+		   assesments='审批人：'+rowData.assessment;
+		}else{
+		   assesments="<font color='#FF0000'>此文章没有被审批</font>";
+		}
+		 img+='<div class="authi">作者：&nbsp;'+rowData.creater+'</div>'
+		    +'<div>发表文章总数：'+rowData.articles+'<imgs src="images/lore/noavatar_middle.gif" width="120" height="120"/><br/>'
+			+assesments+'</div>';
+			
+ 	  content+='<div class="content"><div class="authi" style="foat:left;"><span style="float:left;color:#000;">'
+			  + '<img src="images/lore/online_admin.gif" width="16" height="16" /> 发表时间：'+rowData.creatdt 
+			  +'&nbsp;|&nbsp;<a href="?model=lore_index&action=list&pid={pid}&userid='+rowData.createrid
+			  +'">只看該作者</a></span><span style="float:right;width:40px;text-align:right;color:#000;">'+cnum+'</span></div>'
+			  +'<div class="contents">'+txtcount+'</div>'+favoliten
+			  +'<div class="foot">'+asto
+			  +'<div style="color:#FF0000;float:right;width:45%; height:35px;text-align:right;">'+miscreportstr
+			  //+'<a onclick="miscreport(\''+rowid+'\');" href="javascript:;">举报</a>&nbsp;&nbsp;<a onclick="scrollTo(0,0);" href="javascript:;">返回頂部</a>'
+			  +'&nbsp;&nbsp;<a onclick="scrollTo(0,0);" href="javascript:;"><img src="images/lore/top-1.png" width="12" height="16"  border="0" /></a>'
+              +adminbtn+'<div> </div>';
+		if(rowData.levels==3){
+			txt='<img src="images/lore/hot_1.gif" width="17" height="17" />';
+		}else if(rowData.levels==2){
+			txt='<img src="images/lore/recommend_1.gif" width="17" height="17" />';
+		}
+		if(rowData.flag==1){
+			 tit='<div style="width:100%; height:30px;text-align:center; line-height:30px;">查看：'+rowData.browse+'回复：'+rowData.ascount+'</div>';
+			 tits='<div style="width:100%; height:30px; padding-left:20px; line-height:30px;font-size:18px"><strong><h2>文章标题：'
+			      +temp[rowid]+'&nbsp;&nbsp;'+txt+'</h2></strong></div>';
+           $('.ui-jqgrid tr.jqgrow td').css('border-bottom-style','solid');
+			$('.ui-jqgrid tr.jqgrow td').css('border-bottom-width','3px');
+		     jQuery("#list").jqGrid('setRowData',rowid,{rclass:tit})
+		     jQuery("#list").jqGrid('setRowData',rowid,{rcontent:tits});	
+		}else{
+         jQuery("#list").jqGrid('setRowData',rowid,{rclass:img})
+		 jQuery("#list").jqGrid('setRowData',rowid,{rcontent:content});
+		}
+		if(rowData.cfg=='2'){
+		   document.onmousedown=function() {
+			if (event.button==2 || event.button == 3 ||event.which == 2 || event.which == 3) {   //button==1为左键
+			event.cancelBubble = true 
+			event.returnValue = false; 
+			}} ;
+			document.oncontextmenu = function(e){return false;};
+			document.body.onselectstart=function(){ event.returnValue=false;  return false;}; 
+			document.body.oncopy=function(){ event.returnValue=false;   return false;}; 
+			document.body.oncut=function(){event.oncut= false; return false;}; 
+		}
+			
+		 $('#list td').attr('title','');
+		 $('#list td').css('white-space','normal');
+		 $('#list td').css('vertical-align','top');
+	}
+	
+})
+//$("#list").filterToolbar("tblcontents",{  formtype:"vertical", enableSearch: false, enableClear: false, autosearch: false });
+//jQuery("#list").jqGrid('filterToolbar',{stringResult: true,searchOnEnter : false});
+
+
+	$('#gview_list .ui-jqgrid-labels').css('display','none');
+	$('#list').remove('style');
+	jQuery("#list").jqGrid('navGrid','#plist',{add:false,edit:false,del:false,search:false});
+	$("#subm").bind("click", function(e){
+					submits();
+    });
+	$("#meetingtype").bind("change", function(e){
+		 submits();
+     });
+	
+	//$("#list").tuiJqgridColSpan({ cols: [{ indexes: "9,12", title: "合并后的大标题" },{ indexes: "13,14", title: "合并后的大标题" }]});
+	
+		
+}); 
+
+	
+	 function submits(){
+		var tagsearch=$("#tagsall").val();
+		var sdate=$("#sdate").val();
+		var edate=$("#edate").val();
+		var username=$("#username").val();
+		var keyword= $("#keywords").val();
+    	jQuery("#list").jqGrid('setGridParam',{url:"?model=lore_index&action=referdata&tagsearch="+tagsearch+"&sdate="+sdate+"&edate="+edate+"&username="+username+"&keyword="+keyword,page:1}).trigger("reloadGrid");	
+	 }
+ 
+   function reply(key,name,floors){
+	   $("#miscreport").css('display','none');
+	   //$("#reply").css('display','none');
+	   $("#favorites").css('display','none');
+	   $("#mdly").css('display','none');
+	   if(floors && floors!='H'){
+	    $('#renovation').html('<strong style="font-size:14px;">回复<em>'+floors+'</em>&nbsp;<sup>#</sup>'+name+' 的文章</strong>');
+	   }else{
+		$('#renovation').html('<strong style="font-size:14px;">回复 楼主'+name+' 的文章</strong>');   
+		}
+	   var oEditor = FCKeditorAPI.GetInstance("replycontent");
+		  oEditor.SetHTML("");
+		  showWindow('reply');
+		
+	}
+	 function miscreport(key){
+		// $("#miscreport").css('display','none');
+	   $("#reply").css('display','none');
+	   $("#favorites").css('display','none');
+	   $("#mdly").css('display','none');
+		 $("reportid").val(key);
+		 $('#reportcount').text('');
+	  	 showWindow('miscreport');
+		
+	}
+	 function favorite(key){
+		 $("#miscreport").css('display','none');
+	    $("#reply").css('display','none');
+	   //$("#favorites").css('display','none');
+	   $("#mdly").css('display','none');
+		 $("favoritesid").val(key);
+		 $('#favoritescount').text('');
+	  	 showWindow('favorites');
+	}
+	function requote(key,name,floors){
+		$("#miscreport").css('display','none');
+	   //$("#reply").css('display','none');
+	   $("#favorites").css('display','none');
+	   $("#mdly").css('display','none');
+	    $('#renovation').html(' <div class="quote"><blockquote><strong style="font-size:14px;">引用<em>'
+							  +floors+'</em>&nbsp;<sup>#</sup>'+name
+							  +' 的贴子</strong><img width="13" height="13" alt=""  src="images/lore/back.gif"><br>'
+							  +temp[key]+'</blockquote></div>');
+	   
+	   var oEditor = FCKeditorAPI.GetInstance("replycontent");
+		  oEditor.SetHTML("");
+		  showWindow('reply');
+		
+	}
+	function edit(key,name,floors){
+		$("#miscreport").css('display','none');
+	   //$("#reply").css('display','none');
+	   $("#favorites").css('display','none');
+	   $("#mdly").css('display','none');
+	   vkey=$("#skey").val(key);
+	   $('#renovation').html('');
+	   var oEditor = FCKeditorAPI.GetInstance("replycontent");
+		  oEditor.SetHTML(temp[key]);
+		  showWindow('reply');
+	}
+	
+function modaction(action){
+	 var listids=$("#listid").val();
+	     listids=listid.substr(0,listid.length-1)
+	 if(action=='banpost'&&listid){
+		 if(confirm('您进行屏蔽操作吗？')){
+		 $.post('?model=lore_index&action=adoperation',{listid:listids,op:2,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								listid ='';
+								$('#listid').val('');
+								$('#mdly').css('display','none');
+								$("#refresh_list").click();
+								modclickcount=0;
+							}else{
+								alert("操作失败");
+							}
+						 }
+						)
+		 }
+	  }else if(action=='delpost'&&listid){
+		  if(confirm('您进行删除操作吗？')){
+		 $.post('?model=lore_index&action=deladop',{listid:listids,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								listid ='';
+								$('#listid').val('');
+								$('#mdly').css('display','none');
+								$("#refresh_list").click();
+								modclickcount=0;
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+		  }
+	  }else if(action=='visible'&&listid){
+		  if(confirm('您进行可见操作吗？')){
+		 $.post('?model=lore_index&action=adoperation',{listid:listids,op:1,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								listid ='';
+								$('#listid').val('');
+								$('#mdly').css('display','none');
+								$("#refresh_list").click();
+								modclickcount=0;
+							}else{
+								alert("操作失败");
+							}
+						 }
+						)
+		 
+	  }	}	
+		
+	}		
+	
+ $("#replysubmit").bind("click", function(e){
+	    var oEditor = FCKeditorAPI.GetInstance("replycontent");
+		var renovation=$('#renovation').html();
+		var replycontent=renovation+oEditor.GetHTML();
+		var op='';
+		if(renovation&&replycontent){
+	     $.post('?model=lore_index&action=addreview',{scontent:replycontent,key:'{key}',sby:'{sby}',rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+								hideWindow('reply');
+								oEditor.SetHTML("");
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+		}else if(!renovation){
+		  var skey=$("#skey").val();
+		  if(skey){
+		  	$.post('?model=lore_index&action=updatereview',{scontent:replycontent,skey:skey,rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+								hideWindow('reply');
+								oEditor.SetHTML("");
+								
+								//window.location.reload(); 
+							}else{
+								alert("删除失败");
+							}
+						 }
+						)
+		       }
+		 }
+		
+					
+     });	
+ $("#send").bind("click", function(e){
+		var oEditor = FCKeditorAPI.GetInstance("scontent");
+		var scontent=oEditor.GetHTML();//getFckeditorContent();
+		if(scontent)
+	     $.post('?model=lore_index&action=addreview',{scontent:scontent,key:'{key}',sby:'{sby}',rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$("#refresh_list").click();
+								oEditor.SetHTML("");
+							}else{
+								alert("发送失败");
+							}
+						 }
+						)
+					
+     });
+ 
+ $("#repostsubmit").bind("click", function(e){
+		var rid=$('#reportid').val(); 
+		var rcontent=$('#reportcount').text(); 
+		if(rcontent)
+	     $.post('?model=lore_index&action=report',{rcontent:rcontent,key:'{key}',sby:'{sby}',rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$('#reportid').val(''); 
+								$('reportcount').text('');
+								$("#refresh_list").click();
+								hideWindow('miscreport');
+								
+							}else{
+								alert("纠错失败");
+							}
+						 }
+						)
+					
+     });
+    $("#favoritessubmit").bind("click", function(e){
+		var fid=$('#favoritesid').val(); 
+		var fcontent=$('#favoritescount').text(); 
+	     $.post('?model=lore_index&action=favorites',{fcontent:fcontent,key:'{key}',sby:'{sby}',rand:rand},
+						function (data)
+						{
+							if(data)
+							{
+								alert(data);
+								$('#rfavoritesid').val(''); 
+								$('#favoritescount').text('');
+								$("#refresh_list").click();
+								hideWindow('favorites');
+								
+								
+							}else{
+								alert("收藏失败");
+							}
+						 }
+						)
+					
+     });
+		
+$.post('?model=lore_index&action=upbrowse',{key:'{key}',sby:'{sby}',rand:rand},function (data){ });		
+</script>
+</body>
+</html>

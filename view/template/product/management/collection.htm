@@ -1,0 +1,799 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript"><!--
+        var administrator = 'true';
+        $(function(){
+            $('#tt').datagrid({
+                title: '技术专利数据采集',
+                iconCls: 'icon-edit',
+                pagination: true,
+                rownumbers:true,
+				pageSize:20,
+				pageList:[20],
+                singleSelect: false,
+                idField: 'recid',
+                url: '?model={t_model}&action=list_data',
+                columns: [[
+                 {
+                		field:'ck',
+                		checkbox:true
+                },{
+                	field: 'recid',
+                	title:'RECID',
+                	width:100,
+                	align:'left'
+                },{
+                    field: 'application_number',
+                    title: '申请号',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'title',
+                    title: '专利名称',
+                    width: 400,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                	field: 'ipc',
+                	title:'主分类号',
+                	width:100,
+                	align:'left'
+                },{
+                    field: 'leixin',
+                    title: '专利类型',
+                    width: 60,
+                    align: 'left',
+                   	formatter: function(value, row, index)
+                   	{
+                    	if (value == 'fmzl')
+                    	{
+                    		return '发明专利';	
+                    	}else if (value == 'syxx'){
+                    		return '实用新型';
+                    	}else if (value == 'wgzl'){
+                    		return '外观设计';
+                    	}
+                   }
+                },{
+                    field: 'status',
+                    title: '采集状态',
+                    width: 60,
+                    align: 'left',
+                    formatter: function(value, row, index){
+                    	if (value == 1)
+                    	{
+                    		return '<span style="color:red;">已采集</span>';	
+                    	}else{
+                    		return '未采集';
+                    	}
+                    }
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                    	var a = '<a href="#" onclick="show_info(\''+row.recid+'\')">查看详细</a> | ';
+                    	if (row.status == 1)
+                    	{
+                    		var e = '<a href="#" onclick="storage(\''+row.recid+'\')">采集更新</a> ';
+                    	}else{
+                    		var e = '<a href="#" onclick="storage(\''+row.recid+'\',\''+row.leixin+'\')">采集入库</a> ';
+                    	}
+                        return a+e;
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				}
+            });
+            if (administrator!='') show_button();
+            $('#tabs_content').tabs({onSelect:load_tabs});
+        });
+        var open_tabs = false;
+        function load_tabs(title)
+        {
+        	if (title == '已数据管理' && open_tabs==false)
+        	{
+        		open_tabs = true;
+        		$('#data_list').datagrid({
+                    title: '已采集数据管理',
+                    iconCls: 'icon-edit',
+                    pagination: true,
+                    rownumbers:true,
+    				pageSize:20,
+    				pageList:[20],
+                    singleSelect: false,
+                    idField: 'recid',
+                    url: '?model={t_model}&action=data_list_data',
+                    columns: [[
+                     {
+                    		field:'ck',
+                    		checkbox:true
+                    },{
+                        field: 'leixin',
+                        title: '专利类型',
+                        width: 60,
+                        align: 'center',
+                       	formatter: function(value, row, index)
+                       	{
+                        	if (value == 'fmzl')
+                        	{
+                        		return '发明专利';	
+                        	}else if (value == 'syxx'){
+                        		return '实用新型';
+                        	}else if (value == 'wgzl'){
+                        		return '外观设计';
+                        	}
+                       }
+                    },{
+                        field: 'application_number',
+                        title: '申请号',
+                        width: 120,
+                        align: 'center',
+                        editor: 'text'
+                    },{
+                        field: 'title',
+                        title: '专利名称',
+                        width: 380,
+                        align: 'left',
+                        editor: 'text'
+                    },{
+                    	field: 'applicant',
+                    	title:'申请(专利权)人',
+                    	width:180,
+                    	align:'center'
+                    },{
+                        field: 'export_status',
+                        title: '导出状态',
+                        width: 60,
+                        align: 'center',
+                        formatter: function(value, row, index){
+                        	if (value == 1)
+                        	{
+                        		return '<span style="color:red;">已导出</span>';	
+                        	}else{
+                        		return '未导出';
+                        	}
+                        }
+                    }, {
+                        field: 'action',
+                        title: '操作',
+                        width: 130,
+                        align: 'center',
+                        formatter: function(value, row, index){
+                        	var a = '<a href="#" onclick="show_data_info('+index+');">查看详细</a> | ';
+                        	if (row.export_status == 1)
+                        	{
+                        		var e = '<a href="#" onclick="export_select_data(\''+row.recid+'\')">更新导出</a> ';
+                        	}else{
+                        		var e = '<a href="#" onclick="export_select_data(\''+row.recid+'\')">导出数据</a> ';
+                        	}
+                            return a+e;
+                        }
+                    }]],
+    				onBeforeEdit:function(index,row){
+    					row.editing = true;
+    					updateActions();
+    				},
+    				onAfterEdit:function(index,row){
+    					row.editing = false;
+    					updateActions();
+    				},
+    				onCancelEdit:function(index,row){
+    					row.editing = false;
+    					updateActions();
+    				}
+                });
+        		
+        		$('#data_list').datagrid('getPager').pagination({
+                    buttons: [{
+                        iconCls: 'icon-add',
+                        text: '导出选中数据',
+                        handler: function(){
+                        	export_select_data();
+                        }
+                    },{
+                    	iconCls: 'icon-add',
+                        text: '导出全部数据',
+                        handler: function(){
+                        	export_all_data();
+                        }
+                    }]
+            	});
+        	}
+        }
+        /**
+        *显示远程数据信息信息
+        */
+        function show_info(recid)
+        {
+    		var ajaxbg = $("#background,#progressBar");
+    		ajaxbg.show();
+    		$.post('?model={t_model}&action=get_info',{recid:recid,rand:Math.random(0,9999)},function(data){
+    			if (data!=-1)
+    			{
+    				rs = eval('('+data+')');
+    				for(key in rs)
+    				{
+    					$('#_'+key).html(rs[key] ? rs[key] : '&nbsp;');	
+    				}
+    				ajaxbg.hide();
+    				$('#show_info').window('open');
+    				
+    			}
+    		})
+        }
+        
+        function show_data_info(index)
+        {
+        	$('#data_list').datagrid('selectRow',index);
+			var row = $('#data_list').datagrid('getSelected');
+			for(key in row)
+			{
+				$('#_'+key).html(row[key] ? row[key] : '&nbsp;');	
+			}
+			$('#show_info').window('open');
+        }
+        
+        function GetSearch()
+        {
+        	var type = $('#type').val();
+        	var keyword = $('#keyword').val();
+        	$('#tt').datagrid({
+                url: '?model={t_model}&action=list_data&type=' + type + '&keyword=' + keyword + '&rand=' + Math.random(0, 999)
+            });
+            $('#tt').datagrid('reload');
+            if (administrator!='') show_button();
+        }
+        /**
+        *显示按钮
+        */
+        function show_button()
+        {
+        	$('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '采集搜索结果',
+                    handler: function(){
+                    	all_storage();
+                    }
+                },{
+                    iconCls: 'icon-add',
+                    text: '采集选种',
+                    handler: function(){
+                        select_storage();
+                    }
+                }]
+            });
+        }
+        
+        function select_storage()
+        {
+        	$('#show_list').html('');
+        	var recid_list = new Array();
+        	var rows = $('#tt').datagrid('getSelections');
+        	if(rows.length == 0)
+        	{
+        		$.messager.alert('提示','此操作最少要选择一条数据！');
+        		return false;
+        	}
+        	$('#show_get_data').window('open');
+        	if (rows.length > 0)
+        	{
+	        	for(var i=0;i<rows.length;i++){
+					$('#show_list').append('<p style="height:8px;">采集：'+rows[i].title+' <span id="status_'+i+'">列队中...</span></p>');
+				}
+	        	setTimeout(function(){run(rows,0)},1000);
+        	}
+        }
+        /**
+        *采集搜索结果
+        */
+        function all_storage()
+        {
+        	var obj = $('#tt').datagrid('options');
+        	var url = obj.url;
+        	var pageSize = obj.pageSize;
+        	var data = $('#tt').datagrid('getData');
+        	var total = data.total;
+        	var pagecount = parseInt(total / pageSize);
+        		pagecount = (total % pageSize == 0) ? pagecount : (pagecount+1);
+        	if (pagecount > 0)
+        	{
+        		$('#show_get_data').window('open');
+        		$('#show_list').html('');
+        		setTimeout(function(){run_all(pagecount,1,total)},1000);
+        	}
+        }
+        function run_all(pagecount,page,total)
+        {
+        	//alert(page);
+       		if (pagecount>=page)
+       		{
+       			data = GetPageData(pagecount,page)
+            	rows = data['rows'];
+       			for(var i=0;i<rows.length;i++)
+       			{
+       				$('#show_list').append('<p style="height:8px;">采集：'+rows[i].title+' <span id="status_'+rows[i].recid.replace('.','_')+'">列队中...</span></p>');
+       			}
+       			setTimeout(function(){get_all(rows,0,pagecount,page,total)},500);
+       		}
+        }
+        /*
+        *获取页数据
+        */
+        function GetPageData(pagecount,page)
+        {
+        	var data = new Array();
+        	var keyword = $('#keyword').val();
+        	var type = $('#type').val();
+        	if (page == 1)
+        	{
+        		data = $('#tt').datagrid('getData');
+        	}else{
+        		$.ajax({
+        				type:'POST',
+        				url:'?model={t_model}&action=list_data',
+        				data:'type='+type+'&keyword='+keyword+'&page='+page,
+        				async:false,
+        				success:function(val){
+        					if (val!='')
+        					{
+        						//alert(val);
+        						data = eval('('+val+')');
+        					}
+        				}		
+        		});
+        	}
+        	return data;
+        }
+        /**
+        *按页采集
+        */
+        function get_all(rows,index,pagecount,page,total)
+        {
+        	if (rows.length>index)
+        	{
+        		if(((page-1)*20+index+1) % 20==0) $('#show_list').html('<div style="color:blue;">准备采集第 '+(page+1)+' 页...</div>');
+        		$('#south').html('<span style="color:red;">本次共需采集<b>'+total+'</b> 条信息，现正采集第 <b>'+((page-1)*20+index+1)+'</b> 条信息，剩余 <b>'+(total-((page-1)*20+index+1))+'</b> 条信息。</span>');
+        		$('#status_'+rows[index].recid.replace('.','_')).html('采集中...');
+        		$('#status_'+rows[index].recid.replace('.','_')).css('color','green');
+        		Pause(this,500);
+        		this.NextStep=function(){
+		        	if (GetData(rows[index].recid,rows[index].leixin))
+					{
+						$('#status_'+rows[index].recid.replace('.','_')).html('采集完成。');
+						$('#status_'+rows[index].recid.replace('.','_')).css('color','red');
+						index++;
+						setTimeout(function(){get_all(rows,index,pagecount,page,total)},500);
+					}else{
+						$('#status_'+rows[index].recid.replace('.','_')).html('采集失败。');
+						$('#status_'+rows[index].recid.replace('.','_')).css('color','blue');
+						index++;
+						setTimeout(function(){get_all(rows,index,pagecount,page,total)},500);
+					}
+        		}
+        	}else{
+        		if (pagecount<=page)
+        		{
+        			$('#south').html('<input type="button" id="button" onclick="$(\'#show_get_data\').window(\'close\');" value=" 关闭返回" />');
+        		}else{
+        			page++;
+        			setTimeout(function(){run_all(pagecount,page,total)},500);
+        		}
+        	}
+        }
+        /**
+        *执行采集
+        */
+        function run(rows,index)
+        {
+        	if (rows.length>index)
+        	{
+        		$('#south').html('<span style="color:red;">本次共需采集 <b>'+rows.length+'</b> 条信息，现正采集第 <b>'+(index+1)+'</b> 条信息，剩余 <b>'+(rows.length-(index+1))+'</b> 条信息。</span>');
+        		$('#status_'+index).html('采集中...');
+        		$('#status_'+index).css('color','green');
+        		Pause(this,500);
+        		this.NextStep=function(){
+		        	if (GetData(rows[index].recid,rows[index].leixin))
+					{
+						$('#status_'+index).html('采集完成。');
+						$('#status_'+index).css('color','red');
+						index++;
+						setTimeout(function(){run(rows,index)},500);
+					}else{
+						$('#status_'+index).html('采集失败。');
+						$('#status_'+index).css('color','blue');
+						index++;
+						setTimeout(function(){run(rows,index)},500);
+					}
+        		}
+        	}else{
+        		$('#south').html('<input type="button" id="button" onclick="$(\'#show_get_data\').window(\'close\');" value=" 关闭返回" />');
+        	}
+        }
+        
+      //js暂停函数   
+        function Pause(obj,iMinSecond){    
+           if (window.eventList==null) window.eventList=new Array();    
+           var ind=-1;    
+           for (var i=0;i<window.eventList.length;i++){    
+               if (window.eventList[i]==null) {    
+                 window.eventList[i]=obj;    
+                 ind=i;    
+                 break;    
+                }    
+            }    
+           if (ind==-1){    
+           ind=window.eventList.length;    
+           window.eventList[ind]=obj;    
+           }    
+          setTimeout("GoOn(" + ind + ")",iMinSecond);    
+        }    
+           
+        //js继续函数   
+        function GoOn(ind){    
+          var obj=window.eventList[ind];    
+          window.eventList[ind]=null;    
+          if (obj.NextStep) obj.NextStep();    
+          else obj();    
+        }    
+        /**
+        * 准备采集单条数据
+        */
+        function storage(recid,leixin)
+        {
+        	$.messager.confirm('采集确认', '您确定要采集该条数据吗？', function(r) {
+       		if (r)
+       		{
+       			//var ajaxbg = $("#background,#progressBar");
+       			//ajaxbg.show();
+        		var bol = GetData(recid,leixin);
+        		if (bol == true)
+        		{
+        			$.messager.show({
+						title : '提示',
+						msg : '采集成功！',
+						timeout : 3000,
+						showType : 'show'
+					});
+        		}else{
+        			$.messager.show({
+						title : '提示',
+						msg : '采集失败！',
+						timeout : 3000,
+						showType : 'show'
+					});
+        		}
+        		//ajaxbg.hide();
+       		}
+        	});
+        }
+        /**
+        *采集数据
+        */
+        function GetData(recid,leixin)
+        {
+        	var bol = false;
+        	$.ajax({
+        		type:'POST',
+        		async:false,
+        		url:'?model={t_model}&action=GetData&recid='+recid+'&leixin='+leixin,
+        		success:function(msg){
+        			if (msg == 'ok')
+        			{
+        				bol = true;
+        			}else{
+        				bol = false;
+        			}
+        		}
+        	});
+        	return bol;
+        }
+        /**
+        *导入数据
+        */
+        function import_data(recid)
+        {
+        	if (recid)
+        	{
+        		$.post('?model={t_model}&action=import_data&recid='+recid,{rand:Math.random(0,99999)},function(data){
+        			if (data == 'ok')
+        			{
+        				$.messager.show({
+							title : '提示',
+							msg : '操作成功！',
+							timeout : 3000,
+							showType : 'show'
+						});
+        				$('#data_list').datagrid('reload');
+        			}else{
+        				$.messager.show({
+						title : '提示',
+						msg : '操作失败！',
+						timeout : 3000,
+						showType : 'show'
+					});
+        			}
+        		})
+        	}
+        }
+        
+        function show_data_list(leixin)
+        {
+        	var keyword = $('#zl_keyword').val();
+        	$('#data_list').datagrid({
+        		url: '?model={t_model}&action=data_list_data&leixin='+leixin+'&keyword='+keyword
+            });
+        	$('#data_list').datagrid('reload');
+        	$('#data_list').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '导出选中数据',
+                    handler: function(){
+                    	export_select_data();
+                    }
+                }]
+        	});
+        }
+        
+        function so_data()
+        {
+        	var keyword = $('#zl_keyword').val();
+        	var leixin = $('#leixin').val();
+        	$('#data_list').datagrid({
+                url: '?model={t_model}&action=data_list_data&leixin='+leixin+'&keyword='+keyword
+            });
+        	$('#data_list').datagrid('reload');
+        	$('#data_list').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '导出选中数据',
+                    handler: function(){
+                    	export_select_data();
+                    }
+                }]
+        	});
+        }
+        
+        function export_select_data(recids)
+        {
+        	var msg = '';
+        	var recid='';
+        	if (recids)
+        	{
+        		recid = recids;
+        		msg ='您确定要将该条数据导出或更新到竞争对手技术专利库吗？';
+        	}else{
+        		var rows = $('#data_list').datagrid('getSelections');
+        		msg ='您确定要将选种的 '+rows.length+' 条数据导出或更新到竞争对手技术专利库吗？';
+        		if (rows.length > 0)
+        		{
+        			for (var i=0;i<rows.length;i++)
+        			{
+        				recid+=rows[i].recid+',';
+        			}
+        		}
+        	}
+        	$.messager.confirm('提示', msg, function(r) {
+        		if(r)
+        		{
+		        	$.post('?model={t_model}&action=export_data',{recid:recid,rand:Math.random(0,9999)},function(data){
+		        		if (data == 'ok')
+		        		{
+		        			$.messager.show({
+								title : '提示',
+								msg : '操作成功！',
+								timeout : 3000,
+								showType : 'show'
+							});
+		    				$('#data_list').datagrid('reload');
+		        		}else{
+		        			$.messager.show({
+								title : '提示',
+								msg : '操作失败！',
+								timeout : 3000,
+								showType : 'show'
+							});
+		        		}
+		        	});
+        		}else{
+        			$.messager.show({
+						title : '提示',
+						msg : '取消操作！',
+						timeout : 3000,
+						showType : 'show'
+					});
+        		}
+        	});
+        }
+        --></script>
+        <style type="text/css">
+			.background { 
+				display: block; 
+				width: 100%; 
+				height: 100%; 
+				opacity: 0.8; 
+				filter: alpha(opacity=80); 
+				background:#ccc; 
+				position: absolute; 
+				top: 0; 
+				left: 0; 
+				z-index: 2000; 
+				} 
+				.progressBar { 
+				border: solid 2px #86A5AD; 
+				background: #fff url(js/jqeasyui/themes/default/images/pagination_loading.gif) no-repeat scroll 5px 10px; 
+			} 
+				.progressBar { 
+					display: block; 
+					width: 148px; 
+					height: 28px; 
+					position: fixed; 
+					top: 50%; 
+					left: 50%; 
+					margin-left: -74px; 
+					margin-top: -14px; 
+					padding: 10px 10px 10px 50px; 
+					text-align: left; 
+					line-height: 27px; 
+					font-weight: bold; 
+					position: absolute; 
+					z-index: 2001;
+					font-size: 12px;
+				}		
+			label { font-weight:bold;float:left; text-align:right; width:105px; }
+			.info p {margin:0px; padding:0px; width:630px; float:left; height: 25px;}
+			.info .text {width:200px; display:block; float:left; text-align: left;}}
+			#loading{position:absolute;width:300px;top:0px;left:50%;margin-left:-150px;text-align:center;padding:7px 0 0 0;font:bold 11px Arial, Helvetica, sans-serif;}
+			
+        </style>
+    </head>
+    <div id="background" class="background" style="display: none; "></div> 
+	<div id="progressBar" class="progressBar" style="display: none; ">数据加载中，请稍等...</div>
+    <body>
+    <div id="tabs_content" class="easyui-tabs" fit="true" plain="true">
+    	<div title="采集数据" style="padding:5px;">
+       		<table id="tt" toolbar="#tb"></table>
+       	</div>
+       	<div title="已数据管理" style="padding:5px;">
+       		<table id="data_list" toolbar="#ta"></table>
+       	</div>
+	</div>
+	<div id="tb" style="padding:5px;height:auto;">
+			<div>
+				搜索类型: 
+				<select id="type" name="type">
+				<option selected="selected" value="摘要">摘要</option>
+				<option value="名称">名称</option>
+				<option value="公开（公告）号">公开（公告）号</option>
+				<option value="发明（设计）人">发明（设计）人</option>
+				<option value="申请（专利权）人">申请（专利权）人</option>
+				<option value="公开（公告）日">公开（公告）日</option>
+				<option value="申请日"></option>
+				</select>
+				关键字:
+				<input type="text" name="keyword" id="keyword" value="" />
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search">search</a>
+			</div>
+	</div>
+	<div id="ta" style="padding:5px;height:auto;">
+			<div>
+				专利类型: 
+				<select id="leixin" name="leixin" onchange="show_data_list(this.value);">
+				<option value="">所有类型</option>
+				<option value="fmzl">发明专利</option>
+				<option value="syxx">实用新型专利</option>
+				<option value="wgzl">外观设计专利</option>
+				</select>
+				关键字:
+				<input type="text" name="zl_keyword" id="zl_keyword" value="" />
+				<a href="#" class="easyui-linkbutton" onclick="so_data();" iconCls="icon-search">search</a>
+			</div>
+	</div>
+    </body>
+    
+    <div id="show_info" class="easyui-window" title="查看专利信息" iconCls="icon-edit" modal="false" closed="true" style="width:660px;height:600px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div class="info" region="center" border="false">
+				<p>
+					<label>申    请    号：</label>
+					<span class="text" id="_application_number"></span>
+					<label>申   请   日：</label>
+					<span class="text" id="_application_date"></span>
+				</p>
+				<p>
+					<label>专利名称：</label>
+					<span class="text" style="width:450px;" id="_title"></span>
+				</p>
+				<p>
+					<label>公 开 (公告) 号：</label>
+					<span class="text" id="_recid"></span>
+					<label>公开(公告)日：</label>
+					<span class="text" id="_open_date"></span>
+				</p>
+				<p>
+					<label>主  分  类  号：</label>
+					<span class="text" id="_main_type_number"></span>
+					<label>分案原申请号：</label>
+					<span class="text" id="_filing_no"></span>
+				</p>
+				<p>
+					<label>分    类    号：</label>
+					<span class="text" style="width:450px;" id="_times_type_number"></span>
+				</p>
+				<p>
+					<label>颁   证     日： </label>
+					<span class="text" id="_certification_date"></span>
+					<label>优   先   权：</label>
+					<span class="text" id="_priority"></span>
+				</p>
+				<p>
+					<label>申请(专利权)人： </label>
+					<span class="text" style="width:450px;" id="_applicant"></span>
+				</p>
+				<p>
+					<label>地          址：</label>
+					<span class="text" style="width:450px;" id="_address"></span>
+				</p>
+				<p>
+					<label>发 明 (设计)人： </label>
+					<span class="text" id="_inventor"></span>
+					<label>国  际 申 请：</label>
+					<span class="text" id="_international_application"></span>
+				</p>
+				<p>
+					<label>国  际  公  布：</label>
+					<span class="text" id="_international_publication"></span>
+					<label>进入国家日期：</label>
+					<span class="text" id="_to_enter_the_national_date"></span>
+				</p>
+				<p>
+					<label>专利 代理 机构： </label>
+					<span class="text" id="_agency"></span>
+					<label>代   理   人：</label>
+					<span class="text" id="_agents"></span>
+				</p>
+				<p>
+					<label>专利摘要：</label>
+					<span>
+						<div id="_summary" style="width:530px; line-height: 20px; float: right;"></div>
+					</span>
+				</p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show_info').window('close');" value=" 关闭返回" />
+				</form>
+			</div>
+		</div>
+		</div>
+		
+		<div id="show_get_data" class="easyui-window" title="批量采集数据" iconCls="icon-edit" modal="true" closed="true" closable="false" style="width:660px;height:500px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="show_list" region="center" border="false">
+			</div>
+			<div id="south" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="button" onclick="$('#show_get_data').window('close');" value=" 关闭返回" />
+			</div>
+		</div>
+		</div>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>基本信息</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-personlevel.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-socialplace.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-hrscheme.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-entrynotice-add.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city2.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city3.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city4.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city5.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-provin-city6.js"></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<script>
+		var uploadfile;
+		$(function() {
+			var photoUrl=$("#photoUrl").val();
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_hr_personnel",//业务模块编码，一般取表名
+			},{
+				upload_success_handler : function(file, serverData){
+					var obj = eval("(" + serverData +")");
+					var objType = obj.serviceType;
+					var objName = obj.newName;
+					var url = photoUrl + "/" +objType + "/" + objName;
+					$("#photo").attr("src",url);
+					$("#uploadfileIds").append("<input type='hidden' name='fileuploadIds[0]' value='" + obj.id + "'/>");
+				}
+			});
+
+			uploadfile = createSWFUpload({
+				"serviceType": "personnel_staff"
+			},{
+				button_placeholder_id:'swfupload2',
+				fileListId:'uploadfileList2',
+				progressTarget:'fsUploadProgress2'
+			});
+
+		});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_personnel_personnel&action=add">
+		<table cellpadding="2" width="100%" class="form_main_table">
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>个人信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">员工姓名</span></td>
+								<td class="form_text_right_three" colspan="3">
+									<input type="text" class="txt" name="personnel[staffName]" id="staffName" value="{staffName}"/>
+								</td>
+								<!-- 附件图片-->
+								<td  style="text-align:center" rowspan="6" width="33%" colspan="2">
+									<input type="hidden" id="photoUrl" value="{photoUrl}"/>
+									<img id="photo" src="{photo}"  style="height:140px;width:100px;" class="imgBorder"/><br />
+									<br />
+									<div class="upload" id="">
+										<div class="upload">
+											<span id="swfupload"></span>
+											<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/> <br />
+										</div>
+										<div id="uploadfileList" class="upload"></div>
+									</div>
+									<div id="uploadfileIds">
+									</div>
+									提示：请上传图片像素为：100*140，文件为JPG,GIF或PNG格式的图片
+								</td>
+								<!-- 附件图片-->
+							</tr>
+							<tr>
+								<td class="form_text_left_three">员工编号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyText" name="personnel[userNo]" id="userNo" readonly/>
+								</td>
+								<td class="form_text_left_three">OA关联帐号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[userName]" id="userName" readonly value="{staffName}"/>
+									<input type="hidden" class="txt" name="personnel[userAccount]" id="userAccount" value="{userAccount}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">曾用名(英)</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[englishName]" id="englishName"/>
+								</td>
+								<td class="form_text_left_three">性别</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="sex" value="{sex}"/>
+									<select class="select" name="personnel[sex]">
+										<option value="男">男</option>
+										<option value="女">女</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">出生日期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[birthdate]" id="birthdate" value="{birthdate}" onfocus="WdatePicker()" onchange="getAge();" readonly/>
+								</td>
+								<td class="form_text_left_three">年龄</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyText" name="personnel[age]" id="age" value="{age}" readonly/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">籍贯</td>
+								<td class="form_text_right_three">
+									<select class="selectauto" name="" id="province" val="{nativePlacePro}"></select>
+									<input type="hidden" name="personnel[nativePlacePro]" id="provinceName"/>
+									<select class="selectauto" name="" id="city" val="{nativePlaceCity}"></select>
+									<input type="hidden" name="personnel[nativePlaceCity]" id="cityName"/>
+								</td>
+								<td class="form_text_left_three">民族</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[nation]" value="{nation}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">身份证号</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[identityCard]" id="identityCard" value="{identityCard}" onchange="checkIDCard(this);"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">身份证有效日期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txtshort" onfocus="WdatePicker({dateFmt:'yyyy.MM.dd'})" id="identityCardDate0" readonly onblur="dealCardDate();"/>&nbsp;-
+									<input type="text" class="txtshort" onfocus="WdatePicker({dateFmt:'yyyy.MM.dd'})" id="identityCardDate1" readonly onblur="dealCardDate();"/>
+									<input type="hidden" name="personnel[identityCardDate]" id="identityCardDate" value="{identityCardDate}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">身份证上地址</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[identityCardAddress]" id="identityCardAddress" value="{identityCardAddress}"/>
+								</td>
+								<td class="form_text_left_three">政治面貌</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[politicsStatusCode]" id="politicsStatusCode">
+										<option value="">请选择..</option>
+										{politicsStatusCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">最高学历</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[highEducation]" id="highEducation">
+										<option value="">请选择..</option>
+										{highEducation}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">毕业学校</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[highSchool]" id="highSchool" value="{highSchool}"/>
+								</td>
+								<td class="form_text_left_three">专业</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[professionalName]" id="professionalName" value="{professionalName}"/>
+								</td>
+								<td class="form_text_left_three">毕业时间</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[graduateDate]" id="graduateDate" value="{graduateDate}" onfocus="WdatePicker()" readonly/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>任职信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">公司</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="companyType" value="{companyType}"/>
+									<select id="companyTypeCode" name="personnel[companyTypeCode]" class="selectshort" value="{companyTypeCode}">
+										<option value="1">集团</option>
+										<option value="0">子公司</option>
+									</select>
+									<input type="hidden" id="company" value="{companyName}"/>
+									<select id="companyName" name="personnel[companyName]" class="selectmiddel" val="{companyName}">
+									</select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">部门</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[belongDeptName]" id="belongDeptName" value="{belongDeptName}" readonly/>
+									<input type="hidden" id="belongDeptId" name="personnel[belongDeptId]"  value="{belongDeptId}"/>
+									<input type="hidden" id="belongDeptCode" name="personnel[belongDeptCode]"  value="{belongDeptCode}"/><br/>
+									直属部门:
+									<input type="text" class="readOnlyTxt" name="personnel[deptName]" id="deptName" value="{deptName}" readonly/>
+									<input type="hidden" id="deptId" name="personnel[deptId]" value="{deptId}"/>
+									<input type="hidden" id="deptCode" name="personnel[deptCode]"  value="{deptCode}"/><br/>
+									二级部门:
+									<input type="text" class="readOnlyTxt" name="personnel[deptNameS]" id="deptNameS" value="{deptNameS}" readonly/>
+									<input type="hidden" id="deptIdS" name="personnel[deptIdS]" value="{deptIdS}"/>
+									<input type="hidden" id="deptCodeS" name="personnel[deptCodeS]"  value="{deptCodeS}"/><br/>
+									三级部门:
+									<input type="text" class="readOnlyTxt" name="personnel[deptNameT]" id="deptNameT" value="{deptNameT}" readonly/>
+									<input type="hidden" id="deptIdT" name="personnel[deptIdT]" value="{deptIdT}"/>
+									<input type="hidden" id="deptCodeT" name="personnel[deptCodeT]"  value="{deptCodeT}"/><br/>
+                                    四级部门:
+                                    <input type="text" class="readOnlyTxt" name="personnel[deptNameF]" id="deptNameF" value="{deptNameF}" readonly/>
+                                    <input type="hidden" id="deptIdF" name="personnel[deptIdF]" value="{deptIdF}"/>
+                                    <input type="hidden" id="deptCodeF" name="personnel[deptCodeF]"  value="{deptCodeF}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">职位名称</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[jobName]" id="jobName" value="{jobName}"/>
+									<input type="hidden" id="jobId" name="personnel[jobId]" value="{jobId}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">区域名称</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="regionIdSelect" value="{useAreaId}"/>
+									<select id="regionId" name="personnel[regionId]" class="select">
+										{area_select}
+									</select>
+								</td>
+								<td class="form_text_left_three">员工状态</td>
+								<td class="form_text_right_three">
+									<select class="selectshort" name="personnel[employeesState]" id="employeesState">
+										{employeesState}
+									</select>
+									<select class="selectshort" name="personnel[staffState]" id="staffState">
+										{staffState}
+									</select>
+								</td>
+								<td class="form_text_left_three">员工类型</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[personnelType]" id="personnelType">
+										{personnelType}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">岗位分类</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[position]" id="position">
+										{position}
+									</select>
+								</td>
+								<td class="form_text_left_three">人员分类</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[personnelClass]" id="personnelClass">
+										{personnelClass}
+									</select>
+								</td>
+								<td class="form_text_left_three">工资级别</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[wageLevelCode]" id="wageLevelCode">
+										{wageLevelCode}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">职级</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[jobLevel]" id="jobLevel"/>
+								</td>
+								<td class="form_text_left_three">职能</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[functionCode]" id="functionCode">
+										<option value="">..请选择..</option>
+										{functionCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">是否配置转正方案</td>
+								<td class="form_text_right_three">
+									<input type="radio" name="personnel[isAddScheme]" id="isAddYes" value="是" checked onclick="changeSchem()"/>是
+									<input type="radio" name="personnel[isAddScheme]" id="isAddNo" value="否"  onclick="changeSchem()"/>否&nbsp;&nbsp;<br>
+									<input type="text" name="personnel[schemeName]" id="schemeName" class="txt" value=""/> <!-- style="display:none;" -->
+									<input type="hidden" name="personnel[schemeId]" id="schemeId" class="txt" value=""/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>入职信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">入职日期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[entryDate]" id="entryDate" onfocus="WdatePicker()" readonly/>
+								</td>
+								<td class="form_text_left_three">入职地点</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[entryPlace]" id="entryPlace"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">预计转正日期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[becomeDate]" id="becomeDate" onfocus="WdatePicker()" readonly/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>健康信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">健康状况</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[healthStateCode]" id="healthStateCode">
+										{healthStateCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">是否有既往病史</td>
+								<td class="form_text_right_three">
+									<input type="radio" name="personnel[isMedicalHistory]" id="isYes" value="是" {isYes} onclick="changeRadio()"/>是
+									<input type="radio" name="personnel[isMedicalHistory]" id="isNo" value="否" {isNo} onclick="changeRadio()"/>否&nbsp;&nbsp;
+									<input type="text" name="personnel[medicalHistory]" id="medicalHistory" class="txtmiddle" value="{medicalHistory}"/>
+								</td>
+								<td class="form_text_left_three">传染疾病</td>
+								<td class="form_text_right_three"><input type="text" class="txt" name="personnel[InfectDiseases]" value="{InfectDiseases}"/></td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">身高(cm)</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[height]" id="height" value="{height}"/>
+								</td>
+								<td class="form_text_left_three">体重(kg)</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[weight]" id="weight" value="{weight}"/>
+								</td>
+								<td class="form_text_left_three">血型</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[blood]" id="blood" value="{blood}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>婚育信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">婚姻状况</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="maritalStatusName" value="{maritalStatusName}"/>
+									<select class="select" name="personnel[maritalStatusName]">
+										<option value="">请选择..</option>
+										<option value="未婚">未婚</option>
+										<option value="已婚">已婚</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">生育状况</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="birthStatus" value="{birthStatus}"/>
+									<select class="select" name="personnel[birthStatus]">
+										<option value="">请选择..</option>
+										<option value="未育">未育</option>
+										<option value="已育">已育</option>
+									</select>
+								</td>
+								<td></td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>技能信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">爱好</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[hobby]" id="hobby" value="{hobby}"/>
+								</td>
+								<td class="form_text_left_three">特长</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[speciality]" id="speciality" value="{speciality}"/>
+								</td>
+								<td class="form_text_left_three">专业技能</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[professional]" id="professional" value="{professional}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">英语等级</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[englishSkill]" id="englishSkill">
+										<option value="">请选择..</option>
+										{englishSkill}
+									</select>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>账号信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">常用卡号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[oftenCardNum]" id="oftenCardNum" value="{bankCardNum}"/>
+								</td>
+								<td class="form_text_left_three">常用账号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[oftenAccount]" id="oftenAccount" value="{accountNumb}"/>
+								</td>
+								<td class="form_text_left_three">常用账号开户行</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[oftenBank]" id="oftenBank" value="{openingBank}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">其他卡号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[bankCardNum]" id="bankCardNum"/>
+								</td>
+								<td class="form_text_left_three">其他账号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[accountNumb]" id="accountNumb"/>
+								</td>
+								<td class="form_text_left_three">其他帐号开户行</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[openingBank]" id="openingBank"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">工资账号地区代码</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[salaryAreaTypeCode]" id="salaryAreaTypeCode">
+										<option value="">请选择..</option>
+										{salaryAreaTypeCode}
+									</select>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>戶口信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">档案编号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[archivesCode]" id="archivesCode" value="{archivesCode}"/>
+								</td>
+								<td class="form_text_left_three">档案所在地</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[archivesLocation]" id="archivesLocation" value="{archivesLocation}"/>
+								</td>
+								<td class="form_text_left_three">户籍地</td>
+								<td class="form_text_right_three">
+									<select class="selectauto" name="" id="province2" val="{residencePro}"></select>
+									<input type="hidden" name="personnel[residencePro]" id="provinceName2"/>
+									<select class="selectauto" name="" id="city2" val="{residenceCity}"></select>
+									<input type="hidden" name="personnel[residenceCity]" id="cityName2"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">户籍类型</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="householdType" value="{householdType}"/>
+									<select class="select" name="personnel[householdType]">
+										<option value="城镇">城镇</option>
+										<option value="农业">农业</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">集体户口</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="collectResidence" value="{collectResidence}"/>
+									<select class="select" name="personnel[collectResidence]">
+										<option value="是">是</option>
+										<option value="否">否</option>
+									</select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">社保购买地</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[socialPlace]" id="socialPlace" value="{socialPlace}"/>
+									<input type="hidden" id="socialPlaceId" readonly/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">社保购买方</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="socialBuyer" name="personnel[socialBuyer]"/>
+								</td>
+								<td class="form_text_left_three">公积金购买地</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="fundPlace" name="personnel[fundPlace]"/>
+								</td>
+								<td class="form_text_left_three">公积金购买方</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="fundBuyer" name="personnel[fundBuyer]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">公积金缴费基数</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="fundCardinality" name="personnel[fundCardinality]"/>
+								</td>
+								<td class="form_text_left_three">公积金缴费比例</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="fundProportion" name="personnel[fundProportion]"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>服务线拓展信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">技术等级</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[personLevel]" id="personLevel" value="{personLevel}" readonly="readonly"/>
+									<input type="hidden" id="personLevelId"/>
+								</td>
+								<td class="form_text_left_three">归属区域</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[officeName]" id="officeName" readonly="readonly"/>
+									<input type="hidden" id="officeId"/>
+								</td>
+								<td class="form_text_left_three">无补助城市</td>
+								<td class="form_text_right_three">
+									<select class="selectauto" name="personnel[eprovinceId]" id="eprovinceId" val="{eprovinceId}"></select>
+									<input type="hidden" name="personnel[eprovince]" id="eprovince" value="{eprovince}"/>
+									<select class="selectauto" name="personnel[ecityId]" id="ecityId" val="{ecityId}"></select>
+									<input type="hidden" name="personnel[ecity]" id="ecity" value="{ecity}"/>
+									<input type="hidden" name="personnel[ecountryId]" id="ecountryId" value="1"/>
+									<input type="hidden" name="personnel[ecountry]" id="ecountry" value="中国"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">技术领域</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[technologyCode]" id="technologyCode">
+										<option value=""></option>
+										{technologyCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">网络</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[networkCode]" id="networkCode">
+										<option value=""></option>
+										{networkCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">设备厂家及级别</td>
+								<td class="form_text_right_three">
+									<select class="select" name="personnel[deviceCode]" id="deviceCode">
+										<option value=""></option>
+										{deviceCode}
+									</select>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>联系信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">固定电话</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[telephone]" value="{telephone}"/>
+								</td>
+								<td class="form_text_left_three">移动电话</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="mobile" name="personnel[mobile]" value="{mobile}"/>
+								</td>
+								<td class="form_text_left_three">个人电子邮箱</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="personEmail" name="personnel[personEmail]" value="{personEmail}" onchange="checkmail(this);"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">QQ</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="QQ" name="personnel[QQ]" value="{QQ}"/>
+								</td>
+								<td class="form_text_left_three">MSN</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[MSN]" value="{MSN}"/>
+								</td>
+								<td class="form_text_left_three">飞信</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[fetion]" value="{fetion}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">其他联系方式</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[information]" value="{information}"/>
+								</td>
+								<td class="form_text_left_three">家庭电话</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[homePhone]" value="{homePhone}"/>
+								</td>
+								<td class="form_text_left_three">紧急联系人</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="emergencyName" name="personnel[emergencyName]" value="{emergencyName}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">紧急联系人电话</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="emergencyTel" name="personnel[emergencyTel]" value="{emergencyTel}"/>
+								</td>
+								<td class="form_text_left_three">关系</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="personnel[emergencyRelation]" value="{emergencyRelation}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">现住地址</td>
+								<td class="form_text_right_three" colspan="5">
+									<select class="selectmiddel" name="" id="nowPlaceProId" val="{nowPlacePro}"></select>
+									<input type="hidden" name="personnel[nowPlacePro]" id="nowPlacePro"/>
+									<select class="selectmiddel" name="" id="nowPlaceCityId" val="{nowPlaceCity}"></select>
+									<input type="hidden" name="personnel[nowPlaceCity]" id="nowPlaceCity"/>
+									<input type="text" class="txtlong" id="nowAddress" name="personnel[nowAddress]" value="{nowAddress}"/>
+									&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="nowPost" name="personnel[nowPost]" value="{nowPost}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">家庭详细地址</td>
+								<td class="form_text_right_three" colspan="5">
+									<select class="selectmiddel" name="" id="homeAddressProId" val="{homeAddressPro}"></select>
+									<input type="hidden" name="personnel[homeAddressPro]" id="homeAddressPro"/>
+									<select class="selectmiddel" name="" id="homeAddressCityId"  val="{homeAddressCity}"></select>
+									<input type="hidden" name="personnel[homeAddressCity]" id="homeAddressCity"/>
+									<input type="text" class="txtlong" id="homeAddress" name="personnel[homeAddress]" value="{homeAddress}"/>
+									&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="homePost" name="personnel[homePost]" value="{homePost}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">本人指定邮寄通信地址</td>
+								<td class="form_text_right_three" colspan="5">
+									<select class="selectmiddel" name="" id="appointPro" val="{appointPro}"></select>
+									<input type="hidden" name="personnel[appointPro]" id="appointProName" value="{appointPro}"/>
+									<select class="selectmiddel" name="" id="appointCity" val="{appointCity}"></select>
+									<input type="hidden" name="personnel[appointCity]" id="appointCityName" value="{appointCity}"/>
+									<input type="text" class="txtlong" id="appointAddress" name="personnel[appointAddress]" value="{appointAddress}"/>
+									&nbsp;&nbsp;&nbsp;&nbsp;邮政编码:
+									<input type="text" class="txtmiddel" id="appointPost" name="personnel[appointPost]" value="{appointPost}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>附件信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">附件</td>
+								<td colspan="5" class="form_text_right">
+									<div class="upload">
+										<div class="upload" id="fsUploadProgress2"></div>
+										<div class="upload">
+											<span id="swfupload2"></span>
+											<input id="btnCancel2" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/>
+											<br />
+										</div>
+										<div id="uploadfileList2" class="upload"></div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" class="txt" name="personnel[entryId]" id="entryId" value="{entryId}"/>
+					<input type="hidden" class="txt" name="personnel[employmentId]" id="employmentId" value="{employmentId}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

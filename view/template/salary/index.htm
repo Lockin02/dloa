@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 12px;
+            }
+            .jqgtabs ul li{ line-height: 12px; }
+            /*Splitter style */
+            #LeftPane {
+                /* optional, initial splitbar position */
+                overflow: auto;
+                border: 1px;
+            }
+            /*
+             Right-side element of the splitter.
+            */
+            #RightPane {
+                padding: 0px;
+                overflow: auto;
+                border: 1px;
+            }
+            .ui-tabs-nav li {position: relative;}
+            .ui-tabs-selected a span {padding-right: 10px;}
+            .ui-tabs-close {display: none;position: absolute;top: 3px;right: 0px;z-index: 800;width: 16px;height: 14px;font-size: 10px; font-style: normal;cursor: pointer;}
+            .ui-tabs-selected .ui-tabs-close {display: block;}
+            .ui-layout-west .ui-jqgrid tr.jqgrow td { border-bottom: 0px none;}
+            .ui-datepicker {z-index:1200;}
+            .ui-state-default {font-size: 12px;margin: 0;}
+            .rotate
+            {
+                /* for Safari */
+                -webkit-transform: rotate(-90deg);
+                /* for Firefox */
+                -moz-transform: rotate(-90deg);
+                /* for Internet Explorer */
+                filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+            }
+        </style>
+
+        <script type="text/javascript">
+            var maintab;
+            jQuery(document).ready(function(){
+                //$('#switcher').themeswitcher();
+
+                $('body').layout({
+                    resizerClass: 'ui-state-default',
+                    west__onresize: function (pane, $Pane) {
+                        jQuery("#west-grid").jqGrid('setGridWidth',$Pane.innerWidth()-2);
+                    }
+                });
+                $.jgrid.defaults = $.extend($.jgrid.defaults,{loadui:"enable"});
+                maintab =jQuery('#tabs','#RightPane').tabs({
+                    add: function(e, ui) {
+                        // append close thingy
+                        $(ui.tab).parents('li:first')
+                        .append('<span class="ui-tabs-close ui-icon ui-icon-close" title="Close Tab"></span>')
+                        .find('span.ui-tabs-close')
+                        .click(function() {
+                            maintab.tabs('remove', $('li', maintab).index($(this).parents('li:first')[0]));
+                        });
+                        // select just added tab
+                        maintab.tabs('select', '#' + ui.panel.id);
+                    }
+                });
+                jQuery("#west-grid").jqGrid({
+                    url: "{grid_url}",
+                    datatype: "json",
+                    height: "auto",
+                    pager: false,
+                    loadui: "disable",
+                    colNames: ["id","列表 ","url"],
+                    colModel: [
+                        {name: "id",width:1,hidden:true, key:true},
+                        {name: "menu", width:150, resizable: false, sortable:false},
+                        {name: "url",width:1,hidden:true}
+                    ],
+                    treeGrid: true,
+                    caption: "工作区",
+                    ExpandColumn: "menu",
+                    autowidth: false,
+                    width: 110,
+                    rowNum: 180,
+                    ExpandColClick: true,
+                    treeIcons: {leaf:'ui-icon-document-b'},
+                    onSelectRow: function(rowid) {
+                        var treedata = $("#west-grid").jqGrid('getRowData',rowid);
+                        if(treedata.isLeaf=="true") {
+                            //treedata.url
+                            var st = "#tabs-"+treedata.id;
+                            if($(st).html() != null ) {
+                                maintab.tabs('select',st);
+                            } else {
+                                maintab.tabs('add',st, treedata.menu);
+                                $istr='<iframe id="ifr-'+treedata.id+'" onload="SetWinHeight(this)" src="'+treedata.url+'"  width="100%"  marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"/>';
+                                $(st,"#tabs").append($istr);
+                                $(st).css({padding:'0',margin:'0'});
+                            }
+                        }
+                    }
+                });
+            });
+            //*****获取IFRAME高度******/
+            function SetWinHeight(obj)
+            {
+                var dw=document.documentElement.clientHeight;
+                obj.height=dw-51+2*((dw-350)/100);
+            }
+            function setNewTabs(url,tab,id){
+                var st = "#ui-tabs-"+id;
+                if($(st).html() != null){
+                    maintab.tabs('select',st);
+                }else{
+                    maintab.tabs('add',st,tab);
+                    $istr='<iframe id="ifr-'+id+'" onload="SetWinHeight(this)" src="'+url+'"  width="100%"  marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"/>';
+                    $(st).append($istr);
+                    $(st).css({padding:'0',margin:'0'});
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+        <div id="LeftPane" class="ui-layout-west ui-widget ui-widget-content" style="width: 100px;">
+            <table id="west-grid"></table>
+        </div> <!-- #LeftPane -->
+        <div id="RightPane" class="ui-layout-center ui-helper-reset ui-widget-content"><!-- Tabs pane -->
+            <div id="switcher"></div>
+            <div id="tabs" class="jqgtabs">
+                <ul>
+                    <li><a href="#tabs-1">{first_tab}</a></li>
+					<a href="{exitSalary}" style="float:right;margin-top: 4px;margin-right: 5px;font-weight:normal;color:blue;">退出薪资系统</a>
+                </ul>
+                <div id="tabs-1" style="font-size:12px; padding: 0px; margin: 0px;" >
+                    <iframe id="ifr-1" onload="SetWinHeight(this)" src="{first_ifr}"
+                            marginwidth="0" marginheight="0" vspace="0" hspace="0" width="100%"  frameborder="0" ></iframe>
+                </div>
+            </div>
+        </div> <!-- #RightPane -->
+
+    </body>
+</html>

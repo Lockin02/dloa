@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑车辆供应商</title>
+   {#commonInclude#}
+   <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+   <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/vehiclesupp-edit.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/vehiclesupp-provin-city.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/vehiclesupp-common.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=outsourcing_outsourcessupp_vehiclesupp&action=edit" onsubmit="chkForm()">
+<table class="form_main_table">
+<tr>
+<td  colspan="6">
+	<fieldset>
+ 		<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">公司基本信息
+		<img src="images/icon/info_up.gif" id="baseImg" />
+	</legend>
+	<table width="100%" id="contractinfo" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;" >
+		<tr>
+      		<td class="form_text_left_three"><span style="color:blue">省  份</span></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="vehiclesupp[provinceId]" id="province" val="{province}"></select>
+      			 <input type="hidden" class="txt" id="provinceName" name="vehiclesupp[province]" />
+      		</td>
+      		<td class="form_text_left_three"><span style="color:blue">城  市</span></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="vehiclesupp[cityId]" id="city" val="{city}"></select>
+      			 <input type="hidden" class="txt" id="cityName" name="vehiclesupp[city]" />
+      		</td>
+      		<td class="form_text_left_three"><span style="color:blue">供应商类型</span></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" id="suppCategory" name="vehiclesupp[suppCategory]" >
+ 					 {suppCategory}
+ 				 </select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three"><span style="color:blue">供应商名称</span></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="suppName" name="vehiclesupp[suppName]" value="{suppName}"/>
+      		</td>
+      		<td class="form_text_left_three">成立时间</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="registeredDate" onfocus="WdatePicker()" readOnly  name="vehiclesupp[registeredDate]" value="{registeredDate}"/>
+      		</td>
+      		<td class="form_text_left_three">注册资金(万元)</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="registeredFunds" name="vehiclesupp[registeredFunds]" value="{registeredFunds}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left_three">法人代表</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="legalRepre" name="vehiclesupp[legalRepre]" value="{legalRepre}"/>
+      		</td>
+      		<td class="form_text_left_three">车辆数量</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="carAmount" name="vehiclesupp[carAmount]" value="{carAmount}"/>
+      		</td>
+      		<td class="form_text_left_three">司机数量</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="driverAmount" name="vehiclesupp[driverAmount]" value="{driverAmount}"/>
+      		</td>
+       </tr>
+      		<td class="form_text_left_three">发票属性</td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" id="invoiceCode" name="vehiclesupp[invoiceCode]" >
+ 					 {invoiceCode}
+ 				 </select>
+      		</td>
+      		<td class="form_text_left_three">发票税点</td>
+      		<td class="form_text_right_three" >
+      			<input class="select" id="taxPoint" name="vehiclesupp[taxPoint]" value="{taxPoint}"/>
+      		</td>
+      		<td class="form_text_left_three">能否配备司机</td>
+      		<td class="form_text_right_three" >
+      			 <input type="hidden" id="isEquipDriverSelect" value="{isEquipDriver}"/>
+      			 <select class="select" id="isEquipDriver" name="vehiclesupp[isEquipDriver]">
+ 					 <option value="1">能</option>
+ 					 <option value="0">不能</option>
+ 				 </select>
+      		</td>
+       <tr>
+      		<td class="form_text_left_three">有无路测经验</td>
+      		<td class="form_text_right_three" >
+      			 <input type="hidden" id="isDriveTestSelect" value="{isDriveTest}"/>
+      			 <select class="select" id="isDriveTest" name="vehiclesupp[isDriveTest]">
+ 					 <option value="1">有</option>
+ 					 <option value="0">没有</option>
+ 				 </select>
+      		</td>
+      		<td class="form_text_left_three">业务分布</td>
+      		<td class="form_text_right_three" colspan="3">
+      			 <input type="text" class="txt" style="width:400px;" id="businessDistribute" name="" onclick="initBusinessDistribute();" readonly value="{businessDistribute}"/>
+      			 <input type="hidden" class="txt" id="businessDistributeHidden" name="vehiclesupp[businessDistribute]" value="{businessDistribute}"/>
+      		</td>
+      </tr>
+      <tr>
+      		<td class="form_text_left_three">初步商谈结果</td>
+      		<td class="form_text_right_three" colspan="5">
+                  <textarea class="txt_txtarea_biglong" id="tentativeTalk" name="vehiclesupp[tentativeTalk]">{tentativeTalk}</textarea>
+      		</td>
+      </tr>
+      <tr>
+      		<td class="form_text_left_three">公司简介</td>
+      		<td class="form_text_right_three" colspan="5">
+                  <textarea class="txt_txtarea_biglong" id="companyProfile" name="vehiclesupp[companyProfile]">{companyProfile}</textarea>
+      		</td>
+      </tr>
+      </table>
+    </fieldset>
+    </td>
+    </tr>
+    <tr>
+		<td colspan="6" >
+			<fieldset style="width:200">
+			  <legend class="legend" onclick="showAndHide('linkmanListImg','linkmanList')">公司联系人信息
+				<img src="images/icon/info_up.gif" id="linkmanListImg" />
+			  </legend>
+				  <table width="100%" id="linkmanList" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;" >
+			       <tr>
+			      		<td class="form_text_left_three"><span style="color:blue">姓  名</span></td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="linkmanName" name="vehiclesupp[linkmanName]" value="{linkmanName}"/>
+			      		</td>
+			      		<td class="form_text_left_three"><span style="color:blue">职  务</span></td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="linkmanJob" name="vehiclesupp[linkmanJob]" value="{linkmanJob}"/>
+			      		</td>
+			      		<td class="form_text_left_three"><span style="color:blue">电  话</span></td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="linkmanPhone" name="vehiclesupp[linkmanPhone]" value="{linkmanPhone}"/>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three">邮  箱</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="linkmanMail" name="vehiclesupp[linkmanMail]" value="{linkmanMail}"/>
+			      		</td>
+			      		<td class="form_text_left_three">邮政编码</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="postcode" name="vehiclesupp[postcode]" value="{postcode}"/>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three"><span style="color:blue">地  址</span></td>
+			      		<td class="form_text_right_three" colspan="5">
+			      			 <textarea class="txt_txtarea_biglong" id="address" name="vehiclesupp[address]">{address}</textarea>
+			      		</td>
+			       </tr>
+			       </table>
+				</fieldset>
+			</td>
+	</tr>
+	<tr>
+		<td colspan="6" >
+			<fieldset style="width:200">
+			  <legend class="legend" onclick="showAndHide('bankListImg','bankList')">公司银行账号信息
+				<img src="images/icon/info_up.gif" id="bankListImg" />
+			  </legend>
+				  <table width="100%" id="bankList" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;" >
+					  <tr>
+						  <td class="form_text_left">收款人</td>
+						  <td class="form_text_right" colspan="3">
+							  <input type="text" class="txt" id="bankReceiver" name="vehiclesupp[bankReceiver]"  value="{bankReceiver}"/>
+						  </td>
+					  </tr>
+			     	 <tr>
+			      		<td class="form_text_left">开户行</td>
+			      		<td class="form_text_right" >
+			      			 <input type="text" class="txt" id="bankName" name="vehiclesupp[bankName]" value="{bankName}"/>
+			      		</td>
+			      		<td class="form_text_left">开户账号</td>
+			      		<td class="form_text_right" >
+			      			 <input type="text" class="txt" id="bankAccount" name="vehiclesupp[bankAccount]" value="{bankAccount}"/>
+			      		</td>
+			     	  </tr>
+			      </table>
+			</fieldset>
+       </td>
+    </tr>
+    <tr id="vehicleList">
+			<td colspan="6" >
+				<fieldset style="width:200">
+				  <legend class="legend" onclick="showAndHideDiv('vehicleListImg','vehicleListInfo')">公司车辆资源信息
+					<img src="images/icon/info_up.gif" id="vehicleListImg" />
+				  </legend>
+				    <div id="vehicleListInfo"></div>
+				</fieldset>
+			</td>
+	</tr>
+    <tr>
+   		<td class="txt_btn" colspan="4">
+			<input  type="hidden" id="id" name="vehiclesupp[id]" value="{id}" />
+			<input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+			<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+   		</td>
+	</tr>
+	</table>
+  </form>
+ </body>
+</html>

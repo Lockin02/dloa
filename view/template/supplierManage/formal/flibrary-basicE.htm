@@ -1,0 +1,345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>查看供应商基本信息</title>
+<input type="hidden" id="submitTag_" name="submitTag_" value="{submitTag_}"></input>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/topoptions.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="view/template/supplierManage/formal/js/flibrary-edit-formValidator.js"></script>
+<script type="text/javascript" src="view/template/supplierManage/formal/js/tmp-add.js"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="view/template/system/procity/js/cpcCmp.js"></script>
+<style>
+legend {
+	color:#06c;
+	font-weight:800;
+	background:#fff;
+	border:#b6b6b6 solid 1px;
+	padding:3px 6px;
+}
+fieldset {
+	padding:3px;
+	margin:3px;
+	color:#333;
+	border:#8F8F8F double 1px;
+}
+</style>
+<script>
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_supp_lib",//业务模块编码，一般取表名
+				"serviceId":"{id}"
+			});
+		});
+
+		function checkSubmit(){
+			if($("#uploadfileList").html()!="暂无任何附件"){
+				return true;
+			}else{
+				alert("请上传供应商资质文件");
+				return false;
+			}
+		}
+		/**
+		 * 控制扩展信息展示与隐藏
+		 */
+		function extControl() {
+			if (document.getElementById("extinfo").style.display == "none") {
+				$("#extImg").attr("src", "images/icon/info_up.gif");
+				$("#extinfo").show();
+			} else {
+				$("#extImg").attr("src", "images/icon/info_right.gif");
+				$("#extinfo").hide();
+			}
+		}
+		/**
+		 * 控制扩展信息展示与隐藏
+		 */
+		function baseControl() {
+			if (document.getElementById("baseinfo").style.display == "none") {
+				$("#baseImg").attr("src", "images/icon/info_up.gif");
+				// document.getElementById("extInfo").style.display=="block";
+				$("#baseinfo").show();
+			} else {
+				$("#baseImg").attr("src", "images/icon/info_right.gif");
+				$("#baseinfo").hide();
+			}
+		}
+		</script>
+
+</head>
+
+<body>
+<div class=""></div>
+<form id="form1" name="form1" method="post" action="?model=supplierManage_formal_flibrary&action=basicEdit" onsubmit="return checkSubmit();">
+<input type="hidden" name="flibrary[id]" id="id" value="{id}"/>
+	<input id="optionHidden" value='{KHBank}' type="hidden">
+  <fieldset>
+  <legend><b>基本信息<img src="images/icon/info_up.gif" id="baseImg" onclick="baseControl()"></img></b></legend>
+<table   id="baseinfo" class="form_main_table">
+		<tr>
+			<td class="form_text_left">供应商编号</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyText" name="flibrary[busiCode]" id="busiCode" value="{busiCode}" readonly/>
+			</td>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[suppName]" id="suppName" value="{suppName}">
+				<span class="red">[*]</span>
+				<br><div id="suppNameTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">供应商类别</td>
+			<td class="form_text_right_three">
+				<select type="text" class="txt"  name="flibrary[suppCategory]" id="suppCategory">
+					{suppCategory}
+				</select>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">注册资金</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[registeredFunds]" id="registeredFunds" value="{registeredFunds}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">主要经营范围</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[products]" id="products" value="{products}">
+				<span class="red">[*]</span>
+				<br><div id="productsTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">法人代表</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="legalRepre"   name="flibrary[legalRepre]" value="{legalRepre}">
+				<span class="red">[*]</span>
+				<br><div id="legalRepreTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">营业执照编号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[businessCode]" id="businessCode"  value="{businessCode}">
+				<span class="red">[*]</span>
+				<div id="businessCodeTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">工商登记号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="flibrary[businRegistCode]" id="businRegistCode" value="{businRegistCode}">
+				<span class="red">[*]</span>
+				<div id="businRegistCodeTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+    <!--
+    <tr>
+        <td class="form_text_left">曾用名</td>
+        <td class="form_text_right">
+            <input type="text" class="txt"  name="flibrary[usedName]" id="usedName"  value="{usedName}">
+        </td>
+    </tr>
+    -->
+	<tr>
+		<td class="form_text_left">银行信息</td>
+		<td colspan="3" class="form_text_right">
+			<input type="hidden" id="PayNum" name="PayNum" value="1" />
+			<div style="padding-left:500px">
+			<img src="images/verpic_open.gif" onclick="dis('mypay')" title="缩放"/>
+			<img src="images/collapsed.gif" onclick="pay_add('mypay','PayNum')" title="添加行"/></div>
+				<table width="99%" id="mypay">
+					<tr class="main_tr_header">
+						<td>操作</td>
+						<td style="text-align:center">序号</td>
+						<td style="text-align:center">开户银行</td>
+						<td style="text-align:center">开户账号</td>
+						<td style="text-align:center">备注</td>
+					</tr>
+					{list}
+				</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">供应商地址</td>
+		<td class="form_text_right" colspan="3"><textarea cols="86"
+			rows="4" name="flibrary[address]" id="address">{address}</textarea>
+				<span class="red">[*]</span>
+				<br><div id="addressTip" class="tipShortTxt"></div>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">供应商附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <font color="blue">[*请上传供应商相关资质文件]</font><br />
+		</div>
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+
+
+		</td>
+	</tr>
+</table>
+</fieldset>
+<fieldset>
+<legend><b>扩展信息<img src="images/icon/info_right.gif" id="extImg" onclick="extControl()"></img></b></legend>
+<table class="form_main_table" id="extinfo"  style="display: none;">
+		<tr>
+			<td class="form_text_left">供货生效日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[effectDate]" id="effectDate" onfocus="WdatePicker()" value="{effectDate}">
+			</td>
+			<td class="form_text_left">供货失效日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[failureDate]" id="failureDate" onfocus="WdatePicker()" value="{failureDate}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">创建日期</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[registeredDate]" id="registeredDate" onfocus="WdatePicker()" value="{registeredDate}">
+			</td>
+			<td class="form_text_left">注册商标</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="flibrary[registMark]" id="registMark" value="{registMark}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请等级</td>
+			<td class="form_text_right">
+				<select class="select"  name="flibrary[requestType]">
+					<option>{requestType}</option>
+					<option>一级供应商</option>
+					<option>二级供应商</option>
+					<option>三级供应商</option>
+				</select>
+			</td>
+			<td class="form_text_left">简称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="flibrary[shortName]" id="shortName"  value="{shortName}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商来源</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[suppSource]" id="suppSource"  value="{suppSource}">
+			</td>
+			<td class="form_text_left">纳税登记号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[taxRegistCode]"  value="{taxRegistCode}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应类别</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="flibrary[suppType]" id="suppType"  value="{suppType}">
+			</td>
+			<td class="form_text_left">员工人数</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[employeesNum]"  value="{employeesNum}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公司规模</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[companySize]"  value="{companySize}">
+			</td>
+			<td class="form_text_left">公司性质</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[companyNature]"  value="{companyNature}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">行业</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="flibrary[trade]"  value="{trade}">
+			</td>
+			<td class="form_text_left">国家</td>
+			<td class="form_text_right" >
+				<select class="select" name="flibrary[countryId]" id='country' val='{country}'>
+				</select>
+				<input type="hidden" class="txt" name="flibrary[country]"  id='countryName'>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">省份</td>
+			<td  class="form_text_right">
+				<select class="select" name="flibrary[provincesId]" id='province' val='{provinces}'>
+				</select>
+				<input type="hidden" class="txt"  name="flibrary[provinces]" id='provinceName'>
+			</td>
+			<td class="form_text_left">城市</td>
+			<td  class="form_text_right">
+				<select class="select" name="flibrary[cityId]" id='city' val='{city}'>
+				</select>
+				<input type="hidden" class="txt"  name="flibrary[city]" id='cityName'>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">厂房面积</td>
+			<td  class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[plantArea]"  value="{plantArea}">
+			</td>
+			<td class="form_text_left">座机</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="flibrary[plane]"  value="{plane}">
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮编</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="flibrary[zipCode]" id="zipCode"  value="{zipCode}">
+			</td>
+			<td class="form_text_left">传真</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txt"  name="flibrary[fax]"  value="{fax}">
+			</td>
+		</tr>
+	<tr>
+		<td class="form_text_left">推荐意见</td>
+		<td colspan="3" class="form_text_right"><textarea cols="86"
+			rows="5" name="flibrary[recomComments]">{recomComments}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">公司优势</td>
+		<td colspan="3" class="form_text_right"><textarea cols="86"
+			rows="5" name="flibrary[advantages]">{advantages}</textarea></td>
+	</tr>
+</table>
+</fieldset>
+
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" class="txt" name="flibrary[id]" value="{id}"/>
+			<input type="hidden" class="txt" name="flibrary[parentId]" value="{parentId}"/>
+			<input type="hidden" class="txt" name="flibrary[parentCode]" value="{parentCode}"/>
+			<input name="" type="submit" class="txt_btn_a" value="保  存" />
+
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

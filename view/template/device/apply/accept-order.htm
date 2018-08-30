@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>受理申请</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	
+</style>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('input[type=checkbox]:[disabled=false]').attr('checked',true);
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				width:"100",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+ 
+			};
+		function set_url(table,field)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		$("#tousername").autocomplete(set_url('user','user_name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				get_email();
+			}
+		});
+	});
+	function set_all(chekced,typeid)
+	{
+		$('#type_'+typeid+' input[type=checkbox]:[disabled=false]').attr('checked',chekced);
+	}
+	
+	function show_return()
+	{
+		var inputs = $('input[type=checkbox][name=id[]]:checked').get();
+		if (inputs.length > 0)
+		{
+			tb_show('打回理由','#TB_show_html?inlineId=show_notes&width=420&height=200',false);
+		}else{
+			alert('至少要选择一条记录');
+		}
+		
+	}
+	
+	function post_return()
+	{
+		var temp_notes = $('#TB_ajaxContent textarea').val();
+		
+		if (temp_notes=='')
+		{
+			alert('打回理由不能为空！');
+			$('#TB_ajaxContent textarea').focus();
+			return false;
+		}else
+		{
+			var inputs = $('input[type=checkbox][name=id[]]:checked').get();
+			var id='';
+			var orderid='{t_orderid}';
+			for(var i=0;i<inputs.length;i++)
+			{
+				id +=inputs[i].value+',';
+			}
+			$('#notes').val(temp_notes);
+			$.post('?model=device_apply&action=accept_return',{orderid:orderid,id:id,rand:Math.random()},function(data){
+				if (data == 1)
+				{
+					alert('操作成功！');
+					window.location.reload();
+				}else{
+					alert('操作失败，请与管理员联系！');
+				}
+			});
+		}
+	}
+	function checkmax(id,obj)
+	{
+		if (obj.value!='')
+		{
+			if (obj.value > $('#amount_'+id).html())
+			{
+				alert('借用数量不能大于库存数量！');
+				obj.value='';
+				return false;
+			}
+		}
+	}
+	function get_email()
+	{
+		username = $('#tousername').val();
+        if (username != '') {
+            var rand = Math.random() * 100000;
+            $.post('ajax.php', {
+                model: 'user',
+                action: 'get_email',
+                username: username,
+                rand: rand
+            }, function(data){
+                if (data) {
+                    var emaillist = $('#email').val();
+					var re = "\/"+unescape(data)+"\\n\/";
+					emaillist = emaillist.replace(eval(re),'');
+					$('#email').val(emaillist+unescape(data) + "\r\n");
+                    $('#tousername').val('');
+                    $('#_tousername').html('（真实姓名）');
+                }
+                else {
+                    $('#_tousername').html('该用户姓名不存在！');
+                }
+            });
+        }
+    }
+</script>
+</head>
+<body>
+<br />
+<form name="form" method="post" action="?model=device_borrow&action=borrow_apply&orderid={t_orderid}&key={t_key}" onsubmit="return check();">
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="username" name="username" value="{user_name}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+	<input type="hidden" id="dept_name" name="dept_name" value="{dept_name}" />
+	<input type="hidden" id="project_id" name="project_id" value="{project_id}" />
+	<input type="hidden" id="project_name" name="project_name" value="{project_name}" />
+	<input type="hidden" id="description" name="description" value="{description}" />
+	<input type="hidden" id="targettime" name="targettime" value="{target_date}" />
+	<input type="hidden" id="ls" name="ls" value="{ls}" />
+	<input type="hidden" id="notes" name="notes" value="" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="5">受理借用设备申请</td>
+	</tr>
+	<tr>
+		<td width="100">申 请 人：</td>
+		<td align="left" colspan="3">{user_name}</td>
+	</tr>
+	<tr>
+		<td>借用归属：</td>
+		<td align="left" colspan="3">
+			{ls_name}
+		</td>
+	<tr id="tr_xm" style="display:{xm_none}">
+		<td>借用项目：</td>
+		<td align="left" colspan="3">{project_name}</td>
+	</tr>
+	<tr id="tr_dt" style="display:{dt_none}">
+		<td>借用部门：</td>
+		<td align="left" colspan="3">{dept_name}</td>
+	</tr>
+	<tr>
+		<td>预计归还时间：</td>
+		<td align="left" colspan="3">{target_date}</td>
+	</tr>
+	<tr>
+		<td>借用说明：</td>
+		<td align="left" colspan="3">{description}</td>
+	</tr>
+	<tr>
+		<td>邮件通知：</td>
+		<td align="left">
+			邮件接收人：<input type="text" id="tousername" name="tousername" value="" /><span id="_tousername">（真实姓名）</span>
+		</td>
+		<td>
+			邮件列表：
+		</td>
+		<td align="left">
+			<textarea cols="40" rows="5" id="email" name="email"></textarea>
+			<span id="_email">每行一个邮件地址</span>
+		</td>
+	</tr>
+</table>
+<br />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center">
+			{post_button} {return_button} <input type="button" onclick="parent.tb_remove();;" value=" 关闭返回 " /> 
+		</td>
+	</tr>
+</table>
+<div id="show_notes" style="display:none;">
+	<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+		<tr>
+			<td>填写打回理由:</td>
+		</tr>
+		<tr>
+			<td><textarea rows="5" cols="50" id="temp_notse"></textarea></td>
+		</tr>
+		<tr>
+			<td align="center" style="height:50px;"><input type="button" onclick="post_return();" value=" 确定打回选中 " /></td>
+		</tr>
+	</table>
+</div>
+</form>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <link href="js/supertable/superTables.css" rel="Stylesheet" type="text/css" />
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/supertable/superTables.js"></script>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            $(function(){
+                $('.fakeContainer').css('height',wh-170);
+                new superTable("spsTable", {
+                    cssSkin : "sSky",
+                    fixedCols : {scols},
+                    headerRows : {srows}
+                });
+                $('#navsch').dialog({
+                    /*toolbar:[{
+                            text:'Add',
+                            iconCls:'icon-add',
+                            handler:function(){
+                                alert('add')
+                            }
+                        },'-',{
+                            text:'Save',
+                            iconCls:'icon-save',
+                            handler:function(){
+                                alert('save')
+                            }
+                        }],
+                     */
+                    buttons:[{
+                            text:'查询',
+                            iconCls:'icon-ok',
+                            handler:function(){
+                                $('#seaform').submit();
+                            }
+                        },{
+                            text:'关闭',
+                            handler:function(){
+                                $('#navsch').window('close');
+                            }
+                        }]
+                });
+                $('#navsch').window('close');
+            });
+            function addList(){
+                tb_show('添加报表','?model=module_report&action=add&TB_iframe=true&height=650&width=900');
+            }
+            function outExcel(){
+                location.href='?model=module_report&action=outExcel&reportkey={kid}';
+            }
+            function sch(){
+                $('#navsch').window('open');
+            }
+        </script>
+        <style type="text/css">
+            .fakeContainer { /* The parent container */
+                margin: 0px;
+                padding-left: 1px;
+                border: none;
+                width: 99%; /* Required to set */
+                /*height: 320px;/* Required to set */
+                overflow: hidden; /* Required to set */
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body id="tabdiv" class="easyui-layout" border="false">
+        <div region="north" border="false" 
+             style="height:28px;padding-left: 5px;padding-top: 1px;background:#fafafa;overflow: hidden">
+            <div style="float:left;">
+                <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="sch()">查询</a>
+                <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="outExcel()">Excel导出</a>
+            </div>
+        </div>
+        <div region="center" border="false" >
+            <div class="fakeContainer">
+                {listd}
+            </div> 
+        </div>
+        <div id="navsch" icon="icon-save" title="搜索栏" style="padding:5px;width:480px;height:360px;">
+            <form id="seaform"  method="post" action="?model=module_report&action=list&reportkey={kid}">
+                <table class="ui-table" cellpadding="0" cellspacing="0" width="100%" >
+                    <tr>
+                        <th >关键字：</th>
+                        <td colspan="5">
+                            <input class="easyui-validatebox" size="30" type="text" name="rep[seakey]" value="{seakey}" required="true"></input> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>锁定行数：</th>
+                        <td colspan="5">
+                            <input class="easyui-validatebox" type="text" name="rep[srows]" value="{srows}" required="true"></input> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>锁定列数：</th>
+                        <td colspan="5">
+                            <input class="easyui-validatebox" type="text" name="rep[scols]" value="{scols}" required="true"></input> 
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,120 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtk_onekey_tab.js"></script>
+
+<script type="text/javascript" src="js/ext/ext-base.js"></script>
+<script type="text/javascript" src="js/ext/ext-all.js"></script>
+<script type="text/javascript" src="js/ext/common-ext.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+<script type="text/javascript"
+	src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+<script type="text/javascript" src="view/template/common/combogrid/RdTaskinfoComboGrid.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtaskinfo-list.js"></script>
+
+<title>列表显示</title>
+<script>
+
+	$(document).ready(function() {
+		topTabShow(tkTabInfo, "2");
+	});
+
+	function disabletext()
+  	{
+  		document.getElementById("markStoneName").disabled=true
+  	}
+  	function undisabletext()
+  	{
+  		document.getElementById("markStoneName").disabled=false
+  	}
+	$(document).ready(function() {
+		var ids = "#hiddenStr";
+
+		$(ids).hide();
+
+		$("#milestone").click(function(){
+			var milestoneVal = $(this).attr("checked");
+			if( milestoneVal==true ){
+				undisabletext();
+				$(ids).show();
+
+			}else{
+				disabletext();
+				$(ids).hide();
+
+			}
+		});
+	});
+
+
+</script>
+</head>
+<body>
+<div class="tab_options"></div>
+<div class="tab_line"></div>
+<form id="form1" action="?model=rdproject_task_tkadvanced&action=add"
+	method="POST" onsubmit="return checkForm()">
+<table class="form_main_table">
+	<tr>
+
+		<td class="form_text_left">前置任务</td>
+		<td class="form_text_right"><input type="text"
+			name="tkadvanced[preTask]" id="preTask"> <input
+			type="hidden" name="tkadvanced[preTaskId]" id="preTaskId"> <input
+			type="hidden" name="tkadvanced[projectTaskId]" value={projectTaskId}>
+		</td>
+		<td class="form_text_left">所属任务</td>
+		<td class="form_text_right"><input type="text"
+			name="tkadvanced[belongTask]" id="belongTask"> <input type="hidden"
+			name="tkadvanced[belongTaskId]" id="belongTaskId"> </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">验收标准</td>
+		<td class="form_text_right" colspan="3"><textarea
+			name="tkadvanced[inspectInfo]" class="txt_txtarea_font"></textarea></td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">标记为里程碑</td>
+		<td class="form_text_right" colspan="3"><input type="checkbox"
+			name="tkadvanced[isStone]" id="milestone" ></td>
+
+	</tr>
+	<tr id="hiddenStr">
+		<td class="form_text_left">里程碑名称</td>
+		<td class="form_text_right"colspan="3" >
+			<input type="text" name="tkadvanced[markStoneName]" class="txt" id="markStoneName">
+		</td>
+	</tr>
+
+
+
+	<tr>
+		<td colspan="4"><input name="" type="submit" class="txt_btn_a"
+			value=" 保存&新建" /> <input name="" type="button" class="txt_btn_a"
+			value="清空 " /> <input name="" type="button" class="txt_btn_a"
+			value=" 返回 " onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

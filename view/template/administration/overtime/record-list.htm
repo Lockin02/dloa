@@ -1,0 +1,225 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>工作日延迟下班申请记录列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body style="background-color:#FFF">
+<br />
+<form method="get">
+	<input type="hidden" name="model" value="{t_model}" />
+	<input type="hidden" name="action" value="{t_action}" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>部门：
+			<select id="dept_id" name="dept_id">
+				<option value="">所有部门</option>
+				{select_dept}
+			</select>
+		</td>
+		<td>用餐：
+			<select id="dining" name="dining">
+				<option value="">全部</option>
+				<option value="1">需要用餐的</option>
+				<option value="0">不需要用餐的</option>
+			</select>
+		</td>
+		<td>
+			站点：
+			<select id="station" name="station">
+				<option value="all">全部</option>
+				<option value="isnull">不坐车的</option>
+				<option value="notnull">要坐车的</option>
+				{select_station}
+			</select>
+		</td>
+		<td>下班时间：
+			<select id="work" name="work">
+				<option value="">全部</option>
+				<option {work_selected_1} value="20:15">20:15</option>
+				<option {work_selected_2} value="21:30">21:30</option>
+			</select>
+		</td>
+		<td>日期：
+			<input type="text" size="12" id="start_date" name="start_date" readonly onClick="WdatePicker()" class="Wdate" value="{start_date}" />
+			至
+			<input type="text" size="12" id="end_date" name="end_date" class="Wdate" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" value="{end_date}" />
+		</td>
+		<td>
+			<input type="submit" value=" 查询 " />
+		</td>
+		<td>
+			
+		</td>
+	</tr>
+</table>
+</form>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="8">工作延迟下班申请记录列表</td>
+		<td><input type="button" class="thickbox" alt="?model={t_model}&action=new_add&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=600" title="新添加延迟下班记录" value=" 添加记录 " /></td>
+		<td><input type="button" onClick="export_data();" value=" 导出当前数据 " /></td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>姓名</td>
+		<td>所属部门</td>
+		<td>联系电话</td>
+		<td>是否用餐</td>
+		<td>下车站点</td>
+		<td>下班时间</td>
+		<td>延迟下班日期</td>
+		<td>提交日期</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<div style="display:none">
+	<select id="select_station">
+		<option value="">不坐车</option>
+		{select_station}
+	</select>
+</div>
+<script type="text/javascript">
+	set_selected('dining');
+	set_selected('station');
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	var edit_str = Array();
+	var temp_dining = Array();
+	var temp_station = Array();
+	var temp_work = Array();
+	var temp_date = Array();
+	function edit(id)
+	{
+		edit_str[id] = $('#edit_'+id).html();
+		temp_dining[id] = $('#dining_'+id).html().replace(/<\/?.+?>/g,'');
+		temp_station[id] = $('#station_'+id).html().replace(/<\/?.+?>/g,'');
+		temp_work[id] = $('#work_'+id).html();
+		temp_date[id] = $('#date_'+id).html();
+		date = new Date(temp_date[id].replace(/-/,'/'));
+		var day = date.getDay();
+		temp_work[id] = temp_work[id] !='' ? temp_work[id] : '20:15';
+		$('#dining_'+id).html('<input type="radio" '+(temp_dining[id]=='是' ? "checked" : '')+' name="dining_'+id+'" value="1" />是 <input type="radio" '+(temp_dining[id]=='否' ? "checked" : '')+' name="dining_'+id+'" value="0" />否');
+		
+		$('#station_'+id).html('<select id="_station_'+id+'" name="station_'+id+'">'+$('#select_station').html()+'</select>');
+		set_select('_station_'+id,temp_station[id]);
+		
+		if (day !=0 && day!=6)
+		{
+			$('#work_'+id).html('<input type="radio" '+(temp_work[id]=='20:15' ? "checked" : '')+' name="work_'+id+'" value="20:15" />20:15<input type="radio" '+(temp_work[id]=='21:30' ? "checked" : '')+' name="work_'+id+'" value="21:30" />21:30');
+		}
+		$('#edit_'+id).html('<input type="button" onclick="post_edit('+id+')" value="确定" /> <input type="button" onclick="exit_edit('+id+')" value="取消" />');
+	}
+	
+	function post_edit(id)
+	{
+		var dining = $('input[type=radio][name=dining_'+id+']:checked').val();
+		var station = $('#_station_'+id).val();
+		var work = $('input[type=radio][name=work_'+id+']:checked').val();
+		work = work ? work : '';
+		var key = $('#key_'+id).val();
+		
+		//========
+		$('#dining_'+id).html(dining==1 ? '是' : '<span>否</span>');
+		$('#station_'+id).html(station=='' ? '<span>不坐车</span>' : station);
+		$('#work_'+id).html(work);
+		$('#edit_'+id).html(edit_str[id]);
+		
+		$.post('ajax.php?model={t_model}&action=edit',{id:id,dining:dining,station:station,work:work,key:key,rand:Math.random(0,9999)},
+			function (data)
+			{
+				if (data == -1)
+				{
+					alert('修改失败，请与管理员联系！ ');
+				}
+			}
+		);
+		
+	}
+	
+	function exit_edit(id)
+	{
+		$('#dining_'+id).html(temp_dining[id]);
+		$('#station_'+id).html(temp_station[id]);
+		$('#work_'+id).html(temp_work[id]);
+		$('#edit_'+id).html(edit_str[id]);
+	}
+	function del(id)
+	{
+		var key = $('#key_'+id).val();
+		if (confirm('您确定要删除该条记录吗？'))
+		{
+			$.post('ajax.php?model={t_model}&action=del',{id:id,key:key,rand:Math.random(0,9999)},
+					function (data)
+					{
+						if (data == 1)
+						{
+							$('#tr_'+id).remove();
+						}else{
+							alert('删除失败！');
+						}
+					}
+			);
+		}
+	}
+	
+	function set_select(id,val)
+	{
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == val)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	
+	function export_data()
+	{
+		var dept_id = $('#dept_id').val();
+		var dining = $('#dining').val();
+		var station = $('#station').val();
+		var work = $('#work').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		location.href="?model={t_model}&action=export_data&dept_id="+dept_id+'&dining='+dining+'&station='+station+'&work='+work+'&start_date='+start_date+'&end_date='+end_date+'&rand='+Math.random(0,9999);
+	}
+</script>
+</body>
+</html>

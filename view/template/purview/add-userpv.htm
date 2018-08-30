@@ -1,0 +1,292 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加用户或职位的访问区域</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+</head>
+<body>
+<br />
+<form method="POST" action="?model=purview&action=add_pv&tid={tid}&typeid={typeid}" onsubmit="return check();">
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+
+<input type="hidden" id="userid" name="userid" value="" />
+	<tr>
+		<td width="70">控制对象：</td>
+		<td>
+			<input type="radio" checked name="type" onclick="show_user();show_msg(1)" value="1">用户 
+			<input type="radio" name="type" onclick="show_dept();show_msg(2);" value="2" />职位 
+			<input type="radio" name="type" onclick="show_dept();show_msg(3);" value="3" />部门 
+			<input type="radio" name="type" onclick="show_msg(4);" value="4"/>所有人
+		</td>
+	</tr>
+	<tr id="user">
+		<td>用户姓名：</td>
+		<td>
+			<input type="text" onblur="get_userid();" id="username" name="username" onclick="setdiv();" onfocus="setdiv();" onkeydown="keydown();" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid()");' onblur="losefouse();" value="" />
+			<span id="_username">*</span>
+		</td>
+	</tr> 
+	<tr id="dept" style="display:none;">
+		<td>选择部门：</td>
+		<td>
+		<select id="dept_id" name="dept_id" onchange="show_jobs()">
+		
+		</select>
+		<span id="_dept_id">*</span>
+		</td>
+	</tr>
+	<tr id="jobs" style="display:none;">
+		<td>选择职位：</td>
+		<td>
+			<select id="jobsid" name="jobsid" onchange="check_jobs(this.value);">
+		
+			</select>
+			<span id="_jobsid">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><HR /></td>
+	</tr>
+	<tr>
+		<td>控制内容：</td>
+		<td id="content"><span>输入姓名后显示内容！</span></td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align:center;"><input type="submit" value=" 添加 " /></td>
+	</tr>
+
+</table>
+</form>
+<div id="sug"></div>
+</body>
+<script type="text/javascript">
+var jobs = false;
+var user = false;
+var dept = false;
+var tid = {tid};
+var typeid = {typeid};
+function check()
+{
+	var checked = $('input[name=type]:checked').val();
+	if (checked==1)
+	{
+		if (user == true)
+		{
+			$('#_username').html('该用户已经存在该控制类别中！');
+			return false;
+		}
+		if ($('#userid').val()=='')
+		{
+			$('#_username').html('用户名不能为空！');
+			return false;
+		}
+	}else if (checked==2){
+		if ($('#dept_id').val()=='' || $('#dept_id').val()==null)
+		{
+			$('#_dept_id').html('请选择部门！');
+			return false;
+		}else{
+			$('#_dept_id').html('*');
+			if ($('#jobsid').val()=='' || $('#jobsid').val()==null)
+			{
+				$('#_jobsid').html('请选择职位！');
+				return false;
+			}else{
+				if (jobs == true)
+				{
+					$('#_jobsid').html('您选择的位置已经存在列表中！');
+					return false;
+				}
+				$('#_jobsid').html('*');
+			}
+		}
+	}else if (checked==3){
+		if ($('#dept_id').val()=='' || $('#dept_id').val()==null)
+		{
+			$('#_dept_id').html('请选择部门！');
+			return false;
+		}
+	}
+	return true;
+}
+function allcheckbox()
+{
+	var checked = $('input[type=checkbox]').eq(0).attr("checked");
+	$('input[type=checkbox]').attr('checked',checked);
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username=='')
+	{
+		$('#_username').html('用户姓名不能为空！');
+		return false;
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				check_user(unescape(data));
+			}else{
+				$('#_username').html('该用户姓名不存在！');
+				$('#username').focus();
+			}
+		}
+		)
+	}
+}
+function check_user(userid)
+{
+	if (userid)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_user',tid:tid,typeid:typeid,userid:userid,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 0)
+			{
+				$('#_username').html('该用户已经存在该控制类别中！');
+				$('#username').focus();
+				user = true;
+			}else{
+				user = false;
+				$('#userid').val(userid);
+				$('#_username').html('*');
+				get_content(1,userid);
+			}
+		}
+		)
+	}
+}
+function check_jobs(jobsid)
+{
+	if (jobsid)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_jobs',tid:tid,typeid:typeid,jobsid:jobsid,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 1)
+			{
+				$('#_jobsid').html('该职位已经存在列表中！');
+				jobs = true;
+			}else{
+				jobs = false;
+				$('#_jobsid').html('*');
+				get_content(2,jobsid);
+			}
+		}
+		)
+	}
+}
+function check_dept(dept_id)
+{
+	if (dept_id)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'check_dept',tid:tid,typeid:typeid,dept_id:dept_id,rand:rand},
+		function (data)
+		{
+			if (Number(data) > 1)
+			{
+				$('#_dept_id').html('该部门已经存在列表中！');
+				dept = true;
+			}else{
+				dept = false;
+				$('#_dept_id').html('*');
+				get_content(3,dept_id);
+			}
+		}
+		)
+	}
+}
+function show_dept()
+{
+	$('#jobs').css('display','none');
+	$('#user').css('display','none');
+	$('#dept').css('display','');
+
+	var rand=Math.random()*100000;
+	$.post('ajax.php',{model:'depart',action:'dept_select',rand:rand},
+	function (data)
+	{
+		if (data)
+		{
+			$('#dept_id').html('<option value="">请选择部门</option>'+unescape(data));
+		}
+	}
+	);
+}
+function show_jobs()
+{
+	var dept_id = $('#dept_id').val();
+	if($('input[name=type]:checked').val()=='2')
+	{
+		$('#jobs').css('display','');
+		$('#user').css('display','none');
+		//$('#dept').css('display','none');
+		var rand=Math.random()*100000;
+		if (dept_id)
+		{
+			$.post('ajax.php',{model:'jobs',action:'jobs_select',departid:dept_id,rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					$('#jobsid').html(unescape(data));
+				}
+			}
+			);
+		}
+	}else{
+		check_dept(dept_id);
+	}
+}
+function show_user()
+{
+	$('#jobs').css('display','none');
+	$('#user').css('display','');
+	$('#dept').css('display','none');
+}
+function show_msg(id)
+{
+	if (id==1)
+	{
+		$('#content').html('<span>输入姓名后显示内容！</span>');
+	}else if (id==2)
+	{
+		$('#content').html('<span>选择职位后显示内容！</span>');
+	}else if (id==3){
+		$('#content').html('<span>选择部门后显示内容！</span>');
+	}else
+	{
+		$('#jobs').css('display','none');
+		$('#user').css('display','none');
+		$('#dept').css('display','none');
+		get_content(2);
+	}
+}
+function get_content(id,uid)
+{
+	if (id)
+	{
+		var rand=Math.random()*100000;
+		$.get('ajax.php',{model:'pvurl',action:'get_list',type:id,typeid:typeid,uid:uid,rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					$('#content').html(unescape(data));
+				}
+			}
+		)
+	}
+}
+</script>
+</html>

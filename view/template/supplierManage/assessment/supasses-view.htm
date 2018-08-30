@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看供应商评估信息</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="{#jsPath#}/supasses-view.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+	<script type="text/javascript" src="js/common/approval.js"></script>
+
+</head>
+<body>
+<input type="hidden" id="assessType" value="{assessType}"/>
+<input type="hidden" id="id" value="{id}"/>
+<input type="hidden" id="viewType" value="{viewType}"/>
+<input type="hidden" id="assesKey" value="{assesKey}"/>
+<table class="form_main_table">
+<tr>
+	<td colspan="4">
+      <div class="main_head">
+          <span class="main_head_title">
+            	查看供应商评估
+          </span>
+      </div>
+   </td>
+</tr>
+       <tr>
+      		<td class="form_text_left">单据编号</td>
+      		<td class="form_text_right">
+      			 {formCode}
+      		</td>
+      		<td class="form_text_left">评估类型</td>
+      		<td class="form_text_right">
+      			 {assessTypeName}
+      		</td>
+       </tr>
+    <tr>
+        <td class="form_text_left">评估时间</td>
+        <td class="form_text_right">
+            {createTime}
+        </td>
+        <td class="form_text_left">考核季度/年份</td>
+        <td class="form_text_right">
+            {assesYear} {assesQuarter}
+        </td>
+    </tr>
+       <tr>
+      		<td class="form_text_left">供应商名称</td>
+      		<td class="form_text_right" >
+      			 <a target="_blank" href="?model=supplierManage_formal_flibrary&action=toRead&perm=view&id={suppId}&skey={skey}"  title="查看供应商信息">{suppName}</a>
+      		</td>
+      		<td class="form_text_left">评估方案名称</td>
+      		<td class="form_text_right" >
+      			 {assessName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">供应商电话</td>
+      		<td class="form_text_right" >
+      			 {suppTel}
+      		</td>
+      		<td class="form_text_left">供应商联系人</td>
+      		<td class="form_text_right" >
+      			{suppLinkName}
+      		</td>
+       </tr>
+       <tr id="newsupp">
+      		<td class="form_text_left">供应商来源</td>
+      		<td class="form_text_right" >
+      			 {suppSource}
+      		</td>
+      		<td class="form_text_left">是否首评</td>
+      		<td class="form_text_right" >
+      			<input type="hidden" id="isFirst" value="{isFirst}"/>
+      			 {isFirstName}
+      			 <span id="showFirst" style="display:none">
+					<img src="images/icon/view.gif" title="查看首评信息" onclick="viewFirstSup({parentId});"/>
+				</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">地址及邮编</td>
+      		<td class="form_text_right"  colspan="3">
+      			 {suppAddress}
+      		</td>
+       </tr>
+       <tr>
+       </tr>
+       <tr>
+      		<td class="form_text_left">主营产品</td>
+      		<td class="form_text_right"  colspan="3">
+      			 {mainProduct}
+      		</td>
+       </tr>
+		<tr>
+			<td class="form_text_left">附件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+       <tr>
+      		<td class="form_text_left">评估发起人</td>
+      		<td class="form_text_right" >
+      			 {assesManName}
+      		</td>
+      		<td class="form_text_left">考核小组</td>
+      		<td class="form_text_right" >
+      			{menberStr}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">总分</td>
+      		<td class="form_text_right"   colspan="3">
+      			 {totalNum}
+      		</td>
+       </tr>
+       <tr id="yearsupp">
+      		<td class="form_text_left">所属等级</td>
+      		<td class="form_text_right"   colspan="3">
+      			{suppGrade}
+      		</td>
+       </tr>
+</table>
+
+ <div id="suppassesTable"></div>
+
+<table class="form_main_table">
+	<tr>
+		<td colspan="4" class="td_table" id="approvalView">
+			<input type="hidden" id="pid" value="{id}"/>
+			<input type="hidden" id="itemType" value="oa_supp_suppasses"/>
+		</td>
+	</tr>
+   <tr  id="closeBtn">
+		<td class="txt_btn" colspan="4">
+	      <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</body>
+</html>

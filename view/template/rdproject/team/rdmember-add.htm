@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>项目成员列表</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<script type="text/javascript" src="js/jquery.js">
+		</script>
+<script type="text/javascript" src="js/ext/ext-base.js">
+		</script>
+<script type="text/javascript" src="js/ext/ext-all.js">
+		</script>
+<script type="text/javascript"
+	src="js/ext/ux/tree/TreeCheckNodeUI.class.js">
+		</script>
+<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js">
+		</script>
+<script type="text/javascript"
+	src="js/ext/ux/combox/ComboBoxCheckTree.class.js">
+		</script>
+<script type="text/javascript" src="js/common/businesspage.js">
+		</script>
+<script type="text/javascript" src="js/thickbox.js">
+		</script>
+<script type="text/javascript"
+	src="view/template/rdproject/team/js/rdmember.js">
+		</script>
+<script type="text/javascript"
+	src="view/template/rdproject/project/js/rdproject-update-topTab.js">
+		</script>
+<title>项目修改</title>
+<script>
+	$(document).ready(function() {
+		topTabShow(arrayTop, "pjTeam", "{rdproject[id]}");
+	});
+	function show_page(page){
+		this.location.reload();
+	}
+	function delFun( projectId ){
+		$.get('index1.php',{model:'rdproject_team_rdmember',action:'deleteThisMember',id: projectId },
+			function (data){
+				if( data == 1 ){
+					alert("删除成功");
+	          		show_page();
+				}else
+					alert("删除失败")
+			});
+	}
+</script>
+</head>
+<body>
+<input type="hidden" id="projectId" name="rdmember[projectId]"
+	value="{id}" />
+<div id="main_wraper" class="main_wraper">
+<div class="tab_options"></div>
+<table class="main_table">
+	<tr class="main_tr_header">
+		<td class="main_td_align_left">已有项目成员
+			<input type="button" value="添加内部成员"
+			class="thickbox txt_btn_a" title="添加内部成员"
+			alt="?model=rdproject_team_rdmember&action=toAddMember&projectId={rdproject[id]}&placeValuesBefore&TB_iframe=true&modal=false&height=300&width=600" />
+			<input type="button" value="添加外部成员"
+			class="thickbox txt_btn_a" title="添加外部成员"
+			alt="?model=rdproject_team_rdmember&action=inOutsideInfo&projectId={rdproject[id]}&placeValuesBefore&TB_iframe=true&modal=false&height=300&width=600" />
+		</td>
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="10%">序号</th>
+			<th width="40%">成员名称</th>
+			<th width="30%">角色</th>
+			<th >操作</th>
+		</tr>
+	</thead>
+	{list}
+</table>
+</div>
+</body>
+
+</html>

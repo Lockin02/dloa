@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>
+			采购发票
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-hookpage.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				采购发票 - 供应商 ： {supplierName}
+				<input type="hidden" id="supplierId" value="{supplierId}"/>
+				<input type="hidden" id="supplierName" value="{supplierName}"/>
+				<input type="hidden" id="hookMainIds" value="{hookMainIds}"/>
+			</span>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						输入关键字：
+						<input type="text" id="searchvalue" class="txt" name="searchvalue" value="{searchId}"/>
+						按
+						<select id="searchfield" class="txtmiddle">
+							<option value="objNo">
+								发票号码
+							</option>
+							<option value="objCodeSearch">
+								单据编号
+							</option>
+							<option value="formDateSearch">
+								单据日期
+							</option>
+						</select>
+						<input type="button" value=" 搜索 " onclick="search()" class="txt_btn_a" />
+						<input type="button" value=" 清空 " onclick="clearUrl()" class="txt_btn_a" />
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							<input  type="checkbox" id="titlecb" onclick="checkAll()">
+						</th>
+						<th>
+							单据编号
+						</th>
+						<th>
+							发票号码
+						</th>
+						<th>
+							单据日期
+						</th>
+						<th>
+							状态
+						</th>
+						<th width="50%" class="td_table">
+							<table width="100%" align="center" class="main_table_nested">
+				            	<tr>
+				            		<td colspan="6">
+				            			发票条目
+				            		</td>
+				            	</tr>
+				            	<tr>
+				            		<td width="16%">
+							            物料编号
+							        </td>
+							        <td width="25%">
+							            物料名称
+							        </td>
+							        <td width="12%">
+							        	数量
+							        </td>
+							        <td width="14%">
+							        	单价(元)
+							        </td>
+							        <td width="14%">
+							            金额
+							        </td>
+				            	</tr>
+				            </table>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+		<table class="main_table">
+			<tr>
+				<td colspan="4">
+					<input type="button" value=" 确 认 " class="txt_btn_a" onclick="batchSet()"/>
+					<input type="button" value=" 关 闭 " class="txt_btn_a" onclick="self.parent.tb_remove();"/>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

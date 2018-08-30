@@ -1,0 +1,341 @@
+﻿Object Report
+	Version='5.5.0.8'
+	Title='你的报表标题'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+	End
+	Object DetailGrid
+		BorderColor=DkGray
+		ColLineColor=DkGray
+		RowLineColor=DkGray
+		Object Recordset
+			ConnectionString='Provider=MSDASQL.1;Persist Security Info=False;Data Source=localhost;Extended Properties="DSN=localhost;"'
+			QuerySQL='select \r\n	c.id ,c.hwapplyNumb ,c.orderTime,\r\n	c.state ,c.suppId ,c.suppName ,c.allMoney,\r\n	c.Pid,c.productId,c.productName,c.productNumb,c.pattem,c.price,c.noTaxMoney,c.taxRate,c.units,\r\n	c.amountIssued,c.amountDiff,c.moneyDiff,c.sendName,\r\n	c.moneyAll,c.amountAll,c.applyPrice,c.purchTypeCN,\r\n	p.expand1,\r\n	c.dateHope,\r\n	s.arrivalDate\r\nfrom\r\n	(select c.id ,c.hwapplyNumb ,date_format(c.createTime,'%Y-%m-%d') as orderTime,\r\n		c.state ,c.suppId ,c.suppName ,c.allMoney,c.sendName,\r\n		p.id as Pid,p.productId,p.productName,p.productNumb,p.pattem,p.price,cast((p.price*p.amountAll) as decimal(20,6)) as noTaxMoney,p.taxRate,p.units,\r\n		p.amountIssued,p.amountAll - p.amountIssued as amountDiff,round((p.amountAll - p.amountIssued) * p.price,2) as moneyDiff,\r\n		p.moneyAll,p.amountAll,p.applyPrice,p.dateHope,p.purchType,\r\n		case p.purchType\r\n		when 'oa_sale_order'  then '销售合同采购'\r\n		when 'oa_sale_lease'  then '租赁合同采购'\r\n		when 'oa_sale_service'  then '服务合同采购'\r\n		when 'oa_sale_rdproject'  then '研发合同采购'\r\n		when 'oa_borrow_borrow'  then '补库采购'\r\n		when 'oa_present_present'  then '补库采购'\r\n		when 'stock'  then '补库采购'\r\n		when 'assets'  then '资产采购'\r\n		when 'rdproject'  then '研发采购'\r\n		when 'produce'  then '生产采购'\r\n		when 'oa_asset_purchase_apply'  then '资产采购'\r\n		else '' end\r\n		as purchTypeCN\r\n	from \r\n		oa_purch_apply_basic c inner join oa_purch_apply_equ p on c.id=p.basicId  \r\n	where \r\n		c.isTemp =0 and c.state in (4,7) and p.amountAll >= p.amountIssued\r\n	) c \r\n	inner join \r\n	(\r\n		select\r\n			c.id,sum(if(c.payFor = 'FKLX-03',-d.money,d.money)) as applyed,d.objId,d.objType,d.expand1\r\n		from\r\n			oa_finance_payablesapply c inner join oa_finance_payablesapply_detail d on c.id = d.payapplyId where c.status = 'FKSQD-03' and d.objType = 'YFRK-01'\r\n		group by d.objId,d.expand1\r\n	) p on if(p.expand1 = '',c.id = p.objId,c.Pid = p.expand1)\r\n	left join \r\n	(\r\n		select max(e.arrivalDate) as arrivalDate,e.contractId from oa_purchase_arrival_info i inner join oa_purchase_arrival_equ e on i.id = e.arrivalId where i.state =2 group by i.purchaseId,e.contractId\r\n	) s on c.Pid = s.contractId\r\nwhere 1=1 and if(s.arrivalDate is null,1=1,c.dateHope < s.arrivalDate)'
+			Items Field
+				Item
+					Name='物料编码'
+					DBFieldName='productCode'
+				End
+				Item
+					Name='物料名称'
+					DBFieldName='productName'
+				End
+				Item
+					Name='供应商编码'
+					DBFieldName='busiCode'
+				End
+				Item
+					Name='供应商名称'
+					DBFieldName='supplierName'
+				End
+				Item
+					Name='到货日期'
+					Format='yyyy年MM月dd日'
+					DBFieldName='auditDate'
+				End
+				Item
+					Name='数量'
+					DBFieldName='actNum'
+				End
+				Item
+					Name='单价'
+					Type=Currency
+					Format='#,##0.######'
+					DBFieldName='price'
+				End
+				Item
+					Name='总金额'
+					Type=Currency
+					Format='#,##0.##'
+					DBFieldName='subPrice'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='物料编码'
+				Width=2
+			End
+			Item
+				Name='数量差异'
+				Width=9
+			End
+			Item
+				Name='金额差异'
+				Width=2.80458
+				Visible=F
+			End
+			Item
+				Name='款期'
+				Width=4.60375
+			End
+			Item
+				Name='交货日期'
+				Width=2.16958
+			End
+			Item
+				Name='未按期到货原因'
+				Width=2.98979
+			End
+			Item
+				Name='采购员'
+				Width=2.59292
+			End
+			Item
+				Name='收料日期'
+				Width=2
+			End
+		End
+		Object ColumnContent
+			Height=0.7
+			Items ColumnContentCell
+				Item
+					Column='物料编码'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='物料编码'
+				End
+				Item
+					Column='数量差异'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='物料名称'
+				End
+				Item
+					Column='金额差异'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='供应商编码'
+				End
+				Item
+					Column='款期'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='供应商名称'
+				End
+				Item
+					Column='交货日期'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='到货日期'
+				End
+				Item
+					Column='未按期到货原因'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					DataField='总金额'
+				End
+				Item
+					Column='采购员'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					DataField='单价'
+				End
+				Item
+					Column='收料日期'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='数量'
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0.79375
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='物料编码'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='物料编码'
+				End
+				Item
+					GroupTitle=F
+					Column='数量差异'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='物料名称'
+				End
+				Item
+					GroupTitle=F
+					Column='金额差异'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					WordWrap=T
+					TextAlign=MiddleCenter
+					Text='供应商编码'
+				End
+				Item
+					GroupTitle=F
+					Column='款期'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='供应商名称'
+				End
+				Item
+					GroupTitle=F
+					Column='交货日期'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='到货日期'
+				End
+				Item
+					GroupTitle=F
+					Column='收料日期'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='数量'
+				End
+				Item
+					GroupTitle=F
+					Column='采购员'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='单价'
+				End
+				Item
+					GroupTitle=F
+					Column='未按期到货原因'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=120000,0
+						Weight=400
+						Charset=134
+					End
+					WordWrap=T
+					TextAlign=MiddleCenter
+					Text='总金额'
+				End
+			End
+		End
+	End
+	Items Section
+		Item
+			Type=PageHeader
+			Height=1.2
+		End
+		Item
+			Type=PageFooter
+			Height=1.2
+		End
+		Item
+			Type=ReportHeader
+			Name='ReportHeader1'
+			Height=1.4
+			Items Control
+				Item
+					Type=StaticBox
+					Name='StaticBox1'
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					Center=Horizontal
+					Left=3.99521
+					Top=0.211667
+					Width=8.01688
+					Height=0.978958
+					TextAlign=MiddleCenter
+					Text='库 存 报 表'
+				End
+			End
+		End
+	End
+End
+ 

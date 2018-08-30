@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>确认发货任务分配数量</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<script type="text/javascript" src="{#jsPath#}/resourceapply-confirmTaskNum.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_resources_resourceapply&action=confirmTaskNum" onsubmit="return checkForm();">
+	<table class="form_main_table" style="width:1050px;margin:auto;align:center" align="center">
+		<tr>
+			<td colspan="4">
+		    	<div class="main_head2">
+		    		<span class="main_head_title">
+						设备申请 -- 单号 ：{formNo}
+		        	</span>
+		    	</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+			<fieldset>
+				<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+					<img src="images/icon/info_up.gif" id="baseImg" />
+				</legend>
+				<table width="100%" id="contractinfo" class="form_in_table">
+					<tr>
+						<td class="form_text_left">申 请 人</td>
+						<td class="form_text_right" width="30%">
+							{applyUser}
+						</td>
+						<td class="form_text_left">申请日期</td>
+						<td class="form_text_right">
+							{applyDate}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							申请类型
+						</td>
+						<td class="form_text_right">
+							{applyTypeName}
+						</td>
+						<td class="form_text_left">
+							领用方式
+						</td>
+						<td class="form_text_right">
+							{getTypeName}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">项目编号</td>
+						<td class="form_text_right">
+							{projectCode}
+						</td>
+						<td class="form_text_left">项目名称</td>
+						<td class="form_text_right">
+							{projectName}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">项目经理</td>
+						<td class="form_text_right">
+							{managerName}
+						</td>
+						<td class="form_text_left">设备使用地</td>
+						<td class="form_text_right">
+							{place}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">申请原因</td>
+						<td class="form_text_right" colspan="3">
+							{reason}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">备注信息</td>
+						<td class="form_text_right" colspan="3">
+							{remark}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">邮寄地址</td>
+						<td class="form_text_right" colspan="3">
+							{address}
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr >
+			<td colspan="6" >
+				<fieldset style="width:200">
+					<legend class="legend" onclick="showAndHideDiv('importTableImg','importTable')">设备信息
+						<img src="images/icon/info_up.gif" id="importTableImg" />
+					</legend>
+				    <div id="importTable"></div>
+				</fieldset>
+			</td>
+		</tr>
+	</table>
+			<table class="form_main_table">
+			<tr>
+		   		<td class="form_text_left">是否邮件通知
+		       	</td>
+		   		<td colspan="3" class="form_text_right">
+		   			<input type="radio" name="resourceapply[mailInfo][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+		      		<input type="radio" name="resourceapply[mailInfo][issend]" value="n" onclick="checkEmailTA(this)"/>否
+				</td>
+			</tr>
+		   	<tr id="maildiv">
+		   		<td class="form_text_left">邮件接收人
+		       	</td>
+		       	<td colspan="3" class="form_text_right">
+				    <input type="text" name="resourceapply[mailInfo][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly"/>
+		    		<input type="hidden" name="resourceapply[mailInfo][TO_ID]" id="TO_ID" readonly="readonly" />
+			    </td>
+		   	</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" name="resourceapply[id]" id="id" value="{id}" />
+					<input type="submit" class="txt_btn_a" value=" 确认 "/>
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

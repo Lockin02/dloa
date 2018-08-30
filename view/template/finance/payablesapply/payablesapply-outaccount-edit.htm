@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+
+        <script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-outsourcing-edit.js"></script>
+        <script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-outsourcing-va.js"></script>
+		<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-common.js"></script>
+		<title>付款申请</title>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js">
+		</script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js">
+		</script>
+		<script type="text/javascript" src="swfupload/fileprogress.js">
+		</script>
+		<script type="text/javascript" src="swfupload/handlers.js">
+		</script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+		<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType": "oa_finance_payablesapply",
+					"serviceId": "{id}",
+					"serviceNo": "{formNo}"
+				});
+			});
+		</script>
+	</head>
+<body>
+<form id="form1" method="post" action="?model=finance_payablesapply_payablesapply&action=edit" onsubmit="return checkform();">
+<div class="main_head"><span class="main_head_title">编辑付款申请单</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right">
+			<input id="supplierName" type="text" class="readOnlyTxtNormal" name="payablesapply[supplierName]" value="{supplierName}" readonly="readonly"/>
+			<input id="supplierId" type="hidden" name="payablesapply[supplierId]" value="{supplierId}"/>
+		</td>
+		<td class="form_text_left">付款申请单编号</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" value="{formNo}" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开户银行</td>
+		<td class="form_text_right">
+			<input type="text" id="bank" name="payablesapply[bank]" class="txt" value="{bank}"/>
+			<span id="bankNeed" class="red" style="display:none">[*]</span>
+		</td>
+		<td class="form_text_left">单据日期</td>
+		<td class="form_text_right">
+			<input id="formDate" type="text"  onfocus="WdatePicker()" name="payablesapply[formDate]" class="txt Wdate" value="{formDate}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">收款银行账号</td>
+		<td class="form_text_right">
+			<input type="text" id="account" name="payablesapply[account]" class="txt" value="{account}"/>
+			<span id="accountNeed" class="red" style="display:none">[*]</span>
+		</td>
+		<td class="form_text_left">结算方式</td>
+		<td class="form_text_right">
+			<select id="payType" name="payablesapply[payType]" class="txt" onchange="changePayTypeFun();">
+				{payType}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">付款条件</td>
+		<td class="form_text_right">
+			<input type="text" name="payablesapply[payCondition]" class="txt" value="{payCondition}"/>
+		</td>
+		<td class="form_text_left">付款类型</td>
+		<td class="form_text_right">
+			<!--select id="payFor" name="payablesapply[payFor]" class="txt">
+				{payFor}
+			</select-->
+			<input type="text" class="readOnlyTxtNormal" value="{payForCN}" readonly="readonly"/>
+			<input type="hidden" id="payFor" name="payablesapply[payFor]" value="{payFor}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申请部门</td>
+		<td class="form_text_right">
+			<input id="deptName" type="text" name="payablesapply[deptName]" class="txt" value="{deptName}" readonly="readonly"/>
+			<input id="deptId" type="hidden" name="payablesapply[deptId]" value="{deptId}"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">申 请 人</td>
+		<td class="form_text_right">
+			<input id="salesman" type="text" name="payablesapply[salesman]" class="txt" value="{salesman}" readonly="readonly"/>
+			<input id="salesmanId" type="hidden" name="payablesapply[salesmanId]" value="{salesmanId}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">费用归属部门</td>
+		<td class="form_text_right">
+			<input id="feeDeptName" type="text" name="payablesapply[feeDeptName]" class="txt" value="{feeDeptName}" readonly="readonly"/>
+			<input id="feeDeptId" type="hidden" name="payablesapply[feeDeptId]" value="{feeDeptId}"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">源单类型</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" value="{sourceTypeCN}" readonly="readonly"/>
+			<input type="hidden" id="sourceType" name="payablesapply[sourceType]" value="{sourceType}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">期望付款日期</td>
+		<td class="form_text_right">
+			<input id="payDate" type="text"  onfocus="WdatePicker()" name="payablesapply[payDate]" class="txt Wdate"" value="{payDate}"/>
+		<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">付款币种</td>
+		<td class="form_text_right">
+			<input id="currency" type="text" name="payablesapply[currency]" class="readOnlyTxtNormal" value="{currency}" readonly="readonly"/>
+			<input id="currencyCode" type="hidden" name="payablesapply[currencyCode]" value="{currencyCode}"/>
+			<input id="rate" type="hidden" name="payablesapply[rate]" value="{rate}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">款项用途</td>
+		<td class="form_text_right">
+			<input id="remark" type="text" name="payablesapply[remark]" class="txt" value="{remark}"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">是否已付款
+       	</td>
+		<td class="form_text_right">
+   			<input type="radio" name="payablesapply[isEntrust]" id="isEntrustYes" value="1" onclick="entrustFun(this.value);"/>是
+      		<input type="radio" name="payablesapply[isEntrust]" id="isEntrustNo" value="0" onclick="entrustFun(this.value);" checked="checked"/>否
+      		<input type="hidden" id="isEntrust" value="{isEntrust}" />
+      		<br/>
+      		<span class="blue">
+				<!--注：银行代扣暂时只适用于房屋水电等可由银行代缴费用，<span class="red">正常支付流程请勿选择</span>-->
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">汇入地点(省市)</td>
+		<td class="form_text_right">
+			<input id="place" type="text" name="payablesapply[place]" class="txt" value="{place}"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">是否开据发票</td>
+		<td class="form_text_right">
+			<input type="radio" name="payablesapply[isInvoice]" id="isInvoiceYes" value="1" />是
+			<input type="radio" name="payablesapply[isInvoice]" id="isInvoiceNo" value="0" />否
+      		<input type="hidden" id="isInvoice" value="{isInvoice}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">款项说明</td>
+		<td colspan="3" class="form_text_right">
+			<textarea class="txt_txtarea_biglong" name="payablesapply[payDesc]" id="payDesc">{payDesc}</textarea>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">附 件</td>
+		<td colspan="3" class="form_text_right">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress">
+				</div>
+				<div class="upload">
+					<span id="swfupload">
+					</span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+					disabled="disabled" />
+					<br />
+				</div>
+				<div id="uploadfileList" class="upload">
+					{file}
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span class="red">注意事项</span></td>
+		<td colspan="3" class="form_text_right">
+			<span class="red">
+				1.请将款项用途描述信息保持在10个字或10个字以内
+				<br/>
+				2.未到期望付款日期单据不能提交财务进行付款
+				<br/>
+				3.财务已付款，申请人补录付款申请，无需财务再次付款时，需选择“是”
+				<br/>
+ 				4.付款已经由银行代扣，申请人补录付款申请时，需选择“是”
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="4">
+			<table class="form_in_table">
+				<thead>
+					<tr align="left">
+						<td colspan="8">
+							款项内容
+						</td>
+					</tr>
+					<tr class="main_tr_header">
+						<th>序号
+							<input type="hidden" id="coutNumb" name="coutNumb" value="{coutNumb}" /></th>
+						<th>源单类型</th>
+						<th>源单编号</th>
+						<th>申请金额<span class="red">[*]</span></th>
+						<th>源单金额</th>
+						<th width="10%">外包类型</th>
+						<th width="10%">项目编号</th>
+						<th>备注说明</th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					{detail}
+				</tbody>
+				<tr class="tr_count">
+					<td colspan="2">合计</td>
+					<td></td>
+					<td><input id="payMoney" type="text" name="payablesapply[payMoney]" class="readOnlyTxtMiddleCount formatMoney" readonly="readonly"/></td>
+					<td colspan="4"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+			<input type="hidden" name="payablesapply[id]" value="{id}"/>
+			<input type="hidden" name="payablesapply[businessBelong]" value="{businessBelong}" id="businessBelong"/>
+			<input type="submit" class="txt_btn_a" onclick="auditEdit('audit')" value="提交审批" />
+			<input type="submit" value=" 保存 " onclick="auditEdit()" class="txt_btn_a"/>
+			<input type="button" onclick="self.close();" value=" 关闭 "  class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

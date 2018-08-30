@@ -1,0 +1,405 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="zh_cn" />
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css"/>
+        <link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet"/>
+
+        <!-- 主题css，可切换 -->
+        <link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet"/>
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="js/jquery/woo.js"></script>
+        <script type="text/javascript" src="js/jquery/component.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+        <script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>        
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>        
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"> </script>
+	    <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+        <!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+		<script type="text/javascript" src="swfupload/handlers.js"> </script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+		<!-- 表格组件 -->
+		<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxtreegrid.js"></script>
+
+		<!-- 验证组件 -->
+		<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+		<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+		<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+
+		<script type="text/javascript" src="{#jsPath#}/document-uploadFile.js"></script>
+		<script>
+			$(function() {
+				var guideDocArr = [];var guideIdArr = [];var uploadFun = [];
+	//            uploadfile = createSWFUpload({
+	//                 "serviceType": "{serviceType}"
+	//             });
+				// 新增分类信息 选择物料类型
+				$("#parentName").yxcombotree({
+					hiddenId : 'parentId',
+					treeOptions : {
+						url : "?model=produce_document_documenttype&action=getTreeDataByParentId&typeId=" + $("#topId").val()
+					}
+				});
+				// 渲染指引文件
+				$("#guideDocName").yxcombotree({
+					hiddenId : 'guideDocId',// 隐藏控件id
+					nameCol : 'name',
+					valueCol : 'id',
+					treeOptions : {
+						checkable : true,// 多选
+						event : {
+							"node_click" : function(event, treeId, treeNode) {
+								var html = '';var str = '';var guideId = treeNode.id;
+								if(guideDocArr[guideId] == undefined){// 指导文件没被选过，做添加处理
+									guideIdArr[guideIdArr.length] = guideId;
+									guideDocArr[guideId] = treeNode.name;
+									html += '<div class="upload">' +
+											'<a title="点击下载" href="index1.php?model=file_uploadfile_management&action=toDownFileById&fileId=' + guideId +
+											'">' + treeNode.name + '</a>' +
+											'<input type="hidden" readOnly id="guideDocName_guideId" class="txt" name="guideArr['+guideId+'][styleThree]" value="'+treeNode.name+'"/>'+
+											'<input type="hidden" id="guideDocId_guideId" name="guideArr['+guideId+'][styleTwo]" value="'+guideId+'"/>'+
+											'</div>';
+									var uploadStr = "<div class='upload'>"+
+											"<div class='upload' id='fsUploadProgress_"+guideId+"'></div>"+
+											"<div class='upload'><span id='swfupload_"+guideId+"'></span>"+
+											"<input id='btnCancel_"+guideId+"' type='button' value='中止上传' disabled='disabled'/> <br/>"+
+											"</div>"+
+											"<div id='uploadfileList_"+guideId+"' class='upload'></div>"+
+											"</div>";
+									str = "<tr id='"+guideId+"'><td class='left'>"+html+"</td><td class='right'>"+uploadStr+"</td></tr>";
+								}else{// 指导文件已被选过，做清楚处理
+									delete guideDocArr[guideId];
+									delete guideIdArr[guideIdArr.indexOf(guideId)];
+								}
+
+								if(str != ''){
+									if($('#uploadDocTr').css('display') == 'none'){
+										$('#uploadDocTr').show();
+										$('#uploadFilesTb').append(str);
+									}else{
+										$('#uploadFilesTb').append(str);
+									}
+									// ===== 上传控件配置(开始) ===== //
+									uploadFun['upload_'+guideId] = createSWFUpload({
+										"serviceType": "{serviceType}",//业务模块编码，一般取表名
+										"isTemp": 1//默认一开始传入的都是临时记录，后台处理的时候再对应更新
+									}, {
+										button_placeholder_id: 'swfupload_'+guideId,
+										custom_settings : {
+											progressTarget : "fsUploadProgress_"+guideId,
+											fileListId : 'uploadfileList_'+guideId,
+											cancelButtonId : 'btnCancel_'+guideId
+										}
+									});
+									$('#btnCancel'+guideId).click(function(){
+										cancelQueue(uploadFun['upload_'+guideId]);
+									});
+									// ===== 上传控件配置(结束) ===== //
+								}else{
+									$('#'+guideId).remove();
+									if($('#uploadFilesTb tr').length == 0){
+										$('#uploadDocTr').css('display','none');
+									}
+								}
+							}
+	//        				"node_click" : function(event, treeId, treeNode) {
+	//							var id = treeNode.id;
+	//        					var idArr = new Array();
+	//        					var html = '';
+	//        					if($("#guideDocId").val() != ''){
+	//        						var idArr = $("#guideDocId").val().split(',');
+	//        						var nameArr = $("#guideDocName").val().split(',');
+	//        						var index = idArr.indexOf(id);
+	//        						if(index == -1){
+	//        							idArr.push(id);
+	//        						}else{
+	//        							delete idArr[index];
+	//        						}
+	//        						var len = idArr.length;
+	//        						if(len > 0){
+	//        							for(var i = 0; i < len; i++){
+	//        								if(idArr[i] != undefined){
+	//        									var name = nameArr[i];
+	//        									if(name == undefined){
+	//        										name = treeNode.name;
+	//        									}
+	//        									html += '<div class="upload"><a title="点击下载" href="index1.php?model=file_uploadfile_management&action=toDownFileById&fileId=' + idArr[i]
+	//        										+ '">' + name + '</a></div>';
+	//        								}
+	//        							}
+	//        						}
+	//        					}else{
+	//        						html += '<div class="upload"><a title="点击下载" href="index1.php?model=file_uploadfile_management&action=toDownFileById&fileId=' + id
+	//        							+ '">' + treeNode.name + '</a></div>';
+	//        					}
+	//        					$("#uploadDocTr .upload").html(html);
+	//        				}
+						},
+						url : "index1.php?model=produce_document_document&action=getDocuments&parentId=1"// 这里只获取规范文档，分类id为1
+					}
+				});
+
+				$('#form1').submit(function(){
+					var numOfGuide = $('#uploadFilesTb tr').length;
+					if(numOfGuide > 0){
+						var idCatchStr = '';
+						$.each(guideIdArr,function(i,item){
+							if(item != undefined){
+								var ids = '';
+								$.each($('#uploadfileList_'+item+' input'),function(index,obj){
+									ids += $(this).val()+',';
+								});
+								idCatchStr += '<input type="hidden" name="guideArr['+item+'][fileIds]" value="'+ids+'"/>';
+							}
+						});
+						$('#filesIdsCatch').html(idCatchStr);
+					}
+					return true;
+				});
+			});
+		</script>
+		<!-- 附件上传结束 -->
+        
+		<title>
+			{title}
+		</title>
+	</head>
+	<body>
+	<div class="main_head">
+    <span class="main_head_title">
+      	{title}
+    </span>
+</div>
+	<div align="center">
+		<!-- 生产计划基本信息 -->
+		<table class="form_main_table">
+			<tr class="main_head">
+				<td colspan="4">
+					<span style="font-size:18px;font-weight:bold;letter-spacing:5px;"> 生产计划 </span>
+					<span id="isReprint" style="border:1px;font-weight:bold;float:right;margin:2px 8px 0px 0px;"></span>
+					<input type="hidden" id="printCount" value="{view_printCount}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">单据编号</td>
+				<td class="form_text_right_three">
+					{view_docCode}
+				</td>
+				<td class="form_text_left_three">单据日期</td>
+				<td class="form_text_right_three">
+					{view_docDate}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">物料类型</td>
+				<td class="form_text_right_three">
+					{view_proType}
+				</td>
+				<td class="form_text_left_three">配置编码</td>
+				<td class="form_text_right_three">
+					{view_productCode}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">物料名称</td>
+				<td class="form_text_right_three">
+					{view_productName}
+				</td>
+				<td class="form_text_left_three">数  量</td>
+				<td class="form_text_right_three">
+					{view_planNum}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">文件编号</td>
+				<td class="form_text_right_three">
+					{view_fileNo}
+				</td>
+				<td class="form_text_left_three">生产批次</td>
+				<td class="form_text_right_three">
+					{view_productionBatch}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">{view_showRelDoc}编号</td>
+				<td class="form_text_right_three">
+					{view_relDocCode}
+					<input type="hidden" id="projectName" value="{view_projectName}"/>
+				</td>
+				<td class="form_text_left_three">生产任务单号</td>
+				<td class="form_text_right_three">
+					{view_taskCode}
+				</td>
+			</tr>
+			<tr id="department0">
+				<td class="form_text_left_three">客户名称</td>
+				<td class="form_text_right_three">
+					{view_customerName}
+				</td>
+				<td class="form_text_left_three">销售代表</td>
+				<td class="form_text_right_three">
+					{view_saleUserName}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">优先级</td>
+				<td class="form_text_right_three">
+					{view_urgentLevel}
+				</td>
+				<td class="form_text_left_three">责任人</td>
+				<td class="form_text_right_three">
+					{view_chargeUserName}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">计划开始时间</td>
+				<td class="form_text_right_three">
+					{view_planStartDate}
+				</td>
+				<td class="form_text_left_three">计划结束时间</td>
+				<td class="form_text_right_three">
+					{view_planEndDate}
+				</td>
+			</tr>
+			<tr style="display:none;">
+				<td class="form_text_left_three">配置名称</td>
+				<td class="form_text_right_three">
+					<div id="configProduct"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">备  注</td>
+				<td class="form_text_right_three" colspan="3">
+					<textarea class="textarea_read" style="resize:none" readonly>{view_remark}</textarea>
+				</td>
+			</tr>
+		</table>
+		<div style="margin: 5px 0;"></div>
+
+		<form action="?model=produce_document_document&action=uploadFile" id="form1" method="POST">
+			<!-- 生产计划中的物料信息（满足可修改状态的此页面可修改） -->
+			<fieldset id='fiel_classify' align="left">
+				<legend class="legend" >物料清单</legend>
+				<div id="templateData_Box"></div>
+			</fieldset>
+
+			<!-- 组织生产附件上传 -->
+			<table class="form_main_table"  >
+				<tr class="main_head">
+					<td colspan="4">
+						<span style="font-size:18px;font-weight:bold;letter-spacing:5px;"> 上传附件 </span>
+						<span id="isReprint" style="border:1px;font-weight:bold;float:right;margin:2px 8px 0px 0px;"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">报告分类</td>
+					<td class="form_text_right">
+						<input type="text" readOnly id="parentName" class="txt" name="document[typeName]" value="{typeName}"/>
+						<input type="hidden" id="parentId" name="document[typeId]" value="{typeId}"/>
+						<input type="hidden" id="topId" value="{topId}"/>
+						<span class="red">[*]</span>
+							<div id="parentIdTip" class="tipShortTxt"></div>
+					</td>
+					<td class="form_text_left">指引文件</td>
+					<td class="form_text_right">
+						<input type="text" readOnly id="guideDocName" class="txt" name="document[styleThree]" />
+						<input type="hidden" id="guideDocId" name="document[styleTwo]" />
+					</td>
+			    </tr>
+			    <tr id="uploadDocTr" style="display:none">
+					<td class="form_text_left">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+					<td colspan="3">
+						<style>#uploadFilesTb .left{width:60%;}#uploadFilesTb .right{width:40%;}</style>
+						<table id="uploadFilesTb" width="100%"></table>
+					</td>
+					<!--<td class="form_text_right">-->
+						<!--<div class="upload">-->
+							<!--<div class="upload" id="fsUploadProgress"></div>-->
+							<!--<div class="upload">-->
+								<!--<span id="swfupload"></span>-->
+								<!--<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />-->
+							<!--</div>-->
+							<!--<div id="uploadfileList" class="upload"></div>-->
+						<!--</div>-->
+					<!--</td>-->
+					<!--<td class="form_text_right" colspan="3">-->
+						<!--<div class="upload"></div>-->
+					<!--</td>-->
+		        </tr>
+				<tr align="center" class="tableheader" height="30">
+					<td colspan="4">
+						<div id="filesIdsCatch"></div>
+						<input type="hidden" name="document[serviceId]" value="{serviceId}"/>
+						<input type="hidden" name="document[serviceNo]" value="{serviceNo}"/>
+						<input type="hidden" name="document[styleOne]" value="{styleOne}"/>
+						<input type="hidden" name="produceplan[editEqu]" id="produceplan_editEqu" value="{editEqu}"/>
+						<input type="hidden" name="produceplan[taskId]" id="produceplan_taskId" value="{view_taskId}"/>
+						<input type="hidden" name="produceplan[productCode]" id="produceplan_productCode" value="{view_productCode}"/>
+						<input type="button" id="save" class="txt_btn_a" value="保存" >
+						<input type="button" class="txt_btn_a" value="返回" onclick="self.parent.tb_remove();">
+					</td>
+				</tr>			
+		</table>
+		</form>
+	</div>
+	</body>
+
+</html>
+<script type="text/javascript">
+$(document).ready(function() {
+    $.formValidator.initConfig({
+    	formid: "form1",
+        //autotip: true,
+        onerror: function(msg) {
+        }
+    });
+	$("#parentId").formValidator({
+		onshow : "请选择所属文档分类",
+		onfocus : "所属文档分类不能为空",
+		oncorrect : "所属文档分类有效"
+	}).inputValidator({
+		min : 1,
+		max : 50,
+		onerror : "所属文档分类不能为空，请选择"
+	});
+
+	// 保存前先验证一下物料信息 ID2195（该页面可修改未领料的物料）
+	$('#save').click(function(){
+		if($('#produceplan_editEqu').val() == 'ok'){
+			var error = '';
+			for(var i = 0;i < $('.tr_even').length;i++){
+				if($('#templateData_Box_cmp_productName'+i).val() == '' && error == ''){
+					error = '物料名称不能为空。';
+				}else if((!isNum($('#templateData_Box_cmp_num'+i).val()) || $('#templateData_Box_cmp_num'+i).val() <= 0)){
+					if(error == ''){
+						error = '物料数量必须为大于1的正整数。';
+					}
+					$('#templateData_Box_cmp_num'+i).val('');
+				}
+			}
+			if(error!=''){alert(error);}else{$('#form1').submit();}
+		}else{
+			$('#form1').submit();
+		}
+	});
+})
+</script>

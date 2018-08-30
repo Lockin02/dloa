@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>高级搜索</title>
+		{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentcar-search.js"></script>
+	<script type="text/javascript">
+		/**
+		 * 获取省份数组
+		 */
+		function getProvince() {
+			var responseText = $.ajax({
+				url : 'index1.php?model=system_procity_province&action=getProvinceNameArr',
+				type : "POST",
+				async : false
+			}).responseText;
+			var o = eval("(" + responseText + ")");
+			return o;
+		}
+
+		/**
+		 * 添加省份数组添加到下拉框
+		 */
+		function addDataToProvince(data ,selectId) {
+			$("#" + selectId).append("<option  value=''>...不限...</option>");
+			for (var i = 0, l = data.length; i < l; i++) {
+				$("#" + selectId).append("<option title='" + data[i].text
+						+ "' value='" + data[i].value + "'>" + data[i].text
+						+ "</option>");
+			}
+		}
+
+	$(document).ready(function(){
+		//获取省份数组并赋值给provinceArr
+		provinceArr = getProvince();
+		
+		//把省份数组provinceArr赋值给proCode
+		addDataToProvince(provinceArr ,'companyProvinceCode');
+
+		//归属公司
+		$("#ownCompany").yxcombogrid_branch({
+			hiddenId : 'ownCompany',
+			valueCol : 'NameCN',
+			height : 200,
+			width : 250,
+			isFocusoutCheck : false,
+			gridOptions : {
+				showcheckbox : true
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+		<td colspan="4">
+			<div class="main_head">
+				<span class="main_head_title">
+					高级搜索
+				</span>
+			</div>
+		</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">录入时间</td>
+			<td class="form_text_right">
+				<input type="text" class="txtshort" id="createDateSta" onfocus="WdatePicker()" name="rentcar[createDateSta]"/> ~
+				<input type="text" class="txtshort" id="createDateEnd" onfocus="WdatePicker()" name="rentcar[createDateEnd]"/>
+			</td>
+			<td class="form_text_left">鼎利合同编号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="orderCode" name="rentcar[orderCode]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">合同性质</td>
+			<td class="form_text_right_three">
+				<select class="txt" id="contractNatureCode" name="rentcar[contractNatureCode]">
+					<option value="">...不限...</option>
+					{contractNatureCode}
+				</select>
+			</td>
+			<td class="form_text_left_three">合同类型</td>
+			<td class="form_text_right_three">
+				<select class="txt" id="contractTypeCode" name="rentcar[contractTypeCode]">
+					<option value="">...不限...</option>
+					{contractTypeCode}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">审批状态</td>
+			<td class="form_text_right_three">
+				<select class="txt" id="ExaStatus" name="rentcar[ExaStatus]">
+					<option value="">...不限...</option>
+					<option value="完成">完成</option>
+					<option value="部门审批">部门审批</option>
+					<option value="变更审批中">变更审批中</option>
+					<option value="待提交">待提交</option>
+					<option value="打回">打回</option>
+				</select>
+			</td>
+			<td class="form_text_left_three">合同签收</td>
+			<td class="form_text_right_three">
+				<select class="txt" id="signedStatus" name="rentcar[signedStatus]">
+					<option value="">...不限...</option>
+					<option value="0">未签收</option>
+					<option value="1">已签收</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="orderName"  name="rentcar[orderName]"/>
+			</td>
+			<td class="form_text_left">签约公司</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="signCompany" name="rentcar[signCompany]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公司省份</td>
+			<td class="form_text_right">
+				<select class="select" id="companyProvinceCode" name="rentcar[companyProvinceCode]"></select>
+			</td>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="ownCompany" name="rentcar[ownCompany]" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">是否需要盖章</td>
+			<td class="form_text_right">
+				<select class="select" id="isNeedStamp" name="rentcar[isNeedStamp]">
+					<option value="">...不限...</option>
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+			<td class="form_text_left">是否已盖章</td>
+			<td class="form_text_right">
+				<select class="select" id="isStamp" name="rentcar[isStamp]">
+					<option value="">...不限...</option>
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">签约日期</td>
+			<td class="form_text_right" >
+				<input type="text" class="txtshort" id="signDateSta" onfocus="WdatePicker()" name="rentcar[signDateSta]"/> ~
+				<input type="text" class="txtshort" id="signDateEnd" onfocus="WdatePicker()" name="rentcar[signDateEnd]"/>
+			</td>
+			<td class="form_text_left">申请人</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" id="createName" name="rentcar[createName]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="button" class="txt_btn_a" value=" 确认 " onclick="toSupport();"/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 清空 " onclick="toClear();"/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+			</td>
+		</tr>
+		</table>
+</body>
+</html>

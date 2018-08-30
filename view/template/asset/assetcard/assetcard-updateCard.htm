@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>批量更新资产卡片</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-agency.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/assetcard-updateCard.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=asset_assetcard_assetcard&action=updateCard">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head2">
+                    <span class="main_head_title">
+                       批量更新资产卡片
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">更新类型</td>
+            <td class="form_text_right" colspan="3">
+                <input type="checkbox" value="使用人" onclick="selectType('useInfo');"/>使用人
+                <input type="checkbox" value="所属人" onclick="selectType('belongInfo');"/>所属人
+                <input type="checkbox" value="行政区域" onclick="selectType('agencyInfo');"/>行政区域
+                &nbsp;&nbsp;<span class="blue">勾选后显示更新版面，请根据需要进行单选或多选</span>
+            </td>
+        </tr>
+        <tr id="useInfo" style="display:none;">
+            <td class="form_text_left"><span class="blue">转出使用人</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="outUser" name="assetcard[outUser]" readonly="readonly" />
+                <input type="hidden" id="outUserId" name="assetcard[outUserId]" />
+                <input type="hidden" id="outUseOrg" name="assetcard[outUseOrg]" />
+                <input type="hidden" id="outUseOrgId" name="assetcard[outUseOrgId]" />
+            </td>
+            <td class="form_text_left"><span class="blue">转入使用人</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="inUser" name="assetcard[inUser]" readonly="readonly" />
+                <input type="hidden" id="inUserId" name="assetcard[inUserId]" />
+                <input type="hidden" id="inUseOrg" name="assetcard[inUseOrg]" />
+                <input type="hidden" id="inUseOrgId" name="assetcard[inUseOrgId]" />
+            </td>
+        </tr>
+        <tr id="belongInfo" style="display:none;">
+            <td class="form_text_left"><span class="blue">转出所属人</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="outBelongMan" name="assetcard[outBelongMan]" readonly="readonly" />
+                <input type="hidden" id="outBelongManId" name="assetcard[outBelongManId]" />
+                <input type="hidden" id="outOrg" name="assetcard[outOrg]" />
+                <input type="hidden" id="outOrgId" name="assetcard[outOrgId]" />
+            </td>
+            <td class="form_text_left"><span class="blue">转入所属人</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="inBelongMan" name="assetcard[inBelongMan]" readonly="readonly" />
+                <input type="hidden" id="inBelongManId" name="assetcard[inBelongManId]" />
+                <input type="hidden" id="inOrg" name="assetcard[inOrg]" />
+                <input type="hidden" id="inOrgId" name="assetcard[inOrgId]" />
+            </td>
+        </tr>
+        <tr id="agencyInfo" style="display:none;">
+            <td class="form_text_left"><span class="blue">转出行政区域</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="outAgencyName" name="assetcard[outAgencyName]" readonly="readonly" />
+                <input type="hidden" id="outAgencyCode" name="assetcard[outAgencyCode]" />
+            </td>
+            <td class="form_text_left"><span class="blue">转入行政区域</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="inAgencyName" name="assetcard[inAgencyName]" readonly="readonly" />
+                <input type="hidden" id="inAgencyCode" name="assetcard[inAgencyCode]" />
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+            	<input type="button" class="txt_btn_a" value=" 查  询 " onclick="init();"/>
+                <input type="submit" class="txt_btn_a" value=" 确认更新 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="blue">提示：1.查询结果根据所选转出条件的【并集】获取，更新结果为转入条件替换对应的转出条件&nbsp;&nbsp;2.如果数据太多，可以分批次更新</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" id="showArea">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

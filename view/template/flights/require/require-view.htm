@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+
+    <head>
+        <title>查看订票需求</title>
+        {#commonInclude#}
+		<script type="text/javascript" src="{#jsPath#}/require-common.js"></script>
+        <script type="text/javascript" src="{#jsPath#}/require-view.js"></script>
+		<!-- 引入公用费用归属部分 -->
+		<script type="text/javascript" src="view/template/finance/expense/js/costtype-init.js"></script>
+        <script>
+            $(function() {
+                var a = $("#getType").html();
+                if (a == "联程") {
+                    $("#liancheng").show();
+                }
+            });
+        </script>
+    </head>
+
+    <body>
+        <table class="form_main_table">
+            <tr>
+                <td colspan="4">
+                    <div class="main_head2">
+                        <span class="main_head_title">
+                            查看订票需求信息
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <fieldset>
+                        <legend class="legend">
+                            申请人信息<img src="images/icon/info_up.gif" id="baseImg_a" onclick="showAndHide('baseImg_a','baseTbl_a');"/>
+                        </legend>
+                        <table class="form_in_table" id="baseTbl_a">
+                            <tr>
+                                <td class="form_text_left">
+                                    订票需求号
+                                </td>
+                                <td class="form_text_right" colspan="3">
+                                    {requireNo}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    申请人
+                                </td>
+                                <td class="form_text_right" width="30%">
+                                    {requireName}
+                                </td>
+                                <td class="form_text_left">
+                                    申请日期
+                                </td>
+                                <td class="form_text_right">
+                                    {requireTime}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    所在公司
+                                </td>
+                                <td class="form_text_right">
+                                    {companyName}
+                                </td>
+                                <td class="form_text_left">
+                                    所在部门
+                                </td>
+                                <td class="form_text_right">
+                                    {deptName}
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <fieldset>
+                        <legend class="legend">
+                            乘机人信息<img src="images/icon/info_up.gif" id="airImg_b" onclick="showAndHide('airImg_b','airTbl_b');"/>
+                        </legend>
+                        <table class="form_in_table" id="airTbl_b">
+                            <tr>
+                                <td colspan="4">
+	        						<div id="itemTable"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <fieldset>
+                        <legend class="legend">
+                            订票要求<img src="images/icon/info_up.gif" id="ReqImg_d" onclick="showAndHide('ReqImg_d','ReqTbl_b');"/>
+                        </legend>
+                        <table class="form_in_table" id="ReqTbl_b">
+                            <tr>
+                                <td class="form_text_left">
+                                    机票类型
+                                </td>
+                                <td class="form_text_right">
+                                    <span id="getType">
+                                        {ticketType}
+                                    </span>
+									<input type="hidden" id="ticketTypeHidden" value="{ticketTypeHidden}"/>
+                                </td>
+                                <td class="form_text_left">
+                                    区域类型
+                                </td>
+								<td class="form_text_right">
+									{districtTypeName}
+								</td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    出发城市
+                                </td>
+                                <td class="form_text_right" width="30%">
+                                    {startPlace}
+                                </td>
+                                <td class="form_text_left">
+                                    出发日期
+                                </td>
+                                <td class="form_text_right">
+                                    {startDate}
+                                </td>
+                            </tr>
+							<tr id="middles" style="display:none;">
+                                <td class="form_text_left">
+                                    中转城市
+                                </td>
+                                <td class="form_text_right">
+                                    {middlePlace}
+                                </td>
+                                <td class="form_text_left">
+                                    第二天中转日期
+                                </td>
+                                <td class="form_text_right">
+                                    {twoDate}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    到达城市
+                                </td>
+                                <td class="form_text_right">
+                                    {endPlace}
+                                </td>
+								<td class="form_text_left" id="hlTimes_a" style="display:none;">
+                                    返回日期
+                                </td>
+								<td class="form_text_right" id="hlTimes_b" style="display:none;">
+                                    {comeDate}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    出行事由
+                                </td>
+                                <td class="form_text_right" colspan="3">
+                                    {outReason}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form_text_left">
+                                    未提前三天申请原因
+                                </td>
+                                <td class="form_text_right" colspan="3">
+                                    {requireReason}
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <fieldset>
+                        <legend class="legend">
+                            特别需求<img src="images/icon/info_up.gif" id="speImg_c" onclick="showAndHide('speImg_c','speTbl_c');"/>
+                        </legend>
+                        <table class="form_in_table" id="speTbl_c">
+                            <tr>
+                                <td class="form_text_left">
+                                    期望起始时段
+                                </td>
+                                <td class="form_text_right">
+                                    <span class="blue" id="flyStartTimeShow">{flyStartTime}</span>
+                                    <span style="margin:0 15 0 15;" id="flyTimeKeyShow">
+                                        到
+                                    </span>
+                                    <span class="blue" id="flyEndTimeShow">{flyEndTime}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <fieldset>
+                        <legend class="legend">
+                            	费用归属<img src="images/icon/info_up.gif" id="feeImg_c" onclick="showAndHideDiv('feeImg_c','feeTbl_c');"/>
+                        </legend>
+                        <div class="form_in_table" id="feeTbl_c">
+                        </div>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+        <table class="form_main_table" id="buttonTable">
+            <tr>
+                <td class="txt_btn" colspan="4">
+                    <input type="hidden" id="cardNoLimit" value="{cardNoLimit}" />
+                    <input type="hidden" id="id" value="{id}" />
+                    <input type="hidden" id="actType" value="{actType}" />
+                    <input type="button" class="txt_btn_a" value="关  闭 " onclick="closeFun();"/>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

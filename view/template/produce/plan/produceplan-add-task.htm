@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>制定生产计划</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-process.js"></script>
+	<script type="text/javascript" src="view/template/manufacture/basic/js/yxcombogrid-processequ.js"></script>
+	<script type="text/javascript" src="view/template/produce/plan/js/yxcombogrid-productconfig.js"></script>
+	<script type="text/javascript" src="view/template/produce/plan/js/produceplan-task-add.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/produceplan-common.js"></script>
+
+</head>
+<body>
+	<form id="form1" method="post" action="?model=produce_plan_produceplan&action=add" onsubmit="return checkData();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							制定生产计划
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<!--<td class="form_text_left_three">物料类型</td>
+				<td class="form_text_right_three">
+					{proType}
+				</td>-->
+				<input type="hidden" id="productId" name="produceplan[productId]" value="">
+				<input type="hidden" id="pattern"  name="produceplan[pattern]" value="">
+				<input type="hidden" id="unitName"  name="produceplan[unitName]" value="">
+				<input type="hidden" id="configId"  name="produceplan[configId]" value="">
+				<input type="hidden" name="produceplan[proType]" value="{proType}">
+				<input type="hidden" name="produceplan[proTypeId]" value="{proTypeId}">
+				<td class="form_text_left_three"><span style="color:blue">物料编号</span></td>
+				<td class="form_text_right_three" colspan="3">
+					<input  type="text" class="txt" id='productCode' name="produceplan[productCode]" value="">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">物料名称</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyTxtNormal" id='productName' name="produceplan[productName]" value="" readonly>
+				</td>
+				<td class="form_text_left_three"><span style="color:blue">数  量</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="planNum" name="produceplan[planNum]" value="">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">文件编号</td>
+				<td class="form_text_right_three">
+					{fileNo}
+					<input type="hidden" name="produceplan[fileNo]" value="{fileNo}">
+				</td>
+				<td class="form_text_left_three">生产批次</td>
+				<td class="form_text_right_three">
+					{productionBatch}
+					<input type="hidden" name="produceplan[productionBatch]" value="{productionBatch}">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">源单编号</td>
+				<td class="form_text_right_three">
+					{relDocCode}
+					<input type="hidden" name="produceplan[relDocId]" value="{relDocId}"/>
+					<input type="hidden" name="produceplan[relDocCode]" value="{relDocCode}"/>
+					<input type="hidden" name="produceplan[relDocName]" value="{relDocName}"/>
+					<input type="hidden" name="produceplan[relDocType]" value="{relDocType}"/>
+					<input type="hidden" name="produceplan[relDocTypeCode]" value="{relDocTypeCode}"/>
+					<input type="hidden" name="produceplan[objCode]" value="{objCode}"/>
+					<input type="hidden" name="produceplan[projectName]" value="{projectName}" id="projectName"/>
+				</td>
+				<td class="form_text_left_three">生产任务单号</td>
+				<td class="form_text_right_three">
+					{docCode}
+					<input type="hidden" name="produceplan[taskCode]" value="{docCode}">
+					<input type="hidden" id="id" name="produceplan[taskId]" value="{id}">
+				</td>
+			</tr>
+			<tr id="department0">
+				<td class="form_text_left_three">客户名称</td>
+				<td class="form_text_right_three">
+					{customerName}
+					<input type="hidden" name="produceplan[customerName]" value="{customerName}">
+					<input type="hidden" name="produceplan[customerId]" value="{customerId}">
+				</td>
+				<td class="form_text_left_three">销售代表</td>
+				<td class="form_text_right_three">
+					{saleUserName}
+					<input type="hidden" name="produceplan[saleUserName]" value="{saleUserName}">
+					<input type="hidden" name="produceplan[saleUserId]" value="{saleUserId}">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span style="color:blue">优先级</span></td>
+				<td class="form_text_right_three">
+					<select class="txt" id="urgentLevelCode" name="produceplan[urgentLevelCode]">
+						{urgentLevelCode}
+					</select>
+				</td>
+				<td class="form_text_left_three"><span style="color:blue">责任人</span></td>
+				<td class="form_text_right_three">
+					<input type="hidden" id="chargeUserId" name="produceplan[chargeUserId]">
+					<input type="text" class="txt" readonly id="chargeUserName" name="produceplan[chargeUserName]">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span style="color:blue">计划开始时间</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="planStartDate" onfocus="WdatePicker()" readonly name="produceplan[planStartDate]">
+				</td>
+				<td class="form_text_left_three"><span style="color:blue">计划结束时间</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="planEndDate" onfocus="WdatePicker()" readonly name="produceplan[planEndDate]" value="{planEndDate}">
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">生产计划备注</td>
+				<td class="form_text_right_three" colspan="3">
+					<textarea class="txt_txtarea_long" id="remark" name="produceplan[remark]"></textarea>
+				</td>
+			</tr>
+			<tr id="department1">
+				<td class="form_text_left_three">销售说明</td>
+				<td class="form_text_right_three" colspan="3">
+					<textarea class="textarea_read" readonly>{salesExplain}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">生产任务备注</td>
+				<td class="form_text_right_three" colspan="3">
+					<textarea class="textarea_read" readonly>{remark}</textarea>
+				</td>
+			</tr>
+		</table>
+		<fieldset id='fiel_process' style='display:none;'>
+			<legend class="legend" >工序模板</legend>
+			<div id="productInfo"></div>
+		</fieldset>
+
+		<fieldset id='fiel_classify' style='display:none;'>
+			<legend class="legend" >物料清单</legend>
+			<div id="templateData"></div>
+		</fieldset>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" name="produceplan[applyDocCode]" value="{applyDocCode}">
+					<input type="hidden" name="produceplan[applyDocId]" value="{applyDocId}">
+					<input type="hidden" id="applyDocItemId" name="produceplan[applyDocItemId]" value="{applyDocItemId}">
+					<input type="hidden" name="produceplan[docDate]" value="{today}">
+					<input type="submit" class="txt_btn_a" value=" 制  定 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

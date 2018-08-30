@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <title></title>
+        <script type="text/javascript" >
+            function subHadFun(){
+                var rand=Math.random()*100000;
+                var ckt=$('#hadt').val();
+                if(confirm('确定提交？\n注：土黄色的数据为非正确数据！')){
+                    $.post('?model=system_import&action=sub',{rand:rand,ckt:ckt,flag:'{flag}'},
+                    function (data)
+                    {
+                        if (data)
+                        {
+                            if (data=='1')
+                            {
+                                alert('操作成功！');
+                                location.href='?model=system_import';
+                            }else{
+                                alert('操作失败！'+data);
+                            }
+                        }
+                    }
+                    )
+                }
+            }
+        </script>
+    </head>
+    <body >
+        <div>
+            <form action="?model=system_import" method="post" enctype="multipart/form-data">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+                    <tr class="tablecontrol">
+                        <td width="20"> <img src="images/sms_type10.gif" alt="上传文件" align="middle" /> </td>
+                        <td>
+                            <input type="hidden" value="{ckt}" name="hadt" id="hadt" />
+                            <input type="hidden" value="{flag}" name="flag" id="flag"/>
+                            <input type="file" value="" name="imfile" id="imfile" size="48"/>
+                            <input type="submit" value=" 上传 " name="had"/>
+                            <input type="button" value=" 提交 " name="sub" id="sub" onclick="subHadFun()"/>
+							<a href="upfile/补助导入模板.xls" target="_blank">模板下载</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div>
+            <table border="0" cellpadding="0" cellspacing="0" class="table" width="86%" style="padding-top:25px; text-align: center; border-color: ">
+                {data_list}
+            </table>
+        </div>
+    </body>
+</html>

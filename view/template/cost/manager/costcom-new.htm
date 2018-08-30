@@ -1,0 +1,603 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 5px;
+               width: 10%;
+               height: 25px;
+               line-height: 25px;
+            }
+            .ui-widget-content tr td{
+                padding-left: 1px;
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            .Wdate{ height: 18px; width: 100px; }
+        </style>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                seaUtil('username', new Array('userid'),'?model=cost_manager_costcom&action=user');
+                seaUtil('payee',new Array('payeepro','payeetown','payeeacc'),'?model=cost_manager_costcom&action=payee','new');
+                seaUtil('bankacc_bill',new Array('bank_bill'),'?model=cost_manager_costcom&action=bank','new');
+                seaUtil('username_bill', new Array('userid_bill'),'?model=cost_manager_costcom&action=user');
+                seaUtil('payee_bill',new Array('payeepro_bill','payeetown_bill','payeeacc_bill'),'?model=cost_manager_costcom&action=payee','new');
+                //$('.billclass').attr('disabled',true);
+                $('#username').bind('propertychange', function(){
+                    $('#username_bill').val($('#username').val());
+                    $('#userid_bill').val($('#userid').val());
+                });
+                $('#deptid').bind('propertychange', function(){
+                    $('#deptid_bill').val($('#deptid').val());
+                });
+                $('#payee').bind('propertychange', function(){
+                    $('#payee_bill').val($('#payee').val());
+                });
+                $('#payeepro').bind('propertychange', function(){
+                    $('#payeepro_bill').val($('#payeepro').val());
+                });
+                $('#payeetown').bind('propertychange', function(){
+                    $('#payeetown_bill').val($('#payeetown').val());
+                });
+                $('#payeeacc').bind('propertychange', function(){
+                    $('#payeeacc_bill').val($('#payeeacc').val());
+                });
+                $('#contdt').bind('propertychange', function(){
+                    $('#contdt_bill').val($('#contdt').val());
+                });
+                $('#contno').bind('propertychange', function(){
+                    $('#contno_bill').val($('#contno').val());
+                });
+                $('#content').bind('propertychange', function(){
+                    $('#content_bill').val($('#content').val());
+                });
+                $('#inputdt').bind('propertychange', function(){
+                    $('#inputdt_bill').val($('#inputdt').val());
+                });
+                $('#amount').bind('propertychange', function(){
+                    $('#amount_bill').val($('#amount').val());
+                });
+                $('#tallydt').bind('propertychange', function(){
+                    $('#tallydt_bill').val($('#tallydt').val());
+                });
+                $('.accamount').bind('propertychange', function(){
+                    var tam=0;
+                    $('.accamount').each(function(i){
+                        if(!isNaN(this.value)&&this.value!=''){
+                            tam=parseFloat((tam*1000+parseFloat(this.value)*1000)/1000);
+                        }
+                        if(isNaN(this.value)){
+                            alert('请输入正确的金额');
+                            this.focus();
+                            return false;
+                        }
+                    });
+                    $('#amount_bill').val(tam);
+                });
+            });
+            //费用类型
+            function costTypeClick(id){
+                var seaobj=$('#costtype_bill'+id);
+                var ifrobj=$('#costiframe_costtype_bill'+id);
+                if(ifrobj.length==0){
+                    seaobj.after('<br /><iframe id="costiframe_costtype_bill'+id+'" name="costiframe_costtype_bill'+id+'" style="position: absolute; z-index: 10000;" \n\
+        src="?model=cost_manager_costcom&action=cost_type&seaobj=costtype_bill'+id+'&resobj=costtypeid_bill'+id+'" frameborder="0"\n\
+        ></iframe>');
+                }else{
+                    ifrobj.show("slow");
+                }
+            }
+            function billTypeClick(id){
+                var seaobj=$('#billtype_bill'+id);
+                var ifrobj=$('#costiframe_billtype_bill'+id);
+                if(ifrobj.length==0){
+                    seaobj.after('<br /><iframe id="costiframe_billtype_bill'+id+'" name="costiframe_billtype_bill'+id+'" style="position: absolute; z-index: 10000;" \n\
+        src="?model=cost_manager_costcom&action=bill_type&seaobj=billtype_bill'+id+'&resobj=billtypeid_bill'+id+'" frameborder="0"\n\
+        ></iframe>');
+                }else{
+                    ifrobj.show("slow");
+                }
+            }
+            function openUserWindow()
+            {
+                  URL="{user_win}";
+                  loc_x=event.clientX-300;
+                  loc_y=event.clientY+240;
+                  window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:320px;dialogHeight:360px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+            }
+            function amNewSubFun(){
+                var rand=Math.random()*100000;
+                var id=$('#TO_ID').val();
+                var amount=$('#user_amount').val();
+                var remark=$('#user_remark').val();
+                var proname=$('#user_proname').val();
+                var prono=$('#user_prono').val();
+                $('#newuserSub').attr('disabled',true);
+                $.post('?model=salary&action=dp_pro_in',{
+                    id:id,amount:amount,remark:remark,sub:'new',rand:rand,proname:proname,prono:prono
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('提交成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        parent.tb_remove();
+                        parent.jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            function seaUtil(seaid,resid,purl,flag){
+                var purl=purl+'&seaid='+seaid+'&resid='+resid;
+                var url=purl;
+                var seaobj=$('#'+seaid);
+                seaobj.bind('click',function(){
+                    var ifrobj=$('#seaiframe_'+seaid);
+                    if(ifrobj.length==0){
+                        seaobj.after('<br /><iframe id="seaiframe_'+seaid+'" name="seaiframe_'+seaid+'" style="position: absolute; z-index: 10000;" \n\
+            src="'+url+'" frameborder="0"\n\
+            ></iframe>');
+                        $('#seaiframe_'+seaid).blur(function(){
+                            if(document.activeElement.id!=seaid){
+                                $('#seaiframe_'+seaid).hide('slow');
+                                if($('#'+resid[0]).val()==''&&flag!='new'){
+                                    $('#'+seaid).val('');
+                                }
+                            }
+                        });
+                    }else{
+                        ifrobj.show("slow");
+                    }
+                });
+                seaobj.bind('propertychange',function(){
+                    if(flag!='new'){
+                        for(var i=0; i<resid.length;i++){
+                            $('#'+resid[i]).val('');
+                        }
+                    }
+                    url=purl+'&seaval='+seaobj.val();
+                    var ifrobj=$('#seaiframe_'+seaid);
+                    if(ifrobj.length==0){
+                        seaobj.after('<br /><iframe id="seaiframe_'+seaid+'" name="seaiframe_'+seaid+'" style="position: absolute; z-index: 10000;" \n\
+            src="'+url+'" frameborder="0"\n\
+            ></iframe>');
+                        $('#seaiframe_'+seaid).blur(function(){
+                            if(document.activeElement.id!=seaid){
+                                $('#seaiframe_'+seaid).hide('slow');
+                                if($('#'+resid[0]).val()==''&&flag!='new'){
+                                    $('#'+seaid).val('');
+                                }
+                            }
+                        });
+                    }else{
+                        ifrobj.attr('src',url);
+                    }
+                })
+                seaobj.blur(function(){
+                    if(document.activeElement.id!='seaiframe_'+seaid){
+                        $('#seaiframe_'+seaid).hide('slow');
+                        if($('#'+resid[0]).val()==''&&flag!='new'){
+                            $('#'+seaid).val('');
+                        }
+                    }
+                });
+            }
+            function billShowFun(){
+                $('#billtb').show('slow');
+                $('#newcomsub').hide();
+                $('#billshow').hide();
+                $('#subflag').val('tow');
+            }
+            function oneBillFun(){
+                $('#billtb').show('slow');
+                $('#comtb').hide();
+                $('.billclass').attr('disabled',false);
+                $('#subflag').val('bill');
+                $('#seaiframe_payee_bill').hide();
+                $('#seaiframe_username_bill').hide();
+            }
+            function towBillFun(){
+                $('#billtb').show('slow');
+                $('#comtb').show('slow');
+                $('#newcomsub').hide();
+                $('#billshow').hide();
+                $('.billclass').attr('disabled',true);
+                $('#subflag').val('tow');
+            }
+            function subCk(){
+                var ck='';
+                var bck=false;
+                var subflag=$('#subflag').val();
+                if(subflag=='bill'){
+                    ck='_bill';
+                }
+                if($('#userid'+ck).val()==''){//制单人
+                    alert('请填写制单人');
+                    $('#username'+ck).focus();
+                    return false;
+                }
+                $('.billdept').each(function(i){
+                    if(isNaN(this.value)){
+                        alert('请输入正确的金额');
+                        this.focus();
+                        bck=true;
+                        return false;
+                    }
+                });
+                if(bck){
+                    return false;
+                }
+                /*
+                if($('#deptid'+ck).val()==''&&$('#contno'+ck).val()==''){//部门
+                    alert('请选择部门或填写合同号');
+                    $('#deptid'+ck).focus();
+                    return false;
+                }
+                
+                if($('#payee'+ck).val()==''||$('#payeepro'+ck).val()==''||$('#payeetown'+ck).val()==''||$('#payeeacc'+ck).val()==''){
+                    alert('请填写完整的收据单位信息');
+                    $('#payee'+ck).focus();
+                    return false;
+                }
+                if($('#contdt'+ck).val()==''&&$('#contno'+ck).val()!=''){
+                    alert('请选择合同日期');
+                    $('#contdt'+ck).focus();
+                    return false;
+                }
+                if($('#content'+ck).val()==''){
+                    alert('请填写款项内容');
+                    $('#content'+ck).focus();
+                    return false;
+                }
+                
+                if($('#amount'+ck).val()==''){
+                    alert('请填写金额');
+                    $('#amount'+ck).focus();
+                    return false;
+                }else{
+                    if(isNaN($('#amount'+ck).val())){
+                        alert('请填写正确的金额');
+                        $('#amount'+ck).focus();
+                        return false;
+                    }
+                }
+                if(subflag=='com'||subflag=='tow'){
+                    if($('#bankacc').val()==''){
+                        alert('请填写银行账号');
+                        $('#bankacc').focus();
+                        return false;
+                    }
+                    if($('#bank').val()==''){
+                        alert('请填写银行名称');
+                        $('#bank').focus();
+                        return false;
+                    }
+                }
+                if(subflag=='bill'||subflag=='tow'){
+                    if($('#costtypeid_bill').val()==''){
+                        alert('请填写科目类型');
+                        $('#costtype_bill').focus();
+                        return false;
+                    }
+                }
+                */
+                return true;
+            }
+            function amtypeAddFun(id){
+                var ac=$('.accdept').length;
+                var ct=$('#costtype_bill'+(ac-1)).val();
+                var ctid=$('#costtypeid_bill'+(ac-1)).val();
+                var bt=$('#billtype_bill'+(ac-1)).val();
+                var btid=$('#billtypeid_bill'+(ac-1)).val();
+                $('#acctable').append('<tr><td rowspan="2">\n\
+                <select name="accdept['+ac+']" id="accdept_'+ac+'" class="accdept">{depart_select}</select>\n\
+                </td><td rowspan="2"><input id="" name="accamount['+ac+']" id="" class="accamount" value="" style="width:80px;" />\n\
+                </td><td rowspan="2"><input type="text" id="costtype_bill'+ac+'" onclick="costTypeClick('+ac+')" readonly value="'+ct+'" style="width: 120px;"></input>\n\
+                    <input type="hidden" id="costtypeid_bill'+ac+'" name="costtypeid['+ac+']" value="'+ctid+'"></input>\n\
+                </td><td rowspan="2"><input type="text" id="billtype_bill'+ac+'" onclick="billTypeClick('+ac+')" readonly value="'+bt+'" style="width: 120px;"></input>\n\
+                    <input type="hidden" id="billtypeid_bill'+ac+'" name="billtypeid['+ac+']" value="'+btid+'"></input></td><td> 项目信息 \n\
+                </td><td><input id="" name="accnamep['+ac+']" id="" class="accname" value="" style="width:160px;" />\n\
+                </td><td colspan="2"><input id="" name="accnop['+ac+']" id="" class="accno" value="" style="width:160px;" />\n\
+                </td></tr><tr><td> 合同信息 \n\
+                </td><td><input id="" name="accnamec['+ac+']" id="" class="accname" value="" style="width:160px;" />\n\
+                </td><td colspan="2"><input id="" name="accnoc['+ac+']" id="" class="accno" value="" style="width:160px;" />\n\
+                </td></tr>');
+                $('#accdept_'+ac).val($('#accdept_'+(ac-1)).val());
+                $('.accamount').bind('propertychange', function(){
+                    var tam=0;
+                    $('.accamount').each(function(i){
+                        if(!isNaN(this.value)&&this.value!=''){
+                            tam=parseFloat((tam*1000+parseFloat(this.value)*1000)/1000);
+                        }
+                        if(isNaN(this.value)){
+                            alert('请输入正确的金额');
+                            this.focus();
+                            return false;
+                        }
+                    });
+                    $('#amount_bill').val(tam);
+                });
+            }
+        </script>
+        <style type="text/css">
+#payForm label.error{
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <div id="hr_user_new" tabindex="-1" role="dialog" style="text-align:center;" >
+            <form method="post" action="?model=cost_manager_costcom&action=new_sub" name="payForm" id="payForm" onsubmit="return subCk();">
+                <input type="hidden" name="subflag" id="subflag" value="bill"></input>
+                <!--
+                <table cellpadding="0" cellspacing="0" align="center" style="text-align: left;width:100%;"><tr><td>
+                            <input type="button" id="onebill" onclick="oneBillFun()" value="只填票据信息"/>
+                            <input type="button" id="towbill" onclick="towBillFun()" value="一并填写单据"/>
+                        </td></tr>
+                </table>
+                -->
+                <table id="comtb" class="ui-widget-content ui-corner-all" cellpadding="0" cellspacing="0" align="center" 
+                       style="text-align: left;width:100%;display: none">
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 28px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="4">
+                            付款通知书
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 制&nbsp;单&nbsp;人</td>
+                        <td >
+                            <input type="text" id="username" value=""></input>
+                            <input type="hidden" name="pay[InputMan]" id="userid" value=""></input>
+                        </td>
+                        <td class="tl"> 部&nbsp;&nbsp;门</td>
+                        <td >
+                            <select name="pay[CostDept]" id="deptid">
+                                <option value="">费用类请选择部门</option>
+                                {depart_select}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" rowspan="2" > 收款单位</td>
+                        <td colspan="3"> 户&nbsp;&nbsp;&nbsp;&nbsp;名：
+                            <input type="text" name="pay[Payee]" id="payee" style="width:60%;"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="40%"> 开户银行：
+                                <input type="text" name="pay[PayeePro]" id="payeepro" style="width:50px;"></input> 省
+                                <input type="text" name="pay[PayeeTown]" id="payeetown" style="width:50px;"></input> 市
+                        </td>
+                        <td class="tl"> 账&nbsp;&nbsp;号</td>
+                        <td > <input type="text" name="pay[PayeeAcc]" id="payeeacc" style="width:160px;"></input></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 付款依据</td>
+                        <td > 合同日期：
+                            <input type="text" name="pay[ContractDT]" id="contdt" class="Wdate" readonly onClick="WdatePicker()" value=""></input>
+                        </td>
+                        <td class="tl"> 合同号</td>
+                        <td > <input type="text" name="pay[ContractNo]" id="contno" style="width:160px;"></input></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 款项内容</td>
+                        <td colspan="3">
+                            <textarea  name="pay[Content]" id="content" rows="3" style="width: 90%"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 付款金额</td>
+                        <td colspan="3">
+                            <input type="text" name="pay[Amount]" id="amount" style="width:160px;"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 日&nbsp;&nbsp;&nbsp;&nbsp;期</td>
+                        <td colspan="3">申请日期：
+                            <input type="text" name="pay[InputDt]" id="inputdt" class="Wdate" readonly onClick="WdatePicker()" value="{inputdt_list}"></input>
+                            付款日期：
+                            <input type="text" name="pay[PayDT]" id="paydt" class="Wdate" readonly onClick="WdatePicker()" value="{paydt_list}"></input>
+                            记账日期：
+                            <input type="text" name="pay[TallyDT]" id="tallydt" class="Wdate" readonly onClick="WdatePicker()" value="{tallydt_list}"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 支付银行</td>
+                        <td >银行账号：
+                            <input type="text" name="pay[BankAcc]" id="bankacc"  value="" style="width:180px;"></input>
+                        </td>
+                        <td class="tl">
+                            银行名称
+                        </td>
+                        <td>
+                            <input type="text" name="pay[Bank]" id="bank"  value=""></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="center" >
+                            <input type="button" id="billshow" onclick="billShowFun()" value="增填票据"/>
+                            <input type="submit" id="newcomsub" value="确认提交"/>
+                        </td>
+                    </tr>
+                </table>
+                <table id="billtb" class="ui-widget-content ui-corner-all" cellpadding="0" cellspacing="0" align="center"
+                       style="text-align: left;width:100%;display: block; margin-top: 3px; ">
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 28px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="4">
+                            票据信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 制&nbsp;单&nbsp;人</td>
+                        <td >
+                            <input type="text" id="username_bill" value="" class="billclass" style="width:160px;"></input>
+                            <input type="hidden" name="bill[InputMan]" id="userid_bill" value="" class="billclass"></input>
+                        </td>
+                        <td class="tl"> 流水号</td>
+                        <td>
+                            <select name="bill[SerialType]" id="serialtype" class="billclass">
+                                <option value="1">银</option>
+                                <option value="2">现</option>
+                                <option value="3">转</option>
+                            </select>
+                            <input type="text" name="bill[SerialNo]" value="" id="serialno_bill" class="billclass" style="width:160px;"></input>
+                        </td>
+                        <!--
+                        <td class="tl"> 部&nbsp;&nbsp;门</td>
+                        <td >
+                            <select name="bill[CostDept]" id="deptid_bill" class="billclass">
+                                <option value="">费用类请选择部门</option>
+                                {depart_select}
+                            </select>
+                        </td>
+                        -->
+                    </tr>
+                    <tr>
+                        <td class="tl" rowspan="2" > 收款单位</td>
+                        <td colspan="3"> 户&nbsp;&nbsp;&nbsp;&nbsp;名：
+                            <input type="text" name="bill[Payee]" id="payee_bill" style="width:60%;" class="billclass"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="40%"> 开户银行：
+                                <input type="text" name="bill[PayeePro]" id="payeepro_bill" style="width:50px;" class="billclass"></input> 省
+                                <input type="text" name="bill[PayeeTown]" id="payeetown_bill" style="width:50px;" class="billclass"></input> 市
+                        </td>
+                        <td class="tl"> 账&nbsp;&nbsp;号</td>
+                        <td >
+                            <input type="text" name="bill[PayeeAcc]" id="payeeacc_bill" style="width:160px;" class="billclass"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 款项内容</td>
+                        <td colspan="3">
+                            <textarea  name="bill[Content]" id="content_bill" rows="2" style="width: 100%" class="billclass"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 费用归属</td>
+                        <td colspan="3">
+                            <table cellpadding="0" cellspacing="0" width="100%" id="acctable">
+                                <tr align="center">
+                                    <td height="23">部门</td>
+                                    <td >金额</td>
+                                    <td >费用类型</td>
+                                    <td >科目类型</td>
+                                    <td >付款类型</td>
+                                    <td >名称</td>
+                                    <td >编号</td>
+                                    <td width="1%"><img src="images/collapsed.gif" align="center" style="cursor:hand;padding-right:10px;padding-left:10px;"
+                onclick="amtypeAddFun()"/></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">
+                                        <select name="accdept[0]" id="accdept_0" class="accdept">
+                                            {depart_select}
+                                        </select>
+                                    </td>
+                                    <td rowspan="2">
+                                        <input id="" name="accamount[0]" id="" class="accamount" value="" style="width:80px;" />
+                                    </td>
+                                    <td rowspan="2">
+                                        <input type="text" id="costtype_bill0" onclick="costTypeClick(0)" readonly value="" style="width: 120px;"></input>
+                                        <input type="hidden" id="costtypeid_bill0" name="costtypeid[0]" value=""></input>
+                                    </td>
+                                    <td rowspan="2">
+                                        <input type="text" id="billtype_bill0" onclick="billTypeClick(0)" readonly value="" style="width: 120px;"></input>
+                                        <input type="hidden" id="billtypeid_bill0" name="billtypeid[0]" value=""></input>
+                                    </td>
+                                    <td>项目信息</td>
+                                    <td>
+                                        <input id="" name="accnamep[0]" id="" class="accname" value="" style="width:160px;" />
+                                    </td>
+                                    <td colspan="2">
+                                        <input id="" name="accnop[0]" id="" class="accno" value="" style="width:160px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合同信息</td>
+                                    <td>
+                                        <input id="" name="accnamec[0]" id="" class="accname" value="" style="width:160px;" />
+                                    </td>
+                                    <td colspan="2">
+                                        <input id="" name="accnoc[0]" id="" class="accno" value="" style="width:160px;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 票据金额</td>
+                        <td colspan="3">
+                            <input type="text" name="bill[Amount]" id="amount_bill" style="width:100px;" readonly class="billclass"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 日&nbsp;&nbsp;&nbsp;&nbsp;期</td>
+                        <td colspan="3">
+                            申请日期：
+                            <input type="text" name="bill[InputDt]" id="inputdt_bill" class="Wdate" readonly onClick="WdatePicker()" value="{inputdt_list}"></input>
+                            付款日期：
+                            <input type="text" name="bill[PayDT]" id="paydt_bill" class="Wdate" readonly onClick="WdatePicker()" value="{paydt_list}"></input>
+                            记账日期：
+                            <input type="text" name="bill[TallyDT]" id="tallydt_bill" class="Wdate billclass" readonly onClick="WdatePicker()" value="{tallydt_list}" ></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 付款银行账号</td>
+                        <td >
+                            <input type="text" name="bill[BankAcc]" id="bankacc_bill"  value="" style="width: 180px;"></input>
+                        </td>
+                        <td class="tl">
+                            银行名称
+                        </td>
+                        <td>
+                            <input type="text" name="bill[Bank]" id="bank_bill"  value="" style="width: 180px;"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="center" >
+                            <input type="submit" id="newbillsub" value="确认提交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

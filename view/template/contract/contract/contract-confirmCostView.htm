@@ -1,0 +1,133 @@
+<html>
+<title></title>
+{#commonInclude#}
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script type="text/javascript" src="{#jsPath#}/contract-confirmCost.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-deploy.js"></script>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+	   "serviceType":$("#serviceType").val()
+	});
+	uploadfile2=createSWFUpload({
+	    "serviceType":$("#serviceType2").val()
+	},{
+		button_placeholder_id:'swfupload2',
+		fileListId:'uploadfileList2',
+		progressTarget:'fsUploadProgress2'
+	});
+});
+
+
+</script>
+<!-- 附件上传结束 -->
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+           确认合同成本概算 - <span style="color:blue">{costType}</span>
+      </span>
+</div>
+<form action="?model=contract_contract_contract&action=subConfirmCost" ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1">
+<table class="form_main_table" align="center" width="90%" border="0">
+    <tr>
+        <td class="form_text_left"> 合同编号 </td>
+		<td class="form_text_right"> <span style="cursor:pointer;color:blue" onclick="contractview({contractId})">{contractCode} </span></td>
+		<td class="form_text_left"> 合同名称 </td>
+		<td class="form_text_right"> <span style="cursor:pointer;color:blue" onclick="contractview({contractId})">{contractName} </span></td>
+    </tr>
+
+       {costInfo}
+
+    <tr>
+		<td class="form_text_left"> 确认人 </td>
+		<td class="form_text_right">
+		   {engConfirmName}
+		   <input type="hidden" class="readOnlyTxtNormal" readonly id="engConfirmName" name="contract[engConfirmName]" value="{engConfirmName}" />
+		   <input type="hidden" id="engConfirmId" name="contract[engConfirmId]" value="{engConfirmId}" />
+		   <input type="hidden" id="engConfirmDate" name="contract[engConfirmDate]" value="{engConfirmDate}" />
+		</td>
+		<td class="form_text_left"> 确认时间 </td>
+		<td class="form_text_right">
+		  {engConfirmDate}
+		</td>
+    </tr>
+    <tr>
+				<td class="form_text_left" style="display:none">附件</td>
+				<td class="form_text_right" style="display:none">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span>
+				   <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+				</td>
+				<td class="form_text_left" ><span class="red" title="合同文本只能由相关人员查看">加密区文件<br/></span>(原合同文本)</td>
+				<td class="form_text_right">
+				<div class="upload" >
+				<div class="upload" id="fsUploadProgress2" ></div>
+				<div class="upload"><span id="swfupload2" ></span> <input
+					id="btnCancel2" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList2" class="upload"></div>
+				</div>
+
+				</td>
+	</tr>
+    <tr>
+	<td class="form_text_left">成本[概算]明细备注</td>
+	<td class="form_text_right" colspan="3">
+		 <textarea class="txt_txtarea_font" name="contract[costRemark]" id="costRemark"></textarea>
+	</td>
+    </tr>
+    <!--<tr>
+        <td class="form_text_left">成本[审核]明细备注</td>
+        <td class="form_text_right" colspan="3">
+            {costAppRemark}
+        </td>
+    </tr>-->
+	<tr id="product">
+		<td colspan="4" >
+		<fieldset>
+		     <legend class="legend" onclick="showAndHideDiv('productImg','productInfo')">&nbsp;&nbsp;合同产品清单&nbsp;
+				<img src="images/icon/info_up.gif" id="productImg" />
+			  </legend>
+		<div id="productInfo"></div>
+		<input type="hidden" id="isApp" value="0">
+		</fieldset>
+		</td>
+	</tr>
+<!--    <tr>-->
+<!--      <td class="form_text_right" colspan="4">-->
+<!--         <img src="images/icon/icon095.gif" />-->
+<!--		   <span style="color:blue">提示：<br/>-->
+<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.点击合同编号或合同名称可查看合同信息<br/>-->
+<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.确认后提交审批合同，成本概算可不填写</span>-->
+<!--      </td>-->
+<!--    </tr>-->
+</table>
+<table class="form_main_table">
+</table>
+<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+				   <input type="hidden" id="costType" name="contract[costType]" value="{costType}" />
+				   <input type="hidden" id="type" name="contract[type]" value="{type}" />
+				   <input type="hidden" name="contract[serviceId]" id="serviceId" value="{serviceId}" />
+				   <input type="hidden" name="contract[serviceType]" id="serviceType" value="{serviceType}" />
+				   <input type="hidden" name="contract[serviceType2]" id="serviceType2" value="{serviceType2}" />
+				   <input type="hidden" id="contractId" name="contract[contractId]" value="{contractId}" />
+				   <input type="submit" class="txt_btn_a" value=" 确认提交 "  />
+				   <input type="button" class="txt_btn_a" value=" 关  闭 "  onclick="closeFun();"/>
+			</tr>
+		</table>
+</form>
+</body>
+</html>

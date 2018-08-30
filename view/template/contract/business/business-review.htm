@@ -1,0 +1,74 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=GB2312">
+    <title>选择审批流程</title>
+    <link rel="stylesheet" type="text/css" href="../../../inc/style.css">
+    <script language="JavaScript">
+    function sltFlow(obj)
+    {
+        document.getElementById("ife_sum").setAttribute("src","../../../module/work_flow_examine/process_view.php?flowid="+obj.value+"&proId=&proSid=&billDept=1");
+    }
+    function displaySub(){
+        document.getElementById('sub').disabled=true;
+    }
+    </script>
+</head>
+<body>
+<form id="form1" name="form1" action="?actTo=ewfBuild" method="post" onsubmit="displaySub()">
+<input type="hidden" name="examCode" id="examCode" value="oa_contract_sales">
+<input type="hidden" name="billId" id="billId" value="722">
+<input type="hidden" name="passSqlCode" value="update oa_contract_sales set ExaStatus = \'完成\'  where ID=\'722\'">
+<input type="hidden" name="disPassSqlCode" value="update oa_contract_sales set ExaStatus = \'打回\'  where ID=\'722\'">
+<input type="hidden" name="proId" id="proId" value="">
+<input type="hidden" name="proSid" id="proSid" value="">
+<input type="hidden" name="billDept" id="billDept" value="1">
+<input type="hidden" name="formName" id="formName" value="销售合同审批">
+<table width="95%" border="0" cellspacing="0" cellpadding="0" height="3">
+ <tr>
+   <td background="../../../images/dian1.gif" width="100%"></td>
+ </tr>
+</table>
+<table border="0" width="100%" cellspacing="0" cellpadding="3" class="small">
+  <tr>
+    <td class="Big">
+        <img src="../../../images/sys_config.gif" WIDTH="22" HEIGHT="20">
+        <b><font color="#000000">第一步:选择审批流程</font></b><br>
+    </td>
+  </tr>
+</table>
+<div align="center">
+    <select name="FLOW_ID" id="FLOW_ID"  title="审批流程" onchange="sltFlow(this);">
+<option value="15" >立项审批</option><option value="16" >技术支持审批</option><option value="17" >借试用审批</option></select>
+    <br>
+    <br>
+
+</div>
+<table width="95%" border="0" cellspacing="0" cellpadding="0" height="3">
+ <tr>
+   <td background="../../../images/dian1.gif" width="100%"></td>
+ </tr>
+</table>
+<table border="0" width="100%" cellspacing="0" cellpadding="3" class="small">
+  <tr>
+    <td class="Big">
+        <img src="../../../images/sys_config.gif" WIDTH="22" HEIGHT="20">
+        <b><font color="#000000">第二步:提交</font></b><br>
+        <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;提示:提交后将进入审批流程,费用明细将不可修改,请在提交前检查报销费用明细的填写是否正确.</font><br>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+        <br />发送邮件通知第1个审批者：
+        <input type="radio" name="isSendNotify" value="y" checked>是
+        <input type="radio" name="isSendNotify" value="n" >否<br /><hr width="30%" /><br /><br />
+    </td>
+  </tr>
+</table>
+<div align="center">
+<input type="submit" name="sub" id="sub" value="提交" align="center"   class="BigButton" style="width:80px" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" name="back" id="back" value="返回" align="center"   class="BigButton" style="width:80px" onclick="self.parent.tb_remove();">
+</div>
+</table>
+</form>
+</body>
+</html>

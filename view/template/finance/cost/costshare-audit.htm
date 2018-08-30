@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>审核分摊记录</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-init.js?v=20161107"></script>
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-audit.js?v=20161107"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+        审核分摊记录 <span class="red">【注：撤回功能只能撤回未审核状态的明细】</span>
+    </span>
+    <input type="button" id="back" value=" 撤 回 " class="main_head_btn"/>
+    <input type="button" id="exportAudit" value=" 导 出 " class="main_head_btn"/>
+    <input type="button" id="auditAndNext" value="审核并进入下一单" class="main_head_btn"/>
+    <input type="button" id="audit" value=" 审 核 " class="main_head_btn"/>
+</div>
+<form method="post" action="?model=finance_cost_costshare&action=audit" onsubmit="return checkForm();">
+    <span class="blue">
+        源单类型：{objTypeCN}, 源单编号: {objCode}, 单据金额为：<span class="formatMoney">{objMoney}</span>
+    </span>
+    &nbsp;
+    <div>
+        <input type="hidden" id="thisPeriod" name="thisPeriod" value="{thisPeriod}"/>
+        <input type="hidden" id="goNext" name="goNext" value="0"/>
+        <input type="hidden" id="objId" name="costshare[objId]" value="{objId}"/>
+        <input type="hidden" id="objCode" name="costshare[objCode]" value="{objCode}"/>
+        <input type="hidden" id="objType" name="costshare[objType]" value="{objType}"/>
+        <input type="hidden" id="objMoney" name="costshare[objMoney]" value="{objMoney}"/>
+        <input type="hidden" id="supplierName" name="costshare[supplierName]" value="{supplierName}"/>
+        <input type="hidden" id="company" name="costshare[company]" value="{company}"/>
+        <input type="hidden" id="companyName" name="costshare[companyName]" value="{companyName}"/>
+        <input type="hidden" id="saleDeptId" value="{saleDeptId}"/>
+        <input type="hidden" id="principalId" value="{principalId}"/>
+        <input type="hidden" id="principalName" value="{principalName}"/>
+        <input type="hidden" id="deptId" value="{deptId}"/>
+        <input type="hidden" id="deptName" value="{deptName}"/>
+        <input type="hidden" id="unSltDeptFilter" value="{unSltDeptFilter}"/>
+        <input type="hidden" id="feemansForXtsSales" value="{feemansForXtsSales}"/>
+        <input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+        <input type="hidden" id="unSelectableIds" value="{unSelectableIds}"/>
+        <input type="hidden" id="currency" name="costshare[currency]" value="{currency}"/>
+    </div>
+    <div id="shareGrid"></div>
+</form>
+</body>
+</html>

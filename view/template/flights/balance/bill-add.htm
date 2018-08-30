@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk">
+        <title>
+            录入发票信息
+        </title>
+        {#commonInclude#}
+        <script type="text/javascript" src="{#jsPath#}/bill-add.js"></script>
+        <!-- 附件上传开始 -->
+        <script type="text/javascript" src="swfupload/swfupload.js"></script>
+        <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+        <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+        <script type="text/javascript" src="swfupload/handlers.js"></script>
+        <link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+        <script>
+            var uploadfile, uploadfile2;
+            $(function() {
+                uploadfile = createSWFUpload({
+                    "serviceType": "oa_flights_balance_bill" //业务模块编码，一般取表名
+                });
+            });
+        </script>
+        <!-- 附件上传结束 -->
+    </head>
+    <body>
+        <form id="form1" method="post" action="?model=flights_balance_bill&action=add">
+            <table class="form_main_table" id="tbaTbl">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								 录入发票信息
+							</span>
+						</div>
+					</td>
+				</tr>
+                <tr>
+                    <td class="form_text_left">
+                    	<span style="color:blue;">
+                        	结算单号
+                        </span>
+                    </td>
+                    <td class="form_text_right">
+                        <input type="text" class="readOnlyTxtNormal" id="balanceCode" name="bill[balanceCode]" readonly="readonly" value="{balanceCode}">
+
+                    </td>
+                    <td class="form_text_left">
+                    	<span style="color:blue;">
+                        	发票编号
+                        </span>
+                    </td>
+                    <td class="form_text_right">
+                        <input type="text" class="txt" id="billCode" name="bill[billCode]"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                    	<span style="color:blue;">
+                        	发票金额
+                        </span>
+                    </td>
+                    <td class="form_text_right">
+                        <input type="text" class="txt formatMoney" id="billMoney" name="bill[billMoney]" value="{actualMoney}"/>
+                    </td>
+                    <td class="form_text_left">
+                    	<span style="color:blue;">
+                        	发票类型
+                        </span>
+                    </td>
+                    <td class="form_text_right">
+                        <select class="select" id="billType" name="bill[billType]">
+                        	{billType}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        <span class="blue">
+                            	开票日期
+                        </span>
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <input type="text" class="txt" id="billDate" onfocus="WdatePicker()" name="bill[billDate]" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        	发票内容
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <textarea id="billContent" name="bill[billContent]" class="txt_txtarea_font" style="width:550px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        	附件
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <div class="upload">
+                            <div class="upload" id="fsUploadProgress">
+                            </div>
+                            <div class="upload">
+                                <span id="swfupload">
+                                </span>
+                                <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+                                disabled="disabled" />
+                                <br />
+                            </div>
+                            <div id="uploadfileList" class="upload">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="txt_btn" colspan="4">
+                        <input type="hidden" id="id" value='{id}' name="bill[mainId]" />
+                        <input type="submit" class="txt_btn_a" value=" 保 存 " />
+                        <input type="button" class="txt_btn_a" value=" 关 闭 " onclick="self.parent.tb_remove();"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+
+</html>

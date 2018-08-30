@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+
+<head>
+<title>商机跟踪记录</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/validate.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/track/js/track-add.js"> </script>
+<script type="text/javascript" src="view/template/projectmanagent/track/js/track-cluesadd-formValidator.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+<script type="text/javascript" src="swfupload/handlers.js"> </script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script>
+            var uploadfile;
+            $(function() {
+                uploadfile = createSWFUpload({
+                    "serviceType": "oa_sale_track",
+                    "serviceId": "{id}"
+                });
+            });
+</script>
+</head>
+
+<body>
+<div class="main_head"><span class="main_head_title">
+添加商机跟踪记录 </span></div>
+<form id="form1" method="post" action="?model=projectmanagent_track_track&action=add" name="form1">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">跟踪人姓名</td>
+		<td class="form_text_right">
+		  <input type="text" class="readOnlyTxt" readOnly id="trackName" name="track[trackName]" id="trackName" value="{trackName}" />
+		  <input type="hidden" id="trackmanId" name="track[trackmanId]" />
+		   <input type="hidden" id="chanceId" name="track[chanceId]" value="{chanceId}" />
+<!--		  <input type="button" class="txt_btn_a" value="选 择" class="SmallButton" onclick="loadOrgWindow('trackmanId','trackName')" title="选择人员" name="button" />-->
+<!--		  <input type="button" class="txt_btn_a" value="清 空" class="SmallButton" title="清空人员" onclick="clearOrgInfo('trackmanId','trackName')" />-->
+<!---->
+<!--			<span class="red">[*]</span>-->
+<!--			<div id="trackNameTip" class="tipShortTxt" ></div>-->
+		</td>
+		<td class="form_text_left">跟踪日期</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" id="trackDate" name="track[trackDate]" onfocus="WdatePicker()" value="{trackDate}" />
+			<span class="red">[*]</span>
+			<div id="trackDateTip" class="tipShortTxt"></div>
+			</td>
+
+
+	</tr>
+	<tr>
+		<td class="form_text_left">跟踪类型</td>
+		<td class="form_text_right">
+		   <select class="txt" name="track[trackType]" id="trackType">
+		</select></td>
+		<td class="form_text_left">联系人姓名</td>
+		<td class="form_text_right">
+		  <input type="text" class="txt" name="track[linkmanName]" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">跟踪目的</td>
+		<td class="form_text_right" colspan="3">
+		  <textarea name="track[trackPurpose]" id="trackPurpose" class="txt_txtarea_font600"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户关注点</td>
+		<td class="form_text_right" colspan="3">
+		   <textarea name="track[customerFocus]" id="customerFocus" class="txt_txtarea_font600"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">接触结果</td>
+		<td class="form_text_right" colspan="3">
+		   <textarea name="track[result]" id="result" class="txt_txtarea_font600"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">待解决问题</td>
+		<td class="form_text_right" colspan="3">
+		   <textarea name="track[problem]" id="problem" class="txt_txtarea_font600"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">后续计划</td>
+		<td class="form_text_right" colspan="3">
+		   <textarea name="track[followPlan]" id="followPlan" class="txt_txtarea_font600"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"> </span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+		</td>
+	</tr>
+	<td class="txt_btn" colspan="4" >
+	    <input type="submit" class="txt_btn_a" value=" 保  存 " />
+	    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();" />
+	</td>
+	</tr>
+</table>
+</form>
+</body>
+
+</html>

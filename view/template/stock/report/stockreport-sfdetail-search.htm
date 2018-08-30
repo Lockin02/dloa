@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>物料收发明细查询</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/stockin-productinfo-combogrid.js" ></script>
+
+</head>
+<script type="text/javascript">
+$(function() {
+	$('#beginMonth').val($('#monthStr').val());
+	$('#endMonth').val($('#monthStr').val());
+	$("#productCode").yxcombogrid_product( {
+		hiddenId : 'productId',
+		nameCol : 'productCode',
+		gridOptions : {
+			showcheckbox : false,
+			event : {
+				'row_dblclick' : function(e, row, data) {
+					$("#productName").val(data.productName);
+
+				}
+			}
+		}
+	});
+
+});
+	function confirm() {
+		var beginYear=$("#beginYear").val();
+		var beginMonth=$("#beginMonth").val();
+		var endYear=$("#endYear").val();
+		var endMonth=$("#endMonth").val();
+		var productCodeBegin=$("#productCodeBegin").val();
+		var productCodeEnd=$("#productCodeEnd").val();
+
+		this.opener.location = "?model=stock_report_stockreport&action=toProSFDetailReport&beginMonth="
+								+beginMonth+"&beginYear="+beginYear+"&endMonth="+endMonth+"&endYear="+endYear
+							+"&productCodeBegin="+productCodeBegin+"&productCodeEnd="+productCodeEnd;
+		this.close();
+	}
+
+	function refresh(){
+		$("#productCodeBegin").val("");
+		$("#productIdBegin").val("");
+		$("#productCodeEnd").val("");
+		$("#productIdEnd").val("");
+	}
+	function showInput(thisVal){
+		$("#checkType").val(thisVal);
+		
+		$("#productCodeBegin").yxcombogrid_product("remove");
+		$("#productCodeBegin").attr("disabled","disabled");
+		$("#productCodeBegin").val("");
+		$("#productIdBegin").val("");
+		$("#productCodeEnd").yxcombogrid_product("remove");
+		$("#productCodeEnd").attr("disabled","disabled");
+		$("#productCodeEnd").val("");
+		$("#productIdEnd").val("");
+		
+		
+		if( thisVal == 2 ){
+			$("#productNo").attr("disabled","");
+			$("#productNo").yxcombogrid_product({
+				hiddenId : 'productId',
+				nameCol : 'productCode',
+				height : 300,
+				width : 720,
+				gridOptions : {
+					param : {"properties":"WLSXWG"},
+					showcheckbox : false
+				}
+			});
+		}else if(thisVal == 3){
+			$("#productCodeBegin").attr("disabled","");
+			$("#productCodeBegin").yxcombogrid_product({
+				hiddenId : 'productIdBegin',
+				nameCol : 'productCode',
+				height : 300,
+				width : 720,
+				gridOptions : {
+					showcheckbox : false
+				}
+			});
+			$("#productCodeEnd").attr("disabled","");
+			$("#productCodeEnd").yxcombogrid_product({
+				hiddenId : 'productIdEnd',
+				nameCol : 'productCode',
+				height : 300,
+				width : 720,
+				gridOptions : {
+					showcheckbox : false
+				}
+			});
+		}
+	}
+</script>
+<body>
+<div class="main_head"><span class="main_head_title"> 搜索条件
+</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">起始期次年份</td>
+		<td class="form_text_right">
+		<select id="beginYear">
+			{yearStr}
+		</select></td>
+		<td class="form_text_left">起始期次月份</td>
+		<td class="form_text_right"><select id="beginMonth">
+			<option value="1">1月份</option>
+			<option value="2">2月份</option>
+			<option value="3">3月份</option>
+			<option value="4">4月份</option>
+			<option value="5">5月份</option>
+			<option value="6">6月份</option>
+			<option value="7">7月份</option>
+			<option value="8">8月份</option>
+			<option value="9">9月份</option>
+			<option value="10">10月份</option>
+			<option value="11">11月份</option>
+			<option value="12">12月份</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">结束期次年份</td>
+		<td class="form_text_right">
+		<select id="endYear">
+			{yearStr}
+		</select></td>
+		<td class="form_text_left">结束期次月份<input type="hidden" id="monthStr" value="{monthStr}"/></td>
+		<td class="form_text_right"><select id="endMonth">
+			<option value="1">1月份</option>
+			<option value="2">2月份</option>
+			<option value="3">3月份</option>
+			<option value="4">4月份</option>
+			<option value="5">5月份</option>
+			<option value="6">6月份</option>
+			<option value="7">7月份</option>
+			<option value="8">8月份</option>
+			<option value="9">9月份</option>
+			<option value="10">10月份</option>
+			<option value="11">11月份</option>
+			<option value="12">12月份</option>
+		</select></td>
+	</tr>
+				<tr>
+				<td class="form_text_left">
+					全部物料
+				</td>
+				<td class="form_text_right">
+					<input type="radio" name="checkType" checked="checked" onclick="showInput(this.value)" value="1" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					指定物料编码范围
+				</td>
+				<td class="form_text_right">
+					<input type="radio" name="checkType" onclick="showInput(this.value)" value="3" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					物料编码 从
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="productCodeBegin" class="txt" name="productCodeBegin" disabled="disabled" />
+					<input type="hidden" id="productIdBegin" name="productIdBegin" />
+				</td>
+				<td class="form_text_left">
+					到
+				</td>
+				<td class="form_text_right">
+					<input type="text" id="productCodeEnd" class="txt" name="productCodeEnd" disabled="disabled" />
+					<input type="hidden" id="productIdEnd" name="productIdEnd" />
+				</td>
+			</tr>
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="button"
+			class="txt_btn_a" value="确   认" onclick="confirm();" /> <input
+			type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

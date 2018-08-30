@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<title>权限申请</title>
+<style type="text/css">
+*{padding: 0; margin: 0;}
+#list { padding-left: 10px; width:1000px;font-size: 10pt;}
+#list .title {width:1000px;color: red;font-weight:700; line-height: 25px; height: 25px;}
+#list ul li {padding-left: 10px; float: left; width:145px;}
+#list .submit {width: 100%; text-align: center;}
+#list .msg {color: red; width: 95%; line-height: 50px; text-align: center;}
+.menulist { width:1000px;float: left; border-bottom:1px solid #D3E5FA;}
+</style>
+<script type="text/javascript">
+function check(id)
+{
+	var checked = $('#title_'+id+' input[type=checkbox]').eq(0).attr("checked");
+	if($('#title_'+id+' input[type=checkbox]').attr("disabled")==false)
+	{
+		$('#title_'+id+' input[type=checkbox]').attr("checked",checked);
+	}
+}
+</script>
+</head>
+<body>
+<form method="POST" action="?model=purview&action={action}&tid={id}" onsubmit="return test();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td width="100" align="right">使用人姓名：</td>
+		<td>
+			<input type="text" id="username" onblur="get_userid();" name="username" value="{username}" />
+			<span id="_username">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">使用说明：</td>
+		<td>
+			<textarea cols="50" rows="5" name="description">{description}</textarea>
+		</td>
+	</tr>
+</table>
+<div id="list">
+<div class="menulist">{return_notse}</div>
+	{list}
+</div>
+</form>
+<script type="text/javascript">
+function test()
+{
+	if ($('#userid').val()=='')
+	{
+		$('#username').focus();
+		$('#_username').html('姓名不正确！');
+		return false;
+	}
+	var input = $('input[name="id[]"]:checked');
+	if (input.length==0)
+	{
+		alert('最少选择一个权限！');
+		return false;
+	}
+	return true;
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username == '')
+	{
+		$('#username').focus();
+		$('#_username').html('用户姓名不能为空！');
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#userid').val(unescape(data));
+				$('#_username').html('*');
+			}else{
+				$('#_username').html('姓名不正确！');
+				$('#userid').val('').focus();
+			}
+		}
+
+		)
+	}
+}
+</script>
+</body>
+</html>

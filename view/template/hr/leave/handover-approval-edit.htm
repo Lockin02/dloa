@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/handover-edit.js"></script>
+
+<script>
+		function  setinfo(){
+				var salaryEndDate=$("#salaryEndDate1").val(); //结算时间
+				var id =$("#id").val(); //ID
+				var appendHtml=
+					' <input type="hidden" id="salaryEndDate" name="objInfo[salaryEndDate]" value="'+
+					salaryEndDate
+					+'"/>'+
+					' <input type="hidden" id="id" name="objInfo[id]" value="'+
+					id
+					+'"/>';
+				if($(window.parent.document.getElementById("appendHtml")).html()!=""){   //重新选择刚先把前一次追加的内容清空
+					$(window.parent.document.getElementById("appendHtml")).html("");
+				}
+				$(window.parent.document.getElementById("appendHtml")).append(appendHtml);
+	  }
+		$(window.parent.document.getElementById("sub")).bind("click",function(){
+		  	setinfo();
+			if(window.parent.document.getElementById("salaryEndDate").value==''){
+				alert('请填写工资结算截止日期');
+				return false;
+			}else{
+				if($(window.parent.document.getElementById("appendHtml")).html()==""){
+							alert("请填写工资结算截止日期。");
+							return false;
+			  	}
+			}
+		});
+   </script>
+</head>
+<body>
+<div id="dy">
+<div align="center" cellpadding="5" >
+
+<table class="tableA">
+	<tr>
+		<td colspan="6" bgcolor="#ECECFF"><span>
+		<h3>离职交接清单</h3>
+		</span></td>
+	</tr>
+	<tr>
+		<td class="td_left">员工姓名</td>
+		<td class="td_right">{userName}</td>
+		<td class="td_left">部门名称</td>
+		<td class="td_right">{deptName}</td>
+		<td class="td_left">职位</td>
+		<td class="td_right">{jobName}</td>
+
+	</tr>
+	<tr>
+		<td class="td_left">入职日期</td>
+		<td class="td_right">{entryDate}</td>
+		<td class="td_left">离职日期</td>
+		<td class="td_right">{quitDate}</td>
+		<td class="td_left">离职类型</td>
+		<td class="td_right">{quitTypeName}</td>
+	</tr>
+	<tr>
+		<td class="td_left">离职原因</td>
+		<td colspan="3">
+		<div id="quitReson" class="divChangeLine">{quitReson}</div>
+		</td>
+		<td class="td_left">编制</td>
+		<td class="td_right">{companyName}</td>
+	</tr>
+	{fromworkList}
+
+</table>
+<table class="tableA">
+   <tr>
+		<td class="td_left">员工确认意见</td>
+		<td class="td_right" id="staffAffCon">{staffAffCon}</td>
+		<td class="td_left">确认时间</td>
+		<td class="td_right">{staffAffDT}</td>
+	</tr>
+	   <tr>
+		<td class="td_left"><font color='blue'>工资结算截止日期</font></td>
+		<td class="td_right" id="salaryEndDate">
+			<input type="text" id="salaryEndDate1"  name="handover[salaryEndDate]" onfocus="WdatePicker()" class="txt" value=''/>
+		</td>
+		<td class="td_left" colspan='2'></td>
+	</tr>
+</table>
+</div>
+</div>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="6">
+		   <input type="hidden" id="id" name="handover[handoverId]" value="{id}" /></td>
+	</tr>
+</table>
+</body>
+</html>

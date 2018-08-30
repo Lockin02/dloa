@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>换货物料清单确认</title>
+{#commonInclude#}
+<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+<script type="text/javascript" src="{#jsPath#}/exchangeequ-common.js"></script>
+<script type="text/javascript" src="{#jsPath#}/exchangeequ-add.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+<script type="text/javascript" src="js/util.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post"
+	action="?model=projectmanagent_exchange_exchangeequ&action=equAdd">
+<table class="form_main_table ">
+	<tr>
+		<td colspan="4">
+		<div class="main_head"><span class="main_head_title">换货物料清单确认</span></div>
+		</td>
+	</tr>
+	<table width="100%"
+		style="bcontract-collapse:collapse;background-color:#F3F6FA;"
+		class="form_main_table">
+			<tr>
+				<td class="form_text_left"><span style="color:blue">换货单编号</span></td>
+				<td class="form_text_right" colspan="3">{exchangeCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">源单编号</td>
+				<td class="form_text_right" width='30%'>{contractCode}</td>
+				<td class="form_text_left">源单名称</td>
+				<td class="form_text_right" width='30%'>{contractName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right">{customerName}</td>
+				<td class="form_text_left">销售负责人</td>
+				<td class="form_text_right">{saleUserName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">创建时间</td>
+				<td class="form_text_right">{createTime}</td>
+				<td class="form_text_left">创建人</td>
+				<td class="form_text_right">{createName}</td>
+			</tr>
+			<tr>
+
+				<td class="form_text_left">换货原因</td>
+				<td class="form_text_right" colspan="3"><textarea
+					class="textarea_read" readonly>{reason}</textarea></td>
+			</tr>
+		<tr>
+			<td class="form_text_left">标准交货期</td>
+			<td class="form_text_right"><input type="text"
+				class="readOnlyTxtNormal" id="standardDate"
+				name="exchange[standardDate]" value="" readonly /></td>
+		</tr>
+	</table>
+	<table class="form_main_table" id="mytable">
+		<thead>
+			<tr align="left">
+				<td colspan=6">产品清单&nbsp;&nbsp;&nbsp;</td>
+				<td align="center" width="4%"><input type="hidden"
+					id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+					onclick="dis('invbody')" title="缩放" /></td>
+			</tr>
+		</thead>
+		<tbody id="invbody">
+			<tr class="main_tr_header">
+				<th>序号</th>
+				<!--                        <th>
+                            产品线
+                        </th>-->
+				<!--					<th>产品编号</th>-->
+				<th>产品名称</th>
+				<th>产品描述</th>
+				<th>数量</th>
+				<th>单位</th>
+				<th>加密配置</th>
+				<th>产品配置</th>
+			</tr>
+			{products}
+		</tbody>
+	</table>
+	<table class="form_main_table" id="mytable">
+		<tr id="equ.H" style="display:none;text-align:left;">
+			<td><b onclick="hideList('equ');">新增物料</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">新增物料</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+	</table>
+	<table class="form_main_table" colspan="7">
+		<tr>
+			<td class="txt_btn" colspan="4"><input type="hidden"
+				name="exchange[id]" id="exchangeId" value="{id}" /> <input
+				type="submit" class="txt_btn_a" value=" 保  存 " /> <input
+				type="submit" class="txt_btn_a" value=" 确 认 " onclick="toAddAudit()" />
+			<input type="button" class="txt_btn_a" value=" 关  闭 "
+				onclick="closeFun();" /></td>
+		</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

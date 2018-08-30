@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<TITLE>物料收发汇总表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script>
+	function searchBtn(){
+		window.open("?model=stock_report_stockreport&action=toProSFSubSearch",'newwindow','height=350,width=760');
+	}
+	function clearBtn(){
+		document.getElementById("productId").value='';
+        document.getElementById("productCode").value='';
+        document.getElementById("productName").value='';
+		document.getElementById("beginYear").value='';
+		document.getElementById("beginMonth").value='';
+		document.getElementById("endYear").value='';
+		document.getElementById("endMonth").value='';
+		this.location.reload("?model=stock_report_stockreport&action=toProSFSubReport");
+	}
+</script>
+</HEAD>
+<body style="margin:0" onload="initReport()">
+<table border="0" width="100%" height="100%">
+	<tr>
+        <td>
+            <input type="button" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+            <input type="button" id="clearBtn" onclick="clearBtn();" value=" 清  空 "/>
+            起始期次：{beginYear}.{beginMonth} &nbsp;&nbsp;
+            结束期次：{endYear}.{endMonth}
+        </td>
+	</tr>
+	<tr>
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="productCode" value="{productCode}"/>
+            <input type="hidden" id="productName" value="{productName}"/>
+            <input type="hidden" id="productId" value="{productId}"/>
+			<input type="hidden" id="beginYear" value="{beginYear}"/>
+			<input type="hidden" id="beginMonth" value="{beginMonth}"/>
+			<input type="hidden" id="endYear" value="{endYear}"/>
+			<input type="hidden" id="endMonth" value="{endMonth}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/stock/report/stockreport_sfsub.grf?v=20160621"
+				,"view/template/stock/report/sfsubdata.php?productId="+document.getElementById("productId").value
+                + "&productCode="+document.getElementById("productCode").value
+                + "&productName="+document.getElementById("productName").value
+				+ "&beginYear="+document.getElementById("beginYear").value
+				+ "&beginMonth="+document.getElementById("beginMonth").value
+				+ "&endYear="+document.getElementById("endYear").value
+				+ "&endMonth="+document.getElementById("endMonth").value
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

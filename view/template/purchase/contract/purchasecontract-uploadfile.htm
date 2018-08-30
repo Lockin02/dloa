@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+	var uploadfile;
+	$(function() {
+
+		$('[name="contract[signStatus]"]:radio').each(function() {
+			if( $(this).val() == $("#signStatus").val() ){
+				$(this).attr("checked","true");
+			}
+		});
+
+		uploadfile = createSWFUpload({
+			"serviceType": "oa_purch_apply_basic",
+			"serviceId": "{serviceId}"
+		});
+   			/**邮件发送到*/
+			$("#TO_NAME").yxselect_user({
+						hiddenId : 'TO_ID',
+						mode:'check'
+					});
+	});
+
+</script>
+</head>
+<body>
+	<div class="main_head">
+	   	<span class="main_head_title">修改订单签约状态及附件上传</span>
+	</div>
+
+<form id="form1" method="post" action="?model=purchase_contract_purchasecontract&action=uploadfile">
+<table class="form_main_table">
+		<tr align="center" >
+			<td class="tableheader form_text_left">
+				合同签约状态
+			</td>
+			<td class="form_text_right" colspan="3">
+				<input type="hidden" id="signStatus" value="{signStatus}"/>
+				<input type="radio" name="contract[signStatus]" value="0" />
+				未签约
+				<input type="radio" name="contract[signStatus]" value="1"/>
+				已签约
+				<!--
+				<input type="radio" name="contract[signStatus]" value="2"/>
+				已拿到纸质合同
+				 -->
+				<input type="radio" name="contract[signStatus]" value="3"/>
+				已提交纸质合同
+			</td>
+		</tr>
+			<tr>
+				<td class="form_text_left">附件</td>
+				<td colspan="3" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">
+							{file}
+						</div>
+					</div>
+				</td>
+			</tr>
+		<tr>
+	   		<td class="form_text_left">是否发送邮件
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="contract[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+	      		<input type="radio" name="contract[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+	   	<tr>
+	   		<td class="form_text_left">邮件发送至
+	       	</td>
+	       	<td colspan="3" id="maildiv" class="form_text_right">
+			    <input type="text" class="txtlong" name="contract[email][TO_NAME]" value="" id="TO_NAME" readonly="readonly"/>
+	    		<input type="hidden" name="contract[email][TO_ID]" value="" id="TO_ID" readonly="readonly"/>
+		    </td>
+	   	</tr>
+
+	<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		 <input type="hidden" name="contract[id]" id="id" value="{id}" />
+		 <input type="hidden" name="contract[serviceId]" id="serviceId" value="{serviceId}" />
+	     <input type="hidden" name="contract[serviceType]" id="serviceType" value="oa_purch_apply_basic" />
+		<input type="submit" class="txt_btn_a" value=" 保  存 " />&nbsp;&nbsp;
+		<input type="button" class="txt_btn_a" value=" 关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+	</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

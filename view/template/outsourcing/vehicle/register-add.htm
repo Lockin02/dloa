@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增租车登记表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsuppvehicle.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/register-provin-city.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/register-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/register-add.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_outsourcing_register"
+			});
+		});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+	<form id="form1" method="post" action="?model=outsourcing_vehicle_register&action=add">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							新增租车登记表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<fieldset><legend><b>基本信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three">录入人</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="createName" readonly name="register[createName]" value="{createName}"/>
+									<input type="hidden" id="createId" name="register[createId]" value="{createId}"/>
+								</td>
+								<td class="form_text_left_three">区  域</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="officeName" readonly name="register[officeName]"/>
+									<input type="hidden" id="officeId" name="register[officeId]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">项目名称</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="projectName" name="register[projectName]"/>
+									<input type="hidden" class="txt" id="projectId" name="register[projectId]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">录入时间</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="createTime" readonly name="register[createTime]" value="{createTime}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">省  份</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="provinceName" name="register[province]"/>
+									<select class="select" id="province" name="register[provinceId]" ></select>
+								</td>
+								<td class="form_text_left_three">项目编号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectCode" readonly name="register[projectCode]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">用车日期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useCarDate" onfocus="WdatePicker()" readOnly  name="register[useCarDate]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">城  市</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="cityName" name="register[city]"/>
+									<select class="select" id="city" name="register[cityId]" ></select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">司机姓名</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="driverName" name="register[driverName]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">供应商名称</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="suppName" name="register[suppName]"/>
+									<input type="hidden" id="suppId" name="register[suppId]"/>
+								</td>
+								<td class="form_text_left_three">供应商编号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="suppCode" readonly name="register[suppCode]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">租车性质</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="rentalProperty" name="register[rentalProperty]"/>
+									<select class="select" id="rentalPropertyCode" name="register[rentalPropertyCode]">
+										<option value="">...请选择...</option>
+										{rentalPropertyCode}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">项目经理</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectManager" readonly name="register[projectManager]"/>
+									<input type="hidden" id="projectManagerId" name="register[projectManagerId]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">合同类型</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="contractType" name="register[contractType]"/>
+									<select class="txt" id="contractTypeCode" name="register[contractTypeCode]">
+										<option value="">...请选择...</option>
+										{contractTypeCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">项目类型</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectType" readonly name="register[projectType]"/>
+									<input type="hidden" id="projectTypeCode" name="register[projectTypeCode]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">是否使用油卡支付</span></td>
+								<td class="form_text_right_three" colspan="5">
+									<select class="txt" id="isCardPay" name="register[isCardPay]">
+										<option value="">...请选择...</option>
+										<option value="1">是，使用油卡支付</option>
+										<option value="0">否，报销支付</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<fieldset><legend><b>车辆信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">车  牌</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="carNum" name="register[carNum]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">车  型</span></td>
+								<td class="form_text_right_three">
+									<select class="txt" id="carModelCode" name="register[carModelCode]">
+										<option value="">...请选择...</option>
+										{carModelCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">行车事由</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="drivingReason" name="register[drivingReason]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue">开始里程</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="startMileage" name="register[startMileage]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">结束里程</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="endMileage" name="register[endMileage]"/>
+								</td>
+								<td class="form_text_left_three">有效里程</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal formatMoney" id="effectMileage" readonly name="register[effectMileage]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">餐饮费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="mealsCost" name="register[mealsCost]"/>
+								</td>
+								<td class="form_text_left_three">住宿费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="accommodationCost" name="register[accommodationCost]"/>
+								</td>
+								<td class="form_text_left_three">停车费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="parkingCost" name="register[parkingCost]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">加班费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="overtimePay" name="register[overtimePay]"/>
+								</td>
+								<td class="form_text_left_three">特殊油费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="specialGas" name="register[specialGas]"/>
+								</td>
+								<td class="form_text_left_three">路桥费（元）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="tollCost" name="register[tollCost]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">油价（元/升）</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="gasolinePrice" name="register[gasolinePrice]"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">有效LOG时长</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt formatMoney" id="effectLogTime" name="register[effectLogTime]"/>
+								</td>
+								<td class="form_text_left_three" style="display:none"><span style="color:blue">短租车费（元/天）</span></td>
+								<td class="form_text_right_three" style="display:none">
+									<input type="text" class="txt formatMoney" id="shortRent" name="register[shortRent]"/>
+								</td>
+							</tr>
+							<tr id="extTr" style="display: none">
+								<td class="form_text_left_three" id="reimbursedFuelTd1"><span style="color:blue">实报实销油费（元）</span></td>
+								<td class="form_text_right_three" id="reimbursedFuelTd2" colspan="5">
+									<input type="text" class="txt formatMoney" id="reimbursedFuel" name="register[reimbursedFuel]"/>
+								</td>
+								<td class="form_text_left_three" style="display:none"><span style="color:blue">按公里计价油费单价（元/公里）</span></td>
+								<td class="form_text_right_three" style="display:none" colspan="5">
+									<input type="text" class="txt formatMoney" id="gasolineKMPrice" name="register[gasolineKMPrice]"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">合同附加费用</td>
+								<td class="form_text_right_three" colspan="5">
+									<div id="feeInfo"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">备  注</td>
+								<td class="form_text_right_three" colspan="5">
+									<textarea class="txt_txtarea_biglong" id="remark" name="register[remark]"></textarea>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">附  件</td>
+				<td colspan="5" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/>
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="button" class="txt_btn_a" value=" 保  存 " onclick="toSubmit('save');"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 提  交 " onclick="toSubmit('sub');"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

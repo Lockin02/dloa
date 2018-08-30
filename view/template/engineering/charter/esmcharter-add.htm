@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>新增项目章程</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+	<script type="text/javascript" src="view/template/engineering/project/js/esmproject-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/esmcharter-add.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_charter_esmcharter&action=add" onsubmit="return checkform();">
+	<table class="form_main_table" style="width:900px;margin:auto;text-align:center" align="center">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						新增项目章程
+						<span class="blue">【注：每个执行部门的总占比为100% / 项目编号会根据执行部门和项目类别自动生成】</span>
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同编号</td>
+			<td class="form_text_right">
+				{contractCode}
+				<input type="hidden" id="contractId" name="esmcharter[contractId]" value="{id}"/>
+				<input type="hidden" id="contractCode" name="esmcharter[contractCode]" value="{contractCode}"/>
+				<input type="hidden" id="contractType" name="esmcharter[contractType]" value="{contractType}"/>
+				<input type="hidden" name="esmcharter[rObjCode]" id="rObjCode" value="{objCode}"/>
+			</td>
+			<td class="form_text_left">客户名称</td>
+			<td class="form_text_right" width="30%">
+				{customerName}
+				<input type="hidden" name="esmcharter[customerName]" value="{customerName}"/>
+				<input type="hidden" name="esmcharter[customerId]" value="{customerId}"/>
+				<input type="hidden" name="esmcharter[customerType]" value="{customerType}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">项目编号</span></td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" name="esmcharter[projectCode]"
+					   id="projectCode" readonly="readonly"/>
+			</td>
+			<td class="form_text_left"><span class="blue">项目名称</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[projectName]" id="projectName" value="{contractName}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">项目经理</span></td>
+			<td class="form_text_right">
+				<input type="hidden" name="esmcharter[managerId]" id="managerId"/>
+				<input type="text" class="txt" name="esmcharter[managerName]" id="managerName" readonly="readonly"/>
+
+				<input type="hidden" name="esmcharter[areaManagerId]" value="{areaManagerId}"/>
+				<input type="hidden" name="esmcharter[areaManager]" value="{areaManager}"/>
+
+				<input type="hidden" name="esmcharter[salesmanId]" value="{prinvipalId}"/>
+				<input type="hidden" name="esmcharter[salesman]" value="{prinvipalName}"/>
+			</td>
+			<td class="form_text_left"><span class="blue">工作占比(%)</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[workRate]" id="workRate" value="0"/>
+				<input type="hidden" id="remainWorkRate" value="0"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">收入确认方式</span></td>
+			<td class="form_text_right">
+				<select class="select" name="esmcharter[incomeType]" id="incomeType">
+					{incomeType}
+				</select>
+			</td>
+			<td class="form_text_left"><span class="blue">概算占比(%)</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[estimatesRate]" id="estimatesRate" data-orgval="{estimatesRate}" value="{estimatesRate}" onblur="chkRateIsAvalible(this)"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">预计启动日期</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[planBeginDate]" value="{beginDate}" id="planBeginDate"
+					   onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+			</td>
+			<td class="form_text_left"><span class="blue">PK成本占比(%)</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[pkEstimatesRate]" id="pkEstimatesRate" data-orgval="{pkEstimatesRate}" value="{pkEstimatesRate}" onblur="chkRateIsAvalible(this,'pk')"/>
+				<span class="red" id="pkEstimatesRateTips" {pkEstimatesRateTipsShow}><br>本合同所关联的PK项目仍未关闭，请注意检查。</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">预计结束日期</span></td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="esmcharter[planEndDate]" value="{endDate}" id="planEndDate"
+					   onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+			</td>
+			<td class="form_text_left_three"><span class="blue">项目类别</span></td>
+			<td class="form_text_right_three">
+				<select class="select" name="esmcharter[category]" id="category">
+					{category}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">所属国家</span></td>
+			<td class="form_text_right">
+				<select class="select" name="esmcharter[countryId]" id="country"></select>
+				<input type="hidden" name="esmcharter[country]" id="countryName" value="{contractCountry}"/>
+				<input type="hidden" value="{contractCountryId}" id="countryId"/>
+			</td>
+			<td class="form_text_left"><span class="blue">所属省份</span></td>
+			<td class="form_text_right">
+				<select class="select" name="esmcharter[provinceId]" id="province"></select>
+				<input type="hidden" name="esmcharter[province]" id="provinceName"/>
+				<input type="hidden" value="{contractProvinceId}" id="provinceId"/>
+
+				<input type="hidden" name="esmcharter[contractCountry]" id="contractCountry" value="{contractCountry}"/>
+				<input type="hidden" name="esmcharter[contractProvince]" id="contractProvince"
+					   value="{contractProvince}"/>
+				<input type="hidden" name="esmcharter[contractCity]" id="contractCity" value="{contractCity}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">所属城市</span></td>
+			<td class="form_text_right">
+				<select class="select" name="esmcharter[cityId]" id="city"></select>
+				<input type="hidden" name="esmcharter[city]" id="cityName"/>
+				<input type="hidden" value="{contractCityId}" id="cityId"/>
+			</td>
+		    <td class="form_text_left"><span class="blue">产品线</span></td>
+			<td class="form_text_right">
+				<select class="select" name="esmcharter[newProLine]" id="newProLine"  onchange="initWorkRate();">
+					{newProLine}
+				</select>
+				<input type="hidden" id="newProLineName" value="{newProLineName}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">执行区域</span></td>
+			<td class="form_text_right" colspan="3">
+				<select class="select" name="esmcharter[productLine]" id="productLine" onchange="updateOfficeInfo(this)">
+					{productLine}
+				</select>
+				<input type="hidden" class="txt" name="esmcharter[deptName]" id="deptNameInput"/>
+				<input type="hidden" name="esmcharter[deptId]" id="deptId"/>
+				<input type="hidden" name="esmcharter[officeId]" id="officeId"/>
+				<input type="hidden" class="txt" name="esmcharter[officeName]" id="officeNameInput"/>
+				<input type="hidden" id="productLineUse" value="{productLineUse}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">项目目标</td>
+			<td class="form_text_right" colspan="3">
+                <textarea class="txt_txtarea_900" name="esmcharter[projectObjectives]"
+						  id="projectObjectives"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">项目实施要求</span></td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="txt_txtarea_900" name="esmcharter[description]" id="description"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4" class="innerTd">
+				<div id="closeRules"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" name="esmcharter[businessBelongName]" id="businessBelongName"
+					   value="{businessBelongName}"/>
+				<input type="hidden" name="esmcharter[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+				<input type="hidden" name="esmcharter[formBelong]" id="formBelong" value="{formBelong}"/>
+				<input type="hidden" name="esmcharter[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+				<input type="hidden" id="moduleCode" value="{moduleCode}"/>
+				<input type="hidden" name="msg" value="发布成功"/>
+				<input type="submit" class="txt_btn_a" value="发  布"/>
+				<input type="button" class="txt_btn_a" value="关  闭" onclick="window.close();"/>
+			</td>
+		</tr>
+	</table>
+	<br/>
+</form>
+</body>
+</html>

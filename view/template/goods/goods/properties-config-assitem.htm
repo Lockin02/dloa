@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>关联其他配置选项</title>
+{#commonInclude#}
+<script type="text/javascript"
+	src="view/template/goods/goods/js/properties-config-assitem.js"></script>
+<script>
+	$(document).ready(function() {
+		//alert()
+		initialAssItem();
+	})
+	/**
+	 * 初始化选中关系
+	 */
+	function initialAssItem() {
+		var assItemIdStr = "{assItemIdStr}";
+		var assItemTipStr = "{assitemTipStr}";
+		if(assItemIdStr!=""){
+			var assItemIdArr = assItemIdStr.split(",")
+			var assItemTipArr = assItemTipStr.split(",")
+
+			$("#coutNumb").val(assItemIdArr.length)
+			for ( var j = 0; j < assItemIdArr.length; j++) {
+				if(assItemIdArr[j]!=""){
+					var mycount = j + 1;
+					var itemtable = document.getElementById("itemtable");
+					i = itemtable.rows.length;
+					oTR = itemtable.insertRow([ i ]);
+					oTR.className = "TableData";
+					oTR.align = "center";
+					oTR.height = "28px";
+					var oTL0 = oTR.insertCell([ 0 ]);
+					oTL0.innerHTML = '<img align="absmiddle" src="images/removeline.png" onclick="delItem(this);" title="删除行">';
+					var oTL1 = oTR.insertCell([ 1 ]);
+					oTL1.innerHTML = assItemTipArr[j]
+							+ '<input type="hidden" class="txtshort" tip="'+assItemTipArr[j]+'" value="' + assItemIdArr[j]
+						+ '"  id="checkId' + mycount + '"/>';
+					var oTL2 = oTR.insertCell([ 2 ]);
+
+				}
+			}
+		}
+
+	}
+	/**
+	 * 保存
+	 */
+	function setAssItem() {
+		var assItemIdArr = [];
+		var assItemTipArr=[]
+		$("input[id^=checkId]").each(function() {
+			assItemIdArr.push($(this).val());
+			assItemTipArr.push($(this).attr("tip"))
+		})
+		window.opener.$("#itemTable_cmp_assitemIdStr" + '{rowNum}').val(assItemIdArr);
+		window.opener.$("#itemTable_cmp_assitemTipStr" + '{rowNum}').val(assItemTipArr);
+		closeFun();
+	}
+</script>
+</head>
+<body>
+<!-- <div style="float:left;width:27%;overflow:auto;">
+		<ul id="tree" />
+		<input type="hidden"  id="goodsId" value="{goodsId}" />
+	</div>
+ -->
+<br />
+<input type="hidden" id="assitem" value="{assitem}" />
+<input type="hidden" id="coutNumb" value="0" />
+<table class="form_main_table">
+	{assItems}
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="button"
+			class="txt_btn_a" value=" 添加" onclick="addItem();" /> <input
+			type="button" class="txt_btn_a" value=" 保存 " onclick="setAssItem();" />
+		</td>
+	</tr>
+</table>
+<table class="form_main_table" id="itemtable">
+
+</table>
+</body>
+</html>

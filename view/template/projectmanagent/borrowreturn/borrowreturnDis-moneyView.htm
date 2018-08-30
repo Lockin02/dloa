@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看借试用归还管理</title>
+      {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/borrowreturnDis-confirmComMoney.js" ></script>
+   <script>
+$(document).ready(function() {
+		validate({
+			"requireDate" : {
+				required : true
+			}
+		});
+		if($("#actType").val()!=""){
+			$("#closeBtn").hide();
+		}
+
+		function setinfo(){
+				var affirmMoney = $("#affirmMoney").val(); //预算总金额
+				var itemHtml="";
+					if($("#affirmMoney").length >0){
+					var affirmMoney=$("#affirmMoney").val();
+						if(affirmMoney!=''){
+							itemHtml+='<input type="hidden" id="affirmMoney" name="objInfo[affirmMoney]" value="'+
+							affirmMoney
+							+'"/>';
+						}
+					}
+				if($(window.parent.document.getElementById("appendHtml")).html()!=""){   //重新选择刚先把前一次追加的内容清空
+					$(window.parent.document.getElementById("appendHtml")).html("");
+				}
+				$(window.parent.document.getElementById("appendHtml")).append(itemHtml);
+	  }
+	$("#affirmMoney_v").blur(function(){
+		setinfo(); 
+	});
+});
+</script>
+</head>
+
+<body>
+<table class="form_main_table">
+<tr>
+	<td colspan="4">
+      <div class="main_head">
+          <span class="main_head_title">
+            	查看借试用归还管理信息
+          </span>
+      </div>
+   </td>
+</tr>
+      <tr>
+            <td class="form_text_left">归还单编号</td>
+      		<td class="form_text_right" >
+      			 {borrowreturnCode}
+      		</td>
+      		<td class="form_text_left">借用单编号</td>
+      		<td class="form_text_right" >
+      			 {borrowCode}
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">处理方式</td>
+      		<td class="form_text_right" >
+      			{disposeType}
+      		</td>
+      		<td class="form_text_left">借用类型</td>
+      		<td class="form_text_right" >
+      			{borrowLimit}
+      		</td>
+
+       </tr>
+       <tr>
+            <td class="form_text_left"><span style="color:blue">损坏级别</span></td>
+      		<td class="form_text_right" >
+                {damageLevelName}
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">赔偿方式</span></td>
+      		<td class="form_text_right">
+                {compensateTypeName}
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left"><span style="color:blue">处理结果</span></td>
+      		<td class="form_text_right">
+                {resultTypeName}
+      		</td>
+      		<td class="form_text_left">处理意见</td>
+      		<td class="form_text_right" colspan="3">
+      			<div id="remark" class="divChangeLine">{disposeIdea}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">预算总金额</span></td>
+      		<td class="form_text_right formatMoney" >
+      			{money}
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">借用申请人</span></td>
+      		<td class="form_text_right" >
+      			{userName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">确认总金额</span></td>
+      		<td class="form_text_right" >
+      			<input type="text" class="txt formatMoney" id="affirmMoney" value="{money}"/>
+      		</td>
+       </tr>
+
+       <tr id="product">
+		<td colspan="6">
+		<fieldset style="width:200">
+		     <legend class="legend" onclick="showAndHideDiv('productImg','productInfo')">归还物料清单
+				<img src="images/icon/info_up.gif" id="productImg" />
+			  </legend>
+			<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	  </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+         <input  type="hidden" id="id" name="borrowreturnDis[id]"  value="{id}" />
+<!--          <input  type="submit" class="txt_btn_a" value=" 确  定 "/>-->
+<!--	      <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>-->
+		</td>
+</tr>
+</table>
+</body>
+</html>

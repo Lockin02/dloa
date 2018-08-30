@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>通讯组</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/select_user.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css"> 
+	.table {
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+.input_list li {list-style:none; width:70px; float:left;}
+</style>
+
+</head>
+<body>
+<br />
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">通讯组详情</td>
+	</tr>
+	<tr>
+		<td width="100" ><span class="style1">*</span>
+组 名 称：</td>
+		<td align="left" style=" padding:2px 10px; font-weight:bold;">{groupname}</td>
+	</tr>
+	<tr>
+		<td><span class="style1">*</span>
+归属类型：</td>
+		<td align="left" style=" padding:2px 5px;">
+			<input name="type" type="radio" value="1" {checked1} disabled/>&nbsp;个人组&nbsp;&nbsp;<input name="type" type="radio" value="2" {checked2} disabled/>&nbsp;部门&nbsp;&nbsp;<input name="type" type="radio" value="3" {checked3} disabled/>&nbsp;区域&nbsp;&nbsp;<input name="type" type="radio" value="4" {checked6} disabled/>&nbsp;混合
+					</td>
+	</tr>
+	<tr id='tr_area' style="display:none;">
+		<td><span class="style1">*</span>
+区&nbsp;&nbsp;&nbsp; &nbsp;域：</td>
+		<td align="left" style=" padding:2px 10px;">
+			<select id="area_id" name="area_id" disabled>
+				<option value="A">请选区域</option>
+				{select_area}
+			</select>			
+		</td>
+	</tr>
+	
+	<tr id='tr_dept' style="display:none;">
+		<td><span class="style1">*</span>
+部&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
+		<td align="left" style=" padding:2px 10px;">
+			<select id="dept_id" name="dept_id" disabled>
+				<option  value="D">&nbsp;&nbsp;&nbsp;请选部门</option>
+				<option  value="0">&nbsp;&nbsp;&nbsp;|--所有部门</option>
+				{select_dept}
+			</select>
+			
+		</td>
+	</tr>
+	<tr id='tr_mix_area' style="display:none;">
+		<td><span class="style1">*</span>
+区&nbsp;&nbsp;&nbsp; &nbsp;域：</td>
+		<td align="left">
+			<select id="mix_area_id" name="mix_area_id" disabled>
+				<option value="A">请选区域</option>
+				{select_area}
+			</select>			
+		</td>
+	</tr>
+	<tr id='tr_mix_dept' style="display:none;">
+		<td><span class="style1">*</span>
+部&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
+		<td align="left">
+			<select id="mix_dept_id" name="mix_dept_id" disabled>
+				<option  value="D">&nbsp;&nbsp;&nbsp;请选部门</option>
+				<option  value="0">&nbsp;&nbsp;&nbsp;|--所有部门</option>
+				{select_dept}
+			</select>
+			
+		</td>
+	</tr>
+	<tr id='tr_persons' >
+		<td><span class="style1">*</span>
+所有组员：</td>
+		<td nowrap align="left" style=" padding:2px 10px;">
+         <span style=" color:#00F">{UserName}</span> 
+		 <span style=" color:#F00">{deptUserName}{areaUserName}{mixUserName}{unMemberList}</span> 
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td><span class="style1">*</span>
+发信类型：</td>
+		<td align="left" style=" padding:2px 5px;">
+			<input name="send_type" type="radio" value="1" {checked4} disabled />&nbsp;所有&nbsp;&nbsp;<input name="send_type" type="radio" value="2" {checked5} disabled/>&nbsp;指定人员
+		</td>
+	</tr>
+	<tr id='tr_sender' style="display:none;">
+		<td><span class="style1">*</span>
+发 信 人：</td>
+		<td nowrap align="left" style=" padding:2px 10px;">
+			<span style=" color:#00F">{SendName}</span>
+			<span style=" color:#F00">{unSenderList}</span> 
+		</td>
+	</tr>
+	<tr id='tr_no_person' >
+		<td>不能收发人员：</td>
+		<td nowrap align="left"  style=" padding:2px 10px;" >
+	
+            <span style=" color:#F00">{noUserName}</span> 
+
+		</td>
+	</tr>  
+	<tr>
+		<td>组 描 述：</td>
+		<td align="left" style=" padding:2px 10px;">
+			{description} 
+		</td>
+	</tr>
+	
+</table>
+</form>
+<script type="text/javascript">
+	var area_str;
+	var temp_user='';
+	 var AttType=$('input:radio[name="type"]:checked').val(); 
+	 att_type(AttType)
+	 $('input:radio[name="type"]').bind("click", function()
+	 {
+	 	 att_type($('input:radio[name="type"]:checked').val())
+     }); 
+	 
+	 var SendType=$('input:radio[name="send_type"]:checked').val(); 
+	  send_type(SendType)
+	 $('input:radio[name="send_type"]').bind("click", function()
+	 {
+	 	 send_type($('input:radio[name="send_type"]:checked').val())
+     }); 
+	function check()
+	{
+		
+		var atype=$('input:radio[name="type"]:checked').val();
+		var stype=$('input:radio[name="send_type"]:checked').val();
+		if ($('#groupname').val() == '') 
+		{
+			alert('组名称不能为空！');
+			return false;
+		}
+		if(atype==1)
+		{
+		  if(!$('#UserId').val())
+			{
+				alert('请选组员');
+				return false;
+			}		
+			
+		}else if(atype==2)
+		{
+			if($('#dept_id').val()=='D')
+			{
+				
+				alert('请选归属部门');
+				return false;
+			}
+			
+		}else if(atype==3)
+		{
+			if($('#area_id').val()=='A')
+			{
+				alert('请选归属区域');
+				return false;
+			}
+			
+		}else
+		{
+			alert('请选归属类型');
+			return false;
+		}
+		if(stype==1)
+		{
+			
+		}else if(stype==2)
+		{
+			if (!$('#SendId').val()) 
+			{
+				  alert('请选择发信人！');
+					return false;
+			}
+		}else
+		{
+			 alert('请选发信类型');
+			 return false;
+		}	
+		
+		return true;
+	}
+			
+	 function att_type(type)
+	 {
+	 	if(type==1)
+		 {
+		 	$('#tr_person').css('display','');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+		 }else if(type==2)
+		 {
+		    $('#tr_person').css('display','none');
+			$('#tr_dept').css('display','');
+			$('#tr_dept_person').css('display','');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+		 }else if(type==3)
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_area').css('display','');
+			$('#tr_area_person').css('display','');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+		 }else if(type==4)
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_mix_area').css('display','');
+			$('#tr_mix_dept').css('display','');
+			$('#tr_mix_person').css('display','');
+		 }else
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+		 }
+	 }
+	 function send_type(type)
+	 {
+	 	if(type==1)
+		 {
+		 	$('#tr_sender').css('display','none');
+		 }else if(type==2)
+		 {
+		     $('#tr_sender').css('display','');
+		 }else
+		 {
+		 	 $('#tr_sender').css('display','');
+		 }
+	 }
+	
+
+</script>
+</body>
+</html>

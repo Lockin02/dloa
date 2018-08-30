@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+	<title>BOM清单</title>
+	{#commonInclude#}
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<script>
+		var attributeNameStr = "{attributeNameStr}";
+		var publicUrl = "?model={t_model}";
+		var createName ="{createName}";
+		var createId = "{createId}";
+		var createTime = "{createTime}";
+		var classify_sel = "{classify_sel}";
+	</script>
+	<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="view/template/manufacture/basic/css/template-list.css" />
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jeasyui_newest/datagrid/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="view/template/manufacture/basic/js/template-list.js" ></script>
+
+	<!--
+	<style>
+		.sf_td{border-color: #ccc;border-style: dotted;border-width: 0 1px 1px 0;}
+		.sf_bg{background: linear-gradient(to bottom, #f9f9f9 0px, #efefef 100%) repeat-x scroll 0 0 rgba(0, 0, 0, 0);}
+	</style>
+	 -->
+</head>
+<body>
+
+     <div id='main'>
+
+
+     	<!-- 左侧 -->
+     	<div id='left' >
+     		<div >
+     			<input type="button" class="txt_btn_a" value="新增分类 " id="butAClassify" style="margin:5px 0px 10px 60px;"/>
+     		</div>
+     		<ul id="materials_tree"></ul>
+     	</div>
+     	<!-- 右侧 -->
+     	<div id='right' >
+     		<div id='classifyAdd' style="display:none;">
+     		<form id="form1" method="post" action="?model=manufacture_basic_template&action=classifyAddEdit" onsubmit="return checkAddForm();">
+				<table class="form_main_table">
+					<tr>
+						<td class="form_text_left blue">分类名称</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="classifyName" name="classify[classifyName]"/>
+						</td>
+						<td class="form_text_left">父级</td>
+						<td class="form_text_right">
+							<select class="txt" id="C_parent" name="classify[parent]"></select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">录入人</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyText" id="C_createName" readonly name="classify[createName]" value="{createName}"/>
+							<input type="hidden" id="C_createId" name="classify[createId]" value="{createId}"/>
+						</td>
+						<td class="form_text_left">录入时间</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyText" id="C_createTime" readonly name="classify[createTime]" value="{createTime}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">备  注</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_font600" id="C_remark" name="classify[remark]"></textarea>
+						</td>
+					</tr>
+				</table>
+				<table class="form_main_table">
+					<tr>
+						<td class="txt_btn" colspan="4">
+							<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+							<!--<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>-->
+							<input type="hidden" id="C_id" name="classify[id]"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+     		</div>
+
+     		<div id='classifyView' style="display:none;">
+				<table class="form_main_table">
+					<tr>
+						<td class="form_text_left blue">分类名称</td>
+						<td class="form_text_right" id='V_classifyName'></td>
+						<td class="form_text_left">父级</td>
+						<td class="form_text_right" id="V_parent"></td>
+					</tr>
+					<tr>
+						<td class="form_text_left">录入人</td>
+						<td class="form_text_right" id="V_createName"></td>
+						<td class="form_text_left">录入时间</td>
+						<td class="form_text_right" id="V_createTime"></td>
+					</tr>
+					<tr>
+						<td class="form_text_left">修改人</td>
+						<td class="form_text_right" id="V_updateName"></td>
+						<td class="form_text_left">修改时间</td>
+						<td class="form_text_right" id="V_updateTime"></td>
+					</tr>
+					<tr>
+						<td class="form_text_left">备  注</td>
+						<td class="form_text_right" colspan="3" id="V_remark"></td>
+					</tr>
+				</table>
+     		</div>
+
+
+     		<div id='template-list'></div>
+     		<div id='template-add' style="display:none;">
+     		<table class="form_main_table">
+     			<tr id="importTemp">
+					<td class="form_text_left">导入模板</td>
+					<td class="form_text_right">
+						<iframe style="width:0; height:0; margin-top:-10px;" name="subframe" src="?model=manufacture_basic_template&action=temImport">
+						</iframe>
+						<form id='importForm'  method="post" enctype="multipart/form-data" action="?model=manufacture_basic_template&action=temImport" target="subframe">
+							<input type="file" name="import" id="import"  />
+							<input type="submit" class="txt_btn_a" value="导入">
+							<a class="txt_btn_a" href="view/template/manufacture/basic/classify.xls" style="color:#564032">模板下载</a>
+						</form>
+					</td>
+				</tr>
+			</table>
+     		<form id="form1" method="post" action="?model=manufacture_basic_template&action=add_edit" onsubmit="return checkForm();">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left blue">模板名称</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" id="templateName" name="template[templateName]"/>
+					</td>
+					<td class="form_text_left blue">分类</td>
+					<td class="form_text_right">
+						<select class="txt" id="classify" name="template[classifyId]">{classify_sel}</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">创建人</td>
+					<td class="form_text_right">
+						<input type="text" class="readOnlyText" id="createName" readonly name="template[createName]" value="{createName}"/>
+						<input type="hidden" id="createId" name="template[createId]" value="{createId}"/>
+					</td>
+					<td class="form_text_left">创建时间</td>
+					<td class="form_text_right">
+						<input type="text" class="readOnlyText" id="createTime" readonly name="template[createTime]" value="{createTime}"/>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="form_text_left">备  注</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="txt_txtarea_font600" id="remark" name="template[remark]"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_right" colspan="4">
+						<div id="items"></div>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td class="txt_btn" colspan="4">
+						<input type="hidden" id="type" name="type"/>
+						<input type="hidden" id="id" name="template[id]"/>
+						<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+					</td>
+				</tr>
+			</table>
+		</form>
+     		</div>
+		</div>
+     </div>
+</body>
+</html>

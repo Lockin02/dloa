@@ -1,0 +1,826 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>销售合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-order.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-licenseType.js"></script>
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js" > </script>
+
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+
+
+<script type="text/javascript" src="view/template/contract/sales/js/sales-add-js.js"> </script>
+<script type="text/javascript" src="view/template/contract/sales/js/sales-addvtwo.js"></script>
+
+</head>
+<body>
+	<table>
+		<tr>
+			<td>
+				<img src="images/sys_config.gif"/>
+				<b>
+					销售合同
+				</b>
+			</td>
+		</tr>
+	</table>
+	<form action="?model=contract_sales_sales&action=add" method="post" id="form1" onsubmit="return CheckForm()" onkeypress="return NoSubmit(event);">
+		<table class='form_main_table'>
+			<tr>
+				<td class="form_text_left">
+					鼎利合同号
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[contNumber]" id="contNumber" onblur="check_code(this.value)"/>
+					<span id="_contNumber" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					临时合同号
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[temporaryNo]" id="temporaryNo"/>
+					<input type="hidden" id="orderId" />
+					<span id="_temporaryNo" class="red">
+						[*]
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					合同名称
+				</td>
+				<td class="form_text_right" >
+					<input type="text" class="txt" name="sales[contName]" id="contName"/>
+					<span id="_contName" class="red">[*]</span>
+				</td>
+				<td class="form_text_left">
+					客户合同号
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" name="sales[customerContNum]" id="customerContNum" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					合同金额
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt formatMoney" name="sales[money]" id="money" maxlength="100" />
+					<span id="_money" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					发票类型
+				</td>
+				<td class="form_text_right">
+					<select class="txt" name="sales[invoiceType]" id="invoiceType">
+						{invoiceType}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					交货日期
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[deliveryDate]" id="deliveryDate" onfocus="WdatePicker()"/>
+					<span id="_deliveryDate" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					合同负责人
+				</td>
+				<td class="form_text_right">
+					<input type="hidden" name="sales[principalId]" id="principalId" value="{principalId}"/>
+					<input type="text" class="txt" name="sales[principalName]" id="principalName" readonly value="{principalName}"/>
+					<input type="button" class="txt_btn_a" value="选 择" onclick="loadOrgWindow('principalId','principalName')"/>
+					<input type="button" class="txt_btn_a" value="清 空" onclick="clearOrgInfo('principalId','principalName')"/>
+					<span id="_money" class="red">
+						[*]
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					客户名称
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="customerName" name="sales[customerName]"/>
+					<input type="hidden" name="sales[customerId]" id="customerId"/>
+					<span id="_customerId" class="red">
+						[*]
+					</span>
+				</td>
+				<td class="form_text_left">
+					付款单位
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="payUnit" name="sales[payUnit]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					客户类型
+				</td>
+				<td class="form_text_right">
+					<select class="txt" name="sales[customerType]" id="customerType">
+						{customerType}
+					</select>
+				</td>
+				<td class="form_text_left">
+					客户所属省份
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="sales[province]" id="provincecity" class="text" maxlength="10"/>
+				    <input type="hidden" name="sales[provinceId]" id="provinceId"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="form_text_left">
+					收货地址
+				</td>
+				<td class="form_text_right" colspan="3">
+					<textarea name="sales[address]" id="address" class="all" style="width: 100%"></textarea>
+				</td>
+			</tr>
+		</table>
+		<table class="form_main_table" id="link">
+			<tr>
+				<td colspan="8" class="form_header">
+					客户联系人
+				</td>
+				<td  width="5%">
+					<input type="hidden" id="linkNum" name="linkNum" value="1"/>
+					<img src="images/verpic_open.gif" onclick="dis('mylink')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="link_add('mylink','linkNum')" title="添加行"/>
+				</td>
+			</tr>
+		</table>
+		<table id="mylink" class="form_main_table">
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th>
+					客户联系人
+				</th>
+				<th>
+					电话
+				</th>
+				<th>
+					邮件
+				</th>
+				<th>
+					备注
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			<tr id="linkDetail1">
+				<td>
+					1
+				</td>
+				<td>
+					<input class="text" type="hidden" name="sales[linkman][1][linkmanId]" id="linkmanId1"/>
+					<input class="txt" type="text" name="sales[linkman][1][linkman]" id="linkman1" onclick="reloadLinkman('linkman1');"/>
+				</td>
+				<td>
+					<input class="txt" type="text" name="sales[linkman][1][telephone]" id="telephone1"/>
+				</td>
+				<td>
+					<input class="txt" type="text" name="sales[linkman][1][Email]" id="Email1"/>
+				</td>
+				<td>
+					<input class="txtlong" type="text" name="sales[linkman][1][remark]" id="remark1"/>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mylink')" title="删除行"/>
+				</td>
+			</tr>
+		</table>
+
+		<table class="form_main_table" id="equ">
+		   <thead>
+			<tr>
+				<td colspan="11" class="form_header">
+					产品清单
+				</td>
+				<td width="5%">
+					<input type="hidden" id="EquNum" value="1"/>
+					<img src="images/verpic_open.gif" onclick="dis('myequ')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="soft_add('myequ','EquNum')" title="添加行"/>
+				</td>
+			</tr>
+            <tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="9%">
+					产品线
+				</th>
+				<th width="10%">
+					产品编号
+				</th>
+				<th width="16%">
+					产品名称
+				</th>
+				<th width="9%">
+					型号/版本
+				</th>
+				<th width="8%">
+					数量
+				</th>
+				<th width="8%">
+					单价
+				</th>
+				<th width="8%">
+					金额
+				</th>
+				<th width="10%">
+					计划交货日期
+				</th>
+				<th width="8%">
+					保修期
+				</th>
+				<th width="4%">
+					合同内
+				</th>
+				<th width="5%">
+					操作
+				</th>
+        	</tr>
+        	</thead>
+
+        	<tbody id="myequ">
+        	<tr><td>1
+                </td>
+				<td>
+					<select class="txtshort"  name="sales[equipment][1][productLine]" id="productLine1"></select>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[equipment][1][productNumber]" id="EquId1"/>
+				</td>
+				<td>
+					<input class="txtmiddle" type=text" name="sales[equipment][1][productName]" id="EquName1"/>
+					<input type="hidden" name="sales[equipment][1][productId]" id="ProductId1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[equipment][1][productModel]" id="EquModel1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name='sales[equipment][1][amount]'
+					id='EquAmount1'onblur="FloatMul('EquAmount1','EquPrice1','EquAllMoney1',2)" />
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name='sales[equipment][1][price]'
+					id='EquPrice1'onblur="FloatMul('EquAmount1','EquPrice1','EquAllMoney1',2)"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name='sales[equipment][1][countMoney]' id='EquAllMoney1'/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[equipment][1][projArraDate]" id="EquDeliveryDT1"onfocus="WdatePicker()" />
+				</td>
+				<td>
+					<select class="txtshort" name="sales[equipment][1][warrantyPeriod]" id="warrantyPeriod1">
+						<option value="半年">
+							半年
+						</option>
+						<option value="一年">
+							一年
+						</option>
+						<option value="两年">
+							两年
+						</option>
+						<option value="三年">
+							三年
+						</option>
+					</select>
+				</td>
+				<td>
+					<input type="checkbox" name="sales[equipment][1][isSell]" id="isSell1" checked="checked" />
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="equdel(this,'myequ')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="8" class="form_header">
+					加密信息
+				</td>
+				<td width="5%">
+					<input type="hidden" id="licenseNum" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('mylicense')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="license_add('mylicense','licenseNum')" title="添加行"/>
+				</td>
+			</tr>
+		</table>
+		<table id="mylicense" class="form_main_table">
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="10%">
+					产品线
+				</th>
+				<th width="10%">
+					软件狗类型
+				</th>
+				<th width="10%">
+					数量
+				</th>
+				<th width="12%">
+					License
+				</th>
+				<th width="16%">
+					License树
+				</th>
+				<th width="8%">
+					有效期
+				</th>
+				<th>
+					备注
+				</th>
+				<th width="4%">
+					合同内
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<select class="txtshort" name="sales[licenselist][1][productLine]" id="lProductLine1">
+					</select>
+				</td>
+				<td>
+					<select class="txtshort" name="sales[licenselist][1][softdogType]" id="softdogType1">
+						<option value="HASP">
+							HASP
+						</option>
+					</select>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[licenselist][1][amount]" id="softdogAmount1"/>
+				</td>
+				<td>
+					<input class="txtmiddle" type="text" name="sales[licenselist][1][licenseType]"id="licenseType1" />
+					<input type="hidden" id="licenseinput1" name="sales[licenselist][1][licenseTypeIds]"/>
+				</td>
+				<td>
+					<input type="hidden" id="licenseNodeId1" name="sales[licenselist][1][nodeId]"/>
+					<textarea id="licenseNodeName1" name="sales[licenselist][1][nodeName]" title="选择加密信息" onclick="openDia(1)" rows="3" cols="20"></textarea>
+				</td>
+				<td>
+					<select class="txtshort" name="sales[licenselist][1][validity]" id="validity1">
+						<option value="半年">
+							半年
+						</option>
+						<option value="一年">
+							一年
+						</option>
+						<option value="两年">
+							两年
+						</option>
+					</select>
+				</td>
+				<td>
+					<input class="txt" type="text" name="sales[licenselist][1][remark]" id="licenseRemark1"/>
+				</td>
+				<td>
+					<input type="checkbox" name="sales[licenselist][1][isSell]" id="licenseisSell1" checked="checked" />
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mylicense')" title="删除行"/>
+				</td>
+			</tr>
+		</table>
+		<table class="form_main_table" id="pre">
+		  <thead>
+			<tr>
+				<td colspan="11" class="form_header">
+					自定义清单
+				</td>
+				<td width="5%">
+					<input type="hidden" id="PreNum" name="PreNum" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('mycustom')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="pre_add('mycustom','PreNum')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="10%">
+					产品线
+				</th>
+				<th>
+					产品编号
+				</th>
+				<th>
+					产品名称
+				</th>
+				<th width="8%">
+					产品型号
+				</th>
+				<th width="8%">
+					数量
+				</th>
+				<th width="8%">
+					单价
+				</th>
+				<th width="8%">
+					金额
+				</th>
+				<th>
+					计划交货日期
+				</th>
+				<th width="15%">
+					备注
+				</th>
+				<th width="4%">
+					合同内
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+
+		   <tbody id="mycustom">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[customizelist][1][productLine]"
+					id="cProductLine1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[customizelist][1][productnumber]"
+					id="PequID1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[customizelist][1][name]" id="PequName1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[customizelist][1][prodectmodel]" id="PreModel1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name='sales[customizelist][1][amount]'
+					id='PreAmount1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name='sales[customizelist][1][price]'
+					id='PrePrice1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="sales[customizelist][1][countMoney]"
+					id="CountMoney1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[customizelist][1][projArraDT]"
+					id="PreDeliveryDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txt" type="text" name="sales[customizelist][1][remark]"
+					id="PRemark1" size="18" maxlength="100" />
+				</td>
+				<td>
+					<input type="checkbox" name="sales[customizelist][1][isSell]" id="customizelistSell1"
+					checked="checked" />
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mycustom')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="form_main_table" id="inv">
+		  <thead>
+			<tr>
+				<td colspan="6" class="form_header">
+					开票计划
+				</td>
+				<td width="5%">
+					<input type="hidden" id="InvNum" name="InvNum" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('myinv')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="inv_add('myinv','InvNum')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="10%">
+					开票金额
+				</th>
+				<th width="10%">
+					其中软件金额
+				</th>
+				<th width="10%">
+					开票类型
+				</th>
+				<th>
+					开票日期
+				</th>
+				<th>
+					开票内容
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+
+		   <tbody id="myinv">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="sales[invoice][1][money]"
+					id="InvMoney1"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="sales[invoice][1][softM]" id="InvSoftM1"/>
+				</td>
+				<td>
+					<select class="txtmiddle" name="sales[invoice][1][iType]"
+					id="invoiceListType1">
+					</select>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[invoice][1][invDT]" id="InvDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtlong" type="text" name="sales[invoice][1][remark]" id="InvRemark1"/>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'myinv')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="form_main_table" id="pay">
+		  <thead>
+			<tr>
+				<td colspan="5" class="form_header">
+					收款计划
+				</td>
+				<td width="5%">
+					<input type="hidden" id="PayNum" name="PayNum" value="1"/>
+					<img src="images/verpic_open.gif" onclick="dis('mypay')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="pay_add('mypay','PayNum')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th>
+					收款金额
+				</th>
+				<th>
+					收款日期
+				</th>
+				<th>
+					收款方式
+				</th>
+				<th>
+					收款条件
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+
+		   <tbody id="mypay">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="sales[receiptplan][1][money]" id="PayMoney1"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[receiptplan][1][payDT]" id="PayDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<select class="txtshort" name="sales[receiptplan][1][pType]" id="PayStyle1">
+						<option value="电汇">
+							电汇
+						</option>
+						<option value="现金">
+							现金
+						</option>
+						<option value="银行汇票">
+							银行汇票
+						</option>
+						<option value="商业汇票">
+							商业汇票
+						</option>
+					</select>
+				</td>
+				<td>
+					<input class="txtlong" type="text" name="sales[receiptplan][1][collectionTerms]"
+					id="PayRemark1"/>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mypay')" title="删除行"/>
+				</td>
+			</tr>
+		</table>
+		<table class="form_main_table">
+		  <thead>
+			<tr>
+				<td colspan="7" class="form_header">
+					培训计划
+				</td>
+				<td width="5%">
+					<input type="hidden" id="TraNumber" name="TraNumber" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="train_add('mytra','TraNumber')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="8%">
+					培训开始时间
+				</th>
+				<th width="8%">
+					培训结束时间
+				</th>
+				<th width="8%">
+					参与人数
+				</th>
+				<th width="18%">
+					培训地点
+				</th>
+				<th>
+					培训内容
+				</th>
+				<th width="20%">
+					培训工程师要求
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+		   <tbody id="mytra">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][beginDT]" id="TraDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][endDT]" id="TraEndDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][traNum]"/>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][adress]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][content]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][trainerDemand]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mytra')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class='form_main_table'>
+			<tr>
+				<td colspan="8" class="form_header">
+					保修条款
+					<img src="images/verpic_open.gif" onclick="dis('gua')" title="缩放"/>
+				</td>
+			</tr>
+			<tr id="gua">
+				<td colspan="4">
+					<textarea name="sales[warrantyClause]" id="warrantyClause" rows="5" style="width: 100%"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="8" class="form_header">
+					售后要求
+					<img src="images/verpic_open.gif" onclick="dis('aft')" title="缩放"/>
+				</td>
+			</tr>
+			<tr id="aft">
+				<td colspan="4">
+					<textarea name="sales[afterService]" id="afterService" rows="5" style="width: 100%"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					合同附件 &nbsp;
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress">
+						</div>
+						<div class="upload">
+							<span id="swfupload">
+							</span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+							disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="main_foot_wraper" colspan="4">
+					签约状态 : &nbsp;
+					<input type="radio" name="sales[signStatus]" value="0" checked="checked"/>
+					未签约
+					<input type="radio" name="sales[signStatus]" value="1"/>
+					已签约
+					<input type="radio" name="sales[signStatus]" value="2"/>
+					已拿到纸质合同
+					<input type="radio" name="sales[signStatus]" value="3"/>
+					已提交纸质合同
+				</td>
+			</tr>
+			<tr>
+				<td class="main_foot_wraper" colspan="4">
+					付款条件 :
+					<input type="radio" name="sales[shipCondition]" value="1" checked="checked"/>
+					款到发货
+					<input type="radio" name="sales[shipCondition]" value="2"/>
+					货到付款
+				</td>
+			</tr>
+			<tr>
+				<td class="main_foot_wraper" colspan="4">
+					提交方式 :
+					<input type="radio" name="sales[startType]" value="1" checked="checked"/>
+					通知启动
+					<input type="radio" name="sales[startType]" value="2"/>
+					审批后直接启动
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" name="sales[version]" id="version" value="1"/>
+					<input class="txt_btn_a" type="submit" value="提交审批" />
+					<input type="submit" class="txt_btn_a" value=" 保 存 " onclick="saveContract();"
+					/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

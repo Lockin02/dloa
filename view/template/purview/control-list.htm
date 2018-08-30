@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>区域访问列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<input type='hidden' id='id' value='{id}'>
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td>
+			选择控制类型：
+			<select id="typeid" name="typeid" onchange="set_url(this.value,this.options[this.selectedIndex].text)">
+				<option value="all">请选择类型</option>
+				{control_select}
+			</select>
+		</td>
+		<td id="url" style="display:none;"><input type="button" id="button" alt="" title="添加用户或职位访问限制" class="thickbox" value=" 新增加 " /></td>
+	</tr>
+</table>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="7">权限控制列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>控制名称</td>
+		<td>控制对象</td>
+		<td>对象名称</td>
+		<td>控制内容</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+$(function() {
+	var typeValue = $("#typeid").val();
+	var text = $("#typeid").find("option:selected").text();
+	if (typeValue=='all')
+	{
+		$('#url').css('display','none');
+	}else{
+		var arr = typeValue.split('|');
+		if (arr[0]==2)
+		{
+			$('#button').attr('alt','?model=pvurl&action=show_field&act='+arr[2]+'&tid={id}&typeid='+arr[1]+'&placeValuesBefore&TB_iframe=true&modal=false&height=350&width=500');
+		}else if(arr[0]==1){
+			$('#button').attr('alt','?model=pvurl&action=show_act&act='+arr[2]+'&tid={id}&typeid='+arr[1]+'&placeValuesBefore&TB_iframe=true&modal=false&height=350&width=500');
+		}else{
+			$('#button').attr('alt','?model=pvurl&action=index&act='+arr[2]+'&tid={id}&typeid='+arr[1]+'&placeValuesBefore&TB_iframe=true&modal=false&height=350&width=500');
+		}
+		$('#url').css('display','');
+		$('#button').attr('title','添加 '+text+' 限制');
+		$('#button').attr('value','添加 '+text+' 限制');
+	}
+})
+
+function set_url(val,text)
+{
+	var arr = val.split('|');
+	var url = '?model=purview&action=control_list&id='+$("#id").val();
+	if(arr.length>1){
+		url+="&typeid="+arr[1];  //过滤控制类型
+	}
+	location.href=url;
+}
+</script>
+</body>
+</html>

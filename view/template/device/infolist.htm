@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>{device_name}设备列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/ajax_check.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	.table {
+	border-collapse: collapse;
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+</style>
+</head>
+<body>
+<br />
+<table class="table" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td align="center" style="background:#D3E5FA" colspan="20">设备列表 </td>
+	</tr>
+	<tr class="header">
+		<td width="50">序号  {id_sort_img}</td>
+		{fixed_title}
+		{field_title}
+		<td width="100">入库日期 {date_sort_img}</td>
+		<td>状态  {state_sort_img}</td>
+		<td>库存</td>
+		<td>库存数量{amount_sort_img}</td>
+		<td>借出数量{borrow_sort_img}</td>
+		<td>使用率</td>
+		<td>使用项目{projectname_sort_img}</td>
+		<td>领用人{user_name_sort_img}</td>
+		<td>领用日期{borrow_date_sort_img}</td>
+		<td width="120">操作</td>
+	</tr>
+	{list}
+</table>
+<table width="100%"  border="0" cellpadding="0" cellspacing="0" align="center" style="border:0px;">
+	<tr>
+		<td align="center" style="border:0px;heigth:50px;text-align:center;"><input type="button" onclick="self.parent.location.reload();" value=" 关闭返回" /></td>
+	</tr>
+</tr>
+<script type="text/javascript">
+var temp = Array();
+$(document).ready(function(){
+ /*设置隔行变色*/       
+  //$("tbody tr:odd").css("background-color","#ece9dc");
+ /*设置鼠标划过时变色*/
+  /*单行变色*/
+  var trodd = $("#mytable tbody tr:odd");
+  var treven = $("#mytable tbody tr:even"); 
+  var temp_odd='';
+  var temp_even='';
+  trodd.mouseover(function(){
+  	temp_odd=$(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  	
+  })
+  trodd.mouseout(function() {$(this).css("background",(temp_odd ? temp_odd : '#FFFFFF'));});
+   
+  treven.mouseover(function(){
+  	temp_even = $(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  })
+  treven.mouseout(function() {$(this).css("background",(temp_even ? temp_even : '#FFFFFF'));});
+ });
+function edit(id)
+{
+	temp[id] = $('#tr_'+id).html();
+	var str = $('.edit_'+id).get();
+	var price = $('#price_'+id).get();
+	if (price.length > 0)
+	{
+		var _price = price[0].innerHTML;
+		if (_price == undefined || _price == '--') {
+			_price = '';
+		}
+		_price = _price.replace('￥','');
+		$('#price_'+id).html('<input type="text" size="4" id="new_price_'+id+'" value="'+_price+'" />');
+	}
+	var coding = $('#coding_'+id).get();
+	if (coding.length > 0)
+	{
+		var _coding = coding[0].innerHTML;
+		if (_coding == undefined || _coding == '--') _coding = '';
+		$('#coding_'+id).html('<input type="text" size="13" id="new_coding_'+id+'" value="'+_coding+'"');
+	}
+	var dpcoding = $('#dpcoding_'+id).get();
+	if (dpcoding.length > 0)
+	{
+		var _dpcoding = dpcoding[0].innerHTML;
+		if (_dpcoding == undefined || _dpcoding == '--') _dpcoding = '';
+		$('#dpcoding_'+id).html('<input type="text" size="5" id="new_dpcoding_'+id+'" value="'+_dpcoding+'"');
+	}
+	var fitting  = $('#fitting_'+id).get();
+	if (fitting.length > 0)
+	{
+		var _fitting = fitting[0].innerHTML;
+		if (_fitting == undefined || _fitting == '--') _fitting = '';
+		$('#fitting_'+id).html('<input type="text" size="7" id="new_fitting_'+id+'" value="'+_fitting+'"');
+	}
+	$('#edit_'+id).html('<input type="button" onclick="save('+id+')" value="保存" /> <input type="button" onclick="exit_edit('+id+')" value="取消" />');
+	for (i=0;i<str.length;i++)
+	{
+		name = str[i].name;
+		val = str[i].innerHTML;
+		if (val == undefined) val = '';
+		str[i].innerHTML = '<input type="text" size="10" class="fname_'+id+'" name="'+name+'" value="'+val+'" />';
+	}
+}
+function save(id)
+{
+	var rand=Math.random()*100000;
+	var coding = $('#new_coding_'+id).val();
+	var dpcoding = $('#new_dpcoding_'+id).val();
+	var fitting  = $('#new_fitting_'+id).val();
+	var price = $('#new_price_'+id).val();
+	var str = $('.fname_'+id).get();
+	var fname = Array();
+	for(i=0;i<str.length;i++)
+	{
+
+		fname[str[i].name] = str[i].value;
+	}
+	$.post('ajax.php',{model:'device_stock',action:'update_info',id:id,coding:coding,dpcoding:dpcoding,fitting:fitting,price:price,'fname[]':fname,rand:rand},
+	function (data)
+	{
+		if (ajax_check(data))
+		{
+			if (data==1)
+			{
+				$('#tr_'+id).html(temp[id]);
+				$('#coding_'+id).html(coding);
+				$('#dpcoding_'+id).html(dpcoding);
+				$('#fitting_'+id).html(fitting);
+				$('#price_'+id).html(price);
+				var j = 0;
+				for (x in fname)
+				{
+					$('.edit_'+id).get(j).innerHTML = (fname[x] == '') ? '--' : fname[x];
+					j++;
+				}
+			}else{
+				alert('保存失败！')
+			}
+		}
+	}
+	)
+}
+function exit_edit(id)
+{
+	$('#tr_'+id).html(temp[id]);
+	tb_init('#edit_'+id+' a.thickbox');
+}
+</script>
+
+</body>
+</html>

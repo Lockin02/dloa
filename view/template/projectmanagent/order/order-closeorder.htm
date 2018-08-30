@@ -1,0 +1,76 @@
+<html>
+<head>
+<title>关闭合同</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script Language="JavaScript">
+           function Type(){
+                 var Type = $("#closeType").val()
+                 if( Type == "异常关闭"){
+                    $("#state").attr("disabled",true);
+                    document.getElementById('form1').action = "index1.php?model=projectmanagent_order_order&action=close&actType=app";
+                  }
+
+		    }
+
+		</script>
+</head>
+<body>
+<table>
+	<tr>
+		<td><img src="images/sys_config.gif"> <b> <font>关闭合同</font> </b></td>
+	</tr>
+</table>
+<form method="post" id="form1" name="form1" onsubmit="return CheckForm()" action="?model=projectmanagent_order_order&action=close">
+<table class='form_main_table'>
+	<tr>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right" colspan="3">{orderName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关闭操作人</td>
+		<td class="form_text_right">{userName}
+		    <input type="hidden" name="order[closeName]" value="{userName}" /></td>
+		<td class="form_text_left">关闭日期</td>
+		<td class="form_text_right" width="30%">{dateTime} <input
+			type="hidden" name="order[closeTime]" value="{dateTime}"></td>
+	</tr>
+    <tr>
+        <td class="form_text_left">关闭类型</td>
+        <td class="from_text_right">
+            <select class="select" name="order[closeType]" id="closeType" onclick="Type();">
+                <option>正常关闭</option>
+                <option>异常关闭</option>
+            </select><span class="red">[*]</span>
+        </td>
+    </tr>
+	<tr>
+		<td class="main_head" colspan="4" align="left"><img src="images/sys_config.gif"> <b> <font>关闭说明</font> </b></td>
+	</tr>
+	<tr>
+		<td colspan="4"><textarea name="order[closeRegard]" id="reason"
+			rows="5" style="width:100%"></textarea></td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+		    <input type="hidden" id="state" name="order[state]" value="3" />
+		    <input type="hidden" name="order[id]" value="{id}" />
+		    <input type="submit" class="txt_btn_a" value=" 提  交 " />
+		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+

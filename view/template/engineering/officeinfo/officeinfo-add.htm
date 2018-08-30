@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {#commonInclude#}
+    <link rel="stylesheet" href="js/jquery/ztree/css/zTreeStyle.css" type="text/css"/>
+    <script type="text/javascript" src="js/jquery/ztree/jquery.ztree.core-3.0.js"></script>
+    <script type="text/javascript" src="js/jquery/ztree/jquery.ztree.excheck-3.0.js"></script>
+    <script type="text/javascript" src="js/jquery/ztree/jquery.ztree.exedit-3.0.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+    <script type="text/javascript" src="view/template/engineering/officeinfo/js/officeinfo-range-combotree.js"></script>
+    <script type="text/javascript"
+            src="view/template/engineering/officeinfo/js/officeinfo-add-validator.js?v=201711"></script>
+    <style>
+        ul.list {
+            margin-left: 17px;
+        }
+
+        div.content_wrap {
+            width: 600px;
+            height: 380px;
+        }
+
+        div.content_wrap div.left {
+            float: left;
+            width: 250px;
+        }
+
+        div.content_wrap div.right {
+            float: right;
+            width: 340px;
+        }
+
+        div.zTreeDemoBackground {
+            width: 250px;
+            height: 362px;
+            text-align: left;
+        }
+
+        ul.ztree {
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #f0f6e4;
+            width: 290px;
+            height: 180px;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+
+        ul.log {
+            border: 1px solid #617775;
+            background: #f0f6e4;
+            width: 300px;
+            height: 170px;
+            overflow: hidden;
+        }
+
+        ul.log.small {
+            height: 45px;
+        }
+
+        ul.log li {
+            color: #666666;
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        ul.log li.dark {
+            background-color: #E3E3E3;
+        }
+    </style>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	新增区域
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_officeinfo_officeinfo&action=add">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">
+                <label for="productLine" style="color:blue;">执行区域</label>
+            </td>
+            <td class="form_text_right">
+                <select id="productLine" name="officeinfo[productLine]" class="select"
+                        onchange="initTree();reloadManager();">
+                    {productLine}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                所属板块
+            </td>
+            <td class="form_text_right">
+                <select id="module" name="officeinfo[module]" class="select">
+                    {module}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="head" style="color:blue;">执行区域负责人</label></td>
+            <td class="form_text_right">
+                <input type="text" name="officeinfo[head]" class="txtlong" id="head" readonly="readonly"/>
+                <input type="hidden" name="officeinfo[headId]" id="headId"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="officeName" style="color:blue;">区域名称</label></td>
+            <td class="form_text_right">
+                <input type="text" name="officeinfo[officeName]" id="officeName" class="txtlong"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="feeDeptName" style="color:blue;">归属部门</label></td>
+            <td class="form_view_right">
+                <input type="text" name="officeinfo[feeDeptName]" class="txtlong" id="feeDeptName" readonly="readonly"/>
+                <input type="hidden" name="officeinfo[feeDeptId]" id="feeDeptId"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="range" style="color:blue;">归属公司</label></td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="txtlong" name="officeinfo[businessBelongName]" id="businessBelongName"
+                       value="{businessBelongName}" readonly="readonly"/>
+                <input type="hidden" name="officeinfo[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                <input type="hidden" name="officeinfo[formBelong]" id="formBelong" value="{formBelong}"/>
+                <input type="hidden" name="officeinfo[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="mainManager" style="color:blue;">服务总监</label></td>
+            <td class="form_view_right">
+                <input type="text" name="officeinfo[mainManager]" class="txtlong" id="mainManager" readonly="readonly"/>
+                <input type="hidden" name="officeinfo[mainManagerId]" id="mainManagerId"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="managerName">服务经理</label></td>
+            <td class="form_view_right">
+                <input type="text" name="officeinfo[managerName]" class="readOnlyTxtLong" id="managerName"
+                       readonly="readonly"/>
+                <input type="hidden" name="officeinfo[managerCode]" id="managerCode"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">责任范围</td>
+            <td class="form_text_right">
+                <input type="text" id="range" class="txtlong" name="officeinfo[rangeName]" readonly
+                       onclick="showMenu();return false;"/>
+                <input type="hidden" id="rangeId" name="officeinfo[rangeId]"/>
+                <input type="hidden" id="rangeCode" name="officeinfo[rangeCode]"/>
+
+                <div id="menuContent" class="menuContent" style="display:none; position: absolute;">
+                    <ul id="treeDemo" class="ztree" style="margin-top:0;"></ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><label for="assistant">后台人员</label></td>
+            <td class="form_text_right">
+                <input type="text" name="officeinfo[assistant]" class="txtlong" id="assistant" readonly="readonly"/>
+                <input type="hidden" name="officeinfo[assistantId]" id="assistantId"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">是否开启</td>
+            <td class="form_text_right" colspan="3">
+                <input type="radio" id="state0" name="officeinfo[state]" value="0" checked/>
+                <label for="state0">开启</label>
+                <input type="radio" id="state1" name="officeinfo[state]" value="1"/>
+                <label for="state1">关闭</label>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备&nbsp;&nbsp;&nbsp;&nbsp;注</td>
+            <td class="form_text_right">
+                <textarea name="officeinfo[remark]" rows="4" class="txt_txtarea_font"></textarea></td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="2">
+                <input name="" type="submit" class="txt_btn_a" value=" 保存 "/>
+                <input name="" type="button" class="txt_btn_a" value=" 返回 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

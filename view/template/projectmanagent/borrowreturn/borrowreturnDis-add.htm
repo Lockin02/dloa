@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<title>下达归还确认单</title>
+		{#commonInclude#}
+		<!-- 引入质检报告用的类 -->
+		<script type="text/javascript" src="view/template/produce/quality/js/qualityereportequitem-showqualitydetail.js" ></script>
+		<script type="text/javascript" src="{#jsPath#}/borrowreturnDis-add.js?v=20160902"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=projectmanagent_borrowreturn_borrowreturnDis&action=add">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								下达归还确认单
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						归还申请单编号
+					</td>
+					<td class="form_text_right" width="30%">
+						{Code}
+						<input type="hidden" name="borrowreturnDis[borrowreturnCode]" id="borrowreturnCode" value="{Code}" />
+						<input type="hidden" id="id" name="borrowreturnDis[borrowreturnId]" value="{id}"/>
+					</td>
+					<td class="form_text_left">
+						归还申请人
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="borrowreturnDis[borrowreturnMan]" id="borrowreturnMan" value="{salesName}" />
+						<input type="hidden" name="borrowreturnDis[borrowreturnManId]" id="borrowreturnManId" value="{salesId}"/>
+						{salesName}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						借用单编号
+					</td>
+					<td class="form_text_right">
+						<a href="javascript:void(0);" onclick="borrowView();">{borrowCode}</a>
+						<input type="hidden" id="borrowId" name="borrowreturnDis[borrowId]" value="{borrowId}"/>
+						<input type="hidden" id="borrowCode" name="borrowreturnDis[borrowCode]" value="{borrowCode}" />
+					</td>
+					<td class="form_text_left">
+						借用类型
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" id="limit" name="borrowreturnDis[borrowLimit]" value="{borrowLimit}"/>
+						{borrowLimit}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						申请类型
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="borrowreturnDis[applyTypeName]" value="{applyTypeName}"/>
+						<input type="hidden" id="applyType" name="borrowreturnDis[applyType]" value="{applyType}"/>
+						{applyTypeName}
+					</td>
+					<td class="form_text_left">
+						客户名称
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="borrowreturnDis[customerName]" id="customerName" value="{customerName}" />
+						<input type="hidden" name="borrowreturnDis[customerId]" id="customerId" value="{customerId}"/>
+						{customerName}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						备注
+					</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="txt_txtarea_font" name="borrowreturnDis[remark]"></textarea>
+					</td>
+				</tr>
+				<tr id="product">
+					<td colspan="6" class="innerTd">
+						<div id="productInfo"></div>
+					</td>
+				</tr>
+				<tr class="tr_odd">
+					<td colspan="4" style="text-align:left;">
+						<span class="blue">
+							注:
+							<br/>
+							1.设备遗失与归还都需要做物料归还
+							<br/>
+							2.如果填入出库数量,单据归还完成后,还需要进行出库处理
+							<br/>
+							3.从物料配置中带出的内容不需要做调拨处理，故在此单和后续操作中不会出现这部分的内容
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="4">
+		      			<input type="hidden" id="chargerId" name="borrowreturnDis[chargerId]" value="{salesId}"/>
+		      			<input type="hidden" id="chargerName" name="borrowreturnDis[chargerName]" value="{salesName}"/>
+		      			<input type="hidden" id="deptId" name="borrowreturnDis[deptId]" value="{deptId}"/>
+		      			<input type="hidden" id="deptName" name="borrowreturnDis[deptName]" value="{deptName}"/>
+						<input type="submit" class="txt_btn_a" value=" 确  认 " />
+						<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="showQualityReport"></div>
+	</body>
+</html>

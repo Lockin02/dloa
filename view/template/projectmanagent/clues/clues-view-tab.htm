@@ -1,0 +1,52 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var id = $("#id").val();
+        var skeyStr = "&skey={skey_}";
+ 	var tabArr = [
+                  "?model=projectmanagent_clues_clues&action=toview&id="+id + skeyStr,
+                  "?model=projectmanagent_clues_clues&action=toRecord&id="+id + skeyStr,
+                  "?model=projectmanagent_clues_clues&action=toCloseInfo&id="+id + skeyStr
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{id}" id="id" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">跟踪记录</a></li>
+	<li><a href="#tab3">关闭/暂停信息</a></li>
+
+
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes"><iframe class="pane" id="iframe1" src=""
+	height="96%" frameborder="0"> </iframe> <iframe class="pane"
+	id="iframe2" src="" height="96%" frameborder="0"> </iframe> <iframe
+	class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe></div>
+</div>
+</body>
+</html>
+
+

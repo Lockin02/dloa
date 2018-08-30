@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>邮寄信息</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+	</script>
+	<script type="text/javascript" src="js/common/businesspage.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/woo.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/component.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+	</script>
+	<script type="text/javascript" src="view/template/mail/js/mailapply-add-combo.js">
+	</script>
+	<script type="text/javascript" src="view/template/mail/js/mailapply-add.js">
+	</script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js" >
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	录入邮寄申请
+    </span>
+</div>
+<form action="?model=mail_external_generalmail&action=add" method="post" onsubmit="return check_all()">
+
+<input type="hidden" name="generalmail[applyType]" class="other"/>
+<div align="center">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">邮寄单位</td>
+		<td class="form_text_right">
+		<input id="customerId" type="hidden" name="generalmail[customerId]"/>
+		<input id="customerName" type="text" name="generalmail[customerName]" class="txt"/>
+		<span id="_customerName" class="red">[*]</span></td>
+	<!--
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄编号</td>
+		<td class="form_text_right"><input type="text"
+			name="mailapply[zipCode]" class="txt"/></td>
+	 -->
+		<td class="form_text_left">收件人姓名 </td>
+		<td class="form_text_right">
+			<input type="text" id="linkman" name="generalmail[linkman]" class="txt"/>
+			<span id="_linkman" class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<!--
+		<td class="form_text_left">邮寄状态</td>
+		<td class="form_text_right">
+		<select name="generalmail[status]" class="select">
+			<option value="1">未处理</option>
+			<option value="2">已处理</option>
+		</select></td>
+		 -->
+		<td class="form_text_left">收件人电话</td>
+		<td class="form_text_right"><input type="text"
+			name="generalmail[tel]" class="txt"/>&nbsp;</td>
+        <td class="form_text_left">期望到达日期</td>
+		<td class="form_text_right">
+			<input type="text" name="generalmail[expectDate]" id="expectDate" class="txt" onFocus="WdatePicker()"/>
+			&nbsp;</td>
+
+
+	</tr>
+	<tr >
+		<td class="form_text_left">邮寄方式</td>
+		<td colspan="3" class="form_text_right">
+		<select name="generalmail[mailType]" class="select">
+			{mailTypeList}
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄地址</td>
+		<td colspan="3" class="form_text_right"><textarea name="generalmail[mailAddress]"
+			 rows="3" cols="80" class="txt_txtarea_font"></textarea>
+		</td>
+	</tr>
+	</table>
+    <table class="form_main_table" id="mytable">
+        <thead>
+			<tr align="left">
+			    <td colspan="3">&nbsp;邮寄物品清单：
+				</td>
+				<td align="center" width="15">
+					<input type="hidden" id="rowNum" name="productsnumber" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('productslist')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="products_add();"
+						title="添加行"/>
+				</td>
+			</tr>
+		</thead>
+		<tbody id="productslist">
+           	<tr class="main_tr_header">
+				<th>序号</th>
+				<th>邮寄物品名称</th>
+				<th>本次邮寄数量</th>
+				<th>删除</th>
+			</tr>
+			<tr>
+				<td align="center">1</td>
+				<td align="center">
+					<input type="text" class="txtlong" name="generalmail[productsdetail][1][productName]" id="productName1" />
+				</td>
+				<td align="center">
+					<input type="text" class="txtmiddle" name="generalmail[productsdetail][1][mailNum]" id="mailNum1"/>
+				</td>
+				<td align="center" width="15">
+					<img src='images/closeDiv.gif' onclick="mydel(this,'productslist')" title='删除行'/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="form_main_table">
+		<tr>
+			<td>
+				<input type="submit" value=" 保 存 " class="txt_btn_a"/>
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+
+<script type="text/javascript">
+
+function check_all()
+{
+	if ($('#customerId').val()=='')
+	{
+		$('#_customerName').html('邮寄单位不能为空！');
+		return false;
+	}
+	if ($('#linkman').val()=='')
+	{
+		$('#_linkman').html('收件人不能为空！');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

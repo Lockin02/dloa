@@ -1,0 +1,411 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+		<title>新增固定资产卡片</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+	<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<!-- 弹窗组件 -->
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<!-- 表格组件 -->
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+
+	<!-- 下拉组件 -->
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotext.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+
+	<!-- tab组件 -->
+	<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+	<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+	</script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-agency.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/assetcard-create.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript">
+		$(function() {
+
+		    $("#tabs2").tabs(".panes > div", {effect: 'default',event:'click' ,initialIndex:0, history: true });
+		    var api = $("#tabs2").data("tabs");
+		    api.onClick(function(t,i) {
+				$(".formError").remove();
+				validateForm();
+				//alert($(this).attr('initialIndex'))
+		    });
+		});
+    </script>
+    <script>
+  	  $(function(){
+		$("#assetTypeId").val('{assetTypeId}');
+  		getTypeRateByVal($("#assetTypeId").val())
+  		//setSalvage();
+  	  	if($('#assetTypeId').val()){
+  	  		$('#assetTypeName').val($('#assetTypeId').get(0).options[$('#assetTypeId').get(0).selectedIndex].innerText);
+  	  	}
+  	  	if($('#useStatusCode').val()){
+  	  		$('#useStatusName').val($('#useStatusCode').get(0).options[$('#useStatusCode').get(0).selectedIndex].innerText);
+  	  	}
+  	  	if($('#changeTypeCode').val()){
+  	  		$('#changeTypeName').val($('#changeTypeCode').get(0).options[$('#changeTypeCode').get(0).selectedIndex].innerText);
+  	  	}
+  	  	if($('#assetSource').val()){
+  	  		$('#assetSourceName').val($('#assetSource').get(0).options[$('#assetSource').get(0).selectedIndex].innerText);
+  	  	}
+  	  	$('#deprName').val($('#deprCode').get(0).options[$('#deprCode').get(0).selectedIndex].innerText);
+  	  });
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	添加固定资产卡片
+    </span>
+</div>
+<form id="form1" method="post" action="?model=asset_assetcard_assetcard&action=createBeach" name="form1">
+<div>
+    <ul class="tabs" id="tabs2">
+        <li><a href="#tab1.html">基本信息</a></li>
+        <li><a href="#tab2.html">部门及其他</a></li>
+        <li><a href="#tab3.html">原值与折旧</a></li>
+    </ul>
+
+    <div class="panes">
+    	<div>
+		<table class="form_main_table">
+			 <input type="hidden" class="txt" name="assetcard[tempId]" value="{tempId}"/>
+			 <input type="hidden" class="txt" name="assetcard[num]" id="num" value="{num}"/>
+			 <input type="hidden" class="txt" name="assetcard[receiveItemId]" id="receiveItemId" value="{receiveItemId}"/>
+			<tr><!--
+					<td class="form_text_left">资产编号</td>
+					<td class="form_text_right" >
+						 <input type="text" class="readOnlyTxtNormal" readonly  name="assetcard[assetCode]" id="assetCode" value="{assetCode}"/>
+						 <input type="hidden" name="assetcard[version]" id="version" value="1"/>
+						<span class="red">[*]</span>
+					</td> -->
+					<td class="form_text_left">资产名称</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[assetName]" id="assetName"  value="{assetName}"/>
+						<span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">数量</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[number]" id="number"  value="{number}"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">资产类别</td>
+					<td class="form_text_right" >
+						 <input type="hidden" class="txt" name="assetcard[assetTypeName]" id="assetTypeName"/>
+						 <select class="select" name="assetcard[assetTypeId]" id="assetTypeId"
+						  onchange="javascript:$('#assetTypeName').val(this.options[this.selectedIndex].innerText);getTypeRate(this)">
+						  <option></option>
+						     {dirOption}
+						 </select><span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">品牌</td>
+					<td class="form_text_right">
+						 <input type="text" class="txt" name="assetcard[brand]" id="brand" value="{brand}"/>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">英文名称</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[englishName]" id="englishName"  value="{englishName}"/>
+					</td>
+					<td class="form_text_left">使用状态</td>
+					<td class="form_text_right" >
+						 <select class="select" name="assetcard[useStatusCode]" id="useStatusCode"
+						  onchange="javascript:$('#useStatusName').val(this.options[this.selectedIndex].innerText);">
+						  <option></option>
+						     {useOption}
+						 </select><span class="red">[*]</span>
+						 <input type="hidden" class="txt" name="assetcard[useStatusName]" id="useStatusName" />
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">计量单位</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[unit]" id="unit"  value="{unit}"/>
+					</td>
+					<td class="form_text_left">规格型号</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[spec]" id="spec" value="{spec}"/>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">入账日期</td>
+					<td class="form_text_right" >
+						 <input type="text" class="readOnlyTxtNormal" name="assetcard[wirteDate]" id="wirteDate" readonly  value="{wirteDate}"/>
+						<span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">购置日期</td>
+					<td class="form_text_right" >
+						<input type="text" class="txt" name="assetcard[buyDate]" id="buyDate" onfocus="WdatePicker()" onblur="checkDate()" value="{buyDate}"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+			        <td class="form_text_left">资产来源</td>
+					<td class="form_text_right" >
+						 <select class="select" name="assetcard[assetSource]" id="assetSource"
+						  onchange="javascript:$('#assetSourceName').val(this.options[this.selectedIndex].innerText);">
+						  <option></option>
+						     {assetSource}
+						 </select>
+						 <span class="red">[*]</span>
+						 <input type="hidden" class="txt" name="assetcard[assetSourceName]" id="assetSourceName"  value="{assetSourceName}"/>
+					</td>
+					<td class="form_text_left">变动方式</td>
+					<td class="form_text_right" >
+						 <select class="select" name="assetcard[changeTypeCode]" id="changeTypeCode"
+						  onchange="javascript:$('#changeTypeName').val(this.options[this.selectedIndex].innerText);">
+						  <option></option>
+						     {chnOption}
+						 </select>
+						 <span class="red">[*]</span>
+						 <input type="hidden" class="txt" name="assetcard[changeTypeName]" id="changeTypeName" />
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">存放地点</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[place]" id="place"  value="{place}"/>
+					</td>
+					<td class="form_text_left">用途</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[useType]" id="useType"  value="{useType}"/>
+					</td>
+			</tr>
+<!--			<tr>-->
+<!--			        <td class="form_text_left">产地</td>-->
+<!--					<td class="form_text_right" >-->
+<!--						 <input type="text" class="txt" name="assetcard[origin]" id="origin" />-->
+<!--					</td>-->
+<!--					<td class="form_text_left">制造商</td>-->
+<!--					<td class="form_text_right" >-->
+<!--						 <input type="text" class="txt" name="assetcard[manufacturers]" id="manufacturers" />-->
+<!--					</td>-->
+<!--			</tr>-->
+			<tr>
+					<td class="form_text_left">供应商名称</td>
+					<td class="form_text_right">
+						 <input type="text" class="txt" name="assetcard[supplierName]" id="supplierName" value="{supplierName}"/>
+						 <input type="hidden" class="txt" name="assetcard[supplierId]" id="supplierId" value="{supplierId}"/>
+					</td>
+					<td class="form_text_left">物料名称</td>
+					<td class="form_text_right" >
+						 <input type="hidden" class="txt" name="assetcard[productCode]" id="productCode" value="{productCode}"/>
+						 <input type="hidden" class="txt" name="assetcard[productId]" id="productId" value="{productId}"/>
+						 <input type="text" class="txt" name="assetcard[productName]" id="productName" value="{productName}"/>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">备注</td>
+					<td class="form_text_right" colspan="3">
+						 <textarea class="txt_txtarea_font" name="assetcard[remark]" id="assetCode">{remark}</textarea>
+					</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">固定资产科目</td>
+				<td class="form_text_right" >
+					 <input type="text" class="txt" name="assetcard[subName]" id="subName" />
+					 <input type="hidden" class="txt" name="assetcard[subId]" id="subId" />
+<!--					<span class="red">[*]</span>-->
+				</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">累计折旧科目</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[depSubName]" id="depSubName" />
+						 <input type="hidden" class="txt" name="assetcard[depSubId]" id="depSubId" />
+<!--						<span class="red">[*]</span>-->
+					</td>
+			</tr>
+			<tr class="usingTr">
+					<td class="form_text_left">使用部门</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt useOrg" name="assetcard[useOrgName]" readonly id="useOrgName" />
+						 <input type="hidden" class="txt useOrg" name="assetcard[useOrgId]" id="useOrgId" />
+					</td>
+			</tr>
+			<tr class="usingTr">
+				<td class="form_text_left">
+					是否有使用项目/使用人
+				</td>
+				<td class="form_text_right">
+					<input type="radio" class="hasUse" name="hasUse" value="0" checked/>&nbsp;&nbsp;否&nbsp;&nbsp;&nbsp;
+					<input type="radio" class="hasUse" name="hasUse" value="1"/>&nbsp;&nbsp;是&nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr class="hasUseTr">
+					<td class="form_text_left">使用人</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[userName]" readonly id="userName" />
+						 <input type="hidden" class="txt" name="assetcard[userId]" id="userId" />
+					</td>
+			</tr>
+			<tr class="hasUseTr">
+					<td class="form_text_left">使用项目</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[useProName]" id="useProName" />
+						 <input type="hidden" class="txt" name="assetcard[useProCode]" id="projectCode" />
+						 <input type="hidden" class="txt" name="assetcard[useProId]" id="useProId" />
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">行政区域</td>
+					<td class="form_text_right">
+						 <input type="hidden" class="txt" name="assetcard[agencyCode]" id="agencyCode" value="{agencyCode}"/>
+						 <input type="text" class="txt" name="assetcard[agencyName]" id="agencyName" value="{agencyName}"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">所属公司
+					 </td>
+					<td class="form_text_right" >
+						 <input type="hidden" class="txt" name="assetcard[companyCode]" id="companyCode" value="{companyCode}"/>
+						 <input type="text" class="readOnlyTxtNormal" name="assetcard[companyName]" readonly id="companyName" value="{companyName}"/>
+<!--						<span class="red">[*]</span>-->
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">所属部门
+					 </td>
+					<td class="form_text_right" >
+						 <input type="hidden" class="txt" name="assetcard[orgId]" id="orgId" value="{orgId}"/>
+						 <input type="text" class="txt" name="assetcard[orgName]" readonly id="orgName" value="{orgName}"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr class="belongMan">
+					<td class="form_text_left">所属人</td>
+					<td class="form_text_right" >
+						 <input type="hidden" class="txt" name="assetcard[belongManId]" id="belongManId" value="{belongManId}"/>
+						 <input type="text" class="txt" name="assetcard[belongMan]" readonly id="belongMan" value="{belongMan}"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">购进原值</td>
+				<td class="form_text_right" >
+					 <input type="text" class="txt formatMoney" name="assetcard[origina]"
+					 id="origina" onblur="setSalvage();setNetValue();setMonthlyDepreciation()"/>
+						<span class="red">[*]</span>
+				</td>
+				<td class="form_text_left">购进累计折旧</td>
+				<td class="form_text_right" >
+					 <input type="text" class="txt formatMoney" name="assetcard[buyDepr]" id="buyDepr"  value="0"/>
+						<span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">开始使用日期</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[beginTime]" id="beginTime" onfocus="WdatePicker()" />
+						<span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">预计使用期间数</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[estimateDay]" id="estimateDay"  onblur="setMonthlyDepreciation()"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">已经使用期间数</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt" name="assetcard[alreadyDay]" id="alreadyDay"  value="0"/>
+						<span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">累计折旧</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt formatMoney" name="assetcard[depreciation]"
+						 id="depreciation" value="0" onblur="setNetValue();setMonthlyDepreciation()"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">预计净残值</td>
+					<td class="form_text_right" >
+						<input type="hidden" id="assetTypeRate"/>
+						 <input type="text" class="txt formatMoney" name="assetcard[salvage]" id="salvage" onblur="setMonthlyDepreciation()"/>
+						<span class="red">[*]</span>
+					</td>
+					<td class="form_text_left">净值</td>
+					<td class="form_text_right" >
+						 <input type="text" class="txt formatMoney" name="assetcard[netValue]" id="netValue" onblur="setMonthlyDepreciation()"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">折旧方式</td>
+					<td class="form_text_right" >
+						 <select class="select" name="assetcard[deprCode]" id="deprCode" onchange="javascript:$('#deprName').val(this.options[this.selectedIndex].innerText);">
+						     {deprOption}
+						 </select>
+<!--						 <input type="hidden" class="txt" name="assetcard[deprCode]" id="deprCode" />-->
+						 <input type="hidden" class="txt" name="assetcard[deprName]" id="deprName"/>
+					</td>
+					<td class="form_text_left">月折旧额</td>
+					<td class="form_text_right" >
+						 <input type="text" class="readOnlyTxtNormal formatMoney" readonly name="assetcard[monthlyDepreciation]" id="monthlyDepreciation"/>
+						<span class="red">[*]</span>
+					</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

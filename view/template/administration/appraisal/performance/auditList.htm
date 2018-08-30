@@ -1,0 +1,421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script src="js/extui/boot.js" type="text/javascript"></script>
+</head>
+<style type="text/css">
+html, body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+</style>
+<body>
+<div class="mini-toolbar" style="border-bottom:0; margin-top:0px;  margin-bottom:0px;">
+  <table style="width:100%;">
+    <tr>
+      <td style="width:90%; vertical-align:middle;"> 部门:
+        <input name="deptId" id="deptId" type="text" class="mini-treeselect" style="width:160px;"   valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" onvaluechanged="search(1)" multiSelect="true"   allowInput="false"  url="?model=administration_appraisal_performance_list&action=deptDataAll" checkRecursive="false" 
+        showFolderCheckBox="true"  expandOnLoad="true" showClose="true" oncloseclick="onCloseClick"/>
+        年份：
+        <input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="tplYear" id="tplYear" style="width:60px;"  onvaluechanged="search(1)"/>
+        周期：
+        <input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="tplStyle" id="tplStyle"  style="width:80px;"  onvaluechanged="search(1)"/>
+         状态：<input  data="statusData" class="mini-combobox" emptyText="请选择状态"  name="tplStatus" id="tplStatus" value="5"  style="width:80px;"  onvaluechanged="search(1)"/>
+        关键字：
+        <input id="wordkey" class="mini-buttonedit searchbox" style=" width:200px;" showClose="true"  onbuttonclick="onKeyEnter" selectOnFocus="true" emptyText="请输入搜索"  onenter="onKeyEnter" oncloseclick="onCloseClick"/>
+        &nbsp; 
+        <!-- <a class="mini-button" iconCls="icon-search" onclick="search()">查&nbsp;询&nbsp;&nbsp;</a> -->
+        <a class="mini-button" iconCls="icon-sort" onclick="search(2)">临时排名</a></td>
+      <td style="white-space:nowrap;"> <a class="mini-button" iconCls="icon-ok" onclick="onSubmit()">批量提交</a> 
+        <!--<a class="mini-button" iconCls="icon-add" onclick="add()">导出数据</a>--></td>
+    </tr>
+  </table>
+</div>
+<div class="mini-fit" style="margin-top:0px;">
+  <div id="grid" class="mini-datagrid" style="width:100%;height:100%" allowResize="true" allowAlternating="true"
+        url="?model=administration_appraisal_performance_list&action=auditListData"  idField="id" multiSelect="true" allowUnselect="false"       
+         contextMenu="#gridMenu"  pagesize="20" onshowrowdetail="onShowRowDetail" frozenStartColumn="0" frozenEndColumn="4" showColumnsMenu="true" >
+    <div property="columns">
+      <div type="indexcolumn"></div>
+      <div type="checkcolumn"></div>
+      <div field="sortRank"  name="sortRank" width="0" headerAlign="center" allowSort="true">临时排名</div>
+      <div field="userName" width="60" headerAlign="center" allowSort="true">被考核人</div>
+      <div field="deptName" width="80" headerAlign="center" allowSort="true">部门</div>
+      <div field="jobName" width="80" headerAlign="center" allowSort="true">职位</div>
+      <div field="name" width="170" headerAlign="center" allowSort="true" renderer="onRenderer">模板名称</div>
+      <div field="years" width="40" headerAlign="center" allowSort="true">年份</div>
+      <div field="quarter" width="60" headerAlign="center" allowSort="true">考核周期</div>
+      <div field="inFlag" width="50" headerAlign="center" allowSort="true" renderer="onStatus">状态</div>
+      <div field="count_my_fraction" width="60" headerAlign="center" allowSort="true">自评总分</div>
+      <div field="pevFraction" width="60" headerAlign="center" allowSort="true">评价总分</div>
+      <div type="expandcolumn" width="45" style="color:#F00">评价人</div>
+      <div field="assessName" width="60" headerAlign="center" allowSort="true">考核人</div>
+      <div field="assess_status" width="60" headerAlign="center" allowSort="true" renderer="onAsStatus">考核状态</div>
+      <div field="count_assess_fraction" width="60" headerAlign="center" allowSort="true">考核总分</div>
+      <div field="assess_date" width="60" headerAlign="center" allowSort="true">考核时间</div>
+      <div field="auditName" width="60" headerAlign="center" allowSort="true">审核人</div>
+      <div field="audit_status" width="60" headerAlign="center" allowSort="true" renderer="onAuditStatus">审核状态</div>
+      <div field="count_audit_fraction" width="60" headerAlign="center" allowSort="true">审核总分</div>
+      <div field="audit_date" width="60" headerAlign="center" allowSort="true">审核时间</div>
+      <div field="countFraction" width="60" headerAlign="center" allowSort="true">加权得分</div>
+      <div field="finalScore" width="60" headerAlign="center" allowSort="true">最终得分</div>
+      <div field="deptRank" width="40" headerAlign="center" allowSort="true">排名</div>
+      <div field="deptRankPer" width="95" headerAlign="center"  align="right" allowSort="true">排名比例(前)</div>
+    </div>
+  </div>
+</div>
+<div id="detailSub" style="display:none;">
+  <div id="gridSub" class="mini-datagrid" style="width:70%;height:auto"  dField="id" showFooter="false"  allowSortColumn="false" multiSelect="true"  url="?model=administration_appraisal_performance_list&action=getEvalerData">
+    <div property="columns">
+      <div type="indexcolumn" headerAlign="center" width="30"></div>
+      <div field="evalName" width="100"  headerAlign="center" >评 价 人 </div>
+      <div field="evalDate" width="100"  headerAlign="center" currencyUnit="%">评价时间 </div>
+      <div field="flag" width="70"  headerAlign="center" renderer="onEvalStatus" >状态 </div>
+      <div field="count_fraction" width="100%"  headerAlign="center" allowCellValid="true">评价分数 </div>
+    </div>
+  </div>
+</div>
+<div id="winBegine" class="mini-window" title="发布考核结果&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动进行排名" style="width:500px; text-align:center" 
+    showMaxButton="false" showFooter="true" showModal="true" allowResize="false" allowDrag="true">
+  <div id="chartContainer" class="form" >
+    <table border="0" cellspacing="0" cellpadding="0" class="tables" style="width:100%;height:auto">
+      <tr>
+        <td  class="form_text_left_con">所属部门：</td>
+        <td><input name="begineDeptId" id="begineDeptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="true"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData" showFolderCheckBox="true"  expandOnLoad="true" showClose="true" oncloseclick="onCloseClick"/></td>
+      </tr>
+      <tr>
+        <td  class="form_text_left_con">考核年份：</td>
+        <td><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="begineYear" id="begineYear" style="width:60px;" required="true" /></td>
+      </tr>
+      <tr>
+        <td  class="form_text_left_con">考核周期：</td>
+        <td><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="begineStyle" id="begineStyle"  style="width:80px;" required="true"/></td>
+      </tr>
+    </table>
+  </div>
+  <div property="footer" style="text-align:center;padding:5px;"> <a class="mini-button" style="width:60px;" onclick="submitWinBegine()">提交</a> <span style="display:inline-block;width:25px;"></span> <a class="mini-button" style="width:60px;" onclick="hideWinBegine()">取消</a> </div>
+</div>
+<ul id="gridMenu" class="mini-contextmenu" style="width:160px;" onbeforeopen="onBeforeOpen">
+  <li name="edit" iconCls="icon-edit" onclick="onExIn">修改审核</li>
+  <li name="onApp" iconCls="icon-ok" onclick="onSubmit">提交审核</li>
+  <li name="onExIn" iconCls="icon-edit" onclick="onExIn">填写审核</li>
+  <li name="details" iconCls="icon-node" onclick="onExIn">查看</li>
+</ul>
+<script type="text/javascript">
+     var winAddTpl;
+	var statusData=[{ "id": "", "text": "所有" },{ "id": "1", "text": "未开始" },{ "id": "2", "text": "自评中" },{ "id": "3", "text": "评价中" },{ "id": "4", "text": "考核中" },{ "id": "5", "text": "审核中" },{ "id": "6", "text": "发布结果中" },{ "id": "7", "text": "完成" },{ "id": "10", "text": "关闭" }];	
+		mini.parse();
+        var grid = mini.get("grid");
+         search(1);
+/*		 
+	grid.on("beforeselect", function (e) {
+            if (e.record.inFlag == 6) e.cancel = true;
+        });*/
+		 grid.on("drawcell", function (e) {
+            var record = e.record,
+			column = e.column,
+			field = e.field,
+			value = e.value;
+
+            //给年龄，增加"岁"字符串
+            if (field == "deptRankPer"&&value) {
+                e.cellHtml = value + "%";
+            }
+            //给帐号列，增加背景色
+            if (field == "sortRank") {
+                e.cellStyle = "background:#FCEEE2";
+            }
+        });
+		
+		var grid_sub = mini.get("gridSub");
+        var detailSub = document.getElementById("detailSub");
+		function onShowRowDetail(e) {
+            var grid = e.sender;
+            var row = e.record;
+            var td = grid.getRowDetailCellEl(row);
+            td.appendChild(detailSub);
+            detailSub.style.display = "block";
+            grid_sub.load({ keyId: row.id });
+        }
+		 function search(flag) {
+           if(flag==2){
+			    grid.setColumnWidth("sortRank",60);
+				grid.showColumn("sortRank");
+			 }else{
+				grid.setColumnWidth("sortRank",0);
+				grid.hideColumn("sortRank");
+			 }
+            var deptId = mini.get("deptId").getValue();
+			var tplYear = mini.get("tplYear").getValue();
+			var tplStyle = mini.get("tplStyle").getValue();
+			var tplStatus = mini.get("tplStatus").getValue();
+			var wordkey = mini.get("wordkey").getValue();
+            grid.load({ deptId: deptId,tplYear:tplYear,tplStyle:tplStyle,tplStatus:tplStatus,wordkey:wordkey,flag:flag });
+        }
+        function onKeyEnter(e) {
+            search(1)
+        }
+		  function onExIn(){
+		   var row = grid.getSelected();
+            if (row) {
+			  winAddTpl=mini.open({
+                    url: "?model=administration_appraisal_performance_list&action=perExIn&keyId="+row.id+"&tplId="+row.tpl_id,
+                    title: "审核评分", width: 900, height: 460,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                    	search(1);  
+                	}
+                });
+			} else {
+                alert("请选中一条记录");
+            }
+		   } 
+
+
+		
+function onBeforeOpen(e) {
+    var menu = e.sender;
+    var row = grid.getSelected();
+    var rowIndex = grid.indexOf(row);            
+	if (!row) {
+        e.cancel = true;
+        //阻止浏览器默认右键菜单
+        e.htmlEvent.preventDefault();
+        return;
+    }
+    var editItem = mini.getbyName("edit", menu);
+	var onExIn = mini.getbyName("onExIn", menu);
+	var details = mini.getbyName("details", menu);
+	var onApp = mini.getbyName("onApp", menu);
+	editItem.show();
+	onExIn.show();
+	details.show();
+	onApp.show();
+	if(row.inFlag==5){
+		if(row.audit_status==1){
+		   onExIn.hide();
+		   editItem.show();
+		   onApp.show();
+		}else{
+		   onExIn.show();
+		   editItem.hide();
+		   onApp.hide();
+		}
+		details.hide();
+	}else{
+		details.show();
+		editItem.hide();
+		onExIn.hide();
+		onApp.hide();
+	}
+}
+
+function onAsStatus(e){
+	 var val = e.value;
+	 var str;
+	 if(e.record.assess_userid){
+	 if(val==1&&e.record.inFlag>3){
+	  str='已考核';	 
+	 }else{
+	  str='待考核';	 
+	 }
+	 }
+	return str;
+}
+function onAuditStatus(e){
+	 var val = e.value;
+	 var str;
+	 if(val==1&&e.record.inFlag>5){
+	  str='已审核';	 
+	 }else{
+	  str='待审核';	 
+	 }
+	return str;
+}
+
+        function onRenderer(e) {
+            var s = e.value;
+			d=e.sender;
+		    s += '<span class="btn-menu-group" id="menu-'+e.rowIndex+'" onclick="adds(this)" ><a class="btn" href="#"><span class="icon-optionss"></span><span class="caret"></span></a></span>';
+            return s;
+        }
+		
+		function onStatus(e){
+			 var val = e.value;
+			 var isEvalValue=e.record.isEval;
+			 var isAssValue=e.record.isAss;
+			 var str;
+			 if(val==1){
+			  str='未开始';	 
+		     }else if(val==2){
+				if(isAssValue==1){
+					str='自评中';	
+				}else if(isEvalValue==2&&isAssValue!=1){
+					str='评价中';	
+				}else{
+					str='考核中';
+				} 
+		     }else if(val==3){
+			  str='评价中';	 
+		     }else if(val==4){
+			  str='考核中';	 
+		     }else if(val==5){
+			  str='审核中';	 
+		     }else if(val==6){
+			  str='发布结果中';	 
+		      }else if(val==7){
+				 if(e.record.isAsug==1){
+				  str='反馈意见';
+				 }else{
+				   str='完成';	 
+				}
+			  	 
+		     }else if(val==10){
+			  str='关闭';	 
+		     }
+            return str;
+		}	  
+		function adds(o) {
+            $("#"+o.id).click(function (e) {
+		    var row = grid.getSelected();
+            var rowbox = grid.getRowBox(row);
+			var menu = mini.get("gridMenu");
+			menu.showAtPos(e.pageX,rowbox.bottom);
+			//menu.showAtPos(e.pageX+5, e.pageY+5);
+			   var editItem = mini.getbyName("edit", menu);
+			var onExIn = mini.getbyName("onExIn", menu);
+			var details = mini.getbyName("details", menu);
+			var onApp = mini.getbyName("onApp", menu);
+			editItem.show();
+			onExIn.show();
+			details.show();
+			onApp.show();
+			if(row.inFlag==5){
+				if(row.audit_status==1){
+				   onExIn.hide();
+				   editItem.show();
+				   onApp.show();
+				}else{
+				   onExIn.show();
+				   editItem.hide();
+				   onApp.hide();
+				}
+				details.hide();
+			}else{
+				details.show();
+				editItem.hide();
+				onExIn.hide();
+				onApp.hide();
+			}
+					   
+          });
+		};
+  
+  function onCloseClick(e){
+	  var t = mini.get(e.sender.id);
+            t.setValue("");
+            t.setText("");
+	  }
+function CloseOpen() {
+		 winAddTpl.destroy();
+		search(1);            
+		//window.parent.grid.load();  
+}		  
+
+function onEvalStatus(e){
+	 var val = e.value;
+	if(val==2){
+	  str='已评价';	 
+	 }else{
+	  str='待评价';	 
+	 }
+	 return str;
+}
+	    function deptSort(){
+		 var win = mini.get("winBegine");
+        win.show();
+	}
+	function hideWinBegine(){
+		 var win = mini.get("winBegine");
+        win.hide();
+	}
+	
+function submitWinBegine() {
+	if (confirm("确定要发布考核结果吗？")) {
+            var form = new mini.Form("#winBegine");
+			form.validate();
+            if (form.isValid() == false) return false;
+			var formData = form.getData();
+            var infoData = mini.encode(formData);
+            $.ajax({
+                url: "?model=administration_appraisal_performance_list&action=begineSort",
+                type: "post",
+                data: { infoData:infoData},
+                success: function (text) {
+					if(text==2){
+						search(1); 
+						alert('操作成功！');
+						hideWinBegine();
+					}else if(text==3){
+						alert('暂不能发布考核结果！');
+						hideWinBegine();
+					}else if(text==4){
+						alert('目前存有未考核完的员工，暂不能发布考核结果！');
+						hideWinBegine();
+					}else{
+					    alert('操作失败！');	
+					}
+                }
+            });
+        }		
+}
+
+function onSubmit(){
+	var rows = grid.getSelecteds();
+	if (rows.length > 0) {
+		if (confirm("确定提交审核选中记录？")) {
+			var ids = [];
+			for (var i = 0, l = rows.length; i < l; i++) {
+				var r = rows[i];
+				if(r.inFlag==5&&r.audit_status==1){
+					ids.push(r.id);
+				}
+			}
+			var id = ids.join(',');
+			if(!id){
+			  alert("请选中有效数据行或先进行审核评分！");
+			  return false; 	
+			}
+			$.ajax({
+				url: "index1.php?model=administration_appraisal_performance_list&action=updateInFlag",
+				data:{kId:id,inFlag:6},
+				type: "post",
+				success: function (text) {
+					if(text=='1'){
+						alert("确认成功！");
+						grid.reload();	
+					}else{
+						alert("确认失败！");
+					}
+				},
+				error: function () {
+						alert("确认失败！");
+				}
+			});
+		}
+	} else {
+		alert("请选中一条记录");
+	}
+}
+
+
+
+ top["win"] = window;		
+  </script>
+</body>
+</html>

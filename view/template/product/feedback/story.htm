@@ -1,0 +1,1546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript">
+			var input_num = 0;
+	        var userid ='{userid}';
+	        var isAdmin = '{isAdmin}';
+	        $(function(){
+	        	$('#tt').datagrid({
+	                title: '以下记录可双击显示详细信息',
+	                iconCls: 'icon-edit',
+	                pagination: true,
+	                pageSize: 20,
+	                singleSelect: true,
+	                idField: 'id',
+	                fit:false,
+	                url: '?model={t_model}&action=list_data',
+	                columns: [[
+	                          	{
+	                          		field: 'id',
+	        	                    title: '序号',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'title',
+	        	                    title: '需求名称',
+	        	                    width: 200,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'date',
+	        	                    title: '提交日期',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'status',
+	        	                    title: '需求状态',
+	        	                    width: 60,
+	        	                    align: 'center',
+	        	                    editor: 'text',
+	        	                    formatter: function(value, row, index){
+	        	                    	var str = '待审核';
+	        	                    	if(value == -1){
+	        	                    		str = '被打回';
+	        	                    	}else if(value == 1){
+	        	                    		str = '审核通过';
+	        	                    	}else if(value == 2){
+	        	                    		str = '已实现';
+	        	                    	}else if(value == 3){
+	        	                    		str = '已初审';
+	        	                    	}
+	        	                    	return str;
+	        	                    }
+				                },
+				                {
+	                          		field: 'degree',
+	        	                    title: '紧急程度',
+	        	                    width: 60,
+	        	                    align: 'center',
+	        	                    editor: 'text',
+	        	                    formatter: function(value, row, index){
+	        	                    	var str = '普通';
+	        	                    	if(value == 2){
+	        	                    		str = '紧急';
+	        	                    	}
+	        	                    	return str;
+	        	                    }
+				                },
+				                {
+	                          		field: 'deadline',
+	        	                    title: '完成期限',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'product_name',
+	        	                    title: '所属产品',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'manager_name',
+	        	                    title: '产品经理',
+	        	                    width: 60,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'user_name',
+	        	                    title: '提交人',
+	        	                    width: 60,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                
+				                
+				                
+				                {
+	                          		field: 'feedback',
+	        	                    title: '反馈客户',
+	        	                    width: 50,
+	        	                    align: 'center',
+	        	                    editor: 'text',
+	        	                    formatter: function(value, row, index){
+	        	                  		var str = '否';
+	        	                  		var setLink = "";
+	        	                  		if(value == 1){
+	        	                  			str = '是';
+	        	                  		}
+	        	                  		if(str == '否' && (row.manager == userid || row.assistant == userid) ){
+	        	                  			setLink = '<a href="#" onclick="showFeedback(' + index + ')">'+str+'</a>';
+	        	                  		}else{
+	        	                  			setLink = str;
+	        	                  		}
+	        	                  		return setLink;
+	        	                    }
+				                },
+				                /*
+				                {
+	                          		field: 'algorithm',
+	        	                    title: '需求描述（含应用目的）',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'step',
+	        	                    title: '需求实现步骤',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                
+				                {
+	                          		field: 'unit',
+	        	                    title: '需求提出单位',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'contact',
+	        	                    title: '需求提出人',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                {
+	                          		field: 'mobile',
+	        	                    title: '需求提出人手机',
+	        	                    width: 90,
+	        	                    align: 'center',
+	        	                    editor: 'text'
+				                },
+				                */
+				                {
+				                	field: 'action',
+				                    title: '操作',
+				                    width: 140,
+				                    align: 'left',
+				                    formatter: function(value, row, index){
+				                    	var str = '';
+				                    	
+				                    	var flag = false;
+				                    	var oFlag = false;
+				                    	var aFlag = false;
+				                    	
+				                    	var assistantList;
+				                    	var feedbackOwnerList;
+				                    	var feedbackAssistantList;
+				                    	
+				                    	var assistant = row.assistant;
+				                    	var feedback_owner = row.feedback_owner;
+				                    	var feedback_assistant = row.feedback_assistant;
+				                    	
+				                    	//产品助理
+				                    	if(assistant.indexOf(',') > -1){
+				                    		assistantList = assistant.split(',');
+				                    		for(var i=0; i< assistantList.length; i++){
+				                    			if(assistantList[i] == userid){
+				                    				flag = true;
+				                    			}
+				                    		}
+				                    	}else{
+				                    		if(row.assistant == userid){
+				                    			flag = true;
+				                    		}
+				                    	}
+				                    	
+				                    	//反馈审批人
+				                    	if(feedback_owner.indexOf(',') > -1){
+				                    		feedbackOwnerList = feedback_owner.split(',');
+				                    		for(var i=0; i<feedbackOwnerList.length; i++){
+				                    			if(feedbackOwnerList[i] == userid){
+				                    				oFlag = true;
+				                    			}
+				                    		}
+				                    	}else{
+				                    		if(feedback_owner == userid){
+				                    			oFlag = true;
+				                    		}
+				                    	}
+				                    	
+				                    	//反馈助理
+				                    	if(feedback_assistant.indexOf(',') > -1){
+				                    		feedbackAssistantList = feedback_assistant.split(',');
+				                    		for(var i = 0; i < feedbackAssistantList.length; i++){
+				                    			if(feedbackAssistantList[i] == userid){
+				                    				aFlag = true;
+				                    			}
+				                    		}
+				                    	}else{
+				                    		if(feedback_assistant == userid){
+				                    			aFlag = true;
+				                    		}
+				                    	}
+				                    	
+				                    	str += '<a href="#" onclick="ViewDemand(' + index + ')">查看</a>';
+				                    	//if (row.userid == userid && (row.status == 0 || row.status == -1)){
+				                    	if ((row.userid == userid && row.status == 0) || (isAdmin == 'true' && row.status == 0)){
+				                    		str += ' | <a href="#" onclick="EditDemand(' + index + ')">修改</a> ';
+				                    	}
+				                    	
+				                    	var needTwice = "{need_twice}";
+				                    	if(needTwice == "true"){
+					                    	if((row.manager == userid || flag || isAdmin == 'true') && row.status == 3 ){
+					                    		str += ' | <a href="#" onclick="audit(' + index + ')">审核</a> ';
+					                    	}
+					                    	if((oFlag || aFlag || isAdmin == 'true') && row.status == 0 ){
+					                    		str += ' | <a href="#" onclick="first_audit(' + index + ')">初审</a> ';
+					                    	}
+				                    	}else{
+				                    		if(((oFlag || aFlag) && row.status == 0) || ((row.manager == userid || flag || isAdmin == 'true') && row.status == 3)){
+				                    			str += ' | <a href="#" onclick="audit(' + index + ')">审核</a> ';
+					                    	}
+				                    	}
+				                    	
+				                    	
+				                    	if(row.status == 1 && (row.manager == userid || flag || isAdmin == 'true') && row.realize_date == ''){
+				                    		str += ' | <a href="#" onclick="realize(' + index + ')">实现</a>';
+				                    	}
+				                    	
+				                    	//if (row.userid == userid && (row.status == 0 || row.status == -1)){
+				                    	if ((row.userid == userid && row.status == 0) || (isAdmin == 'true' && row.status == 0) ){
+				                    		str += ' | <a href="#" onclick="removeDemand(' + index + ')">删除</a> ';
+				                    	}
+				                    	
+				                    	
+				                    	
+				                    	
+				                        return str;
+				                    }
+				                }
+							]],
+					onBeforeEdit: function(index, row){
+	                    row.editing = true;
+	                    updateActions();
+	                },
+	                onAfterEdit: function(index, row){
+	                    row.editing = false;
+	                    updateActions();
+	                },
+	                onCancelEdit: function(index, row){
+	                    row.editing = false;
+	                    updateActions();
+	                },
+					onDblClickRow:function(index,row){
+						ViewDemand(index);
+					}		
+				});
+	        	AddButton(); //显示提交新项目需求按钮
+	        })
+	        
+	        //设置已实现选项
+	        function realize(index){
+	        	$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		$('#demand_id').val(row.id);
+	    		$('#version').val('');
+	        	$('#realize').window('open');
+	        }
+	        
+	        //保存已实现选项
+	        function save_realize(){
+	        	var status = $('input[type=radio][name=realize_status]:checked').val();
+	        	if(status == 1){
+	        		var version = $('#version').val();
+	        		var id = $('#demand_id').val();
+	        		$.post('?model={t_model}&action=realize',{id:id,status:status,version:version,rand:Math.random()},function(data){
+	           			if (data == 1)
+	           			{
+	           				$('#audit').dialog('close');
+	           				$('#tt').datagrid('reload');
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作成功！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           				$('#realize').window('close');
+	           			}else{
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作失败，请与OA管理员联系！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           			}
+	           		});
+	        	}else{
+	        		$('#realize').window('close');
+	        	}
+	        }
+	        
+	        //删除数据
+	        function removeDemand(index){
+	        	$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		$.messager.confirm('删除确认','您确定要删除该项目吗？',function(r){
+	            	if (r)
+	            	{
+	            		$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random(0,9999)},function(data){
+	            			if (data == 1)
+	            			{
+	            				$.messager.show({
+	    	                        title: '提示',
+	    	                        msg: '删除成功！',
+	    	                        timeout: 3000,
+	    	                        showType: 'show'
+	    	                    });
+	            				$('#tt').datagrid('reload');
+	            			}else{
+	            				$.messager.alert('提示','删除失败，请与OA管理员联系！');
+	            			}
+	            		});
+	            	}
+	            });
+	        }
+	        
+	        
+	       	//提交新产品需求按钮
+	        function AddButton(){
+	        	$('#tt').datagrid('getPager').pagination({
+	   				buttons : [{
+	   					iconCls : 'icon-add',
+	   					text : '提交新产品需求',
+	   					handler : function() {
+	   						AddDemand();
+	   					}
+	   				}
+	   				]
+	   			});
+	        }
+	        
+	      	//添加新项目需求
+	        function AddDemand(){
+	      		
+	      		var selectedProduct = $('#select_typeid').val();
+	      		
+	        	$('#id').val('');
+	        	$('#title').val('');
+	        	$('#product_id').attr('value',selectedProduct);
+	        	$('#degree').val('1');
+	        	$('#description').val('');
+	        	$('#step').val('');
+	        	$('#algorithm').val('');
+	        	$('#deadline').val('');
+	        	$('#unit').val('');
+	        	$('#mobile').val('');
+	        	$('#contact').val('');
+	        	$('#email').val('{user_email}');
+	        	$('#userid').val('{username}');
+	        	
+	        	$('#file_list_str').html('');
+	        	$('#up').html('<tt id="0"><input size="45" type="file" name="upfile[]" onchange="copy();" value="" /></tt>');
+	        	input_num = 0;
+	        	$('#AddDemand').window('open');
+	        }
+	      	
+	      	//修改新项目需求
+	      	function EditDemand(index){
+	      		$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		$('#id').val(row.id);
+	    		$('#title').val(row.title);
+	        	$('#product_id').attr('value',row.product_id);
+	        	$('#degree').val(row.degree);
+	        	$('#description').val(row.description);
+	        	$('#step').val(row.step);
+	        	$('#algorithm').val(row.algorithm);
+	        	$('#deadline').val(row.deadline);
+	        	$('#unit').val(row.unit);
+	        	$('#mobile').val(row.mobile);
+	        	$('#contact').val(row.contact);
+	        	$('#email').val(row.email);
+	        	$('#userid').val(row.user_name);
+	        	$('#up').html('<tt id="0"><input size="45" type="file" name="upfile[]" onchange="copy();" value="" /></tt>');
+	        	input_num = 0;
+	        	$('#upfile').css('display','');
+	        	var tmp = '';
+	        	if(typeof(row.upfile) != 'undefined'){
+					if (row.upfile != ''){
+						var file_arr = row.upfile.split(',');
+						for (var i=0;i< file_arr.length;i++){
+		    					tmp += ' <tt id="img_'+i+'"><a href="upfile/product/demand/'+row.FilePathName+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> ';
+		    					tmp += ' <a href="#" title="删除附件" onclick="del_file('+row.id+','+i+',\''+file_arr[i]+'\');"><img src="images/closeDiv.gif"/></a></tt> ';
+		    			}
+					}
+	        	}
+				$('#file_list_str').html(tmp);
+	        	$('#AddDemand').window({title:'修改提交的Bug'});
+	        	$('#AddDemand').window('open');
+	        }
+	      	
+	      	
+			//搜索
+	       function GetSearch(){
+				var keyword = $('#keyword').val();
+				var typeid = $('#select_typeid').val();
+				var status = $('#select_status').val();
+				var s_start_date = $('#s_start_date').val();
+				var s_end_date = $('#s_end_date').val();
+				var s_deadline = $('#s_deadline').val();
+				var s_degree = $('#s_degree').val();
+				var s_title = $('#s_title').val();
+				
+				$('#tt').datagrid({url: '?model={t_model}&action=list_data&typeid='+typeid+'&keyword='+keyword+'&status='+status +'&s_degree='+ s_degree+'&s_deadline='+s_deadline+'&s_end_date='+s_end_date+'&s_start_date='+s_start_date+'&s_title='+s_title});
+				$('#tt').datagrid('reload');
+				AddButton(); //显示提交新项目需求按钮
+	       }
+
+	     	//保存数据
+	        function save(){
+	        	if ($('#product_id').val() == ''){
+	        		alert('请选择所属产品！');
+	        		return false;
+	        	}
+	        	
+	        	if($('#title').val() == ''){
+	        		alert('请填写产品需求名称！');
+	        		return false;
+	        	}
+	        	
+	        	if ($('#degree').val()== 0){
+	        		alert('请选择需求紧急程度！');
+	        		return false;
+	        	}
+	        	
+	        	if ($('#description').val()==''){
+	        		alert('请填写产品需求描述！');
+	        		return false;
+	        	}
+	        	document.form1.submit();
+	        }
+	     	
+	     	//查看详细
+	     	function ViewDemand(index){
+	     		$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		var str = "";
+	    		var status_str = "";
+	    		var source_str = "";
+	    		var demand_type_str = "";
+	    		for(key in row){
+	    			if (key == 'upfile'){
+	    				var tmp = '';
+	    				if(row[key] != ''){
+	    					var file_arr = row.upfile.split(',');
+	    					for (var i=0;i< file_arr.length;i++){
+	    						var num = file_arr[i].lastIndexOf('.'); 
+	    						if(num != -1){
+	    							var fileType = file_arr[i].substring(num);
+	        						if(fileType != ".jpg" && fileType != ".bmp" && fileType != ".pdf" && fileType != ".jpg" && fileType != ".gif" && fileType != ".psd" && fileType != ".png" && fileType != ".JPG" && fileType != ".BMP" && fileType != ".PDF" && fileType != ".JPG" && fileType != ".GIF" && fileType != ".PSD" && fileType != ".PNG"){
+	        							tmp += ' <a id="a_'+i+'" href="upfile/product/demand/'+row.FilePathName+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> &nbsp;&nbsp;&nbsp;';	
+	        						}else{
+	        							tmp += ' <a id="a_'+i+'" href="upfile/product/demand/'+row.FilePathName+'/'+file_arr[i]+'" target="_balnk"><img alt="'+file_arr[i]+'" src="upfile/product/demand/'+row.FilePathName+'/'+file_arr[i]+'" style="width:100px; height:100px;" /></a> &nbsp;&nbsp;&nbsp;'	
+	        						}
+	    						}else{
+	    							tmp += ' <a id="a_'+i+'" href="upfile/product/demand/'+row.FilePathName+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> &nbsp;&nbsp;&nbsp;';	
+	    						}
+	    	    			}
+	    				}
+	    				$('#_file_list').html(tmp);
+	    			}else if(key == 'degree'){
+	    				if(row[key] == 1){
+	    					str = '普通';
+	    				}else if(row[key] == 2){
+	    					str = '紧急';
+	    				}
+	    				$('#_degree').html(str);
+	    			}else if(key == 'status'){
+	    				
+	    				
+	    				status_str = '待审核';
+	    				$('#_type_and_source_div').hide();
+	    				$('#_type_and_source_div').hide();
+                		$('#_init_audit_div').hide();
+                		$('#_product_info_realize_div').hide();
+                		$('#_audit_div').hide();
+                		$('#product_info_init_audit_div').hide();
+                		
+                    	if(row[key] == -1){
+                    		
+                    		status_str = '被打回';
+                    		$('#product_info_init_audit_div').show();
+                    		$('#_type_and_source_div').hide();
+                    		
+                    		$('#_product_info_realize_div').hide();
+                    		if(row['init_notes'] == ''){
+                    			$('#_audit_div').show();
+                    			$('#_init_audit_div').hide();
+                    		}else{
+                    			$('#_init_audit_div').show();
+                    			$('#_audit_div').hide();
+                    		}
+                    		
+                    	}else if(row[key] == 1){
+                    		
+                    		status_str = '审核通过';
+                    		if(row['init_notes'] == ''){
+                    			$('#_init_audit_div').hide();
+                    		}else{
+                    			$('#_init_audit_div').show();
+                    		}
+                    		$('#product_info_init_audit_div').show();
+                    		$('#_type_and_source_div').show();
+                    		$('#_audit_div').show();
+                    		$('#_product_info_realize_div').hide();
+                    		
+                    	}else if(row[key] == 2){
+                    		
+                    		status_str = '已实现';
+                    		if(row['init_notes'] == ''){
+                    			$('#_init_audit_div').hide();
+                    		}else{
+                    			$('#_init_audit_div').show();
+                    		}
+                    		$('#product_info_init_audit_div').show();
+                    		$('#_product_info_realize_div').show();
+                    		$('#_type_and_source_div').show();
+                    		$('#_audit_div').show();
+                    	}else if(row[key] == 3){
+                    		
+                    		status_str = '已初审';
+                    		$('#_init_audit_div').show();
+                    		$('#product_info_init_audit_div').show();
+                    		$('#_type_and_source_div').hide();
+                    		$('#_type_and_source_div').hide();
+                    	}
+                    	$('#_status').html(status_str);
+                    	
+	    			}else if(key == 'source'){
+	    				
+	    				if(row[key] == "custom"){
+	    					source_str = "客户";
+	    				}else if(row[key] == "user"){
+	    					source_str = "用户";
+	    				}else if(row[key] == "po"){
+	    					source_str = "产品经理";
+	    				}else if(row[key] == "market"){
+	    					source_str = "市场";
+	    				}else if(row[key] == "service"){
+	    					source_str = "客服";
+	    				}else if(row[key] == "competitor"){
+	    					source_str = "竞争对手";
+	    				}else if(row[key] == "partner"){
+	    					source_str = "合作伙伴";
+	    				}else if(row[key] == "dev"){
+	    					source_str = "开发人员";
+	    				}else if(row[key] == "tester"){
+	    					source_str = "测试人员";
+	    				}else if(row[key] == "bug"){
+	    					source_str = "Bug";
+	    				}else if(row[key] == "other"){
+	    					source_str = "其他";
+	    				}
+	    				$('#_source').html(source_str);
+	    				
+	    			}else if(key == 'type'){
+						if(row[key] == "product"){
+							demand_type_str = "产品需求";
+	    				}else if(row[key] == "project"){
+	    					demand_type_str = "项目需求";
+	    				}else if(row[key] == "study"){
+	    					demand_type_str = "预研需求";
+	    				}else if(row[key] == "design"){
+	    					demand_type_str = "设计需求";
+	    				}else if(row[key] == "hardware"){
+	    					demand_type_str = "硬件需求";
+	    				}else if(row[key] == "bpo"){
+	    					demand_type_str = "外包需求";
+	    				}else if(row[key] == "doc"){
+	    					demand_type_str = "文档需求";
+	    				}else if(row[key] == "other"){
+	    					demand_type_str = "其他需求";
+	    				}
+						$('#_demand_type').html(demand_type_str);
+						
+	    			}else{
+	    				$('#_'+key).html(row[key]);	
+	    			}
+	    		}
+	    		$('#ShowDemand').window('open');
+	     	}
+	     	
+	     	//提交后返回结果并关闭窗口
+	        function save_status(msg)
+	        {
+	        	if (msg == -1)
+	        	{
+	        		$.messager.show({
+						title : '提示',
+						msg : '操作失败，请与OA管理员联系！',
+						timeout : 3000,
+						showType : 'show'
+					});
+					$('#tt').datagrid('reload');
+	        	}else if (msg == 1){
+	        		$.messager.show({
+						title : '提示',
+						msg : '操作成功！',
+						timeout : 3000,
+						showType : 'show'
+					});
+					$('#tt').datagrid('reload');
+					$('#AddDemand').window('close');
+	        	}
+	        }
+	     	
+	        function copy(){
+	        	input_num++;
+	        	var html = '<tt id="tt_'+input_num+'"><input size="45" type="file" onchange="copy();" name="upfile[]" value="" /><input type="button" onclick="del_input('+input_num+');" value="删除" /></tt>';
+	        	$('#up').append(html);
+	        }
+	        
+	        function del_input(id){
+	        	$('#tt_'+id).remove();
+	        }
+	        
+	      	//导出
+	     	function export_file(){
+	     		var product_id = $('#select_typeid').val();
+	     		var status = $('#select_status').val();
+	     		$('#h_status').val(status);
+	     		$('#h_product_id').val(product_id);
+	     		document.export_file_form.submit();
+	     	}
+	        
+	      	//删除附件
+			function del_file(id,key,filename){
+				if (filename){
+					$.post('?model={t_model}&action=delfile',{id:id,upfile:filename},function(data){
+						if (data == 1){
+							$.messager.show({
+								title : '提示',
+								msg : '操作成功!',
+								timeout : 3000,
+								showType : 'show'
+							});
+							$('#img_'+key).remove();
+							$('#tt').datagrid('reload');
+						}else{
+							$.messager.show({
+								title : '提示',
+								msg : '操作失败，请与管理员联系！',
+								timeout : 3000,
+								showType : 'show'
+							});
+							$('#tt').datagrid('reload');
+						}
+					})
+				}
+			}
+	      	
+	      	
+	      	
+			//设置备注标题
+			function set_remark_title(val)
+	        {
+	        	if (val == 1 || val == 3)
+	        	{
+	        		//if(val == 3){
+	        			$('#select_options').show();
+	        		//}
+	        		$('#remark_title').html('备注说明：');
+	        	}else{
+	        		$('#select_options').hide();
+	        		$('#remark_title').html('打回理由：');
+	        	}
+	        }
+			
+			
+			//打开初审
+			function first_audit(index){
+	        	$('#tt').datagrid('selectRow', index);
+	        	var row = $('#tt').datagrid('getSelected');
+	        	//$('#demand_status_id').val(row.status);
+	        	$('#init_demand_id').val(row.id);
+	        	$('#init_notes').val('');
+	        	$("input[name=init_status]:eq(0)").attr("checked",'checked');
+	        	$('#remark_title').html('备注说明：');
+	        	//$('#select_options').show();
+	        	$('#first_audit').window('open');
+	        }
+			
+			
+			
+			//打开审核
+			function audit(index){
+	        	$('#tt').datagrid('selectRow', index);
+	        	var row = $('#tt').datagrid('getSelected');
+	        	$('#demand_status_id').val(row.status);
+	        	$('#demand_id').val(row.id);
+	        	$('#remark').val('');
+	        	$("input[name=status]:eq(0)").attr("checked",'checked');
+	        	$('#remark_title').html('备注说明：');
+	        	
+	        	$('#source').val('');
+	        	$('#demand_type').val('');
+	        	$('#select_options').show();
+	        	$('#audit').window('open');
+	        }
+			
+			
+			
+			//保存初审
+			function save_init_audit(){
+				
+				var id = $('#init_demand_id').val();
+				var init_notes = $('#init_notes').val();
+				var status = $('input[type=radio][name=init_status]:checked').val();
+				
+				
+	        	
+				if(init_notes == ''){
+					alert('请输入理由');
+					return false;
+				}
+				$.post('?model={t_model}&action=first_trial',{id:id,status:status,init_notes:init_notes,rand:Math.random()},function(data){
+           			if (data == 1)
+           			{
+           				$.messager.show({
+   	                        title: '提示',
+   	                        msg: '操作成功！',
+   	                        timeout: 3000,
+   	                        showType: 'show'
+           				});
+           				$('#tt').datagrid('reload');
+           				$('#first_audit').dialog('close');
+           			}else{
+           				$.messager.show({
+   	                        title: '提示',
+   	                        msg: '操作失败，请与OA管理员联系！',
+   	                        timeout: 3000,
+   	                        showType: 'show'
+           				});
+           				$('#tt').datagrid('reload');
+           				$('#first_audit').dialog('close');
+           			}
+           		});
+				$('#first_audit').window('close');
+			}
+			
+			
+			
+			//保存审核
+	        function save_audit(){
+	        	var id = $('#demand_id').val();
+	        	var remark = $('#remark').val();
+	        	var status = $('input[type=radio][name=status]:checked').val();
+	        	
+	        	var source = $('#source').val();
+	        	var type = $('#demand_type').val();
+	        	
+	        	if(source == ''){
+        			alert('请选择来源！');
+	        		return false;
+        		}
+        		if(type == ''){
+        			alert('请选择类型！');
+        			return false;
+        		}
+	        	
+	        	if(remark == '' ){
+	        		alert('请填写理由！');
+	        		return false;
+	        	}else{
+	       			$.post('?model={t_model}&action=audit',{id:id,status:status,notse:remark,rand:Math.random(),source:source,type:type},function(data){
+	           			if (data == 1)
+	           			{
+	           				$('#audit').dialog('close');
+	           				$('#tt').datagrid('reload');
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作成功！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           			}else{
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作失败，请与OA管理员联系！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           			}
+	           		});
+	        	}
+	        	$('#audit').window('close');
+	        }
+			
+			
+			
+			//保存反馈
+			function save_feedback(){
+				var id = $('#demand_id').val();
+				var feedback = $('input[type=radio][name=feedback_status]:checked').val();
+				//var estimate = $('#estimate').val();
+				//var type = $('#type').val();
+				if(feedback == 1){
+					$.post('?model={t_model}&action=set_feedback',{id:id,feedback:feedback,rand:Math.random()},function(data){
+						if (data == 1)
+	           			{
+	           				$('#audit').dialog('close');
+	           				$('#tt').datagrid('reload');
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作成功！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           				$('#feedback').window('close');
+	           			}else{
+	           				$.messager.show({
+	   	                        title: '提示',
+	   	                        msg: '操作失败，请与OA管理员联系！',
+	   	                        timeout: 3000,
+	   	                        showType: 'show'
+	           				});
+	           				$('#tt').datagrid('reload');
+	           			}
+					})
+				}else{
+					$('#feedback').window('close');
+				}
+			}
+			
+			//设置反馈
+	        function showFeedback(index){
+	        	$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		$('#demand_id').val(row.id);
+	        	$('#feedback').window('open');
+	        }
+			
+			//import
+			function showImport(){
+				var selectedProduct = $('#select_typeid').val();
+				$('#import_product_id').val(selectedProduct);
+				
+				$('#upfile').val('');
+				$('#import').window('open');
+			}
+			
+			//导入信息反馈
+			function importResult(msg){
+				if (msg == -1)
+	        	{
+	        		$.messager.show({
+						title : '提示',
+						msg : '操作失败，请与OA管理员联系！',
+						timeout : 3000,
+						showType : 'show'
+					});
+					$('#tt').datagrid('reload');
+	        	}else if (msg == 1){
+	        		$.messager.show({
+						title : '提示',
+						msg : '操作成功！',
+						timeout : 3000,
+						showType : 'show'
+					});
+					$('#tt').datagrid('reload');
+					$('#import').window('close');
+	        	}
+			}
+			
+			
+			function uploadFile(){
+				document.import_form.submit();
+			}
+			
+		</script>
+		<style type="text/css">
+			a img {border: 0px;}
+			label { font-weight:bold;float:left; text-align:right; width:90px;}
+			label b{color:red;}
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:center; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p {margin:0px; padding:0px; width:590px; float:left; height: 25px;}
+			#info .text {width:200px; display:block; float:left; text-align: left;}
+        </style>
+	</head>
+	<body>
+		<iframe name="updata" style="display: none;"></iframe>
+		<table id="tt" toolbar="#tb" ></table>
+		<div id="tb" style="padding:5px;height:auto;">
+			<div>
+				类型筛选: 
+				<select id="select_typeid" name="select_typeid" onchange="GetSearch();">
+				<option value="">所有产品</option>
+				{product_option}
+				</select>
+				&nbsp;&nbsp;
+				需求名称:
+				<input id="s_title" name="s_title" value="" />
+				&nbsp;&nbsp;
+				状态筛选: 
+				<select id="select_status" name="select_status" onchange="GetSearch();">
+					<option value="">全部状态</option>
+					<option value="0">待审核</option>
+					<option value="1">审核通过</option>
+					<option value="2">已实现</option>
+					<option value="-1">被打回</option>
+				</select>
+				&nbsp;&nbsp;
+				提交人筛选:
+				<input type="text" name="keyword" id="keyword" value=""  />
+				<br/>
+				提交日期：
+				<input type="text" name="s_start_date" id="s_start_date" value="" onclick="WdatePicker();" style="width:70px;" />
+				至
+				<input type="text" name="s_end_date" id="s_end_date" value="" onclick="WdatePicker();" style="width:70px;" />
+				&nbsp;&nbsp;
+				完成期限：
+				<input type="text" name="s_deadline" id="s_deadline" value="" style="width:70px;" onclick="WdatePicker();" />
+				&nbsp;&nbsp;
+				紧急程度：
+				<select id="s_degree" name="s_degree" onchange="GetSearch();">
+					<option value="" selected >所有程度</option>
+					<option value="1"  >普通</option>
+					<option value="2">紧急</option>
+				</select>
+				
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search">search</a>
+				<form action="?model={t_model}&action=export" method="post" id="export_file_form" name="export_file_form" style="padding:0; maring:0; display:inline-block;" >
+					<input type="hidden" name="h_status" id="h_status" value="" />
+					<input type="hidden" name="h_product_id" id="h_product_id" value="" />
+					<input type="button" name="export_file_button" id="seport_file_button" value="导出数据" onclick="export_file();"/>
+					<input type="button" name="import_file_button" id="import_file_button" value="导入数据" onclick="showImport();"/>
+				</form>
+			</div>
+		</div>
+		
+		<!-- 产品需求添加 -->
+        <div id="AddDemand" class="easyui-window" title="提交新产品需求" iconCls="icon-edit" modal="false" closed="true" style="width:640px;height:520px;padding-top:10px;">
+			<div class="easyui-layout" fit="true" style="width:100%;">
+				<div id="info" region="center" border="false" style="width:100%; " >
+					<form name="form1" method="post" action="?model={t_model}&action=save" enctype="multipart/form-data" target="updata" accept-charset="utf-8" >
+						<input type="hidden" name="id" id="id" value="" />
+						<fieldset title="提出人信息" style="width: 90%; margin-left: 20px;" >
+							<legend>需求信息</legend>
+							<table width="80%" style="margin-top: 5px;">
+								<tbody>
+									<tr>
+										<td style="width: 50px;">
+											<label><b>*</b>需求名称：</label>
+										</td>
+										<td>
+											<span>
+												<input type="text" name="title" id="title" value="" />
+											</span>
+										</td>
+										
+										<td>
+											<label><b>*</b>所属产品：</label>
+										</td>
+										<td>
+											<span>
+												<select id="product_id" name="product_id">
+													<option value="" >请选择所属产品</option>
+													{product_option}
+												</select>
+											</span>
+										</td>
+										
+									</tr>
+									
+									<tr>
+										<td>
+											<label><b>*</b>紧急程度：</label>
+										</td>
+										<td>
+											<span>
+												<select id="degree" name="degree">
+													<option value="0">请选择需求紧急程度</option>
+													<option value="1" selected >普通</option>
+													<option value="2">紧急</option>
+												</select>
+											</span>
+										</td>
+										<td>
+											<label>完成期限：</label>
+										</td>
+										<td colspan="3">
+											<span>
+												<input type="text" name="deadline" id="deadline" value="" onclick="WdatePicker();" /><br/>（格式：yyyy-mm-dd）
+											</span>
+										</td>
+									</tr>
+									
+									<tr>
+										<td colspan="1">
+											<b style="color: red;margin-left: 16px;">*</b><b>需求描述：</b><br/><span style="font-size: 12px;">（含实现目的及客户建议）</span>
+										</td>
+										<td colspan="3">
+											<textarea style="width:90%;height:40px;" id="description" name="description"></textarea>
+										</td>
+									</tr>
+									
+									<tr>
+										<td colspan="1">
+											<b style="margin-left: 22px;" >实现步骤：</b>
+										</td>
+										<td colspan="3">
+											<textarea style="width:90%;height:40px;" id="step" name="step"></textarea>
+										</td>
+									</tr>
+									
+									<tr>
+										<td colspan="1">
+											<b style="margin-left: 22px;" >实现算法：</b>
+										</td>
+										<td colspan="3">
+											<textarea style="width:90%;height:40px;" id="algorithm" name="algorithm"></textarea>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+						<!-- ************************************************ -->
+						<fieldset title="提出人信息" style="width: 90%; margin-left: 20px;" >
+						<legend>提出人信息</legend>
+						<table width="80%" >
+							<tbody>		
+								<tr>
+									<td>
+										<label>名称：</label>
+									</td>
+									<td>
+										<span>
+											<input type="text" name="contact" id="contact" value="" />
+										</span>
+									</td>
+									<td>
+										<label>电话：</label>
+									</td>
+									<td>
+										<span>
+											<input type="text" name="mobile" id="mobile" value="" />
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label>单位：</label>
+									</td>
+									<td>
+										<span>
+											<input type="text" name="unit" id="unit" value="" />
+										</span>
+									</td>
+									
+								</tr>
+						</table>
+						</fieldset>
+						<fieldset title="提交人信息" style="width: 90%; margin-left: 20px;" >
+						<legend>提交人信息</legend>
+						<table width="80%" >
+								<tr>
+									<td>
+										<label>名称：</label>
+									</td>
+									<td>
+										<span>
+											<input type="text" name="userid" id="userid" value="" />
+										</span>
+									</td>
+									<td>
+										<label>Email：</label>
+									</td>
+									<td>
+										<span>
+											<input type="text" name="email" id="email" value="" />
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</fieldset>
+						 <!-- ********************************************************** -->
+						<table width="80%" style="margin-left: 20px;">
+							<tr>
+								<td>
+									<label>已提交附件：</label>
+								</td>
+								<td>
+									<span id="file_list_str" style="width: 90%;"></span>
+								</td>
+							</tr>
+						
+							<tr>
+								<td>
+									<label>附件：</label>
+								</td>
+								<td>
+									<span id="up" class="text" style="width:450px;">
+										<tt id="0"><input size="45" type="file" id="upfile[]" name="upfile[]" onchange="copy();" value="" /></tt>
+									</span>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+					<input type="button" id="save" onclick="save();"  value="确定提交 " />
+					<input type="button" onclick="$('#AddDemand').window('close');" value="关闭 " />
+				</div>
+			</div>
+		</div>
+		
+		<!-- 查看产品需求 -->
+        <div id="ShowDemand" class="easyui-window" title="查看产品需求" iconCls="icon-edit" modal="false" closed="true" style="width:660px;height:510px;padding:5px;">
+			<div class="easyui-layout" fit="true">
+				<div id="info" region="center" border="false">
+					<!-- 需求信息 -->
+					<div style="width: 100%;">
+						<fieldset style="width: 90%; margin-left: 20px;">
+							<legend>需求信息</legend>
+							<table style="width:100%; margin-left: 5px;" >
+									<tr>
+										<td align="right" width="115px;">
+											需求名称：
+										</td>
+										<td >
+											<span class="text" name="_title" id="_title" style="width: 90px;'"></span>
+										</td>
+										
+										<td align="right" width="100px;">
+											所属产品：
+										</td>
+										<td align="left" width="100px;">
+											<span class="text" id="_product_name" ></span>
+										</td>
+									</tr>
+									
+									<tr>
+										<td align="right">
+											完成期限：
+										</td>
+										<td>
+											<span class="text" id='_deadline' name='_deadline' style="width: 120px;'" ></span>
+										</td>
+										<td align="right">
+											紧急程度：
+										</td>
+										<td>
+											<span class="text" id="_degree" ></span>
+										</td>
+									</tr>
+									
+									<tr>
+										<td align="right">
+											需求状态：
+										</td>
+										<td>
+											<span class="text" id='_status' name='_status' style="width: 120px;'" ></span>
+										</td>
+										<td>
+											&nbsp;
+										</td>
+										<td>
+											&nbsp;
+										</td>
+									</tr>
+									</table>
+									<table style="width:100%;">
+								<tr>
+									<td align="left" colspan="4">
+										&nbsp;&nbsp;&nbsp;<b>产品需求描述</b><span style="font-size:12px;">(含需求实现目的及客户建议方式)</span>：
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td colspan="3" style="table-layout:fixed;">
+										&nbsp;&nbsp;&nbsp;<span  id="_description" style="width: 100px; word-break:break-all; word-wrap:break-word;"></span>
+									</td>
+								</tr>
+							</table>
+							<table style="width:100%;">
+								<tr>
+									<td align="left" colspan="4">
+										&nbsp;&nbsp;&nbsp;<b>产品实现步骤：</b>
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td colspan="3" style="table-layout:fixed;" >
+										<span id="_step" style="width: 100px; word-break:break-all; word-wrap:break-word;" ></span>
+									</td>
+								</tr>
+							</table>
+							<table style="width:100%;">
+								<tr>
+									<td align="left" colspan="4">
+										&nbsp;&nbsp;&nbsp;<b>产品实现算法：</b>
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td colspan="3" style="table-layout:fixed;" >
+										<span id="_algorithm" style="width: 100px; word-break:break-all; word-wrap:break-word;" ></span>
+									</td>
+								</tr>
+							</table>
+									<fieldset style="width: 90%; margin-left: 20px;">
+										<legend>提出人信息</legend>
+										<table>
+											<tr>
+												<td align="right" >名称：</td>
+												<td>
+													<span class="text" id="_contact" ></span>
+												</td>
+												<td align="right" >单位：</td>
+												<td>
+													<span class="text" id="_unit" style="width: 120px;'" ></span>
+												</td>
+												
+											</tr>
+											<tr>
+												<td align="right">电话：</td>
+												<td>
+													<span class="text" id="_mobile" style="width: 120px;'"></span>
+												</td>
+												<td align="right">&nbsp;</td>
+												<td>
+													&nbsp;
+												</td>
+											</tr>
+										</table>
+									</fieldset>
+									<fieldset style="width: 90%; margin-left: 20px;">
+										<legend>提交人信息</legend>
+										<table>
+									<tr>
+										<td align="right">名称：</td>
+										<td>
+											<span class="text" id="_user_name" style="width: 120px;'"></span>
+										</td>
+										
+										<td align="right">Email：</td>
+										<td>
+											<span class="text" id="_email" ></span>
+										</td>
+									</tr>
+							</table>
+							</fieldset>
+							
+						</fieldset>
+						
+						<fieldset style="width: 90%; margin-left: 20px;">
+							<legend>审核信息</legend>
+							<!-- view审核模块 -->
+							<div id="product_info_init_audit_div" style="width:100%;">
+								<!-- 需求来源及类型 -->
+								<div id='_type_and_source_div'>
+									<table style="width:100%;">
+										<tr>
+											<td width="100px" align="right">需求类型：</td>
+											<td><span class="text" id="_demand_type" style="width: 110px;" ></span></td>
+											<td width = "110px"  align="right">来源：</td>
+											<td><span class="text" id="_source" style="width: 110px;" ></span></td>
+										</tr>
+									</table>
+								</div>
+								<!-- 需求初审 -->
+								<div id="_init_audit_div">
+									<table style="width:100%;">
+										<tr>
+											<td align="right" width="100px" >初审说明：</td>
+											<td style="table-layout:fixed;" ><span id="_init_notes" style="width: 100px; word-break:break-all; word-wrap:break-word;" ></span></td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+								<!-- 需求审核  -->
+								<div id="_audit_div">
+									<table style="width:100%;" >
+										<tr>
+											<td align="right" width="100px" >审核说明：</td>
+											<td colspan="3" style="table-layout:fixed;" ><span id="_notse" style="width: 100px; word-break:break-all; word-wrap:break-word;" ></span></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<fieldset style="width: 90%; margin-left: 20px;">
+						<legend>实现信息</legend>
+						<!-- view需求实现模块 -->
+						<div id="_product_info_realize_div" style="width:100%;">
+							<div>
+								<table style="width:100%;">
+									<tbody>
+										<tr>
+											<td align="right" width="100px">
+												实现日期:
+											</td>
+											<td>
+												 <span class="text" id='_realize_date' ></span>
+											</td>
+											<td align="right" width = "110px" >
+												实现版本:
+											</td>
+											<td>
+												<span class="text" id='_version' ></span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</fieldset>
+					
+					<br/>
+					
+					<!-- 附件 -->
+					<div id="product_info_attachment_div" style="width:100%;">
+						
+						<div>
+							<label><b>附件：</b></label>
+							<span id="_file_list" class="text" style="width:450px;" ></span>
+						</div>
+					</div>
+				</div>
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+						<input type="button" onclick="$('#ShowDemand').window('close');" value="关闭 " />
+				</div>
+			</div>
+		</div>
+		
+		
+		<!--需求审核 -->
+		<div id="audit" class="easyui-dialog" title="需求审核" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="demand_id" value="" />
+       			<input type="radio" checked onclick="set_remark_title(1);" name="status" value="1" /> 通过 
+       			<input type="radio" name="status" onclick="set_remark_title(-1);" value="-1" /> 打回 
+       		</div>
+       		<div id="select_options">
+       			<table>
+       				<tr>
+       					<td width="60" id="type_title">需求类型:</td>
+       					<td>
+       						<select id="demand_type" name="demand_type" >
+								<option value="product">产品需求</option>
+								<option value="project">项目需求</option>
+								<option value="study">预研需求</option>
+								<option value="design">设计需求</option>
+								<option value="hardware">硬件需求</option>
+								<option value="bpo">外包需求</option>
+								<option value="doc">文档需求</option>
+								<option value="other">其他需求</option>
+								<option value="" selected="selected">请选择需求类型:</option>
+       						</select>
+						</td>
+       				</tr>
+ 					
+ 					<tr>
+       					<td width="60" id="source_title">来源:</td>
+       					<td>
+       						<select name="source" id="source" >
+								<option value="" selected="selected">请选择来源:</option>
+								<option value="custom">客户</option>
+								<option value="user">用户</option>
+								<option value="po">产品经理</option>
+								<option value="market">市场</option>
+								<option value="service">客服</option>
+								<option value="competitor">竞争对手</option>
+								<option value="partner">合作伙伴</option>
+								<option value="dev">开发人员</option>
+								<option value="tester">测试人员</option>
+								<option value="bug">Bug</option>
+								<option value="other">其他</option>
+							</select>
+						</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div>
+       			<table>
+       				<tr>
+       					<td width="60" id="remark_title">备注说明:</td>
+       					<td>
+       						<textarea rows="6" style="width:300px;height: 60px;" id="remark" name="remark">
+							</textarea>
+						</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_audit();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#audit').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       
+       <!--初审 -->
+		<div id="first_audit" class="easyui-dialog" title="初审" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="init_demand_id" value="" />
+       			<input type="radio" checked onclick="set_remark_title(3);" name="init_status" value="3" /> 通过 
+       			<input type="radio" name="init_status" onclick="set_remark_title(-1);" value="-1" /> 打回 
+       		</div>
+       		
+       		<div>
+       			<table>
+       				<tr>
+       					<td width="60" id="remark_title">备注说明:</td>
+       					<td>
+       						<textarea rows="6" style="width:300px;height: 60px;" id="init_notes" name="init_notes">
+							</textarea>
+						</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_init_audit();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#first_audit').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       
+       <!--客户反馈 -->
+		<div id="feedback" class="easyui-dialog" title="客户反馈" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="demand_id" value="" />
+       			<input type="radio" checked  name="feedback_status" value="1" /> 已反馈 
+       			<input type="radio" name="feedback_status"  value="0" /> 未反馈
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_feedback();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#feedback').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       <!--实现 -->
+		<div id="realize" class="easyui-dialog" title="需求实现" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="demand_id" value="" />
+       			<input type="radio" checked  name="realize_status" value="1" /> 已实现
+       			<input type="radio" name="realize_status"  value="0" /> 未实现
+       		</div>
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			实现版本:<input type="text" id="version" name="version" value="" />
+       		</div>
+       		
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_realize();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#realize').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       <!-- 导入 -->
+       <div id="import" class="easyui-dialog" title="导入" icon="icon-save" closed="true" style="width:600px;height: 400px;" >
+       		<div id="import_file_div" style="text-align: center; height: 30px; line-height: 30px">
+       				<form id="import_form" name="import_form" method="post" action="?model={t_model}&action=import_file" enctype="multipart/form-data" target="updata">
+	       				<br/>
+	       				<table align="center" >
+	       					<tr>
+	       						<td align="left">
+	       							<span>产品列表:</span>
+	       							<select id="import_product_id" name="import_product_id" >
+										<option value="">请选择产品</option>
+										{product_option}
+									</select>
+	       						</td>
+	       						<td>
+	       							&nbsp;
+	       						</td>
+	       					</tr>
+	       						
+	       					<tr>
+	       						<td align="left">
+	       							<span>导入文件:</span><input type="file" id="upfile" name="upfile">
+	       						</td>
+	       						<td>
+	       							<a href="./attachment/demo/demo.xlsx">模板文件下载</a>
+	       						</td>
+	       					</tr>
+	       					
+	       					<tr>
+	       						<td colspan="2">
+	       							<input type="button" id="import_submit" name="import_submit" value="上传" onclick="uploadFile();">
+	       						</td>
+	       					</tr>
+	       				</table>
+       				</form>
+       		</div>
+       </div>
+	</body>
+</html>

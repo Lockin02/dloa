@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+	<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<!-- 弹窗组件 -->
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<!-- 表格组件 -->
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+
+	<!-- 下拉组件 -->
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotext.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+
+	<!-- tab组件 -->
+	<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+	<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+	</script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript">
+/**
+ * 验证信息
+ */
+function validateForm() {
+	validate({
+		"property" : {
+			required : true
+		}
+	});
+}
+$(function(){
+	validateForm();
+});
+$(function(){
+    $("#TO_NAME").yxselect_user({
+		hiddenId : 'TO_ID',
+		mode : 'check'
+	});
+    $("#mailMan").yxselect_user({
+		hiddenId : 'mailManId'
+	});
+	$("#property").val($("#property").attr("val"));
+});
+function ismailFun(){
+	if( document.getElementsByName("assetcard[ismail]")[1].checked ){
+		$('#mailTr').hide();
+	}else{
+		$('#mailTr').show();
+	}
+}
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	确认资产属性
+    </span>
+</div>
+<form id="form1" method="post" action="?model=asset_assetcard_assetcard&action=addBeachByProperty" name="form1">
+<table class="form_main_table">
+	<tr>
+			<td class="form_text_left">资产名称</td>
+			<td class="form_text_right" width='30%'>
+				 {assetName}
+			</td>
+			<td class="form_text_left">机器码</td>
+			<td class="form_text_right" >
+				 {machineCode}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">资产类别</td>
+			<td class="form_text_right" >
+				 {assetTypeName}
+			</td>
+			<td class="form_text_left">数量</td>
+			<td class="form_text_right" >
+				 {number}
+			</td>
+	</tr>
+	<tr>
+	        <td class="form_text_left">资产来源</td>
+			<td class="form_text_right" >
+				 {assetSourceName}
+			</td>
+			<td class="form_text_left">英文名称</td>
+			<td class="form_text_right" >
+				 {englishName}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">计量单位</td>
+			<td class="form_text_right" >
+				 {unit}
+			</td>
+			<td class="form_text_left">规格型号</td>
+			<td class="form_text_right" >
+				 {spec}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">入账日期</td>
+			<td class="form_text_right" >
+				 {wirteDate}
+			</td>
+			<td class="form_text_left">购置日期</td>
+			<td class="form_text_right" >
+				 {buyDate}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">存放地点</td>
+			<td class="form_text_right" >
+				 {place}
+			</td>
+			<td class="form_text_left">用途</td>
+			<td class="form_text_right" >
+				 {useType}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">物料名称</td>
+			<td class="form_text_right" >
+				 {productName}
+			</td>
+			<td class="form_text_left">品牌</td>
+			<td class="form_text_right">
+				 {brand}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right" colspan='3'>
+				 {supplierName}
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				 <textarea class="textarea_read" rows=4 readonly>{remark}</textarea>
+			</td>
+	</tr>
+	<tr>
+			<td class="form_text_left">资产属性</td>
+			<td class="form_text_right" colspan='3'>
+				<select name="assetcard[property]" class="txt" id="property" val={property}>
+					<option></option>
+					<option value='0'>固定资产</option>
+					<option value='1'>低值耐用品</option>
+      			</select>
+				<span class="red"> [*] </span>
+			</td>
+	</tr>
+   	<tr>
+			<td class="form_text_left">是否发送邮件</td>
+			<td class="form_text_right" colspan="3">
+				 <input type="radio" name="assetcard[ismail]" value="1" onclick="ismailFun();" checked/>&nbsp;是&nbsp;&nbsp;
+				 <input type="radio" name="assetcard[ismail]" value="0" onclick="ismailFun();"/>&nbsp;否&nbsp;&nbsp;
+			</td>
+	</tr>
+	<tr id="mailTr">
+			<td class="form_text_left">邮件接收者</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" name="assetcard[email][TO_NAME]" class="txtlong" id="TO_NAME" value="{TO_NAME}"/>
+				<input type="hidden" name="assetcard[email][TO_ID]" class="text" id="TO_ID" value="{TO_ID}"/>
+			</td>
+	</tr>
+</table>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" value="{id}" name="assetcard[id]"/>
+		   <input  type="submit" class="txt_btn_a" value="生成卡片"/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

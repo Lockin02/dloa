@@ -1,0 +1,61 @@
+<html>
+<HEAD>
+    <TITLE>借用明细表</TITLE>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gbk">
+    <OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC" codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+    <script src="webreport/CreateControl.js" language="javascript"></script>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script>
+        //响应内容行双击事件，打开当前行对应的明细报表
+        function OnContentCellDblClick(Sender){
+            //演示超链接功能，在这里做打开链接任务，这里用弹出消息框代替
+            var ReportViewer = document.getElementById("ReportViewer");
+            var Report = ReportViewer.Report;
+            var id = Report.FieldByName("id").AsString;
+            if(id != ""){
+                //获取单据Id
+                var formId = Report.FieldByName("id").AsString;
+                var skey = "";
+                $.ajax({
+                    type: "POST",
+                    url: "?model=projectmanagent_borrow_borrow&action=md5RowAjax",
+                    data: { "id" : formId },
+                    async: false,
+                    success: function(data){
+                        skey = data;
+                    }
+                });
+                showModalWin("?model=projectmanagent_borrow_borrow&action=init&perm=view&id=" + formId +"&skey=" + skey ,1);
+            }
+        }
+    </script>
+</HEAD>
+<BODY>
+<div style="display:none;">
+    <input type="hidden" id="searchKey" value="{searchKey}"/>
+    <input type="hidden" id="searchType" value="{searchType}"/>
+    <input type="hidden" id="countType" value="{countType}"/>
+</div>
+<table style="width: 100%;height: 100%;">
+    <tr style="width: 100%;height: 100%;" width="100%;">
+        <td colspan="4">
+            <script language="javascript">
+                //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+                CreateDisplayViewerEx("100%", "100%",
+                    "view/template/projectmanagent/orderreport/orderreport-borrowdetailreport.grf",
+                    "view/template/projectmanagent/orderreport/orderreport-borrowdetailreport.php"
+                        + "?searchKey=" + $("#searchKey").val()
+                        + "&searchType=" + $("#searchType").val()
+                        + "&countType=" + $("#countType").val()
+                    ,
+                    true,
+                    "<param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+            </script>
+        </td>
+    </tr>
+</table>
+</BODY>
+</HTML>

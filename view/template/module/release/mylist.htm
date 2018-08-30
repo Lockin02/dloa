@@ -1,0 +1,631 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        	label { font-weight:bold;float:left; text-align:right; width:70px;}
+			.list_info {padding-left:30px; float:left;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:center; border:solid 0px red;}
+       		#module_list ul { float:left; width:576px;border-bottom:solid 1px;}
+			#module_list ul li{ list-style:none;float:left;}
+			#module_list ul li.left{float:left;width:540px; line-height:25px; color:#0000ff;}
+			#module_list ul li.left span.ri{ float:right; display:block;}
+			#module_list ul li.right{width:550px; line-height:20px;}
+			
+			#show_info p {width:670px; float:left;}
+			#show_info span {width:140px; display:block; float:left;}
+	    </style>
+		<script type="text/javascript">
+		var ide = false;
+		var model_name_flag = false;
+		var platform = eval('{platform}');
+		var cpu = eval('{cpu}');
+		var edit = false;
+		//platform.push({'id':'','name':'所有平台','selected':true});
+        $(function(){
+            $('#tt').datagrid({
+				view: detailview,
+				detailFormatter:function(index,row){
+					return '<div id="ddv-' + index + '" style="padding:5px 0;"></div>';
+				},onExpandRow: function(index,row){
+					$('#ddv-'+index).panel({
+						border:false,
+						cache:false,
+						href:'?model={t_model}&action=get_history_list&identification='+row.identification+'&id='+row.id,
+						onLoad:function(){
+							$('#tt').datagrid('fixDetailRowHeight',index);
+						}
+					});
+					$('#tt').datagrid('fixDetailRowHeight',index);
+				},
+				fit:true,
+                title: '我发布的模块列表',
+                iconCls: 'icon-edit',
+                pagination: true,
+                pageSize: 20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=mylist_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, {
+                    field: 'module_name',
+                    title: '模块名称',
+                    width: 200,
+                    align: 'center'
+                }, {
+                    field: 'version',
+                    title: '版本号',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'svn_version',
+                    title: 'Revision',
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'platform',
+                    title: '适用平台',
+                    width: 70,
+                    align: 'center'
+                }, {
+                    field: 'cpu',
+                    title: 'CPU',
+                    width: 50,
+                    align: 'center'
+                },{
+                    field: 'description',
+                    title: '版本说明',
+                    width: 200,
+                    align: 'center'
+                }, {
+                    field: 'owner_name',
+                    title: '负责人',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'status',
+                    title: '审批状态',
+                    width: 60,
+                    align: 'center',
+					formatter: function(value, row, index){
+						if (value == 1)
+						{
+							return '已通过';
+						}else if (value == -1){
+							return '<a href="#" onclick="show_remark(\''+row.audit_remark+'\');">被打回</a>';
+						}else{
+							return '待审批';
+						}
+					}
+                }, {
+                    field: 'audit_name',
+                    title: '审批人',
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'user_name',
+                    title: '发布人',
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'date',
+                    title: '更新时间',
+                    width: 84,
+                    align: 'center'
+                },{
+                    field: 'download',
+                    title: '下载',
+                    width: 40,
+                    align: 'center',
+					formatter:function(value,row,index){
+						return '<a href="?model={t_model}&action=download&id='+row.id+'" target="_blink">下载</a>';
+					}
+                },  {
+                    field: 'action',
+                    title: '操作',
+                    width: 160,
+                    align: 'center',
+                    formatter: function(value, row, index){
+  
+                        var str ='';
+						str += '<a href="#" onclick="show_info(' + index + ')">查看</a> ';
+						if (row.status == 1)
+						{
+							str += '<a href="#" onclick="show_feedback(' + row.id + ')">反馈</a> ';
+							str += '<a href="#" onclick="add_version(' + index + ')">增加</a> ';
+						}
+						if (row.status != 1) {
+							str += '<a href="#" onclick="editrow(' + index + ')">修改</a> ';
+						}
+						if (row.status == 0)
+						{
+							str += '<a href="#" onclick="deleterow(' + row.id + ')">删除</a>';
+						}
+                        return str;
+                    }
+                }]],
+                onBeforeEdit: function(index, row){
+                    row.editing = true;
+                    updateActions();
+                },
+                onAfterEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+                onCancelEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                }
+            });
+			$('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                    iconCls: 'icon-add',
+                    text: '新模块发布申请',
+                    handler: function(){
+                        add('show');
+                    }
+                }]
+            });
+			//绑定负责人输入框
+            $("#owner_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#owner').val(data.user_id);
+                }
+                else {
+                    $('#owner').val('');
+                }
+            });
+        });
+		/**
+		 * 删除
+		 * @param {Object} id
+		 */
+		function deleterow(id)
+		{
+			$.messager.confirm('确认提示','你确定要删除该模块申请吗？',function(r){
+				if (r)
+				{
+					$.post('?model={t_model}&action=del&id='+id,{rand:Math.random(0,9999)},function(data){
+						if (data == 1)
+						{
+							$.messager.show({
+		                        title: '提示',
+		                        msg: '删除成功！',
+		                        timeout: 3000,
+		                        showType: 'show'
+		                    });
+							$('#tt').datagrid('reload');
+						}else if (data == -2){
+							$.messager.alert('错误提示','您没有权限执行此操作！');
+						}else{
+							$.messager.alert('提示','删除失败，请与OA管理员联系！');
+						}
+					});
+				}
+			})
+		}
+		/**
+		 * 添加模块
+		 * @param {Object} types
+		 */
+		function add(types)
+		{
+			if (types == 'show')
+			{
+				edit = false;
+				$('#upfile_msg').css('display','none');
+				document.form1.action = '?model={t_model}&action=add';
+				var platform_option = '';
+				for(var i=0;i<platform.length;i++)
+				{
+					platform_option+='<option value="'+platform[i].name+'">'+platform[i].name+'</option>';
+				}
+				
+				var cpu_option = '';
+				for(var i=0;i<cpu.length;i++)
+				{
+					cpu_option+='<option value="'+cpu[i].name+'">'+cpu[i].name+'</option>';
+				}
+				$('#identification').val('');
+				$('#module_name').val('');
+				$('#module_name').attr('readonly',false);
+				$('#module_name').attr('onblur','check_module_name(this.value)');
+				
+				$('#version').val('');
+				$('#svn_version').val('');
+				
+				$('#owner_name').val('');
+				$('#owner').val('');
+				
+				$('#platform').append(platform_option);
+				$('#cpu').append(cpu_option);
+				$('#desc_title').html('模块说明：');
+				$('#platform').attr('value','');
+				$('#add_window').window('setTitle','新模块发布申请');
+				$('#add_window').window('open');
+			}else{
+				if ($('#module_name').val()=='')
+				{
+					$.messager.alert('提示','模块名称不能为空！');
+					$('#module_name').focus();
+					return false;
+				}
+				
+				if (model_name_flag)
+				{
+					$.messager.alert('提示','您输入的模块名称已经发布过，如需要增加新版本请在列表中增加。');
+					$('#module_name').focus();
+					return false;
+				}
+				
+				if ($('#version').val()=='')
+				{
+					$.messager.alert('提示','版本号不好能为空！');
+					$('#version').focus();
+					return false;
+				}
+				
+				if ($('#owner').val()=='')
+				{
+					$.messager.alert('提示','负责人不能为空！');
+					$('#owner').focus();
+					return false;
+				}
+				if ($('#svn_version').val()=='')
+				{
+					$.messager.alert('提示','Revision不能为空！');
+					$('#svn_version').focus();
+					return false;
+				}
+				
+				if ($('#platform').val()=='')
+				{
+					$.messager.alert('提示','请选择适用平台');
+					$('#platform').focus();
+					return false;
+				}
+				
+				if ($('#cpu').val()=='')
+				{
+					$.messager.alert('提示','请选择平台CPU');
+					$('#cpu').focus();
+					return false;
+				}
+				
+				if ($('#description').val() == '')
+				{
+					$.messager.alert('提示','请填写模块说明');
+					$('#description').focus();
+					return false;
+				}
+				
+				if ($('#upfile').val() == '' && edit == false)
+				{
+					$.messager.alert('提示','请选择模块文件上传。');
+					$('#upfile').focus();
+					return false;
+				}
+				
+				document.form1.submit();
+			}
+			
+		}
+		/**
+		 * 修改
+		 * @param {Object} index
+		 */
+		function editrow(index)
+		{
+			edit = true;
+			$('#upfile_msg').css('display','');
+			$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+			
+			document.form1.action = '?model={t_model}&action=edit&id='+row.id;
+			var platform_option = '';
+			for(var i=0;i<platform.length;i++)
+			{
+				platform_option+='<option value="'+platform[i].name+'">'+platform[i].name+'</option>';
+			}
+			var cpu_option = '';
+			for(var i=0;i<cpu.length;i++)
+			{
+				cpu_option+='<option value="'+cpu[i].name+'">'+cpu[i].name+'</option>';
+			}
+			//模块名称
+			$('#module_name').val(row.module_name);
+			$('#module_name').attr('onblur','check_module_name(this.value)');
+			$('#module_name').attr('readonly',false);
+			//唯一标识
+			$('#identification').val(row.identification);
+			//版本
+			$('#version').val(row.version);
+			$('#svn_version').val(row.svn_version);
+			//负责人
+			$('#owner_name').val(row.owner_name);
+			$('#owner').val(row.owner);
+			//适用平台
+			$('#platform').append(platform_option);
+			$('#platform').attr('value',row.platform);
+			//平台CPU
+			$('#cpu').append(cpu_option);
+			$('#cpu').attr('value',row.cpu);
+			
+			$('#desc_title').html('版本说明：');
+			$('#description').val(row.description);
+			$('#upfile_msg').html('注意：重新上传将会覆盖旧文件。')
+			$('#add_window').window({title:'修改模块表'});
+			$('#add_window').window('open');
+		}
+		/**
+		 * 增加版本
+		 * @param {Object} index
+		 */
+		function add_version(index)
+		{
+			edit = false;
+			$('#upfile_msg').css('display','none');
+			document.form1.action = '?model={t_model}&action=add';
+			$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+			
+			var platform_option = '';
+			for(var i=0;i<platform.length;i++)
+			{
+				platform_option+='<option value="'+platform[i].name+'">'+platform[i].name+'</option>';
+			}
+			var cpu_option = '';
+			for(var i=0;i<cpu.length;i++)
+			{
+				cpu_option+='<option value="'+cpu[i].name+'">'+cpu[i].name+'</option>';
+			}
+			$('#platform').append(platform_option);
+			$('#module_name').val(row.module_name);
+			$('#module_name').attr('readonly',true);
+			$('#module_name').attr('onblur','');
+			
+			$('#cpu').append(cpu_option);
+			
+			$('#identification').val(row.identification);
+			
+			$('#version').val('');
+			$('#svn_version').val('');
+			
+			$('#owner_name').val(row.owner_name);
+			$('#owner').val(row.owner);
+			
+			$('#platform').attr('value',row.platform);
+			$('#cpu').attr('value',row.cpu);
+			
+			$('#add_window').window({title:'增加版本'});
+			$('#add_window').window('open');
+		}
+		//查看详细信息
+		function show_info(index)
+		{
+			$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+			show_info_window(row);
+			
+		}
+		//显示单条信息
+		function get_info(id)
+		{
+			$.post('?model={t_model}&action=get_info',{id:id,rand:Math.random(0,99999)},function(data){
+				if (data)
+				{
+					show_info_window(eval('('+data+')'));
+				}
+			});
+		}
+		//显示详细信息窗口
+		function show_info_window(row)
+		{
+			$('#_module_name').html(row.module_name);
+			$('#_version').html(row.version);
+			$('#_svn_version').html(row.svn_version);
+			$('#_user_name').html(row.user_name);
+			$('#_owner').html(row.owner_name);
+			$('#_reviewer').html(row.audit_name ? row.audit_name : '待审批');
+			$('#_audit_time').html(row.audit_time ? row.audit_time : '&nbsp;');
+			$('#_platform').html(row.platform);
+			$('#_cpu').html(row.cpu);
+			$('#_description').html(row.description.replace(/\r\n/g, "<br />"));
+			$('#_date').html(row.date);
+			$('#_down_num').html(row.down_num);
+			$('#download a').attr('href','?model={t_model}&action=download&id='+row.id);
+			$('#show').dialog('open');
+		}
+		/**
+		 * 检查模块名称是否存在
+		 * @param {Object} name
+		 */
+		function check_module_name(name)
+		{
+			if (name!='')
+			{
+				$.post('?model={t_model}&action=check_module_name',{module_name:name,rand:Math.random(0,9999)},function(data){
+					if (data == 1)
+					{
+						model_name_flag = true;
+						$('#module_name_error').html('你输入模块名称已经发布过，如需增加版本请在列表中增加！');
+					}else{
+						model_name_flag = false;
+						$('#module_name_error').html('');
+					}
+				});
+			}
+		}
+		
+		/**
+		 * 检查唯一标识是否存在
+		 * @param {Object} val
+		 */
+		function check_ide(val)
+		{
+			if (val!='')
+			{
+				$.post('?model={t_model}&action=check_identification',{identification:val,rand:Math.random(0,9999)},function(data){
+					if (data == 1)
+					{
+						ide = true;
+						$('#ide_error').html('你输入的唯一标识已经存在，请重新输入！');
+					}else{
+						ide = false;
+						$('#ide_error').html('');
+					}
+				});
+			}
+		}
+		/**
+		 * 显示反馈意见
+		 * @param {Object} id
+		 */
+		function show_feedback(id)
+		{
+			$('#show_feedback').window('open');
+			$.post('?model=module_release_feedback&action=module_list',{module_id:id,rand:Math.random(0,9999)},function(data){
+				if (data)
+				{
+					$('#feedback_list').html(data);
+				}else{
+					
+				}
+			});
+		}
+		/**
+		 * 显示被打回理由
+		 * @param {Object} msg
+		 */
+		function show_remark(msg)
+		{
+			$.messager.alert('打回理由',msg,'info');
+
+		}
+		/**
+		 * 过滤非法字符
+		 * @param {Object} text
+		 */
+		function surnam_keyup(text) {
+		    var textvalue = text.value;
+		    var codes = '\\/:*?"<>|';
+		    var codearray = codes.split('');
+		    for (i = 0; i < codearray.length; i++) {
+		        while (textvalue.indexOf(codearray[i]) != -1) {
+		            textvalue = textvalue.replace(codearray[i], '');
+		        }
+		    }
+		    text.value = textvalue;
+		}
+
+		</script>
+    </head>
+   <body id="tabdiv" class="easyui-layout" border="false">
+		<div region="center" border="true" border="false" style="padding:5px;">
+        	<table id="tt"></table>
+		</div>
+		<div id="show" class="easyui-dialog" title="查看模块详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:700px;height:500px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="show_info" region="center" border="false">
+				<p>
+					<label>模块名称：</label><span id="_module_name"></span>
+					<label>版本号：</label><span id="_version"></span>
+					<label>Revision：</label><span id="_svn_version"></span>
+				</p>
+				<p>
+					<label>适用平台：</label><span id="_platform"></span>
+					<label>平台CPU：</label><span id="_cpu"></span>
+					<label>更新时间：</label><span id="_date"></span>
+				</p>
+				<p>
+					<label>发布人：</label><span id="_user_name"></span>
+					<label>负责人：</label><span id="_owner"></span>
+					<label>审批人：</label><span id="_reviewer"></span>
+				<p>
+					<label>审批时间：</label><span id="_audit_time"></span>
+					<label>已下载数：</label><span id="_down_num"></span>
+					<label>下载模块：</label><span id="download"><a href="" target="_blank">点击下载</a></span>
+				</p>
+				<p><label style=" float:left;">版本说明：</label><div id="_description" style=" line-height:20px; float:left;"></div></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show').dialog('close');" value=" 返回关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+    </body>
+	<div id="add_window" class="easyui-window" title="新模块发布申请" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:650px;height:500px;padding:5px;">	
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="true" style="padding-left:5px;padding:5px;">
+				<form id="form1" name="form1" method="post" action="?model={t_model}&action=add" enctype="multipart/form-data">
+				<input type="hidden" id="owner" name="owner" value=""/>
+				<input type="hidden" id="identification" name="identification" value=""/>
+				<p><label>模块名称：</label><span><input type="text" id="module_name" name="module_name" onblur="check_module_name(this.value);" onkeyup="surnam_keyup(this);" value="" /></span><span id="module_name_error" style="color:red;"></span></p>
+				<p><label>版本号：</label><span><input type="text" id="version" name="version" onkeyup="value=this.value.replace(/[^\d\.]/g,'');" value=""/></span></p>
+				<p><label>Revision：</label><span><input type="text" id="svn_version" name="svn_version" onkeyup="value=this.value.replace(/[^\d\.]/g,'');" value=""/></span></p>
+				<p><label>负责人：</label><span><input type="text" id="owner_name" name="owner_name" value=""/></span></p>
+				<p><label>适用平台：</label><span><select id="platform" name="platform"><option value="">请选择适用平台</option></select></span></p>
+				<p><label>平台CPU：</label><span><select id="cpu" name="cpu"><option value="">请选择平台CPU</option></select></span></p>
+				<p><label id="desc_title">版本说明：</label><span><textarea rows="7" style="width:80%;" id="description" name="description"></textarea></span></p>
+				<p><label>模块文件：</label><span><input size="40" type="file" id="upfile" name="upfile" /></span><span id="upfile_msg" style="color:red;"></span>
+					<br />
+					<span style=" padding-left: 70px; line-height: 25px;">模块打包必须包含：库文件、测试报告、修改历史说明、调用例子程序、模块说明文档，否则不。</span>
+				</p>
+				<p style="color:red;">注意：以上每项都为必填项，请认真填写每一项。</p>
+				</form>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<a class="easyui-linkbutton" iconCls="icon-ok" href="#" onclick="add()">确定</a>
+			<a class="easyui-linkbutton" iconCls="icon-cancel" href="#" onclick="$('#add_window').window('close');">取消</a>
+		</div>
+		</div>
+	</div>
+	<div id="show_feedback" class="easyui-window" title="查看反馈意见" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:680px;height:500px;padding:5px;">	
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="true" style="padding-left:5px;">
+				<div id="feedback_list"></div>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px; padding-top:5px;">
+				<a class="easyui-linkbutton" iconCls="icon-undo" href="javascript:void(0)" onclick="$('#show_feedback').window('close');">返回关闭</a>
+			</div>
+	</di>
+</html>

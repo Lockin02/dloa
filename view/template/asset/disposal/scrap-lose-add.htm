@@ -1,0 +1,133 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>新增遗失资产报废申请</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+<script type="text/javascript"
+	src="view/template/asset/disposal/js/scrap-lose-add.js">
+        </script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">
+添加遗失资产报废申请 </span></div>
+<form id="form1" method="post"
+	action="?model=asset_disposal_scrap&action=add" name="form1"
+	onsubmit="return countAmount();">
+<table class="form_main_table">
+   <tr>
+		<td class="form_text_left">
+			申请时间
+		</td>
+		<td class="form_text_right">
+			<input type="text" name="scrap[scrapDate]" id="scrapDate" value="{scrapDate}" class="txt" onfocus="WdatePicker()"  />
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">
+			报废总数
+		</td>
+		<td class="form_text_right">
+			<input type="text" name="scrap[scrapNum]" id="scrapNum" class="readOnlyTxtNormal" readonly/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+		<tr>
+			<td class="form_text_left">
+				申请人公司
+			</td>
+			<td class="form_text_right">
+			 <input type="hidden" name="scrap[applyCompanyCode]" id="applyCompanyCode" value="{applyCompanyCode}"  />
+			 <input type="text" name="scrap[applyCompanyName]" id="applyCompanyName" value="{applyCompanyName}" class="readOnlyTxtNormal" readonly/>
+			</td>
+			<td class="form_text_left">
+				报废原因
+			</td>
+			<td class="form_text_right">
+				<select name="scrap[reason]" id="reason" class="txt">
+					<option value=""></option>
+					<option value="1">丢失</option>
+                    <option value="2">人为损坏</option>
+                    <option value="3">正常损坏</option>
+                </select><span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请人：</td>
+			<td class="form_text_right"><input type="hidden"
+				name="scrap[proposerId]" id="proposerId" value="{proposerId}"
+				class="txt" /> <input type="text" name="scrap[proposer]"
+				id="proposer" value="{proposer}" class="txt" /> <span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">申请人部门：</td>
+			<td class="form_text_right"><input type="hidden"
+				name="scrap[deptId]" id="deptId" value="{deptId}" /> <input
+				type="text" name="scrap[deptName]" id="deptName" value="{deptName}"
+				class="readOnlyTxtNormal" readonly /></td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				报废处理
+			</td>
+			<td class="form_text_right">
+				<select name="scrap[scrapDeal]" id="scrapDeal" class="txt">
+					<option value=""></option>
+					<option value="1">清记录、赔偿</option>
+                    <option value="2">清记录、变卖</option>
+                </select><span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">
+				公司入账
+			</td>
+			<td class="form_text_right">
+				<select name="scrap[hasAccount]" id="hasAccount" class="txt">
+					<option value=""></option>
+					<option value="1">已入账</option>
+                    <option value="2">未入账</option>
+                </select><span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				缴款人
+			</td>
+			<td class="form_text_right">
+				<input type="hidden" name="scrap[payerId]" id="payerId" class="txt"  />
+				<input type="text" name="scrap[payer]" id="payer" class="txt"  /><span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">
+				缴款费用
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="scrap[amount]" id="salvage" class="txt formatMoney"  /><span class="red">[*]</span>
+			</td>
+		</tr>
+	<tr>
+		<td class="form_text_left">备注：</td>
+		<td colspan="6" class="form_text_right"><textarea
+			class="txt_txtarea_font" rows="6" name="scrap[remark]" id="remark"
+			cols="78"></textarea></td>
+	</tr>
+</table>
+
+<div id="purchaseProductTable"></div>
+
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+<!--		<input type="submit" class="txt_btn_a" value=" 保  存 " />-->
+		<input type="hidden" id="ExaStatus" name="scrap[ExaStatus]" value="待提交" />
+		<input type="hidden" id="loseId" value="{loseId}" />
+		<input type="hidden" id="loseBillNo" value="{loseBillNo}" />
+		<input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+		<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>
+

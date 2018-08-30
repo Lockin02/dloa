@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增检测维修任务</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="{#jsPath#}/repaircheck-add.js" ></script>   </head>
+
+<body>
+   <form id="form1" method="post" action="?model=service_repair_repaircheck&action=add" onsubmit="return checkForm();">
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增检测维修任务
+             </span>
+            </div>
+            </td>
+         </tr>
+        <tr>
+      		<td class="form_text_left">维修申请单编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" readOnly name="repaircheck[applyDocCode]" id="applyDocCode" value="{applyDocCode}"/>
+      			 <input type="hidden" class="txt" name="repaircheck[applyDocId]" id="applyDocId" value="{applyDocId}"/>
+      			 <input type="hidden"  name="repaircheck[applyItemId]"   value="{id}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">下达人</td>
+      		<td class="form_text_right" >
+      		     <input type="text" class="txt" readOnly id="issuedUserName" name="repaircheck[issuedUserName]" value="{issuedUserName}"; />
+      			 <input type="hidden" class="txt" name="repairapply[docCode]" id="docCode" value="{docCode}"/>
+      			 <input type="hidden" id="issuedUserCode" name="repaircheck[issuedUserCode]" value="{issuedUserCode}" />
+      			 <span class="red">[*]</span>
+
+      		</td>
+      		<td class="form_text_left">下达时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" readOnly name="repaircheck[issuedTime]"id="issuedTime"  value="{issuedTime}" />
+      			 <span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">检测维修部门</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" name="repaircheck[repairDeptCode]" id="repairDeptCode" value="{repairDeptCode}"/>
+      			 <input type="text" class="txt" readonly  name="repaircheck[repairDeptName]" id="repairDeptName" value="{repairDeptName}" />
+      			 <span class="red">[*]</span>
+      		</td>
+      		<td class="form_text_left">检测维修人员</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" name="repaircheck[repairUserCode]" id="repairUserCode" value="{repairUserCode}"/>
+      			 <input type="text" class="txt" readonly  name="repaircheck[repairUserName]" id="repairUserName" value="{repairUserName}"/>
+      			 <span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="3">
+	      		<textarea style="width:600px;" class="txt_txtarea_font" id="remark" name="repaircheck[remark]" ></textarea>
+      		</td>
+       </tr>
+		<tr>
+				<td colspan="4">
+				<table class="main_table" id="itemtable">
+					<thead>
+						<tr>
+							<td colspan="10"class="form_header">详细</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>
+								<input type="hidden" id="itemscount" value="1" />
+							</th>
+							<th>序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>所属分类</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>序列号</th>
+							<th>配件信息</th>
+							<th>故障现象</th>
+						</tr>
+					</thead>
+					<tbody id="itembody">
+						{itemsList}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" id="submit" class="txt_btn_a" value=" 下  达 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

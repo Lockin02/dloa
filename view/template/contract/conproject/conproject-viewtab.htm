@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>查看工程项目</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+            //tabs处理
+            var tt = $('#tt');
+            var thisHeight = document.documentElement.clientHeight - 5;
+            tt.tabs({
+                height : thisHeight,
+                plain : true,
+                onSelect:function(node){
+                    var tb=tt.tabs('getTab',node);
+                    var hc=tb.panel('options').headerCls;
+                    if(hc&&hc!=null){
+                        tb.panel('options').headerCls='';//清空之后才不会重新刷新
+                        tt.tabs('update', {
+                            tab: tb,
+                            options:{
+                                content:'<iframe fit="true" name="'+hc+'" scrolling="auto" frameborder="0"  src="'+hc+'" style="width:100%;height:100%;"></iframe>'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+	</script>
+</head>
+<body style="height:100%">
+	<div id="tt">
+		<div title="项目概况" headerCls="?model=contract_conproject_conproject&action=viewProject&id={id}"></div>
+		<div title="产品信息" headerCls="?model=contract_conproject_conproject&action=productList&id={id}"></div>
+		<div title="发货情况" headerCls="?model=contract_conproject_conproject&action=equList&id={id}"></div>
+		<div title="收入成本" headerCls="?model=contract_conproject_conproject&action=incomeList&id={id}"></div>
+		<div title="报销支付" headerCls="?model=contract_conproject_conproject&action=feeCostMainList&cid={contractId}&proLineCode={proLineCode}"></div>
+		<div title="外包及其他" headerCls="?model=contract_conproject_conproject&action=listOsAndOtherCost&id={id}"></div>
+		<div title="项目执行轨迹" headerCls="?model=contract_conproject_conproject&action=listProjectTrack&id={id}"></div>
+	</div>
+</body>
+</html>

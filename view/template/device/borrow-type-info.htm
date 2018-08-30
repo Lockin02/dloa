@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>类别列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+</head>
+<body>
+<form method="get">
+	<input type="hidden" name="model" value="{t_model}" />
+	<input type="hidden" name="action" value="{t_action}" />
+	<input type="hidden" name="typeid" value="{t_typeid}" />
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="typename" name="typename" value="{t_typename}" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="select_type">
+	<tr>
+		<td>设备筛选：
+		<select id="list_id" name="list_id" onchange="go();">
+		<option value="">全部设备</option>
+		{select_device}
+		</select>
+		</td>
+		<td>归还筛选：
+		<select id="status" name="status" onchange="go();">
+		<option value="">全部记录</option>
+		<option {selected_1} value="1">已归还</option>
+		<option {selected_2} value="2">未归还</option>
+		</select>
+		</td>
+		<td>领用人：<input type="text" size="10" onclick="setdiv();" onfocus="setdiv();" onkeydown="keydown();" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid()");' onblur="losefouse();" id="username" name="username" value="{username}" /></td>
+		<td>
+			
+			开始日期：<input type="text" size="12" id="start_date" name="start_date" readonly onClick="WdatePicker()" class="Wdate" value="{start_date}" /> 至
+			<input type="text" size="12" id="end_date" name="end_date" readonly onClick="WdatePicker()" class="Wdate" value="{end_date}" /> 
+			<input type="submit" value=" 查看 " />
+			
+		</td>
+		<td><input type="button" onclick="improt_data()" value="导出当前数据" /></td>
+	</tr>
+</table>
+</form>
+<form method="POST" action="?model=device_borrow&action=return_device_list" onsubmit="return check();" id="list">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="type_{t_typeid}">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="20">{title}</td>
+	</tr>
+	<tr class="tableheader">
+		<td><input type="checkbox" onclick="set_all(this.checked,{t_typeid});"></td>
+		<td>序号</td>
+		<td>设备名称</td>
+		{fixed_title}
+		{field_title}
+		<td>库存数量</td>
+		<td>借用数量</td>
+		<td>借用人</td>
+		<td>使用项目</td>
+		<td>确认状态</td>
+		<td>借用日期</td>
+		<td>预计归还日期</td>
+		<td>实际归还日期</td>
+	</tr>
+	{list}
+<table>
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td colspan="20" style="text-align:center;height:50px;"><input type="submit" value=" 批量归还 " /></td>
+	</tr>
+</table>
+</form>
+<div id="sug"></div>
+<script type="text/javascript">
+	function check()
+	{
+		var s = $('input[type=checkbox][name=id[]]').get();
+		var selected = false;
+		var type = $('#type').val();
+		for (var i=0;i<s.length;i++)
+		{
+			if (s[i].checked == true)
+			{
+				selected = true;
+				break;
+			}
+		}
+		if (selected == false)
+		{
+			alert('最少需要选择一条数据！');
+			return false;
+		}else
+		{
+			return true;
+		}
+		
+	}
+
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	set_selected('list_id');
+	set_selected('status');
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	
+	function go(id)
+	{
+		var typename = $('#typename').val();
+		var list_id = $('#list_id').val();
+		var userid = $('#userid').val();
+		var username = $('#username').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var status = $('#status').val();
+		location.href = '?model=device_borrow&action={t_action}&typename='+typename+'&typeid={t_typeid}&status='+status+'&userid='+userid+'&username='+username+'&list_id='+list_id+'&start_date='+start_date+'&end_date='+end_date;
+	}
+	
+	function get_userid()
+	{
+		var typename = $('#typename').val();
+		var username = $('#username').val();
+		var list_id = $('#list_id').val();
+		var status = $('#status').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		if (username!='')
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href = '?model=device_borrow&action={t_action}&typename='+typename+'&typeid={t_typeid}&list_id='+list_id+'&status='+status+'&userid='+unescape(data)+'&username='+username+'&start_date='+start_date+'&end_date='+end_date;
+				}else{
+					alert('您输入的领用人姓名不正确！');
+				}
+			}
+			);
+		}else{
+			$('#userid').val('');
+		}
+	}
+	
+	function improt_data()
+	{
+		var typename = $('#typename').val();
+		var username = $('#username').val();
+		var list_id = $('#list_id').val();
+		var status = $('#status').val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		var userid = $('#userid').val();
+		location.href = '?model=device_export&action=borrow_type_info&typename='+typename+'&typeid={t_typeid}&list_id='+list_id+'&status='+status+'&userid='+userid+'&username='+username+'&start_date='+start_date+'&end_date='+end_date;
+	}
+	function set_all(checked,id)
+	{
+		$('#type_'+id+' input[type=checkbox][disabled=false]').attr('checked',checked);
+	}
+</script>
+</body>
+</html>

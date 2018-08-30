@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>新增发货单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+<script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+<script type="text/javascript" src="js/jquery/component.js">
+        </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8">
+        </script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8">
+        </script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-linkman.js">
+		</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-logistics.js">
+		</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-dept.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script>
+/**
+ * 保存并邮寄
+ */
+function mailFun() {
+	document.getElementById('form1').action = "?model=stock_outplan_ship&action=add&msg=mail";
+}
+
+/**
+ * 删除从表
+ */
+function mydel(obj, mytable) {
+	if (confirm('确定要删除该行？')) {
+		var rowNo = obj.parentNode.parentNode.rowIndex * 1 - 1;
+		var mytable = document.getElementById(mytable);
+		mytable.deleteRow(rowNo);
+		var myrows = mytable.rows.length;
+		for (i = 1; i < myrows; i++) {
+			mytable.rows[i].childNodes[1].innerHTML = i;
+		}
+	}
+}
+function checkThis( numObj,shipNumObj ){
+	number = document.getElementById(numObj).value;
+	shipNum = document.getElementById(shipNumObj).value;
+	if(shipNum-number<0){
+		alert('发货数量不能大于源单数量！')
+		document.getElementById(numObj).value = shipNum;
+	}
+}
+
+$(document).ready(function() {
+			$("#linkman").yxcombogrid_linkman({
+						hiddenId : 'linkmanId',
+						isFocusoutCheck : false,
+						gridOptions : {
+							reload : true,
+							showcheckbox : false,
+							param : {
+								'customerId' : $('#customerId').val()
+							},
+							event : {
+								'row_dblclick' : function(e, row, data) {
+									$("#customerName").val(data.customerName);
+									$("#customerId").val(data.customerId);
+									$("#mobil").val(data.phone);
+								}
+							}
+						}
+					});
+			$("#companyName").yxcombogrid_logistics({
+						hiddenId : 'companyId',
+						gridOptions : {
+							reload : true,
+							showcheckbox : false,
+							// param : param,
+							event : {
+								'row_dblclick' : function(e, row, data) {
+								}
+							}
+						}
+					});
+			$("#shipman").yxselect_user({
+						hiddenId : 'shipmanId'
+					});
+			 $.formValidator.initConfig({
+			    	formid: "form1",
+			        //autotip: true,
+			        onerror: function(msg) {
+			            //alert(msg);
+			        }
+			    });
+			 $("#shipDate").formValidator({
+				    onshow: "请选择发货日期",
+				    onfocus: "请选择日期",
+				    oncorrect: "你输入的日期合法"
+				}).inputValidator({
+				    min: "1900-01-01",
+				    max: "2100-01-01",
+				    type: "date",
+				    onerror: "日期必须在\"1900-01-01\"和\"2100-01-01\"之间"
+				});
+			$("#receiver").yxselect_user({
+					mode : 'check',
+					hiddenId : 'receiverId'
+			});
+		});
+		</script>
+</head>
+<body>
+<form id="form1" method="post"
+	action="?model=stock_outplan_ship&action=add" name="form1">
+<table class="form_main_table">
+	<tr>
+		<td>
+		<div class="main_head">
+			<span class="main_head_title">
+				添加发货单
+			</span>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">发货方式</td>
+				<td class="form_text_right" colspan="3">
+					<input type="radio" name="ship[shipType]" checked id="order" value="order" />&nbsp;发货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr>				
+				<td class="form_text_left">源单类型</td>
+				<td class="form_text_right">
+					<input type="text"  class="readOnlyTxtNormal" name="ship[docTypeName]" value="{docTypeName}" />			
+				</td>
+				<td class="form_text_left">源单号</td>
+				<td class="form_text_right">
+					<input type="text"  class="readOnlyTxtNormal" name="ship[docCode]" value="{docCode}" />
+					<input type="hidden" name="ship[docType]" value="{docType}" /> 
+					<input type="hidden" name="ship[docId]" value="{docId}" /> 
+					<input type="hidden" name="ship[planId]" value="{docId}" />
+					<input type="hidden" name="ship[planCode]" value="{docCode}" />
+					<input type="hidden" name="ship[shipStatus]" value="{shipStatus}" />
+				</td>
+			</tr>
+			<tr id="customerTr">
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right">					
+					<input type="text" id="customerName" class="readOnlyTxtNormal" name="ship[customerName]" value="{customerName}" />
+					<input type="hidden" id="customerId" name="ship[customerId]" value="{customerId}" />				
+				</td>
+				<td class="form_text_left">联系人</td>
+				<td class="form_text_right">
+					<input type="hidden" id="linkmanId" class="txt" name="ship[linkmanId]" value="{linkmanId}" /> 
+					<input type="text" id="linkman" class="txt" name="ship[linkman]" value="{linkman}" /> 
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">手机号</td>
+				<td class="form_text_right">
+					<input type="text" id="mobil" class="txt" name="ship[mobil]" value="{mobil}" />
+				</td>
+				<td class="form_text_left">物流公司</td>
+				<td class="form_text_right">
+					<input type="hidden" id="companyId" class="txt" name="ship[companyId]" /> 
+					<input type="text" id="companyName" class="txt" name="ship[companyName]" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货地址</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" id="address" class="txtbiglong" name="ship[address]" value="{address}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备注</td>
+				<td class="form_text_right" colspan="3"><textarea
+					name="ship[remark]" class="txt_txtarea_font" id="remark"">{shipConcern}</textarea>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan="8">物料清单</td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th></th>
+					<th>序号</th>
+					<th>产品编号</th>
+					<th>产品名称</th>
+					<th>规格型号</th>
+					<th>源单数量</th>
+					<th>本次发货数量</th>
+					<th>备注</th>
+				</tr>
+				{products}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">发货人</td>
+				<td class="form_text_right">
+					<input type="text" id="shipman"	class="txt" name="ship[shipman]" value="{shipman}" /> 
+					<input type="hidden" id="shipmanId" class="txt" name="ship[shipmanId]" value="{shipmanId}" /> 
+					<span class="red"> [*] </span>
+					<div id="shipmanTip" class="tipShortTxt"></div>
+				</td>
+				<td class="form_text_left">发货日期</td>
+				<td class="form_text_right">
+					<input type="text" id="shipDate" class="txt" name="ship[shipDate]" onfocus="WdatePicker()" />
+					<span class="red"> [*] </span>
+					<div id="shipDateTip" class="tipShortTxt"></div>
+				</td>				
+			</tr>
+			<tr>
+				<td class="form_text_left">邮件发送人</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txt" id="receiver" name="ship[receiver]" value="{receiver}"/>
+					<input type="hidden" class="txt" id="receiverId" name="ship[receiverId]" value="{receiverId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="submit" class="txt_btn_a" onclick="mailFun();" value="保存并邮寄" /> 
+					<input type="submit" class="txt_btn_a" value="保  存" /> 
+					<input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();" /></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

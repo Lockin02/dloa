@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看借试用</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/common/approval.js"></script>
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-common.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-view-list.js"></script>
+    <script>
+       function dis(name) {
+		var temp = document.getElementById(name);
+		if (temp.style.display == '')
+			temp.style.display = "none";
+		else if (temp.style.display == "none")
+			temp.style.display = '';
+       }
+       function renewView(){
+           var id = $("#borrowId").val();
+           showThickboxWin("?model=projectmanagent_borrow_renew&action=renewList&id=" + id
+                      + "&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=900");
+       }
+       $(function() {
+			getUserDeptMoneyByUser("{createId}","{createName}");
+			//审批表单隐藏关闭按钮
+			var actType=$("#actType").val();
+			if(actType=="audit"){
+				$("#app").attr("style","display:none");
+			}
+		});
+
+
+	   //选择序列号
+		function serialNo(borrowId,itemId){
+			 showThickboxWin('?model=projectmanagent_borrow_borrow&action=serialNo&borrowId=' + borrowId + '&itemId=' + itemId
+						     + "&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800");
+		}
+
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看借试用信息<select id="selectChange">
+			<option value="1">只显示变更后值</option>
+			<option value="2">只显示变更前值</option>
+			<option value="3">对比显示</option>
+		</select>
+    </span>
+</div>
+<table class="form_main_table">
+<tr><div id="msg"></div></tr>
+        <tr>
+		<td colspan="6">
+		<fieldset>
+		   <legend class="legend" onclick="showAndHide('baseImg','contractinfo')">&nbsp;&nbsp;&nbsp;基&nbsp;本&nbsp;信&nbsp;息&nbsp;&nbsp;&nbsp;
+			<img src="images/icon/info_up.gif" id="baseImg" />
+		  </legend>
+		<table width="100%" id="contractinfo"
+			style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;">
+	    <tr>
+			<td  class="form_text_left">编号</td>
+			<td class="form_view_right">
+			<input type="hidden" id="borrowId" value="{id}" />
+			 <input type="hidden" id="isTemp" value="{isTemp}" />
+			   <input type="hidden" id="originalId" value="{originalId}" />
+				 <div id="Code">{Code}</div>
+			</td>
+			<td  class="form_text_left">类型</td>
+			<td class="form_view_right">
+				<div id="Type">{Type}</div>
+			</td>
+
+		</tr>
+		<tr>
+		  <td class="form_text_left">研发项目名称</td>
+		  <td class="form_view_right">
+			  <div id="rdprojectName">{rdprojectName}</div>
+		  </td>
+		  <td class="form_text_left">研发专项编号</td>
+		  <td class="form_view_right">
+			  <div id="rdprojectCode">{rdprojectCode}</div>
+		  </td>
+	    </tr>
+		<tr>
+
+			<td  class="form_text_left">开始日期</td>
+			<td class="form_text_right">
+				<div id="beginTime">{beginTime}</div>
+			</td>
+			<td  class="form_text_left">截止日期</td>
+			<td class="form_text_right">
+				<div id="closeTime">{closeTime}</div>
+			</td>
+		</tr>
+		<tr>
+		    <td class="form_text_left">交货日期</td>
+		    <td class="form_text_right">
+                 {deliveryDate}
+		    </td>
+		    <td class="form_text_left">所属板块</td>
+		    <td class="form_text_right">
+                 {module}
+		    </td>
+		</tr>
+			<tr>
+			<td  class="form_text_left">申请人</td>
+			<td class="form_view_right">
+				<div id="createName">{createName}</div>
+			</td>
+			<td  class="form_text_left">范围</td>
+			<td class="form_view_right">
+                 <div id="limits">{limits}</div>
+			</td>
+		</tr>
+		<tr>
+		    <td  class="form_text_left">所在部门</td>
+			<td class="form_view_right">
+			    <div id="createSection">{createSection}</div>
+			</td>
+			<td  class="form_text_left" >续借次数</td>
+			<td class="form_view_right">
+			    <div style="color:red" title="点击查看续借明细列表" onclick="renewView();">{renew}次</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请理由</td>
+			<td class="form_text_right" >
+				<div id="reason" class="divChangeLine" >{reason}</div>
+			</td>
+			<td class="form_text_left">物料成本概算</td>
+			<td class="form_text_right" >
+				<div id="equEstimateTax" class="divChangeLine" >{equEstimateTax}</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<div id="remark" class="divChangeLine" >{remark}</div>
+			</td>
+		</tr>
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="product">
+		<td colspan="6" >
+		<fieldset>
+		     <legend class="legend" onclick="showAndHideDiv('productImg','productInfo')">&nbsp;&nbsp;产品清单&nbsp;
+				<img src="images/icon/info_up.gif" id="productImg" />
+			  </legend>
+		<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+    <tr id="equ" >
+		<td colspan="6" >
+		<fieldset style="width:200">
+		     <legend class="legend" onclick="showAndHideDiv('equinfoImg','equinfo')">&nbsp;&nbsp;发货清单&nbsp;
+				<img src="images/icon/info_up.gif" id="equinfoImg" />
+			  </legend>
+		<div id="equinfo"></div>
+		</fieldset>
+		</td>
+	<tr>
+		<td colspan="6" >
+		<fieldset style="width:200">
+		     <legend class="legend" onclick="showAndHideDiv('appViewImg','appView')">&nbsp;&nbsp;&nbsp;审&nbsp;批&nbsp;情&nbsp;况&nbsp;&nbsp;&nbsp;
+				<img src="images/icon/info_up.gif" id="appViewImg" />
+			  </legend>
+		<div id="appView">
+		   <input type="hidden" id="exgrossVal" value="{exgrossval}" />
+		   <input type="hidden" id="actType" value="{actType}" />
+		   <input type="hidden" id="type" value="borrow" />
+		   <input type="hidden" id="pid" value="{id}" />
+		   <input type="hidden" id="itemType" value="oa_borrow_borrow" />
+		   <input type="hidden" id="isChange" value="all" /></td>
+		</div>
+		</fieldset>
+		</td>
+	</tr>
+     </table>
+
+</body>
+</html>

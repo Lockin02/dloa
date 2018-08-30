@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>我的变更申请</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="css/nav_tab.css">
+    <link rel="stylesheet" href="images/style.css" type="text/css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		//搜索
+		function search(){
+			var searchvalue=$('#applyNumb').val();
+			var searchvalueChange=$('#changeNumb').val();
+			location="?model=purchase_apply_applybasic&action=myList&clickNumb={clickNumb}&applyNumb="+searchvalue+"&changeNumb="+searchvalueChange;
+		}
+
+		function selectBut(obj,id,numb){
+			$trParent=$(obj).parent().parent();
+			var value=$(obj).val();
+			var str = "";
+			if(value=="approval"){
+				location = "controller/purchase/apply/ewf_change.php?actTo=ewfSelect&billId="+id+"&examCode=oa_purch_apply_change&go=1";
+			}
+			else if(value=="read"){
+				location = "?model=purchase_apply_applychange&action=readmain&id="+id;
+			}
+			else if(value=="readExa" ){
+				location = "?model=purchase_apply_applychange&action=readmain&id="+id+"&seeExa=yes";
+			}
+			else if(value=="del" ){
+				location = "?model=purchase_apply_applychange&action=del&id="+id;
+			}
+			else if(value=="close"){
+				location="?model=purchase_apply_applychange&action=close&id="+id;
+			}
+			else if(value=="edit"){
+
+				location="?model=purchase_apply_applybasic&action=read&seeExa=yes&id="+id;
+			}
+			else if(value=="execute"){
+				if( confirm("确定启动执行吗？") ){
+					location="?model=purchase_apply_applychange&action=execute&id="+id;
+				 }
+			}
+		}
+    </script>
+</head>
+<body scroll="yes">
+<table border="0" width="100%" cellspacing="0" cellpadding="3" class="small">
+  <tr>
+    <td class="Big"><img src="images/sys_config.gif"><b><font color="#000000"> 变更申请单</font></b>
+    </td>
+  </tr>
+</table>
+{topPlan}
+<table id="myTab" width="98%" border="0" cellspacing="0" cellpadding="0" class="table" align="center">
+	<tr class="tablecontrol" height="28px">
+		<td colspan="15" align="left">
+			&nbsp;申请单编号：<input type="text" name="applyNumb" id="applyNumb" value="{applyNumb}">
+			&nbsp;变更单编号：<input type="text" name="changeNumb" id="changeNumb" value="{changeNumb}">
+			&nbsp;&nbsp;<input type="button" value="搜索"  onclick="search();">
+		</td>
+	</tr>
+    <tr height="28" class="tableheader" align="center">
+        <td height="30" width="5%">
+        	序号
+        </td>
+        <td>
+            采购申请单编号
+        </td>
+        <td   width="20%">
+            变更单编号
+        </td>
+        <td width="20%">
+            主题
+        </td>
+        <td   width="10%">
+            创建人
+        </td>
+        <td   width="8%">
+            状态
+        </td>
+        <td   width="10%">
+            操作
+        </td>
+    </tr>
+    {list}
+</table>
+<br>
+</body>
+</html>

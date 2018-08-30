@@ -1,0 +1,106 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>修改资产归还申请</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-assetborrow.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-assetcharge.js"></script>
+   <script type="text/javascript" src="view/template/asset/daily/js/return-edit.js" ></script>
+
+   <script type="text/javascript">
+        //编辑时带出下列框的值
+       $(document).ready(function(){
+			$("#returnType").val('{returnType}');
+		});
+   </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	修改资产归还申请
+    </span>
+</div>
+<form id="form1" method="post" action="?model=asset_daily_return&action=edit" name="form1">
+<table class="form_main_table">
+
+		 <tr>
+			<td class="form_text_left">
+				归还单编号：
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="return[billNo]" id="billNo" value="{billNo}" class="readOnlyTxtNormal" readonly />
+				<span class="red">[*]</span>
+			</td>
+
+		</tr>
+
+		<tr >
+		    <td class="form_text_left">归还类型</td>
+			<td class="form_text_right">
+			<input type="hidden" id="returnTypeVal" value="{returnType}"/>
+			 <select name="return[returnType]" id="returnType" class="txt">
+			  <option value="other">其它</option>
+			  <option value="oa_asset_borrow">借用</option>
+			  <option value="oa_asset_charge">领用</option>
+             </select></td>
+
+			<td  id="chargeType" class="form_text_left nullType">领用单编号</td>
+			<td  id="borrowType" class="form_text_left nullType">借用单编号</td>
+			<td  id="relNo" class="form_text_right nullType" colspan="6">
+			<input type="hidden" name="return[borrowId]" class="txt" id="borrowId" value="{borrowId}"/>
+			<input type="text" name="return[borrowNo]" class="txt" id="borrowNo" value="{borrowNo}"/></td>
+        </tr>
+		<tr>
+			<td class="form_text_left">
+				归还人：
+			</td>
+			<td class="form_text_right">
+			    <input type="hidden" name="return[returnManId]" id="returnManId" value="{returnManId}" class="txt"  />
+				<input type="text" name="return[returnMan]" id="returnMan" value="{returnMan}" class="txt" readonly />
+			</td>
+			<td class="form_text_left">
+				归还时间：
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="return[returnDate]" id="returnDate" value="{returnDate}" class="txt" onfocus="WdatePicker()"  />
+			</td>
+
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				归还部门名称：
+			</td>
+			<td class="form_text_right">
+			 <input type="hidden" name="return[deptId]" id="deptId" value="{deptId}"  />
+			 <input type="text" name="return[deptName]" id="deptName" value="{deptName}" class="readOnlyTxtNormal" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注：</td>
+			<td colspan="6" class="form_text_right">
+				<textarea class="txt_txtarea_font" rows="6" name="return[remark]" id="remark" cols="78">{remark}</textarea>
+			</td>
+		</tr>
+</table>
+
+<div id="purchaseProductTable"></div>
+
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input type="hidden" id="ExaStatus" name="return[ExaStatus]" value="待提交"/>
+		    <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+		   <input type="hidden" id="allocateID" name="return[id]" value="{id}"/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>
+

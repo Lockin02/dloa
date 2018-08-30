@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                $('#form1').validate({//new
+                    submitHandler: function(form){
+                        if(confirm('确定提交补贴信息？')){
+                            amNewSubFun();
+                        }
+                    },
+                    rules:{
+                        TO_ID:{
+                            required:true
+                        },
+                        user_meal:{
+                            required:true,
+                            number:true
+                        },
+                        user_other:{
+                            required:true,
+                            number:true
+                        }
+                    },
+                    messages:{
+                        TO_ID:{
+                            required:'请点击输入员工'
+                        },
+                        user_meal:{
+                            required:'请输入节假日补贴金额',
+                            number:'请输入正确节假日补贴'
+                        },
+                        user_other:{
+                            required:'请输入福利补贴金额',
+                            number:'请输入正确福利补贴金额'
+                        }
+                    }
+                });
+            });
+            function openUserWindow()
+            {
+                  URL="{user_win}";
+                  loc_x=event.clientX-300;
+                  loc_y=event.clientY+240;
+                  window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:320px;dialogHeight:360px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+            }
+            function amNewSubFun(){
+                var rand=Math.random()*100000;
+                var id=$('#TO_ID').val();
+                var meal=$('#user_meal').val();
+                var other=$('#user_other').val();
+                var remark=$('#user_remark').val();
+                //$('#newuserSub').attr('disabled',true);
+                $.post('?model=salary&action=hr_sdy_new_in',{
+                    id:id,meal:meal,other:other,remark:remark,sub:'new',rand:rand
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('提交成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        parent.tb_remove();
+                        parent.jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error ,#form1 label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <div id="hr_user_new" tabindex="-1" role="dialog" style="text-align:center;" >
+            <form method="post" action="#" name="form1" id="form1">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width:480px;">
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            补贴信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td id="user_name"><textarea id="TO_NAME" name="TO_NAME" cols="35" rows="3" onClick="openUserWindow()" readonly></textarea>
+                            <input type="hidden" name="TO_ID" id="TO_ID" value="" readonly="readonly"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">节假日补贴：</td>
+                        <td><input id="user_meal" name="user_meal" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">福利补贴：</td>
+                        <td><input id="user_other" name="user_other" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">备注：</td>
+                        <td>
+                            <textarea id="user_remark" name="user_remark" cols="35" rows="3" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center" style="height:35px;">
+                            <input type="submit" id="newuserSub" value="提交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

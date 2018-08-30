@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>待审批采购信息</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td colspan="2">按 状态 筛选查看：<select id="status" name="status" onchange="location.href='?model=device_purchase&action=applylist&status='+this.value">
+			<option value="">选择查看</option>
+			<option value="">查看全部</option>>
+			<option value="0">待审核</option>
+			<option value="1">待采购</option>
+			<option value="-1">被打回</option>
+			<option value="-3">取消采购</option>
+			<option value="2">采购中</option>
+			<option value="3">采购完毕</option>
+			<option value="-2">无法采购</option>
+			</select>
+		</td>
+		<td colspan="8" align="center">采购信息-申请记录</td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>设备类型</td>
+		<td>项目归属</td>
+		<td>项目名称</td>
+		<td>申请人</td>
+		<td>所属部门</td>
+		<td>数量</td>
+		<td>状态</td>
+		<td>申请日期</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	set_selected('status');
+</script>
+</body>
+</html>

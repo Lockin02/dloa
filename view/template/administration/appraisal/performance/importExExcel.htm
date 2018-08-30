@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<title>数据导入更新</title>
+</head>
+<style type="text/css">
+    body{
+        margin:0px;padding:0px;border:0px;width:100%;height:100%;overflow:hidden;
+    }
+    </style>
+<body>
+<div class="mini-fit">
+<fieldset>
+<legend  class="legend" onclick="showAndHideDiv('asImg','asInfo')">数据导入更新
+	<img id="asImg" src="images/icon/info_up.gif">
+</legend>
+  <form id="form" action="?model=administration_appraisal_performance_list&action=importExExcel" method="post"  enctype="multipart/form-data">
+  
+        上传附件：<input class="mini-htmlfile" name="upfile" limitType="*.xls;*.xlsx"  required="true"/><input class="mini-hidden" name="typeId" id="typeId" value="1" />
+        <a class="mini-button" iconCls="icon-upload" onclick="UpdateClick()"> 更 新 </a> 
+        <a class="mini-button" iconCls="icon-upload" onclick="publishClick()">更新并发布结果</a><!--<a  class="mini-button" href="upfile/考核历史数据导入模板.xls" iconCls="icon-download">下载模板</a>-->
+        
+        
+    </form>
+    </br></br>
+    a.	每次导入最多500条记录。</br>
+b.	导入的数据中不能带有公式；数据中的排名比例列不需要带%，比如78.5%，导入时填写78.5。</br>
+c.	“导入更新”：把需要更新的数据记录导出，不改变表格的顺序和编号，更新表格的“最终得分”列，点击“更新”即可把OA已有记录相应的“最终得分”列数据进行批量的修改。但不会生成排名和排名比例。</br>
+d.	“导入更新并发布结果”：把需要更新的数据记录导出，不改变表格的顺序和编号，更新表格的“最终得分”“排名、排名比例”3列，点击“更新并发布结果”即可把OA已有记录相应的“最终得分”“排名、排名比例”3列内容更新进行批量的修改，导入的同时自动发邮件告诉员工本人去填写考核意见。</br>
+
+
+ </fieldset>   
+</div>
+<!--
+<div class="mini-toolbar" style="text-align:center;margin:0px; border-bottom:0px; border-left:0px; border-right:0px;" > <a class="mini-button" style="width:60px;" onclick="submitForm()">确定</a> <span style="display:inline-block;width:25px;"></span> <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a></div>
+-->
+<script type="text/javascript"> 
+mini.parse();
+ function CloseWindow(action) {
+   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	else window.close();          
+	window.parent.grid.load();  
+}
+ function onCancel(e) {
+    CloseWindow("cancel");
+}
+function UpdateClick(){
+	 if(confirm("你确定要更新考核记录吗？请确保分数不为空！")){
+		var form = new mini.Form("#form");
+	  		form.validate();
+     	if (form.isValid() == false) return false;
+	 		$('#form').submit();	
+	}
+}		
+function publishClick(){
+	if(confirm("你确定要发布考核吗？请确保分数、排名、排名比例不为空！")){
+		var form = new mini.Form("#form");
+	  		form.validate();
+			mini.get('typeId').setValue(2);
+     	if (form.isValid() == false) return false;
+	 		$('#form').submit();	
+	}
+	 
+}		
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+    </script>
+            <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+<script type="text/javascript" src="js/jquery/woo.js">
+    </script>
+<script type="text/javascript" src="js/jquery/component.js">
+    </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+    </script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+    </script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8">
+    </script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" >
+	</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js" >
+	</script>
+<script type="text/javascript"
+	src="view/template/stock/inventoryinfo/js/inventoryinfo-productinfo-combogrid.js" >
+</script>
+<script type="text/javascript"
+	src="view/template/stock/inventoryinfo/js/inventoryinfo-stockinfo-combogrid.js" >
+</script>
+<script type="text/javascript"
+	src="view/template/stock/inventoryinfo/js/inventoryinfo-edit-validator.js">
+	</script>
+<title>编辑库存信息</title>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">
+编辑库存信息 </span></div>
+<form id="form1"	action="?model=stock_inventoryinfo_inventoryinfo&action=edit" method="post" onsubmit="return checkForm();" >
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">仓库代码</td>
+		<td class="form_text_right" >
+			 <input type="text" id="stockCode" class="txt" name="inventoryinfo[stockCode]" value="{stockCode}"  />
+			 <input	type="hidden" id="stockId" name="inventoryinfo[stockId]" value="{stockId}" />
+			 <span class="red"> [*] </span>
+			<div id="stockIdTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">仓库名称：</td>
+		<td class="form_text_right">
+			<input type="text" id="stockName"name="inventoryinfo[stockName]" value="{stockName}" class="readOnlyTxtNormal" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">物料编号：</td>
+		<td class="form_text_right">
+			<input type="text" id="productCode" name="inventoryinfo[productCode]" class="txt" value="{productCode}" />
+			<input type="text" id="productId" name="inventoryinfo[productId]" value="{productId}"  style="display:none"/>
+		<span class="red"> [*] </span>
+		<div id="productIdTip" class="tipShortTxt"></div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">物料名称：</td>
+		<td class="form_text_right"><input
+			class="txt" type="text" id="productName"
+			name="inventoryinfo[productName]" value="{productName}"  /></td>
+		<td class="form_text_left">物料类型：</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" id="proType" name="inventoryinfo[proType]" value="{proType}" />
+			 <input type="hidden" id="proTypeId" name="inventoryinfo[proTypeId]" value="{proTypeId}" />
+	</tr>
+
+	<tr>
+		<td class="form_text_left">规格型号</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" id="pattern" name="inventoryinfo[pattern]" value="{pattern}" /></td>
+		<td class="form_text_left">单位</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" id="unitName" name="inventoryinfo[unitName]"  value="{unitName}" />
+			
+	</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">辅助单位</td>
+		<td class="form_text_right">
+		<input type="text" class="readOnlyTxtNormal" id="aidUnit" name="inventoryinfo[aidUnit]" value="{aidUnit}" /></td>
+
+		<td class="form_text_left">换算率</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" id="converRate" name="inventoryinfo[converRate]" value="{converRate}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">期初库存</td>
+		<td class="form_text_right"><input type="text" id="initialNum" class="txt"
+			name="inventoryinfo[initialNum]" value="{initialNum}" onblur="FloatMul('initialNum','price','sumAmount')" />
+			 <input type="hidden" id="actNum" name="inventoryinfo[actNum]" value="{actNum}" />
+			 <input type="hidden" id="exeNum" name="inventoryinfo[exeNum]" value="{exeNum}" />
+			</td>
+
+		<td class="form_text_left">安全库存</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="inventoryinfo[safeNum]" value="{safeNum}" /></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">最大库存</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="inventoryinfo[maxNum]" value="{maxNum}" /></td>
+
+		<td class="form_text_left">最小库存</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="inventoryinfo[miniNum]" value="0" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">成本价</td>
+		<td class="form_text_right"><input type="text" class="txt formatMoney"
+			name="inventoryinfo[price]" id="price" value="{price}" onblur="FloatMul('price','initialNum','sumAmount')" /></td>
+
+		<td class="form_text_left">金额</td>
+		<td class="form_text_right"><input type="text" id="sumAmount" class="readOnlyTxtNormal formatMoney"
+			name="inventoryinfo[sumAmount]" value="{sumAmount}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注：</td>
+		<td colspan=3 class="form_text_right"><textarea class="txt_txtarea_font"
+			style="width:500;" id="remark" name="inventoryinfo[remark]">{remark}</textarea></td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="hidden" name="inventoryinfo[id]" id="id" value="{id}" />
+			<input type="submit" value=" 保 存 " class="txt_btn_a" />
+			<input type="button" value=" 返 回 " class="txt_btn_a" onclick="self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+

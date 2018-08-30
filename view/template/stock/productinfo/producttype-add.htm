@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<title>
+			添加物料类型信息
+		</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"> </script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="view/template/stock/productinfo/js/producttype-type-combotree.js"></script>
+	</head>
+	<body>
+	<div class="main_head">
+    <span class="main_head_title">
+      	物料分类信息
+    </span>
+</div>
+	<div align="center">
+		<form action="?model=stock_productinfo_producttype&action=add" id="form1" method="POST" >
+		<table class="form_main_table"  >
+			
+				<tr>
+					<td class="form_text_left">物料类型</td>
+					<td class="form_text_right">
+						 <input type="text" id="proType" class="txt" name="producttype[proType]"  />
+							<span class="red">[*]</span>
+							<div id="proTypeTip" class="tipShortTxt"></div>
+					</td>
+					<td class="form_text_left">所属分类</td>
+					<td class="form_text_right">
+						<input type="text" readOnly id="parentName" class="txt" name="producttype[parentName]" value="{parentName}" />
+						<input type="hidden" id="parentId"  name="producttype[parentId]" value="{parentId}" />
+						<span class="red">[*]</span>
+							<div id="parentIdTip" class="tipShortTxt"></div>
+						</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">物料属性</td>
+					<td class="form_text_right"><select class="select"
+						name="producttype[properties]">
+						{properties}
+					</select></td>
+					<td class="form_text_left">会计科目</td>
+					<td class="form_text_right">
+						<select class="select" name="producttype[accountingCode]"  >
+							{accountingCode}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">顺序</td>
+					<td class="form_text_right">
+						<input id="orderNum"  class="txt" name="producttype[orderNum]"  onkeypress="return event.keyCode>=48&&event.keyCode<=57" />
+					</td>
+					<td class="form_text_left">交货周期(天)</td>
+					<td class="form_text_right">
+						<input id="submitDay"  class="txt" name="producttype[submitDay]"  onkeypress="return event.keyCode>=48&&event.keyCode<=57" value="{submitDay}" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<table id="itemAccessTable" class='form_main_table'>
+							<tr>
+								<td colspan="7" align="left" class="form_header">&nbsp; 配件清单模板:&nbsp;</td>
+							</tr>
+							<tr class="main_tr_header">
+							    <th>
+									<img  src="images/add_item.png" align="absmiddle" onclick="addAccess();"  title="新增物料配件" alt="新增物料配件" />
+							        <input type="hidden" id="accessCount" value="0"/>
+								</th>
+								<th>序号</th>
+								<th>配件编码</th>
+								<th>配件名称</th>
+								<th>型号/版本号</th>
+								<th>数量</th>
+								<th>说明</th>
+							</tr>
+							<tbody id="itemAccessBody">
+								
+							</tbody>
+						</table>	
+					</td>
+				</tr>
+				<tr align="center" class="tableheader" height="30">
+					<td colspan="4">
+						<input type="submit" class="txt_btn_a" value="保存" >
+						<input type="button" class="txt_btn_a" value="返回" onclick="self.parent.tb_remove();">
+					</td>
+				</tr>			
+		</table>
+		</form>
+	</div>
+	</body>
+
+</html>
+<script type="text/javascript">
+$(document).ready(function() {
+    $.formValidator.initConfig({
+    	formid: "form1",
+        //autotip: true,
+        onerror: function(msg) {
+        }
+    });
+
+	/** 验证物料类型 * */
+	$("#proType").formValidator({
+		onshow : "请输入物料类型名称",
+		onfocus : "物料类型不能为空",
+		oncorrect : "物料类型有效"
+	}).inputValidator({
+		min : 1,
+		max : 50,
+		onerror : "物料类型名称不能为空，请重新输入"
+	});
+
+	$("#parentId").formValidator({
+		onshow : "请选择所属物料分类",
+		onfocus : "所属物料分类不能为空",
+		oncorrect : "所属物料分类有效"
+	}).inputValidator({
+		min : 1,
+		max : 50,
+		onerror : "所属物料分类不能为空，请选择"
+	});
+
+	})
+</script>

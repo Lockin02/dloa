@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+
+<head>
+
+	<title></title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"> </script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+
+  	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	function confirm() {
+
+		var beginDate=$("#beginDate").val();
+		var endDate=$("#endDate").val();
+
+		this.location = "?model=projectmanagent_orderreport_orderreport&action=shipweekReport"
+							+"&beginDate="+beginDate
+							+"&endDate="+endDate;
+	}
+
+	function changeDate(){
+		var today = formatDate(new Date());
+		var thisWeek=0;
+		$.ajax({
+			type : 'POST',
+			url : '?model=stock_outplan_outplan&action=week',
+			data : {
+				date : today
+			},
+			 async: false,
+			success : function(data) {
+				$('#thisWeekH').val(data)
+				thisWeek=data;
+			}
+		});
+		return thisWeek;
+	}
+	 $(function() {
+	  var thisWeek = changeDate();
+	  for (i=thisWeek;i>0;i--){
+	    $("#thisWeek").append("<option value='"+i+"'>"+"第 "+i+" 周"+"</option>");
+	  }
+	   var checkIndex=$("#thisWeek").get(0).selectedIndex;
+		$("#thisWeek").get(0).selectedIndex = 0;
+	  });
+
+
+	/* 功能 : 返回与某日期相距N天(N个24小时)的日期
+	* 参数 : num number类型 可以为正负整数或者浮点数,默认为1;
+	* type 0(秒) or 1(天),默认为秒
+	* 返回 : 新的PowerDate类型
+	*/
+	Date.prototype.dateAfter=function(num,type){
+		num = (num == null?1:num);
+		if(typeof(num)!="number") throw new Error(-1,"dateAfterDays(num,type)的num参数为数值类型.");
+		type = (type==null?0:type);
+		var arr = [1000,86400000];
+		var dd = this.valueOf();
+		dd += num*arr[type];
+		return new Date(dd);
+	}
+	Date.prototype.RtnMonByWeekNum = function (weekNum){
+		if(typeof(weekNum) != "number")
+		throw new Error(-1,"RtnByWeekNum(weekNum)的参数是数字类型.");
+		var date = new Date(this.getFullYear(),0,1);
+		var week = date.getDay();
+		week = (week==0?7:week);
+		return date.dateAfter(weekNum*7-week-7+7+1,1);
+	}
+	var dataObj=new Date();
+	//alert(formatDate(dataObj.RtnMonByWeekNum(25)));
+	//alert(formatDate(dataObj.dateAfter(6,1)));
+	$(function(){
+
+  		var templeWeek = parseInt($('#thisWeek').val());
+  		var firstDateObj=dataObj.RtnMonByWeekNum(templeWeek);
+		var weekFirstDate = formatDate(firstDateObj);
+		var weekLastDate = formatDate(firstDateObj.dateAfter(6,1))
+		$('#beginDate').val(weekFirstDate);
+		$('#endDate').val(weekLastDate);
+
+		$("#thisWeek").change(function(){
+	  		var templeWeek = parseInt($(this).val());
+	  		var firstDateObj=dataObj.RtnMonByWeekNum(templeWeek);
+			var weekFirstDate = formatDate(firstDateObj);
+			var weekLastDate = formatDate(firstDateObj.dateAfter(6,1))
+			$('#beginDate').val(weekFirstDate);
+			$('#endDate').val(weekLastDate);
+		});
+	});
+	//$('#thisWeek').change(function(){
+		//alert(1);
+		//alert($('#thisWeek').val());
+	//});
+</script>
+</head>
+<body>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">
+			周次
+		</td>
+		<td class="form_text_right" colspan=3>
+			<input type="hidden" class="txt" id="thisWeekH"/>
+			<select id="thisWeek">
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">起始日期</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="beginDate" readonly/>
+		</td>
+		<td class="form_text_left">结束日期</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="endDate" readonly/>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+		   <input  type="button" class="txt_btn_a" value="关   闭 " onclick="history.go(-1)" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>列表显示</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/contextmenu.css" />
+<link rel="stylesheet" href="js/jquery/style/jCalendar.css" type="text/css"/>
+ <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+
+<script type="text/javascript" src="js/jquery/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/jMonthCalendar.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/thickbox.js" charset="gb2312" ></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="{jsUrl}"></script>
+
+<script type="text/javascript">
+        $().ready(function() {
+			topTabShow(arrayTop, "pjCanlendar","{pjId}");
+			/**
+			 *
+			 * height ： 日历高度
+			 * width : 日历宽度
+			 * navHeight : 第一行高度
+			 * labelHeight : 第二行高度
+			 * onMonthChanging : 改变月份触发事件
+			 * onEventLinkClick : 单击任务条字符串触发事件
+			 * onEventBlockClick : 单击任务条背景触发事件
+			 * onEventBlockOver : 鼠标移入任务条触发事件
+			 * onEventBlockOut : 鼠标移出任务条触发事件
+			 * onDayLinkClick : 单击日期上半部分触发事件
+			 * onDayCellClick : 单击日期下半部分触发事件
+			 */
+			var options = {
+				height: 550,
+				width: 1000,
+				navHeight: 25,
+				labelHeight: 25,
+				onMonthChanging: function(dateIn) {
+					//this could be an Ajax call to the backend to get this months events
+					//var events = [ 	{ "EventID": 7, "StartDate": new Date(2010, 1, 1), "Title": "10:00 pm - EventTitle1", "URL": "#", "Description": "This is a sample event description", "CssClass": "Birthday" },
+					//				{ "EventID": 8, "StartDate": new Date(2010, 1, 2), "Title": "9:30 pm - this is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" }
+					//];
+					//$.jMonthCalendar.ReplaceEventCollection(events);
+					return true;
+				},
+				onEventLinkClick: function(event) {
+					showThickboxWin(event.URL + '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=900');
+					return false;
+				},
+				onEventBlockClick: function(event) {
+				},
+				onEventBlockOver: function(event) {
+					//alert(event.Title + " - " + event.Description);
+					return true;
+				},
+				onEventBlockOut: function(event) {
+					//alert(event.Title + " - " + event.Description);
+					return true;
+				},
+				onDayLinkClick: function(date) {
+					//alert("onDayLinkClick:");
+					return true;
+				},
+				onDayCellClick: function(date) {
+					//alert("onDayCellClick:");
+					return true;
+				}
+			};
+
+			var events=[];
+
+			//获取日历任务json数据
+
+				 var data = $.ajax({
+  					url: "?model=rdproject_task_rdtask&action=getProjectCalendarTkData&projectId="+"{pjId}",
+  					async: false
+ 					}).responseText;
+ 				events=eval("("+data+")");
+
+			//任务条
+
+			var newoptions = { };
+			var newevents = [ ];
+			//$.jMonthCalendar.Initialize(newoptions, newevents);
+
+			//初始化日期控件
+			$.jMonthCalendar.Initialize(options, events);
+
+			$("#Button").click(function() {
+			});
+
+			$("#ChangeMonth").click(function() {
+				//移动到 2008年5月7日
+				$.jMonthCalendar.ChangeMonth(new Date(2010, 3, 1));
+			});
+        });
+    </script>
+
+</head>
+<body>
+<div class="tab_options"></div>
+<div class="main_head"><span class="main_head_title">项目日历
+</span>
+<div align="CENTER"><b><font color="#008000">●开头为当天将开始的任务；</font><font color="#FF6347">●结束为当天将结束的任务</font><b></div>
+</div>
+<div class="main_wraper">
+<center>
+<div id="jMonthCalendar"></div>
+</center>
+
+</body>
+
+</html>

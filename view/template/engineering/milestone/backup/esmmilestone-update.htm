@@ -1,0 +1,137 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jqueryui/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="js/jqueryui/jquery.ui.widget.js"></script>
+		<script type="text/javascript" src="js/jqueryui/jquery.ui.mouse.js"></script>
+		<script type="text/javascript" src="js/jqueryui/jquery.ui.sortable.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+        <title>里程碑</title>
+        <style type="text/css">
+		#jqueryui_sortable1, #jqueryui_sortable2 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; background: #ffffff; padding: 5px; width: 143px;}
+		#jqueryui_sortable1 tr, #jqueryui_sortable2 tr { margin: 5px; padding: 5px; font-size: 1.2em; width: 120px; }
+		</style>
+        <script>
+            $(document).ready(function() {
+		        $("tbody.jqueryui_sortable").sortable({
+					connectWith: 'tbody'
+					,opacity : 0.4
+					,revert: true
+					,cancel: '.ui-state-disabled'
+					,stop:function(event,ui){
+						//debugObjectInfo(event);
+						//alert( ui );
+						//debugObjectInfo( this )
+						//alert(ui.sender );
+						//alert(ui.helper );
+					}
+				});
+
+				$("#jqueryui_sortable1, #jqueryui_sortable2").disableSelection();
+            });
+
+            function submitFun(){
+            	$("tbody#jqueryui_sortable1").find(".mytype").attr("value","0");
+            	$("tbody#jqueryui_sortable2").find(".mytype").attr("value","1");
+            	return true;
+            }
+        </script>
+    </head>
+
+    <body>
+        <div class="tab_options"></div>
+        <form method="POST" id="form1" action="?model=engineering_milestone_rdmilespoint&action=rmChange" onsubmit="return submitFun()">
+        <div class="form_main">
+	            <table class="form_main_table">
+	                <tr>
+	                    <td colspan="4" class="form_header">
+	                        里程碑变更
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        所属项目:
+	                    </td>
+	                    <td class="form_view_right">
+	                        {rdmilestone[projectName]}
+	                    </td>
+	                    <td class="form_text_left">
+	                        创建人:
+	                    </td>
+	                    <td class="form_view_right">
+                            {rdmilestone[createName]}
+	                    </td>
+	                </tr>
+	                <tr>
+				        <td colspan="4">
+							<table class="main_table" style="width:100%;">
+								<thead>
+									<tr class="main_tr_header">
+										<th width="30%">里程碑点名称</td>
+										<th width="20%">计划开始日期</td>
+										<th width="20%">计划结束日期</td>
+										<th width="20%">前置里程碑</td>
+									</tr>
+								</thead>
+								<tbody class="jqueryui_sortable" id="jqueryui_sortable1">
+									{list}
+									<tr class="ui-state-disabled">
+								        <td colspan="4">
+											拖动表格行以变更你的里程碑点
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+	                <tr>
+	                    <td colspan="4">
+	                        <input type="submit" class="txt_btn_a" value="保存">
+	                        <input type="button" class="txt_btn_a" value="关闭" onclick="self.parent.tb_remove();">
+	                    </td>
+	                </tr>
+	            </table>
+        </div>
+		<br>
+        <div class="form_main">
+        	<table class="main_table">
+        		<thead>
+					<tr class="main_tr_header">
+						<th colspan="4">里程碑点回收站(可拖拉)</td>
+					</tr>
+				</thead>
+				<tbody class="jqueryui_sortable" id="jqueryui_sortable2" >
+					{list2}
+					<tr class="ui-state-disabled">
+				        <td colspan="4">
+							拖动表格行以变更你的里程碑点
+						</td>
+					</tr>
+				</tbody>
+			</table>
+        </div>
+        </form>
+        <br>
+    </body>
+
+</html>

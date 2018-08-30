@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+		<title>修改补库计划</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+	    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="view/template/stock/fillup/js/fillup-edit.js" >
+        </script>
+</head>
+<body>
+  <form id="form1" method="post" action="?model=stock_fillup_fillup&action=edit" name="form1" onsubmit="return checkForm();">
+    <table class="form_main_table">
+     	 <tr>
+     	 <td colspan="4">
+     	 	<div class="main_head">
+   				 <span class="main_head_title">
+      				修改补库计划
+				<input type="hidden" class="txt" id="qualityList" name="" value='{qualityList}'/>
+   				 </span>
+			</div>
+		</td>
+     	 </tr>
+
+     	 <tr>
+     	 	<td class="form_text_left">单据编号</td>
+			<td class="form_text_right" >
+			<input type="text" name="fillup[fillupCode]" value="{fillupCode}" readOnly class="readOnlyTxtNormal"/></td>
+ 		 </tr>
+
+		<tr>
+			<td class="form_text_left">仓库名称</td>
+			<td class="form_text_right" >
+			<input type="text" class="txt" name="fillup[stockName]"  id="stockName" value="{stockName}"/>
+			<input type="hidden" class="txt" name="fillup[stockId]" id="stockId" value="{stockId}" />
+			<span class="red">[*]</span>
+		    </td>
+            <td class="form_text_left">仓库代码</td>
+		    <td class="form_text_right" >
+			<input type="text"  class="readOnlyTxtNormal"  name="fillup[stockCode]" id="stockCode" value="{stockCode}" readOnly/>
+		    </td>
+		</tr>
+		<tr>
+			<td class="form_text_left">制单</td>
+			<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="createName" readOnly name="stockin[createName]" value="{createName}" />
+		</td>
+		</tr>
+
+		<tr>
+		   <td class="form_text_left">备注</td>
+		   <td class="form_text_right" colspan="3">
+		   <textarea  name="fillup[remark]" id="remark"  style="width:90%"  class="txt_txtarea_font" >{remark}</textarea>
+		   </td>
+		</tr>
+<tr>
+                    <td class="form_text_left">
+                        采购说明
+                    </td>
+                    <td class="form_text_right" colspan="3">
+                        <textarea name="fillup[purchRemark]" style="width:90%" class="txt_txtarea_font">{purchRemark}</textarea>
+                    </td>
+                </tr>   
+		<tr>
+		   <td colspan="4">
+			<table class="main_table" id="itemtable">
+				<thead>
+					<tr>
+						<td colspan="14" class="form_header">
+							物料清单&nbsp; <img  src="images/add_item.png" align="absmiddle" onclick="addItem();"  title="新增物料" alt="新增物料" />
+						</td>
+					</tr>
+	              <tr class="main_tr_header">
+                    	<th>
+                    	序号
+                    	</th>
+                        <th>
+                            物料编号
+                        </th>
+                        <th>
+                            物料名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                         <th>
+                            交付周期
+                        </th>
+                        <th>
+                            采购周期
+                        </th>
+                        <th>
+                            最小订单量
+                        </th>
+                        <th>
+                           采购属性
+                        </th>
+                        <th>
+                            补库数量
+                        </th>
+                        <th>
+                            期望到货时间
+                        </th>
+                       
+                        <th width="15%">
+                            操作
+                            <input type="hidden" id="coutNumb" name="coutNumb" value="{itemscount}" />
+                            <img src="images/collapsed.gif" onclick="addItem();" title="添加行" />
+                        </th>
+					</tr>
+				</thead>
+				<tbody id="itembody">
+				{list}
+				</tbody>
+			</table>
+	</td>
+
+		</tr>
+
+      <tr>
+      <td colspan="4">
+            <table class="main_table">
+                <tr  class="txt_btn" >
+                        <td>
+           <input  type="hidden" name="fillup[id]" value="{id}" />
+           <input type="hidden" class="txt" name="fillup[auditStatus]" id="auditStatus" value="未提交" />
+           <input type="hidden" class="txt" name="fillup[ExaStatus]" id="ExaStatus" value="待审核" />
+           <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+           <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+           <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();" />
+         </td>
+		</tr>
+		</table>
+		</td>
+		</tr>
+	</table>
+  </form>
+</body>
+</html>

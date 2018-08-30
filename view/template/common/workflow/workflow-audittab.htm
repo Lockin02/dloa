@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <script type="text/javascript">
+
+$(function() {
+	var selectedCode = $("#selectedCode").val();
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=common_workflow_workflow&action=auditingList&sessionId={sessionId}&selectedCode=" + selectedCode,
+    			"?model=common_workflow_workflow&action=auditedList&sessionId={sessionId}&selectedCode=" + selectedCode,
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+});
+    </script>
+</head>
+<body>
+<div>
+	<input type="hidden" id="selectedCode" value="{selectedCode}"/>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >待办任务</a></li>
+        <li><a href="#tab2" >已办任务</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "about:blank" height="96%" frameborder= "0" >
+            </iframe>
+            <iframe class="pane" id="iframe2"  src= "about:blank" height="96%" frameborder= "0">
+            </iframe>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+	<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加设备</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="POST" action="?model=device_stock&action=add_deviceinfo&listid={listid}" onsubmit="return check();">
+<table class="td_center" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	{field}
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td style="height:80px;border:0px;text-align:center"><input type="submit" value=" 提交添加 " /> <input type="button" onclick="self.parent.location.reload();" value=" 返回 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+var newid = null;
+function chkdate(id)
+{
+	var strdate = $('#date_'+id).val();
+	if (strdate!='')
+	{
+		if(strdate!=strdate.match(/\d{4}-\d{2}-\d{2}/ig))
+		alert("您输入的日期格式错误！!");
+		return false;
+	}
+}
+function copy(id)
+{
+	if (newid == null)
+	{
+		newid = Number(id) + 1 ;
+	}else{
+		newid++;
+	}
+	var data = $('#tr_'+id).html();
+	var html ='';
+	html +='<tr id="tr_'+newid+'">';
+	html += data;
+	html +='</tr>';
+	html = html.replace('copy('+id+')','copy('+newid+')');
+	html = html.replace('td_'+id,'td_'+newid);
+	html = html.replace('del('+id+')','del('+newid+')');
+	$('#mytable').append(html);
+	if (id == 0)
+	{
+		$('#td_'+newid).append('<input type="button" onclick="del('+newid+');" value="删除">');
+	}
+}
+function del(id)
+{
+	$('#tr_'+id).remove();
+}
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/4.5.4/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/4.5.4/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/4.5.4/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;          /* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;   /* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{user_salary_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:['KEY','员工号','姓名','公司','部门',
+                        '基本工资','岗位工资','绩效工资'
+                        ,'项目绩效奖金','项目管理补贴','项目住宿补贴','项目通信补贴','项目电脑补贴','变动部分总薪酬','总薪酬', '补贴发放部分','公积金','社保费'
+                        ,'入职日期', '地区','LEV','账号','开户行','身份证','邮箱','状态'
+                    ],
+                    colModel:[
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 , frozen : true},
+                        {name:'usercard',index:'h.usercard', width:65, align:"center", frozen : true},
+                        {name:'username',index:'u.user_name', width:60, align:'center', frozen : true},
+                        {name:'company',index:'u.company', width:60, align:'center', frozen : true},
+                        {name:'olddept',index:'d.dept_name', width:70,align:'center', frozen : true},
+                        
+                        {name:'amount',index:'s.amount', width:65, align:"right"},
+                        {name:'gwam',index:'p.gwam', width:65, align:"right",search:false},
+                        {name:'jxam',index:'p.jxam', width:65, align:"right",search:false},
+
+                        {name:'jjam',index:'jjam', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'gljtam',index:'gljtam', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'lszsam',index:'lszsam', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'txjt',index:'p.txjt', width:80, align:"right",search:false},
+                        {name:'qtjtam',index:'qtjtam', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'bdbfzxc',index:'bdbfzxc', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'zxc',index:'zxc', width:80,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'expenCeiling',index:'p.expenCeiling', width:120, align:"right",search:false},
+                        {name:'gjjam',index:'s.gjjam', width:60,align:"right",search:false,editable:true,editrules:{required:true,number:true,minValue:0}},
+                        {name:'shbam',index:'s.shbam', width:60, align:"right",editable:true ,search:false},
+                        
+                        
+                        {name:'comedt',index:'s.comedt', width:70, align:'right',editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'oldarea',index:'s.oldarea', width:60, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'lev',index:'h.joblevel',hidden:true,width:40 },
+                        {name:'acc',index:'s.acc', width:155,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'accbank',index:'s.accbank', width:150, align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'idcard',index:'s.idcard', width:150,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'email',index:'s.email', width:180,align:"right",editable:true ,edittype:"textarea",editoptions:{rows:"2"},search:false},
+                        {name:'usersta',index:'s.usersta', width:50, align:"center",searchoptions:{sopt:['eq']},stype:'select',editoptions:{value:"0:新入职;1:试用期;2:已转正;3:离职"}}
+
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,28,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-2,
+                    height:(wh-136+2*((wh-500)/50)),
+                    viewrecords: false,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        if(rowData.expenCeiling > 0){
+                            jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:"red"});
+                        }
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'expenCeiling','',{color:"red"});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('setFrozenColumns');
+            });
+            function gridNavSeaFun(){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                var seacom = jQuery("#seacom").val();
+                var iswy = $("#iswy").is(":checked");
+                var hasData = $("#hasData").is(":checked");
+                var seaerrs = 'n';
+                if(jQuery("#errs").attr("checked")==true){
+                    seaerrs='y';
+                }
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{user_salary_list}&seapy="+seapy
+                        +"&seapm="+seapm+"&seadept="+seadept+"&seaname="+seaname+"&seacom="+seacom+'&seaerrs='+seaerrs+"&iswy="+iswy+"&hasData="+hasData,page:1}).trigger("reloadGrid");
+            }
+
+            /**
+             * 导出薪资结构
+             */
+            function exportSalaryData(){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                var seacom = jQuery("#seacom").val();
+                var iswy = $("#iswy").is(":checked");
+                var hasData = $("#hasData").is(":checked");
+                var seaerrs = 'n';
+                if(jQuery("#errs").attr("checked")==true){
+                    seaerrs='y';
+                }
+                window.open("?model=salary&action=xls_out&flag=salary_base&seapy="+seapy
+                        +"&seapm="+seapm+"&seadept="+seadept+"&seaname="+seaname+"&seacom="+seacom+'&seaerrs='+seaerrs+"&iswy="+iswy+"&hasData="+hasData); 
+            }
+        </script>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+    </body>
+</html>

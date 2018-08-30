@@ -1,0 +1,780 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script src="js/extui/boot.js" type="text/javascript"></script>
+</head>
+<body>
+<style type="text/css">
+    html, body{
+        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
+    }    
+    </style>
+<body>
+<div class="mini-toolbar" style="border-bottom:0; margin:10px; margin-bottom:0px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:90%; vertical-align:middle;">
+                    所属部门: <input name="deptId" id="deptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" onvaluechanged="search"   allowInput="false"  url="?model=administration_appraisal_performance_item&action=tplDeptData"/>
+                    考核年份：<input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="tplYear" id="tplYear" style="width:60px;"  onvaluechanged="search"/>
+                    考核周期：<input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="tplStyle" id="tplStyle"  style="width:80px;" onvaluechanged="search"/>
+                    关键字：<input id="wordkey" class="mini-buttonedit searchbox" style=" width:200px;" showClose="true"  onbuttonclick="onKeyEnter" selectOnFocus="true" emptyText="请输入搜索"  onenter="onKeyEnter" oncloseclick="onCloseClick"/>&nbsp;  
+                         <!-- <a class="mini-button" iconCls="icon-search" onclick="search()">查&nbsp;询&nbsp;&nbsp;</a>-->
+                    </td>
+                    <td style="white-space:nowrap;">
+                       
+                        <a class="mini-menubutton" plain="false" iconCls="icon-admin" menu="#popupMenu">批量操作</a>
+                         <a class="mini-button" iconCls="icon-add" onclick="add()">增加模板设置</a>
+                        <ul id="popupMenu" class="mini-menu" style="display:none;">
+                            <li iconCls="icon-remove"  onclick="onTplRemove()" >批量删除</li>
+                            <li iconCls="icon-ok" onclick="onTplSure()"  >批量确认可用模板</li>
+                            <li iconCls="icon-ok" onclick="onTplCopy()"  >批量复制模板</li>
+                            <li iconCls="icon-ok" onclick="onTplCopyType()"  >同类型复制模板</li>
+                            <li iconCls="icon-ok" onclick="onTplToRec"  >发布考核标准</li>
+                            <li iconCls="icon-ok" onclick="onTplToBegine"  >开始考核</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>           
+        </div>
+    <div class="mini-fit" style=" margin:10px; margin-top:0px;">
+        <div id="griddata" class="mini-datagrid" style="width:100%;height:100%" allowResize="true" allowAlternating="true"
+        url="?model=administration_appraisal_performance_item&action=listData"  idField="id" multiSelect="true" allowUnselect="false"       
+         contextMenu="#gridMenu"  pagesize="20" onshowrowdetail="onShowRowDetail">
+        <div property="columns">
+            <div type="indexcolumn"></div>
+            <div type="checkcolumn"></div>
+            <div field="name" width="170" headerAlign="center" allowSort="true" renderer="onRenderer">模板名称</div>    
+            <div field="years" width="80" headerAlign="center" align="center" allowSort="true">年份</div>
+            <div field="quarter" width="60" headerAlign="center" align="center" allowSort="true">考核周期</div>    
+            <div field="deptName" width="80" headerAlign="center" allowSort="true">归属部门</div>
+            <div field="addTplFlag" width="60" headerAlign="center" align="center" renderer="onState" allowSort="true">是否可发布模板</div>
+            <div field="addTplFlag" width="60" headerAlign="center" align="center" renderer="isAddTpl" allowSort="true">是否已添加模板</div>
+            <div field="isFlag" width="60" headerAlign="center" align="center"  renderer="isAddRec"  allowSort="true">是否已发布</div>
+            <!--
+            <div field="assess_username" width="60" headerAlign="center" allowSort="true">考核人</div>
+            <div field="audit_username" width="100" headerAlign="center" allowSort="true">审核人</div>
+            <div field="fanwei" width="70" headerAlign="center" allowSort="true">使用范围</div>
+               -->
+            <div field="date" width="100" format="yyyy-MM-dd" headerAlign="center" allowSort="true" >最后更新时间</div>
+           
+            <div type="expandcolumn" width="40" style="color:#F00">使用范围</div>
+            <div field="remark" width="120" headerAlign="center" allowSort="true">备注</div>
+                                
+        </div>
+    </div>
+    </div>
+  <div id="detailSub" style="display:none;">
+         <div id="gridSub" class="mini-datagrid" style="width:auto;height:auto"  dField="id" showFooter="false"  allowSortColumn="false" multiSelect="true"  url="?model=administration_appraisal_performance_item&action=getGridUserListData">
+    <div property="columns">
+             <div type="indexcolumn" headerAlign="center" width="30"></div>
+             <div field="assessName" width="100"  headerAlign="center" >考 核 人
+             </div> 
+            <div field="auditName" width="100"  headerAlign="center" currencyUnit="%">审 核 人
+             </div>
+            <div field="userType" width="70"  headerAlign="center" renderer="onUserType" >人员类型
+             </div>
+            <div field="userStrName" width="100%"  headerAlign="center" allowCellValid="true">被考核人员
+                
+            </div>             
+    </div>
+</div>
+</div>
+<div id="winForm" class="mini-window" title="同类型复制模板" style="width:500px; text-align:center" 
+    showMaxButton="false" showFooter="true" showModal="true" allowResize="false" allowDrag="true">
+    <div id="chartContainer" class="form">
+<table border="0" cellspacing="0" cellpadding="0" class="tables" style="width:100%;height:auto">
+  <tr>
+    <td  class="form_text_left_con">所属部门：</td>
+    <td><input name="odlDeptId" id="odlDeptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData"/></td>
+    <td>=></td>
+    <td><input name="newDeptId" id="newDeptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData"/></td>
+  </tr>
+  <tr>
+    <td  class="form_text_left_con">考核年份：</td>
+    <td><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="odlYear" id="odlYear" style="width:60px;" required="true" /></td>
+    <td>=></td>
+    <td><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="newYear" id="newYear" style="width:60px;" required="true" /></td>
+  </tr>
+  <tr>
+    <td  class="form_text_left_con">考核周期：</td>
+    <td><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="odlStyle" id="odlStyle"  style="width:80px;" required="true"/></td>
+    <td>=></td>
+    <td><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="newStyle" id="newStyle"  style="width:80px;" required="true"/></td>
+  </tr>
+</table>
+</div>
+ 	<div property="footer" style="text-align:center;padding:5px;"> 
+    <a class="mini-button" style="width:60px;" onclick="submitWinForm()">提交</a> 
+       <span style="display:inline-block;width:25px;"></span> 
+       <a class="mini-button" style="width:60px;" onclick="hideWindow()">取消</a> 
+	</div>
+</div>
+
+<div id="winGenerate" class="mini-window" title="生成考核数据" style="width:500px; text-align:center" 
+    showMaxButton="false" showFooter="true" showModal="true" allowResize="false" allowDrag="true">
+<div id="chartContainer" class="form">
+<table border="0" cellspacing="0" cellpadding="0" class="tables" style="width:100%;height:auto">
+  <tr>
+    <td  class="form_text_left_con">所属部门：</td>
+    <td><input name="createDeptId" id="createDeptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData"/></td>
+    </tr>
+  <tr>
+    <td  class="form_text_left_con">考核年份：</td>
+    <td><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="createYear" id="createYear" style="width:60px;" required="true" /></td>
+      </tr>
+  <tr>
+    <td  class="form_text_left_con">考核周期：</td>
+    <td><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="createStyle" id="createStyle"  style="width:80px;" required="true"/></td>
+    </tr>
+</table>
+</div>
+ 	<div property="footer" style="text-align:center;padding:5px;"> 
+    <a class="mini-button" style="width:60px;" onclick="submitWinGenerate()">提交</a> 
+       <span style="display:inline-block;width:25px;"></span> 
+       <a class="mini-button" style="width:60px;" onclick="hideWindows()">取消</a> 
+	</div>
+</div>
+
+<div id="winBegine" class="mini-window" title="开始考核" style="width:500px; text-align:center" 
+    showMaxButton="false" showFooter="true" showModal="true" allowResize="false" allowDrag="true">
+<div id="chartContainer" class="form">
+<table border="0" cellspacing="0" cellpadding="0" class="tables" style="width:100%;height:auto">
+  <tr>
+    <td  class="form_text_left_con">所属部门：</td>
+    <td><input name="begineDeptId" id="begineDeptId" type="text" class="mini-treeselect" style="width:160px;" multiSelect="false"  valueFromSelect="false" textField="text" valueField="id" parentField="pid" emptyText="请选择部门" allowInput="false"  required="true" url="?model=administration_appraisal_performance_item&action=tplDeptData"/></td>
+    </tr>
+  <tr>
+    <td  class="form_text_left_con">考核年份：</td>
+    <td><input   class="mini-combobox" url="?model=administration_appraisal_performance_item&action=tplYearData" emptyText="请选择年份" name="begineYear" id="begineYear" style="width:60px;" required="true" /></td>
+      </tr>
+  <tr>
+    <td  class="form_text_left_con">考核周期：</td>
+    <td><input   url="?model=administration_appraisal_performance_item&action=tplTypeData" class="mini-combobox" emptyText="请选择模板类型"  name="begineStyle" id="begineStyle"  style="width:80px;" required="true"/></td>
+    </tr>
+</table>
+</div>
+ 	<div property="footer" style="text-align:center;padding:5px;"> 
+    <a class="mini-button" style="width:60px;" onclick="submitWinBegine()">提交</a> 
+       <span style="display:inline-block;width:25px;"></span> 
+       <a class="mini-button" style="width:60px;" onclick="hideWinBegine()">取消</a> 
+	</div>
+</div>
+     <ul id="gridMenu" class="mini-contextmenu" style="width:160px;" onbeforeopen="onBeforeOpen">
+        <li name="sure" iconCls="icon-ok" onclick="onTplSure">确认为可发布模板</li>
+        <li name="edit" iconCls="icon-edit" onclick="onTplEdit">编辑</li>
+		<li name="remove" iconCls="icon-remove" onclick="onTplRemove">删除</li>
+        <li name="showTpl" iconCls="icon-node" onclick="onShowTpl">查看模板设置</li>
+        <li name="detail" iconCls="icon-node" onclick="detailTpl">查看模板</li>
+        <li name="copy" iconCls="icon-cut" onclick="onTplCopy">复制模板</li>
+        <li name="modify" iconCls="icon-edit" onclick="onTplModify">标为可修改</li>
+        <li ><span name="admins" iconCls="icon-admin">模板内容管理</span>
+                <ul>
+                    <li iconCls="icon-add" name='onAddTpl' onclick="onAddTpl">添加内容</li>
+		            <li iconCls="icon-edit" name='onTplConEdit' onclick="onTplConEdit">编辑内容</li>
+                    <li iconCls="icon-remove" name="onTplConRemove" onclick="onTplConRemove">删除内容</li>
+		        </ul>
+        </li>              
+    </ul>
+<script type="text/javascript">
+
+		mini.parse();
+        var grid = mini.get("griddata");
+        grid.load();
+		var grid_sub = mini.get("gridSub");
+        var detailSub = document.getElementById("detailSub");
+		function onShowRowDetail(e) {
+            var grid = e.sender;
+            var row = e.record;
+            var td = grid.getRowDetailCellEl(row);
+            td.appendChild(detailSub);
+            detailSub.style.display = "block";
+            grid_sub.load({ keyId: row.id });
+        }
+		 function search() {
+            var deptId = mini.get("deptId").getValue();
+			var tplYear = mini.get("tplYear").getValue();
+			var tplStyle = mini.get("tplStyle").getValue();
+			var wordkey = mini.get("wordkey").getValue();
+            grid.load({ deptId: deptId,tplYear:tplYear,tplStyle:tplStyle,wordkey:wordkey });
+        }
+        function onKeyEnter(e) {
+            search();
+        }
+		function add() {
+			mini.open({
+                    url: "index1.php?model=administration_appraisal_performance_item&action=addTpl",
+                    title: "添加模板设置", width: 900, height: 550,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                    	grid.reload();
+                	}
+                });
+           }
+		 var winAddTpl;  
+		 function onAddTpl() {
+            var row = grid.getSelected();
+			if (row) {
+                winAddTpl=mini.open({
+                    url: "index1.php?model=administration_appraisal_performance_item&action=addTplContent&keyId="+row.id,
+                    title: "添加模板内容", width: 920, height: 550,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                        grid.reload();
+                    }
+                });
+                
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+		 function onTplEdit() {
+            var row = grid.getSelected();
+			if (row) {
+                mini.open({
+                    url: "index1.php?model=administration_appraisal_performance_item&action=editTpl&keyId="+row.id,
+                    title: "编辑模板设置", width: 900, height: 550,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                        grid.reload();
+                    }
+                });
+                
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+		function onTplSure(){
+			var rows = grid.getSelecteds();
+            if (rows.length > 0) {
+                if (confirm("确定更新选中记录？")) {
+                    var ids = [];
+                    for (var i = 0, l = rows.length; i < l; i++) {
+                        var r = rows[i];
+						if(r.addTplFlag==2){
+                        	ids.push(r.id);
+						}
+                    }
+                    var id = ids.join(',');
+					if(!id){
+					  alert("请选中有效数据行！");
+					  return false; 	
+					}
+                    //grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "index1.php?model=administration_appraisal_performance_item&action=upTplSure",
+						data:{keys:id},
+						type: "post",
+                        success: function (text) {
+							if(text==2){
+							    alert("确认成功！");
+							    grid.reload();	
+							}else{
+							  	alert("确认失败！");
+							}
+                        },
+                        error: function () {
+								alert("确认失败！");
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+		}
+	 function onTplModify(){
+			var rows = grid.getSelecteds();
+            if (rows.length > 0) {
+                if (confirm("确定更新选中记录？")) {
+                    var ids = [];
+                    for (var i = 0, l = rows.length; i < l; i++) {
+                        var r = rows[i];
+						if(r.addTplFlag==3&&r.isFlag==1){
+                        	ids.push(r.id);
+						}
+                    }
+                    var id = ids.join(',');
+					if(!id){
+					  alert("请选中有效数据行！");
+					  return false; 	
+					}
+                    //grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "index1.php?model=administration_appraisal_performance_item&action=upTplSure&flag=2",
+						data:{keys:id},
+						type: "post",
+                        success: function (text) {
+							if(text==2){
+							    alert("确认成功！");
+							    grid.reload();	
+							}else{
+							  	alert("确认失败！");
+							}
+                        },
+                        error: function () {
+								alert("确认失败！");
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+		
+	}	
+	  function detailTpl(){
+		   var row = grid.getSelected();
+            if (row) {
+			  winAddTpl=mini.open({
+                    url: "?model=administration_appraisal_performance_list&action=detailExIn&tplId="+row.id,
+                    title: "考核模板详情", width:'75%', height:'75%',allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                    	
+                	}
+                });
+			} else {
+                alert("请选中一条记录");
+            }
+		   }
+		   
+        function onTplRemove() {
+            var rows = grid.getSelecteds();
+            if (rows.length > 0) {
+                if (confirm("确定删除选中记录？")) {
+                    var ids = [];
+                    for (var i = 0, l = rows.length; i < l; i++) {
+                        var r = rows[i];
+						if(r.addTplFlag==1){
+                        	ids.push(r.id);
+						}
+                    }
+                    var id = ids.join(',');
+                    //grid.loading("操作中，请稍后......");
+                    $.ajax({
+                       url: "index1.php?model=administration_appraisal_performance_item&action=delTplData",
+						data:{keys:id},
+						type: "post",
+                        success: function (text) {
+							if(text==2){
+							    alert("删除成功！");
+							    grid.reload();	
+							}else{
+							  	alert("删除失败！");
+							}
+                        },
+                        error: function () {
+								alert("删除失败！");
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+        function onTplCopy() {
+            var rows = grid.getSelecteds();
+            if (rows.length > 0) {
+                if (confirm("确定复制选中记录？")) {
+                    var ids = [];
+                    for (var i = 0, l = rows.length; i < l; i++) {
+                        var r = rows[i];
+						if(r.addTplFlag==3){
+                        	ids.push(r.id);
+						}
+                    }
+                    var id = ids.join(',');
+                    //grid.loading("操作中，请稍后......");
+                    $.ajax({
+                       url: "index1.php?model=administration_appraisal_performance_item&action=copyTplData",
+						data:{keys:id},
+						type: "post",
+                        success: function (text) {
+							if(text==2){
+							    alert("复制成功！");
+							    grid.reload();	
+							}else{
+							  	alert("复制失败！");
+							}
+                        },
+                        error: function () {
+								alert("复制失败！");
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+
+		 function onTplConEdit() {
+            var row = grid.getSelected();
+			if (row) {
+                mini.open({
+                    url: "index1.php?model=administration_appraisal_performance_item&action=editTplContent&keyId="+row.id,
+                    title: "编辑模板内容", width: 900, height: 550,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                        grid.reload();
+                    }
+                });
+                
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+		function onShowTpl() {
+            var row = grid.getSelected();
+			if (row) {
+                mini.open({
+                    url: "index1.php?model=administration_appraisal_performance_item&action=onShowTpl&keyId="+row.id,
+                    title: "编辑模板内容", width: 900, height: 550,allowResize:true,showMaxButton:true,
+					ondestroy: function (action) {
+                       
+                    }
+                });
+                
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+        function onTplConRemove() {
+            var rows = grid.getSelecteds();
+            if (rows.length > 0) {
+                if (confirm("确定删除选中记录？")) {
+                    var ids = [];
+                    for (var i = 0, l = rows.length; i < l; i++) {
+                        var r = rows[i];
+                        ids.push(r.id);
+                    }
+                    var id = ids.join(',');
+                    //grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "index1.php?model=administration_appraisal_performance_item&action=delTplContData",
+						data:{keys:id},
+						type: "post",
+                        success: function (text) {
+							if(text==2){
+							    alert("删除成功！");
+							    grid.reload();	
+							}else{
+							  	alert("删除失败！");
+							}
+                        },
+                        error: function () {
+								alert("删除失败！");
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+		
+function onBeforeOpen(e) {
+    var menu = e.sender;
+    var row = grid.getSelected();
+    var rowIndex = grid.indexOf(row);            
+	if (!row) {
+        e.cancel = true;
+        //阻止浏览器默认右键菜单
+        e.htmlEvent.preventDefault();
+        return;
+    }
+    var editItem = mini.getbyName("edit", menu);
+    var removeItem = mini.getbyName("remove", menu);
+	var admins = mini.getbyName("admins", menu);
+	var copy = mini.getbyName("copy", menu);
+	var onAddTpl = mini.getbyName("onAddTpl", menu);
+	var onTplConEdit = mini.getbyName("onTplConEdit", menu);
+	var onTplConRemove = mini.getbyName("onTplConRemove", menu);
+	var sure = mini.getbyName("sure", menu);
+	var detail = mini.getbyName("detail", menu);
+	var modify = mini.getbyName("modify", menu);
+	copy.hide();
+	modify.hide();
+    editItem.show();
+	admins.show();
+	onAddTpl.show();	
+	onTplConEdit.show();
+	onTplConRemove.show();
+	sure.show();
+	editItem.show();
+	removeItem.show();
+	admins.show();
+	detail.hide();
+	if(row.addTplFlag==1){
+		onAddTpl.enable();	
+		removeItem.show();
+		onTplConEdit.disable();
+		onTplConRemove.disable();
+		modify.hide();
+	}else if(row.addTplFlag==2){
+		onAddTpl.disable();	
+		onTplConEdit.enable();
+		onTplConRemove.enable();
+		sure.show();
+		removeItem.hide();
+		detail.show();
+		modify.hide();
+	}else if(row.addTplFlag==3){
+		onAddTpl.hide();	
+		onTplConEdit.hide();
+		onTplConRemove.hide();
+		sure.hide();
+		editItem.hide();
+		removeItem.hide();
+		admins.hide();
+		copy.show();
+		detail.show();
+		if(row.isFlag==1){
+			modify.show();
+		}else{
+			modify.hide();
+		}
+		
+		
+	}else{
+		removeItem.hide();
+		onAddTpl.enable();
+		onTplConEdit.disable();
+		onTplConRemove.disable();
+		sure.hide();
+		modify.hide();
+	}
+}
+
+function onState(e){
+	var s = e.value;
+	if(s==3){
+		str='是';
+	}else{
+		str='否';
+	}
+    return str;
+
+}
+function isAddTpl(e){
+	var s = e.value;
+	if(s>1){
+		str='是';
+	}else{
+		str='否';
+	}
+    return str;
+
+}
+function isAddRec(e){
+	var s = e.value;
+	if(s==2){
+		str='是';
+	}else{
+		str='否';
+	}
+    return str;
+}
+
+
+function onUserType(e){
+	
+	var s = e.value;
+	if(s==2){
+		str='职位';
+	}else{
+		str='人员';
+	}
+    return str;
+	
+}
+        function onRenderer(e) {
+            var s = e.value;
+			d=e.sender;
+		    s += '<span class="btn-menu-group" id="menu-'+e.rowIndex+'" onclick="adds(this)" ><a class="btn" href="#"><span class="icon-optionss"></span><span class="caret"></span></a></span>';
+            return s;
+        }
+		function adds(o) {
+            $("#"+o.id).click(function (e) {
+		    var row = grid.getSelected();
+            var rowbox = grid.getRowBox(row);
+			var menu = mini.get("gridMenu");
+			menu.showAtPos(e.pageX,rowbox.bottom);
+			//menu.showAtPos(e.pageX+5, e.pageY+5);
+			var editItem = mini.getbyName("edit", menu);
+			var removeItem = mini.getbyName("remove", menu);
+			var admins = mini.getbyName("admins", menu);
+			var copy = mini.getbyName("copy", menu);
+			var onAddTpl = mini.getbyName("onAddTpl", menu);
+			var onTplConEdit = mini.getbyName("onTplConEdit", menu);
+			var onTplConRemove = mini.getbyName("onTplConRemove", menu);
+			var sure = mini.getbyName("sure", menu);
+			var detail = mini.getbyName("detail", menu);
+			var modify = mini.getbyName("modify", menu);
+			copy.hide();
+			modify.hide();
+			editItem.show();
+			admins.show();
+			onAddTpl.show();	
+			onTplConEdit.show();
+			onTplConRemove.show();
+			sure.show();
+			editItem.show();
+			removeItem.show();
+			admins.show();
+			detail.hide();
+			if(row.addTplFlag==1){
+				onAddTpl.enable();	
+				removeItem.show();
+				onTplConEdit.disable();
+				onTplConRemove.disable();
+				modify.hide();
+			}else if(row.addTplFlag==2){
+				onAddTpl.disable();	
+				onTplConEdit.enable();
+				onTplConRemove.enable();
+				sure.show();
+				removeItem.hide();
+				detail.show();
+				modify.hide();
+			}else if(row.addTplFlag==3){
+				onAddTpl.hide();	
+				onTplConEdit.hide();
+				onTplConRemove.hide();
+				sure.hide();
+				editItem.hide();
+				removeItem.hide();
+				admins.hide();
+				copy.show();
+				detail.show();
+				if(row.isFlag==1){
+					modify.show();
+				}else{
+					modify.hide();
+				}
+				
+				
+			}else{
+				removeItem.hide();
+				onAddTpl.enable();
+				onTplConEdit.disable();
+				onTplConRemove.disable();
+				sure.hide();
+				modify.hide();
+			}	   
+          });
+		};
+  
+  function onCloseClick(e){
+	  var t = mini.get(e.sender.id);
+            t.setValue("");
+            t.setText("");
+	  } 
+	 function CloseWindow(action) {
+		   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+            else window.close();          
+			window.parent.grid.load();  
+        }
+        function onCancel(e) {
+            CloseWindow("cancel");
+		} 
+    function onTplCopyType() {
+        var win = mini.get("winForm");
+        win.show();
+    }
+    function hideWindow() {
+        var win = mini.get("winForm");
+        win.hide();
+    }
+	function hideWindows() {
+        var win = mini.get("winGenerate");
+        win.hide();
+    }
+	function onTplToRec(){
+		 var win = mini.get("winGenerate");
+        win.show();
+	}
+	function onTplToBegine(){
+		 var win = mini.get("winBegine");
+        win.show();
+	}
+	function hideWinBegine(){
+		 var win = mini.get("winBegine");
+        win.hide();
+	}
+	function submitWinForm() {
+            var form = new mini.Form("#winForm");
+			form.validate();
+            if (form.isValid() == false) return false;
+			var formData = form.getData();
+            var infoData = mini.encode(formData);
+			//alert(infoData);
+			//return false;
+            $.ajax({
+                url: "?model=administration_appraisal_performance_item&action=copyTypeTplData",
+                type: "post",
+                data: { infoData:infoData},
+                success: function (text) {
+					if(text==2){
+						alert('复制成功！');
+						grid.load();  
+						hideWindow();
+						//grid.reload();
+					}else{
+					    alert('复制失败！');	
+					}
+                }
+            });
+        }
+	function submitWinGenerate() {
+            var form = new mini.Form("#winGenerate");
+			form.validate();
+            if (form.isValid() == false) return false;
+			var formData = form.getData();
+            var infoData = mini.encode(formData);
+			//alert(infoData);
+			//return false;
+            $.ajax({
+                url: "?model=administration_appraisal_performance_item&action=createTplData",
+                type: "post",
+                data: { infoData:infoData},
+                success: function (text) {
+					if(text==2){
+						alert('生成考核成功！');
+						grid.load();  
+						hideWindows();
+					}else if(text==3){
+						alert('已过考核发布期，暂不能发布考核标准！');
+						grid.load();  
+						hideWindows();
+					}else{
+					    alert('生成考核失败！');	
+					}
+                }
+            });
+        }
+	function submitWinBegine() {
+            var form = new mini.Form("#winBegine");
+			form.validate();
+            if (form.isValid() == false) return false;
+			var formData = form.getData();
+            var infoData = mini.encode(formData);
+			//alert(infoData);
+			//return false;
+            $.ajax({
+                url: "?model=administration_appraisal_performance_item&action=begineUpData",
+                type: "post",
+                data: { infoData:infoData},
+                success: function (text) {
+					if(text==2){
+						alert('操作成功！');
+						grid.load();  
+						hideWinBegine();
+						
+					}else{
+					    alert('操作失败！');	
+					}
+                }
+            });
+        }
+function CloseOpen() {
+		 winAddTpl.destroy();
+		 grid.load();          
+		//window.parent.grid.load();  
+}		   
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<!--startprint-->
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">设备借用申请</td>
+	</tr>
+	<tr>
+		<td width="100">申 请 人：</td>
+		<td align="left">{username}</td>
+	</tr>
+	<tr style="dysplay:{dt_none}">
+		<td>借用部门：</td>
+		<td align="left">{dept_name}</td>
+	</tr>
+	<tr style="display:{xm_none}">
+		<td>借用项目：</td>
+		<td align="left">{project_name}</td>
+	</tr>
+	<tr>
+		<td>预计归还日期：</td>
+		<td align="left">{targettime}</td>
+	</tr>
+	<tr>
+		<td>借用说明：</td>
+		<td align="left">{description}</td>
+	</tr>
+</table>
+<br />
+<form method="post" action="?model={t_model}&action=borrow_accept&orderid={t_orderid}&key={t_key}" onsubmit="return check();">
+	<input type="hidden" id="userid" name="userid" value="{userid}" />
+	<input type="hidden" id="username" name="username" value="{username}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+	<input type="hidden" id="dept_name" name="dept_name" value="{dept_name}" />
+	<input type="hidden" id="project_id" name="project_id" value="{project_id}" />
+	<input type="hidden" id="project_name" name="project_name" value="{project_name}" />
+	<input type="hidden" id="description" name="description" value="{description}" />
+	<input type="hidden" id="targettime" name="targettime" value="{targettime}" />
+	<input type="hidden" id="email" name="email" value="{email}" />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" class="YesPrint">
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;" >领用人签名：</td>
+		<td style="border:0px;">代办人签字：</td>
+	</tr>
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;">日期：</td>
+		<td style="border:0px;">日期：</td>
+	</tr>
+</table>
+
+<!--endprint-->
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" class="noprint">
+	<tr>
+		<td style="text-align:center;">
+			<input type="submit" id="save" value=" 提交保存记录 " /> <input type="button" value=" 直接打印 " onclick="printClick(1);" /> <input type="button" value=" 打印预览 " onclick="printClick();" /> 
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript"> 
+var myprint = false;
+function check()
+{
+	if (myprint==false)
+	{
+		if (confirm('您还没有打印该借用记录，确定要提交吗？'))
+		
+		{
+			$('#save').attr('disabled',true);
+			return true;
+		}else{
+			return false;
+		}
+		$('#save').attr('disabled',true);
+	}
+}
+function printClick(type)
+{
+	/*var css = '<style type="text/css">'+$('style').html()+'</style>';
+	var bdhtml=document.body.innerHTML;
+	var sprnstr="<!--startprint-->";
+	var eprnstr="<!--endprint-->";
+	prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));*/
+	if (type==1)
+	{
+		myprint = true;
+		window.open("?model=print", "newwin", "width=700,toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}else{
+		myprint = false;
+		window.open("?model=print", "newwin", "width=700,toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}
+}
+</script>
+</body>
+</html>

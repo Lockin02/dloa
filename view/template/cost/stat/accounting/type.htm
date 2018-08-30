@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="general/costmanage/finance_stat/module/ajax_search/sea.css">
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js">
+        </script>
+        <script src="general/costmanage/finance_stat/module/ajax_search/sea.js" type="text/javascript">
+        </script>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css" />
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js">
+        </script>
+        <title>类型统计</title>
+        <script type="text/javascript">
+            function excelFun()
+            {
+                var seadtb = $('#seadtb').val();
+                var seadte = $('#seadte').val();
+                var projectno = $('#ProjectNO').val();
+                var purpose = $('#purpose').val();
+                var place = $('#place').val();
+                var note = $('#note').val();
+                //var purpose = $('#purpose').combobox('getValue');
+                //var place = $('#place').combobox('getValue');
+                //var note = $('#note').combobox('getValue');
+                var dept_id = $('#dept_id').combobox('getValue');
+                var ctidstr = '';
+                $('.checkboxclass').each(function(id)
+                {
+                    if (this.checked) 
+                    {
+                        ctidstr += ',' + this.value;
+                    }
+                });
+                location.href = '{excel_url}&seadtb=' + seadtb + '&seadte=' + seadte +
+                '&projectno=' +
+                projectno +
+                '&purpose=' +
+                purpose +
+                '&place=' +
+                place +
+                '&dept_id=' +
+                dept_id +
+                '&note=' +
+                note +
+                '&ctids=' +
+                ctidstr;
+            }
+            
+            function showChange()
+            {
+                var ox = window.event.offsetX;
+                var oy = window.event.offsetY;
+                var x = window.event.clientX;
+                var y = window.event.clientY;
+                var oSource = document.getElementById("divCostType");
+                oSource.style.display = "block";
+                oSource.style.posTop = y;
+                oSource.style.posLeft = x - 260;
+            }
+            
+            function closeFun()
+            {
+                $('#divCostType').hide();
+            }
+            
+            function setValue()
+            {
+                $('#cc').combobox('setValue', 'bitem3');
+            }
+        </script>
+        <style type="text/css">
+            .Wdate {
+                height: 18px;
+                width: 120px;
+            }
+            
+            .tablecontrol {
+                line-height: 0px;
+                height: 0px;
+            }
+            
+            .tablecontrol TD {
+                line-height: 0px;
+                height: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td colspan="2">
+                    <img src="images/sys_config.gif" /><b>类型统计</b>
+                </td>
+            </tr>
+        </table>
+        <form action="{form_url}" name="pro_days" id="pro_days" method="post">
+            <table border="1" width="99%" class="table" cellpadding="0" cellspacing="0" align="center">
+                <tr class="tablecontrol">
+                    <td align="left" colspan="4">
+                        日期：<input type="text" class="Wdate" onclick="WdatePicker()" id="seadtb" name="seadtb" value="{seadtb}" /> 至 <input type="text" class="Wdate" onclick="WdatePicker()" id="seadte" name="seadte" value="{seadte}" />&nbsp;&nbsp;&nbsp;<input type="button" value="费用类型" onclick="showChange()" class="BigButton">
+                    </td>
+                    <td rowspan="2">
+                        <input type="submit" name="sub" id="sub" value="查询"/><input type="button" name="excel" id="excel" value="Excel导出" onclick="excelFun()"/>
+                    </td>
+                </tr>
+                <tr class="tablecontrol">
+                    <td align="left" colspan="4">
+                        部门：<input name="dept_id" id="dept_id" style="width: 320px; height:25px;" class="easyui-combobox" url="?model=cost_stat_accounting&action=deptData&select={dept_id}" valueField="id" textField="text" panelHeight="auto">
+                        <br/>
+                        项目：<input name="ProjectNO" id="ProjectNO" style="width: 315px;" onkeydown="keydown()" onclick="setdiv()" onfocus="setdiv()" onblur="losefouse()" onpropertychange="change(this,'flag','flag','general/costmanage/finance_stat/module/ajax_search/');" type="text" value="{ProjectNO}" autocomplete="off"/>
+                        <br/>
+                        事由：<input name="purpose" id="purpose" value="{purpose}" style="width: 315px;" valueField="id" textField="text" panelHeight="auto">
+                        <br/>
+                        地点：<input name="place" id="place" style="width: 315px;" value="{place}"  valueField="id" textField="text" panelHeight="auto">
+                        <br/>
+                        摘要：<input name="note" id="note" style="width: 315px;" value="{note}"  valueField="id" textField="text" panelHeight="auto">
+                        <br/>
+                        <!--
+                        事由：<input name="purpose" id="purpose" style="width: 320px; height:25px;" class="easyui-combobox"  url="?model=cost_stat_accounting&action=purposeData&select={purpose}" valueField="id" textField="text"  panelHeight="auto">
+                        <br/>
+                        地点：<input name="place" id="place" style="width: 320px; height:15px;" class="easyui-combobox"  url="?model=cost_stat_accounting&action=placeData&select={place}" valueField="id" textField="text"  panelHeight="auto">
+                        <br/>
+                        摘要：<input name="note" id="note" style="width: 320px; height:25px;" class="easyui-combobox"  url="?model=cost_stat_accounting&action=noteData&select={note}" valueField="id" textField="text"  panelHeight="auto">
+                        <br/>
+                        -->
+                    </td>
+                </tr>
+                {data_list}
+            </table>
+            <div id="divCostType" style="display:none;border-width:2;border-color:#3399CC;width:300;border-style:solid;-index:2;
+ background-color:#FCFCFC;width:40%;margin:0 auto;position:absolute;  z-index:3;"
+ align="center" class="divS">
+
+                {cost_type}
+
+            </div>
+        </form>
+        <div id='sug'>
+        </div>
+    </body>
+</html>

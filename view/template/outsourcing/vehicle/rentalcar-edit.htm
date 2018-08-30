@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑租车申请信息</title>
+	{#commonInclude#}
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"> </script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+    <script type="text/javascript" src="swfupload/handlers.js"> </script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsuppvehicle.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentalcar-provin-city.js"></script>
+    <script type="text/javascript" src="js/common/dateUtil.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentalcar-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/rentalcar-edit.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=edit" onsubmit="return checkData();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							编辑租车申请信息
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td  colspan="6">
+					<fieldset>
+						<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+							<img src="images/icon/info_up.gif" id="baseImg"/>
+						</legend>
+						<table width="100%" id="contractinfo" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;">
+							<tr>
+								<td class="form_text_left_three">申请人</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="createName" name="rentalcar[createName]" readonly value="{createName}"/>
+									<input type="hidden" class="txt" id="createId" name="rentalcar[createId]" value="{createId}"/>
+								</td>
+								<td class="form_text_left_three">申请时间</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="createTime" name="rentalcar[createTime]" readonly value="{createTime}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue;">申请人电话</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="applicantPhone" name="rentalcar[applicantPhone]" value="{applicantPhone}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue;">申请说明</span></td>
+								<td class="form_text_right_three" colspan="5">
+									<textarea class="txt_txtarea_biglong" id="applyExplain" name="rentalcar[applyExplain]">{applyExplain}</textarea>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td  colspan="6">
+					<fieldset>
+						<legend class="legend" onclick="showAndHide('projectinfoImg','projectinfo')">项目信息及车辆需求
+							<img src="images/icon/info_up.gif" id="projectinfoImg"/>
+						</legend>
+						<table width="100%" id="projectinfo" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;">
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue;">项目编号</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectCode" readonly name="rentalcar[projectCode]" value="{projectCode}"/>
+									<input type="hidden" class="txt" id="projectId" name="rentalcar[projectId]" value="{projectId}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue;">项目名称</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="projectName" name="rentalcar[projectName]" value="{projectName}"/>
+								</td>
+								<td class="form_text_left_three">项目类型</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectType" readonly name="rentalcar[projectType]" value="{projectType}"/>
+									<input type="hidden" class="txt" id="projectTypeCode" name="rentalcar[projectTypeCode]" value="{projectTypeCode}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">项目经理</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="projectManager" readonly name="rentalcar[projectManager]" value="{projectManager}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue;">用车地点（省）</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="provinceName" name="rentalcar[province]"/>
+									<select class="select" id="province" name="rentalcar[provinceId]" val="{province}"></select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue;">用车地点（市）</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="cityName" name="rentalcar[city]"/>
+									<select class="select" id="city" name="rentalcar[cityId]" val="{city}"></select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">测试范围</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="testRange" style="width:200px;" onclick="initTestRange();" readonly/>
+									<input type="hidden" class="txt" id="testRangeHidden" name="rentalcar[testRange]" value="{testRange}"/>
+								</td>
+								<td class="form_text_left_three">测试时长/天</td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="testTime" name="rentalcar[testTime]" value="{testTime}"/>
+									<select class="select" id="testTimeCode" name="rentalcar[testTimeCode]">
+										<option value="">...请选择...</option>
+										{testTimeCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">测试时间段</td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="testPeriod" name="rentalcar[testPeriod]" value="{testPeriod}"/>
+									<select class="select" id="testPeriodCode" name="rentalcar[testPeriodCode]">
+										<option value="">...请选择...</option>
+										{testPeriodCode}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue;">预计开始用车时间</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="expectStartDate" onfocus="WdatePicker()" readOnly  name="rentalcar[expectStartDate]" value="{expectStartDate}"   onchange="checkExpectDate(this)"/>
+								</td>
+                                <td class="form_text_left_three"><span style="color:blue;">预计用车结束时间</span></td>
+                                <td class="form_text_right_three">
+                                    <input type="text" class="txt" id="expectEndDate" onfocus="WdatePicker()" readOnly  name="rentalcar[expectEndDate]" value="{expectEndDate}"  onchange="checkExpectDate(this)"/>
+                                </td>
+								<td class="form_text_left_three"><span style="color:blue;">用车周期</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useCycle" name="rentalcar[useCycle]" value="{useCycle}" readonly/>
+								</td>
+							</tr>
+							<tr>
+                                <td class="form_text_left_three"><span style="color:blue;">预估租车合同总额</span></td>
+                                <td class="form_text_right_three">
+                                    <input type="text" class="txt" id="estimateAmonut" name="rentalcar[estimateAmonut]"  value="{estimateAmonut}"/>
+                                </td>
+								<td class="form_text_left_three"><span style="color:blue;">租车性质</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="rentalProperty" name="rentalcar[rentalProperty]" value="{rentalProperty}"/>
+									<select class="select" id="rentalPropertyCode" name="rentalcar[rentalPropertyCode]">
+										<option value="">...请选择...</option>
+										{rentalPropertyCode}
+									</select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue;">油费</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="payGasoline" name="rentalcar[payGasoline]" value="{payGasoline}"/>
+									<select class="select" id="payGasolineCode" name="rentalcar[payGasolineCode]">
+										{payGasolineCode}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three"><span style="color:blue;">路桥停车费</span></td>
+								<td class="form_text_right_three">
+									<input type="hidden" class="txt" id="payParking" name="rentalcar[payParking]" value="{payParking}"/>
+									<select class="select" id="payParkingCode" name="rentalcar[payParkingCode]">
+										{payParkingCode}
+									</select>
+								</td>
+								<td class="form_text_left_three">有无测试人员跟车</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="isTestEngineerVal" value="{isTestEngineer}"/>
+									<select class="select" id="isTestEngineer" name="rentalcar[isTestEngineer]">
+										<option value="1">有</option>
+										<option value="0">无</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">是否需要支付司机食宿</td>
+								<td class="form_text_right_three">
+									<select class="select" id="isPayDriverCode" name="rentalcar[isPayDriverCode]">
+										{isPayDriverCode}
+									</select>
+									<input type="hidden" class="txt" id="isPayDriver" name="rentalcar[isPayDriver]" value="{isPayDriver}"/>
+								</td>
+								<tr>
+									<td class="form_text_left_three">是否申请油卡</td>
+									<td class="form_text_right_three">
+										<input type="hidden" id="isApplyOilCardVal" value="{isApplyOilCard}"/>
+										<select class="select" id="isApplyOilCard" name="rentalcar[isApplyOilCard]">
+											<option value="1" title="是">是</option>
+											<option value="0" title="否">否</option>
+										</select>
+									</td>
+                                <td class="form_text_left_three">预计每月用车天数</td>
+                                <td class="form_text_right_three">
+                                    <select class="select" id="expectUseDayCode" name="rentalcar[expectUseDayCode]">
+                                        {expectUseDayCode}
+                                    </select>
+                                    <input type="hidden" id="expectUseDay" name="rentalcar[expectUseDay]" value="{expectUseDay}"/>
+                                </td>
+                            <td class="form_text_left_three">用车数量</td>
+                            <td class="form_text_right_three">
+                                <input type="text" class="readOnlyTxtNormal" readonly id="useCarAmount" name="rentalcar[useCarAmount]" value="{useCarAmount}"/>
+                            </td>
+                            <!--
+									<td class="form_text_left_three">总费用</td>
+									<td class="form_text_right_three">
+										<input type="text" class="txt formatMoney" id="allFee" name="rentalcar[allFee]" value="{allFee}"/>
+									</td>
+									<td class="form_text_left_three">每月费用</td>
+									<td class="form_text_right_three">
+										<input type="text" class="readOnlyTxtNormal formatMoney" readonly id="monthlyFee" name="rentalcar[monthlyFee]" value="{monthlyFee}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left_three">项目预决算</td>
+									<td class="form_text_right_three">
+										<input type="text" class="readOnlyTxtNormal formatMoney" readonly id="projectBudget" value="{projectBudget}"/>
+									</td>
+									-->
+									<td class="form_text_left_three blue" style="display:none;">用车地点</td>
+									<td class="form_text_right_three" style="display:none;">
+										<input type="text" class="txt" id="usePlace" name="rentalcar[usePlace]" value="{usePlace}"/>
+									</td>
+								</tr>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+		<div style="overflow-x:scroll;">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend" onclick="showAndHideDiv('suppInfoImg','suppInfo')">推荐供应商列表
+								<img src="images/icon/info_up.gif" id="suppInfoImg"/>
+							</legend>
+							<div id="suppInfo"></div>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="id" name="rentalcar[id]" value="{id}"/>
+					<input type="hidden" id="deptId" value="{deptId}"/>
+					<input type="hidden" id="deptName" value="{deptName}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

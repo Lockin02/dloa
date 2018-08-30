@@ -1,0 +1,487 @@
+<html>
+<head>
+<title>服务合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css"
+	media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-to-orderequ.js"></script>
+
+<script type="text/javascript"
+	src="view/template/engineering/serviceContract/js/serviceContract-sign.js"></script>
+<script type="text/javascript"
+	src="view/template/engineering/serviceContract/js/serviceContract-isadd-train-license.js"></script>
+	<script type="text/javascript" src="view/template/common/js/order-proCity.js"></script>
+
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+<script type="text/javascript" src="swfupload/handlers.js"> </script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script>
+            var uploadfile;
+            $(function() {
+                uploadfile = createSWFUpload({
+                    "serviceType": "oa_sale_service",
+                    "serviceId": "{id}"
+                });
+                  uploadfile2=createSWFUpload({
+				    "serviceType":"oa_sale_service2",//业务模块编码，一般取表名
+				     "serviceId": "{id}"
+				},{
+					button_placeholder_id:'swfupload2',
+					fileListId:'uploadfileList2',
+					progressTarget:'fsUploadProgress2'
+				});
+            });
+          function dateCompare(createTime,ExaDT){
+               var com = $.ajax({
+					    type : 'POST',
+					    url : "?model=contract_common_allcontract&action=dateCompare",
+					    data:{
+					       createTime : createTime,
+						   ExaDT : ExaDT
+					    },
+					    async: false,
+					    success : function(data){
+					        if(data == 1){
+					           return 1;
+					        }else{
+					           return 0;
+					        }
+ 					    }
+					}).responseText;
+				 return com;
+          }
+
+          function submitR(){
+			     var cus = $("#cusName").val();
+			     var cusId = $("#cusNameId").val();
+			     if(cus == '' || cusId == ''){
+			         alert("客户名称不能为空！");
+			         return false;
+			     }
+		                     var createTime = $("#createTime").val();
+					         var ExaDT = $("#ExaDT").val();
+                           var com = dateCompare(createTime,ExaDT);
+					       if(com == '1'){
+					            var deliveryDate =$("#deliveryDate").val();
+					            if(deliveryDate == ''){
+							         alert("请选择计划交货日期");
+							         return false;
+							      }
+					       }
+
+				  var orderMoney = $("#orderMoney").val();
+				  var orderMoney_v = $("#orderMoney_v").val();
+				  var orderTempMoney = $("#orderTempMoney").val();
+				  var orderTempMoney_v = $("#orderTempMoney_v").val();
+					  if((orderMoney == '' || orderMoney == '0' || orderMoney == '0.00') && (orderTempMoney == '' || orderTempMoney == '0' || orderTempMoney == '0.00')){
+					        alert("合同金额不能为空");
+					        return false;
+					  }
+			      var areaName = $("#areaName").val();
+			      var areaCode = $("#areaCode").val();
+			      if( areaName == '' || areaCode == ''){
+			               alert("请正确选择合同所属区域");
+			               return false;
+			      }
+			      var orderPrincipal = $("#orderPrincipal").val();
+			      var orderPrincipalId = $("#orderPrincipalId").val();
+			      if(orderPrincipal == '' || orderPrincipalId == ''){
+			              alert("请正确选择合同负责人");
+			              return false;
+			      }
+			      var province = $("#province").val();
+			      var city = $("#city").val();
+			      if(city == '' || province == ''){
+			           alert("请正确选择省市信息");
+			           return false;
+			      }
+			        return true;
+			 }
+			 $(function (){
+			      //省市
+		           var proId = $("#orderProvinceId").val();
+		           var cityId = $("#orderCityId").val();
+		            $("#province").val(proId);//所属省份Id
+				    $("#province").trigger("change");
+					$("#city").val(cityId);//城市ID
+					$("#city").trigger("change");
+			 });
+</script>
+<!-- 附件上传结束 -->
+
+
+</head>
+<body style="overflow:scroll;">
+
+<form id="form1" method="post"
+	action="?model=engineering_serviceContract_serviceContract&action=signInVerify"
+	name="form1" onsubmit="return submitR();">
+<div class="main_head"><span class="main_head_title">服务合同</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">是否签约</td>
+		<td class="form_text_right"><input type="radio"
+			name="serviceContract[sign]" value="是" {signYes}/>是 <input
+			type="radio" name="serviceContract[sign]" value="否" {signNo}/>否</td>
+		<td class="form_text_left">纸质合同状态</td>
+		<td class="form_text_right"><input type="radio"
+			name="serviceContract[orderstate]" value="已提交" {orderstateYes}/>已提交
+		<input type="radio" name="serviceContract[orderstate]" value="已拿到" {orderstateNo}/>已拿到
+		</td>
+		<td class="form_text_left">合同属性</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyText" name="serviceContract[orderNatureName]"
+			id="orderNatureName" value="{orderNatureName}" /> <input
+			type="hidden" name="serviceContract[orderNature]" id="orderNature"
+			value="{orderNature}" /></td>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">父合同名称</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyText" readonly="readonly" name="serviceContract[parentOrder]" /></td>
+		<td class="form_text_left">签收类型</td>
+		<td class="form_text_right">
+		   <input type="hidden" id="objCode"  value="{objCode}" />
+		   <select class="select" id="signinType" name="serviceContract[signinType]"  >
+			 <option value="service">服务类</option>
+			 <option value="order">销售类</option>
+		</select></td>
+	</tr>
+	<tr>
+
+		<td class="form_text_left">鼎利合同号</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="serviceContract[orderCode]" id="orderCode" value="{orderCode}" /></td>
+		<td class="form_text_left">临时合同号</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyText" name="serviceContract[orderTempCode]"
+			id="orderTempCode" value="{orderTempCode}" readonly /></td>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right"><input type="text"
+			class="txt" name="serviceContract[orderName]" id="orderName"
+			value="{orderName}"  /></td>
+	</tr>
+	<tr>
+	<td class="form_text_left">金额币别</td>
+	<td class="form_text_right"><input type="text" class="txt"
+		name="serviceContract[currency]" id="currency" value="{currency}" /></td>
+	<td class="form_text_left">预计金额(人民币)</td>
+	<td class="form_text_right"><input type="text"
+		class="txt formatMoney" name="serviceContract[orderTempMoney]"
+		value="{orderTempMoney}" id="orderTempMoney" />
+	<div id="orderTempMoney_vTip" class="tipShortTxt"></div>
+	</td>
+	<td class="form_text_left">签约金额(人民币)</td>
+	<td class="form_text_right"><input type="text"
+		class="txt formatMoney" name="serviceContract[orderMoney]"
+		value="{orderMoney}" id="orderMoney" />
+	<div id="orderMoney_vTip" class="tipShortTxt"></div>
+	</td>
+	</tr>
+	<tr id="currencyRate" style="display:none">
+		<td class="form_text_left">汇率</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" readonly="readonly"
+			name="serviceContract[rate]" id="rate" value="{rate}"
+			onblur="conversion();" /></td>
+		<td class="form_text_left">预计金额<span id="cur"></span></td>
+		<td class="form_text_right"><input type="text"
+			class="txt formatMoney" name="serviceContract[orderTempMoneyCur]"
+			id="orderTempMoneyCur" value="{orderTempMoneyCur}"
+			onblur="conversion();" /></td>
+		<td class="form_text_left">签约金额<span id="cur1"></span></td>
+		<td class="form_text_right"><input type="text"
+			class="txt formatMoney" name="serviceContract[orderMoneyCur]"
+			id="orderMoneyCur" value="{orderMoneyCur}" onblur="conversion();" />
+
+		</td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[cusName]" id="cusName" value="{cusName}" /> <input
+			type="hidden" name="serviceContract[cusNameId]" id="cusNameId"
+			value="{cusNameId}" /><span class="red">[*]</span></td>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right"><select class="select"
+			name="serviceContract[customerType]" id="customerType">
+			{customerType}
+		</select></td>
+		<td class="form_text_left">签约方合同号</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[customerOrder]" id="customerOrder"
+			value="{customerOrder}" />
+		</td>
+	</tr>
+	<tr>
+        <td class="form_text_left">所属省份</td>
+		<td class="form_text_right">
+		   <select class="select" name="serviceContract[orderProvinceId]" id="province" ></select>
+		   <input type="hidden" name="serviceContract[orderProvince]" id="provinceName" />
+		   <input type="hidden"  value="{orderProvinceId}" id="orderProvinceId"/>
+		   <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">所属城市</td>
+		<td class="form_text_right">
+		   <select class="select" name="serviceContract[orderCityId]" id="city" ></select>
+		   <input type="hidden" name="serviceContract[orderCity]" id="cityName" />
+		   <input type="hidden"  value="{orderCityId}" id="orderCityId"/>
+		   <span class="red">[*]</span>
+		</td>
+        <td class="form_text_left">合同归属区域</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="serviceContract[areaName]" id="areaName" value="{areaName}" />
+	       <input type="hidden" name="serviceContract[areaCode]" id="areaCode" value="{areaCode}" />
+	       <input type="hidden" class="readOnlyTxt" readOnly name="serviceContract[createName]" id="createName"
+			value="{createName}" /> <input type="hidden"
+			name="serviceContract[createId]" id="createId" value="{createId}"
+			value="{createId}" /> <input type="hidden" class="readOnlyTxt"
+			readOnly name="serviceContract[createTime]" id="createTime"
+			value="{createTime}" /></td>
+    </tr>
+	<tr>
+		<td class="form_text_left">签约方联系人</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[customerLinkman]" id="customerLinkman"
+			value="{customerLinkman}" /> <input type="hidden"
+			name="serviceContract[customerLinkmanId]" id="customerLinkmanId"
+			value="{customerLinkman}" /></td>
+		<td class="form_text_left">联系人电话</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[linkmanNo]" id="linkmanNo" value="{linkmanNo}" />
+		</td>
+		<td class="form_text_left">区域负责人</td>
+		<td class="form_text_right"><input type="text"
+			class="readOnlyTxtNormal" readonly="readonly"
+			name="serviceContract[areaPrincipal]" id="areaPrincipal"
+			value="{areaPrincipal}" /> <input type="hidden"
+			name="serviceContract[areaPrincipalId]" id="areaPrincipalId_v"
+			value="{areaPrincipalId}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">发票类型</td>
+		<td class="form_text_right"><select class="select"
+			id="invoiceType" name="serviceContract[invoiceType]">
+			<!-- option value=""></option-->
+			{invoiceType}
+		</select></td>
+		<td class="form_text_left">技术负责人</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[sciencePrincipal]" id="sciencePrincipal"
+			readonly value="{sciencePrincipal}" /> <input type="hidden"
+			name="serviceContract[sciencePrincipalId]" id="sciencePrincipalId"
+			value="{sciencePrincipalId}" /></td>
+		<td class="form_text_left">合同负责人</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[orderPrincipal]" id="orderPrincipal" readonly
+			value="{orderPrincipal}" /> <input type="hidden"
+			name="serviceContract[orderPrincipalId]" id="orderPrincipalId"
+			value="{orderPrincipalId}" /><span class="red">[*]</span></td>
+	</tr>
+
+	<tr>
+
+
+		<td class="form_text_left">合同开始日期</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[beginDate]" id="" onfocus="WdatePicker()"
+			readonly value="{beginDate}" /></td>
+		<td class="form_text_left">合同截止日期</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[endDate]" id="" onfocus="WdatePicker()"
+			readonly value="{endDate}" /></td>
+		<td class="form_text_left">计划交货日期</td>
+		<td class="form_text_right"><input type="text" class="txt"
+			name="serviceContract[timeLimit]" id="deliveryDate"
+			onfocus="WdatePicker()" readonly value="{timeLimit}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="txt_txtarea_font" name="serviceContract[remark]">{remark}</textarea>
+		</td>
+		<td class="form_text_left">父合同号</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="serviceContract[parentOrder]" id="parentOrder" value="{parentOrder}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_view_right" colspan="1">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+		</td>
+		<td class="form_text_left">合同文本</td>
+		<td class="form_text_right" colspan="1">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress2"></div>
+		<div class="upload"><span id="swfupload2"></span> <input
+			id="btnCancel2" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList2" class="upload">{file2}</div>
+		</div>
+		</td>
+	</tr>
+	<tr>
+   <td colspan="6" id="borrowOrderequ">
+      <input type="hidden" id="orderId" value="{id}" />
+      <input type="hidden" id="orderType" value="service" />
+   </td>
+</tr>
+	<tr>
+		<td colspan="6">
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan="4" class="form_header">配置清单/服务内容</td>
+					<td align="center" width="4%"><input type="hidden"
+						id="productNumber" value="1" /> <img src="images/verpic_open.gif"
+						onclick="dis('List')" title="缩放" /> <img
+						src="images/collapsed.gif"
+						onclick="serviceList_add('List','productNumber');" title="添加行" /></td>
+				</tr>
+			</thead>
+			<tbody id="List">
+				<tr class="main_tr_header">
+					<td style="text-align:center" width="5%">序号</td>
+					<td style="text-align:center" width="30%">内容</td>
+					<td style="text-align:center" width="10%">数量/人数</td>
+					<td style="text-align:center" width="30%">详细</td>
+					<td style="text-align:center" width="5%">操作</td>
+				</tr>
+				{servicelist}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan="10" class="form_header">设备清单</td>
+					<td align="center" width="4%"><input type="hidden"
+						id="productNumber" value="{productNumber}" /> <img
+						src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" />
+					<img src="images/collapsed.gif"
+						onclick="dynamic_add('invbody','productNumber');" title="添加行" /></td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<td style="text-align:center" width="5%">序号</td>
+					<td style="text-align:center" width="10%">产品编号</td>
+					<td style="text-align:center" width="16%">产品名称</td>
+					<td style="text-align:center" width="9%">型号/版本</td>
+					<td style="text-align:center" width="8%">数量</td>
+					<td style="text-align:center" width="8%">单价</td>
+					<td style="text-align:center" width="8%">金额</td>
+
+					<td style="text-align:center" width="8%">保修期</td>
+					<td style="text-align:center" width="8%">加密配置</td>
+                    <td style="text-align:center" width="8%">合同内</td>
+					<td style="text-align:center" width="5%">操作</td>
+				</tr>
+				{serviceequ}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<table class="main_table" width="100%" id="" cellspacing='1'
+			cellpadding='0'>
+			<thead>
+				<tr>
+					<td colspan="7" class="form_header">培训计划</td>
+					<td align="center" width="5%"><input type="hidden"
+						id="TraNumber" name="TraNumber" value="{TraNumber}" /> <img
+						src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放" />
+					<img src="images/collapsed.gif"
+						onclick="train_add('mytra','TraNumber')" title="添加行" /></td>
+				</tr>
+			</thead>
+			<tbody id="mytra">
+
+				<tr class="main_tr_header">
+					<td nowrap width="5%" style="text-align:center">序号</td>
+					<td nowrap width="8%" style="text-align:center">培训开始时间</td>
+					<td nowrap width="8%" style="text-align:center">培训结束时间</td>
+					<td nowrap width="8%" style="text-align:center">参与人数</td>
+					<td nowrap width="18%" style="text-align:center">培训地点</td>
+					<td nowrap style="text-align:center">培训内容</td>
+					<td nowrap width="20%" style="text-align:center">培训工程师要求</td>
+					<td nowrap width="5%" style="text-align:center">操作</td>
+				</tr>
+				{trainingplan}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<table class="main_table">
+			<tr>
+				<td colspan="4">
+				   <input type="hidden" value="{createTime}" id="createTime"/>
+				   <input type="hidden" value="{ExaDT}" id="ExaDT"/>
+				   <input type="hidden" name="serviceContract[oldId]" id="contractID" value="{id}" />
+				   <input type="hidden" name="serviceContract[signIn]" value="1" />
+				   <input type="submit" class="txt_btn_a" value=" 签  收 " />
+				   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" /></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

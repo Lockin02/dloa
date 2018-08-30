@@ -1,0 +1,186 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>设备采购申请</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+<!--
+td {
+	font-size:12px;
+	padding-left:10px;
+	height:30px;
+	line-height:30px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: solid;
+	border-left-style: none;
+	border-top-color: #00CCFF;
+	border-right-color: #00CCFF;
+	border-bottom-color: #00CCFF;
+	border-left-color: #00CCFF;
+}
+table {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-top-color: #00CCFF;
+	border-right-color: #00CCFF;
+	border-bottom-color: #00CCFF;
+	border-left-color: #00CCFF;
+}
+span {color:red;}
+-->
+</style>
+<script type="text/javascript">
+function  check()
+{
+	if($('#name').val()=='')
+	{
+		alert('设备名称不能为空！');
+		$('#name').focus();
+		return false;
+	}
+	if ($('#typeid').val()==''){
+		alert('请选择设备类别');
+		return false;
+	}
+	if ($('#amount').val()==''){
+		alert('请输入数量！');
+		$('#amount').focus();
+		return false;
+	}
+	if ($('#use_date').val()=='')
+	{
+		alert('请输入期望使用日期！');
+		$('#use_date').focus();
+		return false;
+	}
+	if ($('#description').val()==''){
+		alert('请填写用途描述！');
+		$('#descriptio').focus();
+		return false;
+	}else{
+		return true;
+	}
+}
+</script>
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="?model=purchase&action=add_apply" onsubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<input type="hidden" id="deptid" name="deptid" value="{deptid}" />
+<table width="600" border="1" cellpadding="0" cellspacing="0" align="center">
+  <tr>
+    <td colspan="2" align="center" bgcolor="#00CCFF">设备采购申请</td>
+    </tr>
+  <tr>
+    <td width="114" align="right">申请人姓名：</td>
+    <td width="470">{USER_NAME}</td>
+  </tr>
+  <tr>
+    <td width="114" align="right">所属部门：</td>
+    <td width="470">{DEPT_NAME}</td>
+  </tr>
+  <tr>
+  	<td align="right">采购类型：</td>
+  	<td>
+  		<input type="radio" name="purchase_type" value="1" />研发采购 
+  		<input type="radio" name="purchase_type" value="2" />固定资产 
+  	</td>
+  </tr>
+  <tr>
+  	<td align="right">项目归属：</td>
+  	<td>
+  		<input type="radio" onclick="show_type(this.value);" name="purchase_type" value="3" />重大专项 
+  		<input type="radio" onclick="show_type(this.value);" name="purchase_type" value="4" />无线网络测试系统多接口 
+  		<input type="radio" onclick="show_type(this.value);" name="purchase_type" value="5" />研发中心建设 
+  	</td>
+  </tr>
+  <tr>
+    <td width="114" align="right">设备名称：</td>
+    <td width="470">
+    	<input size="40" type="text" name="device_name" id="device_name" value="" />
+    	<span id="_name">*</span>
+    </td>
+  </tr>
+  <tr id="show_type" style="display:none;">
+    <td width="114" align="right">设备类别：</td>
+    <td width="470"><select name="typeid" id="typeid">
+      <option value="">请选择类别</option>
+      <optgroup label="研发设备"></optgroup>
+      	<option value="">&nbsp;高性能专业服务器</option>
+      	<option value="">&nbsp;磁盘阵列</option>
+      	<option value="">&nbsp;研发用PC机（含操作系统）</option>
+      	<option value="">&nbsp;...</option>
+      <optgroup label="生产设备"></optgroup>
+        <option value="">&nbsp;振动机</option>
+      	<option value="">&nbsp;高低温测试箱</option>
+      	<option value="">&nbsp;脉冲发生器</option>
+      	<option value="">&nbsp;...</option>
+      	 <optgroup label="办公设置"></optgroup>
+      	 <option value="">&nbsp;办公家具</option>
+      	<option value="">&nbsp;空调</option>
+      	<option value="">&nbsp;复印机</option>
+      	<option value="">&nbsp;...</option>
+    </select>
+    <span id="_typeid">*</span>
+   </td>
+  </tr>
+  <tr>
+    <td width="114" align="right">设备型号：</td>
+    <td width="470">
+    	<input type="text" id="models" name="models" value="" />
+    	<span id="_models"></span>
+    </td>
+  </tr>
+  <tr>
+    <td width="114" align="right">申请数量：</td>
+    <td width="470">
+    	<input size="5" type="text" onKeyUp="value=value.replace(/[^\d]/g,'')" name="amount" id="amount" value=""/>
+    	<span id="_amount">*</span>	
+    </td>
+  </tr>
+  <tr>
+    <td width="114" align="right">期望使用日期：</td>
+    <td width="470">
+    	<input type="text" name="use_date" id="use_date" onClick="WdatePicker()" class="Wdate" value=""/>
+    	<span id="_use_date">*</span> 格式：2010-01-01
+    </td>
+  </tr>
+  <tr>
+    <td width="114" align="right">用途描述：</td>
+    <td width="470">
+    	<textarea name="description" id="description" cols="45" rows="5"></textarea>
+    	<span id="_description">*</span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><input type="submit" name="button" id="button" value="提交申请" /></td>
+  </tr>
+</table>
+</form>
+<script type="text/javascript">
+function show_type(id)
+{
+	if (id > 2)
+	{
+		$('#show_type').css('display','');
+	}else{
+		$('#show_type').css('display','none');
+	}
+}
+</script>
+</body>
+</html>

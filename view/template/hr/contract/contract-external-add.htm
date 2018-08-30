@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增合同信息</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/contract-external-add.js" ></script>
+   <!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType" : "oa_hr_personnel_contract"
+				});
+			});
+		</script>
+<style>
+//	#important{
+//	   color:blue;
+//	}
+</style>
+ </head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_contract_contract&action=add"  onsubmit="return checkForm();">
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增合同信息
+             </span>
+            </div>
+            </td>
+         </tr>
+ <tr>
+		<td class="form_text_left" id="important">员工姓名</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="contract[userName]" id="userName" readonly value="{userName}"/>
+			 <input type="hidden" class="txt" id="userAccount" name="contract[userAccount]"  value="{userAccount}"/>
+		</td>
+		<td class="form_text_left">员工编号</td>
+		<td class="form_text_right" >
+			 <input type="text" readonly class="readOnlyTxtNormal" name="contract[userNo]" id="userNo"  value="{userNo}"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left" id="important">合同编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="contract[conNo]" id="conNo"/>
+		</td>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="contract[conName]" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">合同类型</td>
+		<td class="form_text_right" >
+			 <select id="conType" name="contract[conType]" class="select">
+			 </select>
+		</td>
+		<td class="form_text_left">合同状态</td>
+		<td class="form_text_right" >
+			 <select id="conState" name="contract[conState]" class="select">
+			 </select>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left" >合同开始时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="beginDate" name="contract[beginDate]" onfocus="WdatePicker()"   onblur="timeCheck(this)"/>
+		</td>
+		<td class="form_text_left" >合同结束时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="closeDate" name="contract[closeDate]" onfocus="WdatePicker()"   onblur="timeCheck(this)"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left" >试用开始时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="trialBeginDate" name="contract[trialBeginDate]" onfocus="WdatePicker()"   onblur="trialTimeCheck(this)"/>
+		</td>
+		<td class="form_text_left" >试用结束时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="trialEndDate" name="contract[trialEndDate]" onfocus="WdatePicker()"   onblur="trialTimeCheck(this)"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left" id="important">职位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="contract[jobName]" id="" value="{jobName}" readonly/>
+			 <input type="hidden" class="txt" name="contract[jobId]" id="" value="{jobId}"/>
+			 <input type="hidden" class="txt" name="contract[entryId]" id="entryId" value="{entryId}"/>
+		</td>
+		<td class="form_text_left">合同次数</td>
+		<td class="form_text_right" >
+			 <select id="conNum" name="contract[conNum]" class="select">
+			 </select>
+		</td>
+</tr>
+ <tr>
+		<td class="form_text_left">记录人</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" readonly name="contract[recorderName]" id="recorderName" value="{recorderName}"/>
+			 <input type="hidden" class="txt" id="recorderId" name="contract[recorderId]" value="{recorderId}"/>
+		</td>
+		<td class="form_text_left">记录时间</td>
+		<td class="form_text_right" >
+			 <input type="text" readonly class="readOnlyTxtNormal" name="contract[recordDate]" id="recordDate" value="{recordDate}"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">合同内容</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea class="txt_txtarea_font" name="contract[conContent]"></textarea>
+		</td>
+</tr>
+       <tr>
+      		<td class="form_text_left" id="important">附  件</td>
+					<td colspan="3" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div></td>
+      </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>人员调动信息导出</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/transfer-export.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+</head>
+<body>
+	<form id="exportForm" action="?model=hr_transfer_transfer&action=export" ENCTYPE="multipart/form-data" method="POST" name="form1">
+		<table  class="form_main_table">
+			<tr>
+				<div class="main_head">
+					<span class="main_head_title">
+						人员调动信息导出
+					</span>
+				</div>
+			</tr>
+			<tr>
+				<td class="form_text_left">申请日期开始时间</td>
+				<td class="form_text_right">
+					<input type="text" name="transfer[beginDate]" id="beginDate" class="txt" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left">申请日期结束时间</td>
+				<td class="form_text_right">
+					<input type="text" name="transfer[endDate]" id="endDate" class="txt" onfocus="WdatePicker()"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">员工姓名</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" name="transfer[userName]" id="userName" readonly/>
+					<input type="hidden" name="transfer[userNo]" id="userNo"/>
+				</td>
+				<td class="form_text_left">调动单据编号</td>
+				<td class="form_text_right">
+					<input type="text" name="transfer[formCode]" id="formCode" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">调动前所属部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" name="transfer[preBelongDeptName]" id="preBelongDeptName" readonly="readonly"/>
+					<input type="hidden" id="preBelongDeptId" name="transfer[preBelongDeptId]"/>
+				</td>
+				<td class="form_text_left">调动后所属部门</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" name="transfer[afterBelongDeptName]" id="afterBelongDeptName" readonly="readonly"/>
+					<input type="hidden" id="afterBelongDeptId" name="transfer[afterBelongDeptId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">调动前公司名称</td>
+				<td class="form_text_right">
+					<select id="preUnitId" class="select" name="transfer[preUnitId]">
+						{companyOpt}
+					</select>
+				</td>
+				<td class="form_text_left">调动后公司名称</td>
+				<td class="form_text_right">
+					<select id="afterUnitId" class="select" name="transfer[afterUnitId]">
+						{companyOpt}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">调动前职位</td>
+				<td class="form_text_right">
+					<input type="text" name="transfer[preJobName]" id="preJobName" class="txt"/>
+					<input type="hidden" id="preJobId" name="transfer[preJobId]"/>
+				</td>
+				<td class="form_text_left">调动后职位</td>
+				<td class="form_text_right">
+					<input type="text" name="transfer[afterJobName]" id="afterJobName" class="txt"/>
+					<input type="hidden" id="afterJobId" name="transfer[afterJobId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">调动前人员分类</td>
+				<td class="form_text_right">
+					<select id="prePersonClassCode" class="select" name="transfer[prePersonClassCode]">
+						<option value=""></option>
+						{prePersonClassCode}
+					</select>
+				</td>
+				<td class="form_text_left">调动后人员分类</td>
+				<td class="form_text_right">
+					<select id="afterPersonClassCode" class="select" name="transfer[afterPersonClassCode]">
+						<option value=""></option>
+						{afterPersonClassCode}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

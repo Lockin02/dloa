@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>更新信息</title>
+{#commonInclude#}
+<script>
+	function updateObjCode(objType){
+		$("#msg").html("正在更新中,如果单据数量较多,会占用一定的时间...");
+		$.ajax({
+			url:'?model=common_contract_allsource&action=saveTimingData&objType='+objType,
+			success:function(data){
+				if(data==1){
+					alert('保存成功.');
+					$("#msg").html('保存成功，请注意不要重复保存');
+				}else{
+					alert('程序出错,更新失败.失败原因:'+data);
+					$("#msg").html('保存失败.失败原因:'+data);
+				}
+
+			}
+		});
+	}
+</script>
+</head>
+<body align="center" valign="center">
+<table class="form_main_table">
+<tr>
+	<td>
+		<input type="button"  value="商机数据汇总表" class="txt_btn_a" onclick="updateObjCode('oa_chance_view')"/>
+	</td>
+	<td>
+		<input type="button" value="合同数据汇总表" class="txt_btn_a" onclick="updateObjCode('oa_contract_view')"/>
+	</td>
+</tr>
+ <tr>
+	<td>
+		<input type="button" value="商机/合同数据汇总" class="txt_btn_a" onclick="updateObjCode('oa_saleall_view')"/>
+ 	</td>
+</tr>
+</table>
+<div id="msg"></div>
+</body>
+</html>

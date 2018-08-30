@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>查看人事管理-基本信息</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/personnel-my-edit.js"></script>
+<script type="text/javascript" src="{#jsPath#}/personnel-provin-city.js"></script>
+<script type="text/javascript" src="{#jsPath#}/personnel-provin-city2.js"></script>
+ <!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+	var uploadfile;
+	$(function() {
+		var photoUrl=$("#photoUrl").val();
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_hr_personnel",//业务模块编码，一般取表名
+			"serviceId" : "{id}"
+		},{
+			upload_success_handler : function(file, serverData){
+			   var obj = eval("(" + serverData +")");
+	           var objType = obj.serviceType;
+	           var objName = obj.newName;
+	           var url = photoUrl + "/" +objType + "/" + objName;
+	           $("#photo").attr("src",url);
+	       }
+		});
+
+	});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_personnel_personnel&action=myEdit" >
+<span style="color:blue">*温馨提示:蓝色字段为必填项，当所有必填项填写完成，才能提交。</span>
+		<table cellpadding="2" width="100%" class="form_main_table">
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>个人信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new" >员工姓名</td>
+						<td class="" width="20%" align="left" colspan="3">{staffName}</td>
+						<!-- 附件图片-->
+				            <td  style="text-align:center" rowspan="6" width="33%" colspan="2">
+				            	<input type="hidden" id="photoUrl" value="{photoUrl}"/>
+				                <img id="photo" src="{photo}"  style="height:140px;width:100px;" class="imgBorder"/><br />
+				                <br />
+				                <div class="upload" id="">
+								<div class="upload">
+									<span id="swfupload"></span>
+								   <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+								</div>
+								<div id="uploadfileList" class="upload"></div>
+								提示：请上传图片像素为：100*140，文件为JPG,GIF或PNG格式的图片
+								</div>
+				            </td>
+						<!-- 附件图片-->
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new" >员工编号</td>
+						<td class="" width="20%" align="left">{userNo}</td>
+						<td class="form_text_left_three_new">OA关联帐号</td>
+						<td class="" width="20%" align="left">{userName}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">曾用名(英)</td>
+						<td width="20%" align="left"><input type="text" class="txt" name="personnel[englishName]" id="englishName" value="{englishName}"/></td>
+						<td class="form_text_left_three_new">性别</td>
+						<td width="20%" align="left">
+							<input type="hidden" id="sex" value="{sex}"/>
+							<select class="select" name="personnel[sex]">
+								<option value="男">男</option>
+								<option value="女">女</option>
+							</select></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new"><span style="color:blue">出生日期</span></td>
+						<td width="20%" align="left"><input type="text" class="txt" name="personnel[birthdate]" id="birthdate" value="{birthdate}"  onfocus="WdatePicker()" onchange="getAge();" readonly/></td>
+						<td class="form_text_left_three_new">年龄</td>
+						<td width="20%" align="left"><input type="text" class="readOnlyText" name="personnel[age]" id="age" value="{age}" readonly/></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new"><span style="color:blue">籍贯</span></td>
+						<td width="20%" align="left">
+						   <select class="selectauto" name="" id="province" val="{nativePlacePro}"></select>
+						   <input type="hidden" name="personnel[nativePlacePro]" id="provinceName" />
+						   <select class="selectauto" name="" id="city" val="{nativePlaceCity}"></select>
+						   <input type="hidden" name="personnel[nativePlaceCity]" id="cityName" />
+					   </td>
+						<td class="form_text_left_three_new"><span style="color:blue">民族</span></td>
+						<td width="20%" align="left"><input type="text" class="txt" name="personnel[nation]" id="" value="{nation}"/></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">身份证号</td>
+						<td width="20%" align="left">{identityCard}</td>
+						<td class="form_text_left_three_new">政治面貌</td>
+						<td width="20%" align="left">
+							<select class="select" name="personnel[politicsStatusCode]" id="politicsStatusCode">
+								<option value="">请选择..</option>
+								{politicsStatusCode}
+							</select></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">最高学历</td>
+						<td width="20%" align="left">
+								{highEducationName}
+						</td>
+						<td class="form_text_left_three_new">毕业学校</td>
+						<td width="20%" align="left">{highSchool}</td>
+						<td class="form_text_left_three_new">专业</td>
+						<td width="20%" align="left">{professionalName}</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>任职信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new" >公司</td>
+						<td  width="20%" align="left">{companyType}&nbsp;&nbsp;{companyName}</td>
+						<td class="form_text_left_three_new" >所属部门</td>
+						<td  width="20%" align="left">{belongDeptName}</td>
+						<td class="form_text_left_three_new">职位名称</td>
+						<td  width="20%" align="left">{jobName}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">区域名称</td>
+						<td width="20%" align="left">{regionName}</td>
+						<td class="form_text_left_three_new">员工状态</td>
+						<td width="20%" align="left">{staffStateName}</td>
+						<td class="form_text_left_three_new">员工类型</td>
+						<td cwidth="20%" align="left">{personnelTypeName}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">岗位分类</td>
+						<td width="20%" align="left">{positionName}</td>
+						<td class="form_text_left_three_new">人员分类</td>
+						<td width="20%" align="left">{personnelClassName}</td>
+						<!--
+						<td class="form_text_left_three_new">工资级别</td>
+						<td width="20%" align="left">{wageLevelName}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">职级</td>
+						<td width="20%" align="left">{jobLevel}</td>
+						 -->
+						<td class="form_text_left_three_new">职能</td>
+						<td width="20%" align="left">{functionName}</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>健康信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new">健康状况</td>
+						<td class="" width="20%" align="left">
+							<select class="select" name="personnel[healthStateCode]" id="healthStateCode">
+								{healthStateCode}
+							</select>
+						</td>
+						<td class="form_text_left_three_new">是否有既往病史</td>
+						<td class="" width="20%" align="left">
+							<input type="radio" name="personnel[isMedicalHistory]" id="isYes" value="是" {isYes} onclick="changeRadio()"/>是
+							<input type="radio" name="personnel[isMedicalHistory]" id="isNo" value="否" {isNo} onclick="changeRadio()"/>否&nbsp;&nbsp;
+							<input  type="text" name="personnel[medicalHistory]" id="medicalHistory" class="txtmiddle" value="{medicalHistory}"/> <!-- style="display:none;" -->
+						<td class="form_text_left_three_new">传染疾病</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[InfectDiseases]" id="" value="{InfectDiseases}"/></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">身高(cm)</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[height]" id="height" value="{height}"/></td>
+						<td class="form_text_left_three_new">体重(kg)</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[weight]" id="weight" value="{weight}"/></td>
+						<td class="form_text_left_three_new">血型</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[blood]" id="blood" value="{blood}"/></td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>婚育信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new"><span style="color:blue">婚姻状况</span></td>
+						<td class="" width="20%" align="left">
+							<input type="hidden" id="maritalStatusName" value="{maritalStatusName}"/>
+							<select class="select" name="personnel[maritalStatusName]" id="maritalStatusName2">
+								<option value="">请选择..</option>
+								<option value="未婚">未婚</option>
+								<option value="已婚">已婚</option>
+							</select>
+						</td>
+						<td class="form_text_left_three_new"><span style="color:blue">生育状况</span></td>
+						<td class="" width="20%" align="left">
+							<input type="hidden" id="birthStatus" value="{birthStatus}"/>
+							<select class="select" name="personnel[birthStatus]" id="birthStatus2">
+								<option value="">请选择..</option>
+								<option value="未育">未育</option>
+								<option value="已育">已育</option>
+							</select>
+						</td>
+						<td  width="33%"></td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>技能信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new">爱好</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[hobby]" id="hobby" value="{hobby}"/></td>
+						<td class="form_text_left_three_new">特长</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[speciality]" id="speciality" value="{speciality}"/></td>
+						<td class="form_text_left_three_new">专业技能</td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[professional]" id="professional" value="{professional}"/></td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">英语等级</td>
+						<td width="20%" align="left">
+								{englishSkillName}</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>账号信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new">常用卡号</td>
+						<td class="" width="20%" align="left">{oftenCardNum}</td>
+						<td class="form_text_left_three_new">常用账号</td>
+						<td class="" width="20%" align="left">{oftenAccount}</td>
+						<td class="form_text_left_three_new">常用帐号开户行</td>
+						<td class="" width="20%" align="left">{oftenBank}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">其他卡号</td>
+						<td class="" width="20%" align="left">{bankCardNum}</td>
+						<td class="form_text_left_three_new">其他账号</td>
+						<td class="" width="20%" align="left">{accountNumb}</td>
+						<td class="form_text_left_three_new">其他帐号开户行</td>
+						<td class="" width="20%" align="left">{openingBank}</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>戶口信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new">档案编号</td>
+						<td class="" width="20%" align="left">{archivesCode}</td>
+						<td class="form_text_left_three_new"><span style="color:blue">档案所在地</span></td>
+						<td class="" width="20%" align="left"><input type="text" class="txt" name="personnel[archivesLocation]" id="archivesLocation" value="{archivesLocation}"/></td>
+						<td class="form_text_left_three_new"><span style="color:blue">户籍地</span></td>
+										<td class="" width="20%" align="left">
+						   <select class="selectauto" name="" id="province2" val="{residencePro}"></select>
+						   <input type="hidden" name="personnel[residencePro]" id="provinceName2" />
+						   <select class="selectauto" name="" id="city2" val="{residenceCity}"></select>
+						   <input type="hidden" name="personnel[residenceCity]" id="cityName2"  />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new"><span style="color:blue">户籍类型</span></td>
+						<td class="" width="20%" align="left">
+							<input type="hidden" id="householdType" value="{householdType}"/>
+							<select class="select" name="personnel[householdType]" id="">
+								<option value="城镇">城镇</option>
+								<option value="农业">农业</option>
+							</select>
+						</td>
+						<td class="form_text_left_three_new">集体户口</td>
+						<td class="" width="20%" align="left">
+							{collectResidence}
+						</td>
+						<td class="form_text_left_three_new">社保购买地</td>
+						<td class="" width="20%" align="left">
+			 				{socialPlace}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">社保购买方</td>
+						<td class="" width="20%" align="left">
+							{socialBuyer}
+						</td>
+						<td class="form_text_left_three_new">公积金购买地</td>
+						<td class="" width="20%" align="left">
+							{fundPlace}
+						</td>
+						<td class="form_text_left_three_new">公积金购买方</td>
+						<td class="" width="20%" align="left">
+							{fundBuyer}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">公积金缴费基数</td>
+						<td class="" width="20%" align="left">
+							*
+						</td>
+						<td class="form_text_left_three_new">公积金缴费比例</td>
+						<td class="" width="20%" align="left">
+							{fundProportion}
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+				<fieldset><legend><b>服务线拓展信息</b></legend>
+				<table cellpadding="2" width="100%">
+					<tr>
+						<td class="form_text_left_three_new">技术等级</td>
+						<td class="" width="20%" align="left">{personLevel}</td>
+						<td class="form_text_left_three_new">归属区域</td>
+						<td class="" width="20%" align="left">{officeName}</td>
+						<td class="form_text_left_three_new">无补助城市</td>
+						<td class="" width="20%" align="left">{eprovince}{ecity}</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three_new">技术领域</td>
+						<td width="20%" align="left">
+								{technologyName}
+						</td>
+						<td class="form_text_left_three_new">网络</td>
+						<td width="20%" align="left">
+							{networkName}
+						</td>
+						<td class="form_text_left_three_new">设备厂家及级别</td>
+						<td width="20%" align="left">
+								{deviceName}
+						</td>
+					</tr>
+				</table>
+				</fieldset>
+				</td>
+			</tr>
+		</table>
+
+<table class="form_main_table">
+           <tr>
+   		<td class="txt_btn" colspan="4">
+            <input  type="hidden" id="id" name="personnel[id]" value="{id}" />
+   		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+   		</td>
+        </tr>
+     </table>
+  </form>
+</body>
+</html>

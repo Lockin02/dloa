@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>新增物料序列号台账</title>
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/serialno-add-batch.js" ></script>		
+</head>
+<body>
+<script type="text/javascript">
+	Array.prototype.in_array = function(e) { //判断一个元素是否在数组里面
+		for (i = 0; i < this.length; i++) {
+			if (this[i] == e)
+				return true;
+		}
+		return false;
+	}
+
+	
+	function checkForm() {//设置序列号信息到入库表单上 
+		var sequenceArr = [];
+		var sequenceIsNull = true;
+		$("input[id^='sequence']").each(function() {
+			var serialNoStr = $(this).val();
+			
+			//后台进行重复性校验
+			$.ajax({
+				type : "POST",
+				async : false,
+				url : "?model=stock_serialno_serialno&action=checkRepeat",
+				data : {
+					serialNo : serialNoStr,
+					productId : $("#productId").val()
+				},
+				success : function(result) {
+					if (result == 0) {
+						alert("序列号《" + serialNoStr + "》库存中已存在!");
+						sequenceIsNull = false;
+						return false;
+					}
+
+				}
+			})
+
+			//用户输入的序列号重复性校验
+			if (sequenceArr.in_array(serialNoStr)) {
+				sequenceIsNull = false;
+				alert("输入的序列号存在重复！")
+			}
+
+			if (serialNoStr == "") {
+				
+			} else {
+				sequenceArr.push(serialNoStr);
+			}
+		})
+
+		return sequenceIsNull;
+
+	}
+
+</script>
+<div class="main_head"><span class="main_head_title">
+物料序列号管理 </span></div>
+<form id="form1" method="post"
+	action="?model=stock_serialno_serialno&action=addBatch" name="form1" onsubmit="return checkForm();" >
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right">
+			<input type="text" 	class="txt" name="serialno[productName]"
+				 id="productName" /> 
+			<input type="hidden"  name="serialno[productId]" id="productId" />
+		</td>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="serialno[productCode]"  id="productCode" />
+		</td>
+
+	</tr>
+
+	<tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="stockName" name="serialno[stockName]"	 />
+			<input type="hidden" name="serialno[stockId]" id="stockId"  />
+		</td>
+		<td class="form_text_left">仓库代码</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" readOnly id="stockCode" name="serialno[stockCode]"  />
+		</td>
+
+	</tr>
+	<!-- 
+<tr>
+		<td class="form_text_left">保质期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[shelfLife]" />
+		</td>
+		<td class="form_text_left">生产（采购）日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[prodDate]" />
+		</td>
+</tr>        
+<tr>
+		<td class="form_text_left">有效期至</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="serialno[validDate]" />
+		</td>
+</tr>
+ -->
+	<tr>
+		<td colspan="4">
+		<div style="height: 320px; overflow-y: auto; overflow-x: hidden">
+		<table class="main_table" id="itemtable">
+			<thead>
+				<tr>
+					<td colspan="3" class="form_header">
+						序列号编制
+					 	<input type="hidden"id="itemscount" value="0" />
+					 	<img  src="images/add_item.png" align="absmiddle" onclick="addItem();" title="增加一行" />
+					</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th></th>
+					<th>序列号</th>
+					<th>说明</th>
+				</tr>
+			</thead>
+			<tbody id="itembody">
+
+			</tbody>
+		</table>
+		</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input type="hidden" class="txt" name="serialno[seqStatus]" value="0" /> 
+		<input type="submit" class="txt_btn_a" value=" 保  存  "  />
+		<input type="button" class="txt_btn_a" value=" 关  闭  " onclick="closeFun()" /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

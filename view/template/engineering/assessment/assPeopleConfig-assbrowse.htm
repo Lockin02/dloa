@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="css/yxstyle.css" type="text/css"
+	media="screen" />
+
+
+
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen"
+	rel="stylesheet" />
+<!-- 主题css，可切换 -->
+<link type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" rel="stylesheet" />
+<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css" />
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+<script type="text/javascript">
+	//统计考核分数
+	function subAssScore(){
+		var subScore=0;
+		$("select").each(function(){
+			var tWeight=$(this).attr("weight");
+			var tOpScore=$(this).find("option:selected").val();
+			var tSubScore=tWeight*tOpScore;
+			subScore=subScore+tSubScore;
+
+		})
+		$("#assweekScore").text(Math.round(subScore*100)/10000);
+		 var levelData = $.ajax({
+				url: "?model=engineering_assessment_assLevel&action=getLevelByScore&score="+Math.round(subScore*100)/10000,
+				async: false
+				}).responseText;
+		 $("#assweekAssLevel").text(levelData);
+		}
+	$(document).ready(function(){
+		subAssScore();
+		})
+</script>
+
+
+</head>
+<body>
+<form id="form1" method="post" name="form1"
+	action="?model=engineering_assessment_assPeopleConfig&action=add">
+<table class="form_main_table">
+	<tr class="tableheader">
+		<td align="center" colspan="4"><b>直属上级对员工本周的考核</b></td>
+	</tr>
+	<tr class="main_tr_header">
+		<td ></td>
+		<td class="form_text_right">考核分数:  <span id="assweekScore"></span></td>
+		<td class="form_text_right">考核级别:  <span id="assweekAssLevel"></span>
+		</td>
+	</tr>
+	{list}
+
+	<tr class="txt_btn">
+		<td colspan="4"><input type="button" value="返 回"
+			onclick="self.parent.tb_remove();" /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

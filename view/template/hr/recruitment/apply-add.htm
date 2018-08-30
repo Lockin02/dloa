@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>增员申请表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-recruitplan.js"></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-provin-city.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-add.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_recruitment_apply&action=add" onsubmit="return checkData();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							增员申请表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">招聘计划</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" class="txt" id="plan" name="apply[objCode]"/>
+					<input type="hidden" id="objId" name="apply[objId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">需求部门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="deptName" name="apply[deptName]" value="{deptName}" readonly/>
+					<input type="hidden" id="deptId" name="apply[deptId]" value="{deptId}"/>
+				</td>
+				<td class="form_text_left_three blue">职位类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="postType" name="apply[postType]">
+						<option value="">...请选择...</option>
+						{postType}
+					</select>
+				</td>
+				<td class="form_text_left_three blue">需求职位</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="positionName" name="apply[positionName]" readonly/>
+					<input type="hidden" id="positionId" name="apply[positionId]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">研发职位</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="developPositionName" name="apply[developPositionName]"/>
+				</td>
+				<td class="form_text_left_three blue">级  别</td>
+				<td class="form_text_right_three">
+					<input type="text" class='txt' id="positionLevel" style="width:202px;" onclick="initLevel()" readonly/>
+					<input type="hidden" name="apply[positionLevel]" id="positionLevelHidden" readonly/>
+				</td>
+				<td class="form_text_left_three blue">是否紧急</td>
+				<td class="form_text_right_three">
+					&nbsp;<input type="radio" name="apply[isEmergency]" value="1"/>&nbsp;是&nbsp;
+					&nbsp;<input type="radio" name="apply[isEmergency]" value="0" checked/>&nbsp;否&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">需求人数</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="needNum" name="apply[needNum]"/>
+				</td>
+				<td class="form_text_left_three blue">希望到岗时间</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="hopeDate" onfocus="WdatePicker()" readonly name="apply[hopeDate]"/>
+				</td>
+				<td class="form_text_left_three blue">工作地点</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="workPlace" name="apply[workPlace]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">工资范围</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="wageRange" name="apply[wageRange]"/>
+				</td>
+				<td class="form_text_left_three blue">建议补充方式</td>
+				<td class="form_text_right_three">
+					<input type="text" class='txt' id="addModeName" style="width:202px;" onclick="initPCC()" readonly/>
+					<input type="hidden" name="apply[addMode]" id="addModeNameHidden"/>
+				</td>
+				<td class="form_text_left_three blue">增员类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="addTypeCode" name="apply[addTypeCode]">
+						<option value="">...请选择...</option>
+						{addTypeCode}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span id="leaveStyle">离职/换岗人姓名</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="leaveManName" name="apply[leaveManName]" readonly/>
+				</td>
+				<td class="form_text_left_three blue">用工类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="employmentTypeCode" name="apply[employmentTypeCode]">
+						<option value="">...请选择...</option>
+						{employmentTypeCode}
+					</select>
+				</td>
+				<td class="form_text_left_three blue">归属区域<br/>(支撑中心)</td>
+				<td class="form_text_right_three">
+					<input type="hidden" id="useAreaName" name="apply[useAreaName]"/>
+					<select id="regionId" name="apply[useAreaId]" class="select">
+						{area_select}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">项目类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="projectType" name="apply[projectType]">
+						<option value="">...请选择...</option>
+						<option value="YFXM">研发项目</option>
+						<option value="GCXM">工程项目</option>
+					</select>
+				</td>
+				<td class="form_text_left_three"><span id="leaveStyle">所在项目组</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="projectGroup" name="apply[projectGroup]" readonly onclick="checkProjectType();"/>
+					<input type="hidden" id="projectGroupId" name="apply[projectGroupId]" readonly/>
+					<input type="hidden" id="projectCode" name="apply[projectCode]" readonly/>
+				</td>
+				<td class="form_text_left_three">性  别</td>
+				<td class="form_text_right_three">
+					&nbsp;<input type="radio" name="apply[sex]" value="男"/>&nbsp;男&nbsp;
+					&nbsp;<input type="radio" name="apply[sex]" value="女"/>&nbsp;女&nbsp;
+					&nbsp;<input type="radio" name="apply[sex]" value="不限" checked/>&nbsp;不限&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">年  龄</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="age" name="apply[age]"/>
+				</td>
+				<td class="form_text_left_three">婚  姻</td>
+				<td class="form_text_right_three">
+					<select class="select" id="maritalStatus" name="apply[maritalStatus]">
+						<option value="">...请选择...</option>
+						{maritalStatus}
+					</select>
+				</td>
+				<td class="form_text_left_three">学  历</td>
+				<td class="form_text_right_three">
+					<input type="hidden" name='apply[educationName]'/>
+					<select class="select" id="education" name="apply[education]">
+						<option value="">...请选择...</option>
+						{education}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">专业要求</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="professionalRequire" name="apply[professionalRequire]"/>
+				</td>
+				<td class="form_text_left_three">工作经验要求</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="workExperiernce" name="apply[workExperiernce]"/>
+				</td>
+				<td class="form_text_left_three">工作省市</td>
+				<td class="form_text_right_three">
+					<select class="selectauto" name="apply[workProvinceId]" id="province"></select>
+					<input type="hidden" name="apply[workProvince]" id="provinceName"/>
+					<select class="selectauto" name="apply[workCityId]" id="city"></select>
+					<input type="hidden" name="apply[workCity]" id="cityName"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span id="networkSpan">网  络</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class=txt id="network" name="apply[network]"/>
+				</td>
+				<td class="form_text_left_three"><span id="deviceSpan">设  备</span></td>
+				<td class="form_text_right_three">
+					<input type="text" class=txt id="device" name="apply[device]"/>
+				</td>
+				<td class="form_text_left_three blue">简历发送至</td>
+				<td class="form_text_right_three">
+					<input type="hidden" id="resumeToId" name="apply[resumeToId]" value="{resumeToId}"/>
+					<input type="text" class="txt" id="resumeToName" name="apply[resumeToName]" value="{resumeToName}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">指定导师</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="tutor" name="apply[tutor]" readonly/>
+					<input type="hidden" id="tutorId" name="apply[tutorId]"/>
+				</td>
+				<td class="form_text_left_three blue">电脑配置</td>
+				<td class="form_text_right_three" colspan="3">
+					<select class="select" id="computerConfiguration" name="apply[computerConfiguration]">
+						<option value="" title="请选择">...请选择...</option>
+						<option value="公司提供笔记本电脑" title="公司提供笔记本电脑">公司提供笔记本电脑</option>
+						<option value="公司提供台式电脑" title="公司提供台式电脑">公司提供台式电脑</option>
+						<option value="自备笔记本电脑" title="自备笔记本电脑">自备笔记本电脑</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">填表人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="formManName" name="apply[formManName]" value="{formManName}" readonly/>
+					<input type="hidden" id="formManId" name="apply[formManId]" value="{formManId}"/>
+				</td>
+				<td class="form_text_left_three">填表日期</td>
+				<td class="form_text_right_three" colspan="3">
+					<input type="text" class="readOnlyText" id="formDate"  readonly  name="apply[formDate]" value="{formDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">需求原因</td>
+				<td class="form_text_right_three" colspan="5">
+					<textarea class="txt_txtarea_biglong" id="applyReason" name="apply[applyReason]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">工作职责</td>
+				<td class="form_text_right_three" colspan="5">
+					<span >工作职责详见职位说明书，该处填写补充内容</span><br/>
+					<textarea class="txt_txtarea_biglong" id="workDuty" name="apply[workDuty]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">任职要求</td>
+				<td class="form_text_right_three" colspan="5">
+					<textarea class="txt_txtarea_biglong" id="jobRequire" name="apply[jobRequire]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">试用期内的工作安排(请逐月填写)</td>
+				<td class="form_text_right_three" colspan="5">
+					<textarea class="txt_txtarea_biglong" id="workArrange" name="apply[workArrange]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three blue">试用期结束后的主要考核指标</td>
+				<td class="form_text_right_three" colspan="5">
+					<textarea class="txt_txtarea_biglong" id="assessmentIndex" name="apply[assessmentIndex]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">附  件</td>
+				<td class="form_text_right_three" colspan="5">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/><br />
+						</div>
+						<div id="uploadfileList" class="upload">
+						</div>
+					</div>
+					<font color=red>如有相关参考资料，可点击此上传以作说明</font>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 提  交 " id="submitApp" onclick="toSubmit()"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

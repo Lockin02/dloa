@@ -1,0 +1,369 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="view/template/rdproject/project/js/rdproject-read-topTab.js"></script>
+        <title>查看项目</title>
+        <script>
+            $(document).ready(function() {
+				//审批表单隐藏关闭按钮
+				if("{actType}"=="exam"){
+					$("input[name='close']").hide();
+				}
+                topTabShow(arrayTop, "pjDashboard","{pjId}" );
+
+                //$("#mileston,#task").hide();
+
+                $("#milestonClick").toggle(
+					function () {
+    					$("#mileston").show();
+  					},function () {
+    					$("#mileston").hide();
+  					}
+				);
+
+				$("#taskClick").toggle(
+					function () {
+    					$("#task").show();
+  					},function () {
+    					$("#task").hide();
+  					}
+				);
+
+				$(".mileston").click(function(){
+					if( $(this).attr("checked")==true ){
+						$("#mileston_deviation_iframe").attr("src","index1.php");
+						$("#mileston_cycle_iframe").attr("src","index1.php");
+					}
+				});
+
+				//$(".task").click(function(){
+					if( $(".task").attr("checked")==true ){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGroupChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGroupList&pjId={pjId}");
+					}
+				//});
+
+
+/*S: ----------------任务---------------*/
+
+
+				//$(".task").click(function(){
+					if( $(".task").attr("checked")==true ){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusList&pjId={pjId}");
+					}
+				//1.
+				$("#taskStatus").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGStatusList&pjId={pjId}");
+				})
+				//2.
+				$("#missiontype").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGTypeChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGTypeList&pjId={pjId}");
+				})
+				//3.任务偏差透视图
+				$("#missiondeviation").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGVariaChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGVariaList&pjId={pjId}");
+				})
+				//4.
+				$("#missioncomplete").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGQualityChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGQualityList&pjId={pjId}");
+				})
+				//5.
+				$("#missionduty").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGChargeChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGChargeList&pjId={pjId}");
+				})
+				//6.
+				$("#missionstate6").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActFinChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActFinList&pjId={pjId}");
+				})
+				//7.
+				$("#missionstate7").bind("click",function(){
+						$("#task_deviation_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActVarChart&pjId={pjId}");
+						$("#task_cycle_iframe").attr("src","index1.php?model=rdproject_task_rdtask&action=toProTkGActVarList&pjId={pjId}");
+				})
+				//});
+
+/*E: ----------------任务---------------*/
+
+
+				//计划部分开始
+				$("#planResource").bind("click",function(){
+					$("#plan_charts").attr("src","index1.php?model=rdproject_plan_rdplan&action=planCharts&pjId={pjId}");
+					$("#plan_table").attr("src","index1.php?model=rdproject_plan_rdplan&action=planTable&pjId={pjId}");
+				})
+
+				$("#planSchedule").bind("click",function(){
+					$("#plan_charts").attr("src","index1.php?model=rdproject_plan_rdplan&action=planSchedule&pjId={pjId}");
+					$("#plan_table").attr("src","index1.php?model=rdproject_plan_rdplan&action=planTable&pjId={pjId}");
+				})
+
+
+				var planMark = 0;
+				$("#planClick").toggle(
+					function () {
+    					$("#plan").show();
+    					if(!planMark){
+							$("#planResource").trigger("click");
+							planMark = 1;
+						}
+  					},function () {
+    					$("#plan").hide();
+  					}
+				);
+				//计划部分结束
+
+
+				//工作量部分开始
+				$("#loadResource").click(function(){
+					$("#load_charts").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=worklogCharts&pjId={pjId}");
+					$("#load_table").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=worklogTable&pjId={pjId}");
+				})
+
+				$("#loadClick").toggle(
+					function () {
+    					$("#load").show();
+						$("#loadResource").trigger("click");
+  					},function () {
+    					$("#load").hide();
+  					}
+				);
+
+				//工作量部分结束
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="form_main">
+        	<div class="tab_options"></div>
+        	<div class="tab_line"></div>
+            <table class="form_main_table">
+            	<thead>
+                <tr class="main_tr_header">
+                    <td colspan="4" class="main_td_align_left">
+                        概要信息 >>>
+                    </td>
+                </tr>
+                </thead>
+                <tr>
+                    <td class="form_text_left">
+                        项目名称
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[projectName]}
+                    </td>
+                    <td class="form_text_left">
+                        当前状态
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[statusCN]}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        项目责任人
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[managerName]}
+                    </td>
+                    <td class="form_text_left">
+                        项目团队人数
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[countMember]}
+                    </td>
+                </tr>
+                <tr>
+                	<td class="form_text_left">
+                        完成率
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[effortRate]}
+                    </td>
+                    <td class="form_text_left">
+                        偏差率
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[warpRate]}
+                    </td>
+				<tr>
+					<td class="form_text_left">
+                        估计工作量
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[appraiseWorkload]}小时
+                    </td>
+                    <td class="form_text_left">
+                        已投入工作量
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[putWorkload]}小时
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        当前里程碑
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[newPointName]}
+                    </td>
+                    <td class="form_text_left">
+                        当前里程碑日期
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[newPointRealBeginDate]}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">
+                        下一个里程碑
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[nextPointName]}
+                    </td>
+                    <td class="form_text_left">
+                        下一个里程碑日期
+                    </td>
+                    <td class="form_view_right">
+                        {rdproject[nextPointPlanBeginDate]}
+                    </td>
+                </tr>
+			</table>
+		</div>
+
+		<!-- div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="milestonClick">里程碑状态透视 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="mileston" style="display:none;">
+			<table class="main_table" >
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left" >
+						<input type="radio" name="mileston" value="" class="mileston" id="mileston_Deviation" checked>阶段偏差趋势图
+						<input type="radio" name="mileston" value="" class="mileston" id="mileston_cycle" >阶段周期分布图
+					</td>
+				</tr>
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left">
+						<iframe src="#" width="50%" height="380px" frameborder=0 id="mileston_deviation_iframe"></iframe >
+						<iframe src="#" width="50%" height="380px" frameborder=0 align="top" id="mileston_cycle_iframe"></iframe >
+					</td>
+				</tr>
+			</table>
+			</div>
+		</div-->
+
+		<div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="taskClick">任务状态透视 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="task" style="display:none;">
+			<table class="main_table" >
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left" >
+							<input type="radio" name="task" value="" class="task" id="taskStatus" value="taskStatus" checked>任务状态透视图
+							<input type="radio" name="task" value="" class="task" id="missiontype" value="missiontype" >任务类型透视图
+							<input type="radio" name="task" value="" class="task" id="missiondeviation" value="missiondeviation" >任务偏差透视图
+							<input type="radio" name="task" value="" class="task" id="missioncomplete" value="missioncomplete" >任务完成质量透视图
+							<input type="radio" name="task" value="" class="task" id="missionduty" value="missionduty" >任务责任主体透视图
+							<input type="radio" name="task" value="" class="task" id="missionstate6" value="missionstate6" >成员任务进展透视图
+							<input type="radio" name="task" value="" class="task" id="missionstate7" value="missionstate7" >成员任务偏差透视图
+					</td>
+				</tr>
+				<tr class="tr_even">
+					<td colspan="4" class="main_td_align_left" >
+							<iframe src="#" width="50%" height="380px" frameborder=0 id="task_deviation_iframe" ></iframe >
+							<iframe src="#" width="50%" height="380px" frameborder=0 align="top" id="task_cycle_iframe" ></iframe >
+					</td>
+				</tr>
+			</table>
+			</div>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="planClick">计划状态透视 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="plan" style="display:none;">
+				<table class="main_table" >
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<input type="radio" id="planResource" name="planPerspective" class="plan">计划资源使用透视图
+							<input type="radio" id="planSchedule" name="planPerspective" class="plan">计划实际进展透视图
+						</td>
+					</tr>
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<iframe width="50%" height="380px" frameborder=0 id="plan_charts" ></iframe >
+							<iframe width="50%" height="380px" frameborder=0 align="top" id="plan_table" ></iframe >
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="loadClick">工作量投入透视图 >>></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="load" style="display:none;">
+				<table class="main_table" >
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<input type="radio" id="loadResource" name="loadPerspective" class="load">人员投入工作量透视图
+						</td>
+					</tr>
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<iframe width="50%" height="380px" frameborder=0 id="load_charts" ></iframe >
+							<iframe width="50%" height="380px" frameborder=0 align="top" id="load_table" ></iframe >
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<br><br>
+		<center>
+			<input name="close" type="button" class="txt_btn_a" value="关 闭" onclick="window.close()">
+		</center>
+	</body>
+
+</html>

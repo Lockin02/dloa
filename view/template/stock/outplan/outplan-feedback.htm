@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<title>查看发货计划</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <!-- 主题css，可切换 -->
+<link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/grid/yxtreegrid.js"></script>
+<!-- 树形组件 -->
+<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/outplan-view.js">
+        </script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script>
+			$(function(){
+				if( $('#docStatus').val()=='YGB' ){
+					$('#feedbacktable').attr("disabled","disabled");
+					$(".txt_txtarea_font").attr("readonly","readonly");
+				}else{
+					var firstTag=true;
+					$("#delayDetail").yxcombotree({
+						hiddenId : 'delayDetailCode',
+						width : 490,
+						valueSeparator : "。",
+						nameCol : 'name',
+						valueCol : 'code',
+						treeOptions : {
+							url : '?model=system_datadict_datadict&action=getChildren&parentCode=YCYY&addRoot=1',
+							checkable : true,
+							event : {
+								"node_click" : function(event, treeId, treeNode) {
+									 // alert(treeNode)
+								},
+								"node_change" : function(event, treeId, treeNode) {
+									// alert(treeId)
+								},
+								"node_success":function(){
+									if(firstTag){
+										$("#delayDetail").yxcombotree('expandAll');
+										firstTag=false;
+									}
+								}
+							}
+						}
+					});
+				}
+			});
+		</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看发货计划<input type="hidden" id="pageAction" value="{pageAction}"/>
+    </span>
+</div>
+<form id="form1" method="post" action="?model=stock_outplan_outplan&action=feedback" name="form1">
+	<div>
+		<div>
+			<table class="form_main_table">
+				<tr>
+						<td class="form_text_left">发货通知单号</td>
+						<td class="form_text_right" colspan="3">
+							 <input type="hidden" class="txt" id="docStatus" value="{docStatus}"/>
+							 <input type="hidden" class="txt" name="outplan[id]" value="{id}"/>
+							 <input type="hidden" class="txt" name="outplan[docType]" value="{docType}"/>
+							 {planCode}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">合同号</td>
+						<td class="form_text_right" width=30%>
+							 {docCode}
+						</td>
+						<td class="form_text_left">合同名称</td>
+						<td class="form_text_right" >
+							 {docName}
+						</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right" colspan=3>
+						 {customerName}
+					</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">周次</td>
+						<td class="form_text_right" >
+							{week}
+						</td>
+						<td class="form_text_left">性质</td>
+						<td class="form_text_right" >
+							{type}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">计划下达日期</td>
+						<td class="form_text_right" >
+							 {planIssuedDate}
+						</td>
+						<td class="form_text_left">计划发货日期</td>
+						<td class="form_text_right" >
+							 {shipPlanDate}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货仓库</td>
+						<td class="form_text_right" colspan="3">
+							 {stockName}
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">采购人员关注重点</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="textarea_read" readonly>{purConcern}</textarea>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">发货人员关注</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="textarea_read" readonly>{shipConcern}</textarea>
+						</td>
+				</tr>
+			</table>
+		</div>
+        <div>
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan=10">
+                            物料清单
+                            <input type="hidden" id="invnumber" value="1" />
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                    <tr class="main_tr_header">
+                        <th>
+                            序号
+                        </th>
+<!--                        <th>
+                            产品线
+                        </th>-->
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            出货仓库名称
+                        </th>
+                        <th>
+                            本次发货数量
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                        <th>
+                            已发货数量
+                        </th>
+                        <th>
+                      	赠送
+                        </th>
+                        <th>
+                            即时库存
+                        </th>
+                    </tr>
+                    {products}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table class="form_main_table" id="feedbacktable" >
+				<tr>
+						<td class="form_text_left">是否发货</td>
+						<td class="form_text_right" >
+				            <input type="radio" name="outplan[isShipped]" value="1" {shipped}/>&nbsp;是
+				            <input type="radio" name="outplan[isShipped]" value="0" {notShipped}/>&nbsp;否
+						</td>
+						<td class="form_text_left">是否按时发货</td>
+						<td class="form_text_right" >
+				            <input type="radio" name="outplan[isOnTime]" value="1" {ontime}/>&nbsp;是
+				            <input type="radio" name="outplan[isOnTime]" value="0" {notOntime}/>&nbsp;否
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">延期原因归类</td>
+						<td class="form_text_right" colspan="3">
+<!--							 <select class="select" name="outplan[delayType]">-->
+<!--							 <option></option>-->
+<!--							 	{delayType}-->
+<!--							 </select>-->
+							<textarea class="txt_txtarea_font" readOnly id="delayDetail" name="outplan[delayDetail]">{delayDetail}</textarea>
+							<input class="txt" type="hidden" id="delayDetailCode" name="outplan[delayDetailCode]" value="{delayDetailCode}"/>
+						</td>
+				</tr>
+				<tr>
+						<td class="form_text_left">未发具体原因</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="outplan[delayReason]" class="txt_txtarea_font" id="delayReason">{delayReason}</textarea>
+						</td>
+				</tr>
+            </table>
+        </div>
+        <div>
+            <table class="form_main_table">
+				<tr>
+						<td class="txt_btn" colspan="4">
+						   <input  type="hidden" name="outplan[docType]" value="{docType}" />
+						   <input  type="hidden" name="outplan[planId]" value="{planId}" />
+						   <input  type="hidden" name="outplan[isEx]" value="{isEx}" />
+						   <input  type="submit" class="txt_btn_a" value="保存反馈"/>
+						   <input  type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+						</td>
+				</tr>
+			</table>
+		</div>
+</form>
+</body>
+</html>

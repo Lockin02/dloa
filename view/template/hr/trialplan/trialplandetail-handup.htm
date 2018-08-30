@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>提交审核</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/trialplandetail-handup.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+            	"serviceType": "oa_hr_trialplan_detail",
+            	"serviceId": "{id}"
+			});
+		});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_trialplan_trialplandetail&action=handup" onsubmit="checkform();">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						提交审核
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">任务名称</td>
+			<td class="form_text_right" >
+				 <input type="text" class="readOnlyTxtNormal" id="taskName"  name="trialplandetail[taskName]"  value="{taskName}" readonly="readonly"/>
+			</td>
+			<td class="form_text_left">任务类型</td>
+			<td class="form_text_right" >
+				 <input type="text" class="readOnlyTxtNormal" value="{taskTypeName}" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span class="blue">任务负责人</span></td>
+			<td class="form_text_right" >
+				 <input type="hidden" id="managerId"  name="trialplandetail[managerId]"  value="{managerId}"/>
+				 <input type="text" class="txt" id="managerName"  name="trialplandetail[managerName]"  value="{managerName}" readonly="readonly"/>
+			</td>
+			<td class="form_text_left">提交日期</td>
+			<td class="form_text_right" >
+				<input type="text" class="readOnlyTxtNormal" id="handupDate" readonly="readonly" name="trialplandetail[handupDate]" value="{thisDate}"  />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">提交说明</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="txt_txtarea_font" id="handupDesc" name="trialplandetail[handupDesc]"></textarea>
+			</td>
+		</tr>
+	    <tr>
+			<td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+			<td class="form_text_right_three" colspan="3">
+				 <!--  <input type="text" class="txt" name="other[accessory]" />-->
+
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+			</td>
+	    </tr>
+		<tr>
+	   		<td class="txt_btn" colspan="4">
+				<input type="hidden" id="taskType" name="trialplandetail[taskType]"  value="{taskType}" />
+				<input type="hidden" id="memberName" name="trialplandetail[memberName]"  value="{memberName}" />
+				<input type="hidden" id="memberId" name="trialplandetail[memberId]"  value="{memberId}" />
+				<input type="hidden" id="beforeName" name="trialplandetail[beforeName]"  value="{beforeName}" />
+				<input type="hidden" id="beforeId" name="trialplandetail[beforeId]"  value="{beforeId}" />
+	            <input type="hidden" id="id" name="trialplandetail[id]" value="{id}" />
+	   		    <input type="submit" class="txt_btn_a" value=" 提  交 "/>
+	   		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	   		</td>
+        </tr>
+	</table>
+</form>
+</body>
+</html>

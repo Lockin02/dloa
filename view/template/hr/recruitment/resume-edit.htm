@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>编辑简历信息</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/resume-edit.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-resumeSource.js"></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<script>
+		var uploadfile;
+		$(function() {
+			var photoUrl=$("#photoUrl").val();
+			uploadfile = createSWFUpload({
+				"serviceType":"oa_hr_recruitment_resume",//业务模块编码，一般取表名
+				"serviceId" : "{id}"
+			},{
+				upload_success_handler : function(file, serverData){
+					var obj = eval("(" + serverData +")");
+					var objType = obj.serviceType;
+					var objName = obj.newName;
+					var url = photoUrl + "/" +objType + "/" + objName;
+					$("#photo").attr("src",url);
+				}
+			});
+
+			uploadfile2 = createSWFUpload({
+				"serviceType":"oa_hr_recruitment_resume2",//业务模块编码，一般取表名
+				"serviceId":"{id}"
+			},{
+				button_placeholder_id:'swfupload2',
+				fileListId:'uploadfileList2',
+				progressTarget:'fsUploadProgress2'
+			});
+		});
+	</script>
+	<!-- 附件上传结束 -->
+	<style type="text/css">
+		.rimless_textA {
+			border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: 1.7px solid rgb(192, 192, 192);
+			font-family: Courier;
+			height:18px;
+			width:300px;
+		}
+	</style>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_recruitment_resume&action=edit" onsubmit="return sub();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							编辑简历信息
+						</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table cellpadding="2" width="100%" class="form_main_table">
+			<tr>
+				<td colspan="1">
+					<fieldset><legend><b>简历信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left">简历编号</td>
+								<td class="form_text_right"  colspan="3">
+									<input type="text" class="readOnlyTxtNormal" readonly="readonly" id="resumeCode" name="resume[resumeCode]" value="{resumeCode}"/>
+								</td>
+								<!-- 附件图片-->
+								<td style="text-align:center" rowspan="7" colspan="2" width="33%">
+									<input type="hidden" id="photoUrl" value="{photoUrl}"/>
+									<img id="photo" src="{photo}"  style="height:150px;width:120px;" class="imgBorder"/><br/>
+									<br/>
+									<div class="upload" id="">
+										<div class="upload">
+											<span id="swfupload"></span>
+											<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/> <br/>
+										</div>
+										<div id="uploadfileList" class="upload"></div>
+									</div>
+								</td>
+								<!-- 附件图片-->
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">应聘者姓名</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="applicantName" name="resume[applicantName]" value="{applicantName}"/>
+								</td>
+								<td class="form_text_left">性别</td>
+								<td class="form_text_right">
+									&nbsp;<input type="radio" name="resume[sex]" value="男" {sexM}/>&nbsp;男&nbsp;
+									&nbsp;<input type="radio" name="resume[sex]" value="女" {sexW}/>&nbsp;女&nbsp;
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">出生日期</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="birthdate" onfocus="WdatePicker()" readonly="readonly"  name="resume[birthdate]" value="{birthdate}"/>
+								</td>
+								<td class="form_text_left"><span style="color:blue">联系电话</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="phone" name="resume[phone]" value="{phone}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">电子邮箱</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt Email" id="email" name="resume[email]" value="{email}"/>
+								</td>
+								<td class="form_text_left">婚姻状况</td>
+								<td class="form_text_right">
+									<input type="hidden" id="maritalS" value="{marital}"/>
+									<select class="select"  id="marital" name="resume[marital]">
+										<option value=""> ...请选择... </option>
+										<option value="未婚"> &nbsp;未&nbsp;&nbsp;&nbsp;婚&nbsp; </option>
+										<option value="已婚"> &nbsp;已&nbsp;&nbsp;&nbsp;婚&nbsp; </option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">期望工作地点</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="wishAdress" name="resume[wishAdress]" value="{wishAdress}"/>
+								</td>
+								<td class="form_text_left"><span style="color:blue">学历</span></td>
+								<td class="form_text_right">
+									<select class="select" id="education" name="resume[education]">
+										{education}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">应聘职位(大类)</span></td>
+								<td class="form_text_right">
+									<select class="select" id="post" name="resume[post]">
+										{post}
+									</select>
+								</td>
+								<td class="form_text_left"><span style="color:blue">应聘职位(小类)</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="reserveA" name="resume[reserveA]" value="{reserveA}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">毕业时间</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="graduateDate" onfocus="WdatePicker()" name="resume[graduateDate]" value="{graduateDate}" onchange="Calculate(this)"/>
+								</td>
+								<td class="form_text_left"><span style="color:blue">工作年限</span></td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="workSeniority" name="resume[workSeniority]" value="{workSeniority}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">计算机水平</td>
+								<td class="form_text_right">
+									<select class="select" id="computerGrade" name="resume[computerGrade]">
+										{computerGrade}
+									</select>
+								</td>
+								<td class="form_text_left">语种</td>
+								<td class="form_text_right">
+									<select class="select" id="language" name="resume[language]">
+										{language}
+									</select>
+								</td>
+								<td class="form_text_left">外语水平</td>
+								<td class="form_text_right">
+									<select class="select" id="languageGrade" name="resume[languageGrade]">
+										{languageGrade}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">毕业学院</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="college" name="resume[college]" value="{college}"/>
+								</td>
+								<td class="form_text_left">毕业专业</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="major" name="resume[major]" value="{major}"/>
+								</td>
+								<td class="form_text_left">期望薪水</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="wishSalary" name="resume[wishSalary]" value="{wishSalary}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">上家公司名称</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="prevCompany" name="resume[prevCompany]" value="{prevCompany}"/>
+								</td>
+								<td class="form_text_left">到岗时间</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="hillockDate" readonly name="resume[hillockDate]" value="{hillockDate}" onfocus="WdatePicker()"/>
+								</td>
+								<td class="form_text_left">特长</td>
+								<td class="form_text_right">
+									<input type="text" class="txt" id="specialty" name="resume[specialty]" value="{specialty}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">招聘渠道</span></td>
+								<td class="form_text_right" colspan="5">
+									&nbsp;&nbsp;大类（选择）
+									<select class="select" id="sourceA" name="resume[sourceA]">
+										{sourceA}
+									</select>
+									<br/><br/>
+									&nbsp;&nbsp;小类（自填）
+									<input type="text" id="sourceB" name="resume[sourceB]" class="rimless_textA" value="{sourceB}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">附件上传</td>
+								<td class="form_text_right" colspan="5">
+									<div class="upload">
+										<div class="upload" id="fsUploadProgress2"></div>
+										<div class="upload"><span id="swfupload2"></span> <input
+											id="btnCancel2" type="button" value="中止上传"
+											onclick="cancelQueue(uploadfile2);" disabled="disabled"/> <br/>
+										</div>
+										<div id="uploadfileList2" class="upload">{file2}</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left"><span style="color:blue">简历内容</span></td>
+								<td class="form_text_right" colspan="5">
+									<textarea class="txt_txtarea_full" id="selfAssessment" name="resume[selfAssessment]">{selfAssessment}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">备注</td>
+								<td class="form_text_right" colspan="5">
+									<textarea class="txt_txtarea_full" id="remark" name="resume[remark]">{remark}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="6">
+									<span style="color:red">提示：保存后会同步更新相对应的面试评估和入职通知中的姓名、性别、电话和邮箱</span>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="id" name="resume[id]" value="{id}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

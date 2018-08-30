@@ -1,0 +1,247 @@
+<html>
+<head>
+    <title>新建采购任务</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/checkImage.js" ></script>
+    <script type="text/javascript" src="view/template/purchase/plan/js/basic-taskadd-delete.js"> </script>
+    <script type="text/javascript" src="view/template/purchase/task/js/basic-add-validator.js"> </script>
+    <script type="text/javascript">
+
+    	var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看 jquery定位
+
+		var amount= "input.taskAmount";
+
+		var allAmount = ".allAmount";
+
+    	function myDatePick(value){
+    		WdatePicker({el:$dp.$(value)});
+    	}
+
+		function checkSumbit(){
+			var purNumb = $("#taskNumb").val();
+			var sendUserId = $("#sendUserId").val();
+			var dateHope = $("#dateHope").val();
+			//if( purNumb==null || purNumb=="" ){
+				//alert("请输入任务编号");
+				//return false;
+			//}
+			if( dateHope==null || dateHope=="" ){
+				alert("请输入期望完成日期");
+				return false;
+			}
+			if( sendUserId==null || sendUserId=="" ){
+				alert("请选择负责人");
+				return false;
+			}
+		}
+		function checkAllData(){
+			var booble=true;
+			$("input.taskAmount").each(function(){
+				if ($(this).val()==""||$(this).val()==0) {
+					alert("请输入数量,不能为空或者小于1");
+					$(this).focus();
+					booble=false;
+					return false;
+				}
+			});
+			if(!$("input.taskAmount").length>0){   //判断是否选择了物料
+				alert("采购申请清单为空,无法下达采购任务。");
+				booble=false;
+			}
+			return booble;
+		}
+
+		function LoadWindow(toid,toname){
+			URL="module/user_select_single/index.php?ID=2&toid="+toid+"&toname="+toname;
+			loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+			loc_y=document.body.scrollTop+event.clientY-event.offsetY+170;
+			//window.open(URL,"read_notify","height=400,width=550,status=1,toolbar=no,menubar=no,location=no,scrollbars=yes,top=150,left=150,resizable=yes");
+			window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:450px;dialogHeight:450px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+		}
+
+		function clear_user(toid,toname){
+			document.getElementById(toid).value="";
+			document.getElementById(toname).value="";
+		}
+
+		function myload(){
+			$(".taskAmount").bind("change",function(){
+				var thisVal = parseInt( $(this).val() );
+				var nextVal = parseInt( $(this).next().val() );
+				if($(this).val()==""){
+					$(this).attr("value",nextVal);
+				}
+				var reg=/^[-+]?\d+$/;
+				if ( ! reg.test( $(this).val() ) ) {
+		    		$(this).attr("value",nextVal);
+		    	}
+				 if(thisVal>nextVal){
+					alert("请不要超过最大可下达数量 "+nextVal);
+					$(this).attr("value",nextVal);
+				}else if(thisVal<1){
+					alert("请输入大于0的数字");
+					$(this).attr("value",nextVal);
+				}
+			});
+
+		}
+
+
+// 选择负责人
+$(function() {
+	$("#sendName").yxselect_user({
+				hiddenId : 'sendUserId'
+			});
+	});
+
+
+    </script>
+    <script language="JavaScript" type="text/javascript" src="js/common/imgShrink.js"></script>
+
+</head>
+<body onload="myload()" scroll="auto">
+
+<div class="main_head">
+    <span class="main_head_title">
+      	下达采购任务
+    </span>
+</div>
+<div class="main_wraper">
+  	<form id='form1' name='form1' action="?model=purchase_task_basic&action=add" method="post" onsubmit="return checkAllData();">
+		<table class="form_main_table">
+		<!--
+			<tr>
+				<td colspan="4" class="form_header">
+					<font face="宋体" size="3">采购任务</font>
+				</td>
+			</tr>  -->
+			<tr align="center" >
+				<td  class="form_text_left" width="12%">
+					任务下达日期
+				</td>
+				<td class="form_text_right"  width="38%">
+					<input type="text" id="sendTime" class="readOnlyText" name="basic[sendTime]" value="{sendTime}" readonly />
+				</td>
+				<td  class="form_text_left" width="12%">
+					期望完成日期
+				</td>
+				<td class="form_text_right"  width="38%">
+					<input type="text" id="dateHope" class="txt" name="basic[dateHope]"   onfocus="WdatePicker()"  value="" readonly />
+                    <span class="red">[*]</span>
+			        <div id="dateHopeTip" class="tipShortTxt"></div>
+				</td>
+			</tr>
+			<tr align="center">
+				<td class="form_text_left">
+					负责人
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input type="hidden" id="sendUserId" name="basic[sendUserId]" value="">
+					<input type="text" id="sendName" name="basic[sendName]"  size="30" value="" class="txt" readonly>
+				    <span class="red">[*]</span>
+			        <div id="sendUserIdTip" class="tipShortTxt"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" class="td_table">
+					<table id="mytable" class="main_table main_table_nested">
+						<thead>
+							<tr>
+								<td colspan="10" class="form_header">
+									采购任务清单
+								</td>
+							</tr>
+							<tr height="28" class="main_tr_header" >
+								<th   align="center" width="5%">
+									<p class="allImg">
+										序号
+									</p>
+								</th>
+								<th width="13%">
+									物料名称
+								</th>
+								<th>
+									规格型号
+								</th>
+								<th>
+									单位
+								</th>
+								<th>
+									采购类型
+								</th>
+								<th  width="8%">
+									任务数量
+								</th>
+								<th  width="10%">
+									希望完成时间
+								</th>
+								<th  width="10%">
+									备注
+								</th>
+								<th>
+							         操作
+								</th>
+							</tr>
+						</thead>
+							{list}
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					采购说明
+				</td>
+				<td colspan="3" class="form_text_right">
+					<textarea class="txt_txtarea_font" id="instruction" name="basic[instruction]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注
+				</td>
+				<td colspan="3" class="form_text_right">
+					<textarea  class="txt_txtarea_font" id="remark" name="basic[remark]"></textarea>
+				</td>
+			</tr>
+			<tr align="center" class="TableHeader" height="28">
+				<td colspan="6">
+					<input type="submit" value="下  达" class="txt_btn_a" >&nbsp;
+					<input type="button" value="返  回" class="txt_btn_a" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	</form>
+	 </div>
+	</body>
+</html>

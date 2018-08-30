@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model=sell_clue&action=audit_clue&id={t_id}&key={t_key}" onsubmit="return check();">
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">审核线索</td>
+	</tr>
+	<tr>
+		<td align="left" width="100"><input type="radio" checked name="status" value="1" />审核通过</td>
+		<td align="left">分派给：
+			<select id="sales" name="sales">
+				<option value="">选择销售人员</option>
+				{user_select}
+			</select>
+		</td>
+	</tr>
+	<tr id="user_select">
+		<td align="left" rowspan="2"><input type="radio" name="status" value="-1" />审核不通过</td>
+		<td align="left" style="text-align:center;">
+			打回理由：
+		</td>
+	</tr>
+	<tr>
+		<td><textarea rows="6" cols="40" id="notse" name="notse"></textarea></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 确定 " /> <input type="button" onclick="self.parent.location.reload();" value="关闭返回"></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	function check()
+	{
+		var status = $('input[type=radio][name=status]:checked').val();
+		if (status==1)
+		{
+			if ($('#sales').val()=='')
+			{
+				alert('请选择要分派的销售人员！');
+				return false;
+			}
+		}else{
+			if ($('#notse').val()=='')
+			{
+				alert('请填写打回理由！');
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	function show_notse()
+	{
+		var status = $('input[type=radio][name=status]:checked').val();
+		if (status==1)
+		{
+			$('#user_select').css('display','');
+			$('#tr_notse').css('display','none');
+		}else{
+			$('#user_select').css('display','none');
+			$('#tr_notse').css('display','');
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{user_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:['KEY','员工类型','员工号','姓名','部门','入职日期','转正日期'
+                        ,'年度平均收入','年度总收入','年度平均基本工资','年度总基本工资'
+                        ,'总季度奖','年终奖','其他'
+                        ,'一月(基本)','二月(基本)'
+                        ,'三月(基本)','四月(基本)','五月(基本)','六月(基本)','七月(基本)'
+                        ,'八月(基本)','九月(基本)','十月(基本)','十一月(基本)','十二月(基本)'
+                    ],
+                    colModel:[
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'exp',index:'h.expflag',width:60 },
+                        {name:'usercard',index:'h.usercard', width:60, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'username',index:'u.user_name', width:70, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'olddept',index:'d.dept_name', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'comedt',index:'s.comedt', width:80, align:"center",editable:true ,search:false},
+                        {name:'pdt',index:'s.passdt', width:80, align:"center",editable:true ,search:false},
+                        {name:'avgt',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'tal',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'avgl',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'tall',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'flo',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'yeb',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'qt',index:'s.amount', width:95, align:"right",search:false},
+                        {name:'yi',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'er',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'san',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'si',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'wu',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'liu',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'qi',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'ba',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'jiu',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'shi',index:'s.amount', width:70, align:"right",search:false},
+                        {name:'shiyi',index:'s.amount', width:90, align:"right",search:false},
+                        {name:'shier',index:'s.amount', width:90, align:"right",search:false}
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,28,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-2,
+                    height:(wh-135+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        if(rowData.lev!='4'){
+                            var cl='#FF9900';
+                        }
+                        if(rowData.exp=='外派员工'){
+                            be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='修改' title='信息编辑' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                            jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{doact:be});
+                        }
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#edituserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                        return false;
+                    },
+                    rules:{
+                        amount:{
+                            required:true,
+                            number:true
+                        }
+                    },
+                    messages:{
+                        amount:{
+                            required:'填入金额',
+                            number:'填入金额'
+                        }
+                    }
+                });
+            });
+            //编辑
+            function saveSuccesFun(res){
+                var msg=eval('(' + res.responseText + ')');
+                if(msg&&msg['error']){
+                    alert('错误：'+msg['error']);
+                    return false;
+                }else{
+                    alert('操作成功！');
+                    jQuery("#rowedgrid").trigger("reloadGrid");
+                }
+                return true;
+            }
+            function gridNavSeaFun(){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                var seasl = jQuery("#seasl").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{user_list}&seapy="+seapy+"&seapm="
+                        +seapm+"&seadept="+seadept+"&seaname="+seaname+"&seasl="+seasl,page:1}).trigger("reloadGrid");
+            }
+            //隐藏
+            function editClickFun(id){
+                $('#edit_'+id).css('display','none');
+                $('#save_'+id).css('display','block');
+                $('#reset_'+id).css('display','block');
+                $('#am_'+id).css('display','none');
+                $('#pa_'+id).css('display','none');
+                $('#le_'+id).css('display','none');
+            }
+            //显示
+            function saveClickFun(id){
+                $('#edit_'+id).css('display','block');
+                $('#save_'+id).css('display','none');
+                $('#reset_'+id).css('display','none');
+                $('#am_'+id).css('display','block');
+                $('#pa_'+id).css('display','block');
+                $('#le_'+id).css('display','block');
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function xlsClickFun(){
+                var sy=$('#seapy').val();
+                location.href='?model=salary&action=hr_user_stat_xls&flag=xls&seapy='+sy;
+            }
+            function expClickFun(){
+                var sy=$('#seapy').val();
+                var sm=$('#seapm').val();
+                location.href='?model=salary&action=hr_user_exp_xls&flag=float&sy='+sy+'&sm='+sm;
+            }
+            function yebStatClickFun(){
+                tb_show('年度工资合计', '?model=salary&action=hr_yeb_stat&TB_iframe=true&height=800&width=900');
+            }
+            // 修改
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#username').html(rowData.username);
+                $('#pym').html(rowData.pym);
+                $('#amount').val(rowData.amount);
+                $('#gjjam').val(rowData.gjjam);
+                $('#shbam').val(rowData.shbam);
+                $('#cogjjam').val(rowData.cogjjam);
+                $('#coshbam').val(rowData.coshbam);
+                $('#prepaream').val(rowData.prepaream);
+                $('#handicapam').val(rowData.handicapam);
+                $('#manageam').val(rowData.manageam);
+            }
+            //修改提交
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var amount=$('#amount').val();
+                var leaveflag=$('#leaveflag').val();
+                var leavedt=$('#leavedt').val();
+                var gjjam=$('#gjjam').val();
+                var shbam=$('#shbam').val();
+                var cogjjam=$('#cogjjam').val();
+                var coshbam=$('#coshbam').val();
+                var prepaream=$('#prepaream').val();
+                var handicapam=$('#handicapam').val();
+                var manageam=$('#manageam').val();
+                if(confirm('修改员工工资信息，请再次确定是否修改？')){
+                    $.post('?model=salary&action=fn_info_in',{
+                        id:id,rand:rand,amount:amount,leaveflag:leaveflag,leavedt:leavedt
+                        ,gjjam:gjjam,shbam:shbam,cogjjam:cogjjam,coshbam:coshbam
+                        ,prepaream:prepaream,handicapam:handicapam,manageam:manageam
+                        ,flag:'hr'
+                        },
+                        function (data)
+                        {
+                            //alert(data);
+                            //return false;
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                return false;
+                            }else{
+                                alert('操作成功！');
+                            }
+                            paCloseFun('hr_user_new');
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    )
+                }
+                return false;
+            }
+            /**
+             * 导出
+              */
+             function xlsStaClickFun(){
+                 var sy=$('#seapy').val();
+                 var sm=$('#seapm').val();
+                 var seacom=$('#seacom').val();
+                 var seadept=$('#seadept').val();
+                 var seaname=$('#seaname').val();
+                 window.open('?model=salary&action=xls_out&flag=gs_cp&seapy='+sy+'&seapm='+sm+'&seacom='+seacom
+                 +'&seadept='+seadept+'&seaname='+seaname);
+             }
+        </script>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="edituserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 528px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="4">
+                            员工信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 姓名：</td>
+                        <td id="username" ></td>
+                        <td class="tl"> 发薪月份：</td>
+                        <td id="pym" ></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 基本工资：</td>
+                        <td >
+                            <input id="amount" name="amount" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 不发工资：</td>
+                        <td >
+                            <select id="leaveflag">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </td>
+                        <td class="tl"> 离职日期：</td>
+                        <td >
+                            <input id="leavedt" name="leavedt" type="text" class="Wdate" style="display: inline;width: 100px;height: 18px;"
+                                   readonly onClick="WdatePicker()"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 公积金：</td>
+                        <td >
+                            <input id="gjjam" name="gjjam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 社保费：</td>
+                        <td >
+                            <input id="shbam" name="shbam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 公司公积金：</td>
+                        <td >
+                            <input id="cogjjam" name="cogjjam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 公司社保费：</td>
+                        <td >
+                            <input id="coshbam" name="coshbam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 调配费：</td>
+                        <td >
+                            <input id="prepaream" name="prepaream" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td class="tl"> 残障费：</td>
+                        <td >
+                            <input id="handicapam" name="handicapam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 管理费：</td>
+                        <td >
+                            <input id="manageam" name="manageam" type="text" style="display: inline;width: 80px;text-align: right;" />
+                        </td>
+                        <td colspan="2"> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="center">
+                            <input type="submit" id="newuserSub" value="提交"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

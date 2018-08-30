@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>销售退货</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+
+<script type="text/javascript" src="view/template/projectmanagent/return/js/return-edit-list.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/return/js/return-add.js"></script>
+    <script>
+        function submitR(){
+             var returnCode = $("#returnCode").val();
+             if(returnCode == ''){
+                 alert("退货单编号不能为空！");
+                 return false;
+             }
+             var rowNum = $("#equinfo").yxeditgrid('getCurShowRowNum');
+	          if(rowNum == '0'){
+	              alert("退货物料为空，请选择正确的源单");
+	              return false;
+	          }
+                 return true;
+        }
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	销售退货单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=projectmanagent_return_return&action=edit" name="form1" onsubmit="return submitR();">
+<table class="form_main_table">
+<tr>
+		<td colspan="6">
+		<fieldset><legend style="text-align:left">
+		  <b>基本信息</b>
+		  </legend></legend>
+		<table cellpadding="2" width="100%" id="contractinfo"   style="bcontract-collapse:collapse;background-color:#F3F6FA;" >
+			<tr>
+		<td class="form_text_left">退货单编号</td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="readOnlyText" name="return[returnCode]" id="returnCode" value="{returnCode}" readonly/>
+		</td>
+		</tr>
+		<tr>
+		        <td class="form_text_left">源单编号</td>
+				<td class="form_text_right" >
+					 <input type="text" class="txt" name="return[contractCode]" id="contractCode" value="{contractCode}" readonly/>
+					 <input type="hidden" name="return[contractId]" id="contractId" value="{contractId}"/>
+				</td>
+				<td class="form_text_left">源单名称</td>
+				<td class="form_text_right" >
+				     <input type="text" class="readOnlyText" readonly name="return[contractName]" value="{contractName}" id="contractName" />
+				</td>
+		</tr>
+		<tr>
+		        <td class="form_text_left">销售负责人</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" name="return[saleUserName]" id="saleUserName"  value="{createName}" readonly/>
+					 <input type="hidden" class="readOnlyText" name="return[saleUserId]" id="saleUserId" value="{createId}" readonly/>
+				</td>
+		</tr>
+		<tr>
+		        <td class="form_text_left">创建时间</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyTxtNormal" name="return[createTime]" onfocus="WdatePicker()" value="{createTime}"/>
+				</td>
+				<td class="form_text_left">创建人</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyTxtNormal" name="return[createName]" value="{createName}"/>
+					 <input type="hidden" class="txt" name="return[createId]" value="{createId}"/>
+				</td>
+		</tr>
+		<tr>
+
+				<td class="form_text_left">退货原因</td>
+				<td class="form_text_right" colspan="3">
+				      <textarea class="txt_txtarea_font1000" name="return[reason]" id="reason">{reason}</textarea>
+
+				</td>
+		</tr>
+		</table>
+		</fieldset>
+		</td>
+		</tr>
+		<tr id="equH" style="display:none;text-align:left;">
+			<td><b onclick="hideList('equ');">物料清单</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">物料清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="equinfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+</table>
+<table class="form_main_table" >
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="hidden" id="userId" value="{userId}" />
+		   <input  type="hidden" name="return[id]" value="{id}" id="returnId"/>
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

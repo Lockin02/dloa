@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>人事调动申请</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/transfer-addTran.js" ></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=hr_transfer_transfer&action=addtran" >
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head">
+				<span class="main_head_title">
+               		人事调动申请
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+
+		<td class="form_text_left">员工编号</td>
+		<td class="form_text_right" title="选择员工姓名后自动带出">
+			 <input type="text" class="txt"  name="transfer[userNo]" id="userNo" value="{thisUserNo}" readonly="readonly"/>
+
+		</td>
+		<td class="form_text_left">员工姓名</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="transfer[userName]" id="userName" value="{thisUser}" readonly="readonly"/>
+			 <input type="hidden" name="transfer[userAccount]" id="userAccount" value="{thisUserId}" />
+
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动类型</td>
+		<td class="form_text_right" >
+			<select id="transferType" name="transfer[transferType]" class="select">
+			 	{transferType}
+			</select>
+			 <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">调动日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt Wdate" onfocus="WdatePicker()" name="transfer[transferDate]"/>
+			 <span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动前单位类型</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="transfer[preUnitTypeId]"/>
+		</td>
+		<td class="form_text_left">调动前公司名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="transfer[preUnitName]"/>
+			 <input type="hidden" name="transfer[preUnitId]"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动前二级部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="transfer[preDeptNameS]" readonly="readonly"/>
+			 <input type="hidden" name="transfer[preDeptIdS]"  value="{preDeptIdS}" />
+		</td>
+		<td class="form_text_left">调动前三级部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="preDeptNameT" name="transfer[preDeptNameT]" readonly="readonly"/>
+			 <input type="hidden" id="preDeptIdTId" name="transfer[preDeptIdT]"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动后单位类型</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"name="transfer[afterUnitTypeId]"/>
+		</td>
+		<td class="form_text_left">调动后公司名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="transfer[afterUnitName]"/>
+			 <input type="hidden" name="transfer[afterUnitId]"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动后二级部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="afterDeptNameS" name="transfer[afterDeptNameS]" readonly="readonly"/>
+			 <input type="hidden" id="afterDeptNameSId" name="transfer[afterDeptIdS]"/>
+		</td>
+		<td class="form_text_left">调动后三级部门</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="afterDeptNameT" name="transfer[afterDeptNameT]" readonly="readonly"/>
+			 <input type="hidden" id="afterDeptIdTId" name="transfer[afterDeptIdT]"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动前职位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="transfer[preJobName]"/>
+			 <input type="hidden" name="transfer[preJobId]"/>
+		</td>
+		<td class="form_text_left">调动后职位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="transfer[afterJobName]"/>
+			 <input type="hidden" name="transfer[afterJobId]"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">经办人</td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="txt"  name="transfer[managerName]" id="managerName" readonly="readonly"/>
+			 <input type="hidden" name="transfer[managerId]" id="managerId" />
+			 <span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">调动原因</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea id="remark" name="transfer[reason]" class="txt_txtarea_900"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注说明</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea id="remark" name="transfer[remark]" class="txt_txtarea_900"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+			<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

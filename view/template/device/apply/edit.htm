@@ -1,0 +1,261 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>修改SIM卡申请</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+</head>
+<body>
+<br />
+<form method="POST" action="?model={t_model}&action={t_action}&id={t_id}&key={t_key}" onsubmit="return check()">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">修改SIM卡申请</td>
+	</tr>
+	<tr>
+		<td width="100" align="right">审核人：</td>
+		<td align="left">
+				<input type="text" id="username" name="username" onclick="setdiv()" onfocus="setdiv();" onkeydown="keydown()" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid(\""+this.value+"\")")' onblur="losefouse();" value="{audit_username}" />
+				<input type="hidden" id="audit_userid" name="audit_userid" value="{audit_userid}">
+		</td>
+	</tr>
+	<tr>
+		<td align="right">运营商：</td>
+		<td align="left">
+			<select id="operators" name="operators"/>
+				<option value="">请选择运营商</option>
+				<option value="移动">移动</option>
+				<option value="电信">电信</option>
+				<option value="联通">联通</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">使用地区：</td>
+		<td align="left">
+			<select id="area" name="area">
+				<option value="">请选择使用地区</option>
+				<option value="珠海">珠海</option>
+				<option value="广东省内">广东省内</option>
+				<option value="广东省外">广东省外</option>
+				<option value="国际">国际</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">SIM卡名称：</td>
+		<td align="left">
+			<input type="text" id="card_name" name="card_name" value="{card_name}" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right">SIM卡类型：</td>
+		<td align="left">
+			<input type="checkbox" name="card_type[]" value="数据" />数据 
+			<input type="checkbox" name="card_type[]" value="语音" />语音</td>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">流量：</td>
+		<td align="left">
+			<select id="flow" name="flow" onchange="show_flow_input()">
+				<option value="">请选择流量</option>
+				<option value="1G">1G</option>
+				<option value="2G">2G</option>
+				<option value="5G">5G</option>
+				<option value="10G">10G</option>
+				<option value="other">其他</option>
+			</select>
+			<span id="dis" style="display:none">流量：<input type="text" size="12" id="flow_data" name="flow_data" value="{flow}" /> </span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">申请数量：</td>
+		<td align="left"><input type="text" size="5" onKeyUp="this.value=value=this.value.replace(/\D/g,'')" id="amount" name="amount" value="{amount}" /></td>
+	</tr>
+	<tr>
+		<td align="right">申请用途：</td>
+		<td align="left">
+			<textarea style="width:80%" rows="5" id="notse" name="notse" cols="30">{notse}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 确认修改 "/></td>
+	</tr>
+</table>
+</form>
+<div id="sug"></div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var operators = '{operators}';
+		var area = '{area}';
+		var card_type = '{card_type}';
+		var flow = '{flow}';
+		var operators_option = $('select[name=operators] option').get();
+		var area_option = $('select[name=area] option').get();
+		var card_type_checkbox = $('input[name=card_type[]]').get();
+		var flow_option = $('select[name=flow] option').get();
+		for(var i=0;i<operators_option.length;i++)
+		{
+			if (operators_option[i].value==operators)
+			{
+				operators_option[i].selected = true;
+			}
+		}
+		
+		for(var i=0;i<area_option.length;i++)
+		{
+			if (area_option[i].value==area)
+			{
+				area_option[i].selected = true;
+			}
+		}
+		
+		if (card_type) 
+		{
+			var card_type_arr = card_type.split(',');
+			for(var i=0;i<card_type_arr.length;i++)
+			{
+				if (card_type_arr[i]==card_type_checkbox[0].value)
+				{
+					card_type_checkbox[0].checked = true;
+				}
+				if (card_type_arr[i]==card_type_checkbox[1].value)
+				{
+					card_type_checkbox[1].checked = true;
+				}
+			}
+		}
+		
+		if (flow)
+		{
+			var dis = 0;
+			for(var i=0;i<flow_option.length;i++)
+			{
+				if (flow_option[i].value==flow)
+				{
+					dis = 1;
+					flow_option[i].selected = true;
+					break;
+				}
+			}
+			if (dis==0)
+			{
+				$('#dis').css('display','');
+				for(var i=0;i<flow_option.length;i++)
+				{
+					if (flow_option[i].value=='other')
+					{
+						flow_option[i].selected = true;
+					}
+				}
+			}
+		}
+		
+		
+	});
+	
+	function check()
+	{
+		if ($('#audit_userid').val()=='' || $('#username').val()=='')
+		{
+			alert('审核领导不能为空！');
+			$('#username').focus();
+			return false;
+		}
+		if ($('#operators').val()=='')
+		{
+			alert('请选择运营商！');
+			return false;
+		}
+		
+		if ($('#area').val()=='')
+		{
+			alert('请选择使用地区！');
+			return false;
+		}
+		
+		if ($('#card_name').val()=='')
+		{
+			alert('SIM卡名称不能为空！');
+			$('#card_name').focus();
+			return false;
+		}
+		
+		var card_type = $('input[name=card_type[]]:checked').get();
+		if (card_type.length < 1)
+		{
+			alert('请选择SIM卡类型！');
+			return false;
+		}
+		
+		if ($('#flow').val()=='')
+		{
+			alert('请选择流量！');
+			return false;
+		}else if ($('#flow').val()=='other'){
+			if ($('#flow_data').val()=='')
+			{
+				alert('请填写流量！');
+				$('#flow_data').focus();
+				return false;
+			}
+		}
+		
+		if ($('#amount').val()=='')
+		{
+			alert('请填写申请SIMK数量！');
+			$('#amount').focus();
+			return false;
+		}else if ($('#amount').val()=='0'){
+			alert('申请数量不能为零');
+			return false;
+		}
+		
+		if ($('#notse').val()=='')
+		{
+			alert('请填写申请用途！');
+			$('#notse').focus();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	function get_userid(username)
+	{
+		if (username)
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,9999)},
+				function (data)
+				{
+					if (data)
+					{
+						$('#audit_userid').val(unescape(data));
+					}else{
+						alert('该职员不存在！');
+					}
+				}
+			)
+		}else{
+			$('#audit_userid').val('');
+		}
+	}
+	
+	function show_flow_input()
+	{
+		if ($('#flow').val()=='other')
+		{
+			$('#dis').css('display','');
+		}else{
+			$('#dis').css('display','none');
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>设备采购申请</title>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js">
+        </script>
+        <script type="text/javascript" src="js/jquery.js">
+        </script>
+        <link rel="stylesheet" href="images/style.css" type="text/css">
+        <script type="text/javascript">
+            function check(){
+                var device_name = $('input[name=device_name[]]').get();
+				var amount = $('input[name=amount[]]').get();
+				var checked = false;
+				for (var i=0;i<device_name.length;i++)
+				{
+					if (device_name[i].value!='')
+					{
+						if (amount[i].value=='')
+						{
+							alert('数量不能为空！');
+							amount[i].focus();
+							return false;
+						}
+						checked = true;
+					}
+				}
+				if (checked == false)
+				{
+					alert('至少要填写一项物品！');
+					return false;
+				}else{
+					return true;
+				}
+				
+            }
+        </script>
+    </head>
+    <body>
+        <br/>
+        <form method="post" action="?model=device_purchase&action=apply" onsubmit="return check();">
+            <input type="hidden" id="userid" name="userid" value="{userid}" />
+			<input type="hidden" id="deptid" name="deptid" value="{deptid}" />
+            <table class="table td_height_30" width="90%" border="1" cellpadding="0" cellspacing="0" align="center">
+                <tr class="tableheader">
+                    <td colspan="3" align="center">
+                        设备采购申请
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        申请人姓名：{USER_NAME}
+                    </td>
+                    <td align="left">
+                        所属部门：{DEPT_NAME}
+                    </td>
+                    <td align="left">
+                        电话号码：<input type="text" id="phone" name="phone" value="{phone}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        设备类型：<input type="radio" checked="" name="fixed" value="0">固定资产 
+					<input type="radio" name="fixed" value="1" /> 其他
+                    </td>
+                    <td align="left" colspan="2">
+                        笔记本：<input type="radio" name="laplop" id="laplop" value="1" />是 <input type="radio" checked name="laplop" id="laplop" value="0" />否
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        项目归属：
+                        <select name="tid" onchange="show_project(this.value)">
+                            {select_project}
+                        </select>
+                    </td>
+                    <td colspan="2" align="left">
+                        项目名称：
+                        <select id="typeid" name="typeid">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table class="table_not_border td_center" width="100%" cellpadding="0" cellspacing="0" align="center" id="list">
+                            <tr>
+                                <td>
+                                    物品名称
+                                </td>
+                                <td>
+                                    厂商和规格
+                                </td>
+                                <td>
+                                    数量
+                                </td>
+                                <td>
+                                    单位
+                                </td>
+                                <td>
+                                    希望交货日期
+                                </td>
+                                <td>
+                                    备注
+                                </td>
+                                <td>
+                                    操作
+                                </td>
+                            </tr>
+                            <tr id="tr_0">
+                                <td>
+                                    <input type="text" name="device_name[]" value="" />
+                                </td>
+                                <td>
+                                    <input type="text" name="norm[]" value="" />
+                                </td>
+                                <td>
+                                    <input size="5" type="text" name="amount[]" onKeyUp="value=value.replace(/[^\d]/g,'')" value="1"/>
+                                </td>
+                                <td>
+                                    <input size="5" type="text" name="unit[]" value="" />
+                                </td>
+                                <td>
+                                    <input type="text" name="delivery_date[]" readonly class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" value="" />
+                                </td>
+                                <td>
+                                    <input type="text" name="notse[]" value="" />
+                                </td>
+                                <td id="edit_0">
+                                    <input type="button" onclick="copy_tr(0);" value="复制" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table class="table_not_border td_center" width="100%" cellpadding="0" cellspacing="0" align="center" id="list">
+                            <tr>
+                                <td colspan="2" width="80">
+                                    购买用途：
+                                </td>
+                                <td style="text-align:left;">
+                                    <textarea name="description" id="description" cols="85" rows="8"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center">
+                        <input type="submit" name="button" id="button" value="提交申请" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <script type="text/javascript">
+            var tempid = 0;
+            show_project('1');
+            function copy_tr(id){
+                tempid++;
+                var html = '';
+                html += '<tr id="tr_' + tempid + '">';
+                html += $('#tr_' + id).html();
+                html += '</tr>'
+                html = html.replace('copy_tr(' + id + ')', 'copy_tr(' + tempid + ')');
+                html = html.replace('edit_' + id, 'edit_' + tempid);
+                html = html.replace('itme_' + id, 'itme_' + tempid);
+                html = html.replace('show_itme(' + id + ',this.value)', 'show_itme(' + tempid + ',this.value)')
+                $('#list').append(html);
+                $('#edit_' + tempid).html('<input type="button" onclick="copy_tr(' + tempid + ');" value="复制" /> <input type="button" onclick="del_tr(' + tempid + ')" value="删除" />');
+            }
+            
+            function del_tr(id){
+                $('#tr_' + id).remove();
+            }
+            
+            function show_project(id){
+                if (id) {
+                    $.post('ajax.php',{model:'{t_model}',action:'get_project',tid:id,rand:Math.random(0,9999)},
+					function (data)
+					{
+						if (data)
+						{
+							$('#typeid').html(unescape(data));
+						}
+					}
+					);
+                }
+            }
+        </script>
+    </body>
+</html>

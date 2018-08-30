@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>借试用</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdproject.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-common.js"></script>
+<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+<script type="text/javascript" src="js/common/dateUtil.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-chance.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-add.js"></script>
+    <script>
+		// 保存按钮 
+		function toNoApp(){
+			$("#act").val("");
+	    	document.getElementById('form1').action = "index1.php?model=projectmanagent_borrow_borrow&action=relateChance";
+		}
+    	// 审批按钮 
+    	function toApp(){
+    		$("#act").val("app");
+	    	document.getElementById('form1').action = "index1.php?model=projectmanagent_borrow_borrow&action=relateChance&act=app";
+    	}
+    	// 提交审批
+    	function sub(){
+    		if($("#act").val() == "app" && ($("#chanceCode").val() == undefined || $("#chanceCode").val() == "")){
+    			alert("请选择源单编号再提交审批！");
+    			return false;
+    		}
+    	}
+        $(function() {
+			/**
+			 * 验证信息
+			 */
+			validate({
+				"beginTime" : {
+					required : true
+				},"closeTime" : {
+					required : true
+				},"deliveryDate" : {
+					required : true
+				},"customerName" : {
+					required : true
+				}
+			});
+		});
+    </script>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_borrow_borrow&action=relateChance" id="form1" method="POST" onsubmit="return sub();">
+
+	 <table class="form_main_table">
+           <div class="main_head">
+	           <span class="main_head_title">借试用关联商机&nbsp;&nbsp;
+	           		<font color='red'>友情提示：个人申请累计金额已达{equMoney}</font>
+	           </span>
+           </div>
+        <tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+		        <input type="hidden" id="SingleTypeT" name="borrow[SingleType]" value="{SingleType}"/>
+			    <input type="hidden" id="chanceCodeT" value="{chanceCode}"/>
+                <input type="hidden" id="chanceIdT" value="{chanceId}"/>
+				<select class="select" id="SingleType" onchange="singleSelect();"></select>
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right" id="single">
+				{chanceCode}
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table">
+					<tr>
+						<td class="txt_btn" colspan="4">
+			               <input type="hidden" id="borrowId" name="borrow[id]" value="{id}" />
+			               <input type="hidden" id="act" />
+					       <input type="submit" class="txt_btn_a" value=" 保  存 " onclick="toNoApp();"/>
+					       <input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toApp();" />
+					       <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+</div>
+</body>

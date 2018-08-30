@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>导出条件</title>
+		{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/vehiclesupp-provin-city.js" ></script>
+	<script>
+		$(document).ready(function() {
+			validate({
+				"carAmountLower" : {
+					required : false,
+					custom : ['onlyNumber']
+				},
+				"carAmountCeiling" : {
+					required : false,
+					custom : ['onlyNumber']
+				},
+				"driverAmountLower" : {
+					required : false,
+					custom : ['onlyNumber']
+				},
+				"driverAmountCeiling" : {
+					required : false,
+					custom : ['onlyNumber']
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=outsourcing_outsourcessupp_vehiclesupp&action=excelOutCustom" >
+	<table class="form_main_table">
+		<tr>
+		<td colspan="4">
+			<div class="main_head">
+				<span class="main_head_title">
+					选择导出条件
+				</span>
+			</div>
+		</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商编号</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" name="vehiclesupp[suppCode]"/>
+			</td>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" name="vehiclesupp[suppName]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">省份</td>
+			<td class="form_text_right" >
+				<select class="select" id="province" ></select>
+				<input type="hidden" class="txt" id="provinceName" name="vehiclesupp[provinceName]"/>
+			</td>
+			<td class="form_text_left">城市</td>
+			<td class="form_text_right" >
+				<select class="select" id="city" ></select>
+				<input type="hidden" class="txt" id="cityName" name="vehiclesupp[cityName]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商类型</td>
+			<td class="form_text_right" >
+				<select class="select" id="suppCategory" name="vehiclesupp[suppCategory]">
+					<option value="">不限</option>
+						{suppCategory}
+				</select>
+			</td>
+			<td class="form_text_left">车辆数量范围</td>
+			<td class="form_text_right" >
+				<input type="text" class="txtshort" id="carAmountLower" name="vehiclesupp[carAmountLower]"/> ~
+				<input type="text" class="txtshort" id="carAmountCeiling" name="vehiclesupp[carAmountCeiling]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">司机数量范围</td>
+			<td class="form_text_right" >
+				<input type="text" class="txtshort" id="driverAmountLower" name="vehiclesupp[driverAmountLower]"/> ~
+				<input type="text" class="txtshort" id="driverAmountCeiling" name="vehiclesupp[driverAmountCeiling]"/>
+			</td>
+			<td class="form_text_left">发票属性</td>
+			<td class="form_text_right" >
+				<select class="select" id="invoiceCode" name="vehiclesupp[invoiceCode]">
+					<option value="">不限</option>
+						{invoiceCode}
+					</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">能否配备司机</td>
+			<td class="form_text_right" >
+				<select class="select" id="isEquipDriver" name="vehiclesupp[isEquipDriver]">
+					<option value="">不限</option>
+					<option value="1">能</option>
+					<option value="0">不能</option>
+				</select>
+			</td>
+			<td class="form_text_left">有无路测经验</td>
+			<td class="form_text_right" colspan="3">
+      			 <select class="select" id="isDriveTest" name="vehiclesupp[isDriveTest]">
+					<option value="">不限</option>
+					<option value="1">有</option>
+					<option value="0">没有</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+			</td>
+		</tr>
+		</table>
+	</form>
+</body>
+</html>

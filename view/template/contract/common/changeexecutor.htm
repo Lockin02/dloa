@@ -1,0 +1,99 @@
+<html>
+	<head>
+		<title>指定合同执行人</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script Language="JavaScript">
+
+			function LoadWindow(toid,name)
+			{
+				URL="module/user_select_single?toname="+name+"&toid="+toid;
+				loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+				loc_y=document.body.scrollTop+event.clientY-event.offsetY+170;
+				window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:450px;dialogHeight:450px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+			}
+
+			function clear_user(){
+				$("#executorId").val("");
+				$("#executorName").val("");
+			}
+
+			function checkForm(){
+				if($('#executorId').val() == ""){
+					alert("新执行人不能为空");
+					return false;
+				}
+				return true;
+			}
+
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td><img src="images/sys_config.gif">
+
+					<b>
+						指定合同执行人
+					</b>
+				</td>
+			</tr>
+		</table>
+		<table width='800' class='form_main_table' align="center">
+			<form method="post" id="form1" name="form1" onsubmit="return checkForm()" action="index1.php?model=contract_sales_sales&action=changePeopleAction">
+				<tr>
+					<td class="form_text_left">
+						鼎利合同号
+					</td>
+					<td class="form_text_right">
+						{contractNumber}
+					</td>
+					<td class="form_text_left">
+						合同名称
+					</td>
+					<td class="form_text_right">
+						{contractName}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						当前执行人
+					</td>
+					<td class="form_text_right">
+						{oldexecutorName}
+						<input type="hidden" name="oldexecutorId" size="25" readonly value="{oldexecutorId}"/></td>
+					<td class="form_text_left" width="20%">
+						新执行人
+					</td>
+					<td class="form_text_right" width="35%">
+	    		    	<input type="hidden" name="sales[executorId]" id="executorId" />
+				        <input type="text" name="sales[executorName]" id="executorName" readonly/>
+				        <input type="button" class="txt_btn_a" value="选 择" onClick="LoadWindow('executorId','executorName')" title="选择人员">
+				        <input type="button" class="txt_btn_a" value="清 空" onClick="clear_user();" title="清空人员">
+					</td>
+				</tr>
+				<!--tr>
+					<td class="formtd1" colspan="4" height="30px" align="left">&nbsp;&nbsp;&nbsp;&nbsp;
+						<font>备注</font>
+					</td>
+				</tr>
+				<tr height = "100px">
+					<td colspan="4">
+						<textarea name="CloseReason" rows="5" cols="90"  wrap="on" style="OVERFLOW:auto;"></textarea>
+					</td>
+				</tr-->
+				<tr>
+					<td class="footform" colspan="4">&nbsp;
+						<input type="hidden" name="sales[id]" value="{id}">
+						<input type="submit" class="txt_btn_a" value=" 确 定 " />
+						<input type="button" class="txt_btn_a"   value=" 取 消 " onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</form>
+		</table>
+	</body>
+</html>

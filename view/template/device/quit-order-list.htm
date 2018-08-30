@@ -1,0 +1,169 @@
+<html>
+	<head>
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+		<script type="text/javascript" src="js/jqeasyui/jquery.min.js">
+		</script>
+		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js">
+		</script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js">
+		</script>
+		<script type="text/javascript" src="js/thickbox.js">
+		</script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="images/style.css" type="text/css">
+		<script type="text/javascript">
+			
+			var open_tabs = Array();
+			var field = "{field}";
+			$(function()
+			{
+			    $('#tt').tabs(
+			    {
+			        onSelect: load_tabs
+			    });
+			    
+			});
+			function selects()
+			{
+			    var typid = $('#typeid').val();
+			    var stats = $('#status').val();
+			    var sdate = $('input[name=start_date]').val();
+			    var edate = $('input[name=end_date]').val();
+			    var field = $('#field').val();
+			    var keyword = $('#keyword').val();
+			    
+			    $.post('?model=device_quit&action=search_order_list', 
+			    {
+			        typid: typid,
+			        stats: stats,
+			        sdate: sdate,
+			        edate: edate,
+			        field: field,
+			        keyword: keyword
+			    }, function(data)
+			    {
+			        if (data) 
+			        {
+			            $('#searchcontent').html(data);
+			        }
+			    });
+			    
+			}
+			
+			function load_tabs(title)
+			{
+			    if (title == '退库单列表' && !open_tabs[title]) 
+			    {
+			        open_tabs[title] = true;
+			        
+			    }
+			    if (title == '退库设备表' && !open_tabs[title]) 
+			    {
+			        open_tabs[title] = true;
+			        $.post('?model=device_quit&action=search_order_list', {}, function(data)
+			        
+			        {
+			            if (data) 
+			            {
+			                $('#searchcontent').html(data);
+			            }
+			        });
+			    }
+			}
+			
+			function show_field(mytypeid, loads)
+			{
+			    if (mytypeid != '') 
+			    {
+			        $.post('ajax.php', 
+			        {
+			            model: 'device_stock',
+			            action: 'get_field_name',
+			            typeid: mytypeid,
+			            rand: Math.random(0, 99999)
+			        }, function(data)
+			        {
+			            if (data) 
+			            {
+			                if (loads == true) 
+			                {
+			                    $('select[name=field[]]').eq(0).html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>' + unescape(data));
+			                }
+			                else 
+			                {
+			                    $('select[name=field[]]').html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>' + unescape(data));
+			                }
+			                
+			                
+			            }
+			        });
+			    }
+			}
+			
+			
+		</script>
+	</head>
+	<body id="mytable">
+		<div id="tt" fit="true" class="easyui-tabs">
+			<div title="退库单列表 " style="padding:10px;width:90%;">
+				<table class="table" width="100%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+					<tr bgcolor="#D3E5FA">
+						<td align="center" colspan="5">
+							退库单列表
+						</td>
+						<td colspan="1">
+							<input type="button" alt="?model=device_quit&action=apply&placeValuesBefore&TB_iframe=true&modal=false&height=400" title="添加退库记录" value="添加退库记录" class="thickbox">
+						</td>
+					</tr>
+					<tr class="tableheader">
+						<td>
+							单号
+						</td>
+						<td>
+							操作人
+						</td>
+						<td>
+							数量
+						</td>
+						<td>
+							日期
+						</td>
+						<td>
+							状态
+						</td>
+						<td>
+							操作
+						</td>
+					</tr>
+					{list}
+				</table>
+			</div>
+			<div id="12" title="退库设备表" style="padding:10px;">
+				<div style=" margin:0px 5px; ">
+					类型：
+					<select id="typeid" name="typeid" onchange="selects();show_field(this.value);">
+						<option value="">全部类别</option>
+						{select_type}
+					</select>
+					状态：
+					<select id="status" name="status" onchange="selects();">
+						<option value="">全部记录</option>
+						<option value="0">退库</option>
+						<option value="1">已取退库</option>
+					</select>
+					<!--开始日期：<input type="text" id="start_date" name="start_date" class="easyui-datebox" readonly="readonly" style="width:80px;"/> 至<input type="text" id="end_date" name="end_date" class="easyui-datebox" readonly="readonly" style="width:80px;"/>-->搜索内容：
+					<select id="field" name="field[]">
+						<option value="">请选择搜索内容</option>
+					</select>
+					关键字：<input type="text" size="12" id="keyword" name="keyword[]" value=""/><input type="button" onclick="selects();" value=" 查询 " />
+				</div>
+				<div id="searchcontent">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

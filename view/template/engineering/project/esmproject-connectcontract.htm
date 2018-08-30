@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑工程项目</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+
+	<script type="text/javascript" src="{#jsPath#}/esmproject-connectcontract.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	关联合同 项目：{projectName}({projectCode})
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_project_esmproject&action=connectContract" onsubmit="return checkForm();">
+<table class="form_main_table">
+   	<tr>
+		<td class="form_text_left">鼎利合同号</td>
+		<td class="form_text_right" width="30%">
+			 <input type="text" class="txt" id="contractCode" name="esmproject[contractCode]" value="{contractCode}"/>
+			 <input type="hidden" name="esmproject[contractId]" id="contractId" value="{contractId}" />
+			 <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">合同业务号</td>
+		<td class="form_text_right">
+			 <input type="text" class="readOnlyTxtNormal" id="contractTempCode" name="esmproject[contractTempCode]" value="{contractTempCode}" readonly="readonly"/>
+			 <input type="hidden" id="rObjCode" name="esmproject[rObjCode]" readonly="readonly" value="{rObjCode}"/>
+			 <input type="hidden" id="contractType" name="esmproject[contractType]" value="{contractType}"/>
+			 <span class="red">[*]</span>
+		</td>
+   	</tr>
+   	<tr>
+		<td class="form_text_left_three">客户名称</td>
+		<td class="form_text_right_three" >
+			<input type="hidden" name="esmproject[customerId]" value="{customerId}" id="customerId"/>
+			<input type="text" class="readOnlyTxtNormal" name="esmproject[customerName]" value="{customerName}" id="customerName" readonly="readonly"/>
+			<input type="hidden" id="customerType" name="esmproject[customerType]" value="{customerType}"/>
+		</td>
+		<td class="form_text_left">工作占比(%)</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="esmproject[workRate]" id="workRate"/>
+			<input type="hidden" id="workRateHidden"/>
+			 <span class="red">[*]</span>
+		</td>
+   	</tr>
+   	<tr>
+		<td colspan="4">
+			选择合同时会自动带出对应合同的剩余工作占比，选择占比请勿大于该值
+		</td>
+   	</tr>
+    <tr>
+		<td class="txt_btn" colspan="4">
+         	<input type="hidden" name="esmproject[id]" value="{id}" />
+         	<input type="hidden" id="contractType" value="{contractType}" />
+		    <input type="submit" class="txt_btn_a" value="保  存"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

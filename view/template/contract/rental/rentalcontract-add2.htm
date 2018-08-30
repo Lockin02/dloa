@@ -1,0 +1,340 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>新建出租合同</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script>
+      function License(){
+            showThickboxWin('?model=projectmanagent_order_order&action=License'
+                             + '&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=900');
+             }
+      function orderSign(obj) {
+         if(obj.value == "是"){
+            document.getElementById("condition").style.display="";
+         }else {
+            document.getElementById("condition").style.display="none";
+         }
+        }
+      function parent(obj){
+         if(obj.value == "是"){
+            document.getElementById("parentOrder").style.display="";
+         }else{
+            document.getElementById("parentOrder").style.display="none";
+         }
+      }
+</script>
+</head>
+
+<body>
+<div class="main_head"><span class="main_head_title">租赁合同</span></div>
+<form action="?model=contract_rental_rentalcontract&action=add" id="form1" method="POST" >
+
+	<table class="form_main_table">
+	    <tr>
+        <td class="form_text_left">是否签约</td>
+        <td class="form_text_right" colspan="3">
+                         是<input type="radio" name="rentalcontract[sign]" value="是" onclick="orderSign(this);"/>
+                         否<input type="radio" name="rentalcontract[sign]" value="否" onclick="orderSign(this);" checked/>
+        </td>
+        <td class="form_text_left">是否有父合同</td>
+        <td class="form_text_right">
+                         是<input type="radio" name="rentalcontract[parent]" value="是" onclick="parent(this);"/>
+                         否<input type="radio" name="rentalcontract[parent]" value="否" onclick="parent(this);" checked/>
+     </tr>
+     <tr id="condition" style="display:none">
+        <td class="form_text_left">纸质合同状态</td>
+        <td class="form_text_right" colspan="5">
+                        已提交<input type="radio" name="rentalcontract[condition]" value="已提交" onclick="condition(this.value)"/>
+                        已拿到<input type="radio" name="rentalcontract[condition]" value="已拿到" onclick="condition(this.value)" checked/>
+        </td>
+    </tr>
+    <tr id="parentOrder" style="display:none">
+        <td class="form_text_left">父合同名称</td>
+        <td class="form_text_right" colspan="5">
+          <input type="text" class="txt" name="rentalcontract[parentOrder]" />
+        </td>
+
+    </tr>
+	    <tr>
+			<td  class="form_text_left">鼎利合同号</td>
+			<td class="form_view_right">
+				 <input class="txt" type="text" name="rentalcontract[orderCode]" id="orderCode">
+			</td>
+			<td  class="form_text_left">临时合同号</td>
+			<td class="form_view_right">
+				<input class="txt" type="text" name="rentalcontract[orderTempCode]" id="orderTempCode">
+			</td>
+			<td  class="form_text_left">合同名称</td>
+			<td class="form_view_right">
+				<input class="txt" type="text" name="rentalcontract[orderName]" id="">
+			</td>
+		</tr>
+
+		<tr>
+			<td  class="form_text_left">承租方</td>
+			<td class="form_view_right">
+				<input class="txt" type="text" name="rentalcontract[tenant]" id="" />
+			</td>
+			<td  class="form_text_left">出租方</td>
+			<td class="form_view_right">
+				<input type="text" class="txt" name="rentalcontract[hires]" id="" />
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">承租方负责人</td>
+			<td class="form_view_right">
+				<input type="text" class="txt" name="rentalcontract[tenantName]" id="" />
+				<input type="hidden" name="rentalcontract[tenantId]">
+			</td>
+			<td  class="form_text_left">出租方负责人</td>
+			<td class="form_view_right">
+				<input type="text" class="txt" name="rentalcontract[hiresName]" id="" />
+			    <input type="hidden" name="rentalcontract[hiresId]">
+			</td>
+			<td  class="form_text_left">技术负责人</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[scienceMan]" id="" />
+			</td>
+		</tr>
+
+		<tr>
+		    <td  class="form_text_left">期限</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[timeLimit]" id="" />
+				<span class="red">[*]</span>
+			</td>
+			<td  class="form_text_left">承租开始日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[beginTime]" id="" />
+
+				<span class="red">[*]</span>
+			</td>
+			<td  class="form_text_left">承租截止日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[closeTime]" id="" />
+
+				<span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">付款方式</td>
+			<td class="form_text_right">
+				 <select name="rentalcontract[paymentType]" class="select">
+					<option>请选择</option>
+					<option>现金</option>
+					<option>电汇</option>
+					<option>银行汇款</option>
+					<option>商业汇票</option>
+				</select>
+			</td>
+			<td  class="form_text_left">支付方案</td>
+			<td class="form_text_right">
+				 <select name="rentalcontract[paymentPrecept]" class="select">
+					<option>请选择</option>
+					<option>月付</option>
+					<option>季付</option>
+					<option>半年付</option>
+					<option>一年一付</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+		    <td  class="form_text_left">租金总额(元)</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[rentMoney]" id="" />
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">已付款项</td>
+			<td class="form_text_right">
+				<select name="rentalcontract[accountPaid]" class="select">
+					<option>请选择</option>
+					<option>全额支付</option>
+					<option>定金支付</option>
+				</select>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">已付款项金额(元)</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="rentalcontract[accountPaidMoney]" id="" />
+			</td>
+		</tr>
+
+		<tr>
+			<td  class="form_text_left">合同附件</td>
+			<td class="form_text_right" colspan="3">
+				<input name="textfield" type="text"   class="txt" />
+				<input name="" type="button" class="txt_upload_btn" value=" 浏览 " />
+				<input name="" type="button" class="txt_upload_btn" value=" 上传 " />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">支付详情</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="rentalcontract[details]" id=""  class="txt_txtarea_font" cols="136"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="rentalcontract[remark]" id=""  class="txt_txtarea_font" cols="136"></textarea>
+			</td>
+		</tr>
+		<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="8" class="form_header">产品清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="productNumber" value="1" />
+			  <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="dynamic_add('invbody','productNumber');" title="添加行" /></td>
+		</tr>
+	</thead>
+	<tbody id="invbody">
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="5%">序号</td>
+
+			<td style="text-align:center" width="10%">产品编号</td>
+			<td style="text-align:center" width="16%">产品名称</td>
+			<td style="text-align:center" width="9%">型号/版本</td>
+			<td style="text-align:center" width="8%">数量</td>
+			<td style="text-align:center" width="8%">单价</td>
+			<td style="text-align:center" width="8%">金额</td>
+
+
+			<td style="text-align:center" width="8%">加密配置</td>
+
+			<td style="text-align:center" width="5%">操作</td>
+		</tr>
+		<tr align="center">
+			<td>1</td>
+
+			<td>
+			  <input type="text" name="order[orderequ][1][productNo]" id="productNo1" class="txtmiddle" />
+			 </td>
+			<td>
+			  <input type="hidden" id="productId1" name="order[orderequ][1][productId]" />
+			  <input type="text" name="order[orderequ][1][productName]" id="productName1" class="txt" readonly="readonly" /></td>
+			<td>
+			   <input type="text" name="order[orderequ][1][productModel]" id="productModel1" class="txtmiddle" /></td>
+			<td><input type="text" name="order[orderequ][1][number]"
+				id="number1" class="txtshort"
+				onblur="FloatMul('number1','price1','money1')" /></td>
+			<td><input type="text" name="order[orderequ][1][price]"
+				id="price1" class="txtshort"
+				onblur="FloatMul('number1','price1','money1');countAll()" /></td>
+			<td><input type="text" name="order[orderequ][1][money]"
+				id="money1" class="txtshort" /></td>
+
+			<td>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License();"/>
+			</td>
+
+			<td><img src="images/closeDiv.gif"
+				onclick="mydel(this,'invbody')" title="删除行" /></td>
+		</tr>
+	</tbody>
+</table>
+		<table class="form_main_table">
+		  <thead>
+			<tr>
+				<td colspan="7" class="form_header">
+					培训计划
+				</td>
+				<td width="5%">
+					<input type="hidden" id="TraNumber" name="TraNumber" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="train_add('mytra','TraNumber')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="8%">
+					培训开始时间
+				</th>
+				<th width="8%">
+					培训结束时间
+				</th>
+				<th width="8%">
+					参与人数
+				</th>
+				<th width="18%">
+					培训地点
+				</th>
+				<th>
+					培训内容
+				</th>
+				<th width="20%">
+					培训工程师要求
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+		   <tbody id="mytra">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][beginDT]" id="TraDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][endDT]" id="TraEndDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][traNum]"/>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][adress]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][content]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][trainerDemand]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mytra')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+<table class="form_main_table">
+<tr>
+        <td class="form_text_left">归属区域</td>
+        <td class="form_text_right">
+           <input type="text" class="txt" name="rentalcontract[district]" id="" />
+        </td>
+        <td class="form_text_left">销售员</td>
+		<td class="form_text_right">
+		  <input type="text" class="txt" name="rentalcontract[saleman]" id="saleman" value="{saleman}"/>
+        </td>
+		<td class="form_text_left">创建人</td>
+		<td class="form_text_right">
+		  <input type="text" name="rentalcontract[createName]" id="createName" value="{createName}" />
+		  <input type="hidden" name="rentalcontract[createId]" id="createId" value="{createId}" />
+		</td>
+		<td class="form_text_left">创建时间</td>
+		<td class="form_text_right">
+		  <input type="text" name="rentalcontract[createTime]" id="createTime" value="{createTime}" />
+
+		</td>
+
+</tr>
+</table>
+<table class="main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input name="" type="button" class="txt_btn_a" value=" 保  存 " />
+				<input name="" type="button" class="txt_btn_a" value=" 提交审批 " onclick="location.href('?model=contract_rental_rentalcontract&action=toChooseWorkFlow')" />
+			</td>
+		</tr>
+	</table>
+</form>
+</div>
+</body>

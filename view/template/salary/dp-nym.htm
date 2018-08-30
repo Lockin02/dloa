@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                $('#form1').validate({//new
+                    submitHandler: function(form){
+                        if(confirm('确定提交？提示：因邮件发送需要一定时间，请耐心等待，谢谢')){
+                            amNewSubFun();
+                        }
+                    },
+                    rules:{
+                        TO_ID:{
+                            required:true
+                        },
+                        user_amount:{
+                            required:true,
+                            number:true
+                        },
+                        user_remark:{
+                            required:true
+                        }
+                    },
+                    messages:{
+                        TO_ID:{
+                            required:'请点击输入员工'
+                        },
+                        user_amount:{
+                            required:'请输入金额',
+                            number:'请输入正确金额'
+                        },
+                        user_remark:{
+                            required:'请输入备注信息'
+                        }
+                    }
+                });
+            });
+            function openUserWindow()
+            {
+                  URL="{user_win}";
+                  loc_x=event.clientX-300;
+                  loc_y=event.clientY+240;
+                  window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:320px;dialogHeight:360px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+            }
+            function amNewSubFun(){
+                var rand=Math.random()*100000;
+                var id=$('#TO_ID').val();
+                var amount=$('#user_amount').val();
+                var gwam=$('#gwam').val();
+                var jxam=$('#jxam').val();
+                
+                var oldam=$('#user_baseam').html();
+                var oldgwam=$('#user_gwam').html();
+                var oldjxam=$('#user_jxam').html();
+                
+                var remark=$('#user_remark').val();
+                var remark_rea=$('#user_remark_rea').val();
+                var uty=$("#user_type").val();
+                var udt=$('#user_cdt').val();
+                $('#newuserSub').attr('disabled',true);
+                $.post('?model=salary&action=dp_nym_in',{
+                    id:id,amount:amount,remark:remark,sub:'new',rand:rand,remark_rea:remark_rea
+                    ,uty:uty,udt:udt,gwam:gwam,jxam:jxam
+                    ,oldam:oldam, oldgwam:oldgwam,oldjxam:oldjxam
+                    },
+                    function (data)
+                    {
+                    	//alert(data);
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('提交成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        parent.tb_remove();
+                        parent.jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            function userBaseFun(){
+                var rand=Math.random()*100000;
+                var id=$('#TO_ID').val();
+                //alert(id);
+                $.post('?model=salary&action=salary_info',{
+                    id:id,type:'amount,gwam,jxam',rand:rand,cdflag:1
+                    },
+                    function (data)
+                    {
+                    	var msg=eval('(' + data + ')');
+                        if(msg){
+                        	$('#user_baseam').html(msg['amount']);
+                        	$('#user_gwam').html(msg['gwam']);
+                        	$('#user_jxam').html(msg['jxam']);
+                        }else{
+                            alert('查询失败！');
+                        }                        
+                    }
+                )
+            }
+            function chtr(){
+                var type=$('#user_type').val();
+                if(type=='part'){
+                    $('#tr_type_part').css('display','block');
+                }else{
+                    $('#tr_type_part').css('display','none');
+                }
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error ,#form1 label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <div id="hr_user_new" tabindex="-1" role="dialog" style="text-align:center;" >
+            <form method="post" action="#" name="form1" id="form1">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width:480px;">
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            申请信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:10px;width:160px;"> 姓名：</td>
+                        <td id="user_name">
+                            <input id="TO_NAME" name="TO_NAME" onClick="openUserWindow()" style="display: inline;width: 115px;" readonly onpropertychange="userBaseFun()" />
+                            <input type="hidden" name="TO_ID" id="TO_ID" value="" readonly="readonly"/>
+                            <input type="button"   onClick="userBaseFun()" value='查询工资'></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪前基本金额：</td>
+                        <td id="user_baseam" ></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪前岗位金额：</td>
+                        <td id="user_gwam" ></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪前绩效金额：</td>
+                        <td id="user_jxam" ></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪后基本金额：</td>
+                        <td><input id="user_amount" name="user_amount" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪后岗位金额：</td>
+                        <td><input id="gwam" name="gwam" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">调薪后绩效金额：</td>
+                        <td><input id="jxam" name="jxam" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">全月调薪：</td>
+                        <td>
+                            <select name="user_type" id="user_type" onchange="chtr()">
+                                <option value="all">是</option>
+                                <option value="part">否</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="tr_type_part" style="display: none;">
+                        <td class="tl">日期：</td>
+                        <td><input id="user_cdt" name="user_cdt" type="text" style="display: inline;" class="Wdate default vdata" 
+                                   readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                            <br/>
+                            <font color="red">请输入调薪日期，系统按调薪日期计算当月工资。
+                            <br/>当月工资=（调薪前工作日*调薪前工资+调薪后工作日*调薪后工资）/当月工作日
+                            </font> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">申请原因：</td>
+                        <td>
+                            <textarea id="user_remark_rea" name="user_remark_rea" cols="35" rows="3" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">工资条备注（显示在员工工资条）：</td>
+                        <td>
+                            <textarea id="user_remark" name="user_remark" cols="35" rows="3" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newuserSub" value="提交审批"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

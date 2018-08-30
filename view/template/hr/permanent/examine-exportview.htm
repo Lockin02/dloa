@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>转正考核信息导出</title>
+	{#commonInclude#}
+	<script type="text/javascript">
+		$(function() {
+		//直属部门
+		$("#deptNameSearch").yxselect_dept({
+			hiddenId : 'deptId'
+		});
+		//二级部门
+		$("#deptNameSSearch").yxselect_dept({
+			hiddenId : 'deptIdS'
+		});
+		//三级部门
+		$("#deptNameTSearch").yxselect_dept({
+			hiddenId : 'deptIdT'
+		});
+		//四级部门
+		$("#deptNameFSearch").yxselect_dept({
+			hiddenId : 'deptIdF'
+		});
+		validate({
+			"beginDate" : {
+				required : true
+			},
+			"endDate" : {
+				required : true
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+	<form id="exportForm" action="?model=hr_permanent_examine&action=ExamineExport" ENCTYPE="multipart/form-data" method="post" name="form1">
+		<table  class="form_main_table">
+			<tr>
+				<div class="main_head">
+					<span class="main_head_title">
+						转正考核信息导出
+					</span>
+				</div>
+			</tr>
+			<tr>
+				<td class="form_text_left blue">单据开始日期</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[beginDate]" class="txt" id="beginDate" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left blue">单据结束日期</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[endDate]" class="txt" id="endDate" onfocus="WdatePicker()"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">入职时间</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[beginTime]" id="beginTime" class="txt" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left">计划转正时间</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[finishTime]" id="finishTime" class="txt" onfocus="WdatePicker()"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="form_text_left">直属部门</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[deptName]" class="txt" id="deptNameSearch" readonly="readonly"/>
+					<input type="hidden" name="examine[deptId]" id="deptId"/>
+				</td>
+				<td class="form_text_left">二级部门</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[deptNameS]" class="txt" id="deptNameSSearch" readonly="readonly"/>
+					<input type="hidden" name="examine[deptIdS]" id="deptIdS"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">三级部门</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[deptNameT]" class="txt" id="deptNameTSearch" readonly="readonly"/>
+					<input type="hidden" name="examine[deptIdT]" id="deptIdT"/>
+				</td>
+				<td class="form_text_left">四级部门</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[deptNameF]" class="txt" id="deptNameFSearch" readonly="readonly"/>
+					<input type="hidden" name="examine[deptIdF]" id="deptIdF"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">转正员工</td>
+				<td class="form_text_right">
+					<input type="text" name="examine[userName]" id="userName" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/4.5.4/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/4.5.4/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/4.5.4/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;          /* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;   /* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{hr_yuti_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:['KEY','年月','部门区域','项目编号','项目名称','补贴预提'
+                    ],
+                    colModel:[
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'date',index:'y.date', width:100, align:"center"},
+                        {name:'deptName',index:'y.deptName', width:100, align:'center'},
+                        {name:'projectCode',index:'y.projectCode', width:188,align:'center'},
+                        {name:'projectName',index:'y.projectName', width:330, align:'center'},
+                        {name:'payTotal',index:'y.payTotal', width:100, align:"right"}
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,28,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-2,
+                    height:(wh-136+2*((wh-500)/50)),
+                    viewrecords: false,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    caption: "{user_capt}"
+                });
+                jQuery("#rowedgrid").jqGrid('setFrozenColumns');
+            });
+            function gridNavSeaFun(){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{hr_yuti_list}&seapy="+seapy
+                        +"&seapm="+seapm,page:1}).trigger("reloadGrid");
+            }
+            function inityuti() {
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                if(seapy == '-' || seapm == '-') {
+                    alert("请选择预提年月");
+                    return;
+                }
+                if(confirm("确认生成 "+seapy+"-"+seapm+" 预提数据？")) {
+                    $.post('?model=salary&action=yuti_init&seapy='+seapy+'&seapm='+seapm,{
+                        },
+                        function (data)
+                        {
+                            alert("生成预提数据成功");
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    );
+                }
+            }
+            function pushyuti() {
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                if(seapy == '-' || seapm == '-') {
+                    alert("请选择预提年月");
+                    return;
+                }
+                if(confirm("确认输出 "+seapy+"-"+seapm+" 预提数据？")) {
+                    $.post("?model=engineering_records_esmfieldrecord&action=updateFee&category=subsidyProvision&thisYear="+seapy+"&thisMonth="+seapm,{
+                        },
+                        function (data)
+                        {
+                            alert("输出预提数据成功");
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    );
+                }
+            }
+
+            function cancelyuti() {
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                if(seapy == '-' || seapm == '-') {
+                    alert("请选择预提年月");
+                    return;
+                }
+                if(confirm("确认撤销 "+seapy+"-"+seapm+" 预提数据？")) {
+                    $.post("?model=engineering_records_esmfieldrecord&action=cancelFee&category=subsidyProvision&thisYear="+seapy+"&thisMonth="+seapm,{
+                        },
+                        function (data)
+                        {
+                            alert("撤销预提数据成功");
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    );
+                }
+            }
+            
+            function exportExcel() {
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seacom=$('#seacom').val();
+                var seadept=$('#seadept').val();
+                var seaname=$('#seaname').val();
+                window.open('?model=salary&action=xls_out&flag=hr_yuti&seapy='+seapy+'&seapm='+seapm);
+
+            }
+        </script>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+    </body>
+</html>

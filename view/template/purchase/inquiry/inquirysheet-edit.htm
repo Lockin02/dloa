@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<title>修改采购询价单</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" media="screen"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="view/template/purchase/inquiry/js/supplier-add.js"></script>
+	<script type="text/javascript" src="view/template/purchase/inquiry/js/inquirysheet-edit.js"></script>
+	<script type="text/javascript" src="view/template/purchase/inquiry/js/inquirysheet-add.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="view/template/purchase/inquiry/js/inquirysheet-add-validator.js"></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_purch_inquiry",
+				"serviceNo": "{inquiryCode}",
+				"serviceId": "{id}"
+			});
+		});
+
+		function checkSubmit(){
+			if($("#uploadfileList").html()==""||$("#uploadfileList").html()== "暂无任何附件"){
+				alert("请上传询价附件");
+				return false;
+			}else{
+				return true;
+			}
+		}
+	</script>
+
+	<!-- 附件上传结束 -->
+
+
+</head>
+<body onload="myload()" >
+<div class="main_head">
+    <span class="main_head_title">
+      	修改采购询价单
+    </span>
+</div>
+
+<div class="form_main">
+<form id="form1" method="post" action="?model=purchase_inquiry_inquirysheet&action=edit"   onsubmit="return checkSubmit();">
+    <input type="hidden" id="parentId" name="inquirysheet[id]" value="{id}"/>
+    <input type="hidden" id="" name="inquirysheet[inquiryCode]" value="{inquiryCode}"/>
+	<table class="form_main_table">
+	<!--
+		<tr>
+			<td class="form_text_left">采购询价单编号</td>
+			<td class="form_text_right" colspan="3">
+            	{inquiryCode}
+            </td>
+		</tr>
+	 -->
+		<tr>
+			<td class="form_text_left">采购部门</td>
+			<td class="form_text_right">
+ 				{deptName}
+			</td>
+			<td class="form_text_left">采购员</td>
+			<td class="form_text_right">
+			    {purcherName}
+			</td>
+
+		</tr>
+		<tr>
+			<td class="form_text_left">询价日期</td>
+			<td class="form_text_right">
+				<input type="text" id="inquiryBgDate" name="inquirysheet[inquiryBgDate]" class="txt" value="{inquiryBgDate}" onfocus="WdatePicker()" readonly/>
+				<span class="red">[*]</span>
+				<br/>
+				<div id="inquiryBgDateTip" class="tipShortTxt"></div>
+			</td>
+		    <td class="form_text_left">报价截止日期</td>
+			<td class="form_text_right">
+				<input type="text" id="inquiryEndDate" name="inquirysheet[inquiryEndDate]" class="txt" value="{inquiryEndDate}" onfocus="WdatePicker()" readonly/>
+				<span class="red">[*]</span>
+				<br/>
+				<div id="inquiryEndDateTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">生效日期</td>
+			<td class="form_text_right">
+				<input type="text" id="effectiveDate" name="inquirysheet[effectiveDate]" class="txt" value="{effectiveDate}" onfocus="WdatePicker()" readonly/>
+				<span class="red">[*]</span>
+				<br/>
+				<div id="effectiveDateTip" class="tipShortTxt"></div>
+			</td>
+		    <td class="form_text_left">失效日期</td>
+			<td class="form_text_right">
+				<input type="text" id="expiryDate" name="inquirysheet[expiryDate]" class="txt" value="{expiryDate}" onfocus="WdatePicker()" readonly/>
+				<span class="red">[*]</span>
+				<br/>
+				<div id="expiryDateTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea  rows="4" class="txt_txtarea_font" name="inquirysheet[remark]">{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附  件</td>
+			<td colspan="3" class="form_text_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+						<br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<div class="form_mian">
+	<table id="mytable" class="main_table">
+     <thead>
+        <tr>
+			<td colspan="7" class="form_header">采购询价清单
+			</td>
+		</tr>
+       <tr class="main_tr_header">
+         <th>行号</th>
+         <th>物料代码</th>
+         <th>物料名称</th>
+         <th>规格型号</th>
+         <!--
+         <th>辅助属性</th>  -->
+         <th>单位</th>
+         <th>询价数量</th>
+	     <th>采购类型</th>
+         <!--
+         <th>操作</th>
+          -->
+       </tr>
+     </thead>
+     <tbody>
+     {productLidt}
+     </tbody>
+     </table>
+     </div>
+     <br/>
+  <div class="form_mian">
+	<table class="main_table">
+     <thead>
+        <tr>
+			<td colspan="7" class="form_header">询价明细
+			</td>
+		</tr>
+       <tr class="main_tr_header">
+         <th></th>
+         <th>供应商A <input type="button" id="" class="txt_btn_a" value="清空" onclick="delSupp(1);"/></th>
+         <th>供应商B <input type="button" id="" class="txt_btn_a" value="清空" onclick="delSupp(2);"/></th>
+         <th>供应商C <input type="button" id="" class="txt_btn_a" value="清空" onclick="delSupp(3);"/></th>
+       </tr>
+     </thead>
+     <tbody>
+		<tr class="tr_even">
+		    <td class="form_text_left">供应商名称</td>
+			<td  class="form_text_right">
+				<input type="text" class="txt" id="supplierName1" name="inquirysheet[inquirysupp][1][suppName]" />
+				<input type="hidden" id="supplierId1" name="inquirysheet[inquirysupp][1][suppId]" />
+			</td>
+			<td  class="form_text_right">
+				<input type="text" class="txt" id="supplierName2" name="inquirysheet[inquirysupp][2][suppName]" />
+				<input type="hidden" id="supplierId2" name="inquirysheet[inquirysupp][2][suppId]"/>
+			</td>
+			<td  class="form_text_right">
+				<input type="text" class="txt" id="supplierName3" name="inquirysheet[inquirysupp][3][suppName]" />
+				<input type="hidden" id="supplierId3" name="inquirysheet[inquirysupp][3][suppId]"/>
+			</td>
+		</tr>
+
+	    <tr class="tr_even">
+		    <td class="form_text_left">主营产品</td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="products1" name="inquirysheet[inquirysupp][1][suppTel]" readonly/></td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="products2" name="inquirysheet[inquirysupp][2][suppTel]" readonly/></td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="products3" name="inquirysheet[inquirysupp][3][suppTel]" readonly/></td>
+		</tr>
+		<tr class="tr_odd">
+		    <td class="form_text_left">报价总额</td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="quote1" name="inquirysheet[inquirysupp][1][quote]" readonly/></td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="quote2" name="inquirysheet[inquirysupp][2][quote]" readonly/></td>
+			<td  class="form_text_right"><input type="text" class="readOnlyText" id="quote3" name="inquirysheet[inquirysupp][3][quote]" readonly/></td>
+		</tr>
+		<tr class="tr_even">
+		    <td class="form_text_left">报价详情</td>
+			<td  class="form_text_right">
+				<input type="hidden" name="" id="suppId1"/>
+				<a onclick="quote(1);" href="#">A-报价单</a>
+			</td>
+			<td  class="form_text_right">
+				<input type="hidden" name="" id="suppId2"/>
+				<a onclick="quote(2);" href="#">B-报价单</a>
+			</td>
+			<td  class="form_text_right">
+				<input type="hidden" name="" id="suppId3" value=""/>
+				<a onclick="quote(3)" href="#">C-报价单</a>
+			</td>
+		</tr>
+     </table>
+     </div>
+
+
+     <div class="form_main">
+       <table class="form_main_table">
+         <tr>
+            <td colspan="4">
+            <!-- <input type="button" class="txt_btn_a" onclick="subInquiry();" value=" 提交 " />
+             -->
+            	<input type="submit" class="txt_btn_a" value=" 保 存 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+            	 <input type="submit" class="txt_btn_a" onclick="submitAudit();" value=" 提交审批 " />&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" class="txt_btn_a" value=" 返 回 " onclick="history.back();"/>
+            </td>
+         </tr>
+       </table>
+     </div>
+</form>
+</div>
+</body>
+</html>

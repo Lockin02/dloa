@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>终端信息列表</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        {#commonInclude#}
+		
+ 		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/terminalinfo-report.js" ></script>
+       <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-terminalProduct.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/terminalinfo-report.js" ></script>
+		<script>
+			function search(){
+				var param='terminalinfo[proType]='+$("#proTypeHidden").val()+    //产品类型
+				'&terminalinfo[supportNetwork]='+$("#supportNetworkHidden").val()+		//网络类型
+				"&terminalinfo[versionStatus]="+$("#versionStatusHidden").val()+		//版本状态
+				"&terminalinfo[terminalName]="+$("#terminalName").val()+				//终端名称
+				"&terminalinfo[deviceType]="+$("#deviceTypeHidden").val()+				//设备类型
+				"&terminalinfo[situation]="+$("#situation").val();						//库存情况
+				window.opener.submitSearch(param);
+				window.close();
+			}
+		</script>
+    </head>
+    <body>
+   
+      <table class="form_main_table" id="table">
+		<tr>
+			<td class="form_text_left">终端名称:</td>
+			<td><input type="text" name="terminalinfo[terminalName]" id="terminalName" value="" style="width:202px;"/></td>
+			<td class="form_text_right">产品类型:</td>
+			<td><input type="text" class='txt' name="terminalinfo[proTypeName]"  id="proType"  readonly/>
+				<input type="hidden" name="terminalinfo[proType]" id="proTypeHidden" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">设备类型:</td>
+			<td><input type="text" class='txt' id="deviceType" style="width:202px;" readonly/>
+				<input type="hidden" name="terminalinfo[deviceType]" id="deviceTypeHidden" readonly/>
+			</td>
+			<td class="form_text_right">网络类型:</td>
+			<td><input type="text" class='txt' id="supportNetwork" style="width:202px;" readonly/>
+				<input type="hidden" name="terminalinfo[supportNetwork]" id="supportNetworkHidden" value=""  readonly/></td>
+								<!-- <td>货源情况:</td><td><select style="width:202px;"><option>在产</option><option>停产</option></select></td> -->
+			</d>
+		</tr>
+		<tr><td class="form_text_left">库存情况:</td>
+			<td><select  name="terminalinfo[situation]" id="situation" style="width:202px;">
+					<option value=''></option>
+					<option value='1'>有</option>
+					<option value='2'>无</option>
+				</select>
+			</td>
+			<td class="form_text_right">版本状态:</td>
+			<td><input type="text" class='txt' id="versionStatus"  style="width:202px;" readonly/>
+				<input type="hidden" name="terminalinfo[versionStatus]" id="versionStatusHidden"  value="" readonly/></td>
+		</tr>
+		<tr><td colspan="8" align="center"><input type="button" value="查询" onclick="search()"/></td></tr>
+	</table>
+	
+
+    </body>
+</html>

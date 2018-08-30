@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>转正考核评估表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/examine-add.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_permanent_examine&action=add" onsubmit="return caculate()">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							转正考核评估表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_right_three" colspan="6">
+					<font color='blue'>[*]为必填项</font>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">员工编号</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="userNo" name="examine[userNo]" value="{userNo}" readonly/>
+				</td>
+				<td class="form_text_left_three">姓  名</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="useName" name="examine[useName]" value="{userName}" readonly/>
+					<input type="hidden" id="userAccount" name="examine[userAccount]" value="{userAccount}"/>
+				</td>
+				<td class="form_text_left_three">性  别</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="sex" name="examine[sex]" value="{sex}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">年  龄</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="age" name="examine[age]" value="{age}" readonly/>
+				</td>
+				<td class="form_text_left_three">部  门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="deptName" name="examine[deptName]" value="{belongDeptName}" readonly/>
+					<input type="hidden" id="deptId" name="examine[deptId]" value="{belongDeptId}"/>
+					<input type="hidden" class="txt" id="deptCode" name="examine[deptCode]" value="{belongDeptCode}"/>
+					<!-- 二级部门: -->
+					<input type="hidden" name="examine[deptNameS]" id="deptNameS" value="{deptNameS}" readonly/>
+					<input type="hidden" id="deptIdS" name="examine[deptIdS]" value="{deptIdS}"/>
+					<input type="hidden" id="deptCodeS" name="examine[deptCodeS]" value="{deptCodeS}"/><br/>
+					<!-- 三级部门: -->
+					<input type="hidden" name="examine[deptNameT]" id="deptNameT" value="{deptNameT}" readonly/>
+					<input type="hidden" id="deptIdT" name="examine[deptIdT]" value="{deptIdT}"/>
+					<input type="hidden" id="deptCodeT" name="examine[deptCodeT]" value="{deptCodeT}"/>
+					<!-- 四级部门: -->
+					<input type="hidden" name="examine[deptNameF]" id="deptNameF" value="{deptNameF}" readonly/>
+					<input type="hidden" id="deptIdF" name="examine[deptIdF]" value="{deptIdF}"/>
+					<input type="hidden" id="deptCodeF" name="examine[deptCodeF]" value="{deptCodeF}"/>
+				</td>
+				<td class="form_text_left_three">职  位</td>
+				<td class="form_text_right_three">
+					<input type="hidden" id="positionId" name="examine[positionId]" value="{jobId}"/>
+					<input type="text" class="readOnlyText" id="positionName" name="examine[positionName]" value="{jobName}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">学历</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="education" name="examine[education]" value="{highEducationName}" readonly/>
+					<input type="hidden" id="educationCode" name="examine[educationCode]" value="{highEducation}"/>
+				</td>
+				<td class="form_text_left_three">毕业院校</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="school" name="examine[school]" value="{highSchool}" readonly/>
+				</td>
+				<td class="form_text_left_three">专  业</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="professional" name="examine[professional]" value="{professionalName}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">联系电话</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="phone" name="examine[phone]" value="{mobile}"/>
+				</td>
+				<td class="form_text_left_three">工作年限</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="workSeniority" name="examine[workSeniority]" value="" />
+				</td>
+				<td class="form_text_left_three">填表日期</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="reformDT" readonly  name="examine[reformDT]" value="{reformDT}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">入职时间</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="begintime" value="{begintime}" readonly  name="examine[begintime]" />
+				</td>
+				<td class="form_text_left_three">计划转正时间</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="finishtime" value="{finishtime}"  readonly  name="examine[finishtime]" />
+					<input type="hidden" id="permanentDate" value="{finishtime}" name="examine[permanentDate]" />
+				</td>
+				<td class="form_text_left_three">考核方案</td>
+				<td class="form_text_right_three">
+					<input id="assessName" class="readOnlyText" name="examine[schemeName]" type="text" readonly="readonly" value="{schemeName}"/>
+					<input id="assessId" name="examine[schemeId]" value="{schemeId}" type="hidden"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">导  师</td>
+				<td class="form_text_right_three">
+					<input type="hidden" name="examine[tutorId]" id="tutorId" value="{tutorId}"/>
+					<input type="text" class="readOnlyText" id="tutor" name="examine[tutor]" value="{tutor}" readonly='readonly'/>
+				</td>
+				<td class="form_text_left_three"><span id="leaderShow">直接领导</span></td>
+				<td class="form_text_right_three">
+					<input type="hidden" id="leaderId" name="examine[leaderId]" value="{leaderId}"/>
+					<input type="text" class="txt" id="leader" name="examine[leaderName]" value="{leaderName}" readonly='readonly'/>
+				</td>
+				<td class="form_text_left_three">自评总分</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="selfScore" name="examine[selfScore]" readonly='readonly'/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">工作总结</td>
+				<td class="form_text_right_three" colspan="6">
+					{summarysetting}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">后三个月工作规划</td>
+				<td class="form_text_right_three" colspan="6">
+					{plansetting}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">想法及建议</td>
+				<td class="form_text_right_three" colspan="6">
+					<textarea name="examine[aboutIt]" class="txt_txtarea_biglong" id="suggestion"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" class="form_text_right">
+					<span class="blue">提示:复核总分在50分以下的，视为考核不通过。</span><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">
+					考评尺度(分):
+				</td>
+				<td colspan="6" class="form_text_right">
+					优秀：9(含)-10    良好：7(含)-8    一般：5(含)-6     较差：3(含)-4    极差：0-2
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<fieldset><legend><b>考核内容</b></legend>
+						<div id="schemeTable"></div>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="hidden" id="summarystatus" name="examine[summarystatus]" value="{summarystatus}"/>
+					<input type="hidden" id="planstatus" name="examine[planstatus]" value="{planstatus}"/>
+					<input type="hidden" name="examine[isAgree]" value="0"/>
+					<input type="hidden" id="status" name="examine[status]" value="1"/>
+					<input type="button" class="txt_btn_a" id="postbtn" value=" 提交领导审核 " onclick="submitinfo();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" id="masterbtn" value=" 提交导师审核 " onclick="submitmaster();"/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" id="savebtn" value=" 保  存 "/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

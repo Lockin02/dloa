@@ -1,0 +1,60 @@
+<html>
+<title>导入EXCEL数据</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script>
+    function DownloadTemplates(){
+        window.open('upfile/合同销售项目决算导入模板.xls')
+    }
+ 	//表单验证方法
+    function sub(){
+    	if($("#inputExcel").val() == "" ){
+    		alert("请选择需要导入的EXCEL文件");
+    		return false;
+    	}
+    	$("#loading").show();
+    	return true;
+    }
+</script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            财务金额导入
+      </span>
+</div>
+<form action="?model=contract_conproject_conproject&action=finalceMoneyImport" ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1" onsubmit="return sub();">
+    <input type="hidden" name="leadExcel" value="true">
+
+    <table class="form_main_table" align="center" width="90%" border="0">
+        <span class="red">点击导入后有延迟请稍作等待...</span>
+    	<tr>
+            <td class="form_text_left">
+                导入标准
+            </td>
+            <td class="form_text_right">
+                <!--<input type="radio" name="import[normType]" value="合同号"  checked >合同号-->
+                <input type="radio" name="import[normType]" value="项目编号" checked>项目编号
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                <label for="file">上传文件:</label>
+            </td>
+            <td class="form_text_right">
+                <input type="file" class="txt" name="inputExcel" id="inputExcel"/>&nbsp&nbsp
+                <input type="button" onclick="DownloadTemplates();" class="txt_btn_a" value="下载模版">
+
+                <input type="submit" class="txt_btn_a" value=" 导 入 "  />
+            </td>
+        </tr>
+		<tr id="loading" style="display:none">
+			<td colspan="2" align="center">
+				<img src="images/loading1.gif">
+			</td>
+		</tr>
+    </table>
+</form>
+</body>
+</html>

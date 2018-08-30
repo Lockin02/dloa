@@ -1,0 +1,220 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>
+            我的项目
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+ <script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script>
+
+			$().ready(function() {
+                /**
+				 * Json数组
+				 * width : 右键区域宽度
+				 * items ：右键操作数组
+				 * 		text : 名称
+				 *  	icon : 图表
+				 *  	alias: 数组表示（类似Id）
+				 *  	action : 单击触发事件（函数名）
+				 *      type: "splitLine": 右键显示分割线
+				 * onShow : 是否显示右键某些操作接口
+				 * onContextMenu : 右键触发前事件接口(需要返回值)
+				 */
+                var option = {
+                    width: 150,
+                    items: [{
+                        text: "管理项目",
+                        icon: "images/ico1.gif",
+                        alias: "1-1",
+                        action: openProject
+                    },{
+                        text: "查看项目",
+                        icon: "images/ico2.gif",
+                        alias: "1-2",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_project_rdproject&action=rpRead&pjId='
+								+ row.pjId
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=750');
+                        }
+                    },
+                    {
+                        type: "splitLine"
+                    },
+                    {
+                        text: "暂停项目",
+                        icon: "images/ico3.gif",
+                        alias: "1-3",
+                        action: menuAction
+                    },
+                    {
+                        text: "完成项目",
+                        icon: "images/ico1.gif",
+                        alias: "1-4",
+                        action: menuAction1
+                    },
+                    {
+                        text: "关闭项目",
+                        icon: "images/ico2.gif",
+                        alias: "1-5",
+                        action: menuAction1
+                    }],
+                    onShow: applyrule,
+                    onContextMenu: BeforeContextMenu
+                };
+
+                //单击 操作1
+
+                function menuAction(t) {
+                    alert("管理项目");
+                    //location = '?model=management_stop&action=stop';
+                }
+                function menuAction1(t) {
+                    alert("暂停项目");
+                    //location = '?model=management_stop&action=close';
+                }
+
+
+                //单击 操作2
+                function openProject(t) {
+
+                }
+
+                //隐藏右键某些操作
+                function applyrule(menu) {
+                    if (this.id == "kong") {
+                        menu.applyrule({
+                            name: "kong",
+                            disable: true,
+                            items: ["1-2", "1-3"]
+                        });
+                    } else {
+                        menu.applyrule({
+                            name: "all",
+                            disable: true,
+                            items: []
+                        });
+                    }
+                }
+
+                //右键触发前操作
+                function BeforeContextMenu() {
+
+                    return true;
+                }
+
+                //定位初始化右键板块
+                $(".tr_even,.tr_odd").contextmenu(option);
+            });
+
+            $(document).ready(function() {
+            	//添加鼠标经过行颜色改变
+                rowsColorChange();
+
+                $(".tr_even,.tr_odd").bind("dblclick",
+                function() {
+                    //location = '?model=management_dashboard';
+                    alert("TODO:查看");
+                });
+
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="main_head">
+            <span class="main_head_title">
+                项目列表
+            </span>
+        </div>
+        <div class="tab_line"></div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+                <tr>
+                    <td>
+                        输入关键字：
+                        <input type="text" id="searchvalue" class="txt" name="searchvalue" value=""/>
+                        按
+                        <select id="searchfield" class="select">
+                            <option>
+                                请选择
+                            </option>
+                            <option value="Name">
+                                客户名称
+                            </option>
+                            <option value="Number">
+                                客户编号
+                            </option>
+                        </select>
+                        <input type="button" value=" 搜索 " class="txt_btn_a" />
+                        &nbsp;
+                        <input title="高级搜索" type="button" value="高级搜索" class="txt_btn_a"/>
+                        &nbsp;
+                        <input title="组合报表生成" type="button" value="组合报表生成" class="txt_btn_a" />
+                    </td>
+                    <td>
+                        <input type="checkbox" name="">
+                        隐藏关闭的项目
+                    </td>
+                </tr>
+            </table>
+			<table class="main_table">
+		        <thead>
+		            <tr class="main_tr_header">
+		                <th width="2%">
+		                </th>
+		                <th width="10%">
+		               		 名称
+		                </th>
+		                <th width="11%">
+		                    所属部门
+		                </th>
+		                <th width="7%">
+		                    责任人
+		                </th>
+		                <th width="5%">
+		                    项目状态
+		                </th>
+		                <th width="5%">
+		                    偏差率
+		                </th>
+		                <th width="7%">
+		                     已投入工作量
+		                </th>
+		                <th width="7%">
+		                    当前里程碑
+		                </th>
+		                <th width="7%">
+		                     项目编号
+		                </th>
+		                <th width="7%">
+		                    项目类型
+		                </th>
+		                <th width="8%">
+		                    计划启动日期
+		                </th>
+		                <th width="8%">
+		                     计划关闭日期
+		                </th>
+		                <th width="4%">
+		                    操作
+		                </th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        	{list}
+		        </tbody>
+		    </table>
+		</div>
+		{pageDiv}
+    </body>
+
+</html>

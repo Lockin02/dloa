@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑奖惩</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/incentive-edit.js" ></script>
+      <!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+   <script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_personnel_incentive",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_incentive_incentive&action=edit" >
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head">
+            	<span class="main_head_title">
+               		编辑奖惩信息
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">员工编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="incentive[userNo]" id="userNo" value="{userNo}" readonly="readonly"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">员工姓名</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="incentive[userName]" id="userName" value="{userName}" readonly="readonly"/>
+			 <input type="hidden" name="incentive[userAccount]" id="userAccount" value="{userAccount}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">所属部门</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="incentive[deptName]" id="deptName" value="{deptName}" readonly="readonly"/>
+			 <input type="hidden" name="incentive[deptId]" id="deptId" value="{deptId}" />
+		</td>
+		<td class="form_text_left">授予单位</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt"  name="incentive[grantUnitName]"  value="{grantUnitName}"/>
+			 <input type="hidden" name="incentive[grantUnitId]"  value="{grantUnitId}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">奖惩属性</span></td>
+		<td class="form_text_right" >
+			 <select id="incentiveType" name="incentive[incentiveType]" class="select">
+			 	{incentiveType}
+			 </select>
+		</td>
+		<td class="form_text_left"><span style="color:blue">奖惩日期</span></td>
+		<td class="form_text_right" >
+			<input type="text" class="txt Wdate" onfocus="WdatePicker()" id="incentiveDate" name="incentive[incentiveDate]" value="{incentiveDate}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">工资月份</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt Wdate"  name="incentive[rewardPeriod]" id="rewardPeriod" value="{rewardPeriod}" onfocus="WdatePicker({'dateFmt':'yyyy-M'})" readonly="readonly"/>
+		</td>
+		<td class="form_text_left">奖惩金额</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt formatMoney" name="incentive[incentiveMoney]" id="incentiveMoney" value="{incentiveMoney}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">记 录 人</span></td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="recorderName" name="incentive[recorderName]"  value="{recorderName}" readonly="readonly"/>
+			 <input type="hidden" name="incentive[recorderId]" id="recorderId" value="{recorderId}" />
+		</td>
+		<td class="form_text_left">记录日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt Wdate" id="recordDate" onfocus="WdatePicker()" name="incentive[recordDate]" value="{recordDate}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left" id="important">附  件</td>
+		<td colspan="3" class="form_text_right">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+					<br />
+				</div>
+				<div id="uploadfileList" class="upload">{file}</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">奖惩原因</td>
+		<td class="form_text_right" colspan="3">
+			<textarea name="incentive[reason]" class="txt_txtarea_800">{reason}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">奖惩说明</td>
+		<td class="form_text_right" colspan="3">
+			<textarea name="incentive[description]" class="txt_txtarea_800">{description}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注说明</td>
+		<td class="form_text_right" colspan="3">
+			<textarea name="incentive[remark]" class="txt_txtarea_800">{remark}</textarea>
+		</td>
+	</tr>
+   	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" name="incentive[id]" id="id" value="{id}" />
+			<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

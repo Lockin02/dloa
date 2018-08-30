@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+<link type="text/css" href="js/jquery/style/yxwindow.css" media="screen" rel="stylesheet" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+	var uploadfile;
+	$(function() {
+			// 验证信息
+			validate({
+				"stampType" : {
+					required : true
+				}
+			});
+
+		uploadfile = createSWFUpload({
+			"serviceType": "oa_purch_apply_basic",
+			"serviceId": "{serviceId}"
+		});
+	});
+
+	function checkForm(){
+		if($("#uploadfileList").html() =="" || $("#uploadfileList").html() =="暂无任何附件"){
+			alert('请上传附件！');
+			return false;
+		}
+		return true;
+	}
+
+</script>
+</head>
+<body>
+	<div class="main_head">
+	   	<span class="main_head_title">申请盖章《{hwapplyNumb}》</span>
+	</div>
+
+<form id="form1" method="post" action="?model=purchase_contract_purchasecontract&action=seal"  onsubmit="return checkForm();">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">盖章类型</td>
+		<td class="form_text_right">
+			<select class="select" name="contract[stamp][stampType]" id="stampType">
+				{stampType}
+			</select>
+			<span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">备注说明</td>
+		<td class="form_text_right">
+			 <textarea class="txt_txtarea_font" name="contract[stamp][remark]" id="remark"></textarea>
+		</td>
+    </tr>
+			<tr>
+				<td class="form_text_left">附件</td>
+				<td colspan="3" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">{file}</div>
+					</div>
+				</td>
+			</tr>
+
+	<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		 <input type="hidden" name="contract[id]" id="id" value="{id}" />
+		 <input type="hidden" name="contract[serviceId]" id="serviceId" value="{serviceId}" />
+	     <input type="hidden" name="contract[serviceType]" id="serviceType" value="oa_purch_apply_basic" />
+       	<input type="hidden" name="contract[stamp][contractId]" value="{id}" />
+       	<input type="hidden" name="contract[stamp][contractCode]" value="{hwapplyNumb}" />
+       	<input type="hidden" name="contract[stamp][contractName]" value="" />
+       	<input type="hidden" name="contract[stamp][objCode]" value="" />
+       	<input type="hidden" name="contract[stamp][signCompanyName]" value="{suppName}" />
+       	<input type="hidden" name="contract[stamp][signCompanyId]" value="{suppId}" />
+       	<input type="hidden" name="contract[stamp][applyUserId]" value="{thisUserId}" />
+       	<input type="hidden" name="contract[stamp][applyUserName]" value="{thisUserName}" />
+       	<input type="hidden" name="contract[stamp][applyDate]" value="{applyDate}" />
+       	<input type="hidden" name="contract[stamp][status]" value="0" />
+       	<input type="hidden" name="contract[stamp][contractType]" value="HTGZYD-03" />
+       	<input type="hidden" name="contract[stamp][categoryId]" value="GZLB-01" />
+		<input type="submit" class="txt_btn_a" value=" 提 交" />&nbsp;&nbsp;
+		<input type="button" class="txt_btn_a" value=" 关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+	</tr>
+	</table>
+</table>
+</form>
+</body>
+</html>

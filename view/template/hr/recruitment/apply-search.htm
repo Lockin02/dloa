@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>查询条件</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-recruitplan.js"></script>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/yxcombogrid-interviewparent.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-search.js"></script>
+</head>
+<body>
+	<form>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							选择查询条件
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">填表人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="formManName"/>
+					<input type="hidden" id="formManId"/>
+				</td>
+				<td class="form_text_left_three">接口人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="resumeToName"/>
+				</td>
+				<td class="form_text_left_three">需求部门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="deptName" readonly />
+					<input type="hidden" id="deptId"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">工作地点</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="workPlace"/>
+				</td>
+				<td class="form_text_left_three">职位类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="postType">
+						<option value="">不限</option>
+						{postType}
+					</select>
+				</td>
+				<td class="form_text_left_three">需求职位</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="positionName"/>
+					<input type="hidden" class="txt"
+					id="positionId"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">职位备注</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="positionNote"/>
+				</td>
+				<td class="form_text_left_three">所在项目组</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="projectGroup"/>
+					<input type="hidden" id="projectGroupId"/>
+					<input type="hidden" id="projectCode"/>
+				</td>
+				<td class="form_text_left_three">是否紧急</td>
+				<td class="form_text_right_three">
+					&nbsp;<input type="radio" name="apply[isEmergency]" value="" checked />&nbsp;不限&nbsp;
+					&nbsp;<input type="radio" name="apply[isEmergency]" value="1"/>&nbsp;是&nbsp;
+					&nbsp;<input type="radio" name="apply[isEmergency]" value="0"/>&nbsp;否&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">填表日期</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" id="formDateBef" onfocus="WdatePicker()" readonly />&nbsp;-&nbsp;
+					<input type="text" style="width:87px" id="formDateEnd" onfocus="WdatePicker()" readonly />
+				</td>
+				<td class="form_text_left_three">希望到岗时间</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" id="hopeDateBef" onfocus="WdatePicker()" readonly />&nbsp;-&nbsp;
+					<input type="text" style="width:87px" id="hopeDateEnd" onfocus="WdatePicker()" readonly />
+				</td>
+				<td class="form_text_left_three">增员类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="addTypeCode">
+						<option value="">不限</option>
+						{addTypeCode}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">需求人数</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="needNum"/>
+				</td>
+				<td class="form_text_left_three">招聘负责人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="recruitManName"/>
+				</td>
+				<td class="form_text_left_three">需求原因</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="applyReason"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">工作职责</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="workDuty"/>
+				</td>
+				<td class="form_text_left_three">任职要求</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="jobRequire"/>
+				</td>
+				<td class="form_text_left_three">关键要点</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="keyPoint"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">注意事项</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="attentionMatter"/>
+				</td>
+				<td class="form_text_left_three">部门领导喜好</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="leaderLove"/>
+				</td>
+				<td class="form_text_left_three">进度备注</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" id="applyRemark"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">非需求部门</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" class="txtlong" id="noDeptName" readonly />
+					<input type="hidden" id="noDeptId"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">单据状态</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="checkbox" name="apply[state][]" value="1"/>未下达&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="2"/>招聘中&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="3"/>暂停&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="4"/>完成&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="7"/>取消&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="8"/>提交
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">审批状态</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="checkbox" name="apply[ExaStatus][]" value="未提交"/>未提交&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="打回"/>打回&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="部门审批"/>部门审批&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="完成"/>完成&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="button" class="txt_btn_a" value=" 确   认 " onclick="toSupport();"/>&nbsp;&nbsp;
+					<input type="reset" class="txt_btn_a" value=" 清  空 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

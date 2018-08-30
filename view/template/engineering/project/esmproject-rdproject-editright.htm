@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑工程项目</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allorder.js"></script>
+
+	<script type="text/javascript" src="{#jsPath#}/esmproject-editright.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	编辑工程项目
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_project_esmproject&action=editNormal">
+<table class="form_main_table">
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">基 本 信 息</legend>
+				<table class="form_in_table">
+					<tr>
+				   		<td class="form_text_left_three">办 事 处</td>
+						<td class="form_text_right_three">
+							{officeName}
+						</td>
+						<td class="form_text_left_three">项目编号</td>
+						<td class="form_text_right_three">
+							{projectCode}
+						</td>
+						<td class="form_text_left_three">项目名称</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmproject[projectName]" value="{projectName}" id="projectName"/>
+							<span class="red">[*]</span>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">项目状态</td>
+						<td class="form_text_right">
+							{statusName}
+						</td>
+						<td class="form_text_left_three">审批状态</td>
+						<td class="form_text_right">
+							{ExaStatus}
+						</td>
+						<td class="form_text_left_three">最近更新</td>
+						<td class="form_text_right">
+							{updateTime}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">详 细 信 息</legend>
+				<table class="form_in_table">
+					<tr>
+						<td class="form_text_left_three">预计开始</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="esmproject[planBeginDate]" id="planBeginDate" value="{planBeginDate}" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">预计结束</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="esmproject[planEndDate]" id="planEndDate" value="{planEndDate}" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">预计工期</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmproject[expectedDuration]" id="expectedDuration" value="{expectedDuration}"/>
+							<span class="red">[*]</span>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">总 人 数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText" name="esmproject[peopleNumber]" value="{peopleNumber}" id="peopleNumber" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">鼎利人数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText" name="esmproject[dlPeople]" value="{dlPeople}" id="dlPeople" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">外包人数</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmproject[outsourcingPeople]" value="{outsourcingPeople}" id="outsourcingPeople"/>
+							<span id="outsourcingPeopleUnit" style="display:none">人</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">外包类型</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[outsourcing]" id="outsourcing">
+								{outsourcing}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">外包方式</td>
+						<td class="form_text_right">
+							<select class="select" name="esmproject[outsourcingType]" id="outsourcingType">
+								{outsourcingType}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">外包分担工作</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="esmproject[outsourcingJob]" value="{outsourcingJob}" id="outsourcingJob"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">预 决 算</legend>
+				<table class="form_in_table">
+					<tr>
+						<td class="form_text_left_three">总 预 算</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetAll]" id="budgetAll"  value="{budgetAll}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">现场预算</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetField]" id="budgetField" value="{budgetField}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">设备预算</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetEqu]" id="budgetEqu" value="{budgetEqu}" readonly="readonly"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">人力预算(元)</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetPerson]" id="budgetPerson"  value="{budgetPerson}" readonly="readonly"/>
+						<td class="form_text_left_three">人力预算(天)</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetPeople]" id="budgetPeople" value="{budgetPeople}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">人天预算(天)</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmproject[budgetDay]" id="budgetDay" value="{budgetDay}" readonly="readonly"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">外包预算</td>
+						<td class="form_text_right" colspan="5">
+							<input type="text" class="txt formatMoney" name="esmproject[budgetOutsourcing]" id="budgetOutsourcing"  value="{budgetOutsourcing}" onblur="countBudgetAll();"/>
+							<span class="red">[*]</span>
+			 				<input type="hidden" name="esmproject[budgetOther]" id="budgetOther"  value="{budgetOther}"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">负 责 人 员</legend>
+				<table class="form_in_table">
+					<tr>
+				   		<td class="form_text_left_three">项目经理</td>
+						<td class="form_text_right_three">
+							<input type="hidden" name="esmproject[managerId]" value="{managerId}" id="managerId"/>
+							<input type="text" class="readOnlyText" name="esmproject[managerName]" value="{managerName}" id="managerName" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">大区经理</td>
+						<td class="form_text_right_three">
+							<input type="hidden" name="esmproject[areaManagerId]" value="{areaManagerId}" id="areaManagerId"/>
+							<input type="text" class="txt" name="esmproject[areaManager]" value="{areaManager}" id="areaManager" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">技术经理</td>
+						<td class="form_text_right_three">
+							<input type="hidden" name="esmproject[techManagerId]" value="{techManagerId}" id="techManagerId"/>
+							<input type="text" class="txt" name="esmproject[techManager]" value="{techManager}" id="techManager" readonly="readonly"/>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">客户姓名</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmproject[customerLinkMan]" value="{customerLinkMan}" id="customerLinkMan"/>
+						</td>
+						<td class="form_text_left_three">销售负责人</td>
+						<td class="form_text_right_three">
+							<input type="hidden" name="esmproject[salesmanId]" value="{salesmanId}" id="salesmanId"/>
+							<input type="text" class="txt" name="esmproject[salesman]" value="{salesman}" id="salesman" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">研发责任人</td>
+						<td class="form_text_right_three">
+							<input type="hidden" name="esmproject[rdUserId]" value="{rdUserId}" id="rdUserId"/>
+							<input type="text" class="txt" name="esmproject[rdUser]" value="{rdUser}" id="rdUser" readonly="readonly"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 分 类</legend>
+				<table class="form_in_table">
+					<tr>
+						<td class="form_text_left_three">客户类型</td>
+						<td class="form_text_right_three" >
+							{customerTypeName}
+						</td>
+						<td class="form_text_left_three">项目属性</td>
+						<td class="form_text_right">
+							{attributeName}
+						</td>
+						<td class="form_text_left_three">长/短 期</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[cycle]" id="cycle">
+								{cycle}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">项目类别</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[category]" id="category">
+								{category}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">性 质 1</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[nature]" id="nature">
+								{nature}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">性 质 2</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[nature2]" id="nature2">
+								{nature2}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">方案及平台</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[platform]" id="platform">
+								{platform}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">网 络</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[net]" id="net">
+								{net}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">建立方式</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[createType]" id="createType">
+								{createType}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">签定方式</td>
+						<td class="form_text_right_three">
+							<select class="select" name="esmproject[signType]" id="signType">
+								{signType}
+							</select>
+							<span class="red">[*]</span>
+						</td>
+						<td class="form_text_left_three">工具类型</td>
+						<td class="form_text_right_three" colspan="3">
+							<input type="text" class="txt" name="esmproject[toolType]" value="{toolType}" id="toolType"/>
+							<input type="hidden" value="{toolType}" id="toolTypeHidden"/>
+							<span class="red">[*]</span>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">合 同 信 息</legend>
+				<table class="form_in_table">
+					<tr>
+						<td class="form_text_left_three">鼎利合同号</td>
+						<td class="form_text_right_three" >
+							{contractCode}
+						</td>
+						<td class="form_text_left_three">临时合同号</td>
+						<td class="form_text_right_three">
+							{contractTempCode}
+						</td>
+						<td class="form_text_left_three">合同业务号</td>
+						<td class="form_text_right_three">
+							{rObjCode}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">客户名称</td>
+						<td class="form_text_right">
+							{customerName}
+						</td>
+						<td class="form_text_left_three">所属省份</td>
+						<td class="form_text_right_three">
+							{proName}
+						</td>
+						<td class="form_text_left_three">工作占比</td>
+						<td class="form_text_right" colspan="3">
+							{workRate}&nbsp;%
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">描 述 信 息</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three">项目描述</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" name="esmproject[description]" rows="4" cols="78">{description}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">工作量描述</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" name="esmproject[workDescription]" rows="4" cols="78">{workDescription}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">备注说明</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" name="esmproject[remark]" style="wrap:hard" rows="4" cols="78">{remark}</textarea>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" name="esmproject[status]" value="{status}" />
+         	<input type="hidden" id="id" name="esmproject[id]" value="{id}" />
+		    <input type="submit" class="txt_btn_a" value="保  存"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

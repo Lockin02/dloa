@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>新增项目状态报告</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" href="js/jquery/validation/validationEngine.css" type="text/css" media="screen" />
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<!-- 验证组件 -->
+	<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+	<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<script type="text/javascript" src="view/template/engineering/project/js/statusreport-common.js"></script>
+	<script type="text/javascript" src="view/template/engineering/project/js/statusreport-add.js" ></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_project_statusreport&action=add">
+<table class="form_main_table" style="width:1150px;margin:auto;align:center" align="center">
+	<tr>
+		<td colspan="6">
+			<div class="main_head2">
+			    <span class="main_head_title">
+			      	项目周报
+			    </span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">基 本 信 息</legend>
+                <table class="form_in_table">
+                    <tr>
+                        <td class="form_text_left_three">项目名称：</td>
+                        <td class="form_text_right_three">
+                            {projectName}
+                            <input type="hidden" name="statusreport[handupDate]" id="handupDate" value="{thisDate}"/>
+                            <input type="hidden" name="statusreport[officeName]" id="officeName" value="{officeName}"/>
+                            <input type="hidden" name="statusreport[officeId]" id="officeId" value="{officeId}"/>
+                            <input type="hidden" name="statusreport[projectId]" id="projectId" value="{id}"/>
+                            <input type="hidden" name="statusreport[projectCode]" id="projectCode" value="{projectCode}"/>
+                            <input type="hidden" name="statusreport[projectName]" id="projectName" value="{projectName}"/>
+                            <input type="hidden" name="statusreport[managerName]" id="managerName" value="{managerName}"/>
+                            <input type="hidden" name="statusreport[managerId]" id="managerId" value="{managerId}"/>
+                            <input type="hidden" name="statusreport[beginDate]" id="beginDate" value="{beginDate}"/>
+                            <input type="hidden" name="statusreport[endDate]" id="endDate" value="{endDate}"/>
+                            <input type="hidden" name="statusreport[weekNo]" id="weekNo" value="{weekNo}"/>
+                        </td>
+                        <td class="form_text_left_three">项目编号：</td>
+                        <td class="form_text_right_three">
+                            <a href='javascript:void(0)' onclick="viewProject();">{projectCode}</a>
+                        </td>
+                        <td class="form_text_left_three">项目经理：</td>
+                        <td class="form_text_right_three">
+                            {managerName}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_three">周 次：</td>
+                        <td class="form_text_right_three">
+                            {weekNo}
+                        </td>
+                        <td class="form_text_left_three">周报开始日期：</td>
+                        <td class="form_text_right_three">
+                            {beginDate}
+                        </td>
+                        <td class="form_text_left_three">周报结束日期：</td>
+                        <td class="form_text_right_three">
+                            {endDate}
+                        </td>
+                    </tr>
+                </table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 预 警</legend>
+				<div id="weekWarning"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">关 键 指 标</legend>
+				<div id="weekStatus"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 汇 报</legend>
+				<table class="form_in_table">
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">进 展 描 述</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="description" name="statusreport[description]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">下 周 计 划</span></td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="nextPlan" name="statusreport[nextPlan]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">销 售 机 会</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="saleChance" name="statusreport[saleChance]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">竞争对手动向</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="competitorTrends" name="statusreport[competitorTrends]"></textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">研 发 反 馈</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="txt_txtarea_full" id="memberStatus" name="statusreport[memberStatus]"></textarea>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="hidden" id="status" name="statusreport[status]" value="XMZTBG01"/>
+			<input type="hidden" id="msg" name="msg" value="保存成功"/>
+			<input type="hidden" id="submitTag_" name="submitTag_" value="{submitTag_}"/>
+
+		    <input type="submit" class="txt_btn_a" value="提交审批" onclick="audit()"/>
+		    <input type="submit" class="txt_btn_a" value="保  存"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

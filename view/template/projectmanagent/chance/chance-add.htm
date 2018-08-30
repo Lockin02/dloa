@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增销售商机</title>
+{#commonInclude#}
+
+<script type="text/javascript" src="js/jquery/jquery.scrolltotop.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/chance/js/chance-proCity.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/chance/js/chance-add-list.js" ></script>
+	<script type="text/javascript" src="view/template/projectmanagent/chance/js/chance-add-validator.js"></script>
+    <script>
+      function toSave(){
+	          document.getElementById('form1').action = "index1.php?model=projectmanagent_chance_chance&action=add";
+             }
+    </script>
+    <style type="text/css">
+		.rimless_textA {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:100px;
+				}
+   </style>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_sale_chance"//业务模块编码，一般取表名
+	});
+});
+
+
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_chance_chance&action=add" name="form1" onsubmit="return checkMoneyAll();sub();">
+ <input type="hidden" class="txt" id="role" name="" value='{role}'/>
+<table class="form_main_table">
+ <div class="main_head"><span class="main_head_title">添加商机</span>
+<tr>
+		<td class="form_text_left_three"><span style="color:blue">商机名称</span></td>
+		<td class="form_text_right_three">
+			 <input type="text" class="txt" name="chance[chanceName]" id="chanceName"/>
+		</td>
+		<td class="form_text_left_three">商机金额</td>
+	    <td class="form_text_right_three" >
+			 <input type="text" id="chanceMoney" class="txt formatMoney" name="chance[chanceMoney]" />
+		</td>
+		<td class="form_text_left_con">签约主体 :</td>
+		<td class="form_text_right_con">
+<!--		   <select class="select" name="chance[signSubject]" id="signSubject">-->
+<!--		   </select>-->
+		     <input type="text" class="txt" name="chance[businessBelongName]" id="businessBelongName" value="{businessBelongName}" readonly="readonly"/>
+			 <input type="hidden" name="chance[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+		</td>
+</tr>
+<tr>
+       <td class="form_text_left_three"><span style="color:blue">商机类型</span></td>
+	   <td class="form_text_right_three" >
+			 <select class="select" id="chanceType" name="chance[chanceType]" onchange="Type(this);">
+			     <option value="">...请选择...</option>
+			 </select>
+		</td>
+		<td class="form_text_left_three"><span style="color:blue">商机属性</span></td>
+	   <td class="form_text_right_three" >
+			 <select class="select" id="chanceNature" name="chance[chanceNature]">
+			     <option value="">...请选择...</option>
+			 </select>
+		</td>
+		<td class="form_text_left_con">归属公司 :</td>
+		<td class="form_text_right_con">
+		     <input type="text" class="txt" name="chance[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+			 <input type="hidden" name="chance[formBelong]" id="formBelong" value="{formBelong}" />
+
+		</td>
+	   <!-- <td class="form_text_left_three"><span style="color:blue">商机阶段</span></td>
+	   <td class="form_text_right_three" >
+			 <select class="select" id="chanceStage" name="chance[chanceStage]" onchange="changeStage();">
+			     <option value="">...请选择...</option>
+			 </select>
+	   </td>-->
+</tr>
+<tr>
+		<td class="form_text_left_three"><span style="color:blue">客户名称</span></td>
+		<td class="form_text_right_three" id="customerTypeWrap">
+			 <input type="text" class="txt" name="chance[customerName]" id="customerName"/>
+			 <input type="hidden" name="chance[customerId]" id="customerId"/>
+		</td>
+		<td class="form_text_left_three">客户类型</td>
+		<td class="form_text_right_three">
+		    <!--<select class="txt" name="chance[customerType]" id="customerType">-->
+		        <!--<option value="">...请选择...</option>-->
+		    <!--</select>-->
+			<input type="text" class="readOnlyTxtNormal" readonly id="customerTypeName"/>
+			<input type="hidden" name="chance[customerType]" id="customerType" value=""/>
+		</td>
+		<td class="form_text_left_three"><span style="color:blue">商机赢率</span></td>
+	    <td class="form_text_right_three" >
+			 <select class="select" id="winRate" name="chance[winRate]">
+			     <option value="">...请选择...</option>
+			 </select>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">所属国家:</td>
+		<td class="form_text_right_three">
+		    <select class="select" id="country" disabled="true">
+		    </select>
+		    <input type="hidden" name="chance[Country]" id="countryName" value="中国"/>
+			<input type="hidden" name="chance[CountryId]" id="country_Id"/>
+		</td>
+		<td class="form_text_left_three">所属省份:</td>
+		<td class="form_text_right_three">
+			<select class="select" id="province" disabled="true">
+			</select>
+			<input type="hidden" name="chance[Province]" id="provinceName"/>
+			<input type="hidden" name="chance[ProvinceId]" id="province_Id"/>
+	    </td>
+		<td class="form_text_left_three">所属城市:</td>
+		<td class="form_text_right_three">
+		   <select class="select" id="city" disabled="true">
+		   </select>
+		   <input type="hidden" name="chance[City]" id="cityName"/>
+			<input type="hidden" name="chance[CityId]" id="city_Id"/>
+		</td>
+</tr>
+<tr>
+        <td class="form_text_left_three"><span style="color:blue">预计合同签署日期</span></td>
+		<td class="form_text_right_three">
+		   <input type="text" class="txt" name="chance[predictContractDate]" onfocus="WdatePicker()" id="predictContractDate" />
+		</td>
+        <td class="form_text_left_three">预计合同执行日期</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" name="chance[predictExeDate]" onfocus="WdatePicker()" id="predictExeDate" />
+        </td>
+        <td class="form_text_left_three">合同执行周期（月）</td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt formatMoney" name="chance[contractPeriod]" id="contractPeriod"/>
+        </td>
+
+
+</tr>
+<tr>
+        <td class="form_text_left_three"><span style="color:blue">商机负责人</span></td>
+		<td class="form_text_right_three" >
+			 <input type="text" class="txt" readonly name="chance[prinvipalName]" id="prinvipalName" value="{prinvipalName}"/>
+			 <input type="hidden" class="txt" name="chance[prinvipalId]" id="prinvipalId" value="{prinvipalId}"/>
+			 <input type="hidden"  class="txt"  name="chance[prinvipalDeptId]" id="depId" value="{prinvipalDeptId}"/>
+			 <input type="hidden"  class="txt"  name="chance[prinvipalDept]" id="depName" value="{prinvipalDept}"/>
+        </td>
+		<td class="form_text_left_three"><span style="color:blue">归属区域</span></td>
+		 <td class="form_text_right_three">
+			 <select class="select" id="chooseAreaName" style="display:none"></select>
+			 <input type="hidden" id="originalAreaName" value="{areaName}" />
+		   <input type="text" class="readOnlyTxtNormal" readonly name="chance[areaName]" id="areaName" value="{areaName}"/>
+		   <input type="hidden" name="chance[areaCode]" id="areaCode" value="{areaCode}"/>
+		</td>
+		<td class="form_text_left_three">区域负责人</td>
+		<td class="form_text_right_three">
+		   <input type="text" class="readOnlyTxtNormal" name="chance[areaPrincipal]" id="areaPrincipal" value="{areaPrincipal}" readonly/>
+		   <input type="hidden" name="chance[areaPrincipalId]" id="areaPrincipalId" value="{areaPrincipalId}"/>
+		</td>
+</tr>
+<tr>
+ <td class="form_text_left_three">所属板块</td>
+	   <td class="form_text_right_three" >
+			 <select class="select" id="module" name="chance[module]">
+			 </select>
+		</td>
+</tr>
+<tr>
+       <td class="form_text_left_three">项目团队</td>
+	   <td class="form_text_right_three" colspan="5">
+			 <input type="text" class="txtbiglong900"  name="chance[trackman]" id="trackman"  readonly="readonly"/>
+			 <input type="hidden" name="chance[trackmanId]"  id="trackmanId" />
+			 &nbsp;&nbsp;&nbsp;&nbsp;
+			 <span onclick="authorize()" style="color:red;cursor:pointer;"> 团队赋权 </span>
+			 <img id="sf" src="images/unicorn_ico_up.gif" onclick="authorize()" title="缩放" />
+      	     <img id="zk" style="display:none" src="images/unicorn_ico_MyFavorite.gif" onclick="authorize()" title="展开" />
+			 <table  id="authorize" class="form_main_table">
+			 </table>
+	   </td>
+</tr>
+<tr>
+		<td class="form_text_left_three">产品选择</td>
+		<td class="form_text_right_three" colspan="5">
+			<span onclick="chooseProduct()" style="color:red;cursor:pointer;">选择产品</span>
+			<table id="productList" border=0 cellspacing=0  width=100% bordercolorlight=#333333 bordercolordark=#efefef style='font-size:14'>
+			</table>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">设备硬件</td>
+		<td class="form_text_right_three" colspan="5">
+			<span onclick="chooseHardware()" style="color:red;cursor:pointer;">选择设备硬件</span>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<img src="images/icon/icon095.gif" /> 提醒：请注意选择设备硬件，方便交付部提前做好预算
+			<table id="hardwareList" border=0 cellspacing=0  width=100% bordercolorlight=#333333 bordercolordark=#efefef style='font-size:14'>
+			</table>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">项目进展描述</td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_font1000" style="width:900px;" name="chance[progress]"></textarea>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">备注</td>
+		<td class="form_text_right_three"  colspan="5">
+			 <textarea class="txt_txtarea_font1000" style="width:900px;" name="chance[remark]" id="remark"></textarea>
+		</td>
+</tr>
+ <tr>
+				<td class="form_text_left_three">附件</td>
+				<td class="form_text_right_three" colspan="5">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span> <input
+					id="btnCancel" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+
+				</td>
+</tr>
+<tr id="linkmanList">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		  <b>客户联系人信息</b></legend>
+		    <div id="linkmanListInfo"></div>
+		</fieldset>
+		</td>
+</tr>
+<tr>
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		  <b>竞争对手</b>
+		   <img src="images/icon/icon002.gif" alt="新增选项" /></legend>
+		    <div id="competitorList"></div>
+		</fieldset>
+		</td>
+</tr>
+<!--<tr id="product" class="productInfo">-->
+<!--		<td colspan="6" class="innerTd">-->
+<!--		<fieldset style="width:200"><legend style="text-align:left">-->
+<!--		  <b onclick="hideList('product');">产品清单</b>-->
+<!--		    <img src="images/icon/icon002.gif" onclick="hideList('product');" title="隐藏" alt="新增选项" /></legend>-->
+<!--			<div id="productInfo"></div>-->
+<!--		</fieldset>-->
+<!--		</td>-->
+<!--	</tr>-->
+<!--<tr>-->
+<td colspan="6">
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+           <input type="hidden" id="status" name="chance[status]" value="5" />
+		   <input type="submit" class="txt_btn_a" value=" 提  交 " onclick="toSave();"/>&nbsp;
+		</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

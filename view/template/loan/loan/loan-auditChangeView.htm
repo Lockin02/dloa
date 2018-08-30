@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>借款单变更审批页面</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/common/dateUtil.js"></script>
+    <script type="text/javascript" src="js/common/approval.js"></script>
+
+    <style type="text/css">
+        input.billHistoryBtn {
+            COLOR: #000066;
+            BACKGROUND: #eee;
+            /*border: 1px solid black;*/
+            FONT-SIZE: 9pt;
+            FONT-STYLE: normal;
+            FONT-VARIANT: normal;
+            FONT-WEIGHT: normal;
+            HEIGHT: 18px;
+            LINE-HEIGHT: normal;
+            padding-left:5px;
+        }
+        #mainWrap{width: 70%;margin: 0 auto;padding-bottom: 20px;}
+        .proView{display: none}
+        table>tbody>tr>td{width: 250px;}
+        .textLeft,table>tbody>tr>td+td{text-align: left !important;width: auto}
+        .form_main_table td{padding:0 0 0 7px !important;line-height: 20px;}
+        .form_main_table td .labelStr{font-weight: bolder;}
+        a.newFile{color:red;}
+    </style>
+    <script>
+        function getProjectkey(id){
+            var skey = "";
+            $.ajax({
+                type: "POST",
+                url: "?model=engineering_project_esmproject&action=md5RowAjax",
+                data: { "id": id },
+                async: false,
+                success: function (data) {
+                    skey = data;
+                }
+            });
+            return skey;
+        }
+        $(function(){
+            var OldId = $("#ProjectNoOldStr").attr("data-id");
+            var OldCode = $("#ProjectNoOldStr").attr("data-code");
+            var newId = $("#ProjectNoStr").attr("data-id");
+            var newCode = $("#ProjectNoStr").attr("data-code");
+            var oldSkey = getProjectkey(OldId);
+            var newSkey = getProjectkey(newId);
+
+            var oldStr = '<a href="javascript:void(0)" onclick="window.open(&quot;?model=engineering_project_esmproject&amp;action=viewTab&amp;id='+OldId+'&amp;skey='+oldSkey+'&quot;)">'+OldCode+'</a>'
+            var newStr = '<a href="javascript:void(0)" style="color:red" onclick="window.open(&quot;?model=engineering_project_esmproject&amp;action=viewTab&amp;id='+newId+'&amp;skey='+newSkey+'&quot;)">'+newCode+'</a>'
+            $("#ProjectNoOldStr").html(oldStr);
+            $("#ProjectNoStr").html(newStr);
+        })
+    </script>
+</head>
+
+<body>
+<div id="mainWrap">
+    <table class="form_main_table">
+        <tr>
+            <td >
+                <div style="text-align:center;width:100%;margin-top:10;margin-bottom:10px;"><span style="font-size:large;font-weight:bold;color:red;"> 借 款 单 </span></div>
+                <input type="hidden" id="loanType" value="{XmFlag}">
+                <input type="hidden" id="loanId" value="{id}">
+            </td>
+        </tr>
+        <tr>
+            <td >
+                <table border="0" width="100%" cellpadding="1" cellspacing="0" align="right" class="small" >
+                    <tr  bgcolor="#FBFBFB">
+                        <td class="leftTd" height="23" align="right">
+                            <span class="labelStr">  借&nbsp;&nbsp;款&nbsp;ID : &nbsp;</span>
+                        </td>
+                        <td colspan="4">
+                            {loanId}
+                        </td>
+                    </tr>
+                    <tr  bgcolor="#FBFBFB">
+                        <td class="leftTd" height="23" align="right">
+                            <span class="labelStr">  借&nbsp;&nbsp;款&nbsp;人 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">
+                            {debtorName} &nbsp;&nbsp;
+                            账号：
+                            {DebtorPersnlNum}
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" rowspan="2" align="right">
+                            <span class="labelStr"><font color="red">借款金额 : &nbsp;</font></span>
+                        </td>
+                        <td height="23" colspan="4">
+                            小写（元）：
+                            {Amount}
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td height="23" colspan="4" class="textLeft">
+                            大写（元）：<span id="AmountBigStr">{AmountBig}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" rowspan="5">
+                            <span class="labelStr">借款信息 : &nbsp;</span>
+                        </td>
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下审批通过的已支付未还款的借款金额合计。">
+                            借款余额（元）：<span class="formatMoney">{preLoanBalance}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB" >
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下超过预计归还日期的已支付未还款的借款金额合计。">
+                            逾期借款余额（元）：<span class="formatMoney">{yqjkam}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB" >
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下借款性质是租金押金类型的已支付未还款的借款金额合计。">
+                            租房押金余额（元）：<span class="formatMoney">{cqjkam}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人正在报销中（审批中或还未支付）的费用金额总计。">
+                            报销中的费用（元）：<span class="formatMoney">{billingCost}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB" style="display: none;">
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下收单状态为已收单的报销金额，属于上交发票总额。">
+                            上交发票总额（元）：<span class="formatMoney">{addUpNotCost}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB" style="display: none;">
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下收单状态为未收单的报销金额，属于手里发票总额。">
+                            手里发票总额（元）：<span class="formatMoney">{handCost}</span>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB" >
+                        <td height="23" colspan="4" class="textLeft"style="cursor:pointer;"  title="借款人名下未还款借款单中最大的逾期天数。">
+                            借款逾期天数（天）：{maxOverRowDifDays}
+                        </td>
+                    </tr>
+
+                    <tr class="proView" bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">项目信息 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">
+                            <span id="ProjectNoOldStr" data-id="{oldProjectId}" data-code="{ProjectNoOld}">{ProjectNoOld}</span>
+                            <span id="ProjectNoStr" data-id="{projectId}" data-code="{ProjectNo}"><font color="red">{ProjectNo}</font></span>
+                        </td>
+                    </tr>
+
+                    <tr class="proView" bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23"style="cursor:pointer;"  title="该项目中已支付未还款的以及已还款的借款单的金额合计。">
+                            <span class="labelStr">项目借款 : &nbsp;</span>
+                        </td>
+                        <td colspan="4" class="formatMoney">&nbsp;{inLoanAmount}</td>
+                    </tr>
+
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">借款理由 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">
+                            <span>{Reason}</span>
+                        </td>
+                    </tr>
+
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">借款性质 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{loanNature}</td>
+                    </tr>
+                    {rendDatesStr}
+                    <tr bgcolor="#FBFBFB">
+                        <td align="right" height="23">
+                            <span class="labelStr">预计还款 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{PrepaymentDateOld} <font color="red">{PrepaymentDate}</font></td>
+                    </tr>
+
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">银行账号 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{BankNo}</td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">开户银行 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{BankAddress}</td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{file}</td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td class="leftTd" align="right" height="23">
+                            <span class="labelStr">变更理由 : &nbsp;</span>
+                        </td>
+                        <td colspan="4">{changeReason}</td>
+                    </tr>
+                    <tr bgcolor="#FBFBFB">
+                        <td align="right" height="23">
+                            <span class="labelStr">报销历史 : &nbsp;</span>
+                        </td>
+                        <td style="text-align: center !important;">
+                            <a href="javascript:void(0)" onClick="javascript:showHisloan()">最近5次借款</a>
+                        </td><td style="text-align: center !important;">
+                            <a href="javascript:void(0)" onClick="javascript:showHisBill()">最近5次报销</a>
+                        </td><td style="text-align: center !important;">
+                            <a href="javascript:void(0)" onClick="javascript:showHisDetail()">费用表（30天）</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    $(function(){
+        if($.trim($("#loanType").val()) == "工程借款"){
+            $(".proView").show();
+            $(".noProView").hide();
+        }
+    });
+
+    function showHisloan(){
+        var url="../general/costmanage/query/exam/loan_his.php?debtor={Debtor}";
+        window.open(url , "his_bill","status=1,toolbar=no,menubar=no,location=no,height=450");
+    }
+    function showHisBill(){
+        var url="../general/costmanage/query/exam/bill_his.php?seaUser={Debtor}";
+        window.open(url , "his_bill","status=1,toolbar=no,menubar=no,location=no,height=450");
+    }
+    function showHisDetail(){
+        var url="../general/costmanage/query/exam/detail_his.php?seaUser={Debtor}&actType=now";
+        window.open(url , "his_bill");
+    }
+</script>
+</body>

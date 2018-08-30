@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>批量操作</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=gbk"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/esmdevice-bacth.js"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+        批量操作
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_device_esmdevice&action=batch" onSubmit="return checkForm();">
+	<table class="form_main_table" width="90%">
+	    <tr>
+	        <td class="form_text_left">
+	            <label>执行操作:</label>
+	        </td>
+	        <td class="form_text_right">
+	            <input type="radio" name="esmdevice[type]" value="ereturn" checked="checked" title="生成归还单" onclick="changeInfo(this.value)"/>
+	            <span id="ereturn" class="green">生成归还单</span>
+	            <input type="radio" name="esmdevice[type]" value="erenew" title="生成续借单" onclick="changeInfo(this.value)"/>
+	            <span id="erenew">生成续借单</span>
+	            <input type="radio" name="esmdevice[type]" value="elent" title="生成转借单" onclick="changeInfo(this.value)"/>
+	            <span id="elent">生成转借单</span>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="form_text_left">
+	            <label>查询字段:</label>
+	        </td>
+	        <td class="form_text_right">
+				<select id="searchKey" class="selectshort" name="esmdevice[searchKey]">
+					<option title="部门编码" value="dpcoding">部门编码</option>
+					<option title="机身码" value="coding">机身码</option>
+					<option title="序号" value="id">序号</option>
+				</select>
+				<input type="submit" class="txt_btn_a" value=" 确  认 "/>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="form_text_left" style="color:blue;">
+	            <label>查询内容:</label>
+	        </td>
+	        <td class="form_text_right">
+				<textarea cols="50" rows="15" id="searchText" name="esmdevice[searchText]"></textarea>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td class="form_text_left">
+	            功能说明:
+	        </td>
+	        <td class="form_text_right">
+	            <span id="remarkInfo1" val='ereturn' style="color:red;">
+	                1.查询内容不能为空，每一行算做一条记录。<br/>
+	                2.不同所属部门的设备不能合并生成一张归还单据。
+	            </span>
+	            <span id="remarkInfo2" val='erenew' style="color:red;display:none;">
+	                1.查询内容不能为空，每一行算做一条记录。<br/>
+	                2.不同所属部门的设备不能合并生成一张续借单据。<br/>
+	                3.不同项目的设备不能合并生成一张续借单据。
+	            </span>
+	            <span id="remarkInfo3" val='elent' style="color:red;display:none;">
+ 					1.查询内容不能为空，每一行算做一条记录。<br/>
+	                2.不同所属部门的设备不能合并生成一张转借单据。
+	            </span>
+	        </td>
+	    </tr>
+	</table>
+</form>
+</body>
+</html>

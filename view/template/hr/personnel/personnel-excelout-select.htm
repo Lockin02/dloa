@@ -1,0 +1,620 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>自定义导出档案信息</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/personnel-excelout-select.js"></script>
+</head>
+<body>
+	<form id="form1" action="?model=hr_personnel_personnel&action=excelOut" method="post">
+		<table cellpadding="2" width="100%" class="form_main_table">
+			<tr>
+				<td colspan="4" class="">
+					<input class="saveButton txt_btn_a" type="button" value=" 确 定 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="txt_btn_a" type="button" value=" 返 回 " onclick="history.back(-1);"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<input type="checkbox" onclick="selectAll()"/><b>全选</b>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="basic" onclick="selectModelAll('basic')"/><b>个人信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr align="left">
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_staffName" value="staffName"/>
+									员工姓名
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_userNo" value="userNo"/>
+									员工编号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_userAccount" value="userAccount"/>
+									OA关联帐号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_englishName" value="englishName"/>
+									曾用名(英)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_sex" value="sex"/>
+									性别
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_birthdate" value="birthdate"/>
+									出生日期
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_age" value="age"/>
+									年龄
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_nativePlacePro" value="nativePlacePro"/>
+									籍贯(省)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_nativePlaceCity" value="nativePlaceCity"/>
+									籍贯(市)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_nation" value="nation"/>
+									民族
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_identityCard" value="identityCard"/>
+									身份证号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_identityCardDate" value="identityCardDate"/>
+									身份证有效日期
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_identityCardAddress" value="identityCardAddress"/>
+									身份证上地址
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_politicsStatus" value="politicsStatus"/>
+									政治面貌
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_highEducationName" value="highEducationName"/>
+									最高学历
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_highSchool" value="highSchool"/>
+									毕业学校
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_professionalName" value="professionalName"/>
+									专业
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="basic_graduateDate" value="graduateDate"/>
+									毕业时间
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="job" onclick="selectModelAll('job')"/><b>任职信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_companyType" value="companyType"/>
+									公司类型
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_companyName" value="companyName"/>
+									公司
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_deptName" value="deptName"/>
+									直属部门
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_deptNameS" value="deptNameS"/>
+									二级部门
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_deptNameT" value="deptNameT"/>
+									三级部门
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_deptNameF" value="deptNameF"/>
+									四级部门
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_jobName" value="jobName"/>
+									职位名称
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_regionName" value="regionName"/>
+									区域名称
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_staffStateName" value="staffStateName"/>
+									员工状态
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_personnelTypeName" value="personnelTypeName"/>
+									员工类型
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_positionName" value="positionName"/>
+									岗位分类
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_personnelClassName" value="personnelClassName"/>
+									人员分类
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_wageLevelName" value="wageLevelName"/>
+									工资级别
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_jobLevel" value="jobLevel"/>
+									职级
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="job_functionName" value="functionName"/>
+									职能
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="inleave" onclick="selectModelAll('inleave')"/><b>入离职信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_entryDate" value="entryDate"/>
+									入职日期
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_becomeDate" value="becomeDate"/>
+									预计转正日期
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_realBecomeDate" value="realBecomeDate"/>
+									实际转正日期
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_becomeFraction" value="becomeFraction"/>
+									转正分数
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_entryPlace" value="entryPlace"/>
+									入职地点
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_createTime" value="createTime"/>
+									建档时间
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_quitDate" value="quitDate"/>
+									离职日期
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_quitTypeName" value="quitTypeName"/>
+									离职类型
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_quitReson" value="quitReson"/>
+									离职原因
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_quitInterview" value="quitInterview"/>
+									离职面谈记录
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_isBack" value="isBack"/>
+									是否黑名单
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="inleave_realReason" value="realReason"/>
+									真实离职原因
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="contact" onclick="selectModelAll('contact')"/><b>联系信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_telephone" value="telephone"/>
+									固定电话
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_mobile" value="mobile"/>
+									移动电话
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_personEmail" value="personEmail"/>
+									个人电子邮箱
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_compEmail" value="compEmail"/>
+									公司邮箱
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_QQ" value="QQ"/>
+									QQ
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_MSN" value="MSN"/>
+									MSN
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_fetion" value="fetion"/>
+									飞信
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_information" value="information"/>
+									其他联系方式
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_homePhone" value="homePhone"/>
+									家庭电话
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_emergencyName" value="emergencyName"/>
+									紧急联系人
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_emergencyTel" value="emergencyTel"/>
+									紧急联系人电话
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_emergencyRelation" value="emergencyRelation"/>
+									关系
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_nowAddress" value="nowAddress"/>
+									现住地址
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_homeAddress" value="homeAddress"/>
+									家庭详细地址
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_unitPhone" value="unitPhone"/>
+									单位电话
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_extensionNum" value="extensionNum"/>
+									分机号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_unitFax" value="unitFax"/>
+									单位传真
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_shortNum" value="shortNum"/>
+									短号
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_otherPhone" value="otherPhone"/>
+									其他手机
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="contact_otherPhoneNum" value="otherPhoneNum"/>
+									其他号码
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="health" onclick="selectModelAll('health')"/><b>健康信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_healthState" value="healthState"/>
+									健康状况
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_isMedicalHistory" value="isMedicalHistory"/>
+									是否有既往病史
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_medicalHistory" value="medicalHistory"/>
+									既往病史
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_InfectDiseases" value="InfectDiseases"/>
+									传染疾病
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_height" value="height"/>
+									身高(cm)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_weight" value="weight"/>
+									体重(kg)
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="health_blood" value="blood"/>
+									血型
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="marital" onclick="selectModelAll('marital')"/><b>婚育信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="marital_maritalStatusName" value="maritalStatusName"/>
+									婚姻状况
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="marital_birthStatus" value="birthStatus"/>
+									生育状况
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="skill" onclick="selectModelAll('skill')"/><b>技能信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="skill_hobby" value="hobby"/>
+									爱好
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="skill_speciality" value="speciality"/>
+									特长
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="skill_professional" value="professional"/>
+									专业技能
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="skill_englishSkillName" value="englishSkillName"/>
+									英语等级
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+								<td class="form_text_left_three_new">
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="account" onclick="selectModelAll('account')"/><b>账号信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_oftenCardNum" value="oftenCardNum"/>
+									常用卡号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_oftenAccount" value="oftenAccount"/>
+									常用账号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_oftenBank" value="oftenBank"/>
+									常用帐号开户行
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_bankCardNum" value="bankCardNum"/>
+									其他卡号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_accountNumb" value="accountNumb"/>
+									其他账号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_openingBank" value="openingBank"/>
+									其他帐号开户行
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="account_salaryAreaCode" value="salaryAreaCode"/>
+									工资账号地区代码
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="residence" onclick="selectModelAll('residence')"/><b>戶口信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_archivesCode" value="archivesCode"/>
+									档案编号
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_archivesLocation" value="archivesLocation"/>
+									档案所在地
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_residencePro" value="residencePro"/>
+									户籍地(省)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_residenceCity" value="residenceCity"/>
+									户籍地(市)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_householdType" value="householdType"/>
+									户籍类型
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_collectResidence" value="collectResidence"/>
+									集体户口
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_socialPlace" value="socialPlace"/>
+									社保购买地
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_socialBuyer" value="socialBuyer"/>
+									社保购买方
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_fundPlace" value="fundPlace"/>
+									公积金购买地
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_fundBuyer" value="fundBuyer"/>
+									公积金购买方
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="residence_fundProportion" value="fundProportion"/>
+									公积金缴费比例
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1">
+					<fieldset>
+						<legend>
+							<input type="checkbox" id="internet" onclick="selectModelAll('internet')"/><b>服务线拓展信息</b>
+						</legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_personLevel" value="personLevel"/>
+									技术等级
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_officeName" value="officeName"/>
+									归属区域
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_eprovince" value="eprovince"/>
+									无补助城市(省)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_ecity" value="ecity"/>
+									无补助城市(市)
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_technologyName" value="technologyName"/>
+									技术领域
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_networkName" value="networkName"/>
+									网络
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_deviceName" value="deviceName"/>
+									设备厂家及级别
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_outsourcingSupp" value="outsourcingSupp"/>
+									外包公司
+								</td>
+								<td class="form_text_left_three_new">
+									<input type="checkbox" name="personnel[]" id="internet_outsourcingName" value="outsourcingName"/>
+									外包性质
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" class="">
+					<input type="hidden" name="listSql" value="{listSql}"/>
+					<input type="hidden" name="checkId" value="{checkId}"/>
+					<input type="hidden" name="checkValue" value="{checkValue}" id="checkValue"/>
+					<input class="saveButton txt_btn_a" id="saveButton" type="button" value=" 确 定 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="txt_btn_a" type="button" value=" 返 回 " onclick="history.back(-1);"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

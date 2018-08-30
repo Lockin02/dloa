@@ -1,0 +1,730 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加公告</title>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="module/minieditor/themes/default/css/ueditor.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" charset="utf-8" src="module/minieditor/ueditor.js"></script>
+<style type="text/css">
+body {margin:0px auto;font-size: 10pt; padding:10px; font-family:"微软雅黑","宋体",Verdana;}
+.table {
+    border-collapse: collapse;
+    border:1px solid #D3E5FA;
+    word-break:break-all;
+}
+.table td {
+    border:1px solid #D3E5FA;
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+	padding:2px 5px;
+}
+.table_not_border {
+    border:1px solid #ffffff;
+}
+.table_not_border td {
+    border-style:none;
+	padding:0px;
+}
+
+.td_height_30 td{
+    height:30px;
+    line-height:30px;
+}
+.bordeLeft {
+	border-left:#8CB2E2 1px solid;
+}
+*{padding: 0; margin: 0;}
+#jobs_str span {color:#000000;}
+hr{ height:1px;border:none;border-top:1px dashed #D3E5FA;}
+#menu {margin-left: 10px;height:30px; position:relative}
+#menu li {
+	list-style:none;
+	float: left;
+	border-top:1px solid #8CB2E2;
+	border-left:1px solid #8CB2E2;
+	border-right:1px solid #8CB2E2;
+	width:100px;
+	text-align:center;
+	margin-left:10px;
+	margin-right:15px;
+	cursor:pointer;
+}
+.showLi {
+	background-image: url(images/media/bluetabactives.gif);
+	position:absolute;
+	background: white;
+	border-bottom:none;
+	border-bottom:0px;
+	line-height:30px;
+	height:30px;
+	font-weight:bold;
+}
+.noLi {
+	position:absolute;
+	border-bottom:1px #8CB2E2 solid;
+	line-height:29px;
+	height:29px;
+	background:#CDE1EB;
+}
+.no_2s {background: white url(images/media/bluetabs.gif) top left repeat-x;background:#CDE1EB;position:absolute;left:110px;top:0px;}
+
+
+.input {
+    background-color: #FFF;
+    border: 1px solid #C0C2CF;
+    font-family: 微软雅黑,Arial,宋体,helvertica,sans-serif;
+    font-size: 12px;
+    height: 26px;
+	line-height:26px;
+    text-decoration: none;
+    width: 340px;
+}
+</style>
+<script type="text/javascript">
+function show_base()
+{
+	$('#content').css('display','none');
+	$('#base').css('display','');
+	$('#No1').removeClass('noLi');
+	$('#No1').addClass('showLi');
+	$('#No2').removeClass('showLi');
+	$('#No2').addClass('noLi');
+
+	//$('#No1').css('background','url(images/media/bluetabactives.gif)');
+	//$('.no_2').css('background','url(images/media/bluetabs.gif)');
+}
+function show_content()
+{
+	$('#content').css('display','');
+	$('#base').css('display','none');
+	
+		$('#No1').removeClass('showLi');
+	$('#No1').addClass('noLi');
+	$('#No2').removeClass('noLi');
+	$('#No2').addClass('showLi');
+	//$('.no_1').css('background','url(images/media/bluetabs.gif)');
+	//$('.no_2').css('background','url(images/media/bluetabactives.gif)');
+}
+</script>
+</head>
+<body>
+<center>
+<br />
+<form method="POST" action="?model=info_notice&action=save_edit&id={id}&rand_key={rand_key}"
+	enctype="multipart/form-data" onsubmit="return check()">
+<div id="menu">
+	<li id="No1" class="showLi" onclick="show_base()">基本信息</li>
+	<li id="No2" class="noLi" style="left:115px;" onclick="show_content()">公告内容</li>
+</div>
+<table class="table td_height_30" width="100%" border="0" cellpadding="0" cellspacing="0"  id="base">
+    <tr>
+		<td colspan="2" style="border-top:#8CB2E2 1px solid; border-left:#8CB2E2 1px solid; text-align:center;">基本信息填写</td>
+	</tr>
+	<tr>
+		<td width="100" align="right" style="border-left:#8CB2E2 1px solid">标题：</td>
+		<td align="left">
+			<input type="text"  class="input"  id="title" name="title" value="{title}" />
+			<span id="_title" style="color:#F00">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">发稿名义：</td>
+		<td align="left">{radio}</td>
+	</tr>
+	<!-- 
+	<tr>
+		<td align="right">生效日期：</td>
+		<td align="left"><input type="text" readonly
+			onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})"
+			class="Wdate" id="start_date" name="start_date" value="{start_date}" />
+		<span id="_start_date">开始日期为空时公告会立即生效。</span></td>
+	</tr>
+	 -->
+	<tr>
+		<td align="right">查看权限：</td>
+		<td align="left" nowrap>
+		<input type="radio" {user_chekced_0} onclick="select_user(0);" name="user_check" value="" />所有员工 <input type="radio" {user_chekced_1} onclick="select_user(1);" name="user_check" value="1" />指定员工
+			<div id="show_select" style="display:{show_select};">
+			<hr />
+			部门：<span id="dept_name_str" style="color:#0000ff;">{dept_name_str}</span>
+			<input type="hidden" id="dept_id_str" name="dept_id_str" value="{dept_id_str}"/>
+			<hr />
+			区域：<span id="area_name_str" style="color:#0000ff;">{area_name_str}</span>
+			<input type="hidden" id="area_id_str" name="area_id_str" value="{area_id_str}"/>
+			<hr />
+			职位：<span id="jobs_name_str" style="color:#0000ff;">{jobs_name_str}</span>
+			<input type="hidden" id="jobs_id_str" name="jobs_id_str" value="{jobs_id_str}"/>
+			<hr />
+			员工：<span id="user_name_str" style="color:#0000ff;">{user_name_str}</span>
+			<input type="hidden" id="user_id_str" name="user_id_str" value="{user_id_str}"/>
+			<hr />
+			有权查看的领导：<span id="loader"></span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">邮件提醒：</td>
+		<td align="left"><input type="checkbox" {send_email} name="send_email" value="1" />{send_email_tag}</td>
+	</tr>
+	<tr>
+		<td align="right">已有附件：</td>
+		<td align="left" id="file_list">{file_list}</td>
+	</tr>
+	<tr>
+		<td align="right">添加附件：</td>
+		<td id="file_input" align="left"></td>
+	</tr>
+    <tr>
+		<td align="right">附件同步制度：</td>
+		<td align="left">
+        <select id="inst" name="inst" >
+        	<option>不同步</option>
+            {instSelect}
+        </select>
+        </td>
+	</tr>
+</table>
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" id="content" style="display:none">
+	<tr>
+		<td style="border-top:#8CB2E2 1px solid; border-left:#D3E5FA 1px solid; border-bottom:0px; color:#F00; line-height:18px;text-align:left;">
+        注意：1、公告内容中的图片需要先上传，再插入内容中，对于地图图片需另存成图片上传，再插入公告内容中。<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、从Word中复制的内容，与以下编辑器中格式会有不同，建议使用以下编辑器进行排版。
+        </td>
+	</tr>
+	<tr class="table_not_border">
+		<td   style="border-left:#D3E5FA 1px solid; border-right:#D3E5FA 1px solid; padding:0px 3px;">
+			<script type="text/plain" id="editor">{content}</script></td>
+	</tr>
+</table>
+<table class="table td_height_30" style="border-top:0px;" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td style="border-top:0px;text-align:center;"><input type="submit" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" /> &nbsp; <input type="button" onclick="self.parent.location.reload();" value="&nbsp;&nbsp;返&nbsp;&nbsp;回&nbsp;&nbsp;" /></td>
+	</tr>
+
+</table>
+</form>
+<script type="text/javascript">
+try{
+	var editor = new UE.ui.Editor();
+	editor.render("editor");
+	editor.focus(true);	
+}catch(e){
+	
+}
+var temp = 0;
+file_input();
+
+var dept_id_str = '{dept_id_str}';
+var area_id_str = '{area_id_str}';
+var jobs_id_str = '{jobs_id_str}';
+var user_check = '{user_check}';
+$(document).ready(function(){
+	
+	if (dept_id_str != '') show_span('1','_deptid');
+	if (area_id_str != '') show_span('1','_area');
+	if (jobs_id_str != '') show_span('1','_jobs_id');
+	if (user_check !='0') show_span('1','_userid');
+	show_user_checked();
+	show_username(1);
+	loader();
+}
+);
+function select_user(flag)
+{
+	if (flag == 1)
+	{
+		$('#show_select').css('display','');
+		tb_show('选择员工','?model=user&action=select_user&TB_iframe=true&width=500',false);
+		//window.open('?model=user&action=select_user','newwin','toolbar=no,top=200,width=400,height=600');
+	}else{
+		$('#show_select').css('display','none');
+	}
+}
+//选择用户后执行
+function return_func()
+{
+	loader();
+}
+function all_checked(id,tid,checked){
+	var str = '';
+	$('#TB_ajaxContent input[type=checkbox]').attr('checked', checked);
+	if (checked) {
+		var inputs = $('input[name='+tid+']:checked').get();
+		for (var i = 0; i < inputs.length; i++) {
+			if (i >= 1) 
+				str += '、';
+			str += inputs[i].title;
+		}
+	}
+	$('#'+id).html(str);
+	loader(id);
+}
+function show_user_checked(iframe)
+{
+	if (typeof(jobsid_str)!='undefined' && jobsid_str!='')
+	{
+		var arr = jobsid_str.split(',');
+		var count = arr.length;
+		for (var i=0;i<count;i++)
+		{
+			if (iframe == true)
+			{
+				$('#TB_ajaxContent .show_user_'+arr[i]).css('display','');
+			}else{
+				$('.show_user_'+arr[i]).css('display','');
+			}
+		}
+	}
+}
+function save_temp_content()
+{
+	var content = oEditor.GetHTML();
+	var rand=Math.random()*100000;
+	if (content != '')
+	{
+		$.post('ajax.php',{model:'info_notice',action:'save_edit_temp_content',content:content,rand:rand},
+		function (data)
+		{
+			if (data == 'ok')
+			{
+				//alert('保存成功！');
+				//保存临时编辑内容成功！
+			}else{
+				alert('保存失败！');
+			}
+		}
+		);
+	}
+}
+function check()
+{
+	//判断标题
+	if ($('#title').val()=='')
+	{
+		show_base();
+		$('#_title').html('请填写公告标题！');
+		return false;
+	}else{
+		$('#_title').html('*');
+	}
+	//判断开始日期
+	/*if ($('#start_date').val()=='')
+	{
+	show_base();
+	$('#_date').html('请选择有效开始日期！');
+	return false;
+	}else{
+	$('#_date').html('*');
+	}
+	//判断结束日期
+	if ($('#end_date').val()=='')
+	{
+	show_base();
+	$('#_date').html('请选择有效结束日期！');
+	return false;
+	}else{
+	$('#_date').html('*');
+	}
+	//判断开始日期和结束日期
+	if ($('#end_date').val() < $('#start_date').val())
+	{
+	show_base();
+	$('#_date').html('有效结束日期不能大于有效开始日期！');
+	return false;
+	}else{
+	$('#_date').html('*');
+	}*/
+	//判断选择部门
+	if ($('#deptid').val()==1)
+	{
+		var dept = $('input[name=dept_id[]]:checked').get();
+		if (dept.length < 1)
+		{
+			show_base();
+			alert('请选择指定部门！');
+			return false;
+		}
+	}
+	//判断选择区域
+	if ($('#area').val()==1)
+	{
+		var area = $('input[name=areaid[]]:checked').get();
+		if (area.length < 1)
+		{
+			show_base();
+			alert('请选择指定的区域！');
+			return false;
+		}
+	}
+	//判断职位
+	if ($('#jobs_id').val()==1)
+	{
+		var jobs = $('input[name=jobsid[]]:checked').get();
+		if (jobs.length < 1)
+		{
+			show_base();
+			alert('请选择指定职位！');
+			return false;
+		}
+	}
+	if (oEditor.GetHTML()=='')
+	{
+		show_content();
+		alert('公告内容不能为空！');
+		return false;
+	}
+	if (confirm('您确定要提交修改公告吗？'))
+	{
+		return true;
+	}else{
+		return false;
+	}
+	
+}
+//获取领导
+function loader()
+{
+	var dept_id_str = $('#dept_id_str').val();
+	var area_id_str = $('#area_id_str').val();
+	var jobs_id_str = $('#jobs_id_str').val();
+	var user_id_str = $('#user_id_str').val();
+	$.post('ajax.php',{model:'user',action:'get_loader',dept_id:dept_id_str,area_id:area_id_str,jobs_id:jobs_id_str,user_id:user_id_str,rand:Math.random(0,9999)},
+		function (data)
+		{
+			$('#loader').html(unescape(data));
+		}
+	);
+}
+function add_dept(name,checked)
+{
+	if (checked && name)
+	{
+		$('#_deptid_').append(name+'、');
+	}else{
+		var str = $('#_deptid_').html();
+		$('#_deptid_').html(str.replace(name+'、',''));
+	}
+	loader('_deptid_');
+}
+function add_area(name,checked)
+{
+	if (checked && name)
+	{
+		$('#_area_').append(name+'、');
+	}else{
+		var str = $('#_area_').html();
+		$('#_area_').html(str.replace(name+'、',''));
+	}
+	loader('_area_');
+}
+function add_jobs()
+{
+	var input = $('#TB_ajaxContent input[name=jobsid[]]:checked').get();
+	var str = '';
+	for (var i=0;i<input.length;i++)
+	{
+		str +=input[i].title +'、';
+	}
+	$('#_jobs_id_').html(str);
+	loader('_jobsid_');
+}
+function show_span(id,div)
+{
+	if (id==1)
+	{
+		$('#'+div).css('display','');
+		$('#'+div+'_').css('display','');
+	}else{
+		$('#'+div).css('display','none');
+		$('#'+div+'_').css('display','none');
+		$('#'+div+'_').html('');
+		$('#'+div+'_str').html('');
+		
+		switch(div)
+		{
+			case '_deptid':
+				loader('_deptid_');
+				break;
+			case '_area':
+				loader('_area_');
+				break;
+			case '_jobs_id':
+				loader('_jobsid_');
+				break;
+			case '_userid':
+				loader('_userid_');
+				break;	
+		}
+	}
+}
+function show_dept()
+{
+	if ($('#_deptid_str').html()=='')
+	{
+		var rand=Math.random()*100000;
+		$.get('ajax.php',{model:'info_notice',action:'get_dept',rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+				$('#_deptid_str').html(unescape(data));
+				tb_show('选择部门','#TB_show_html?inlineId=_deptid_str&width=400',false);
+			}
+		}
+		);
+	}else{
+		tb_show('选择部门','#TB_show_html?inlineId=_deptid_str&width=400',false);
+	}
+}
+function show_area()
+{
+	if ($('#_area_str').html()=='')
+	{
+		var rand=Math.random()*100000;
+		$.get('ajax.php',{model:'info_notice',action:'get_area',rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+				$('#_area_str').html(unescape(data));
+				tb_show('选择区域','#TB_show_html?inlineId=_area_str&width=400',false);
+			}
+		}
+		);
+	}else{
+		tb_show('选择区域','#TB_show_html?inlineId=_area_str&width=400',false);
+	}
+}
+function show_jobs()
+{
+	//获取区域ID
+	var deptid = $('input[name=dept_id[]]:checked').get();
+	var deptid_str = '';
+	for (var i=0;i<deptid.length;i++)
+	{
+		deptid_str +=deptid[i].value+',';
+	}
+	if (deptid_str!='')
+	{
+		temp = deptid_str+'temp';
+		deptid_str = temp.replace(',temp','');
+	}
+	//获取选择的职位ID
+	var jobsid = $('input[name=jobsid[]]:checked').get();
+	var jobs_str = '';
+	for(var i=0;i<jobsid.length;i++)
+	{
+		jobs_str +=jobsid[i].value+',';
+	}
+	if (jobs_str !='')
+	{
+		temp = jobs_str+'temp';
+		jobs_str = temp.replace(',temp','');
+	}
+	if (($('#_jobs_id_str').html()=='') || (dept_id_str != deptid_str))
+	{
+		dept_id_str = deptid_str;
+		var rand=Math.random()*100000;
+		$.get('ajax.php',{model:'info_notice',action:'get_jobs',deptid_str:deptid_str,jobs_str:jobs_str,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+				$('#_jobs_id_str').html(unescape(data));
+				tb_show('选择职位','#TB_show_html?inlineId=_jobs_id_str&width=400',false);
+			}
+		}
+		);
+	}else{
+		tb_show('选择职位','#TB_show_html?inlineId=_jobs_id_str&width=400',false);
+	}
+}
+function show_user()
+{
+	//获取选择的部门ID
+	var deptid = $('input[name=dept_id[]]:checked').get();
+	var deptid_str = '';
+	for (var i=(deptid.length-1);i >=0;i--)
+	{
+		deptid_str +=deptid[i].value+',';
+	}
+	if (deptid_str !='')
+	{
+		temp = deptid_str+'temp';
+		deptid_str = temp.replace(',temp','');
+	}
+	//获取选择的区域ID
+	var areaid = $('input[name=areaid[]]:checked').get();
+	var area_str = '';
+	for (var i=0;i<areaid.length;i++)
+	{
+		area_str +=areaid[i].value+',';
+	}
+	if (area_str !='')
+	{
+		temp = area_str+'temp';
+		area_str = temp.replace(',temp','');
+	}
+	//获取选择的职位ID
+	var jobsid = $('input[name=jobsid[]]:checked').get();
+	var jobs_str = '';
+	for(var i=0;i<jobsid.length;i++)
+	{
+		jobs_str +=jobsid[i].value+',';
+	}
+	if (jobs_str !='')
+	{
+		temp = jobs_str+'temp';
+		jobs_str = temp.replace(',temp','');
+	}
+	var userid_input = $('input[name=user_id[]]:checked').get();
+	var user_str = '';
+	for (var i=0;i<userid_input.length;i++)
+	{
+		user_str += userid_input[i].value+',';
+	}
+	if (user_str !='')
+	{
+		temp = user_str+'temp';
+		user_str = temp.replace(',temp','');
+	}
+	if (($('#_userid_str').html()=='') || (dept_id_str != deptid_str) || (area_id_str!=area_str) || (jobs_id_str!=jobs_str))
+	{
+		dept_id_str = deptid_str;
+		area_id_str = area_str;
+		jobs_id_str = jobs_str;
+		$.get('ajax.php',{model:'info_notice',action:'get_user_list',deptid_str:deptid_str,area_str:area_str,jobs_str:jobs_str,user_str:user_str},
+		function (data)
+		{
+			if (data)
+			{
+				data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>';
+				$('#_userid_str').html(unescape(data));
+				tb_show('选择用户','#TB_show_html?inlineId=_userid_str&width=400',false);
+				show_user_checked(true);
+			}
+		}
+		);
+	}else{
+		tb_show('选择用户','#TB_show_html?inlineId=_userid_str&width=400',false);
+	}
+}
+function file_input()
+{
+	temp++;
+	$('#file_input').append('<div id="temp_'+temp+'"><input type="file" size="50" onchange="file_input();"'
+							+'name="upfile[]" value="" /><a href="javascript:del_input('+temp+')">删除</a></div>');
+
+}
+function del_input(id)
+{
+    if($('#temp_'+id+' input').val()!=''){
+	$('#temp_'+id).remove();
+	//$('#temp_'+id).remove('<a href="javascript:del_input('+(temp-1)+')">删除</a></span>');
+	}
+}
+//=============================
+function all_jobs(id,checked)
+{
+	$('#dept_'+id+' input[type=checkbox]').attr("checked",checked);
+	add_jobs();
+}
+
+function show_jobs_list(id)
+{
+	var display = $('#TB_ajaxContent .show_jobs_'+id).css('display');
+	if (display=='none')
+	{
+		$('#TB_ajaxContent .show_jobs_'+id).css('display','');
+		$('#TB_ajaxContent .a_jobs_'+id+' img').attr('src','images/work/sub.png');
+	}else{
+		$('#TB_ajaxContent .show_jobs_'+id).css('display','none');
+		$('#TB_ajaxContent .a_jobs_'+id+' img').attr('src','images/work/plus.png');
+	}
+}
+
+function show_user_list(id)
+{
+	var display = $('#TB_ajaxContent .show_user_'+id).css('display');
+	if (display=='none')
+	{
+		$('#TB_ajaxContent .show_user_'+id).css('display','');
+		$('#TB_ajaxContent .a_user_'+id+' img').attr('src','images/work/sub.png');
+	}else{
+		$('#TB_ajaxContent .show_user_'+id).css('display','none');
+		$('#TB_ajaxContent .a_user_'+id+' img').attr('src','images/work/plus.png');
+	}
+}
+function set_jobs_checked(id,checked)
+{
+	$('.show_jobs_'+id+' input[type=checkbox]').attr('checked',checked);
+	show_username();
+}
+function set_user_checked(id,checked)
+{
+	$('.show_user_'+id+' input[type=checkbox]').attr('checked',checked);
+	show_username();
+}
+
+function del_file(id)
+{
+	var checked = $('input[name=file[]]:checked').get();
+	if (checked.length < 1)
+	{
+		alert('最少要选中一个附件才可以执行此操作！');
+		return false;
+	}
+	var filename_str = '';
+	var rand=Math.random()*100000;
+	for (var i=0;i<checked.length;i++)
+	{
+		filename_str +=checked[i].value+',';
+	}
+	if (filename_str!='')
+	{
+		$.get('ajax.php',{model:'info_notice',action:'del_file',filename_str:filename_str,id:id,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				if (data == 'ok')
+				{
+					$('#file_list').html('之前上传的附件已经全部删除！');
+				}else{
+					$('#file_list').html(unescape(data));
+				}
+			}else{
+				alert('删除附件失败，请与管理员联系！');
+			}
+		}
+		)
+	}
+}
+function show_username(num)
+{
+	var inputs = Array();
+	if (num==1)
+	{
+		inputs = $('#_userid_str input[name=user_id[]]:checked').get();
+	}else{
+		inputs = $('#TB_ajaxContent input[name=user_id[]]:checked').get();
+	}
+	var str = '';
+	for(var i=0;i<inputs.length;i++)
+	{
+		if (i >=1) str +='、';
+		str += inputs[i].title;
+	}
+	$('#_userid_').html(str);
+	loader('_userid_');
+}
+</script>
+
+</body>
+</html>

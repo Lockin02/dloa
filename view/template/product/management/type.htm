@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; width:100px;}
+       		.show_info p {margin:0px; padding:0px; width:600px; float:left; height:25px;}
+			.show_info span {width:200px; display:block; float:left;}
+        	a {text-decoration:none;}
+        </style>
+		<script type="text/javascript">
+		var dept_tree = '{dept_json}';
+		var dept_data = '{dept_data}';
+		var manage = '{manage}';
+		dept_tree = dept_tree ? eval('('+dept_tree+')') : [];
+		var dept_data = dept_data ? eval('('+dept_data+')') : [];
+		function get_dept_name(value)
+		{
+			for(key in dept_data)
+			{
+				if (key == value) return dept_data[key];
+			}
+		}
+        $(function(){
+            $('#tt').datagrid({
+                title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',
+                columns: [[/*{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'left'
+                }, */{
+                    field: 'typename',
+                    title: '中文类型名称',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                    field: 'en_typename',
+                    title: '英文类型名称',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                	field: 'dept_id',
+                	title:'归属部门',
+                	width:200,
+                	align:'left',
+                	formatter:get_dept_name,
+                	editor: {
+						type: 'combotree',
+						options: {
+							valueField: 'dept_id',
+							textField: 'dept_name',
+							data: dept_tree,
+							required: true
+						}
+					}
+                },{
+                    field: 'description',
+                    title: '类型描述',
+                    width: 350,
+                    align: 'left',
+                    editor: 'text'
+                }, {
+                    field: 'action',
+                    title: '操作',
+                    width: 80,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                    	if (manage == 'true')
+                    	{
+	                        if (row.editing) {
+	                            var s = '<a href="#" onclick="saverow(' + index + ')">保存</a> ';
+	                            var c = '<a href="#" onclick="cancelrow(' + index + ')">取消</a>';
+	                            return s + c;
+	                        }
+	                        else {
+	                            var e = '<a href="#" onclick="editrow(' + index + ')">修改</a> ';
+	                            var d = '<a href="#" onclick="deleterow(' + index + ')">删除</a>';
+	                            return e+d;
+	                        }
+                    	}else{
+                    		return '<a href="#" onclick="show_info('+index+')">查看详细</a>';
+                    	}
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+            if (manage == 'true')
+            {
+	            $('#tt').datagrid('getPager').pagination({
+	                buttons: [{
+	                    iconCls: 'icon-add',
+	                    text: '添加类型',
+	                    handler: function(){
+	                        insert();
+	                    }
+	                }]
+	            });
+            }
+        });
+		function updateActions(){
+				var rowcount = $('#tt').datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#tt').datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(index){
+			$('#tt').datagrid('beginEdit', index);
+		}
+		function deleterow(index){
+			$.messager.confirm('确认提示','您确定要删除该产品类型吗?',function(r){
+				if (r){
+					$('#tt').datagrid('selectRow',index);
+					var row = $('#tt').datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#tt').datagrid('reload');
+							}
+						})
+					}
+					$('#tt').datagrid('deleteRow', index);
+					updateActions();
+				}
+			});
+		}
+		function saverow(index){
+			$('#tt').datagrid('endEdit', index);
+			$('#tt').datagrid('selectRow',index);
+			var row = $('#tt').datagrid('getSelected');
+			var action= 'add';
+			var msg = '添加';
+			id = '';
+			if(row.id)
+			{
+				id = row.id;
+				action = 'edit';
+				msg = '修改';
+			}else{
+				action = 'add';
+			}
+			$.post('?model={t_model}&action='+action+'&id='+id,{typename:row.typename,en_typename:row.en_typename,dept_id:row.dept_id,description:row.description,rand:Math.random(0,99999)},function(data){
+				if (data ==1)
+				{
+					$.messager.show({
+	                        title: '提示',
+	                        msg: msg+'成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+						$('#tt').datagrid('reload');
+				}else{
+					$.messager.show({
+	                        title: '提示',
+	                        msg: msg+'失败！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+						$('#tt').datagrid('reload');
+				}
+			})
+			
+		}
+		function cancelrow(index){
+			$('#tt').datagrid('cancelEdit', index);
+		}
+
+		function insert(){
+			var row = $('#tt').datagrid('getSelected');
+			if (row){
+				var index = $('#tt').datagrid('getRowIndex', row);
+			} else {
+				index = 0;
+			}
+			$('#tt').datagrid('insertRow', {
+				index: index,
+				row:{
+					//status:'P'
+				}
+			});
+			$('#tt').datagrid('selectRow',index);
+			$('#tt').datagrid('beginEdit',index);
+		}
+		//查看信息
+		function show_info(index)
+		{
+			$('#tt').datagrid('selectRow',index);
+			var row = $('#tt').datagrid('getSelected');
+			$('#show').window({title:'查看 '+row.typename});
+			for(key in row){
+				if (key == 'dept_id'){
+					$('#_'+key).html(dept_data[row[key]]);
+				}else{
+					$('#_'+key).html(row[key]);
+				}
+			}
+			$('#show').window('open');
+		}
+		</script>
+    </head>
+    <body>
+        <table id="tt"></table>
+		<div id="add" class="easyui-dialog" title="添加产品类型" iconCls="icon-edit" modal="false" closed="true" style="width:300px;height:250px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<p><label>类型名称：</label><span><input type="text" name="typename" id="typename" value="" /></span></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定添加 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+		<div id="show" region="center" border="false" class="easyui-window" closed="true" style="width:650px;height: 400px;padding: 5px;">
+	        <div class="easyui-layout" fit="true">
+		        <div class="show_info" region="center" border="false">
+		        	<p>
+						<label>中文类型名称 ：</label><span id="_typename"></span>
+						<label>英文类型名称 ：</label><span id="_en_typename"></span>
+					</p>
+					<p>
+						<label>归属部门 ：</label><span id="_dept_id"></span>
+					</p>
+					<p style="height:60px;">
+						<label style=" line-height: 70px;">产品描述：</label>
+						<span id="_description" style="width: 80%; float: left; line-height: 25px;"></span>
+					</p>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

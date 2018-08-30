@@ -1,0 +1,315 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+</head>
+<body>
+<br />
+<form method="POST" action="?model={t_model}&action=add_apply" onsubmit="return check();">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="9">申请SIM卡</td>
+	</tr>
+	<tr>
+		<td>审核领导</td>
+		<td>运营商</td>
+		<td>使用地区</td>
+		<td>SIM卡名称</td>
+		<td>SIM卡类型</td>
+		<td>选择流量</td>
+		<td>数量</td>
+		<td>使用用途</td>
+		<td>操作</td>
+	</tr>
+	<tr id="tr_0">
+		<td>
+			<input type="text" size="10" id="username_0" onclick="setdiv()" onfocus="setdiv();" onkeydown="keydown()" onpropertychange='change(this,"user","user_name","module/ajax_search/","get_userid(0,\""+this.value+"\")")' onblur="losefouse();" name="username[]" value="" />
+			<input type="hidden" id="userid_0" name="userid[]" value="" />
+			</td>
+		<td>
+			<select name="operators[]"/>
+				<option value="">请选择运营商</option>
+				<option value="移动">移动</option>
+				<option value="电信">电信</option>
+				<option value="联通">联通</option>
+			</select>
+		</td>
+		<td>
+			<select name="area[]">
+				<option value="">请选择使用地区</option>
+				<option value="珠海">珠海</option>
+				<option value="广东省内">广东省内</option>
+				<option value="广东省外">广东省外</option>
+				<option value="国际">国际</option>
+			</select>
+		</td>
+		<td><input type="text" size="15" name="card_name[]" value="" /></td>
+		<td>
+			<input type="checkbox" id="card_type_data_0" onclick="set_card_type(0);" name="data[]" value="数据" />数据 
+			<input type="checkbox" id="card_type_voice_0" onclick="set_card_type(0);"  name="voice[]" value="语音" />语音</td>
+			<input type="hidden" id="card_type_0" name="card_type[]" value="" />
+		<td id="flow_0" width="15%">
+			<select name="flow[]" onchange="show_flow_input(0);">
+				<option value="">请选择流量</option>
+				<option value="1G">1G</option>
+				<option value="2G">2G</option>
+				<option value="5G">5G</option>
+				<option value="10G">10G</option>
+				<option value="other">其他</option>
+			</select>
+			<br />
+			<br />
+			<span id="sp_0" style="display:none">流量：<input type="text" size="12" name="flow_data[]" value="" /> </span>
+		</td>
+		<td>
+			<input type="text" size="5" id="amount_0" onKeyUp="this.value=value=this.value.replace(/\D/g,'')" name="amount[]" value="1" />
+		</td>
+		<td width="20%">
+			<textarea style="width:100%" cols="30" rows="5" name="notse[]"></textarea>
+		</td>
+		<td id="edit_0">
+			<input type="button" onclick="copy(0)" value="复制">
+		</td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<td>
+		<input type="submit" value=" 提交申请 " />
+	</td>
+</table>
+<form>
+<div id="sug"></div>
+<script type="text/javascript">
+	var copy_num = 0;
+	
+	function check()
+	{
+		var username = $('input[name=username[]]').get();
+		var userid = $('input[name=userid[]]').get();
+		var operators = $('select[name=operators[]] option:selected').get();
+		var area = $('select[name=area[]] option:selected').get();
+		var card_name = $('input[name=card_name[]]').get();
+		var card_type = $('input[name=card_type[]]').get();
+		var flow = $('select[name=flow[]] option:selected').get();
+		var flow_data = $('input[name=flow_data[]]').get();
+		var amount = $('input[name=amount[]]').get();
+		var notse = $('textarea[name=notse[]]').get();
+		if (userid.length > 0)
+		{
+			for(var i=0;i<userid.length;i++)
+			{
+				if (userid[i].value=='' || username[i].value=='')
+				{
+					alert('审核领导不能为空！');
+					username[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('审核领导错误！');
+			return false;
+		}
+		if (operators.length > 0)
+		{
+			for(var i=0;i<operators.length;i++)
+			{
+				if (operators[i].value=='')
+				{
+					alert('请选择运营商！');
+					operators[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('请选择运营商！');
+			return false;
+		}
+		
+		if (area.length > 0)
+		{
+			for (var i=0;i<area.length;i++)
+			{
+				if (area[i].value=='')
+				{
+					alert('请选择使用地区！');
+					area[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('请选择使用地区！');
+			return false;
+		}
+		
+		if (card_name.length > 0)
+		{
+			for (var i=0;i<card_name.length;i++)
+			{
+				if (card_name[i].value=='')
+				{
+					alert('SIM卡名称不能为空！');
+					card_name[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('SIM卡名称不能为空！');
+			return false;
+		}
+		
+		if (card_type.length > 0) {
+			for (var i = 0; i < card_type.length; i++) {
+				if (card_type[i].value=='')
+				{
+					alert('请选择SIM卡类型！');
+					return false;
+				}
+			}
+		}else{
+			alert('请选择SIM卡类型！');
+			return false;
+		}
+		if (flow.length > 0)
+		{
+			for (var i=0;i<flow.length;i++)
+			{
+				if (flow[i].value=='')
+				{
+					alert('请选择流量！');
+					flow[i].focus();
+					return false;
+				}else if (flow[i].value=='other'){
+					if (flow_data[i].value=='')
+					{
+						alert('请填写流量！');
+						flow_data[i].focus();
+						return false;
+					}
+				}
+			}
+		}else{
+			alert('请选择流量！');
+			return false;
+		}
+		if (amount.length > 0)
+		{
+			for (var i=0;i<amount.length;i++)
+			{
+				if (amount[i].value=='')
+				{
+					alert('请填写申请数量！');
+					amount[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('请填写数量！');
+			return false;
+		}
+		if (notse.length > 0)
+		{
+			for (var i=0;i<notse.length;i++)
+			{
+				if (notse[i].value == '')
+				{
+					alert('请填写申请SIM卡用途！');
+					notse[i].focus();
+					return false;
+				}
+			}
+		}else{
+			alert('请填写SIM卡用途！');
+			return false;
+		}
+		
+	}
+	function set_card_type(id)
+	{
+		var data = $('#card_type_data_'+id).get(0);
+		var voice = $('#card_type_voice_'+id).get(0);
+		var str = '';
+		if (data.checked == true)
+		{
+			str = data.value;
+		}
+		if (voice.checked == true)
+		{
+			str = str ? str+','+voice.value : voice.value;
+		}
+		$('#card_type_'+id).val(str);
+	}
+	
+	function show_flow_input(id)
+	{
+		var flow = $('#flow_'+id+' select[name=flow[]]').val();
+		if (flow=='other')
+		{
+			$('#sp_'+id).css('display','');
+		}else{
+			$('#sp_'+id).css('display','none');
+		}
+		
+	}
+	
+	function copy(id)
+	{
+		copy_num++;
+		var html = $('#tr_'+id).html();
+		html = html.replace('username_'+id,'username_'+copy_num);
+		html = html.replace('userid_'+id,'userid_'+copy_num);
+		html = html.replace('amount_'+id,'amount_'+copy_num);
+		html = html.replace('get_userid('+id+',','get_userid('+copy_num+',');
+		html = html.replace('card_type_data_'+id,'card_type_data_'+copy_num);
+		html = html.replace('card_type_voice_'+id,'card_type_voice_'+copy_num);
+		html = html.replace('card_type_'+id+'','card_type_'+copy_num+'');
+		html = html.replace('set_card_type('+id+')','set_card_type('+copy_num+')');
+		html = html.replace('set_card_type('+id+')','set_card_type('+copy_num+')');
+		html = html.replace('flow_'+id,'flow_'+copy_num);
+		html = html.replace('sp_'+id,'sp_'+copy_num);
+		html = html.replace('edit_'+id,'edit_'+copy_num);
+		html = html.replace('copy('+id+')','copy('+copy_num+')');
+		html = html.replace('show_flow_input('+id+')','show_flow_input('+copy_num+')');
+		if (id > 0)
+		{
+			html = html.replace('del('+id+')','del('+copy_num+')');
+		}
+		$('#mytable').append('<tr id="tr_'+copy_num+'">'+html+'</tr>');
+		if (id == 0)
+		{
+			$('#edit_'+copy_num).append('<input type="button" onclick="del('+copy_num+')" value="删除" />');
+		}
+	}
+	function del(id)
+	{
+		$('#tr_'+id).remove();
+	}
+	
+	function get_userid(id,username)
+	{
+		if (username)
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,9999)},
+				function (data)
+				{
+					if (data)
+					{
+						$('#userid_'+id).val(unescape(data));
+					}else{
+						alert('该职员不存在！');
+					}
+				}
+			)
+		}else{
+			$('#userid_'+id).val('');
+		}
+	}
+</script>
+</body>
+</html>

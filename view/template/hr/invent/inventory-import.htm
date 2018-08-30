@@ -1,0 +1,77 @@
+<html>
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>人员盘点信息导入</title>
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen">
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<script type="text/javascript" src="js/jquery/jquery.js"></script>
+    <script type="text/javascript">
+	    function checkAllData(){
+				if($("#inputExcel").val()==''){
+					alert("请选择导入的文件。");
+					 return  false;
+				}else{
+					$("input[type='submit']").attr("disabled","disabled");
+					return true;
+				}
+		}
+
+	</script>
+
+<body>
+<form action="?model=hr_invent_inventory&action=excelIn"
+ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1" onsubmit="return checkAllData();">
+<input type="hidden" name="leadExcel" value="true">
+<table class="form_main_table" width="90%">
+	<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">人员盘点信息导入</font>
+			    </span>
+			</div>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txtlong" name="inputExcel" id="inputExcel"/>
+            <input type="submit" class="txt_btn_a" value=" 导 入">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>模板下载</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="button" class="txt_btn_a" value="人员盘点信息导入模版" onclick="location='upfile/人资-人员盘点信息.xls'"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right">
+		</td>
+		<td class="form_text_right">
+			导入功能说明：<br/>
+			<span id="remarkInfo" style="color:blue">
+				此功能只用于导入人员盘点信息，不能进行信息更新操作。<br/>
+				此功能暂无重复导入验证。
+			</span><br/><br/>
+			注：<br/>
+			<span class="red">1. 导入功能暂不支持单元格公式计算。</span><br/>
+			<span class="red">2. 单元格内请勿带特殊符号。</span><br/>
+			<span class="red">3. 日期格式请使用 YYYY-MM-DD 的形式。</span><br/>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

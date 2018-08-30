@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/general.js"></script>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/loadmask/jquery.loadmask.css"/>
+        <script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
+        <title></title>
+        <script type="text/javascript">
+            function ck(){
+                if($('#ctr_file').val()==''){
+                    alert('请导入对比数据');
+                    return false;
+                }
+                return true;
+            }
+            function changeCtrFun(){
+                var rand=Math.random()*100000;
+                $("#repdiv").mask("等待中......");
+                if(confirm('确定提交以下数据信息？')){
+                    $.post('?model=salary&action=hr_div_xls_in',{
+                        rand:rand,sub:'xls',ckt:'{ckt}'
+                        },
+                        function (data)
+                        {                         
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $("#repdiv").unmask();
+                                $('#newuserSub').attr('disabled',false);
+                                return false;
+                            }else{
+                                alert('提交成功！');
+                            }
+                             
+                        }
+                    )
+                }else{
+                    $("#repdiv").unmask();
+                }
+            }
+        </script>
+    </head>
+    <body id ="repdiv">
+    <form action="#" method="post" onsubmit="return ck();" enctype="multipart/form-data">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+          <tr>
+              <td>
+                  导入表单：<input type="file" name="ctr_file" id="ctr_file" />&nbsp;
+                  <input type="submit" id="subctr" name="subctr" value="导入" />
+                  <input type="button" id="changectr" name="changectr" value="提交" onclick="changeCtrFun()" title="提交"/>
+                  <br/>
+                  <span color="red">表单格式：<a href="attachment/xls_model/salary_hr_div.xls">专区模板</a>；数据导入后，请检查数据是否正确，然后点击提交，数据方才生效！
+                  </span>
+              </td>
+          </tr>
+        </table>
+    </form>
+    <table border="1" width="98%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        <tr class="tableheader">
+            <td align="center">员工号</td>
+            <td align="center">发薪日期</td>
+            <td align="center">姓名</td>
+            <td align="center">部门</td>
+            <td align="center">基本工资</td>
+            <td align="center">项目奖金</td>
+            <td align="center">节假日补贴</td>
+            <td align="center">福利补贴</td>
+            <td align="center">其他扣除</td>
+            <td align="center">其他补发</td>
+            <td align="center">事假</td>
+            <td align="center">病假</td>
+            <td align="center">备注</td>
+            <td align="center">数据状态</td>
+        </tr>
+        {data_list}
+    </table>
+    </body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看付款申请单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-common.js"></script>
+	<script>
+		$(document).ready(function() {
+			//渲染是否银行代扣变色
+			if($("#isEntrustInfo").html() =='0'){
+				$("#isEntrustInfo").html("是");
+			}else{
+				$("#isEntrustInfo").attr('class','red').html("否");
+			}
+		});
+	</script>
+</head>
+<body>
+	<div id="payablesapply">
+	<table class="form_main_table">
+		<tr class="main_head">
+			<td colspan="4">付款申请单</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收款单位</td>
+			<td class="form_text_right">
+				{supplierName}
+				<input type="hidden" id="supplierId" value="{supplierId}"/>
+				<input type="hidden" id="supplierSkey" value="{supplierSkey}"/>
+				<input type="hidden" id="status" value="{status}" />
+			</td>
+			<td class="form_text_left">申请单号</td>
+			<td class="form_text_right">
+				{formNo}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收款银行账号</td>
+			<td class="form_text_right">
+				{account}
+			</td>
+			<td class="form_text_left">单据日期</td>
+			<td class="form_text_right">
+				{formDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">开户银行</td>
+			<td class="form_text_right">
+				{bank}
+			</td>
+			<td class="form_text_left">结算方式</td>
+			<td class="form_text_right">
+				{payTypeCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">付款条件</td>
+			<td class="form_text_right">
+				{payCondition}
+			</td>
+			<td class="form_text_left">付款类型</td>
+			<td class="form_text_right">
+				{payForCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_text_right">
+				{deptName}
+			</td>
+			<td class="form_text_left">申 请 人</td>
+			<td class="form_text_right" width="30%">
+				{salesman}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">费用归属部门</td>
+			<td class="form_text_right">
+				{feeDeptName}
+			</td>
+			<td class="form_text_left">源单类型</td>
+			<td class="form_text_right">
+				{sourceTypeCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总 金 额</td>
+			<td class="form_text_right">
+				<span class="formatMoney">{payMoney}</span>
+			</td>
+			<td class="form_text_left">已付金额</td>
+			<td class="form_text_right">
+				<span class="formatMoney">{payedMoney}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总金额(大写)</td>
+			<td class="form_text_right">
+				<span id="chinseMoney"></span>
+				<input type="hidden" id="payMoney" value="{payMoney}"/>
+			</td>
+			<td class="form_text_left">已付金额(大写)</td>
+			<td class="form_text_right">
+				<span id="chinseMoneyPayed"></span>
+				<input type="hidden" id="payedMoney" value="{payedMoney}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">期望付款日期</td>
+			<td class="form_text_right">
+				{payDate}
+			</td>
+			<td class="form_text_left">实际付款日期</td>
+			<td class="form_text_right">
+				{actPayDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">付款币种</td>
+			<td class="form_text_right">
+				{currency}
+			</td>
+			<td class="form_text_left">打印次数</td>
+			<td class="form_text_right">
+				{printCount}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">是否需要财务付款</td>
+			<td class="form_text_right">
+				<span id="isEntrustInfo">{isEntrust}</span>
+			</td>
+			<td class="form_text_left">汇入地点</td>
+			<td class="form_text_right">
+				{place}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">是否开具发票</td>
+			<td class="form_text_right">
+				<span id="isInvoiceInfo">{isInvoice}</span>
+			</td>
+			<td class="form_text_left">付款业务类型</td>
+			<td class="form_text_right">
+				<span id="payForBusiness">{payForBusiness}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right">
+				{businessBelongName}
+			</td>
+			<td class="form_text_left">款项用途</td>
+			<td colspan="3" class="form_text_right">
+				{remark}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">款项说明</td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_blue" readonly="readonly">{payDesc}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td colspan="3" class="form_text_right">
+				{comments}
+			</td>
+		</tr>
+		<tr class="closeInfo" style="display:none">
+			<td class="form_text_left"><span class="green">关 闭 人</span></td>
+			<td class="form_text_right">
+				<span class="green">{closeUser}</span>
+			</td>
+			<td class="form_text_left"><span class="green">关闭日期</span></td>
+			<td class="form_text_right">
+				<span class="green">{closeDate}</span>
+			</td>
+		</tr>
+		<tr class="closeInfo" style="display:none">
+			<td class="form_text_left"><span class="green">关闭原因</span></td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_green" readonly="readonly">{closeReason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附 件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<thead>
+						<tr align="left">
+							<td colspan="8">
+								款项内容
+							</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th width="5%">序号</th>
+							<th width="10%">源单类型</th>
+							<th width="15%">源单编号</th>
+							<th width="10%">申请金额</th>
+							<th width="10%">源单金额</th>
+							<th width="10%">项目类型</th>
+							<th width="10%">项目名称</th>
+							<th>备注说明</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						{detail}
+					</tbody>
+					<tr class="tr_count">
+						<td colspan="2">合计</td>
+						<td></td>
+						<td><span class="formatMoney">{payMoney}</span></td>
+						<td colspan="4"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<tr>
+						<td colspan="4" class="td_table" id="approvalView">
+							<input type="hidden" id="pid" value="{exaId}"/>
+							<input type="hidden" id="itemType" value="{exaCode}"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="button" onclick="closeFun();" value=" 关闭 " class="txt_btn_a"/>
+			</td>
+		</tr>
+</body>
+</html>

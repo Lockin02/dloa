@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看员工转正考核评估表</title>
+      {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/examine-viewhigh.js" ></script>
+   <script type="text/javascript" src="js/common/approval.js"></script>
+</head>
+<body>
+<script>
+$(document).ready(function() {
+		if($("#actType").val()!=""){
+			$("#closeBtn").hide();
+		}
+		if( $('#isDirector').val()==1 ){
+			$('#directorView').show();
+		}
+});
+</script>
+<table class="form_main_table">
+<tr>
+	<td colspan="6">
+      <div class="main_head">
+          <span class="main_head_title">
+            	员工转正考核评估表信息<input type="hidden" id="isDirector" value="{isDirector}"/>
+          </span>
+      </div>
+   </td>
+</tr>
+	<tr>
+      		<td class="form_text_left_three">员工编号</td>
+      		<td class="form_text_right_three" >
+      			{userNo}
+      		</td>
+      		<td class="form_text_left_three">姓名</td>
+      		<td class="form_text_right_three" >
+      			 {useName}
+      		</td>
+      		<td class="form_text_left_three">性别</td>
+      		<td class="form_text_right_three" >
+      			{sex}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">年龄</td>
+      		<td class="form_text_right_three" >
+      			{age}
+      		<td class="form_text_left_three">部门</td>
+      		<td class="form_text_right_three" >
+      			 {deptName}
+      		</td>
+      		<td class="form_text_left_three">职位</td>
+      		<td class="form_text_right_three" >
+				{positionName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">学历</td>
+      		<td class="form_text_right_three" >
+      			 {education}
+      		</td>
+      		<td class="form_text_left_three">毕业院校</td>
+      		<td class="form_text_right_three" >
+      			 {school}
+      		</td>
+      		<td class="form_text_left_three">专业</td>
+      		<td class="form_text_right_three" >
+      			 {professional}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">联系电话</td>
+      		<td class="form_text_right_three" >
+      			 {phone}
+      		</td>
+      		<td class="form_text_left_three">工作年限</td>
+      		<td class="form_text_right_three" >
+      			{workSeniority}
+      		<td class="form_text_left_three">填表日期</td>
+      		<td class="form_text_right_three" >
+      			 {reformDT}
+      		</td>
+	   </tr>
+       <tr>
+      		<td class="form_text_left_three">入职时间</td>
+      		<td class="form_text_right_three" >
+      			{begintime}
+      		</td>
+      		<td class="form_text_left_three">计划转正时间</td>
+      		<td class="form_text_right_three" >
+      			 {finishtime}
+      		</td>
+			<td class="form_text_left_three">考核方案</td>
+      		<td class="form_text_right_three" >
+				{schemeName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">工作总结</td>
+      		<td class="form_text_right_three" colspan="5">
+      			  {summary}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">后三个月工作规划</td>
+      		<td class="form_text_right_three" colspan="5">
+      			 {plan}
+      		</td>
+       </tr>
+	   <tr>
+      		<td class="form_text_left_three">自评总分计算</td>
+      		<td class="form_text_right_three">
+      			 {selfScore}
+      		</td>
+			<td class="form_text_left_three">复核总分计算</td>
+      		<td class="form_text_right_three" colspan="4">
+      			 {totalScore}
+      		</td>
+       </tr>
+	   <tr id="directorView" >
+      		<td class="form_text_left_three">总监转正意见</td>
+      		<td class="form_text_right_three" colspan="6">
+      			 {directorMessage}
+      		</td>
+       </tr>
+	   <tr>
+			<td class="form_text_left_three">员工同意情况</td>
+      		<td class="form_text_right_three" colspan="6">
+      			 {isAgreeComment}
+      		</td>
+       </tr>
+	   <tr>
+			<td class="form_text_left_three">员工意见</td>
+      		<td class="form_text_right_three" colspan="6">
+      			 {comment}
+      		</td>
+       </tr>
+	   <tr>
+			<td colspan="6" class="form_text_right">
+				<span class="blue">提示:复核总分在50分以下的，视为考核不通过。</span>
+			</td>
+       </tr>
+       <tr>
+			<td colspan="6">
+			<fieldset><legend><b>考核内容</b></legend>
+   			 	<div id="schemeTable"></div>
+			</fieldset>
+			</td>
+		</tr>
+	   <tr  id="closeApproval">
+				<td colspan="6" class="td_table" id="approvalView">
+					<input type="hidden" id="pid" value="{id}"/>
+					<input type="hidden" id="itemType" value="oa_hr_permanent_examine"/>
+		</td>
+		</tr>
+   <tr>
+		<td class="txt_btn" colspan="6">
+		  <input type="hidden" id="parentId" value="{id}"/>
+		   <input  type="hidden" id="actType"  value="{actType}" />
+	      <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</body>
+</html>

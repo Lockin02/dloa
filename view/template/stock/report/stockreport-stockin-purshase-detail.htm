@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<TITLE>采购成本明细表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript">
+	function searchBtn() {
+		var url = "?model=stock_report_stockreport&action=toStockinPurSearch"
+			+ "&beginYear="+document.getElementById("beginYear").value
+			+ "&beginMonth="+document.getElementById("beginMonth").value
+			+ "&endYear="+document.getElementById("endYear").value
+			+ "&endMonth="+document.getElementById("endMonth").value
+			+ "&productId="+document.getElementById("productId").value
+			+ "&productCode="+document.getElementById("productCode").value
+			+ "&supplierId="+document.getElementById("supplierId").value
+			+ "&supplierName="+document.getElementById("supplierName").value
+			+ "&catchStatus="+document.getElementById("catchStatus").value
+			+ "&isRed="+document.getElementById("isRed").value
+			+"&remark="+document.getElementById("remark").value
+		;
+		window.open(url,
+				'newwindow', 'height=500,width=860');
+	}
+	function clearBtn() {
+		this.location.reload("?model=stock_report_stockreport&action=toStockinPurchase");
+	}
+</script>
+<SCRIPT LANGUAGE="JavaScript" FOR="ReportViewer" EVENT="ContentCellClick(pSender)">
+<!--
+    if (pSender.Column.Name == "单据编码")
+    {
+        //获取单据Id
+        var formId = Report.FieldByName("id").AsString;
+        var skey = "";
+        $.ajax({
+		    type: "POST",
+		    url: "?model=stock_instock_stockin&action=md5RowAjax",
+		    data: {"id" : formId},
+		    async: false,
+		    success: function(data){
+		   	   skey = data;
+			}
+		});
+        showModalWin("?model=stock_instock_stockin&action=toView&id="
+				+formId
+				+ "&docType=RKPURCHASE&skey="
+				+skey
+				+ "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=800");
+		//showModalWin("index1.php?model=stock_outstock_stockout&action=toView&id="+formId+"&docType=CKSALES&skey="+skey+"&placeValuesBefore");
+    }
+-->
+</SCRIPT>
+</HEAD>
+<body style="margin:0" onload="initReport()">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td><input type="button" id="searchBtn" class="txt_btn_a" onclick="searchBtn();" value=" 查  询 " />
+			<input type="button" id="clearBtn" class="txt_btn_a" onclick="clearBtn();" value=" 清  空 " />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%">
+			查询日期 ：
+			{beginYear}年{beginMonth}月 到
+			{endYear} 年 {endMonth}月
+		</td>
+		<td width="40%">
+			供应商 ：
+			{supplierName}
+		</td>
+		<td>
+			物料编号 ：
+			{productCode}
+		</td>
+	</tr>
+	<tr height="100%">
+		<td colspan="3" style="font-size: 10pt;" height="100%">
+		<input type="hidden" id="productId" value="{productId}" />
+		<input type="hidden" id="productCode" value="{productCode}" />
+		<input type="hidden" id="supplierId" value="{supplierId}" />
+		<input type="hidden" id="supplierName" value="{supplierName}" />
+		<input type="hidden" id="beginYear" value="{beginYear}" />
+		<input type="hidden" id="beginMonth" value="{beginMonth}" />
+		<input type="hidden" id="endYear" value="{endYear}" />
+		<input type="hidden" id="endMonth" value="{endMonth}" />
+		<input type="hidden" id="catchStatus" value="{catchStatus}" />
+		<input type="hidden" id="isRed" value="{isRed}" />
+		<input type="hidden" id="remark" value="{remark}" />
+            <input type="hidden" id="moneyLimit" value="{moneyLimit}" />
+		<script language="javascript">
+            CreateDisplayViewer("view/template/stock/report/stockreport_stockin_purchase_detail.grf?v=20160801",
+                    "view/template/stock/report/stockinpurchasedetail.php?"
+                            + "&beginYear="+document.getElementById("beginYear").value
+                            + "&beginMonth="+document.getElementById("beginMonth").value
+                            + "&endYear="+document.getElementById("endYear").value
+                            + "&endMonth="+document.getElementById("endMonth").value
+                            + "&productId="+document.getElementById("productId").value
+                            + "&productCode="+document.getElementById("productCode").value
+                            + "&supplierId="+document.getElementById("supplierId").value
+                            + "&supplierName="+document.getElementById("supplierName").value
+                            + "&catchStatus="+document.getElementById("catchStatus").value
+                            + "&isRed="+document.getElementById("isRed").value
+                            + "&moneyLimit="+document.getElementById("moneyLimit").value
+                            + "&remark="+document.getElementById("remark").value)
+		</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

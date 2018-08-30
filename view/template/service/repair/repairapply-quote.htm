@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>申请单确认报价</title>
+   {#commonInclude#}
+  <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js" ></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+   <script>
+   $(document).ready(function(){
+	   $("#tableDiv").width(document.documentElement.clientWidth-30);
+   })
+
+   function reloadItemCount() {
+	var i = 1;
+	$("#itembody").children("tr").each(function() {
+				if ($(this).css("display") != "none") {
+					$(this).children("td").eq(1).text(i);
+					i++;
+
+				}
+			})
+}
+	// 删除
+	function delItem(obj) {
+	if (confirm('确定要删除该行？')) {
+		var rowNo = obj.parentNode.parentNode.rowIndex - 2;
+		$(obj).parent().parent().hide();
+		$(obj).parent().append('<input type="hidden" name="repairapply[items]['
+				+ rowNo + '][isDelTag]" value="1" id="isDelTag' + rowNo + '" />');
+		reloadItemCount();
+	}
+}
+   </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=service_repair_repairapply&action=quote"  onsubmit="" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	申请单确认报价
+             </span>
+         </div>
+      </td>
+   </tr>
+<tr>
+		<td class="form_text_left">单据编号</td>
+		<td class="form_text_right" >
+			{docCode}
+		</td>
+
+		<td class="form_text_left">单据日期</td>
+		<td class="form_text_right" >
+			{docDate}
+		</td>
+</tr>
+<tr>
+      <td class="form_text_left">客户名称</td>
+      		<td class="form_text_right" >
+      			 {customerName}
+      		</td>
+
+      		<td class="form_text_left">客户联系人</td>
+      		<td class="form_text_right" >
+				{contactUserName}
+      		</td>
+</tr>
+<tr>
+		<td class="form_text_left">联系电话</td>
+      		<td class="form_text_right" colspan="3">
+      			{telephone}
+      		</td>
+</tr>
+<tr>
+		<td class="form_text_left">客户地址</td>
+		<td class="form_text_right" colspan="3">
+				{adress}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">申请人</td>
+      	<td class="form_text_right" >
+      		{applyUserName}
+      	</td>
+		<td class="form_text_left">维修费用</td>
+		<td class="form_text_right formatMoney" >
+			 {subCost}
+		</td>
+</tr>
+
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea class="textarea_read">{remark}</textarea>
+		</td>
+</tr>
+<tr>
+			<td colspan="4">
+			<div id="tableDiv" style="width: 1000px; height: 300px; overflow-y: auto; overflow-x: auto">
+				<table class="main_table" id="itemtable">
+					<thead>
+						<tr>
+							<td colspan="15" class="form_header">详细</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>
+
+							</th>
+							<th>序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>是否过保</th>
+							<th>费用类型</th>
+							<th>维修成本</th>
+							<th>收取费用</th>
+							<th>所属分类</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>序列号</th>
+							<th>配件信息</th>
+							<th>故障现象</th>
+							<th>检测处理方法</th>
+						</tr>
+					</thead>
+					<tbody id="itembody">
+                      {itemsList}
+					</tbody>
+				</table>
+			</div>
+		</td>
+	</tr>
+
+   <tr>
+		<td class="txt_btn" colspan="4">
+           <input  type="hidden" name="repairapply[id]" value="{id}" />
+		   <input  type="submit" class="txt_btn_a" value=" 确  认 "  />
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

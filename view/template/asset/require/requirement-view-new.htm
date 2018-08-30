@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看资产需求申请</title>
+   {#commonInclude#}
+<script type="text/javascript" src="js/common/approval.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/requirement-view-new.js" ></script>
+   <script>
+	   $(function(){
+			$("#requireType").val('{requireType}');
+			if( $('#btn').val()==1){
+				$('#approvalTr').hide();
+			}
+	   });
+   </script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=asset_require_requirement&action=edit" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	查看资产需求申请
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left">需求编号</td>
+      		<td class="form_text_right">
+      			 {requireCode}
+      		</td>
+      		<td class="form_text_left">使用类型</td>
+      		<td class="form_text_right" >
+      			{requireType}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">使用人</td>
+      		<td class="form_text_right" width="30%">{userName}
+      		</td>
+      		<td class="form_text_left">使用部门</td>
+      		<td class="form_text_right" >{userDeptName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">使用公司</td>
+      		<td class="form_text_right" >{userCompanyName}
+      		</td>
+      		<td class="form_text_left">使用人电话</td>
+      		<td class="form_text_right" >{userPhone}
+      		</td>
+       </tr>
+<!--       <tr>-->
+<!--      		<td class="form_text_left">项目编号</td>-->
+<!--      		<td class="form_text_right" >{projectCode}-->
+<!--      		</td>-->
+<!--       </tr>-->
+       <tr>
+      		<td class="form_text_left">预计开始日期</td>
+      		<td class="form_text_right" >{beginDate}
+      		</td>
+      		<td class="form_text_left">预计归还日期</td>
+      		<td class="form_text_right" >{returnDate}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">申请人</td>
+      		<td class="form_text_right" >{applyName}
+      		</td>
+      		<td class="form_text_left">申请部门</td>
+      		<td class="form_text_right" >{applyDeptName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">预计金额</td>
+      		<td class="form_text_right formatMoney" >{expectAmount}
+      		</td>
+      		<td class="form_text_left">申请日期</td>
+      		<td class="form_text_right" width="30%">
+      			 {applyDate}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">确认金额</td>
+      		<td class="form_text_right formatMoney" colspan='3'>{recognizeAmount}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">收货地址</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea class="txt_txtarea_font" readonly>{address}</textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea name="requirement[remark]" class="txt_txtarea_font" readonly>{remark}</textarea>
+      		</td>
+       </tr>
+      </table>
+		<div id="itemTable"></div>
+		<input type="hidden" id="requireDetails" value='{requireDetails}' />
+      <table class="form_main_table">
+    	<tr>
+      		<td class="txt_btn" colspan="4">
+      			<input type="hidden" id="btn" value="{btn}" />
+      			<input type="hidden" name="requirement[id]" value="{id}" id="id"/>
+<!--      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()"/>-->
+      		</td>
+       </tr>
+		<tr id="approvalTr">
+			<td colspan="4" class="td_table" id="approvalView">
+			    <input type="hidden" id="type" value="require" />
+			    <input type="hidden" id="pid" value="{id}" />
+			    <input type="hidden" id="itemType" value="oa_asset_requirement" />
+<!--			    <input type="hidden" id="isChange" value="1" />-->
+			</td>
+		</tr>
+      </table>
+   </form>
+</body>
+</html>

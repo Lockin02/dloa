@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增生产领料申请单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/picking-add-multi-plan.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=produce_plan_picking&action=add&mutil" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							新增生产领料申请单
+						</span>
+					</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="form_text_left blue">单据类型</td>
+				<td class="form_text_right">
+					<select class="txt" id="docTypeCode" name="picking[docTypeCode]">
+						<option value="" title="请选择">...请选择...</option>
+						{docTypeCode}
+					</select>
+				</td>
+				<td class="form_text_left">申请人</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" readonly id="createName" name="picking[createName]" value="{createName}"/>
+					<input type="hidden" id="createId" name="picking[createId]" value="{createId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">申请日期</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" readonly id="docDate" name="picking[docDate]" value="{docDate}"/>
+				</td>
+				<td class="form_text_left" style="display:none;">数  量</td>
+				<td class="form_text_right" style="display:none;">
+					<input type="text" class="txt" id="num" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">计划领料日期</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" readonly id="planDate" onfocus="WdatePicker()" onchange="setPlanDate(this);"/>
+				</td>
+				<td class="form_text_left blue">所属板块</td>
+			    <td class="form_text_right">
+			        <select class="select" name="picking[module]" id="module">
+			        {module}
+			        </select>
+			    </td>
+			</tr>
+			<tr>
+			<td class="form_text_left">备  注</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="txt_txtarea_long" id="remark" name="picking[remark]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<div id="productItem"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="typeId" value="{typeId}"/>
+					<input type="hidden" id="planId" value="{planId}"/>
+					<input type="hidden" id="productId" value="{productId}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

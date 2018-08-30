@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>申请盖章</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+	<script>
+		$(document).ready(function(){
+			// 验证信息
+			validate({
+				"stampType" : {
+					required : true
+				}
+			});
+
+			//盖章类型渲染
+			$("#stampType").yxcombogrid_stampconfig({
+				hiddenId : 'stampType',
+				height : 250,
+				gridOptions : {
+					isTitle : true,
+					showcheckbox : true
+				}
+			});
+		});
+
+		function checkForm(){
+			if($("#uploadfileList").html() ==""){
+				alert('申请盖章前需要上传合同附件！');
+				return false;
+			}
+			return true;
+		}
+	</script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_sale_other",
+                 "serviceId": "{id}"
+             });
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	申请盖章
+    </span>
+</div>
+<form id="form1" method="post" action="?model=outsourcing_contract_rentcar&action=stamp" onsubmit="return checkForm();">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left_three">鼎利合同编号</td>
+		<td class="form_text_right_three">
+			{orderCode}
+		</td>
+		<td class="form_text_left_three">合同名称</td>
+		<td class="form_text_right_three">
+			{orderName}
+		</td>
+		<td class="form_text_left_three">合同负责人</td>
+		<td class="form_text_right_three">
+			{principalName}
+		</td>
+	</tr>
+    <tr>
+		<td class="form_text_left_three"><span style="color:blue">盖章类型</span></td>
+		<td class="form_text_right_three" colspan="5">
+			<input type="text" class="txt500" name="rentcar[stampType]" id="stampType" readonly="readonly"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">备注说明</td>
+		<td class="form_text_right_three" colspan="5">
+			 <textarea class="txt_txtarea_long" name="rentcar[remark]" id="remark"></textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left_three">附  件</td>
+		<td class="form_text_right_three" colspan="5">
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload">
+					<span id="swfupload"></span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+			</div>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+         	<input type="hidden" name="rentcar[contractId]" value="{id}" />
+         	<input type="hidden" name="rentcar[contractCode]" value="{orderCode}" />
+         	<input type="hidden" name="rentcar[contractName]" value="{orderName}" />
+         	<input type="hidden" name="rentcar[objCode]" value="{objCode}" />
+         	<input type="hidden" name="rentcar[contractMoney]" value="{orderMoney}" />
+         	<input type="hidden" name="rentcar[signCompanyName]" value="{signCompany}" />
+         	<input type="hidden" name="rentcar[signCompanyId]" value="{signCompanyId}" />
+         	<input type="hidden" name="rentcar[applyUserId]" value="{thisUserId}" />
+         	<input type="hidden" name="rentcar[applyUserName]" value="{thisUserName}" />
+         	<input type="hidden" name="rentcar[applyDate]" value="{applyDate}" />
+         	<input type="submit" class="txt_btn_a" value="申请盖章"/>&nbsp;&nbsp;
+         	<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

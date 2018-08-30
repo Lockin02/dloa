@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>联系人</title>
+<base target="_self" />
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="{#jsPath#}/linkman_add.js"></script>
+
+</head>
+<body>
+<form action="?model=customer_linkman_linkman&action=add" method="POST" onsubmit="return check_all()">
+<input id="isFromCustomer" type="hidden"  value="{isFromCustomer}"/>
+<div align="center">
+<table width='98%' class='form_main_table' align="center">
+	<tr>
+		<td class="form_header" colspan="4" align="center" height="30px">录入联系人</td>
+	</tr>
+	<tr >
+		<td class="form_text_left">所属客户</td>
+		<td class="form_view_right" colspan="3"><div id="append"></div>
+		<div id="customerIdNull">
+			<input id="customerId" type="hidden" name="linkman[customerId]" value="{customerId}"/>
+			<input id="customerName" type="text" name="linkman[customerName]" class="txt" value="{customerName}"/>
+			<span id="_customerName" class="red">[*]</span>
+		</div>
+		</td>
+	</tr>
+	<tr >
+		<td class="form_text_left">姓名</td>
+		<td class="form_view_right" colspan="3"><input class="txt" type="text" id="linkmanName"
+			name="linkman[linkmanName]" value="" size="20"> <span id="_linkmanName" class="red">[*]</span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">性别</td>
+		<td class="form_view_right"><select class="select" id="sex" name="linkman[sex]">
+			<option value="1">未知</option>
+			<option value="2">男</option>
+			<option value="3">女</option>
+		</select></td>
+		<td class="form_text_left">email</td>
+		<td class="form_view_right" width="30%" ><input class="txt" type="text"
+			name="linkman[email]" size="25" id="email" onchange="Ema();" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">身高</td>
+		<td class="form_view_right"><input class="txt" type="text" name="linkman[height]"
+			value="" size="25"></td>
+		<td class="form_text_left">体重</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[weight]" size="25" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">年龄</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[age]" size="25" id="age" onchange="Agecheck();"/></td>
+		<td class="form_text_left">职务</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[duty]" size="25" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">电话号码</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[phone]" size="25" id="phone" onchange="tell();"/></td>
+		<td class="form_text_left">手机号码</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[mobile]" size="25" id="mobile"  onchange="Mob();"/></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">MSN</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			name="linkman[MSN]" size="25" id="MSN"onchange="msn();"/></td>
+		<td class="form_text_left">QQ</td>
+		<td class="form_view_right"><input class="txt" type="text" name="linkman[QQ]"
+			size="25"id="QQ" onchange="QQcheck();"/></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">地址</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="5"
+			name="linkman[address]" style="width:100%"></textarea></td>
+	</tr>
+	<tr >
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="5"
+			name="linkman[remark]" style="width:100%"></textarea></td>
+	</tr>
+
+	<tr>
+
+		<td class="" colspan="4">
+		 <input type="hidden" name="linkman[createId]" value="{createId}" />
+	    <input type="hidden" name="linkman[createName]" value="{createName}" />
+		<input class="txt_btn_a" type="submit" value="提交" />
+		<input class="txt_btn_a" type="button" value="关闭" onclick="self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+
+<script type="text/javascript">
+function check_all()
+{
+	if ($('#customerId').val()=='')
+	{
+		alert('客户不能为空！');
+		return false;
+	}
+	if ($('#linkmanName').val()=='')
+	{
+		alert('姓名不能为空！');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

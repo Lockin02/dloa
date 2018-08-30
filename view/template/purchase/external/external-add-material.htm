@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>添加采购申请</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-batchnumb.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/external-add-delete.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/external-add-validator.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/external-produce-add.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/external-add-material.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<script>
+		$(document).ready(function(){
+			$("#instruction").val('请填写采购时需要特别注意的事项');
+			$("#instruction").attr("color" ,'#AAAAAA');
+			window.document.getElementById("instruction").style.color = '#AAAAAA';
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_purch_plan_basic"
+			});
+
+			$("#purchDepart").yxselect_dept({
+				hiddenId : 'purchDepartId'
+			});
+			$("#sendName").yxselect_user({
+				hiddenId : 'sendUserId',
+				isGetDept : [true ,"depId" ,"depName"]
+			});
+
+			$("#batchNumb").trigger("change"); //出发选择批次号事件
+		});
+	</script>
+</head>
+<body>
+	<form id='form1' name='form1' action="?model=purchase_external_external&action=add" method="post" onsubmit="return checkAllData();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							申请采购
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">批次号</td>
+				<td class="form_text_right">
+					<input type="text" class="txtlong" id="batchNumb" name="basic[batchNumb]" onblur="setBatchNumb(this);" value="{productionBatch}"/>
+					<span class="red">[*]</span>
+					<div id="batchNumbTip" class="tipShortTxt"></div>
+				</td>
+				<td class="form_text_left">合同号</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txt" id="contractCode" value="{relDocCode}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">申请日期</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" id="sendTime" name="basic[sendTime]" value="{sendTime}" readonly/>
+				</td>
+				<td class="form_text_left">期望完成日期</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="dateHope" name="basic[dateHope]" onfocus="WdatePicker()" value="{dateHope}" readonly/>
+					<span class="red">[*]</span>
+					<br/>
+					<div id="dateHopeTip" class="tipShortTxt"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">申请人名称</td>
+				<td class="form_text_right">
+					<input type="hidden" name="basic[sendUserId]" value="{sendUserId}"/>
+					<input type="text" class="readOnlyText" name="basic[sendName]" value="{sendName}" readonly/>
+				</td>
+				<td class="form_text_left">申请部门</td>
+				<td class="form_text_right">
+					<input type="hidden" id="depId" name="basic[departId]" value="{departId}"/>
+					<input type="text" class="readOnlyText" id="depName" name="basic[department]" value="{department}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">采购部门</td>
+				<td class="form_text_right">
+					<input type="hidden" id="purchDepartId" name="basic[purchDepartId]" value="{purchDepartId}"/>
+					<input type="text" class="txt" id="purchDepart" name="basic[purchDepart]" value="{purchDepart}" readonly/>
+					<span class="red">[*]</span>
+					<br/>
+					<div id="purchDepartTip" class="tipShortTxt"></div>
+				</td>
+				<td class="form_text_left">电话</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="phone" name="basic[phone]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">申请原因说明</td>
+				<td class="form_text_right" colspan="3">
+					<textarea id="applyReason" class="txt_txtarea_font" name="basic[applyReason]" onblur="setBatchNumb(this);"></textarea>
+					<span class="red">[*]</span>
+					<div id="applyReasonTip" class="tipShortTxt"></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">采购说明</td>
+				<td class="form_text_right" colspan="3">
+					<textarea id="instruction" class="txt_txtarea_font" name="basic[instruction]" onfocus="if (value=='请填写采购时需要特别注意的事项'){value ='';this.style.color='#000000'}" onblur="if (value==''){value='请填写采购时需要特别注意的事项';this.style.color='#AAAAAA'}"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备注</td>
+				<td class="form_text_right" colspan="3">
+					<textarea id="remark" class="txt_txtarea_font" name="basic[remark]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">附  件</td>
+				<td class="form_text_right" colspan="3">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/>
+							<br/>
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div style="overflow-x:scroll;">
+			<div style="display:none" id="productJson">{productJson}</div>
+			<table class="form_main_table">
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend" onclick="showAndHideDiv('productItemImg','productItem')">采购申请清单
+								<img src="images/icon/info_up.gif" id="productItemImg"/>
+							</legend>
+							<div id="productItem"></div>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6" id="historyApply"></td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<input type="hidden" id='purchType' name="basic[purchType]" value="produce"/>
+					<input type="hidden" id='purchType1' name="external[purchType]"/>
+					<input type="hidden" id="qualityList" value='{qualityList}'/>
+					<input type="hidden" id='sourceId1'/>
+					<input type="hidden" id='sourceName1'/>
+					<input type="submit" value=" 保  存 " class="txt_btn_a"/>&nbsp;&nbsp;
+					<input type="submit" value=" 提交审批 " onclick="submitAudit();" class="txt_btn_a"/>&nbsp;&nbsp;
+					<input type="submit" value=" 关  闭 " onclick="closeFun();" class="txt_btn_a"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

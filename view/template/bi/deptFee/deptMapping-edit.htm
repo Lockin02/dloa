@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>部门映射配置</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/deptMapping-common.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=bi_deptFee_deptMapping&action=edit" onsubmit="return checkSubmit();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+					<span class="main_head_title">
+						编辑部门映射配置
+					</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><span class="blue">事业部</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="business" name="deptMapping[business]" value="{business}"/>
+                <input type="hidden" name="deptMapping[orgBusiness]" value="{business}"/>
+                <input type="hidden" name="deptMapping[orgSecondDept]" value="{secondDept}"/>
+                <input type="hidden" name="deptMapping[orgThirdDept]" value="{thirdDept}"/>
+                <input type="hidden" name="deptMapping[orgFourthDept]" value="{fourthDept}"/>
+            </td>
+            <td class="form_text_left"><span class="blue">二级部门</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[secondDept]" id="secondDept" value="{secondDept}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">三级部门</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[thirdDept]" id="thirdDept" value="{thirdDept}"/>
+            </td>
+            <td class="form_text_left">四级部门</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[fourthDept]" id="fourthDept" value="{fourthDept}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">包含部门</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="txt" style="width: 610px;" name="deptMapping[mappingDept]"
+                       id="mappingDept" value="{mappingDept}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">对应板块</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[module]" id="module" value="{module}"
+                       placeholder="目前仅用于报销数据取值"/>
+            </td>
+            <td class="form_text_left">产品线</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[productLine]" id="productLine" value="{productLine}"
+                       placeholder=""/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">费用类别</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="deptMapping[costCategory]" id="costCategory" value="{costCategory}"/>
+            </td>
+            <td class="form_text_left">不统计项</td>
+            <td class="form_text_right">
+                <input type="checkbox" name="deptMapping[forbidFeeType][]" id="人力" value="人力"/> 人力
+                <input type="checkbox" name="deptMapping[forbidFeeType][]" id="报销" value="报销"/> 报销
+                <input type="checkbox" name="deptMapping[forbidFeeType][]" id="支付" value="支付"/> 支付
+                <input type="checkbox" name="deptMapping[forbidFeeType][]" id="PK" value="PK"/> PK
+                <input type="hidden" id="forbidFeeType" value="{forbidFeeType}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">统计开始日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txtmin" id="filterStartDateY" name="deptMapping[filterStartDateY]" value="{filterStartDateY}" onclick="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'2099'})" title="{filterStartDateY}"> 年
+                <input type="text" class="txtmin" id="filterStartDateM" name="deptMapping[filterStartDateM]" value="{filterStartDateM}" onclick="WdatePicker({dateFmt:'M'})" title="{filterStartDateM}"> 月
+            </td>
+            <td class="form_text_left">统计截止日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txtmin" id="filterEndDateY" name="deptMapping[filterEndDateY]" value="{filterEndDateY}" onclick="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'2099'})" title="{filterEndDateY}"> 年
+                <input type="text" class="txtmin" id="filterEndDateM" name="deptMapping[filterEndDateM]" value="{filterEndDateM}" onclick="WdatePicker({dateFmt:'M'})" title="{filterEndDateM}"> 月
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">序号</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="txt" name="deptMapping[sortOrder]" id="sortOrder" value="{sortOrder}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注说明</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="remark" name="deptMapping[remark]" class="txt_txtarea_800">{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" name="deptMapping[id]" value="{id}"/>
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script type="text/javascript">
+    $(function() {
+        var forbidFeeType = $("#forbidFeeType").val();
+        if (forbidFeeType != "") {
+            var forbidFeeTypeArr = forbidFeeType.split(',');
+            for (var i = 0; i < forbidFeeTypeArr.length; i++) {
+                $("#" + forbidFeeTypeArr[i]).attr('checked', 'checked');
+            }
+        }
+    });
+</script>
+</html>

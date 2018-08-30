@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑常用设备备货时间及库存信息</title>
+   {#commonInclude#}
+         <script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+	<!-- 
+     <script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-goods.js" ></script>	
+	 -->
+	   <script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-extraequip.js" ></script>		 
+   <script type="text/javascript" src="{#jsPath#}/procompositebase-edit.js" ></script>   
+   <script>
+   	$(document).ready(function (){
+   		var tempStr = "";
+   		if ("{periodType}" == "0") {
+   			tempStr = "<option value='1'>1月份上半月</option>"
+   					+ "<option value='2'>1月份下半月</option>"
+   					+ "<option value='3'>2月份上半月</option>"
+   					+ "<option value='4'>2月份下半月</option>"
+   					+ "<option value='5'>3月份上半月</option>"
+   					+ "<option value='6'>3月份下半月</option>"
+   					+ "<option value='7'>4月份上半月</option>"
+   					+ "<option value='8'>4月份下半月</option>"
+   					+ "<option value='9'>5月份上半月</option>"
+   					+ "<option value='10'>5月份下半月</option>"
+   					+ "<option value='11'>6月份上半月</option>"
+   					+ "<option value='12'>6月份下半月</option>"
+   					+ "<option value='13'>7月份上半月</option>"
+   					+ "<option value='14'>7月份下半月</option>"
+   					+ "<option value='15'>8月份上半月</option>"
+   					+ "<option value='16'>8月份下半月</option>"
+   					+ "<option value='17'>9月份上半月</option>"
+   					+ "<option value='18'>9月份下半月</option>"
+   					+ "<option value='19'>10月份上半月</option>"
+   					+ "<option value='20'>10月份下半月</option>"
+   					+ "<option value='21'>11月份上半月</option>"
+   					+ "<option value='22'>11月份下半月</option>"
+   					+ "<option value='23'>12月份上半月</option>"
+   					+ "<option value='24'>12月份下半月</option>";
+   		} else if ("{periodType}" == "1") {
+   			tempStr = "<option value='1'>1月份</option>"
+   					+ "<option value='2'>2月份</option>"
+   					+ "<option value='3'>3月份</option>"
+   					+ "<option value='4'>4月份</option>"
+   					+ "<option value='5'>5月份</option>"
+   					+ "<option value='6'>6月份</option>"
+   					+ "<option value='7'>7月份</option>"
+   					+ "<option value='8'>8月份</option>"
+   					+ "<option value='9'>9月份</option>"
+   					+ "<option value='10'>10月份</option>"
+   					+ "<option value='11'>11月份</option>"
+   					+ "<option value='12'>12月份</option>";
+   		} else if ("{periodType}" == "2") {
+   			tempStr = "<option value='1'>第1季度</option>"
+   					+ "<option value='2'>第2季度</option>"
+   					+ "<option value='3'>第3季度</option>"
+   					+ "<option value='4'>第4季度</option>";
+   		}
+   		
+   		$("#periodSeNum").append(tempStr);
+   		$("#periodType").val("{periodType}");
+   		//alert()
+   		//$("#periodSeNum").val("{periodSeNum}");
+   	 $("#periodSeNum option[value='"+"{periodSeNum}"+"']").attr("selected", true);    
+   		
+   	})
+   </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=stock_extra_procompositebase&action=edit" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	编辑常用设备备货时间及库存信息
+             </span>
+         </div>     
+      </td>
+   </tr>
+     <tr>
+      		<td class="form_text_left">年份</td>
+      		<td class="form_text_right" >
+      			<select id="activeYear" name="procompositebase[activeYear]" class="select" >
+      				{yearStr}
+      			</select>
+      		</td>
+      		 <td class="form_text_left">周期类型</td>
+      		<td class="form_text_right" >
+      			<select name="procompositebase[periodType]" id="periodType" class="select" onchange="setPeriodSeNumOption()" >
+      				<option value="0">半个月</option>
+      				<option value="1">一个月</option>
+      				<option value="2">一季度</option>
+      			</select>
+      			<input type="hidden" id="periodTypeHidden"  value="{periodType}" />
+      		</td>
+       </tr>        
+       <tr>
+      		<td class="form_text_left">时段</td>
+      		<td class="form_text_right" >
+      			<select id="periodSeNum" name="procompositebase[periodSeNum]" class="select" >
+      			</select>
+      			 <input type="hidden" id="periodSeNumHidden"  value="{periodSeNum}" />
+      		</td>
+       </tr>    
+       <tr>
+            <td class="form_text_left">说明</td>
+      		<td class="form_text_right" colspan="3">
+	      		<textarea style="width:600px;" class="txt_txtarea_font"  id="remark" name="procompositebase[remark]" >{remark}</textarea>
+      		</td>
+       </tr>     
+</table>
+		<div id="itemTable"></div>
+	    <table class="form_main_table">        
+	    <tr>
+	 		  <td class="txt_btn" colspan="4">
+	           <input  type="hidden" id="id" name="procompositebase[id]" value="{id}" />
+	 		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+	 		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+	 		</td>
+	      </tr>
+	   </table>
+  </form>
+ </body>
+</html>

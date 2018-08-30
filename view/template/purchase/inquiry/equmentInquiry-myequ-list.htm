@@ -1,0 +1,203 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+	$(function() {
+			 function document.onkeydown(){//回车绑定搜索按钮
+		          if(event.keyCode==13)
+		          {
+		          	  document.getElementById("searchBtn").click();
+		            //  search();
+		          }
+			 }
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+			var h=document.body.clientHeight;
+			$("#bodyDiv").attr("style","height:"+(h-132)+"px;overflow-y:scroll;");
+			$("th[id^='th']").each(function(){
+				var id=$(this).attr('id');
+				var ththObj=$("td[name^='td"+id+"']");
+				if(ththObj.length > 0){
+					var w=ththObj.eq(0).width();
+					$(this).width(w);
+					ththObj.width(w);
+				}
+			});
+
+			var purchType=$('#purchType').val();
+			$("select[id='searchPurchType'] option").each(function(){
+				if($(this).val()==purchType){
+					$(this).attr("selected","selected");
+				}
+			});
+		});
+	</script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue2=$('#equName').val();
+			var purchTypes=$('#purchType').val();
+			var purchType=purchTypes.replace(/[ ]/g,"");
+			location="?model=purchase_inquiry_equmentInquiry&action=toMyInquiryEquList&equName="+searchvalue2+"&purchType="+purchType;
+		}
+
+		//清空
+		function clearNum(){
+			var purchType=$('#purchType').val();
+			location="?model=purchase_inquiry_equmentInquiry&action=toMyInquiryEquList";
+		}
+
+		function selectButton(obj){
+			//TODO:
+			alert(obj.value);
+		}
+
+		//form提交判断
+		function purchForm(){
+			var idsArry = $(checkListIdStr).val();
+			if( idsArry==null||idsArry==""){
+				alert("请至少选择一条可下达的采购物料信息");
+			}else{
+				$.ajax({
+    		         type:"POST",
+    		         url:"?model=purchase_inquiry_equmentInquiry&action=isSameTypeByOrder",
+    		         data:{
+    		         	ids:idsArry
+    		         },
+    		         success:function(msg){
+    		            if(msg==1){
+							parent.location = "index1.php?model=purchase_contract_purchasecontract&action=toAddByInquiryEqu&idsArry="+idsArry;
+    		            }else{
+    		            	alert("请选择同一供应商且同一类型的物料");
+    		            }
+    		         }
+    		     });
+			}
+		}
+
+		//类型分类
+		function searchPurchType(obj){
+			var purchType=$(obj).attr('value');
+			location="?model=purchase_inquiry_equmentInquiry&action=toMyInquiryEquList&purchType="+purchType;
+		}
+    </script>
+</head>
+<body scroll="no">
+<div class="main_wraper">
+<table class="main_table"  style="width:97.5%">
+<thead>
+  <tr  class="main_table_search">
+		<td colspan="15" align="left">
+			&nbsp;物料名称：<input type="text" name="equName" id="equName" value="{equName}">
+			<input type="button" class="txt_btn_a" value="搜  索"   id="searchBtn"  onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+			&nbsp;采购类型：
+			<select class="" id="searchPurchType" onchange="searchPurchType(this)" >
+			    <option  value="">所有</option>
+			    <option  value="oa_sale_order,HTLX-XSHT">销售合同采购</option>
+			    <option  value="oa_sale_service,HTLX-FWHT">服务合同采购</option>
+			    <option  value="oa_sale_lease,HTLX-ZLHT">租赁合同采购</option>
+			    <option  value="oa_sale_rdproject,HTLX-YFHT">研发合同采购</option>
+			    <option value="assets,oa_asset_purchase_apply">资产采购</option>
+			    <option value="stock,oa_borrow_borrow,oa_present_present">补库采购</option>
+			    <option  value="produce">生产采购</option>
+			    <option value="rdproject">研发采购</option>
+		  	</select>
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;<input type="button" class="txt_btn_a" value="生成采购订单" onclick="purchForm()"/>
+			<input type="hidden" id="idsArry" name="idsArry" value="{idsArry}">
+			<input type="hidden" id="purchType" value="{purchType}">
+		</td>
+	</tr>
+    <tr class="main_tr_header">
+        <th width="5%"id="th01">
+        	<p class="allImg">序号<br/>
+            	<img src="images/expanded.gif" />
+        	</p>
+        </th>
+        <th width="25%" id="th02">
+           供应商
+        </th>
+        <th  width="10%" id="th03">
+           采购类型
+        </th>
+        <th width="10%" id="th04">
+        	<p class="checkAll">
+            	未下达<br/>订单总数<br/>
+            	<input type="checkbox" onclick="checkAll();" id="titlecb" />
+            </p>
+        </th>
+        <th width="60%" class="td_table">
+            <table class="main_table_nested" frame=void>
+            	<tr>
+            		<th id="th05">
+			            物料编号/名称
+			        </th>
+			        <th width="12%" id="th06">
+			           询价单号
+			        </th>
+			        <th  width="10%" id="th07">
+			            询价数量
+			        </th>
+			        <th  width="15%" id="th08">
+			            未下达<br>订单数量
+			        </th>
+			        <th  width="12%" id="th09">
+			            含税单价
+			        </th>
+            	</tr>
+            </table>
+        </th>
+    </tr>
+</thead>
+</table>
+    <div id="bodyDiv">
+    <table class="main_table" >
+    <tbody >
+    {list}
+    </tbody>
+	</table>
+	</div>
+</div>
+{pageDiv}
+</body>
+</html>

@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+<TITLE>终端交付报表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+
+
+<script src="js/jquery.js" language="javascript"></script>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+{#commonInclude#}
+<!--
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-terminalProduct.js"></script>
+ <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="{#jsPath#}/terminalinfo-report.js" ></script>
+ -->
+	
+<style>
+#div{
+	margin:20 0 20 120;
+}
+</style>
+<script type="text/javascript">
+function showWind_(){
+	url ='?model=product_terminal_terminalinfo&action=toReportSearch';
+	 var iTop = (window.screen.availHeight-550)/2; //获得窗口的垂直位置,550为弹出窗口的height;
+     var iLeft = (window.screen.availWidth-640)/2; //获得窗口的水平位置,640为弹出窗口的width;
+     var feature = "width=700,height=400,top="+iTop+",left="+iLeft+",menubar=no,toolbar=no,location=no,scrollbars=no,status=no,modal=yes";
+     window.open(url, '交付表查询条件', feature) ;
+}
+function submitSearch(param){
+	window.location="?model=product_terminal_terminalinfo&action=reportInfo&"+param ;
+}
+
+</script>
+</HEAD>
+<BODY style="margin:0;" >
+<div id="div">
+<input type="button"  onclick="showWind_()" value="查  询">
+</div>
+<input type="hidden" id="terminalName_" value="{terminalName}">
+<input type="hidden" id="proType_"  value="{proType}">
+<input type="hidden" id="deviceType_"  value="{deviceType}">
+<input type="hidden" id="supportNetwork_"  value="{supportNetwork}">
+<input type="hidden" id="situation_"  value="{situation}">
+<input type="hidden" id="versionStatus_"  value="{versionStatus}">
+ 
+<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEx("100%", "100%",
+				"view/template/product/terminal/terminalinfo-report.grf"
+				,"view/template/product/terminal/terminalinfo-report.php?"+
+				"terminalName="+$("#terminalName_").val()+
+				"&proType="+$("#proType_").val()+
+				"&deviceType="+$("#deviceType_").val()+
+				"&supportNetwork="+$("#supportNetwork_").val()+
+				"&situation="+$("#situation_").val()+
+				"&versionStatus="+$("#versionStatus_").val(),
+				true,'')				
+</script>  
+</BODY>
+
+</HTML>

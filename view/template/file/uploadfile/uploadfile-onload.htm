@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script>
+		var uploadfile;
+		$(function() {
+			$("#officeName").yxcombogrid_office();
+			uploadfile=createSWFUpload({
+				"serviceType":"{objTable}",//业务模块编码，一般取表名
+				"serviceId":"{objId}"
+			});
+		});
+
+		function changePlanDuration(sDayEl,eDayEl,el){//自动计算计划工期
+			var subday=plusDateInfo(sDayEl,eDayEl)
+			$("#"+el).val(subday);
+		}
+
+		</script>
+<title>项目修改</title>
+</head>
+<body>
+<form method="post" id="form1"
+	action="?model=engineering_project_esmproject&action=rpUpdate">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">项目附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload">{file}</div>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4"><input type="hidden" id="objId" name="esmproject[objId]" value="{objId}" />
+			<input type="hidden" id="objId" name="esmproject[objTable]" value="{objTable}" />
+			<input type="button" class="txt_btn_a" value="关闭" onclick="self.parent.show_page(1);self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+
+</html>

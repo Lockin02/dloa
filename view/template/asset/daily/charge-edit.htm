@@ -1,0 +1,131 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑资产领用申请</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-assetrequireitem.js"></script>
+    <script type="text/javascript" src="view/template/asset/daily/js/charge-edit.js" >
+        </script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+<script>
+	var uploadfile;
+	$(function() {
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_asset_charge",
+			"serviceId":"{id}"
+		});
+	});
+</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	修改资产领用申请
+    </span>
+</div>
+<form id="form1" method="post" action="?model=asset_daily_charge&action=edit" name="form1">
+<table class="form_main_table">
+
+		 <tr>
+			<td class="form_text_left">
+				领用单编号：
+			</td>
+			<td class="form_text_right">
+				<input type="hidden" name="charge[requireId]" id="requireId" value="{requireId}" class="readOnlyTxtNormal" readonly />
+				<input type="text" name="charge[billNo]" id="billNo" value="{billNo}" class="readOnlyTxtNormal" readonly />
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">
+				领用人：
+			</td>
+			<td class="form_text_right">
+			    <input type="hidden" name="charge[chargeManId]" id="chargeManId" value="{chargeManId}" readonly class="txt"  />
+				<input type="text" name="charge[chargeMan]" id="chargeMan" value="{chargeMan}" readonly class="txt"  />
+
+			</td>
+		</tr>
+		<tr>
+           <td class="form_text_left">
+				领用部门名称：
+			</td>
+			<td class="form_text_right">
+			 <input type="hidden" name="charge[deptId]" id="deptId" value="{deptId}"  />
+			 <input type="text" name="charge[deptName]" id="deptName" value="{deptName}" class="readOnlyTxtNormal" readonly/>
+			</td>
+           <td class="form_text_left">
+				领用公司：
+			</td>
+			<td class="form_text_right">
+			 <input type="hidden" name="charge[applyCompanyCode]" id="applyCompanyCode" value="{applyCompanyCode}"  />
+			 <input type="text" name="charge[applyCompanyName]" id="applyCompanyName" value="{applyCompanyName}" class="readOnlyTxtNormal" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				领用日期：
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="charge[chargeDate]" id="chargeDate" value="{chargeDate}" class="txt" onfocus="WdatePicker()"  />
+			</td>
+			<td class="form_text_left">
+				归还日期：
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="charge[returnDate]" id="returnDate" value="{returnDate}" class="txt" onfocus="WdatePicker()"  />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				申请人：
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="reposeMan" name="charge[reposeMan]" value="{reposeMan}" readonly class="readOnlyTxtNormal"  />
+				<input type="hidden" id="reposeManId" name="charge[reposeManId]" value="{reposeManId}" readonly class="readOnlyTxtNormal"  />
+
+			</td>
+			<td class="form_text_left">附件</td>
+			<td class="form_view_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload"><span id="swfupload"></span> <input
+						id="btnCancel" type="button" value="中止上传"
+						onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注：</td>
+			<td colspan="6" class="form_text_right">
+				<textarea class="txt_txtarea_font" rows="6" name="charge[remark]" id="remark" cols="78">{remark}</textarea>
+			</td>
+		</tr>
+</table>
+
+<div id="purchaseProductTable"></div>
+
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input type="hidden" id="ExaStatus" name="charge[ExaStatus]" value="{ExaStatus}"/>
+		   <input type="hidden" id="allocateID" name="charge[id]" value="{id}"/>
+<!--		   <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />-->
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>
+

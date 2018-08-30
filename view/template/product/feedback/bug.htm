@@ -1,0 +1,1364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript">
+        var input_num = 0;
+        var userid ='{userid}';
+        $(function(){
+        	$('#tt').datagrid({
+                title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+                pageSize: 20,
+                singleSelect: true,
+                idField: 'id',
+                fit:false,
+                url: '?model={t_model}&action=list_data',
+                columns: [[{
+                    field: 'id',
+                    title: '序号',
+                    width: 35,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                    field: 'pms_bug_id',
+                    title: 'P序号',
+                    width: 48,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                    field: 'title',
+                    title: 'Bug标题',
+                    width: 200,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                	field: 'product_name',
+                    title: '所属产品',
+                    width: 150,
+                    align: 'left',
+                    editor: 'text'
+                }, {
+                    field: 'version',
+                    title: '产品版本号',
+                    width: 65,
+                    align: 'left',
+                    editor: 'text'
+                }, 
+                {
+                    field: 'date',
+                    title: '提交时间',
+                    width: 90,
+                    align: 'center',
+                    editor: 'text'
+                },
+                {
+                    field: 'deadline',
+                    title: '完成期限',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text'
+                },
+                {
+                    field: 'resolved_date',
+                    title: '解决日期',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text'
+                },
+                /*
+                {
+                    field: 'unit',
+                    title: '提出单位',
+                    width: 80,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.code!=row.d_code && row.d_code ? '<div style="background:#FBEC88;">'+value+'</div>' : value;
+                    }
+                },
+                
+                {
+                    field: 'user_name',
+                    title: '提交人',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text'
+                },
+                */
+                {
+                    field: 'contact',
+                    title: '提出人',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.desc!=row.d_desc && row.d_desc ? '<div style="background:#FBEC88;" title="'+value+'">'+value+'</div>' : value;
+                    }
+                },
+                /*
+                {
+                    field: 'mobile',
+                    title: '提出手机',
+                    width: 90,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.desc!=row.d_desc && row.d_desc ? '<div style="background:#FBEC88;" title="'+value+'">'+value+'</div>' : value;
+                    }
+                },{
+                    field: 'email',
+                    title: '提出人Email',
+                    width: 100,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	return row.desc!=row.d_desc && row.d_desc ? '<div style="background:#FBEC88;" title="'+value+'">'+value+'</div>' : value;
+                    }
+                }, 
+                */
+                {
+                    field: 'status',
+                    title: '状态',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	//str = value == 1 ? '已确认' : (value== 0 ? '待确认' : (value==2 ? '已解决' : '被打回'));
+                    	var str = "";
+                    	if(value == 0){
+                    		str = '待确认';
+                    	}else if(value == 1){
+                    		str = '已确认';
+                    	}else if(value == 2){
+                    		str = '已解决';
+                    	}else if(value == 3){
+                    		str = '已初审';
+                    	}else{
+                    		str = '被打回';
+                    	}
+                    	return row.status!=row.d_status && row.d_status ? '<div style="background:#FBEC88;">'+str+'</div>' : str;
+                    }
+                }, {
+                    field: 'feedback',
+                    title: '反馈',
+                    width: 50,
+                    align: 'left',
+                    editor: 'text',
+                    formatter: function(value, row, index){
+                    	//str = value == 1 ? '已确认' : (value== 0 ? '待确认' : (value==2 ? '已解决' : '被打回'));
+                    	var str = "";
+                    	if(value == 0){
+                    		str = '未反馈';
+                    	}else if(value == 1){
+                    		str = '已反馈';
+                    	}
+                    	return row.status!=row.d_status && row.d_status ? '<div style="background:#FBEC88;">'+str+'</div>' : str;
+                    }
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 140,
+                    align: 'left',
+                    formatter: function(value, row, index){
+                    	
+                    	var flag = false;
+                    	var oFlag = false;
+                    	var aFlag = false;
+                    	
+                    	var assistantList;
+                    	var feedbackOwnerList;
+                    	var feedbackAssistantList;
+                    	
+                    	var assistant = row.assistant;
+                    	var feedback_owner = row.feedback_owner;
+                    	var feedback_assistant = row.feedback_assistant;
+                    	
+                    	//产品助理
+                    	if(assistant.indexOf(',') > -1){
+                    		assistantList = assistant.split(',');
+                    		for(var i=0; i< assistantList.length; i++){
+                    			if(assistantList[i] == userid){
+                    				flag = true;
+                    			}
+                    		}
+                    	}else{
+                    		if(row.assistant == userid){
+                    			flag = true;
+                    		}
+                    	}
+                    	
+                    	//反馈审批人
+                    	if(feedback_owner.indexOf(',') > -1){
+                    		feedbackOwnerList = feedback_owner.split(',');
+                    		for(var i=0; i<feedbackOwnerList.length; i++){
+                    			if(feedbackOwnerList[i] == userid){
+                    				oFlag = true;
+                    			}
+                    		}
+                    	}else{
+                    		if(feedback_owner == userid){
+                    			oFlag = true;
+                    		}
+                    	}
+                    	
+                    	//反馈助理
+                    	if(feedback_assistant.indexOf(',') > -1){
+                    		feedbackAssistantList = feedback_assistant.split(',');
+                    		for(var i = 0; i < feedbackAssistantList.length; i++){
+                    			if(feedbackAssistantList[i] == userid){
+                    				aFlag = true;
+                    			}
+                    		}
+                    	}else{
+                    		if(feedback_assistant == userid){
+                    			aFlag = true;
+                    		}
+                    	}
+                    	
+                    	var str = '';
+                    		str += '<a href="#" onclick="show_info(' + index + ')">查看详细</a>';
+                    	
+                    	//if (row.userid==userid && (row.status == 0 || row.status == -1)){
+                    	if (row.userid==userid && (row.status == 0)){
+                    		str += ' | <a href="#" onclick="edit(' + index + ')">修改</a> ';
+                    	}
+                   	
+                    	
+                    	
+                    	
+                    	/* 二次审核 */
+                    	var needTwice = "{need_twice}";
+                    	if(needTwice == "true"){
+	                    	if(row.status == 3){
+	                			if (row.manager == userid || flag){
+	                				str += ' | <a href="#" onclick="audit(' + index + ')">审核</a> ';
+	                    		}
+	                		}
+	                    	if(row.status == 0){
+	                    		if (oFlag || aFlag){
+	                				str += ' | <a href="#" onclick="first_trial(' + index + ')">初审</a> ';
+	                    		}
+	                		}
+                    	}else{
+                    		if(row.status == 0){
+	                    		if (oFlag || aFlag){
+	                    			str += ' | <a href="#" onclick="audit(' + index + ')">审核</a> ';
+	                    		}
+	                		}
+                    	}
+                    	
+                    	
+                    	if(row.feedback == 0 && row.status == 2 && (row.manager == userid || flag)){
+                    		str += ' | <a href="#" onclick="feedback(' + index + ')">反馈</a> ';
+                    	}
+                    	
+                    	if(row.status == 1 && (row.manager == userid || flag)){
+                    		str += ' | <a href="#" onclick="resolved(' + index + ')">已解决</a> ';
+                    	}
+                    	
+                        return str;
+                    }
+                }]],
+                onBeforeEdit: function(index, row){
+                    row.editing = true;
+                    updateActions();
+                },
+                onAfterEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+                onCancelEdit: function(index, row){
+                    row.editing = false;
+                    updateActions();
+                },
+				onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+        	AddButton(); //显示提交新Bug按钮
+        });
+        
+        function AddButton()
+        {
+        	$('#tt').datagrid('getPager').pagination({
+   				buttons : [ {
+   					iconCls : 'icon-add',
+   					text : '提交新Bug',
+   					handler : function() {
+   						AddBug();
+   					}
+   				} ]
+   			});
+        }
+        //BUG详细
+        function show_info(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		var str = '';
+    		var pri = '';
+    		var error = '';
+    		var severity = '';
+    		var status_id;
+    		/* 二次审核 */
+        	var needTwice = "{need_twice}";
+    		for (key in row){	
+    			if (key == 'status'){
+    				status_id = row[key];
+    				if(row[key] == 0){
+                		str = '待确认';
+                		$('#bug_info_preliminary_div').hide();
+                		$('#bug_info_audit_div').hide();
+                		$('#bug_info_resolved_div').hide();
+                		$('#bug_info_reject_div').hide();
+                		
+                	}else if(row[key] == 1){
+                		str = '已确认';
+                		
+                		if(needTwice == "false"){
+                			$('#bug_info_preliminary_div').show();
+                    		$('#bug_info_audit_div').hide();
+                    		$('#bug_info_resolved_div').hide();
+                    		$('#bug_info_reject_div').hide();
+                		}else{
+                			$('#bug_info_preliminary_div').show();
+                    		$('#bug_info_audit_div').show();
+                    		$('#bug_info_resolved_div').hide();
+                    		$('#bug_info_reject_div').hide();
+                		}
+                		
+                	}else if(row[key] == 2){
+                		str = '已解决';
+                		$('#bug_info_preliminary_div').show();
+                		$('#bug_info_audit_div').show();
+                		$('#bug_info_resolved_div').show();
+                		$('#bug_info_reject_div').hide();
+                	}else if(row[key] == 3){
+                		str = '已初审';
+                		$('#bug_info_preliminary_div').show();
+                		$('#bug_info_audit_div').hide();
+                		$('#bug_info_resolved_div').hide();
+                		$('#bug_info_reject_div').hide();
+                	}else{
+                		str = '被打回';
+                		$('#bug_info_reject_div').show();
+                		$('#bug_info_preliminary_div').hide();
+                		$('#bug_info_audit_div').hide();
+                		$('#bug_info_resolved_div').hide();
+                		
+                		if(row['notes'] != ''){
+                			$('#_reject_note').html(row['notes'])
+                		}else if(row['preliminary_notes'] != '') {
+                			$('#_reject_note').html(row['preliminary_notes'])
+                		}
+                		
+                	}
+    				$('#_status').html(str);
+    			}else if (key == 'file_str'){
+    				var tmp = '';
+    				if(row[key] != ''){
+    					var file_arr = row[key].split(',');
+        				for (var i=0;i< file_arr.length;i++){
+        					var num = file_arr[i].lastIndexOf('.');
+        					if(num != -1){
+        						var fileType = file_arr[i].substring(num);
+        						if(fileType != ".jpg" && fileType != ".bmp" && fileType != ".pdf" && fileType != ".jpg" && fileType != ".gif" && fileType != ".psd" && fileType != ".png" && fileType != ".JPG" && fileType != ".BMP" && fileType != ".PDF" && fileType != ".JPG" && fileType != ".GIF" && fileType != ".PSD" && fileType != ".PNG"){
+        							tmp += ' <a id="a_'+i+'" href="upfile/product/bug/'+row.upfile_dir+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> &nbsp;&nbsp;&nbsp;';	
+        						}else{
+        							tmp += ' <a id="a_'+i+'" href="upfile/product/bug/'+row.upfile_dir+'/'+file_arr[i]+'" target="_balnk"><img alt="'+file_arr[i]+'" src="upfile/product/bug/'+row.upfile_dir+'/'+file_arr[i]+'" style="width:100px; height:100px;" /></a> &nbsp;&nbsp;&nbsp;'	
+        						}
+        					}else{
+        						tmp += ' <a id="a_'+i+'" href="upfile/product/bug/'+row.upfile_dir+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> &nbsp;&nbsp;&nbsp;';
+        					}
+        				}
+    				}
+    				$('#file_list').html(tmp);
+    			}else if(key == 'pri'){
+    				if(row[key] == 0){
+    					pri = '无';
+    				}else if(row[key] == 1){
+    					pri = '低';
+    				}else if(row[key] == 2){
+    					pri = '中';
+    				}else if(row[key] == 3){
+    					pri = '高';
+    				}else if(row[key] == 4){
+    					pri = '加急';
+    				}else if(row[key] == 5){
+    					pri = '特急';
+    				}
+    				$('#_pri').html(pri);
+    			}else if(key == 'error_type'){
+    				if(row[key] == 'codeerror'){
+    					error = '代码错误';
+    				}else if(row[key] == 'interface'){
+    					error = '界面优化';
+    				}else if(row[key] == 'designdefect'){
+    					error = '设计缺陷';
+    				}else if(row[key] == 'config'){
+    					error = '配置相关';
+    				}else if(row[key] == 'install'){
+    					error = '安装部署';
+    				}else if(row[key] == 'security'){
+    					error = '安全相关';
+    				}else if(row[key] == 'performance'){
+    					error = '性能问题';
+    				}else if(row[key] == 'standard'){
+    					error = '标准规范';
+    				}else if(row[key] == 'automation'){
+    					error = '测试脚本';
+    				}else if(row[key] == 'others'){
+    					error = '其他';
+    				}
+    				$('#_error_type').html(error);
+    			}else if(key == 'severity'){
+    				if(row[key] == 1){
+    					severity = '低';
+    				}else if(row[key] == 2){
+    					severity = '中';
+    				}else if(row[key] == 3){
+    					severity = '高';
+    				}else if(row[key] == 4){
+    					severity = '紧急';
+    				}
+    				$('#_severity').html(severity);
+    			}else{
+    				$('#_'+key).html(row[key]);
+    			}
+    		}
+    		$('#ShowBug').window('open');
+        }
+        
+        //添加BUG
+        function AddBug()
+        {
+        	$('#product_id').attr('value','');
+        	$('#title').val('');
+        	$('#version').val('');
+        	$('#unit').val('');
+        	$('#contact').val('');
+        	$('#mobile').val('');
+        	$('#description').val('');
+        	$('#email').val('');
+        	$('#deadline').val('');
+        	$('#file_list_str').html('');
+        	$('#up').html('<tt id="0"><input size="45" type="file" name="upfile[]" onchange="copy();" value="" /></tt>');
+        	input_num = 0;
+        	$('#AddBug').window('open');
+        }
+        
+        function copy()
+        {
+        	input_num++;
+        	var html = '<tt id="tt_'+input_num+'"><input size="45" type="file" onchange="copy();" name="upfile[]" value="" /><input type="button" onclick="del_input('+input_num+');" value="删除" /></tt>';
+        	$('#up').append(html);
+        }
+        
+        function del_input(id)
+        {
+        	$('#tt_'+id).remove();
+        }
+        
+		//修改
+		function edit(index)
+		{
+			$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+			$('#id').val(row.id);
+			$('#product_id').attr('value',row.product_id);
+        	$('#title').val(row.title);
+        	$('#version').val(row.version);
+        	$('#unit').val(row.unit);
+        	$('#contact').val(row.contact);
+        	$('#mobile').val(row.mobile);
+        	$('#description').val(row.description);
+        	$('#email').val(row.email);
+        	$('#up').html('<tt id="0"><input size="45" type="file" name="upfile[]" onchange="copy();" value="" /></tt>');
+			$('#file_str').css('display','');
+			$('#deadline').val(row.deadline);
+			if (row.file_str !=''){
+				var file_arr = row.file_str.split(',');
+				var tmp = '';
+				for (var i=0;i< file_arr.length;i++){
+    					tmp += ' <tt id="img_'+i+'"><a href="upfile/product/bug/'+row.upfile_dir+'/'+file_arr[i]+'" target="_balnk">'+file_arr[i]+'</a> ';
+    					tmp += ' <a href="#" title="删除附件" onclick="del_file('+row.id+','+i+',\''+file_arr[i]+'\');"><img src="images/closeDiv.gif"/></a></tt> ';
+    			}
+			}
+			$('#file_list_str').html(tmp);
+			$('#AddBug').window({title:'修改提交的Bug'});
+			$('#AddBug').window('open');
+		}
+		
+		//删除附件
+		function del_file(id,key,filename){
+			if (filename){
+				$.post('?model={t_model}&action=delfile',{id:id,filename:filename,rand:Math.random()},function(data){
+					if (data == 1){
+						$.messager.show({
+							title : '提示',
+							msg : '操作成功!',
+							timeout : 3000,
+							showType : 'show'
+						});
+						$('#img_'+key).remove();
+						$('#tt').datagrid('reload');
+					}else{
+						$.messager.show({
+							title : '提示',
+							msg : '操作失败，请与管理员联系！',
+							timeout : 3000,
+							showType : 'show'
+						});
+						$('#tt').datagrid('reload');
+					}
+				})
+			}
+		}
+
+		//保存数据
+        function save()
+        {
+        	if ($('#product_id').val()=='')
+        	{
+        		alert('请选择所属产品！');
+        		return false;
+        	}
+        	
+        	if ($('#version').val()==''){
+        		alert('请填写产品版本号！');
+        		return false;
+        	}
+        	
+        	if ($('#title').val()==''){
+        		alert('请填写Bug标题');
+        		return false;
+        	}
+        	
+        	if ($('#description').val()=='')
+        	{
+        		alert('请填写Bug描述！');
+        		return false;
+        	}
+        	
+        	document.form1.submit();
+        }
+        
+        //提交后返回
+        function save_status(msg)
+        {
+        	if (msg == -1)
+        	{
+        		$.messager.show({
+					title : '提示',
+					msg : '操作失败，请与OA管理员联系！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+        	}else if (msg == 1){
+        		$.messager.show({
+					title : '提示',
+					msg : '操作成功！',
+					timeout : 3000,
+					showType : 'show'
+				});
+				$('#tt').datagrid('reload');
+				$('#AddBug').window('close');
+        	}
+        }
+        
+      /* 审核BUG */
+        function audit(index){
+        	$('#tt').datagrid('selectRow', index);
+        	var row = $('#tt').datagrid('getSelected');
+        	$('#audit_bug_status_id').val(row.status);
+        	$('#audit_bug_id').val(row.id);
+        	$('#audit_remark').val('');
+        	$('#pri').val('2');
+   			$('#severity').val('2');
+   			$('#error_type').val('interface');
+	        $('#initial_audit').show();
+       		$("input[name=audit_status]:eq(0)").attr("checked",'checked');
+       		$('#remark_title').html('备注说明：');
+       		$('#audit').window({title:'审核bug'});
+        	
+        	$('#audit').window('open');
+        }
+      	  
+      
+        /* 保存审核 */
+        function save_audit(){
+        	var id = $('#audit_bug_id').val();
+        	var remark = $('#audit_remark').val();
+        	var status = $('input[type=radio][name="audit_status"]:checked').val();
+        	var error_type = $('#error_type').val();
+   			var pri = $('#pri').val();
+   			var severity = $('#severity').val();
+        	//var bug_status = $('#bug_status_id');
+        	if(remark == ''){
+        		alert('请填写说明、理由！');
+        		return false;
+        	}else{
+        		$.post('?model={t_model}&action=audit',{id:id,status:status,notes:remark,rand:Math.random(),error_type:error_type,pri:pri,severity:severity},function(data){
+	    			if (data == 1)
+	    			{
+	    				$('#audit').dialog('close');
+	    				$('#tt').datagrid('reload');
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	    				});
+	    			}else{
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作失败，请与OA管理员联系！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	    				});
+	    			}
+	    		});
+        	}
+        	$('#audit').window('close');
+        }
+      	
+      	
+      	/* 初审BUG */
+        function first_trial(index){
+        	$('#tt').datagrid('selectRow', index);
+        	var row = $('#tt').datagrid('getSelected');
+        	$('#first_trial_bug_status_id').val(row.status);
+        	$('#first_trial_bug_id').val(row.id);
+        	$('#first_trial_remark').val('');
+        	if(row.status == 0){
+        		
+        		if(row.feedback_owner != "" || row.feedback_assistant != "" ){
+	        		$("input[name=first_trial_status]:eq(0)").attr("checked",'checked');
+            		$('#remark_title').html('备注说明：');
+            		$('#initial_audit').show();
+	        		$('#first_trial').window({title:'初步审核bug'});
+        		}else{
+        			alert("请设置反馈审批人、反馈助理！");
+        			return false;
+        		}
+        	}
+        	
+        	$('#first_trial').window('open');
+        }
+        
+        /* 提交初审 */
+        function save_first_trial(){
+        	var id = $('#first_trial_bug_id').val();
+        	var remark = $('#first_trial_remark').val();
+        	var status = $('input[type=radio][name="first_trial_status"]:checked').val();
+        	
+        	if(remark == ''){
+        		alert('请填写说明、理由！');
+        		return false;
+        	}else{
+       			$.post('?model={t_model}&action=first_trial',{id:id,status:status,preliminary_notes:remark,rand:Math.random()},function(data){
+           			if (data == 1)
+           			{
+           				$('#first_trial').dialog('close');
+           				$('#tt').datagrid('reload');
+           				$.messager.show({
+   	                        title: '提示',
+   	                        msg: '操作成功！',
+   	                        timeout: 3000,
+   	                        showType: 'show'
+           				});
+           			}else{
+           				$.messager.show({
+   	                        title: '提示',
+   	                        msg: '操作失败，请与OA管理员联系！',
+   	                        timeout: 3000,
+   	                        showType: 'show'
+           				});
+           			}
+           		});
+        	}
+        }
+        
+        
+     	/* 设置备注标题 */
+        function set_remark_title(val)
+        {
+     		//alert(val.value);
+        	if (val.value == 1 || val.value == 3){
+        		$('#remark_title').html('备注说明：');
+        		//if(val.value == 3){
+        			$('#initial_audit').show();
+        		//}
+        	}else{
+        		$('#initial_audit').hide()
+        		$('#remark_title').html('打回理由：');
+        	}
+        	
+        }
+     	
+     	/* 搜索 */
+        function GetSearch()
+        {
+        	var oa_id = "";
+        	var pms_id = "";
+        	var keyword = $('#keyword').val();
+        	var typeid = $('#select_typeid').val();
+        	var status = $('#s_status_type').val();
+        	var start_date = $('#s_start_date').val();
+        	var end_date = $('#s_end_date').val();
+        	var deadline = $('#s_deadline').val();
+        	var getId = $('#s_bug_id').val();
+        	var getIdType = $('#s_id_type').val();
+        	var resolved_date =$('#s_resolved_date').val();
+        	if(getIdType == 'bug_id'){
+        		oa_id = getId;
+        	}else{
+        		pms_id = getId;
+        	}
+        	$('#tt').datagrid({
+        		url: '?model={t_model}&action=list_data&typeid='+typeid+
+        							'&keyword='+keyword+
+        							'&status='+status+
+        							'&sdate='+start_date+
+        							'&edate='+end_date+
+        							'&id='+oa_id+
+        							'&pms_bug_id='+pms_id+
+        							'&deadline='+deadline+
+        							'&resolved_date='+resolved_date
+            });
+            $('#tt').datagrid('reload');
+            AddButton();
+        }
+     	
+     	/* 显示反馈 */
+     	function feedback(index){
+     		$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		$('#f_bug_id').val(row.id);
+    		$('#feedback').window({title:'反馈设置'});
+        	$('#feedback').window('open');
+     	}
+     	
+     	/* 保存反馈 */
+		function save_feedback(){
+			var id = $('#f_bug_id').val();
+			var feedback = $('input[type=radio][name=feedback_status]:checked').val();
+			var estimate = $('#estimate').val();
+			var type = $('#type').val();
+			if(feedback == 1){
+				$.post('?model={t_model}&action=set_feedback',{id:id,feedback:feedback,rand_key:Math.random(),type:type,estimate:estimate},function(data){
+					if (data == 1)
+	       			{
+	       				$('#audit').dialog('close');
+	       				$('#tt').datagrid('reload');
+	       				$.messager.show({
+		                        title: '提示',
+		                        msg: '操作成功！',
+		                        timeout: 3000,
+		                        showType: 'show'
+	       				});
+	       				$('#tt').datagrid('reload');
+	       				$('#feedback').window('close');
+	       			}else{
+	       				$.messager.show({
+		                        title: '提示',
+		                        msg: '操作失败，请与OA管理员联系！',
+		                        timeout: 3000,
+		                        showType: 'show'
+	       				});
+	       				$('#tt').datagrid('reload');
+	       				//$('#feedback').window('close');
+	       			}
+				})
+			}else{
+				$('#feedback').window('close');
+			}
+		}
+     	
+     	/* 解决BUG */
+		function resolved(index){
+     		$('#tt').datagrid('selectRow', index);
+    		var row = $('#tt').datagrid('getSelected');
+    		$('#r_bug_id').val(row.id);
+    		$('#resolved').window({title:'Bug解决设置'});
+    		$('#resolved').window('open');
+     	}
+     	
+     	/* 保存解决 */
+     	function save_resolved(){
+     		var id = $('#r_bug_id').val();
+ 			var status = $('input[type=radio][name=resolved_status]:checked').val();
+ 			var resolved_date = $('#resolved_date').val();
+ 			var resolved_note = $('#resolved_note').val();
+ 			var resolved_version = $('#resolved_version').val();
+ 			if(status == 2){
+ 				if(resolved_date == ""){
+ 					alert("请输入解决日期！");
+ 					return false;
+ 				}
+ 				if(resolved_version == ""){
+ 					alert("请输入解决版本！");
+ 					return false;
+ 				}
+ 				if(resolved_note == ""){
+ 					alert("请输入备注信息！");
+ 					return false;
+ 				}
+ 				
+ 				$.post('?model={t_model}&action=save_resolved',{id:id, status:status, rand:Math.random(), resolved_note:resolved_note, resolved_version:resolved_version, resolved_date:resolved_date},function(data){
+					if (data == 1)
+	       			{
+	       				$.messager.show({
+		                        title: '提示',
+		                        msg: '操作成功！',
+		                        timeout: 3000,
+		                        showType: 'show'
+	       				});
+	       				$('#tt').datagrid('reload');
+	       				$('#resolved').window('close');
+	       			}else{
+	       				$.messager.show({
+		                        title: '提示',
+		                        msg: '操作失败，请与OA管理员联系！',
+		                        timeout: 3000,
+		                        showType: 'show'
+	       				});
+	       				$('#tt').datagrid('reload');
+	       				//$('#resolved').window('close');
+	       			}
+				})
+ 			}else{
+ 				$('#resolved').window('close');
+ 			}
+ 			
+     	}
+     	
+        </script>
+        <style type="text/css">
+			a img {border: 0px;}
+			label { font-weight:bold;float:left; text-align:right; width:90px;}
+			label b{color:red;}
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:center; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p {margin:0px; padding:0px; width:590px; float:left; height: 25px;}
+			#info .text {width:200px; display:block; float:left; text-align: left;}
+        </style>
+    </head>
+    <body>
+    	<iframe name="updata" style="display: none;"></iframe>
+        <table id="tt" toolbar="#tb" ></table>
+        <!-- search bug 条件 -->
+        <div id="tb" style="padding:5px;height:auto;">
+			<div>
+				类型筛选:
+				<select id="select_typeid" name="select_typeid" onchange="GetSearch();">
+				<option value="">所有产品</option>
+				{product_option}
+				</select>
+				
+				
+				&nbsp;&nbsp;
+				关键字:
+				<input type="text" name="keyword" id="keyword" value="" />
+				&nbsp;&nbsp;
+				提交日期:
+				<input type="text" name="s_start_date" id="s_start_date" value="" onclick="WdatePicker();" style="width:70px;" />
+				至
+				<input type="text" name="s_end_date" id="s_end_date" value="" onclick="WdatePicker();" style="width:70px;" />
+				
+				<br/>
+				
+				状态筛选:
+				<select id="s_status_type" name="s_status_type" onchange="GetSearch();">
+					<option value="" >所有情况</option>
+					<option value="0" >待确认BUG</option>
+					<option value="3" >已初审</option>
+					<option value="1" >已确认</option>
+					<option value="2" >已解决</option>
+					<option value="-1" >被打回</option>
+				</select>
+				&nbsp;&nbsp;
+				序号查询:
+				<select id="s_id_type" name="s_id_type" >
+					<option value="bug_id">序号</option>
+					<option value="pms_bug_id">P序号</option>
+				</select>
+				<input type="text" name="s_bug_id" id="s_bug_id" value="" style="width:50px;"/>&nbsp;&nbsp;
+				&nbsp;&nbsp;
+				完成期限:
+				<input type="text" name="s_deadline" id="s_deadline" value="" style="width:70px;" onclick="WdatePicker();" />
+				&nbsp;&nbsp;
+				解决日期:
+				<input type="text" name="s_resolved_date" id="s_resolved_date" value="" style="width:70px;" onclick="WdatePicker();" />
+				
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search" >search</a>
+			</div>
+		</div>
+		
+		<!-- BUG添加 -->
+        <div id="AddBug" class="easyui-window" title="提交新Bug" iconCls="icon-edit" modal="false" closed="true" style="width:800px;height:600px;padding-top:10px;">
+			<div class="easyui-layout" fit="true">
+				<div id="info" region="center" border="false">
+				
+					<div>
+						<form name="form1" method="post" action="?model={t_model}&action=save" enctype="multipart/form-data" target="updata">
+							
+							<table width="80%" style="margin-left: 70px; margin-top: 20px;">
+								<tr>
+									<td colspan="4"><input type="hidden" name="id" id="id" value="" /></td>
+								</tr>
+								
+								<tr>
+									<td><label><b>*</b>所属产品：</label></td>
+									<td>
+										<span>
+											<select id="product_id" name="product_id">
+												<option value="">请选择所属产品</option>
+												{product_option}
+											</select>
+										</span>
+									</td>
+									<td><label><b>*</b>版本号：</label></td>
+									<td>
+										<span>
+											<input type="text"  id="version" name="version" value=""/>
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td><label><b>*</b>Bug名称：</label></td>
+									<td colspan="3">
+										<span class="text" style="width:450px;">
+											<input type="text" style="width:431px;" name="title" id="title" value="" />
+										</span>
+									</td>
+									
+								</tr>
+								<tr>
+									<td><label>提出单位：</label></td>
+									<td>
+										<span>
+											<input type="text" name="unit" id="unit" value="" />
+										</span>
+									</td>
+									<td><label>提出人：</label></td>
+									<td>
+										<span>
+											<input type="text" name="contact" id="contact" value="" />
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td><label>提出人手机：</label></td>
+									<td>
+										<span>
+											<input type="text" name="mobile" id="mobile" value="" />
+										</span>
+									</td>
+									<td ><label>提出人Email：</label></td>
+									<td>
+										<span>
+											<input type="text" name="email" id="email" value="" />
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td><label>完成期限：</label></td>
+									<td colspan="3">
+										<span>
+											<input type="text" name="deadline" id="deadline" value="" onclick="WdatePicker();" />(格式：yyyy-mm-dd)
+										</span>
+									</td>
+								</tr>
+							</table>
+							
+							<table width="80%" style=" margin-left:70px;">
+								<tbody>
+									<tr>
+										<td width="101px">
+											<label><b>*</b>Bug描述：</label>
+										</td>
+										<td colspan="3">
+											<span>
+												<textarea style="width:100%;height:100px;" id="description" name="description"></textarea>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<table width="80%" style=" margin-left:70px;">
+								<tbody>
+									<tr>
+										<td><label>已提交附件：</label></td>
+										<td><span id="file_list_str" style="width: 90%;"></span></td>
+									</tr>
+									<tr>
+										<td><label>附件：</label></td>
+										<td>
+											<span class="text" style="width:450px;" id="up">
+												<tt id="0"><input size="45" type="file" name="upfile[]" onchange="copy();" value="" /></tt>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+				</div>
+				 
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+					<input type="button" id="save" onclick="save();"  value=" 确定提交 " />
+					<input type="button" onclick="$('#AddBug').window('close');" value=" 取消关闭 " />
+				</div>
+			</div>
+		</div>
+		
+		<!-- BUG详细 -->
+        <div id="ShowBug" class="easyui-window" title="查看产品BUG" iconCls="icon-edit" modal="false" closed="true" style="width:800px;height:600px;padding:5px;">
+			<div class="easyui-layout" fit="true">
+				<div id="info" region="center" border="false">
+					
+					<!-- 基本信息 -->
+					<div id="bug_info_div" style="width:100%;">
+						<div>
+							<label><b>Bug信息</b></label>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;">
+								<tbody>
+									
+									<tr>
+										<td width="81px" align="right">Bug标题：</td>
+										<td colspan="3"><span class="text" id="_title"></span></td>
+									</tr>
+									
+									<tr>
+										<td width="81px" align="right">所属产品：</td>
+										<td><span class="text" id="_product_name"></span></td>
+										<td width="88px" align="right">版本号：</td>
+										<td><span class="text" id="_version"></span></td>
+									</tr>
+									<tr>
+										<td width="81px" align="right">Bug状态：</td>
+										<td><span class="text" id="_status"></span></td>
+										<td width="88px" align="right">提交日期：</td>
+										<td align="right"><span class="text" id="_date"></span></td>
+									</tr>
+									<tr>
+										<td width="81px" align="right">完成期限：</td>
+										<td colspan="3"><span class="text" id="_deadline"></span></td>
+									</tr>
+									<tr>
+										<td width="81px" align="right">提出单位：</td>
+										<td><span class="text" id="_unit"></span></td>
+										<td style="width:88px;" align="right">提出人 ：</td>
+										<td><span class="text" id="_contact"></span></td>
+									</tr>
+									<tr>
+										<td width="81px" align="right">提出人手机：</td>
+										<td><span class="text" id="_mobile"></span></td>
+										<td width="88px" align="right">提出人Email：</td>
+										<td><span class="text" id="_email"></span></td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;">
+								<tbody>
+									<tr>
+										<td width="81px" align="right">Bug描述：</td>
+										<td colspan="3" style="table-layout:fixed;">
+											<span id="_description" style="width: 100px; word-break:break-all; word-wrap:break-word;" ></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					
+					<!-- 初审信息 -->
+					<div id="bug_info_preliminary_div" style="width:100%;">
+						<div>
+							<label><b>审核信息</b></label>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;" >
+								<tbody>
+									<tr>
+										<td width="81px" align="right">BUG类型：</td>
+										<td><span class="text" id="_error_type"></span></td>
+										<td width="81px" align="right">严重程度：</td>
+										<td><span class="text" id="_severity"></span></td>
+									</tr>
+									<tr>
+										<td align="right">优先级：</td>
+										<td><span class="text" id="_pri"></span></td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;" >
+								<tbody>
+									<tr>
+										<td width="81px" align="right" >审核备注：</td>
+										<td colspan="3" style="table-layout:fixed;"><span id="_preliminary_notes" style="width: 50px; word-break:break-all; word-wrap:break-word;"></span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- 审核信息 -->
+						<table style="width:80%; margin-left: 100px;" >
+							<tbody>
+								<tr>
+									<td width="81px" align="right">二次审核：</td>
+									<td colspan="3" style="table-layout:fixed;"><span id="_notes" style="width: 100px; word-break:break-all; word-wrap:break-word;"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<br/>
+					
+					<!-- 审核信息 -->
+					<div id="bug_info_audit_div" style="width:100%;">
+						
+					</div>
+					<br/>
+					
+					<!-- 解决信息 -->
+					<div id="bug_info_resolved_div" style="width:100%;">
+						<div>
+							<label><b>解决信息</b></label>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;">
+								<tbody>
+									<tr>
+										<td width="81px" align="right">解决日期：</td>
+										<td><span id="_resolved_date" class="text"  ></span></td>
+										<td width="88px" align="right">解决版本：</td>
+										<td><span id="_resolved_version" class="text"  ></span></td>
+									</tr>
+									<tr>
+										<td width="81px" align="right">备注信息：</td>
+										<td colspan="3" style="table-layout:fixed;">
+											<span id="_resolved_note" style="width: 100px; word-break:break-all; word-wrap:break-word;"></span>
+	  									</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					
+					<!-- 打回信息 -->
+					<div id="bug_info_reject_div" style="width:100%;">
+						<div>
+							<label><b>打回信息</b></label>
+						</div>
+						<div>
+							<table style="width:80%; margin-left: 100px;">
+								<tbody>
+									<tr>
+										<td width="81px" align="right">打回信息：</td>
+										<td colspan="3" style="table-layout:fixed;">
+											<span id="_reject_note" style="width: 100px; word-break:break-all; word-wrap:break-word;"></span>
+	  									</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<br/>
+					
+					<!-- 附件 -->
+					<div id="bug_info_attachment_div" style="width:100%;">
+						<div>
+							<label><b>附件：</b></label>
+						</div>
+						<div>
+							<span class="text" style="width:450px;" id="file_list"></span>
+						</div>
+					</div>
+				</div>
+				<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+					<input type="button" onclick="$('#ShowBug').window('close');" value=" 返回关闭 " />
+				</div>
+			</div>
+		</div>
+		
+		<!-- BUG审核  -->
+		<div id="audit" class="easyui-dialog" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="audit_bug_id" value="" />
+       			<input type="hidden" id="audit_bug_status_id" value="" />
+       			<input type="radio" name="audit_status" onclick="set_remark_title(this);" value="1" checked /> 通过 
+       			<input type="radio" name="audit_status" onclick="set_remark_title(this);" value="-1" /> 打回 
+       		</div>
+       		<div id="initial_audit" style="display:block;" >
+       			<table>
+       				<tr>
+       					<td  width="60"  id="error_type_title">错误类型</td>
+       					<td>
+       						<select id="error_type" name="error_type">
+       							<option value="codeerror" >代码错误</option>
+       							<option value="interface" selected="selected" >界面优化</option>
+       							<option value="designdefect">设计缺陷</option>
+       							<option value="config">配置相关</option>
+       							<option value="install">安装部署</option>
+       							<option value="security">安全相关</option>
+       							<option value="performance">性能问题</option>
+       							<option value="standard">标准规范</option>
+       							<option value="automation">测试脚本</option>
+       							<option value="others">其他</option>
+       						</select>
+       					</td>
+       				</tr>
+       				<tr>
+       					<td  width="60"  id="severity_title">严重程度</td>
+       					<td>
+       						<select name="severity" id="severity" class="select-3">
+								<option value="3">高</option>
+								<option value="1">低</option>
+								<option value="2" selected="selected" >中</option>
+								<option value="4" >紧急</option>
+							</select>
+       					</td>
+       				</tr>
+       				<tr>
+       					<td  width="60"  id="pri_title">优先级</td>
+       					<td>
+       						<select name="pri" id="pri" class="select-3">
+								<!-- <option value="0">无</option> -->
+								<option value="3">高</option>
+								<option value="1">低</option>
+								<option value="2" selected="selected" >中</option>
+								<option value="4">加急</option>
+								<!-- <option value="5" selected="selected">特急</option>  -->
+							</select>
+       					</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div>
+       			<table>
+       				<tr>
+       					<td width="60" id="remark_title">备注说明:</td>
+       					<td>
+       						<textarea rows="6" style="width:300px;height: 60px;" id="audit_remark" name="audit_remark">
+							</textarea>
+						</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_audit();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#audit').dialog('close')">返回</a>
+			</div>
+       </div>
+      
+       
+       <!-- BUG初审 -->
+		<div id="first_trial" class="easyui-dialog" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="first_trial_bug_id" value="" />
+       			<input type="hidden" id="first_trial_bug_status_id" value="" />
+       			<input type="radio" name="first_trial_status" onclick="set_remark_title(this);" value="3" checked /> 通过 
+       			<input type="radio" name="first_trial_status" onclick="set_remark_title(this);" value="-1" /> 打回 
+       		</div>
+       		<div>
+       			<table>
+       				<tr>
+       					<td width="60" id="remark_title">备注说明:</td>
+       					<td>
+       						<textarea rows="6" style="width:300px;height: 60px;" id="first_trial_remark" name="first_trial_remark">
+							</textarea>
+						</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_first_trial();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#first_trial').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       
+       <!--客户反馈 -->
+		<div id="feedback" class="easyui-dialog" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="f_bug_id" value="" />
+       			<input type="radio" checked  name="feedback_status" value="1" /> 已反馈 
+       			<input type="radio" name="feedback_status"  value="0" /> 未反馈
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_feedback();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#feedback').dialog('close')">返回</a>
+			</div>
+       </div>
+       
+       <!--解决BUG -->
+		<div id="resolved" class="easyui-dialog" icon="icon-save" closed="true" style="width:600px;height: 400px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">       			
+       			<input type="hidden" id="r_bug_id" value="" />
+       			<input type="radio" checked  name="resolved_status" value="2" /> 已解决 
+       			<input type="radio" name="resolved_status"  value="0" /> 未解决
+       		</div>
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<table align="center">
+       				<tr>
+       					<td>解决日期：</td>
+       					<td align="left">
+       						<input type="text" id="resolved_date" name="resolved_date" value="" onclick="WdatePicker();" />(格式：yyyy-mm-dd)
+       					</td>
+       				</tr>
+       				<tr>
+       					<td>解决版本：</td>
+       					<td align="left">
+       						<input type="text" id="resolved_version" name="resolved_version" value="" />
+       					</td>
+       				</tr>
+       				<tr>
+       					<td>备注信息：</td>
+       					<td align="left">
+       						<textarea rows="6" style="width:300px;height: 60px;" id="resolved_note" name="resolved_note"></textarea>
+       					</td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 300px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_resolved();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#resolved').window('close')">返回</a>
+			</div>
+       </div>
+    </body>
+</html>

@@ -1,0 +1,137 @@
+<html>
+<head>
+	<meta http-equiv="Content-Language" content="zh_cn" />
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		{#commonInclude#}
+		<link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link type="text/css" rel="stylesheet" href="js/jquery/style/validator.css">
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="js/jquery/woo.js"></script>
+        <script type="text/javascript" src="js/jquery/component.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+        <script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+        <script type="text/javascript" src="js/validate.js"> </script>
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+        <link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet"/>
+        <!-- 主题css，可切换 -->
+        <link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet"/>
+        <link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css"/>
+        <script type="text/javascript" src="view/template/system/datadict/js/datadict_add.js"></script>
+<title>添加数据字典</title>
+</head>
+<body>
+<br />
+<form id="form1" action="?model=system_datadict_datadict&action=add" method="POST" >
+<input type="hidden" name="datadict[leaf]" value="1" />
+
+<table border="1" width="90%" class="form_main_table" cellpadding="0"
+	cellspacing="0" align="center">
+	<tr>
+		<td class="form_text_left">名称</td>
+		<td class="form_view_right">
+		   <input class="txt" type="text" id="dataName"
+			name="datadict[dataName]" value="" />
+		 <span class="red">[*]</span>
+		 <div id="dataNameTip" class="tipShortTxt"></div></td>
+	</tr>
+	<!-- OA外包 zengq 2012-9-12 英文名称-->
+	<tr>
+		<td class="form_text_left">英文名称</td>
+		<td class="form_view_right">
+		   <input class="txt" type="text" id="dataEnglishName"
+			name="datadict[dataEnglishName]" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">编码</td>
+		<td class="form_view_right">
+		   <input class="txt" type="text" id="dataCode"
+			name="datadict[dataCode]" value="" />
+			<span class="red">[*]</span>
+			<div id="dataCodeTip" class="tipShortTxt"></div></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">上级</td>
+		<td class="form_view_right">
+		<input class="txt" readOnly type="text" id="parentName" name="datadict[parentName]" value="{dataName}" />
+		<input type="hidden" id="parentId" name="datadict[parentId]" value="{parentId}" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">顺序</td>
+		<td class="form_view_right"><input class="txt" type="text"
+			size="5" id="orderNum" name="datadict[orderNum]" value=""></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right"><textarea id="remark"
+			name="datadict[remark]" rows="4" cols="50"></textarea></td>
+	</tr>
+    <tr>
+		<td class="form_text_left">所属板块</td>
+		<td class="form_view_right">
+		   <select class="select" name="datadict[module]" id="module">
+           </select>
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">是否添加扩展字段 </td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="datadict[radio]" value="y"  onclick="checkDiv(this)"/>是
+			<input type="radio" name="datadict[radio]" value="n" checked="checked" onclick="checkDiv(this)"/>否
+		</td>
+	</tr>
+	</table>
+    <table id="mydiv" border="1" width="90%" class="form_main_table" cellpadding="0"
+	cellspacing="0" align="center" style="display:none">
+	<tr>
+		<td class="form_text_left">扩展字段一</td>
+		<td class="form_view_right" >
+		  <input  class="txt" type="text" id="expand1" name="datadict[expand1]" >
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">扩展字段二</td>
+		<td class="form_view_right">
+		  <input class="txt" type="text" id="expand2" name="datadict[expand2]" >
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">扩展字段三</td>
+		<td class="form_view_right">
+		  <input class="txt" type="text" id="expand3" name="datadict[expand3]" >
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">扩展字段四</td>
+		<td class="form_view_right">
+		  <input class="txt" type="text" id="expand4" name="datadict[expand4]" >
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">扩展字段五</td>
+		<td class="form_view_right">
+		  <input class="txt" type="text" id="expand5" name="datadict[expand5]" >
+		</td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td class="formtd1" colspan="2"
+			style="height: 80px; text-align: center;"><input
+			class="txt_btn_a" type="submit" value=" 保存 " /> <input
+			class="txt_btn_a" type="button" onclick="self.parent.tb_remove();"
+			value=" 取消 " /></td>
+	</tr>
+
+</table>
+
+</form>
+
+</body>
+</html>

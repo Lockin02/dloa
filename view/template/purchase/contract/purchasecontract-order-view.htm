@@ -1,0 +1,448 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title>采购订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/woo.js"></script>
+    <script type="text/javascript" src="js/jquery/dump.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/checkImage.js"></script>
+
+    <script type="text/javascript" src="js/jquery/component.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+    <script type="text/javascript" src="js/common/approval.js"></script>
+    <script language="javascript" type="text/javascript" src="js/Lodop/printer.js"></script>
+    <script type="text/javascript" src="view/template/purchase/contract/js/purchasecontract-pushorder-read.js"></script>
+</head>
+
+<body>
+<div class="main_head">
+    <span class="main_head_title">采购订单</span>
+</div>
+<div class="main_wraper">
+    <table class="form_main_table" id="purchOrder">
+        <tr id="formTitle">
+            <td class="form_header2" colspan="6">采购合同审核表</td>
+        </tr>
+
+        <tr>
+            <td class="tableheader form_text_left_three">订单编号</td>
+            <td class="form_text_right_three">
+                {hwapplyNumb}
+            </td>
+            <td class="tableheader form_text_left_three">
+                单据日期
+            </td>
+            <td align="left">
+                {formDate}
+            </td>
+            <td class="tableheader form_text_left_three">
+                采购员
+            </td>
+            <td align="left">
+                {sendName}
+            </td>
+        </tr>
+        <tr>
+            <td class="tableheader form_text_left_three">归属公司</td>
+            <td class="form_text_right_three" colspan="5">
+                {businessBelongName}
+            </td>
+        </tr>
+        <tr class="tablecontrol form_header" style="line-height:9px;">
+            <td colspan="6" class="form_header">
+                申请信息：
+            </td>
+        </tr>
+        <tr id='plan'>
+            <td colspan="6" class="td_table">
+                <table class="main_table">
+                    <tbody>
+                    <tr class="main_tr_header">
+                        <th width="3%">序号</th>
+                        <th width="8%">物料编号</th>
+                        <th width="24%">物料名称</th>
+                        <th width="9%">采购类型</th>
+                        <th width="6%">申请人</th>
+                        <th width="14%">源单编号</th>
+                        <th width="35%">备注</th>
+                    </tr>
+                    </tbody>
+                    {planList}
+                </table>
+            </td>
+        </tr>
+        <tr id='inquiryTable'>
+            <td colspan="7" class="td_table">
+                <table class="form_main_table">
+                    <thead>
+                    <tr class="tablecontrol form_header" style="line-height:13px;">
+                        <td colspan="7" class="form_header">
+                            询价信息：
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header" width="18%">
+                        <th width="15%"></th>
+                        <th class="supHtml1" width="15%">供应商A&nbsp;&nbsp;<img id="supp1" src="images/icon/view.gif"
+                                                                              title="查看报价详细" onclick="quoteRead(1);"/>
+                        </th>
+                        <th class="supHtml2" width="15%">供应商B&nbsp;&nbsp;<img id="supp2" src="images/icon/view.gif"
+                                                                              title="查看报价详细" onclick="quoteRead(2);"/>
+                        </th>
+                        <th class="supHtml3" width="15%">供应商C&nbsp;&nbsp;<img id="supp3" src="images/icon/view.gif"
+                                                                              title="查看报价详细" onclick="quoteRead(3);"/>
+                        </th>
+                        <th width="13%">历史价格&nbsp;&nbsp;</th>
+                        <th width="15%">历史价格备注&nbsp;&nbsp;</th>
+                        <th width="12%">参考价格&nbsp;&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="line-height:13px;">
+                        <td>供应商名称</td>
+                        <td class="supHtml1">
+                            <div id="supplier1"></div>
+                            <input type="hidden" id="supplierName1" name="inquirysheet[inquirysupp][1][suppName]"
+                                   readonly/>
+                            <input type="hidden" id="suppId1"/>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="supplier2"></div>
+                            <input type="hidden" id="supplierName2" name="inquirysheet[inquirysupp][1][suppName]"
+                                   readonly/>
+                            <input type="hidden" id="suppId2"/>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="supplier3"></div>
+                            <input type="hidden" id="supplierName3" name="inquirysheet[inquirysupp][1][suppName]"
+                                   readonly/>
+                            <input type="hidden" id="suppId3"/>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr style="line-height:13px;">
+                        <td>主营产品</td>
+                        <td class="supHtml1">
+                            <div id="product1"></div>
+                            <input type="hidden" id="products1" name="inquirysheet[inquirysupp][1][suppTel]" readonly/>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="product2"></div>
+                            <input type="hidden" id="products2" name="inquirysheet[inquirysupp][2][suppTel]" readonly/>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="product3"></div>
+                            <input type="hidden" id="products3" name="inquirysheet[inquirysupp][3][suppTel]" readonly/>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:13px;">
+                        <td>报价总额</td>
+                        <td class="supHtml1">
+                            <div id="quoteAll1"></div>
+                            <input type="hidden" id="quote1" class="formatMoney"
+                                   name="inquirysheet[inquirysupp][1][quote]" readonly/>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="quoteAll2"></div>
+                            <input type="hidden" id="quote2" class="formatMoney"
+                                   name="inquirysheet[inquirysupp][2][quote]" readonly/>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="quoteAll3"></div>
+                            <input type="hidden" id="quote3" class="formatMoney"
+                                   name="inquirysheet[inquirysupp][3][quote]" readonly/>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:13px;">
+                        <td>付款条件</td>
+                        <td class="supHtml1">
+                            <div id="paymentCondition1"></div>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="paymentCondition2"></div>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="paymentCondition3"></div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:13px;">
+                        <td>交货日期</td>
+                        <td class="supHtml1">
+                            <div id="arrivalDate1"></div>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="arrivalDate2"></div>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="arrivalDate3"></div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:14px;">
+                        <td>备注</td>
+                        <td class="supHtml1">
+                            <div id="remark1"></div>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="remark2"></div>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="remark3"></div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:14px;">
+                        <td>供应商最新评估结果</td>
+                        <td class="supHtml1">
+                            <div id="ss1"></div>
+                        </td>
+                        <td class="supHtml2">
+                            <div id="ss2"></div>
+                        </td>
+                        <td class="supHtml3">
+                            <div id="ss3"></div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="line-height:13px;">
+                        <td colspan="7" align="left">报价详情(<font color=blue><b>含税单价</b></font>
+                            <税率>):
+                        </td>
+                    </tr>
+                    {listSee}
+                </table>
+            </td>
+        </tr>
+        <tr class="tablecontrol form_header" style="line-height:13px;">
+            <td colspan='6' class="form_header">
+                订单供应商：
+            </td>
+        </tr>
+        <tr>
+            <td class="tableheader form_text_left_three">
+                供应商名称
+            </td>
+            <td class="form_text_right_three">
+                {suppName}
+            </td>
+            <td class="tableheader form_text_left_three">订单总金额</td>
+            <td class="form_text_right_three  formatMoney">
+                {allMoney}
+            </td>
+            <td class="form_text_left_three">付款条件</td>
+            <td class="form_text_right_three">
+                {paymentCondition} {payRatio}
+            </td>
+        </tr>
+        <tr>
+            <td class="tableheader form_text_left_three"><span class="red">付款币种</span></td>
+            <td class="form_text_right_three">
+                <span class="red">{currency}</span>
+            </td>
+            <td class="tableheader form_text_left_three">本位币金额</td>
+            <td class="form_text_right_three  formatMoney">
+                {allMoneyCur}
+            </td>
+            <td class="form_text_left_three">汇率</td>
+            <td class="form_text_right_three">
+                {rate}
+            </td>
+        </tr>
+        <tr>
+            <td class="tableheader form_text_left_three">
+                联系人
+            </td>
+            <td class="form_text_right_three">
+                {suppContactMan}
+            </td>
+            <td class="tableheader form_text_left_three">
+                联系人电话
+            </td>
+            <td class="form_text_right_three" colspan="3">
+                {contactManPhone}
+            </td>
+        </tr>
+        <tr>
+            <td class="tableheader form_text_left_three">
+                说明
+            </td>
+            <td class="form_text_right_three" colspan="5">
+                <textarea class="textarea_read_blue" readonly>{selectRemark}</textarea>
+            </td>
+        </tr>
+        <tr id="" class="payapply tablecontrol form_header" style="line-height:11px;display:none">
+            <td class="form_header">
+                付款信息：
+            </td>
+            <td class="form_text_right" colspan="5">
+                <span style="color:red">*订单审批完成后会自动生成相应付款申请单</span>
+            </td>
+
+        </tr>
+        <tr class="payapply" style="display:none">
+            <td class="form_text_left_three">申请金额</td>
+            <td class="form_text_right_three">
+                {payMoney}
+            </td>
+            <td class="tableheader form_text_left_three">订单总金额</td>
+            <td class="form_text_right_three  formatMoney">
+                {allMoney}
+            </td>
+            <td class="form_text_left_three">付款条件</td>
+            <td class="form_text_right_three">
+                {paymentCondition} {payRatio}
+            </td>
+        </tr>
+        <tr class="payapply" style="display:none">
+            <td class="form_text_left_three">款项说明</td>
+            <td colspan="5" class="form_text_right_three">
+                <textarea class="textarea_read_blue" readonly>{payDesc}</textarea>
+            </td>
+        </tr>
+        <tr class="tablecontrol form_header" style="line-height:11px;">
+            <td colspan="6" class="form_header">
+                其他信息：
+                <img src="images/verpic_open.gif" onclick="dis('otherinfo')" title="缩放"/>
+            </td>
+        </tr>
+        <tr id="otherinfo">
+            <td colspan="6" class="td_table">
+                <table id="mytable" class="form_main_table">
+                    <tr align="center">
+                        <td class="tableheader form_text_left_three">
+                            发票类型
+                        </td>
+                        <td class="form_text_right_three">
+                            {bType}
+                        </td>
+                        <td class="tableheader form_text_left_three">
+                            付款类型
+                        </td>
+                        <td class="form_text_right_three">
+                            {pType}
+                        </td>
+                        <td class="tableheader form_text_left_three">
+                            合同签约状态
+                        </td>
+                        <td class="form_text_right_three">
+                            {signStatus}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_three">需要盖章</td>
+                        <td class="form_text_right_three">
+                            {isNeedStamp}
+                        </td>
+                        <td class="form_text_left_three">盖章类型</td>
+                        <td class="form_text_right_three">
+                            {stampType}
+                        </td>
+                        <td class="form_text_left_three">已经盖章</td>
+                        <td class="form_text_right_three">
+                            {isStamp}
+                        </td>
+                    </tr>
+
+                    <tr align="center">
+                        <td class="tableheader form_text_left_three">
+                            采购说明
+                        </td>
+                        <td class="form_text_right_three" colspan="5">
+                            <textarea id="instruction" name="contract[instruction]" class="textarea_read_blue" readonly>{instruction}</textarea>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td class="tableheader form_text_left_three">
+                            备注
+                        </td>
+                        <td class="form_text_right_three" colspan="5">
+                            <textarea id="remark" name="contract[remark]" class="textarea_read_blue"
+                                      readonly>{remark}</textarea>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">附件</td>
+            <td colspan="5" class="form_text_right_three">
+                {file}
+            </td>
+        </tr>
+        <tr id="auditView">
+            <td colspan="6" class="td_table" id="approvalView">
+                <input type="hidden" id="pid" value="{id}"/>
+                <input type="hidden" id="itemType" value="oa_purch_apply_basic"/>
+                <input type="hidden" id="isChange" value="1"/>
+            </td>
+        </tr>
+    </table>
+    <table class="form_main_table" id="closeButn">
+        <tr align="center" class="TableHeader" height="28">
+            <td colspan="6" class="footform">
+                <input type="hidden" id="id" value="{id}"/>
+                <input type="hidden" id=isApplyPay value="{isApplyPay}"/>
+                <input type="hidden" id="suppNumb" value="{suppNumb}"/>
+                <input type="hidden" id="isAudit" value="{isAudit}"/>
+                <input type="hidden" id="hideBtn" value="{hideBtn}"/>
+                <input type="button" class="txt_btn_a"
+                       onclick="javascript:$('#formTitle').show();prn_preview('purchOrder','采购订单');$('#formTitle').hide();"
+                       value="打印预览"/>
+                <input type="button" class="txt_btn_a"
+                       onclick="javascript:$('#formTitle').show();prn_design('purchOrder','采购订单');$('#formTitle').hide();"
+                       value="页面设置"/>
+                <input type="button" value="关  闭" class="txt_btn_a" onclick="closeFun();"/>&nbsp;</td>
+        </tr>
+    </table>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#formTitle").hide();
+        if ($("#hideBtn").val() == 1) {
+            $("#closeButn").hide();
+        }
+    });
+
+    var isTemp = $("#isTemp").val();//隐藏打印表头
+    if (isTemp == 1) {
+        $b = $("<input type='button' value='查看原始采购订单信息' class='txt_btn_a' />");
+        $b.click(function () {
+            window.open("?model=purchase_contract_purchasecontract&action=init&perm=view&id={originalId}&skey={skey}");
+        });
+        $("#viewOldOrder").append($b);
+    }
+</script>
+
+</html>

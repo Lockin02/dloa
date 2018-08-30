@@ -1,0 +1,172 @@
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>借出操作</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+<script src="module/ajax_search/sea.js" type="text/javascript"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+<form method="POST" action="?model=device_stock&action=borrow_device_info&id={id}&typeid={typeid}&list_id={list_id}" onsubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="" />
+<input type="hidden" id="dept_id" name="dept_id" value="" />
+<input type="hidden" id="project_id" name="project_id" value="" />
+<input type="hidden" id="managerid" name="managerid" value="" />
+<input type="hidden" id="area" name="area" value="{area}" />
+	<tr>
+		<td width="85" align="right">编号：</td>
+		<td align="left">{id}</td>
+	</tr>
+	<tr>
+		<td align="right"> 使用项目：</td>
+		<td align="left">
+			<input type="text" id="xm_name" name="xm_name" onclick="setdiv();" onfocus="setdiv();" onkeydown="keydown();" onpropertychange='change(this,"xm_lx","Name","module/ajax_search/","get_xm_info()");' onblur="losefouse();" value="" />
+			<span id="_xm_name"></span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">领用人：</td>
+		<td align="left">
+			<input type="text" id="username" onblur="get_userid();" name="username" value="" />
+			<span id="_username">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">领用日期：</td>
+		<td align="left"><input type="text" id="date" name="date" readonly value="{date}" /></td>
+	</tr>
+	<tr>
+		<td align="right">预计归还日期：</td>
+		<td align="left"><input type="text" id="targettime" name="targettime" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" class="Wdate" value="" />
+			<span id="_targettime">*</span></td>
+	</tr>
+	<tr>
+		<td align="right">借出数量：</td>
+		<td align="left">
+			<input type="text" size="5" onKeyUp="this.value=value=this.value.replace(/\D/g,'');" onblur="quite();" id="amount" name="amount" value="1" />
+			<span id="_amount">* 该设备可以借用 {amount} {unit}</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">备注:</td>
+		<td align="left"><input type="text" size="40" name="notse" value="" /></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 确定提交 " /> <input type="button" onclick="self.parent.tb_remove();" value=" 返回 " /></td>
+	</tr>
+	</form>
+</table>
+<div id="sug"></div>
+<script type="text/javascript">
+var amount = {amount};
+function check()
+{
+	if ($('#userid').val()=='')
+	{
+		$('#_username').html('您填写的用户名不正确！');
+		$('#username').focus();
+		return false;
+	}else{
+		$('#_username').html('*');
+	}
+	if ($('#targettime').val()==''){
+		$('#_targettime').html('请选择预计归还日期！');
+		return false;
+	}else{
+		$('#_targettime').html('*');
+	}
+	return quite();
+}
+function quite()
+{
+	var val = $('#amount').val();
+	if (val=='')
+	{
+		$('#_amount').html("借出数量不能为空！");
+		$('#_amount').focus();
+		return false;
+	}else if(Number(val) > amount){
+		$('#_amount').html("借出数量 "+val+" 不能大于库存数量 "+amount+" ！");
+		$('#_amount').focus();
+		return false;
+	}else{
+		return true;
+	}
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username == '')
+	{
+		$('#_username').html('领用人姓名不能为空！');
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#userid').val(unescape(data));
+				$('#_username').html('*');
+				get_dept(unescape(data));
+			}else{
+				$('#_username').html('姓名不正确！');
+				$('#userid').val('');
+				$('#dept_id').val('');
+			}
+		}
+
+		)
+	}
+}
+function get_dept(userid)
+{
+	if (userid)
+	{
+		$.post('ajax.php',{model:'user',action:'get_dept',userid:userid},
+		function (data)
+		{
+			if (data)
+			{
+				data = unescape(data);
+				arr = data.split('|');
+				$('#dept_id').val(arr[0]);
+			}
+		}
+		)
+	}
+}
+function get_xm_info()
+{
+	var xm_name = $('#xm_name').val();
+	if (xm_name=='')
+	{
+		$('#project_id').val('');
+		$('#manager').val('');
+		return false;
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'xm',action:'get_info',name:xm_name,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				data = unescape(data);
+				arr = data.split('|');
+				$('#project_id').val(arr[0]);
+				$('#managerid').val(arr[1]);
+				//$('#xm_no').val(arr[2]);
+				//$('#manager').val(arr[3]);
+			}
+		}
+		)
+	}
+}
+</script>
+</body>
+</html>

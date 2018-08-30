@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title></title>
+	{#commonInclude#}
+
+	<script type="text/javascript" src="js/common/approval.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/chance-view.js"></script>
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+    <script>
+       function chanceStageInfo(){
+         showThickboxWin('?model=projectmanagent_chance_chance&action=boostChanceStageInfo&id='
+						+ $("#chanceId").val()
+						+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=600');
+       }
+       function winRateInfo(){
+         showThickboxWin('?model=projectmanagent_chance_chance&action=winRateInfo&id='
+						+ $("#chanceId").val()
+						+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=600');
+       }
+       function contractView(){
+         showModalWin('?model=projectmanagent_chance_chance&action=toContractViewTab&id='
+						+ $("#chanceId").val()
+						+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=600');
+       }
+    </script>
+</head>
+<body>
+
+<table class="form_main_table">
+<tr>
+        <td class="form_text_left_three">商机编号</td>
+		<td class="form_text_right_three" colspan = "5">
+			{chanceCode}
+			<input type="hidden" id="chanceId" value="{id}" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">签约主体</td>
+		<td class="form_text_right_three">
+			{businessBelongName}
+		</td>
+		<td class="form_text_left_three">商机名称</td>
+		<td class="form_text_right_three">
+			{chanceName}
+		</td>
+		 <td class="form_text_left_three">预计金额</td>
+		<td class="form_text_right_three formatMoney" id="chanceMoney">
+			{chanceMoney}
+		</td>
+</tr>
+<tr>
+       <td class="form_text_left_three">商机类型</td>
+	   <td class="form_text_right_three" >
+			 {chanceType}
+		</td>
+		<td class="form_text_left_three">商机属性</td>
+	   <td class="form_text_right_three" >
+			 {chanceNatureName}
+		</td>
+	   <td class="form_text_left_three">商机阶段</td>
+	   <td class="form_text_right_three" id="chanceStage">
+			{chanceStage}
+	   </td>
+</tr>
+<tr>
+		<td class="form_text_left_three">客户名称</td>
+		<td class="form_text_right_three" >
+			 {customerName}
+		</td>
+		<td class="form_text_left_three">客户类型</td>
+		<td class="form_text_right_three">
+		    {customerType}
+		</td>
+		<td class="form_text_left_three">商机赢率</td>
+		<td class="form_text_right_three" id="winRate">
+		    {winRate}
+	   </td>
+</tr>
+<tr>
+		<td class="form_text_left_three">所属国家:</td>
+		<td class="form_text_right_three">
+		    {Country}
+		</td>
+		<td class="form_text_left_three">所属省份:</td>
+		<td class="form_text_right_three">
+		   {Province}
+	    </td>
+		<td class="form_text_left_three">所属城市:</td>
+		<td class="form_text_right_three">
+		   {City}
+		</td>
+</tr>
+<tr>
+        <td class="form_text_left_three">预计合同签署日期</td>
+		<td class="form_text_right_three">
+		  {predictContractDate}
+		</td>
+        <td class="form_text_left_three">预计合同执行日期</td>
+		<td class="form_text_right_three" >
+			{predictExeDate}
+        </td>
+        <td class="form_text_left_three">合同执行周期（月）</td>
+		<td class="form_text_right_three" >
+			 {contractPeriod}
+        </td>
+
+
+</tr>
+<tr>
+        <td class="form_text_left_three">商机负责人</td>
+		<td class="form_text_right_three" >
+			{prinvipalName}
+        </td>
+		<td class="form_text_left_three">归属区域</td>
+		 <td class="form_text_right_three">
+		   {areaName}
+		</td>
+		<td class="form_text_left_three">区域负责人</td>
+		<td class="form_text_right_three">
+		   {areaPrincipal}
+		</td>
+</tr>
+<tr>
+        <td class="form_text_left_three">所属板块</td>
+		<td class="form_text_right_three">
+			{module}
+        </td>
+        <td class="form_text_left_three">关联合同号</td>
+		<td class="form_text_right_three" id="contractView">
+			<span style='color:blue;cursor:pointer;' onclick='contractView();'>{contractCode}</span>
+        </td>
+</tr>
+<tr>
+       <td class="form_text_left">项目团队</td>
+	   <td class="form_text_right" colspan="5">
+			{trackman}
+	   </td>
+</tr>
+<tr>
+		<td class="form_text_left_three">产品选择</td>
+		<td class="form_text_right_three" colspan="5">
+			{productList}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">设备硬件</td>
+		<td class="form_text_right_three" colspan="5">
+			{hardwareList}
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">项目进展描述</td>
+		<td class="form_text_right_three" colspan="5">
+			 <div id="remark" class="divChangeLine">{progress}</div>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left_three">备注</td>
+		<td class="form_text_right_three"  colspan="5">
+		     <div id="remark" class="divChangeLine">{remark}</div>
+		</td>
+</tr>
+	   <tr>
+		    <td align="center" colspan="6">附件 &nbsp;{file}</td>
+	   </tr>
+<tr>
+    <tr id="linkmanList">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b>客户联系人信息</b></legend>
+		<div id="linkmanListInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="product">
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b>产品清单</b></legend>
+		<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="innerTd">
+		<fieldset style="width:200"><legend style="text-align:left">
+		<b>对手信息</b></legend>
+		<div id="competitorList"></div>
+		</fieldset>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

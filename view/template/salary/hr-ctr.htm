@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="zh_cn" />
+    <meta name="GENERATOR" content="Zend Studio" />
+    <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+    <script type="text/javascript" src="js/general.js"></script>
+    <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="js/loadmask/jquery.loadmask.css"/>
+    <script type="text/javascript" src="js/loadmask/jquery.loadmask.min.js"></script>
+    <title>对比</title>
+    <script>
+        function ck(){
+            var cty='';
+            var ctyn='';
+            if($('#ctr_file').val()==''){
+                alert('请导入对比数据');
+                return false;
+            }
+           	return true;
+            cty=$("input[name='ctr_type'][checked]").val();
+            if(cty==''||cty==null){
+                alert('请选择数据对应的比较类型');
+                return false;
+            }
+            if(cty=='com'){
+                ctyn='公司员工';
+            }else{
+                ctyn='派遣员工';
+            }
+            var ctcn='';
+            var ctcom=$('#ctr_com').val();
+            if(ctcom=='dl'){
+                ctcn='世纪鼎利';
+            }else{
+                if(ctcom=='sy'){
+                    ctcn='世源信通';
+                }else{
+                    ctcn='广州贝软';
+                }
+            }
+            return confirm('对比类型为:'+ctcn+' '+ctyn+'，是否确定进行对比？');
+        }
+        function changeCtrFun(){
+            $("#repdiv").mask("等待中......");
+            var rand=Math.random()*100000;
+            var ckt=$('#ckt').val();
+            var cky=$('#cky').val();
+            var ckm=$('#ckm').val();
+            var ckc=$('#ckc').val();
+            if(confirm('更新数据，将会以导入数据为基础，对OA数据进行更新，确定更新？')){
+                $.post('?model=salary&action=hr_pay_ctr_in',{
+                    rand:rand,ckt:ckt,cky:cky,ckm:ckm,ckc:ckc
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $("#repdiv").unmask();
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        location.reload();
+                    }
+                )
+            }else{
+                $("#repdiv").unmask();
+            }
+        }
+    </script>
+  </head>
+  <body id ="repdiv">
+<form action="?model=salary&action=hr_pay_ctr" method="post" onsubmit="return ck();" enctype="multipart/form-data">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;">
+      <tr>
+          <td colspan="2"><b>缴费信息对比</b></td>
+      </tr>
+      <tr>
+          <td>
+              <input type="hidden" value="{ckt}" name="ckt" id="ckt" />
+              <input type="hidden" value="{cky}" name="cky" id="cky" />
+              <input type="hidden" value="{ckm}" name="ckm" id="ckm" />
+              <input type="hidden" value="{ckc}" name="ckc" id="ckc" />
+              导入对比数据：<input type="file" name="ctr_file" id="ctr_file" />&nbsp;
+              <input type="submit" id="subctr" name="subctr" value="导入" />
+              <input type="button" id="changectr" name="changectr" value="更新" onclick="changeCtrFun()" title="更新数据，依照对比结果更新OA数据为导入数据">
+              &nbsp;<span color="red"><a href="attachment/xls_model/salary_hr_ctr.xls">模 板</a></span>
+              <br>
+              {pm_list}
+              <br>
+              对比员工公司类型：
+              <select id="ctr_com" name="ctr_com">
+                  {ctr_com}
+              </select>
+          </td>
+          <td>
+              <table border="0" cellpadding="1" >
+                  <tr>
+                      <td>颜色：</td><td style="background-color: blue;color: #FFFFFF;">导入并存在OA的数据，可更新</td></tr>
+                  <tr><td style="background-color: green;color: #FFFFFF;">非导入但存在OA的数据，可更新</td>
+                      <td style="background-color: #000000;color: #FFFFFF;">导入不存在OA的数据，不更新</td></tr>
+              </table>
+          </td>
+      </tr>
+    </table>
+</form>
+    <table border="1" width="98%" class="table" cellpadding="0" cellspacing="0" align="center" >
+        <tr class="tableheader">
+            <td align="center" rowspan="2" width="8%">员工</td>
+            <td align="center" rowspan="2" width="15%">员工号</td>
+            <td align="center" colspan="2">缴付公司</td>
+            <td align="center" colspan="2">公积金</td>
+            <td align="center" colspan="2">社保费</td>
+            <td align="center" colspan="2">公司公积金</td>
+            <td align="center" colspan="2">公司社保费</td>
+            <td align="center" colspan="2">调配费</td>
+            <td align="center" colspan="2">残障金</td>
+            <td align="center" colspan="2">管理费</td>
+        </tr>
+        <tr class="tableheader">
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+            <td align="center" style="color: red;background-color: #FFE573;">导入</td>
+            <td align="center">OA</td>
+        </tr>
+        {data_list}
+    </table>
+  </body>
+</html>

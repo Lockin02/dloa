@@ -1,0 +1,543 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','姓名','部门','发放月份', '类型', '计税方式', '金额'
+                        , '备注','状态','审批状态','发放日期','录入人','录入日期','可否打回','fskey'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:80, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'username',index:'u1.user_name', width:60, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'olddept',index:'d.dept_name', width:80,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'payym',index:'s.payym', width:60,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'paytype',index:'s.paytype', width:50, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'acctype',index:'s.acctype', width:65, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'amount',index:'s.amount', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'remark',index:'s.remark', width:160, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'spesta',index:'s.spesta', width:50, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'fsta',index:'s.spesta', width:80, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'paydt',index:'s.paydt', width:80, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'creator',index:'s.creator', width:60, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'createdt',index:'s.createdt', width:140, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'ck',index:'',hidden:true ,key:true ,width:40 },
+                        {name:'fskey',index:'',hidden:true }
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-138+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    //multiselect: true,
+                    //multikey: "key",
+                    caption: "{user_capt}\n\
+<input type='button' value='导入' onclick=\"tb_show('补贴-Excel导入', '?model=salary&action=hr_spe_xls_in&TB_iframe=true&height=600')\"/>",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#000000';
+                        var cs='#000000';
+                        switch(rowData.spesta){
+                            case '编辑':
+                                cl='green';
+                                be ="<input style='height:22px;' class='btn-class' id='sub_"
+                                    +rowData.key+"' type='button' value='编辑' title='编辑补发/扣除单' onclick=\"amClickFun('"+rowData.key+"','submit')\" />"
+                                    +"<input style='height:22px;' class='btn-class' id='hap_"
+                                    +rowData.key+"' type='button' value='提交' title='提交审批' onclick=\"amHandupFun('"+rowData.key+"','handup')\" />";
+                                break;
+                            case '打回':
+                                cl='blue';
+                                cs='red';
+                                be ="<input style='height:22px;' class='btn-class' id='bak_"
+                                    +rowData.key+"' type='button' value='重新编辑' title='重新编辑补发/扣除单' onclick=\"amClickFun('"+rowData.key+"','back')\" />";
+                                $('#jqg_'+rowData.key).css('display','none');
+                                break;
+                            case '提交':
+                                cl='#FF9900';
+                                if(rowData.ck=='yes'){
+                                    be ="<input style='height:22px;' class='btn-class' id='edt_"
+                                    +rowData.key+"' type='button' value='修改' title='未审批前，打回修改' onclick=\"amClickFun('"+rowData.key+"','edit')\" />"
+                                    +"<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='删除' title='删除' onclick=\"delClickFun('"+rowData.key+"')\" />";;
+                                }
+                                $('#jqg_'+rowData.key).css('display','none');
+                                break;
+                            default:
+                                $('#jqg_'+rowData.key).css('display','none');
+                                break;
+                        }
+                        if(rowData.paytype=='扣除'){
+                            jQuery("#rowedgrid").jqGrid('setCell',rowid,'paytype','',{color:'red'});
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'spesta','',{color:cs});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "导出",
+                    title: "导出信息",
+                    onClickButton : function (){
+                        $('#lui_rowedgrid').css('display', 'block');
+                        $('#hr_spe_xls').css('display', 'block');
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(form){
+                        if(confirm('确定提交？提示：因邮件发送需要一定时间，请耐心等待，谢谢')){
+                            amSubmitFun();
+                        }
+                    },
+                    rules:{
+                        user_amount:{
+                            required:true,
+                            number:true
+                        }
+                    },
+                    messages:{
+                        user_amount:{
+                            required:'请输入金额',
+                            number:'请输入正确金额'
+                        }
+                    }
+                });
+                $('#form1').validate({//new
+                    submitHandler: function(form){
+                        if(confirm('确定提交？提示：因邮件发送需要一定时间，请耐心等待，谢谢')){
+                            amNewSubFun();
+                        }
+                    },
+                    rules:{
+                        TO_ID:{
+                            required:true
+                        },
+                        spe_amount:{
+                            required:true,
+                            number:true
+                        },
+                        spe_remark:{
+                            required:true
+                        }
+                    },
+                    messages:{
+                        TO_ID:{
+                            required:'请点击输入员工'
+                        },
+                        spe_amount:{
+                            required:'请输入金额',
+                            number:'请输入正确金额'
+                        },
+                        spe_remark:{
+                            required:'请输入备注信息'
+                        }
+                    }
+                });
+            });
+            function newClickFun(){
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_spe_new').css('display', 'block');
+                $('#TO_ID').val('');
+                $('#TO_NAME').val('');
+                $('#spe_amount').val('');
+                $('#spe_remark').val('');
+                
+            }
+            //转正
+            function amClickFun(id,sub){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_dept').html(rowData.olddept);
+                $('#user_amount').val(rowData.amount);
+                $('#user_remark').val(rowData.remark);
+                $('#user_acc').val(rowData.acctype);
+                $('#sub').val(sub);
+                var count=$("#user_type option").length;
+                for(var i=0;i<count;i++)
+                {
+                    if($("#user_type").get(0).options[i].text == rowData.paytype)
+                    {
+                        $("#user_type").get(0).options[i].selected = true;
+                        break;
+                    }
+                }
+                var count=$("#user_acc option").length;
+                for(var i=0;i<count;i++)
+                {
+                    if($("#user_acc").get(0).options[i].text == rowData.acctype)
+                    {
+                        $("#user_acc").get(0).options[i].selected = true;
+                        break;
+                    }
+                }
+                var rand=Math.random()*100000;
+                $.post('?model=salary&action=dp_sal_exa_info',{id:rowData.fskey,rand:rand},
+                    function (data){
+                        $('#exa_info').html(data);
+                    }
+                )
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var type=$('#user_type').val();
+                var amount=$('#user_amount').val();
+                var remark=$('#user_remark').val();
+                var acctype=$('#user_acc').val();
+                var sub=$('#sub').val();
+                $('#newuserSub').attr('disabled',true);
+                $('#newuserClo').attr('disabled',true);
+                $.post('?model=salary&action=hr_spe_in',{
+                    id:id,type:type,amount:amount,remark:remark,sub:sub,rand:rand,acctype:acctype
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            $('#newuserClo').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        $('#newuserClo').attr('disabled',false);
+                        paCloseFun('hr_user_new');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            function delClickFun(id){
+                if(confirm('确定删除？')){
+                    var rand=Math.random()*100000;
+                    $.post('?model=salary&action=hr_spe_in',{
+                        id:id,rand:rand,sub:'del'
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                            }else{
+                                alert('操作成功！');
+                            }
+                            paCloseFun('hr_user_new');
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    )
+                }
+            }
+            function amNewSubFun(){
+                var rand=Math.random()*100000;
+                var id=$('#TO_ID').val();
+                var type=$('#spe_type').val();
+                var amount=$('#spe_amount').val();
+                var remark=$('#spe_remark').val();
+                var acctype=$('#acc_type').val();
+                $('#newspeSub').attr('disabled',true);
+                $('#newspeClo').attr('disabled',true);
+                $.post('?model=salary&action=hr_spe_in',{
+                    id:id,type:type,amount:amount,remark:remark,sub:'new',rand:rand,acctype:acctype
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newspeSub').attr('disabled',false);
+                            $('#newspeClo').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        $('#newspeSub').attr('disabled',false);
+                        $('#newspeClo').attr('disabled',false);
+                        paCloseFun('hr_spe_new');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            function amHandupFun(id,sub){
+                if(confirm('确定提交审批？')){
+                    var rand=Math.random()*100000;
+                    $('#sub_'+id).attr('disabled',true);
+                    $('#hap_'+id).attr('disabled',true);
+                    $.post('?model=salary&action=hr_spe_in',{
+                        id:id,sub:sub,rand:rand
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $('#sub_'+id).attr('disabled',false);
+                                $('#hap_'+id).attr('disabled',false);
+                                return false;
+                            }else{
+                                alert('操作成功！');
+                            }
+                            $('#sub_'+id).attr('disabled',false);
+                            $('#hap_'+id).attr('disabled',false);
+                            paCloseFun('hr_user_new');
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    )
+                }else{
+                    return false;
+                }
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function openUserWindow()
+            {
+                  URL="module/user_select";
+                  loc_x=event.clientX-300;
+                  loc_y=event.clientY+240;
+                  window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:320px;dialogHeight:360px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+            }
+            function xlsClickFun(){
+                var sy=$('#xls_year').val();
+                var sm=$('#xls_mon').val();
+                location.href='?model=salary&action=hr_spe_xls&sy='+sy+'&sm='+sm;
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error ,#form1 label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 508px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            单据信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td id="user_name"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td id="user_dept"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 计税方式：</td>
+                        <td>
+                            <select id="user_acc" name="user_acc" style="width: 120px;">
+                                <option value="0">参与计税</option>
+                                <option value="1">不参与计税</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 类型：</td>
+                        <td>
+                            <select id="user_type" name="user_type" style="width: 120px;">
+                                <option value="0">补发</option>
+                                <option value="1">扣除</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">金额：</td>
+                        <td><input id="user_amount" name="user_amount" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">备注：</td>
+                        <td>
+                            <textarea id="user_remark" name="user_remark" cols="35" rows="3" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 审批信息：</td>
+                        <td id="exa_info"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="hidden" id="sub" name="sub" value=""/>
+                            <input type="submit" id="newuserSub" value="提交审批"/>
+                            <input type="button" id="newuserClo" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="hr_spe_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="form1" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 508px;" >
+                    <tr>
+                        <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            新建补发/扣除
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td ><textarea id="TO_NAME" name="TO_NAME" cols="35" rows="3" onClick="openUserWindow()" readonly></textarea>
+                            <input type="hidden" name="TO_ID" id="TO_ID" value="" readonly="readonly"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 计税方式：</td>
+                        <td>
+                            <select id="acc_type" name="acc_type" style="width: 120px;">
+                                <option value="0">参与计税</option>
+                                <option value="1">不参与计税</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 类型：</td>
+                        <td>
+                            <select id="spe_type" name="spe_type" style="width: 120px;">
+                                <option value="0">补发</option>
+                                <option value="1">扣除</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">金额：</td>
+                        <td><input id="spe_amount" name="spe_amount" type="text" style="display: inline;width: 115px;" class="default vdata"/></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">备注：</td>
+                        <td>
+                            <textarea id="spe_remark" name="spe_remark" cols="35" rows="3" ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newspeSub" value="提交审批"/>
+                            <input type="button" id="newspeClo" onclick="paCloseFun('hr_spe_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="hr_spe_xls" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        导出信息
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top:5px;"> 导出年月：</td>
+                    <td >
+                        {xls_list}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" id="newspeSub" onclick="xlsClickFun()" value="导出"/>
+                        <input type="button" id="newspeClo" onclick="paCloseFun('hr_spe_xls');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

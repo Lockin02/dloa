@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<!-- script type="text/javascript" src="view/template/rdproject/task/js/rdtask-onekey-add-formValidator.js"></script> -->
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+<title>强制终止</title>
+</head>
+<body>
+
+<div class="form_main">
+<form action="?model=rdproject_task_tkover&action=add" method="POST"
+	name="form1" id="form1" onsubmit="">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">确认工作量</td>
+		<td class="form_view_right" colspan="3"><input id="taskId"
+			type="hidden" name="tkover[taskId]" value="{taskId}"> <input
+			type="text" name="tkover[informTime]" id="informTime"> <span class='red'>[*]</span>
+		<br />
+		<div id="informTimeTip" class="dbcolumnTipTxt"></div>
+		</td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">完成等级</td>
+		<td class="form_view_right"><select name="tkover[finishGrade]"
+			class="select">
+			{finishGrade}
+		</select></td>
+		<td class="form_text_left">关键事件</td>
+		<td class="form_view_right"><select name="tkover[impEvent]"
+			class="select">
+			<option value="red">红事件</option>
+			<option value="black">黑事件</option>
+		</select></td>
+
+	</tr>
+	<tr>
+		<td class="form_text_left">描述</td>
+		<td class="form_view_right" colspan="3"><textarea
+			class="txt_txtarea_font" name="tkover[auditRemark]"></textarea></td>
+	</tr>
+	<tr>
+		<td colspan="4"><input type="submit" value="保存" class="txt_btn_a">
+		<input type="button" value="返回" class="txt_btn_a"
+			onclick="self.parent.tb_remove();"></td>
+	</tr>
+</table>
+</form>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$.formValidator.initConfig({
+		formid:"form1",
+		onerror:function(msg){
+		},
+		onsuccess:function(){
+			if(confirm("你输入成功,确定提交吗?")){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	});
+	$("#informTime").formValidator({
+		forcevalid:true,
+		triggerevent:"change",
+		onshow:"请输入确认工作量（数字）",
+		onfocus:"请输入数字",
+		oncorrect:"你输入的内容正确"
+	 }).inputValidator({
+		min:1,
+		max:999,
+		type:"value",
+		onerrormin:"你输入的值必须大于等于1",
+		onerrormax:"你输入的值必须小于于等于999",
+		onerror:"请输入确认工作量(数字)"
+		});//.defaultPassed();
+
+
+})
+
+	</script>
+</body>
+</html>

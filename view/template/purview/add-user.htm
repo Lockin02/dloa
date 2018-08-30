@@ -1,0 +1,69 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加用户</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+<form method="POST" action="?model=purview&action=save_apply_audit_user" onsubmit="return check()">
+<input type="hidden" id="userid" name="userid" value="" />
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加用户</td>
+	</tr>
+	<tr>
+		<td>类型：</td>
+		<td align="left"><input type="radio" checked name="type" value="0" />申请 <input type="radio" name="type" value="1" />审核</td>
+	</tr>
+	<tr>
+		<td>姓名：</td>
+		<td align="left">
+			<input type="text" id="username" onblur="get_userid();" name="username" value="" />
+			<span id="_username">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 添加 " /></td>
+	</tr>
+</form>
+</table>
+<script type="text/javascript">
+function check()
+{
+	if ($('#userid').val()=='')
+	{
+		$('#_username').html('请填写正确姓名！');
+		return false;
+	}
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username == '')
+	{
+		$('#_username').html('用户姓名不能为空！');
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#userid').val(unescape(data));
+				$('#_username').html('*');
+			}else{
+				$('#_username').html('姓名不正确！');
+				$('#userid').val('');
+			}
+		}
+
+		)
+	}
+}
+</script>
+</body>
+</html>

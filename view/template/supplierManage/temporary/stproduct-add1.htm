@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+        <title>
+            jquery woo menu demo
+        </title>
+        <meta http-equiv="content-type" content="text/html; charset=gbk" />
+
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxtree.css" />
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+        <script type="text/javascript" src="js/jquery/woo.js"></script>
+        <script type="text/javascript" src="js/jquery/component.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombobox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcomboboxtree.js"></script>
+        <script type="text/javascript" src="js/jquery/ztree/jquery-ztree-2.1.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="view/template/supplierManage/temporary/js/stproduct-add-formValidator.js"></script>
+
+        <script type="text/javascript">
+
+	$(document).ready(function(){
+
+			var setting = {
+				showLine : true,
+				checkable: true,
+				root : {
+					isRoot : true,
+					nodes : []
+				}
+			};
+
+			var zNodes = [{
+				name : "Hunter's Home",
+				iconSkin : "flag5",
+				url : "http://baby666.cn",
+				target : "_blank"
+			}, {
+				name : "zTree in Google",
+				iconSkin : "flag5",
+				url : "http://code.google.com/p/jquerytree/",
+				target : "_blank"
+			}, {
+				name : "zTree 功能演示",
+				iconSkin : "sim1",
+				target : "testIframe",
+				open : true,
+				nodes : [
+						// 节点连线、自定义图标、一个Web同时显示多个Tree
+						{
+							name : "基本功能演示",
+							iconSkin : "sim2",
+							"url" : "standardDemo.html",
+							"target" : "testIframe"
+						},
+						// checkbox 演示、onCheck、onClick事件
+						{
+							name : "CheckBox演示",
+							iconSkin : "sim5",
+							"url" : "checkboxDemo.html",
+							"target" : "testIframe"
+						},
+						// radio 演示、onCheck、onClick事件
+						{
+							name : "Radio演示",
+							iconSkin : "sim6",
+							"url" : "radioDemo.html",
+							"target" : "testIframe"
+						},
+						// 编辑演示
+						{
+							name : "编辑演示",
+							iconSkin : "sim4",
+							"url" : "editDemo.html",
+							"target" : "testIframe"
+						},
+						// 异步加载节点演示、异步事件
+						{
+							name : "异步加载演示",
+							iconSkin : "sim8",
+							"url" : "asyncDemo.html",
+							"target" : "testIframe"
+						},
+						// 代码加载、移动、删除节点演示
+						{
+							name : "JS操作 & 大数据量演示",
+							iconSkin : "sim10",
+							"url" : "jscontrolDemo.html",
+							"target" : "testIframe"
+						},
+						// 高级应用演示
+						{
+							name : "高级应用演示",
+							iconSkin : "sim10",
+							open : true,
+							nodes : [
+									// 两棵树之间数据交互
+									{
+										name : "两棵树的数据交换",
+										iconSkin : "sim4",
+										"url" : "superDemo_mutilTree.html",
+										"target" : "testIframe"
+									},
+									// 超大数据量异步加载
+									{
+										name : "异步加载超大数据",
+										iconSkin : "sim8",
+										"url" : "superDemo_hugeData.html",
+										"target" : "testIframe"
+									}]
+						},
+						// 皮肤演示
+						// { name:"皮肤演示", iconSkin:"sim7", url:"skinDemo.html",
+						// target:"testIframe"}
+						{
+							name : "皮肤演示",
+							iconSkin : "sim7",
+							url : "http://baby666.cn/hunter/ztree/skinDemo.html",
+							target : "testIframe"
+						}]
+			}];
+
+
+
+
+		var setting2 = {
+			checkable: true,
+			async: true,
+			asyncUrl: "node.txt",  //获取节点数据的URL地址
+			asyncParam: ["name", "id"],  //获取节点数据时，必须的数据名称，例如：id、name
+			asyncParamOther: ["test","true"] //其它参数 ( key, value 键值对格式)
+		};
+
+		var zNodes2 =[];
+
+
+		 $("#aaa").comboboxtree({
+		 	setting : setting2,
+		 	zNodes : zNodes2
+
+		 });
+
+
+	});
+
+
+        </script>
+        <!-- theme switcher button <script type="text/javascript" src="../src/theme.js"></script>
+        <script type="text/javascript"> $(function(){ $('<div style="position: absolute; top: 20px; right: 300px;" />').appendTo('body').themeswitcher(); }); </script>
+        -->
+    </head>
+
+    <body>
+
+    	<center><input type="button" id="aaa" class="aaa" value="aaa" ></center>
+
+        <div id="search-engines" style="">
+            <ul>
+                <li>
+                    <a href="#">
+                        Google
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Yahoo
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        MSN
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        Ask
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        AOL
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,52 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>查看供应商信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //tabs处理
+            var tt = $('#tt');
+            var thisHeight = document.documentElement.clientHeight - 5;
+            tt.tabs({
+                height : thisHeight,
+                plain : true,
+                onSelect:function(node){
+                    var tb=tt.tabs('getTab',node);
+                    var hc=tb.panel('options').headerCls;
+                    if(hc&&hc!=null){
+                        tb.panel('options').headerCls='';//清空之后才不会重新刷新
+                        tt.tabs('update', {
+                            tab: tb,
+                            options:{
+                                content:'<iframe fit="true" name="'+hc+'" scrolling="auto" frameborder="0"  src="'+hc+'" style="width:100%;height:100%;"></iframe>'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div id="tt">
+    <div title="基本信息" headerCls="?model=supplierManage_formal_flibrary&action=tobasicRead&id={id}&objCode={objCode}&skey={skey_}"></div>
+    <div title="联系人" headerCls="?model=supplierManage_formal_sfcontact&action=tosfconlist&parentId={id}&parentCode={objCode}&skey={skey_}"></div>
+    <div title="供应产品" headerCls="?model=supplierManage_formal_sfproduct&action=toProEdit&perm=view&parentId={id}&parentCode={objCode}&skey={skey_}"></div>
+    <div title="注册信息" headerCls="?model=supplierManage_formal_flibrary&action=toassessMsg&id={id}&objCode={objCode}&skey={skey_}"></div>
+    <div title="附件" headerCls="?model=file_uploadfile_management&action=supplyFile&objTable=oa_supp_lib&objId={id}"></div>
+    <div title="评估记录" headerCls="?model=supplierManage_assessment_supasses&action=toSuppList&suppId={id}"></div>
+    <div title="曾用名" headerCls="?model=supplierManage_formal_usedname&action=page&suppId={id}"></div>
+</div>
+
+
+</body>
+</html>

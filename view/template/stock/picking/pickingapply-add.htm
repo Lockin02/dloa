@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>
+            新增费用发票
+        </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"
+        />
+        <!-- 主题css，可切换 -->
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="view/template/stock/picking/js/picking_add.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/picking/js/picking-combo.js">
+        </script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stock.js">
+		</script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/picking/js/picking-add-formValidator.js">
+        </script>
+    </head>
+    <body>
+        <div class="main_head">
+            <span class="main_head_title">
+                新增领料申请单
+            </span>
+        </div>
+        <form id=form1 action="?model=stock_picking_pickingapply&action=add" method="post">
+       		 <div class="main_wraper">
+                <div>
+                    <table class="form_main_table">
+                        <tr>
+                            <td class="form_text_left">
+                                领料申请单号
+                            </td>
+                            <td class="form_text_right">
+                                <input type="text" id="pickingCode" class="txt" name="pickingapply[pickingCode]"/>
+                                <span class="red">
+                                    [*]
+                                </span>
+                                <div id="pickingCodeTip" class="tipShortTxt">
+                                </div>
+                            </td>
+                            <td class="form_text_left">
+                                领料类型
+                            </td>
+                            <td class="form_text_right">
+                                <input type="text" id="pickingType" class="txt" name="pickingapply[pickingType]"
+                                />
+                                <span class="red">
+                                    [*]
+                                </span>
+                                <div id="pickingTypeTip" class="tipShortTxt">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">
+                                对方科目
+                            </td>
+                            <td class="form_text_right">
+                                <input type="text" id="otherSubjects" class="txt" name="pickingapply[otherSubjects]"/>
+                            </td>
+                            <td class="form_text_left">
+                                源单类型
+                            </td>
+                            <td class="form_text_right">
+                                <input type="text" id="sourceType" class="txt" name="pickingapply[sourceType]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">
+                                领料部门
+                            </td>
+                            <td class="form_text_right">
+                                <input type="hidden" id="departmentsId" name="pickingapply[departmentsId]"/>
+                                <input type="text" id="departments" class="txt" name="pickingapply[departments]"
+                                readonly="readonly"/>
+                                <input type="button" value="选 择" onclick="loadOrgWindowDept('departmentsId','departments');"
+                                title="选择人员" class="txt_btn_a" />
+                                <input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('departmentsId','departments');"
+                                class="txt_btn_a" />
+                            </td>
+                            <td class="form_text_left">
+                                领料人
+                            </td>
+                            <td class="form_text_right">
+                                <input type="hidden" id="pickId" name="pickingapply[pickId]"/>
+                                <input type="text" id="pickName" class="txt" name="pickingapply[pickName]"
+                                readonly="readonly"/>
+                                <input type="button" value="选 择" onclick="loadOrgWindow('pickId','pickName');"
+                                title="选择人员" class="txt_btn_a" />
+                                <input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('pickId','pickName');"
+                                class="txt_btn_a" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">
+                                发料仓库
+                            </td>
+                            <td class="form_text_right">
+                            	<input type="hidden" id="stockId" name="pickingapply[stockId]"/>
+                                <input type="text" id="stockName" class="txt" name="pickingapply[stockName]"/>
+                            </td>
+                            <td class="form_text_left">
+                                领料用途
+                            </td>
+                            <td class="form_text_right">
+                                <input type="text" id="toUse" class="txt" name="pickingapply[toUse]" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">
+                                发料人
+                            </td>
+                            <td class="form_text_right">
+                                <input type="hidden" id="sendId"  name="pickingapply[sendId]"/>
+                                <input type="text" id=sendName class="txt" name="pickingapply[sendName]" readonly="readonly" />
+                                <input type="button" value="选 择" onclick="loadOrgWindow('sendId','sendName');"
+                                title="选择人员" class="txt_btn_a" />
+                                <input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('sendId','sendName');"
+                                class="txt_btn_a" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table class="form_main_table" id="mytable">
+                        <thead>
+                            <tr align="left">
+                                <td colspan=6">
+                                    领料条目
+                                </td>
+                                <td align="center" width="4%">
+                                    <input type="hidden" id="invnumber" value="1" />
+                                    <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                                    <img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+                                 </td>
+                            </tr>
+                        </thead>
+                        <tbody id="invbody">
+                            <tr class="main_tr_header">
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    产品编号
+                                </th>
+                                <th>
+                                    产品名称
+                                </th>
+                                <th>
+                                    规格型号
+                                </th>
+                                <th>
+                                    出货仓库名称
+                                </th>
+                                <th>
+                                    数量
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            <tr align="center">
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    <input type="text" name="pickingapply[pickingapplyDetail][1][productNo]"
+                                    id="productNo1" class="txtmiddle" readonly="readonly"/>
+                                </td>
+                                <td>
+                                	<input type="hidden" id="productId1" name="pickingapply[pickingapplyDetail][1][productId]"/>
+                                    <input type="text" name="pickingapply[pickingapplyDetail][1][productName]"
+                                    id="productName1" class="txt" readonly="readonly"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="pickingapply[pickingapplyDetail][1][productModel]"
+                                    id="productModel1" readonly="readonly" class="txtmiddle"/>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="pickingapply[pickingapplyDetail][1][stockId]"
+                                    id="dstockId1"/>
+                                    <input type="text" name="pickingapply[pickingapplyDetail][1][stockName]"
+                                    id="dstockName1" readonly="readonly" class="txtmiddle"/>
+                                </td>
+                                <td>
+                                    <input type="text" name="pickingapply[pickingapplyDetail][1][number]"
+                                    id="number1" class="txtshort"/>
+                                </td>
+                                <td>
+                                    <img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table class="form_main_table">
+                        <tr>
+                            <td>
+                                <input type="submit" class="txt_btn_a" value="保 存" />
+                                <input type="button" class="txt_btn_a" value="返 回" onclick="self.parent.tb_remove();"
+                                />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        	</div>
+       	</form>
+    </body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>邮寄签收</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+	</script>
+	<script type="text/javascript" src="js/common/businesspage.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/woo.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/component.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js" >
+	</script>
+	<script type="text/javascript" src="js/util.js"></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+
+	<script type="text/javascript">
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_mail_sign",
+				"serviceId": "{id}",
+				"serviceNo": "{id}"
+			});
+		});
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	邮寄签收
+    </span>
+</div>
+<form action="?model=mail_mailsign&action=edit" method="post" onsubmit="return check_all()">
+
+<div align="center">
+<input type="hidden" name="mailsign[id]" value="{id}"/>
+<table class="form_main_table">
+	<tr >
+		<td class="form_text_left">客户签收人</td>
+		<td class="form_text_right"><input type="text" id="signMan"
+			name="mailsign[signMan]" value="{signMan}" class="txt"/></td>
+		<td class="form_text_left">签收时间</td>
+		<td class="form_text_right"><input id="signDate" type="text"
+			name="mailsign[signDate]" class="txt" maxlength="12" class="BigInput"
+			value="{signDate}" onfocus="WdatePicker()" readonly/></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td colspan="4" class="form_text_right">
+			<textarea rows="3" name="mailsign[remark]" cols="80" class="txt_txtarea_font">{remark}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			客户签收原件 &nbsp;
+			<div class="upload">
+				<div class="upload" id="fsUploadProgress">
+				</div>
+				<div class="upload">
+					<span id="swfupload">
+					</span>
+					<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+					disabled="disabled" />
+					<br />
+				</div>
+				<div id="uploadfileList" class="upload">
+					{file}
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr >
+		<td colspan="4">
+			<input type="submit" value=" 提交 " class="txt_btn_a"/>
+			<input type="button" value=" 返回 " onclick="self.parent.tb_remove();" class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+</body>
+</html>

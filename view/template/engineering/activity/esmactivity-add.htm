@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增项目任务</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmmember.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/esmactivity-add.js" ></script>
+    <script type="text/javascript" src="{#jsPath#}/esmactivity-common.js" ></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=engineering_activity_esmactivity&action=add" onsubmit="return checkform();">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="6">
+				<div class="main_head2">
+             		<span class="main_head_title">
+               			新增项目任务  上级 - {activityName}
+             		</span>
+            	</div>
+            </td>
+		</tr>
+        <tr>
+			<td colspan="6">
+				<fieldset class="fieldset">
+					<legend class="legend">基 本 信 息</legend>
+					<table class="form_in_table">
+					    <tr>
+				      		<td class="form_text_left_three">
+				      			<span class="blue">任务名称</span>
+				      		</td>
+				      		<td class="form_text_right_three" >
+								<input type="text" class="txt" id="activityName" name="esmactivity[activityName]" />
+								<input type="hidden" id="parentName" name="esmactivity[parentName]" value="{activityName}"/>
+								<input type="hidden" id="parentId" name="esmactivity[parentId]" value="{parentId}"/>
+								<input type="hidden" id="changeId" name="esmactivity[changeId]" value="{changeId}"/>
+				      		</td>
+				      		<td class="form_text_left_three">
+				      			<span class="blue">工作占比(%)</span>
+				      		</td>
+				      		<td class="form_text_right_three">
+								<input type="text" class="txt" id="workRate" name="esmactivity[workRate]" value="{workRate}"/>
+				      		</td>
+				      		<td class="form_text_left_three">所属项目</td>
+				      		<td class="form_text_right_three">
+								<input type="text" class="readOnlyText" name="esmactivity[projectName]" value="{projectName}" id="projectName" readonly="readonly"/>
+								<input type="hidden" name="esmactivity[projectCode]" value="{projectCode}" id="projectCode"/>
+								<input type="hidden" id="projectId" class="txt" name="esmactivity[projectId]" value="{id}"/>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left_three">预计开始</td>
+				      		<td class="form_text_right_three" >
+				      			 <input type="text" class="txt Wdate" id="planBeginDate" name="esmactivity[planBeginDate]" value="{planBeginDate}" onchange="timeCheck(this)" onfocus="WdatePicker()"/>
+				      		</td>
+				      		<td class="form_text_left_three">预计结束</td>
+				      		<td class="form_text_right_three" >
+				      			 <input type="text" class="txt Wdate" id="planEndDate" name="esmactivity[planEndDate]" value="{planEndDate}" onchange="timeCheck(this)" onfocus="WdatePicker()"/>
+				      		</td>
+				      		<td class="form_text_left_three">预计工期</td>
+				      		<td class="form_text_right_three" >
+				      			 <input type="text" class="txt" id="days" name="esmactivity[days]" value="{days}" onblur="periodCheck('planBeginDate','planEndDate',this.id);"/>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left_three">
+				      			<span class="blue">工 作 量</span>
+			      			</td>
+				      		<td class="form_text_right_three" >
+				      			 <input type="text" class="txt" name="esmactivity[workload]" id="workload" value="{days}"/>
+				      		</td>
+				      		<td class="form_text_left_three">
+				      			<span class="blue">工作单位</span>
+			      			</td>
+				      		<td class="form_text_right_three" colspan="3">
+								<select class="select" name="esmactivity[workloadUnit]" id="workloadUnit">
+									{workloadUnit}
+								</select>
+				      		</td>
+				        </tr>
+				    </table>
+				</fieldset>
+			</td>
+		</tr>
+        <tr>
+			<td colspan="6">
+				<fieldset class="fieldset">
+					<legend class="legend">描 述 信 息</legend>
+					<table class="form_in_table">
+					    <tr>
+				      		<td class="form_text_left_three">
+				      			<span class="blue">工作内容</span>
+				      		</td>
+				      		<td class="form_text_right" colspan="5">
+								<textarea class=txt_txtarea_biglong id="workContent" name="esmactivity[workContent]" ></textarea>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left_three">备注说明</td>
+				      		<td class="form_text_right"  colspan="5">
+								<textarea class="txt_txtarea_biglong" name="esmactivity[remark]"></textarea>
+				      		</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+      		<td class="txt_btn" colspan="6">
+      			<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+      			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+<TITLE>交付物料预警表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+
+
+<script src="js/jquery.js" language="javascript"></script>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+{#commonInclude#}
+<!--
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-terminalProduct.js"></script>
+ <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="{#jsPath#}/terminalinfo-report.js" ></script>
+ -->
+<script type="text/javascript">
+function showWind_(){
+	url ='?model=projectmanagent_orderreport_orderreport&action=searchMaterialWarn';
+	 var iTop = (window.screen.availHeight-550)/2; //获得窗口的垂直位置,550为弹出窗口的height;
+     var iLeft = (window.screen.availWidth-640)/2; //获得窗口的水平位置,640为弹出窗口的width;
+     var feature = "width=700,height=400,top="+iTop+",left="+iLeft+",menubar=no,toolbar=no,location=no,scrollbars=no,status=no,modal=yes";
+     window.open(url, '交付物料预警表', feature) ;
+}
+function submitSearch(param){
+	window.location="?model=projectmanagent_orderreport_orderreport&action=materialWarn&"+param ;
+}
+
+
+</script>	
+<style>
+#div{
+	margin:20 0 20 120;
+}
+</style>
+
+</HEAD>
+<BODY style="margin:0;">
+<div id="div">
+<input type="button"  onclick="showWind_()" value="查  询">
+</div>
+<input type="hidden" id="productName" value="{productName}">
+<input type="hidden" id="productNo"  value="{productNo}">
+<input type="hidden" id="theCode"  value="{theCode}">
+<input type="hidden" id="orderType"  value="{orderType}">
+<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEx("100%", "100%",
+				"view/template/projectmanagent/orderreport/orderreport-materialWarn.grf"
+				,"view/template/projectmanagent/orderreport/orderreport-materialWarn.php?"
+				+"&productName="+$("#productName").val()
+				+"&productNo="+$("#productNo").val()
+				+"&orderType="+$("#orderType").val()
+				+"&theCode="+$("#theCode").val(),
+				true,
+				'')				
+</script>  
+</BODY>
+
+</HTML>

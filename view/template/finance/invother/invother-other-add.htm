@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新增应付其他发票</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+    <script type="text/javascript" src="view/template/finance/cost/js/costHook-init.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/invother-other-add.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/invother-strategy-common.js"></script>
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+    <script type="text/javascript" src="swfupload/handlers.js"></script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+    <script type="text/javascript">
+        var uploadfile;
+        $(function () {
+            uploadfile = createSWFUpload({
+                "serviceType": "oa_finance_invother"//业务模块编码，一般取表名
+            });
+        });
+        var redLimit = '{redLimit}';
+    </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=finance_invother_invother&action=add" onsubmit="return checkform();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="6">
+                <div class="main_head2">
+                    <span id="formTitle" class="main_head_title">
+                        新增其他发票
+                    </span>
+                    <span style="float:right;padding-right:10px;">
+                        <span class="blue">蓝色</span>
+                        <input type="radio" name="invother[isRed]" value="0"
+                               checked="checked" onchange="changeTitle(this.value)">
+                        <span id="redSpan" style="display: none;">
+                            <span class="red">红色</span>
+                            <input type="radio" name="invother[isRed]" value="1"
+                                   onchange="changeTitle(this.value)">
+                        </span>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                供 应 商
+            </td>
+            <td class="form_text_right_three">
+                <input type="hidden" name="invother[supplierId]" id="supplierId" value="{signCompanyId}"/>
+                <input type="text" class="readOnlyTxtNormal" name="invother[supplierName]" id="supplierName"
+                       value="{signCompanyName}" readonly="readonly"/>
+            </td>
+            <td class="form_text_left_three">
+                付款日期
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" id="payDate" name="invother[payDate]" onfocus="WdatePicker()"/>
+            </td>
+            <td class="form_text_left_three">单据日期</td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[formDate]" id="formDate" value="{thisDate}"
+                       onfocus="WdatePicker()"/>
+                <span class="red">[*]</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">发票号码</td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" id="invoiceNo" name="invother[invoiceNo]"/>
+                <span class="red">[*]</span>
+            </td>
+            <td class="form_text_left_three">
+                发票类型
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal" value="{invTypeCN}" readonly="readonly"/>
+                <select name="invother[invType]" id="invType" class="select" style="display: none;">
+                    {invType}
+                </select>
+            </td>
+            <td class="form_text_left_three">往来科目</td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[subjects]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                开户银行
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[bank]"/>
+            </td>
+            <td class="form_text_left_three">
+                币&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[currency]"/>
+            </td>
+            <td class="form_text_left_three">
+                汇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[excRate]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                税 率(%)
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal" id="taxRate" name="invother[taxRate]" value="{taxPoint}"
+                       readonly="readonly"/>
+            </td>
+            <td class="form_text_left_three">
+                源单类型
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal" value="{sourceTypeCN}" readonly="readonly"/>
+                <input type="hidden" name="invother[sourceType]" id="sourceType" value="{sourceType}"/>
+            </td>
+            <td class="form_text_left_three">
+                源单编号
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal" name="invother[menuNo]" id="menuNo" value="{orderCode}"
+                       readonly="readonly"/>
+                <input type="hidden" id="menuId" value="{id}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                总 金 额
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal formatMoney" name="invother[amount]" id="allAmount"
+                       readonly="readonly" value="0"/>
+            </td>
+            <td class="form_text_left_three">
+                总 税 额
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal formatMoney" name="invother[formAssessment]"
+                       id="formAssessment"
+                       readonly="readonly" value="0"/>
+            </td>
+            <td class="form_text_left_three">
+                价税合计
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal formatMoney" name="invother[formCount]" id="formCount"
+                       readonly="readonly" value="0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                业 务 员
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" name="invother[salesman]" id="salesman" readonly="readonly"
+                       value="{createName}"/>
+                <input type="hidden" name="invother[salesmanId]" id="salesmanId" value="{createId}"/>
+                <span class="red">[*]</span>
+            </td>
+            <td class="form_text_left_three">
+                部门名称
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="txt" id="departments" name="invother[departments]" readonly="readonly"
+                       value="{deptName}"/>
+                <input type="hidden" name="invother[departmentsId]" id="departmentsId" value="{deptId}"/>
+                <span class="red">[*]</span>
+            </td>
+            <td class="form_text_left_three">
+                总 数 量
+            </td>
+            <td class="form_text_right_three">
+                <input type="text" class="readOnlyTxtNormal formatMoney" name="invother[formNumber]" id="formNumber"
+                       readonly="readonly" value="0"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">归属公司</td>
+            <td class="form_text_right_three" colspan="5">
+                <input type="text" class="txt" name="invother[businessBelongName]" id="businessBelongName"
+                       value="{businessBelongName}" readonly="readonly"/>
+                <span class="red" id="radioSpan">[*]</span>
+                <input type="hidden" name="invother[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                <input type="hidden" name="invother[formBelong]" id="formBelong" value="{formBelong}"/>
+                <input type="hidden" name="invother[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">
+                单位地址
+            </td>
+            <td class="form_text_right_three" colspan="5">
+                <input type="text" class="txtmaxlong" name="invother[address]" id="address"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">备注说明</td>
+            <td class="form_text_right_three" colspan="5">
+                <input type="text" class="txtmaxlong" name="invother[remark]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">附 件</td>
+            <td class="form_text_right" colspan="5">
+                <div class="upload">
+                    <div class="upload" id="fsUploadProgress"></div>
+                    <div class="upload"><span id="swfupload"></span> <input
+                            id="btnCancel" type="button" value="中止上传"
+                            onclick="cancelQueue(uploadfile);" disabled="disabled"/> <br/>
+                    </div>
+                    <div id="uploadfileList" class="upload"></div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="innerTd" colspan="6">
+                <div id="innerTable"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="innerTd" colspan="6">
+                <div id="shareGrid"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">邮件通知
+            </td>
+            <td colspan="5" class="form_text_right">
+                <input type="radio" name="invother[mail][issend]" value="y" checked="checked"
+                       onclick="checkEmailTA(this)"/>是
+                <input type="radio" name="invother[mail][issend]" value="n" onclick="checkEmailTA(this)"/>否
+            </td>
+        </tr>
+        <tr id="maildiv">
+            <td class="form_text_left_three">接 收 人
+            </td>
+            <td colspan="5" class="form_text_right">
+                <input type="text" name="invother[mail][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly"
+                       value="{sendName}"/>
+                <input type="hidden" name="invother[mail][TO_ID]" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="6">
+                <input type="hidden" id="verify" value="{verify}"/>
+                <input type="hidden" id="isShare" name="invother[isShare]" value="{isShare}"/>
+                <input type="submit" class="txt_btn_a" id="auditBtn" value=" 审  核 " onclick="audit('audit')"
+                       style="display: none;"/>
+                <input type="submit" class="txt_btn_a" id="submitBtn" value=" 提  交 " onclick="audit('sub')"/>&nbsp;
+                <input type="submit" class="txt_btn_a" value=" 保  存 " onclick="audit('save')"/>&nbsp;
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

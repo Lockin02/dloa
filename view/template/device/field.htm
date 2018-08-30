@@ -1,0 +1,100 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>设置字段</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<style type="text/css">
+body,td {font-size:12px;}
+td {height:30px;padding-left:5px;}
+#list,#tbl {
+	border: 1px solid #D3E5FA;
+}
+</style>
+</head>
+<body>
+<form method="POST" action="?model=device&action=update_field&id={id}">
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" id="tbl">
+	<tr>
+		<td bgcolor="#D3E5FA" height="30" colspan="2"><b>以下为系统默认已有字段</b></td>
+	</tr>
+	<tr>
+		<td>字段名称：<input type="text" disabled value="机身码" /></td>
+		<td>是否可见：<input type="radio" {_coding_0} name="fixed[_coding]" value="0" />是 <input type="radio" {_coding_1} name="fixed[_coding]" value="1" />否</td>
+	</tr>
+	<tr>
+		<td>字段名称：<input type="text" disabled value="部门编码" /></td>
+		<td>是否可见：<input type="radio" {_dpcoding_0} name="fixed[_dpcoding]" value="0" />是 <input type="radio" {_dpcoding_1} name="fixed[_dpcoding]" value="1" />否</td>
+	</tr>
+	<tr>
+		<td>字段名称：<input type="text" disabled value="配件" /></td>
+		<td>是否可见：<input type="radio" {_fitting_0} name="fixed[_fitting]" value="0" />是 <input type="radio" {_fitting_1} name="fixed[_fitting]" value="1" />否</td>
+	</tr>
+	<tr>
+		<td>字段名称：<input type="text" disabled value="单价" /></td>
+		<td>是否可见：<input type="radio" {_price_0} name="fixed[_price]" value="0" />是 <input type="radio" {_price_1} name="fixed[_price]" value="1" />否</td>
+	</tr>
+	<tr>
+		<td>字段名称：<input type="text" disabled value="备注" /></td>
+		<td>是否可见：<input type="radio" {_notes_0} name="fixed[_notes]" value="0" />是 <input type="radio" {_notes_1} name="fixed[_notes]" value="1" />否</td>
+	</tr>
+</table>
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" id="list">
+	<tr>
+		<td bgcolor="#D3E5FA" height="30"><b>以下为自定义字段</b></td>
+	</tr>
+	{set_field}
+</table>
+<table border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td height="50" style="padding-left:10px;"><input type="button" onclick="add()" value=" 增加字段 " /></td>
+	</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>
+			<input type="submit" value=" 确 定 " />
+			<input type="button" onclick="self.parent.tb_remove();" value=" 取消 " />	
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+var new_id = 0;
+function add()
+{
+	var input_arr = $('#list input:text').get();
+	var sort = 0;
+	if (input_arr.length > 0)
+	{
+		sort = Number(input_arr[input_arr.length-1].value) + 1;
+	}
+	new_id--;
+	var html = '';
+	html +='<tr id="tr_'+new_id+'"><td>';
+	html +='字段名称：<input type="text" id="new_field_'+new_id+'" name="new_field[]" />';
+	html +=' 属性：'+property();
+	html +=' 唯一值：<select name="new_only[]"><option value="0">否</option><option value="1">是</option></select>';
+	html +=' 序号：<input type="text" size="5" onKeyUp="this.value=value=this.value.replace(/\\D/g,\'\')" name="new_sort[]" value="'+sort+'" />'
+	html +=' <input type="button" onclick="del('+new_id+')" value=" 删除 " />';
+	html +='</td></tr>';
+	$('#list').append(html);
+}
+function del(id)
+{
+	$('#tr_'+id).remove();
+}
+function property()
+{
+	var html = '';
+	html +='<select name="new_property[]">';
+	html +='<option value="text">文本</option>';
+	html +='<option value="int">数字</option>';
+	html +='<option value="date">日期</option>';
+	html +='</select>';
+	return html;
+}
+</script>
+</body>
+</html>

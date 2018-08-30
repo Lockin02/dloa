@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>开票申请单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-logistics.js"></script>
+
+	<script type="text/javascript" src="view/template/finance/invoiceapply/js/invoiceapply-reedit.js"></script>
+	<script type="text/javascript" src="view/template/finance/invoiceapply/js/invoiceapply-combo.js"></script>
+</head>
+<body>
+<form id="form1" action="?model=finance_invoiceapply_invoiceapply&action=reAdd" method="post" onsubmit="return checkform();" onkeypress="javascript:return NoSubmit(event);">
+<table class="form_main_table">
+	<tr class="main_head">
+		<th colspan="4">开票申请单</th>
+	</tr>
+	<tr>
+		<td class="form_text_left">发票类型</td>
+		<td class="form_text_right" colspan="3">
+			<select id="invoiceType" name="invoiceapply[invoiceType]" class="select" onchange="changeInvType(this.id);">
+				{invoiceType}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[customerName]" id="customerName" value="{customerName}" class="readOnlyTxtNormal" readonly="readonly"/>
+			<input type="hidden" name="invoiceapply[customerId]" id="customerId" value="{customerId}"/>
+		</td>
+
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+			<input type="text" value="{customerTypeCN}" class="readOnlyTxtNormal" readonly="readonly"/>
+			<input type="hidden" name="invoiceapply[customerType]" value="{customerType}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关联业务类型</td>
+		<td class="form_text_right" width="30%">
+			<input type="text" value="{objTypeCN}" class="readOnlyTxtNormal" readonly="readonly"/>
+		</td>
+		<td class="form_text_left">关联业务编号</td>
+		<td class="form_text_right">
+			<input type="hidden" name="invoiceapply[applyNo]" id="applyNo" value="{applyNo}"/>
+			<input type="hidden" name="invoiceapply[objId]" id="objId" value="{objId}"/>
+			<input type="hidden" name="invoiceapply[objCode]" id="objCode" value="{objCode}"/>
+			<input type="hidden" name="invoiceapply[objType]" id="objType" value="{objType}"/>
+			<input type="hidden" name="invoiceapply[rObjCode]" id="rObjCode" value="{rObjCode}"/>
+			<input type="text" value="{objCode}" class="readOnlyTxtNormal" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">联系人</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[linkMan]" id="linkMan" value="{linkMan}" class="txt"/>
+			<span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">电话</td>
+		<td class="form_text_right"	>
+			<input type="text" name="invoiceapply[linkPhone]" id="linkPhone" value="{linkPhone}" class="txt"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开票单位地址</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoiceapply[unitAddress]" id="unitAddress" value="{unitAddress}" class="txtbiglong"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left" title="发票邮寄地址，不填则默认邮寄地址为开票单位地址">
+			发票邮寄地址
+			<span class="red">!</span>
+		</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoiceapply[linkAddress]" id="linkAddress" value="{linkAddress}" class="txtbiglong"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoiceapply[remark]" value="{remark}" class="txtbiglong"/>
+		</td>
+	</tr>
+	<tr class="phoneNo">
+		<td class="form_text_left" title="不可填写手机号码">
+			开票单位电话
+			<span class="red">!</span>
+		</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoiceapply[phoneNo]" id="phoneNo" class="txt" value="{phoneNo}"/>
+			<span id="phoneNoNeed" class="red"></span>
+		</td>
+	</tr>
+	<tr class="taxpayerNo">
+		<td class="form_text_left">纳税人识别号</td>
+		<td class="form_text_right" colspan="3">
+			<input type="text" name="invoiceapply[taxpayerId]" id="taxpayerId" class="txt" value="{taxpayerId}" />
+			<span id="taxpayerIdNeed" class="red"></span>
+		</td>
+	</tr>
+	<tr class="bankInfo">
+		<td class="form_text_left">开户银行</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[bank]" id="bank" class="txt" value="{bank}"/>
+			<span id="bankNeed" class="red"></span>
+		</td>
+		<td class="form_text_left">银行账号</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[bankCount]" id="bankCount" class="txt" value="{bankCount}"/>
+			<span id="bankCountNeed" class="red"></span>
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">是否需要邮寄
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="invoiceapply[isMail]" id="isMailYes" value="1"/>是
+      		<input type="radio" name="invoiceapply[isMail]" id="isMailNo" value="0"/>否
+      		<input type="hidden" id="isMail" value="{isMail}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="4">
+			<table class="form_in_table">
+				<thead>
+					<tr>
+						<td align="left" colspan="9">
+							详细
+						</td>
+						<td width="5%">
+							<input type="hidden" id="invnumber" name="invnumber" value="{invnumber}"/>
+					 		<img src="images/collapsed.gif" onclick="detailAdd('invbody','invnumber');" title="添加行"/>
+					 	</td>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					<tr class="main_tr_header">
+						<th width="5%">序号</th>
+						<th>货品名称/服务项目</th>
+						<th>数量</th>
+						<th>软件金额</th>
+						<th>硬件金额</th>
+						<th>维修金额</th>
+						<th>服务金额</th>
+						<th>产品/服务类型</th>
+						<th>备注</th>
+						<th width="5%">操作</th>
+					</tr>
+					{detail}
+				</tbody>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申请总数量</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[allAmount]" id="allAmount" value="{allAmount}" class="readOnlyTxtNormal" readonly="readonly"/>
+		</td>
+		<td class="form_text_left">申请总金额</td>
+		<td class="form_text_right">
+			<input type="text" name="invoiceapply[invoiceMoney]" id="invoiceMoney" value="{invoiceMoney}" class="formatMoney readOnlyTxtNormal" readonly="readonly"/>
+			<input type="hidden" name="invoiceapply[contAmount]" value="{contAmount}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">{objTypeCN}金额</td>
+		<td class="form_text_right formatMoney" colspan="3">
+			{contAmount}
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">是否发送邮件
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="invoiceapply[issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="invoiceapply[issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr>
+   		<td class="form_text_left">邮件发送人
+       	</td>
+       	<td colspan="3" id="maildiv" class="form_text_right">
+		    <input type="text" name="invoiceapply[TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly"/>
+    		<input type="hidden" name="invoiceapply[TO_ID]" id="TO_ID" readonly="readonly"/>
+	    </td>
+   	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="hidden" name="invoiceapply[oldId]" value="{id}"/>
+			<input type="submit" class="txt_btn_a" onclick="audit()" value="提交审批" />
+			<input type="submit" class="txt_btn_a" value=" 保 存 " />
+			<input type="button" class="txt_btn_a" onclick="closeFun();" value=" 返 回 " />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+
+

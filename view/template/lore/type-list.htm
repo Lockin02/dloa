@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css" />
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>筛选：
+			<select id="level" onChange="location.href='?model={t_model}&action={t_action}&level='+this.value">
+				<option value="">全部标签</option>
+				<option value="1">标签一</option>
+				<option value="2">标签二</option>
+				<option value="3">标签三</option>
+			</select>
+		</td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="4">标签类型类表</td>
+		<td width="120"><input type="button" alt="?model={t_model}&action=add&placeValuesBefore&TB_iframe=true&modal=false&width=500&height=400" class="thickbox" title="添加新标签" value=" 添加新标签 " /></td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>级别</td>
+		<td>标签名称</td>
+		<td>管理员</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		set_selected('level');
+	});
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	
+	function del(id,key)
+	{
+		if (confirm('您确定要删除该标签吗？'))
+		{
+			$.post('ajax.php',{model:'{t_model}',action:'del',id:id,key:key,rand:Math.random(0,999)},
+				function(data)
+				{
+					alert(data);
+					if (data==1)
+					{
+						$('#tr_'+id).remove();
+					}else if (data==-1)
+					{
+						alert('抱歉，该标签还存在文章，暂时不能删除！');
+					}else if (data==-2)
+					{
+						alert('非法参数！');
+					}
+				}
+			);
+			
+			
+		}else
+		{
+			return false;
+		}
+		
+	}
+</script>
+</body>
+</html>

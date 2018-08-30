@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>合同管理平台权限控制</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/contractTool-limitContract.js"></script>
+	<style>
+		th {
+				align: center;
+				padding: 0;
+				align : middle;
+				font-size : 14px;
+			}
+	 .left	{
+				background-color:#EFF7FF;
+				width:20%;
+				min-width:100px;
+				text-align:middle;
+				line-height:16px;
+				padding:1px 0px 0px 0px;
+				margin:5px 0px;
+			}
+	.right	{
+				text-align: middle;
+				line-height:16px;
+				padding:1px 0px 0px 0px;
+				margin:5px 0px;
+			}
+	</style>
+	<script>
+		$(function(){
+			$("#userName").yxselect_user({
+				hiddenId : 'userCode',
+				mode : check,
+				event : {
+					"select" : function(obj, row) {
+						authorizeList();
+					}
+				}
+			});
+		})
+		/**
+		 * 动态配置合同权限配置列表
+		 */
+		function authorizeList() {
+			var userCode = $("#userCode").val();
+			var userName = $("#userName").val();
+			$.ajax({
+				type : 'POST',
+				url : '?model=contractTool_contractTool_contractTool&action=toSetauthorizeInfo',
+				data : {
+					userCode : userCode,
+					userName : userName
+				},
+				async : false,
+				success : function(data) {
+					$("#authorize").html(data);
+				}
+			});
+		}
+		function check(){
+			if($('#userName').val()==''){
+				alert('请指定用户名！');
+				return false;
+			}
+		}
+	</script>
+</head>
+<body>
+	<!-- <form id='form1' method='post' name="form1" action='?model=contractTool_contractTool_contractTool&action=limitContract' onsubmit="return check();">
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">用户名</td>
+				<td  class="form_text_right" colspan="3">
+					<input type="text" class='txt' name='contractTool[userName]' id='userName' readonly/>
+					<input type="hidden" class='txt' name='contractTool[userCode]' id='userCode' />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left" >权限设置</td>
+				<td class="form_text_right" id="authorize"></td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+				   <input type="submit" class="txt_btn_a" value=" 保  存 " />&nbsp;
+				</td>
+			</tr>
+		</table>
+	</form>
+	<table class="form_main_table">
+		{html}
+	</table> -->
+	<div id="contractToolGrid"></div>
+</body>
+</html>

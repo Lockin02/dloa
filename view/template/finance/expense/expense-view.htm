@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看报销单</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script type="text/javascript" src="js/jquery/jquery.scrolltotop.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/expense-view.js" ></script>
+	<script type="text/javascript" src="view/template/finance/expense/js/costtype-expense.js" ></script>
+</head>
+<body>
+
+<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+	<tr>
+		<td>
+			<div class="main_head2">
+				<span class="main_head_title">查看报销单</span>
+				<span style="float:right;margin:2px 8px 0px 0px;" title="单据录入时间">{InputDate}</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+				<legend class="legend">基 本 信 息 - {BillNo}
+					<img src="images/icon/info_up.gif" id="costBelongImg" onclick="showAndHideDiv('costBelongImg','costbelong');"/>
+				</legend>
+				<div id="costbelong"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset><legend class="legend">费 用 信 息
+				<img src="images/icon/info_up.gif" id="expenseImg" onclick="showAndHide('expenseImg','expenseTbl')"/>
+			</legend>
+			<table class="form_in_table" id="expenseTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="14%">费用大类</th>
+						<th width="14%">费用小类</th>
+						<th width="10%">费用金额</th>
+						<th width="12%">发票类型</th>
+						<th width="10%">发票金额</th>
+						<th width="10%">发票数量</th>
+						<th>特别申请</th>
+						<th>费用说明</th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					{expensedetail}
+				</tbody>
+				<tr class="tr_count">
+					<td>合计</td>
+					<td></td>
+					<td title="当前报销单的常规报销费用为：{feeRegular},补贴费用为：{feeSubsidy}"><span class="formatMoney">{countMoney}</span></td>
+					<td></td>
+					<td><span class="formatMoney">{invoiceMoney}</span></td>
+					<td>{invoiceNumber}</td>
+					<td align="left" colspan="2">
+						常规费用 : <span id="feeRegularView" class="formatMoney">{feeRegular}</span>,
+						补贴费用 : <span id="feeSubsidyView" class="formatMoney">{feeSubsidy}</span>
+					</td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="6">
+			<table class="form_in_table">
+				<tr>
+					<td class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{ID}"/>
+						<input type="hidden" id="itemType" value="cost_summary_list"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<input type="hidden" id="id" value="{ID}" />
+			<div id="fileInfo" style="display:none;">{file}</div>
+			<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="window.close();"/>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

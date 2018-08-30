@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新增其他合同</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stampconfig.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.masonry.min.js"></script>
+
+    <script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>-->
+    <!--<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>-->
+
+    <script type="text/javascript" src="view/template/finance/cost/js/costshare-init.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/other-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/other-addpay.js"></script>
+
+    <!-- 附件上传开始 -->
+    <link rel="stylesheet" type="text/css" href="js/jquery/Huploadify/Huploadify.css"/>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.js"></script>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.handlers.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            // 主表附件上传
+            createUpload($('#upload'), {
+                'serviceType' : 'oa_sale_other'
+            });
+            // 付款申请附件上传
+            createUpload($('#upload2'), {
+                'serviceType' : 'oa_sale_otherpayapply'
+            }, {
+                'fileListId' : 'uploadFileList2'
+            });
+        });
+    </script>
+    <!-- 附件上传结束 -->
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	新增其他合同
+                &nbsp;&nbsp;&nbsp;&nbsp;<img src= "images/icon/view.gif"><a href="#" title="帮助说明" taget="_blank" id="" onclick="window.open('{docUrl}');">帮助说明</a>
+
+    </span>
+</div>
+<form id="form1" method="post" action="?model=contract_other_other&action=add" onsubmit="return checkForm();">
+<table class="form_main_table" style="width:1100px;margin:auto;text-align:center" align="center">
+<tr>
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend">基 本 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three">款项性质</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <select class="select" name="other[fundType]" id="fundType"
+                                onchange="changeFundType(this.value)" disabled="disabled">
+                            <option value="">请选择</option>
+                            {fundType}
+                        </select>
+                        <input type="hidden" name="other[fundType]" value="{fundTypeHidden}"/>
+                        <span id="fundTypeDesc" style="color:blue"></span>
+                        <span style="color:red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">鼎利合同号</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="other[orderCode]"
+                               id="orderCode"/>
+                        <span id="orderCodeNeed" class="red"></span>
+                    </td>
+                    <td class="form_text_left_three">合同名称</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[orderName]" id="orderName"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">合同负责人</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[principalName]" id="principalName"
+                               value="{principalName}" readonly="readonly"/>
+                        <input type="hidden" name="other[principalId]" id="principalId" value="{principalId}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">签约公司</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[signCompanyName]" id="signCompanyName"/>
+                        <input type="hidden" id="signCompanyId"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">公司省份</td>
+                    <td class="form_text_right_three">
+                        <select id="proCode" name="other[proCode]" onchange="setProName()" class="select">
+                            <option value="">请选择省份</option>
+                        </select>
+                        <input type="hidden" name="other[proName]" id="proName"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">负责人部门</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" name="other[deptName]" id="deptName"
+                               value="{deptName}" readonly="readonly"/>
+                        <input type="hidden" name="other[deptId]" id="deptId" value="{deptId}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">合同金额</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal formatMoney" name="other[orderMoney]" id="orderMoney"
+                               value="{orderMoney}" readonly="readonly"/>
+                        <span id="orderMoneyNeed" class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">合同税率(%)</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[taxPoint]" id="taxPoint"/>
+                        <span id="taxPointNeed" class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">合同金额(不含税)</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt formatMoney" name="other[moneyNoTax]" id="moneyNoTax"/>
+                        <span id="moneyNoTaxNeed" class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three"><label for="invoiceType">合同发票类型</label></td>
+                    <td class="form_text_right_three">
+                        <select class="txt" name="other[invoiceType]" id="invoiceType">
+                            {invoiceType}
+                        </select>
+                        <span id="invoiceTypeNeed" class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">需要盖章</td>
+                    <td class="form_text_right_three">
+                        <input type="radio" name="other[isNeedStamp]" value="1" id="isNeedStampYes"
+                               onclick="changeRadio()"/>是
+                        <input type="radio" name="other[isNeedStamp]" value="0" checked="checked" id="isNeedStampNo"
+                               onclick="changeRadio()"/>否
+                    </td>
+                    <td class="form_text_left_three">盖章类型</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" name="other[stampType]" id="stampType"
+                               readonly="readonly"/>
+                        <span class="red" style="display:none" id="radioSpan">[*]</span>
+                    </td>
+                </tr>
+                <tr id="projectInfo" style="display:none">
+                    <td class="form_text_left_three"><label for="otherFeeDeptName">费用归属部门</label></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[feeDeptName]" id="otherFeeDeptName"
+                               value="{deptName}" readonly="readonly"/>
+                        <input type="hidden" name="other[feeDeptId]" id="otherFeeDeptId" value="{deptId}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three"><label for="projectType">项目类型</label></td>
+                    <td class="form_text_right_three">
+                        <select class="select" id="projectType" disabled="disabled">
+                            {projectType}
+                        </select>
+                        <input type="hidden" name="other[projectType]" value="{projectTypeHidden}"/>
+                    </td>
+                    <td class="form_text_left_three"><label for="projectName">项目名称</label></td>
+                    <td class="form_text_right_three">
+                        <input type="hidden" name="other[projectCode]" id="projectCode" value="{projectCode}"/>
+                        <input type="hidden" name="other[projectId]" id="projectId" value="{projectId}"/>
+                        <input type="text" class="txt" name="other[projectName]" id="projectName" value="{projectName}"/>
+                        <span id="projectNeed" class="red" style="display:none">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three"><label for="linkman">联 系 人</label></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[linkman]" id="linkman"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three"><label for="phone">联系电话</label></td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[phone]" id="phone"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">签约日期</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[signDate]" id="signDate" onfocus="WdatePicker()"
+                               value="{thisDate}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">合同归属公司</td>
+                    <td class="form_text_right_three" colspan="3">
+                        <input type="text" class="txt" readonly="readonly" name="other[businessBelongName]"
+                               id="businessBelongName" value="{businessBelongName}"/>
+                        <span class="red">[*]</span>
+                        <input type="hidden" name="other[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                        <input type="hidden" name="other[formBelong]" id="formBelong" value="{formBelong}"/>
+                        <input type="hidden" name="other[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+                    </td>
+                    <td class="form_text_left_three payForBusinessMainTd" style="display: none">付款业务类型</td>
+                    <td class="form_text_right_three payForBusinessMainTd" style="display: none">
+                        <input type="hidden" name="other[payForBusinessName]" id="payForBusinessName" value="{payForBusinessName}"/>
+                        <input type="hidden" name="other[payForBusiness]" value="{payForBusiness}"/>
+                        <select id="payForBusinessMain" class="txt" disabled="disabled">
+                            <option value="{payForBusiness}" selected>无</option>
+                        </select>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">联系地址</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="other[address]" id="address"
+                                  style="width:920px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three"><span id="fundConditionShow">款项</span>条件</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="other[fundCondition]" id="fundCondition"
+                                  style="width:920px;"></textarea>
+                        <span class="red" id="myspan">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">合同内容</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <textarea class="txt_txtarea_biglong" name="other[description]" id="description"
+                                  style="width:920px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <div id="upload"></div>
+                        <div id="uploadFileList" class="upload"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left_three">申 请 人</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{principalName}"/>
+                    </td>
+                    <td class="form_text_left_three">录入日期</td>
+                    <td class="form_text_right_three" colspan="3">
+                        <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{thisDate}"/>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+
+    <tr>
+        <td colspan="6"></td>
+    </tr>
+
+    <tr id="shareGridTr" style="display:none;">
+        <td colspan="6">
+            <div id="st" style="width:1180px;height:250px">
+                <div title="费用分摊明细" style="padding:5px">
+                    <div id="shareGrid"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+<tr id="forPay" style="display:none">
+    <td class="innerTd" colspan="6">
+        <fieldset>
+            <legend class="legend">付 款 信 息</legend>
+            <table class="form_in_table">
+                <tr>
+                    <td class="form_text_left_three">申请付款</td>
+                    <td class="form_text_right" colspan="5">
+                        <input type="checkbox" id="isNeedPayapply" name="other[isNeedPayapply]" value="1"
+                               onclick="showPayapplyInfo(this)"/>&nbsp;
+                        <span style="color:blue">选中后合同会进入合同付款审批流程，审批完成后会自动生成相应付款申请单。</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">申请金额</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt formatMoney" name="other[payapply][applyMoney]" id="applyMoney"
+                               onblur="checkApplyMoney()"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">期望付款日期</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[payapply][formDate]" title="本合同如在“期望付款日期”当天12:00完成审批，则系统当天将付款申请提交至出纳；超过12:00，将于次日提交至出纳。" id="formDate"
+                               onfocus="WdatePicker()"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">费用归属部门</td>
+                    <td class="form_text_right_three">
+                        <input type="hidden" name="other[payapply][feeDeptId]" id="feeDeptId" value="{deptId}"/>
+                        <input type="text" class="txt" name="other[payapply][feeDeptName]" id="feeDeptName"
+                               value="{deptName}" readonly/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">收款银行</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[payapply][bank]" id="bank"/>
+                        <span id="bankNeed" class="red" style="display:none">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">收款账号</td>
+                    <td class="form_text_right_three">
+                        <input type="text" class="txt" name="other[payapply][account]" id="account"/>
+                        <span id="accountNeed" class="red" style="display:none">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款类型</td>
+                    <td class="form_text_right_three">
+                        <select id="payFor" name="other[payapply][payFor]" class="txt">
+                            {payFor}
+                        </select>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">结算方式</td>
+                    <td class="form_text_right_three">
+                        <select id="payType" name="other[payapply][payType]" class="txt" onchange="changePayTypeFun();">
+                            {payType}
+                        </select>
+                    </td>
+                    <td class="form_text_left_three">款项用途</td>
+                    <td class="form_text_right_three">
+                        <input id="remark" type="text" name="other[payapply][remark]" class="txt"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款币种</td>
+                    <td class="form_text_right_three">
+                        <input id="currency" type="text" name="other[payapply][currency]" class="txt" value="人民币"
+                               readonly="readonly"/>
+                        <input id="currencyCode" type="hidden" name="other[payapply][currencyCode]" value="CNY"/>
+                        <input id="rate" type="hidden" name="other[payapply][rate]" value="1"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">是否已付款</td>
+                    <td class="form_text_right_three">
+                        <input type="radio" name="other[payapply][isEntrust]" value="1" id="isEntrustYes"
+                               onchange="entrustFun(this.value);"/>是
+                        <input type="radio" name="other[payapply][isEntrust]" value="0" id="isEntrustNo"
+                               onchange="entrustFun(this.value);" checked="checked"/>否
+                    </td>
+                    <td class="form_text_left_three">汇入地点(省市)</td>
+                    <td class="form_text_right_three">
+                        <input id="place" type="text" name="other[payapply][place]" class="txt"/>
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">收款单位</td>
+                    <td class="form_text_right_three">
+                        <input id="payee" type="text" name="other[payapply][payee]" class="txt"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">是否开具发票</td>
+                    <td class="form_text_right_three">
+                        <input type="radio" name="other[payapply][isInvoice]" value="1" id="isInvoiceYes"/>是
+                        <input type="radio" name="other[payapply][isInvoice]" value="0" id="isInvoiceNo"/>否
+                        <span class="red">[*]</span>
+                    </td>
+                    <td class="form_text_left_three">付款业务类型
+                    </td>
+                    <td class="form_text_right_three" colspan="3">
+                        <input id="payForBusinessShow" type="text" value="无" class="readOnlyTxtNormal" readonly/>
+                        <input id="payForBusiness" type="hidden" name="other[payapply][payForBusiness]" value="{payForBusiness}" class="txt"/>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+                    <td class="form_text_right_three" colspan="5">
+                        <div id="upload2"></div>
+                        <div id="uploadFileList2" class="upload"></div>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">款项说明</td>
+                    <td colspan="5" class="form_text_right">
+                        <textarea class="txt_txtarea_biglong" name="other[payapply][payDesc]" id="payDesc"
+                                  style="width:920px;"></textarea>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three">备注</td>
+                    <td colspan="5" class="form_text_right">
+                        <textarea class="txt_txtarea_biglong" name="other[payapply][comments]" id="comments"
+                                  style="width:920px;"></textarea>
+                    </td>
+                </tr>
+                <tr class="payapplyInfo" style="display:none">
+                    <td class="form_text_left_three"><span class="red">注意事项</span></td>
+                    <td colspan="5" class="form_text_right">
+                        <span class="red">
+                            1. 如本合同在“期望付款日期”当天12:00完成审批，则系统当天将付款申请提交至出纳；如超过12:00，将于次日提交至出纳。
+                            <br/>
+                            2. 如需早于“期望付款日期”发起付款，可打开具体的其他类合同，在付款申请页，找到对应的付款申请，并通过右键发起付款。
+                            <br/>
+                            3. 财务已付款，申请人补录付款申请，无需财务再次付款时，需选择“是”。
+                            <br/>
+                            4. 付款已经由银行代扣，申请人补录付款申请时，需选择“是”。
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td class="txt_btn" colspan="6">
+        <input type="hidden" id="isSysCode" value="{isSysCode}"/>
+        <input type='hidden' id='userId' value='{userId}'/>
+        <input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+        <input type="hidden" id="payDetailMoneyHidden" readonly="readonly" value="0"/>
+        <input type="submit" class="txt_btn_a" onclick="audit('audit')" value="提交审批"/>
+        <input type="submit" class="txt_btn_a" onclick="audit()" value="保  存"/>
+        <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+    </td>
+</tr>
+</table>
+</form>
+</body>
+</html>

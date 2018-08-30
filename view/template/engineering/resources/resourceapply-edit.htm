@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑项目设备申请表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmdevice.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/resourceapply-common.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/resourceapply-edit.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_resources_resourceapply&action=edit" onsubmit="return confirmCheck();">
+<table class="form_main_table" style="width:1050px;margin:auto;align:center" align="center">
+	<tr>
+		<td colspan="4">
+			<div class="main_head">
+				<span class="main_head_title">编辑项目设备申请表信息&nbsp;&nbsp;
+					<font color='red'>友情提示：个人名下在借的设备数量为{borrowDeviceNum}</font>
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<fieldset>
+				<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+					<img src="images/icon/info_up.gif" id="baseImg"/>
+				</legend>
+				<table width="100%" id="contractinfo" class="form_in_table">
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申 请 人</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="applyUser" name="resourceapply[applyUser]" value="{applyUser}" readonly="readonly"/>
+							<input type="hidden" id="applyUserId" name="resourceapply[applyUserId]" value="{applyUserId}"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">申请人部门</span>
+						</td>
+      					<td class="form_text_right_three">
+      			 			<input type="text" class="readOnlyTxtNormal" id="deptName" name="resourceapply[deptName]" value="{deptName}" readonly="readonly"/>
+                            <input type="hidden" id="deptId" name="resourceapply[deptId]" value="{deptId}"/>
+      					</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申请日期</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="applyDate" name="resourceapply[applyDate]" value="{applyDate}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">申请类型</span>
+						</td>
+						<td class="form_text_right">
+							<select class="select" id="applyType" name="resourceapply[applyType]">
+								{applyType}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							<span id="projectCodeShow" class="blue">项目编号</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="projectCode" name="resourceapply[projectCode]" value="{projectCode}" readonly="readonly"/>
+							<input type="hidden" id="projectId" name="resourceapply[projectId]" value="{projectId}"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">领用方式</span>
+						</td>
+						<td class="form_text_right">
+							<select class="select" id="getType" name="resourceapply[getType]">
+								{getType}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">项目名称</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="projectName" name="resourceapply[projectName]" value="{projectName}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">项目经理</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="managerName" name="resourceapply[managerName]" value="{managerName}" readonly="readonly"/>
+							<input type="hidden" id="managerId" name="resourceapply[managerId]" value="{managerId}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							<span id="placeShow" class="blue">设备使用地</span>
+						</td>
+						<td class="form_text_right">
+							<select class="select"  id="placeId" name="resourceapply[placeId]" onchange="setPlace();"></select>
+							<input type="hidden" name="resourceapply[place]" id="place" value="{place}"/>
+							<input type="hidden" id="placeIdHidden" value="{placeId}"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">联系电话</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="mobile" name="resourceapply[mobile]" value="{mobile}" placeholder="请填写有效的号码" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申请原因</span>
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_900" style="width:711px;" id="reason" name="resourceapply[reason]">{reason}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">备注信息</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_900" style="width:711px;" name="resourceapply[remark]">{remark}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">邮寄地址</span>
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_900" style="width:711px;" id="address" name="resourceapply[address]">{address}</textarea>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" >
+			<fieldset style="width:200">
+				<legend class="legend" onclick="showAndHideDiv('importTableImg','importTable')">设备信息
+					<img src="images/icon/info_up.gif" id="importTableImg" />
+				</legend>
+			    <div id="importTable"></div>
+			</fieldset>
+		</td>
+	</tr>
+</table>
+<table class="form_main_table" style="width:1050px;margin:auto;align:center" align="center">
+	<tr>
+   		<td class="form_text_left" >是否发送邮件</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="resourceapply[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="resourceapply[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+      		<span class='red' style="font-weight: bold;">&nbsp;&nbsp;提示：设备申请确认王东生(工程)，梅艳玫(研发设备)，祝威美子(研发SIM卡)</span>
+		</td>
+	</tr>
+   <tr id="maildiv">
+   		<td class="form_text_left" >邮件接收人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" name="resourceapply[email][TO_NAME]" id="TO_NAME" class="txtlong" readonly="readonly"/>
+    		<input type="hidden" name="resourceapply[email][TO_ID]" id="TO_ID" readonly="readonly" />
+	    </td>
+   	</tr>	
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" id="id" name="resourceapply[id]" value="{id}" />
+			<input type="hidden" id="audit" name="resourceapply[audit]" value="1" />
+			<input type="hidden" id="confirmStatus" name="resourceapply[confirmStatus]" value="{confirmStatus}" />
+			<!--input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="setAudit(1);"/>&nbsp;-->
+			<input type="submit" class="txt_btn_a" value=" 提交确认 " onclick="setConfirm(1);"/>&nbsp;
+			<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="setAudit(0);setConfirm(0);"/>&nbsp;
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

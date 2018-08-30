@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/present/js/present-change.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/present/js/present-change-list.js"></script>
+    <script>
+	    $(function () {
+			//判断是否有临时保存的记录，有则提示用户是否加载
+			if($("#tempId").val() != '' && $("#presentId").val() == $("#oldId").val()){
+				if(confirm("检测到您上次有保存过临时变更记录，是否加载？")){
+					var url = window.location.href;
+					var index = url.indexOf('&',url.indexOf('&')+1);
+					if(index != -1){
+					    url = url.substr(0,index);
+					}
+					window.location.replace(url + '&id=' + $("#presentId").val() + '&tempId=' + $("#tempId").val());
+				}
+			}
+	    });
+	    function sub(){
+	        if($("#customerName").val() == ''){
+	           alert("客户名称不能为空！");
+	           return false;
+	        }
+	        if($("#areaName").val() == ''){
+	            alert("归属区域不能为空！");
+	            return false;
+	        }
+	        if($("#feeMan").val() == ''){
+	            alert("费用承担人不能为空！");
+	            return false;
+	        }
+			if($("#customTypeName").val() == ''){
+				alert("客户类型不能为空！");
+				return false;
+			}
+			if($("#province").val() == ''){
+				alert("省份不能为空！");
+				return false;
+			}
+			if($("#moduleName").val() == ''){
+				alert("归属板块不能为空！");
+				return false;
+			}
+			if($("#businessBelongName").val() == ''){
+				alert("归属公司不能为空！");
+				return false;
+			}
+	        if($("#productInfo").productInfoGrid('getCurShowRowNum') == '0'){
+	          alert("产品清单不能为空！");
+	          return false;
+	        }
+	        return true;
+	    }
+      	//保存
+        function changeSave(){
+        	$("#isSub").val(0);
+        }
+      	
+      	//提交
+        function changeSub(){
+        	$("#isSub").val(1);
+        }
+    </script>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_present_present&action=change" id="form1" method="POST" onsubmit="return sub();">
+
+	 <table class="form_main_table">
+           <div class="main_head"><span class="main_head_title">赠送申请变更</span></div>
+	   <tr>
+			<td  class="form_text_left">编号</td>
+			<td class="form_view_right" colspan="3">
+				 {Code}
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+			     <div id="SingleType">{SingleType}</div>
+			</td>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right" id="single">
+                 <div id="singleCode">{orderCode}</div>
+			</td>
+	    </tr>
+		<tr>
+		    <td  class="form_text_left"><span style="color:blue">客户名称</span></td>
+			<td class="form_view_right">
+				<input class="txt" type="text" name="present[customerName]" id="customerName" value="{customerName}"/>
+				<input type="hidden" name="present[customerNameId]" id="customerNameId" value="{customerNameId}"/>
+			</td>
+			<td class="form_text_left">交货日期</td>
+			<td class="form_view_right">
+			    <input type="text" class="txt" name="present[deliveryDate]" id="deliveryDate" value="{deliveryDate}" onfocus="WdatePicker()" />
+			</td>
+		</tr>
+		<tr>
+		    <td class="form_text_left_con"><span style="color:blue">归属区域:</span></td>
+				<td class="form_text_right_con">
+				   <input type="text" class="txt" name="present[areaName]" id="areaName" value="{areaName}"/>
+				   <input type="hidden" name="present[areaCode]" id="areaCode" value="{areaCode}"/>
+			</td>
+			<td class="form_text_left_con">区域负责人:</td>
+				<td class="form_text_right_con">
+				    <input type="text" class="readOnlyTxtNormal" readonly name="present[areaPrincipal]" id="areaPrincipal" value="{areaPrincipal}"/>
+				    <input type="hidden" class="txt" name="present[areaPrincipalId]" id="areaPrincipalId" value="{areaPrincipalId}"/>
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">申请人</td>
+			<td class="form_view_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[salesName]" id="salesName" value="{salesName}"/>
+				<input type="hidden" name="present[salesNameId]" id="salesNameId" value="{salesNameId}"/>
+			</td>
+			<td  class="form_text_left">申请日期</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[createTime]" value="{createTime}" />
+			</td>
+		</tr>
+		 <tr>
+			 <td class="form_text_left">客户类型</td>
+			 <td class="form_view_right">
+				 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[customTypeName]" id="customTypeName" value="{customTypeName}"/>
+				 <input type="hidden" name="present[customTypeId]" id="customTypeId" value="{customTypeId}"/>
+			 </td>
+			 <td class="form_text_left">省份</td>
+			 <td class="form_text_right">
+				 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[province]" id="province" value="{province}" />
+				 <input type="hidden" class="readOnlyTxtNormal" readonly="readonly" name="present[provinceId]" id="provinceId" value="{provinceId}" />
+			 </td>
+		 </tr>
+		 <tr>
+			 <td class="form_text_left">归属板块</td>
+			 <td class="form_view_right">
+				 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[moduleName]" id="moduleName" value="{moduleName}"/>
+				 <input type="hidden" name="present[module]" id="module" value="{module}"/>
+			 </td>
+			 <td class="form_text_left">归属公司</td>
+			 <td class="form_text_right">
+				 <select class="txt" id="businessBelongNameOpt" style="display:none"></select>
+				 <input type="text" class="readOnlyTxtNormal" data-editNum="0" readonly="readonly" id="businessBelongNameRead" value="{businessBelongName}"/>
+				 <input type="hidden" name="present[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+				 <input type="hidden" name="present[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+			 </td>
+		 </tr>
+		<tr>
+			<td class="form_text_left"><span style="color:blue">费用承担人</span></td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txt" readonly="readonly" name="present[feeMan]" id="feeMan" value="{feeMan}" />
+				<input type="hidden" name="present[feeManId]" id="feeManId" value="{feeManId}" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请理由</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="present[reason]" id="reason"  class="txt_txtarea_font600" cols="136">{reason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="present[remark]" id="remark"  class="txt_txtarea_font600" cols="136">{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				变更原因
+			</td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="txt_txtarea_font600" id="changereason" name="present[changeReason]" >{changeReason}</textarea>
+			</td>
+		</tr>
+		<tr id="productH" style="display:none;text-align:left;">
+			<td><b onclick="hideList('product');">产品清单</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('product');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="product">
+			<td colspan="6">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('product');">产品清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('product');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+		<tr style="display:none;text-align:left;">
+		<td><b onclick="hideList('equ');">发货物料清单</b>
+		  <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="equ" style="display:none">
+			<td colspan="6">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('equ');">发货物料清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('equ');" title="隐藏" alt="新增选项" /></legend>
+				<div id="equInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+
+<tr>
+<td colspan="4">
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		    <input type="hidden" name="present[oldId]" value="{id}" id="oldId"/>
+		    <input type="hidden" id="presentId" name="present[presentId]" value="{presentId}"/>
+			<input type="hidden" id="isSub" name="present[isSub]">
+            <input type="hidden" id="tempId" name="present[tempId]" value="{tempId}">
+            <input type="submit" class="txt_btn_a" value=" 保  存 " onclick="changeSave();"/>
+		    <input type="submit" class="txt_btn_a" value=" 变  更 " onclick="changeSub();"/>
+		    <input type="button" class="txt_btn_a" value=" 返  回 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>

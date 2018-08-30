@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action={t_action}&id={t_id}&key={t_key}" onsubmit="return check()">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">审核操作</td>
+	</tr>
+	<tr>
+		<td><input type="radio" checked name="status" onclick="set_show_reason(this.value);" value="1" />通过审核</td>
+		<td><input type="radio" name="status" onclick="set_show_reason(this.value);" value="-1" />打回该申请</td>
+	</tr>
+	<tr id="notse" style="display:none">
+		<td colspan="2"><textarea style="width:100%" cols="20" rows="5" id="reason" name="reason"></textarea></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 确定 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	function check()
+	{
+		var inputs = $('input[name=status]:checked').val();
+		if(inputs!=1)
+		{
+			if ($('#reason').val()=='')
+			{
+				alert('请填写打回理由！');
+				$('#reason').focus();
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	function set_show_reason(val)
+	{
+		if (val==1)
+		{
+			$('#notse').css('display','none');
+		}else{
+			$('#notse').css('display','');
+		}
+	}
+</script>
+</body>
+</html>

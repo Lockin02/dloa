@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查询条件</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/personnel-proCity.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/personnel-search.js"></script>
+</head>
+<body>
+	<div class="main_head">
+		<span class="main_head_title">
+			选择查询条件
+		</span>
+	</div>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="1">
+				<fieldset><legend><b>基本信息</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left">员工编号</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="userNoSearch"/>
+							</td>
+							<td class="form_text_left">姓名</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="userNameSearch"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">籍贯(省)</td>
+							<td class="form_text_right">
+								<select class="select toClear" id="province"></select>
+								<input type="hidden" id="provinceName"/>
+							</td>
+							<td class="form_text_left">籍贯(市)</td>
+							<td class="form_text_right">
+								<select class="select toClear" id="city"></select>
+								<input type="hidden" id="cityName"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">公司</td>
+							<td class="form_text_right">
+								<select   class="select " id="companyName">
+									<option value=""></option>
+									{companyOpt}
+								</select>
+								<input type="hidden" class="txt toClear" id="companyNameSearch"/>
+							</td>
+							<td class="form_text_left">最高学历</td>
+							<td class="form_text_right">
+								<select id="highEducation" class="select toClear">
+									<option value="">全部</option>
+									{highEducation}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">毕业学校</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="highSchool"/>
+							</td>
+							<td class="form_text_left">职能</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="functionName"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">直属部门</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="deptNameSearch" readonly="readonly"/>
+								<input type="hidden" id="deptId"/>
+							</td>
+							<td class="form_text_left">二级部门</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="deptNameSSearch" readonly="readonly"/>
+								<input type="hidden" id="deptIdS"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">三级部门</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="deptNameTSearch" readonly="readonly"/>
+								<input type="hidden" id="deptIdT"/>
+							</td>
+                            <td class="form_text_left">四级部门</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt toClear" id="deptNameFSearch" readonly="readonly"/>
+                                <input type="hidden" id="deptIdF"/>
+                            </td>
+						</tr>
+						<tr>
+							<td class="form_text_left">职位</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="jobNameSearch"/>
+								<input type="hidden" class="hidden toClear" id="jobId"/>
+							</td>
+							<td class="form_text_left">区域</td>
+							<td class="form_text_right">
+								<select id="regionId" class="select toClear">
+									<option></option>
+									{area_select}
+								</select>
+								<input type="hidden" class="txt toClear" id="regionNameSearch"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">员工状态</td>
+							<td class="form_text_right">
+								<select id="employeesStateNameSearch" class="select toClear">
+									<option value="">全部</option>
+									{employeesStateName}
+								</select>
+							</td>
+							<td class="form_text_left">员工类型</td>
+							<td class="form_text_right">
+								<select id="personnelTypeNameSearch" class="select toClear">
+									<option value="">全部</option>
+									{personnelTypeName}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">岗位分类</td>
+							<td class="form_text_right">
+								<select id="positionNameSearch" class="select toClear">
+									<option value="">全部</option>
+									{positionName}
+								</select>
+							</td>
+							<td class="form_text_left">人员分类</td>
+							<td class="form_text_right">
+								<select id="personnelClassNameSearch" class="select toClear">
+									<option value="">全部</option>
+									{personnelClassName}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">入职开始时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="entryDateBegin" onfocus="WdatePicker()" readonly/>
+							</td>
+							<td class="form_text_left">入职结束时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="entryDateEnd" onfocus="WdatePicker()" readonly/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">转正开始时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="becomeDateBegin" onfocus="WdatePicker()" readonly/>
+							</td>
+							<td class="form_text_left">转正结束时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="becomeDateEnd" onfocus="WdatePicker()" readonly/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">建档开始时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="createDateBegin" onfocus="WdatePicker()" readonly/>
+							</td>
+							<td class="form_text_left">建档结束时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="createDateEnd" onfocus="WdatePicker()" readonly/>
+							</td>
+						</tr>
+                        <tr>
+                            <td class="form_text_left">性别</td>
+                            <td class="form_text_right">
+                                <select   class="select " id="sex">
+                                    <option value=""></option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </td>
+                        </tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="1">
+				<fieldset><legend><b>教育经历</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left">学校</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="school"/>
+							</td>
+							<td class="form_text_left">专业</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="content"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="1">
+				<fieldset><legend><b>工作经历</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left">公司</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="company"/>
+							</td>
+							<td class="form_text_left">职位</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="workjob"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">工作职责</td>
+							<td class="form_text_right" colspan="3">
+								<input type="text" class="txt toClear" id="responsibilities"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="1">
+				<fieldset><legend><b>资格证书</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left">证书名称</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="certificates"/>
+							</td>
+							<td class="form_text_left">发证机构</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="certifying"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">发证时间</td>
+							<td class="form_text_right" colspan="3">
+								<input type="text" class="txt toClear" id="certifyingDate"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="1">
+				<fieldset><legend><b>项目经历</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left">项目名称</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="searchProjectName"/>
+							</td>
+							<td class="form_text_left">在项目中的主要工作内容</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="projectContent"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left">参加项目开始时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="beginDate" onfocus="WdatePicker()" readonly/>
+							</td>
+							<td class="form_text_left">参加项目结束时间</td>
+							<td class="form_text_right">
+								<input type="text" class="txt toClear" id="closeDate" onfocus="WdatePicker()" readonly/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="button" class="txt_btn_a" value=" 确  认 " onclick="toSupport();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 清  空 " onclick="toClear();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

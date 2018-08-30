@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>邮寄信息</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js" ></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-invoice.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-logistics.js"></script>
+	<script type="text/javascript" src="view/template/mail/js/mailinfo-invoice-add.js"></script>
+	<script type="text/javascript" src="view/template/mail/js/mailinfo-invoice-va.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	录入邮寄记录
+    </span>
+</div>
+<form id="form1" action="?model=mail_mailinfo&action=addInvoice" method="post" onsubmit="return checkform();">
+	<table class="form_main_table">
+		<tr>
+			<td class="form_text_left">邮寄发票号码
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="docCode" name="mailinfo[docCode]" class="txt"/>
+				<input type="hidden" id="docId" name="mailinfo[docId]"/>
+				<input type="hidden" id="docType" name="mailinfo[docType]" value="{docType}"/>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">客户名称
+			</td>
+			<td class="form_text_right">
+				<input type="hidden" id="customerId" name="mailinfo[customerId]"/>
+				<input type="text" id="customerName" name="mailinfo[customerName]" class="txt"/>
+			<span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">收件人姓名
+			</td>
+			<td class="form_text_right"><input type="text" id="receiver" name="mailinfo[receiver]" class="txt"/>
+			<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">收件人电话
+			</td>
+			<td class="form_text_right">
+				<input type="text" name="mailinfo[tel]" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮寄单号
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="mailNo" name="mailinfo[mailNo]" value="" class="txt"/>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">邮寄日期
+			</td>
+			<td class="form_text_right">
+				<input id="mailTime" type="text" name="mailinfo[mailTime]" value="{mailTime}" class="txt" onfocus="WdatePicker()"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">物流公司
+			</td>
+			<td class="form_text_right">
+				<input type="hidden" id="logisticsId" name="mailinfo[logisticsId]"/>
+				<input type="text" id="logisticsName" name="mailinfo[logisticsName]" class="txt"/>
+				<span class="red">[*]</span>
+			</td>
+			<td class="form_text_left">邮寄方式
+			</td>
+			<td class="form_text_right">
+				<select name="mailinfo[mailType]"  class="txt">
+					{mailTypeList}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮寄人
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="mailMan" name="mailinfo[mailMan]" value="{mailMan}" class="txt" readonly="readonly"/>
+				<input type="hidden" id="mailManId" name="mailinfo[mailManId]" value="{mailManId}"/>
+			</td>
+			<td class="form_text_left">业务员
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="salesman" name="mailinfo[salesman]" class="txt" readonly="readonly"/>
+				<input type="hidden" id="salesmanId" name="mailinfo[salesmanId]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">件数
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="number" name="mailinfo[number]" value="" class="txt"/>
+			</td>
+			<td class="form_text_left">重量
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="weight" name="mailinfo[weight]" value="" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">运费
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="fare" name="mailinfo[fare]" value="" class="txt formatMoney"/>
+			</td>
+			<td class="form_text_left">附加费用
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="anotherfare" name="mailinfo[anotherfare]" value="" class="txt formatMoney"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮寄费用
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="mailMoney" name="mailinfo[mailMoney]" value="" class="txt formatMoney"/>
+			</td>
+			<td class="form_text_left">服务方式
+			</td>
+			<td class="form_text_right">
+				<input type="text" id="serviceType" name="mailinfo[serviceType]" value="" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮寄地址</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txtbiglong" id="address" name="mailinfo[address]"/>
+				<span class="red">[*]</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txtbiglong" name="mailinfo[remark]"/>
+			</td>
+		</tr>
+	</table>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<input type="submit" value=" 保存 " class="txt_btn_a"/>
+				<input type="button" value=" 返回 " onclick="self.parent.tb_remove();" class="txt_btn_a"//>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<TITLE>销售季报</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script>
+	function searchBtn(){
+		this.location = "?model=contract_report_contractreport&action=quarterSearch";
+	}
+
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="95%">
+    <tr height="100%">
+		<input type="button" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="year" value="{year}"/>
+			<input type="hidden" id="areaCode" value="{areaCode}"/><input type="hidden" id="area" value="{area}"/>
+			<input type="hidden" id="principalId" value="{principalId}"/><input type="hidden" id="principal" value="{principal}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/contract/report/contractquarterreport.grf"
+				,"view/template/contract/report/quarterreportSql.php?" + "&year=" + document.getElementById("year").value
+				                                                                   + "&areaCode=" + document.getElementById("areaCode").value + "&area=" + document.getElementById("area").value
+				                                                                   + "&principalId=" + document.getElementById("principalId").value + "&principal=" + document.getElementById("principal").value
+
+				)
+			</script>
+		</td>
+	</tr>
+
+</table>
+</BODY>
+</HTML>

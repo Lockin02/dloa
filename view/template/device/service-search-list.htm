@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<meta name="GENERATOR" content="Zend Studio" />
+	<META NAME="save" CONTENT="history">
+	<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+	<title>维修设备列表</title>
+	<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js">
+	</script>
+	<script type="text/javascript" src="js/jquery.js">
+	</script>
+	<script type="text/javascript" src="js/thickbox.js">
+	</script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="images/style.css" type="text/css">
+	<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js">
+	</script>
+	<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+	</head>
+	<body>
+		<table width="700" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+			<form method="POST" action="?model=device_service&action=device_service_apply&type=save_list" onsubmit="return check();">
+			<input type="hidden" name="operatorid" value="{operatorid}" /><input type="hidden" id="userid" name="userid" value="" />
+			<tr>
+				<td>
+					接收人：<input type="text" class="sHistory" id="username" name="username" value="" /><span id="_username">*</span>
+				</td>
+				<td>
+					预计完成日期：<input type="text" id="budget_date" name="budget_date" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" class="Wdate" value="" /><span id="_budget_date">*</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					办理人：<input type="text" id="operator" name="operator" value="{operator}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					邮件接收人：<input type="text" id="tousername" name="tousername" value="" /><span id="_tousername">（真实姓名）</span>
+				</td>
+				<td>
+					邮件列表：<textarea cols="50" class="sHistory" id="email" name="email" rows="5"></textarea>
+					<span id="_email">每行一个邮件地址</span>
+				</td>
+			</tr>
+		</table>
+		<br/>
+		<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="list">
+		<tr bgcolor="#D3E5FA">
+			<td align="center" colspan="12">
+				维修设备列表
+			</td>
+		</tr>
+		<tr class="tableheader">
+			<td id="box">
+				<input type="checkbox" onclick="box();"/>
+			</td>
+			<td>
+				序号
+			</td>
+			<td>
+				设备类型
+			</td>
+			<td>
+				设备名称
+			</td>
+			<td>
+				部门编码
+			</td>
+			<td>
+				机身码
+			</td>
+			<td>
+				配件
+			</td>
+			<td>
+				库存数量
+			</td>
+			<td>
+				借出数量
+			</td>
+			<td>
+				维修数量
+			</td>
+			<td>
+				预计完成日期
+			</td>
+			<td>
+				维修原因
+			</td>
+		</tr>
+		{list}
+		<tr>
+			<td colspan="12">
+				<input type="submit" value="　下一步　" /><input type="button" onclick="history.back();" value=" 返 回 " />
+			</td>
+		</tr>
+		</form>
+	</table>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+		    function options(width)
+		    {
+		        return {
+		            multiple: false,
+		            mustMatch: true,
+		            width: (width ? width : 150),
+		            max: 200,
+		            parse: function(data)
+		            {
+		                data = unescape(data).split(',');
+		                var rows = [];
+		                for (var i = 0; i < data.length; i++) 
+		                {
+		                    rows[i] = {
+		                        data: data[i],
+		                        value: data[i],
+		                        result: data[i]
+		                    };
+		                }
+		                return rows;
+		            },
+		            formatItem: function(row, i, n)
+		            {
+		                return row
+		            },
+		            formatResult: function(row)
+		            {
+		                return row;
+		            }
+		            
+		        };
+		    }
+		    function set_url(table, field, return_field)
+		    {
+		        return "ajax.php?model=autocomplete&action=GetField&table=" + table + "&field=" + field + "&return_field=" + return_field;
+		    }
+		    $("#username").autocomplete(set_url('user', 'user_name', 'username'), options()).result(function(evnet, data, formatted)
+		    {
+		        if (data) 
+		        {
+		            var username = unescape(data);
+		            rand = Math.random(0, 99999);
+		            $.post('ajax.php', 
+		            {
+		                model: 'user',
+		                action: 'get_userid',
+		                username: username,
+		                rand: rand
+		            }, function(data)
+		            {
+		                if (data) 
+		                {
+		                    $('#userid').val(unescape(data));
+		                    // get_dept(unescape(data));
+		                    get_email(username)
+		                }
+		            });
+		        }
+		    });
+		    $("#tousername").autocomplete(set_url('user', 'user_name', 'username'), options()).result(function(evnet, data, formatted)
+		    {
+		        if (data) 
+		        {
+		            var username = unescape(data);
+		            get_email(username);
+		        }
+		    });
+		    
+		    function get_userid()
+		    {
+		        var username = $('#username').val();
+		        if (username == '') 
+		        {
+		            $('#_username').html('归还人姓名不能为空！');
+		        }
+		        else 
+		        {
+		            var rand = Math.random() * 100000;
+		            $.post('ajax.php', 
+		            {
+		                model: 'user',
+		                action: 'get_userid',
+		                username: username,
+		                rand: rand
+		            }, function(data)
+		            {
+		                if (data) 
+		                {
+		                    $('#userid').val(unescape(data));
+		                    $('#_username').html('*');
+		                }
+		                else 
+		                {
+		                    $('#_username').html('姓名不正确！');
+		                    $('#userid').val('');
+		                }
+		            })
+		        }
+		    }
+		    
+		   
+		})
+		 function get_email(username)
+		    {
+		        if (username != '') 
+		        {
+		            var rand = Math.random() * 100000;
+		            $.post('ajax.php', 
+		            {
+		                model: 'user',
+		                action: 'get_email',
+		                username: username,
+		                rand: rand
+		            }, function(data)
+		            {
+		                if (data) 
+		                {
+		                    $('#email').val($('#email').val() + unescape(data) + "\r\n");
+		                    $('#tousername').val('');
+		                    //  $('#tousername').focus();
+		                    $('#_tousername').html('（真实姓名）');
+		                }
+		                else 
+		                {
+		                    $('#_tousername').html('该用户姓名不存在！');
+		                }
+		            });
+		        }
+		    }
+		    function box()
+		    {
+		        var che = $('#box input[type=checkbox]').attr('checked');
+		        var v = $('#list input[type=checkbox][name=id[]]').get();
+		        for (var i = 0; i < v.length; i++) 
+		        {
+		            if (v[i].disabled == true) 
+		            {
+		                v[i].checked = false;
+		            }
+		            else 
+		            {
+		                v[i].checked = che;
+		            }
+		        }
+		    }
+		    function quite(id)
+		    {
+		        var num = $('#num_' + id).val();
+		        var amounit = $('#amount_' + id).html();
+		        var borrow = $('#borrow_' + id).html();
+		        if ((Number(amounit) - Number(borrow)) < Number(num)) 
+		        {
+		            alert('您输入的数量大于库存剩余数量，请重新输入！');
+		            $('#num_' + id).val('').focus();
+		        }
+		        else if (Number(num) < 0) 
+		        {
+		            alert('请输入要整数！');
+		            $('#num_' + id).val('').focus();
+		        }
+		    }
+		function check()
+		    {
+		        if ($('#username').val() == '') 
+		        {
+		            $('#_username').html('请填写用户名！');
+		            $('#username').focus();
+		            return false;
+		        }
+		        if ($('#budget_date').val() == '') 
+		        {
+		            $('#_budget_date').html('请填写预计完成日期！');
+		            return false;
+		        }
+		        var s = $('input[type=checkbox][name=id[]]').get();
+		        var selected = false;
+		        for (var i = 0; i < s.length; i++) 
+		        {
+		            if (s[i].checked == true) 
+		            {
+		                selected = true;
+		                break;
+		            }
+		        }
+		        if (selected == false) 
+		        {
+		            alert('最少需要选择一条数据！');
+		            return false;
+		        }
+		        for (var i = 0; i < s.length; i++) 
+		        {
+		            if (s[i].checked == true) 
+		            {
+		                var tid = s[i].value;
+		                var reason = $('input[name=reason[' + tid + ']]').val();
+						var num = $('input[name=num[' + tid + ']]').val();
+						if (num == ''||num == 0) 
+		                {
+		                    alert('请填写维修数量！');
+		                    $('input[name=num[' + tid + ']]').focus();
+		                    return false;
+		                }
+		                if (reason == '') 
+		                {
+		                    alert('请填写维修原因！');
+		                    $('input[name=reason[' + tid + ']]').focus();
+		                    return false;
+		                }
+		            }
+		            
+		        }
+		        return true;
+		        
+		    }
+	</script>
+</body>
+</html>

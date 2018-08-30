@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看物料序列号台账</title>
+	{#commonInclude#}
+<script type="text/javascript">
+function initItems(){//初始化列表
+	var sequenceStr="{serialSequence}";
+	var remarkStr="{serialRemark}";//
+	
+	if(sequenceStr!=""){
+		var sequenceArr=sequenceStr.split(",");
+		var remarkArr=remarkStr.split(",");
+		for(var i=0;i<sequenceArr.length;i++){
+			var sequenceVal="";
+			var remarkVal="";
+			
+			if(sequenceArr[i]){
+				sequenceVal=sequenceArr[i];
+			}
+			if(remarkArr[i]){
+				remarkVal=remarkArr[i];
+			}
+			var trStr='<tr><td>'+(i+1)+'</td><td> '+sequenceVal+'</td><td>'+ remarkVal+'</td></tr>';
+			$("#itembody").append(trStr);
+		}		
+	}
+}
+$(document).ready(function(){
+	initItems();
+})
+</script>
+</head>
+<body>
+<table class="form_main_table">
+<tr>
+<td colspan="4">
+<div style="height:320px;overflow-y:auto;overflow-x:hidden">
+<table class="main_table" id="itemtable">
+ 			<thead>
+							<tr>
+								<td colspan="3" class="form_header">
+									序列号信息
+								</td>
+							</tr>
+                            <tr class="main_tr_header">
+                            	<th>
+                            	</th>
+                                <th>
+                                    序列号
+                                </th>
+                                <th>
+                                   说明
+                                </th>
+							</tr>
+			</thead>
+			<tbody id="itembody">
+
+      		</tbody>
+</table>
+</div>
+</td>
+</tr>
+<tr>
+		<td class="txt_btn" colspan="4">
+	      <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	     <!-- <input  type="button" class="txt_btn_a" value=" 返回 " onclick="history.go(-1);"/> --> 
+		</td>
+</tr>
+</table>
+</body>
+</html>

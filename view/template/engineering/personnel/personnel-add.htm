@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+
+<script type="text/javascript" src="view/template/system/procity/js/province-show.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script src="js/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/validator.css"/>
+
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="view/template/engineering/personnel/js/personnel-validator.js"></script>
+
+		<script>
+		$(function() {
+			$("#officeName").yxcombogrid_office();
+
+		});
+		var province = "";
+		var userLevel = "";
+		</script>
+
+</head>
+<body>
+<form method="post" action="?model=engineering_personnel_personnel&action=add" name="form1" id="form1">
+
+<table class="form_main_table">
+	<tr>
+		<th colspan="4" align="center">新增人员</th>
+	</tr>
+	<tr>
+		<td class="form_text_left">人员名称</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[userName]" id="userName"/>
+			<span class="red">[*]</span>
+            <div id="userNameTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">性别</td>
+		<td class="form_text_right">
+			<input type="radio" name="personnel[sex]" value="0" checked/>男
+			<input type="radio" name="personnel[sex]" value="1"/>女
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">职位</td>
+		<td class="form_text_right">
+			<select class="select" name="personnel[positionCode]" id="positionCode">
+				<option value="">请选择职位</option>
+				<option value="在职">初级工程师</option>
+				<option value="出差">中级工程师</option>
+				<option value="请假">高级工程师</option>
+			</select>
+            <div id="positionCodeTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">等级</td>
+		<td class="form_text_right">
+			<select class="select" name="personnel[userLevel]" id="userLevel">
+				<option value="">请选择等级</option>
+				<option value="A1">A1</option>
+				<option value="A2">A2</option>
+				<option value="A3">A3</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">所属办事处</td>
+		<td class="form_text_right">
+			<input type="hidden" class="txt" id="officeId" value="{officeId}"/>
+			<input type="text" class="txt" id="officeName" name="personnel[officeName]" id="officeName" readonly/>
+			<span class="red">[*]</span>
+            <div id="officeNameTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">所在地</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[locationName]" id="locationName"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">籍贯</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[originPlace]" id="originPlace"/>
+		</td>
+		<td class="form_text_left">考勤状态</td>
+		<td class="form_text_right">
+			<select class="select" name="personnel[attendStatus]" id="attendStatus">
+				<option value="">请选择考勤状态</option>
+				<option value="在职">在职</option>
+				<option value="出差">出差</option>
+				<option value="请假">请假</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">当前项目</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[currentProName]" id="currentProName"/>
+		</td>
+		<td class="form_text_left">项目（预计）结束时间</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[proEndDate]" id="proEndDate" onfocus="WdatePicker()" readonly/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">资质数量</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[aptitudeNum]" id="aptitudeNum"/>
+			<span class="red">[*]</span>
+            <div id="aptitudeNumTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">入职日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[checkDate]" id="checkDate" onfocus="WdatePicker()" readonly/>
+		</td>
+	</tr>
+	<tr>
+		<!-- <td class="form_text_left">毕业院校</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[colleges]" id/>
+		</td> -->
+		<td class="form_text_left">合同期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="personnel[conYear]" id="conYear"/>
+			<span class="red">[*]</span>
+            <div id="conYearTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">直属上级</td>
+		<td class="form_text_right">
+
+			<input type="hidden" id="leaderCode"  name="personnel[leaderCode]"/>
+			<input type="text" class="txt" name="personnel[leaderName]" id="leaderName" readonly/>
+
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('leaderCode','leaderName')"/>
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('leaderCode','leaderName')"/>
+	    </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			非津贴补助省份
+		</td>
+		<td class="form_text_right">
+			<select class="select" name="personnel[nproName]" id="province">
+				<option value="">
+					无
+				</option>
+			</select>
+		</td>
+		<td class="form_text_left">
+			非津贴补城市
+		</td>
+		<td class="form_text_right">
+			<select class="select" name="personnel[ncityName]" id="city">
+				<option value="">
+					无
+				</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" align="center">
+			<input type="submit" class="txt_btn_a" value="保 存" />
+			<input type="button" class="txt_btn_a" onclick="self.parent.tb_remove();" value="返 回" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

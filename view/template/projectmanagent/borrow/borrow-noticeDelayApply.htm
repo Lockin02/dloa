@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>借试用</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-signcompany.js"></script>
+    <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+    <style type="text/css">
+        #mailContentShow{padding:10px;}
+        #mailContentShow>table th{text-align: center;border:1px solid #E9EBF5;border-left:0;border-right:0;border-top:0;}
+        #mailContentShow>table th+th{border-left:1px solid #E9EBF5;}
+    </style>
+</head>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_borrow_borrow&action=sendNoticeDelayApply" id="form1" method="POST" >
+    <div class="main_head"><span class="main_head_title">延期提醒邮件发送</span></div>
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">邮件标题:</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" id="mailTitle" class="txt" name="borrow[mailTitle]" value="{mailTitle}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">邮件内容:</td>
+            <td class="form_text_right" colspan="3">
+                <div id="mailContentInput">
+                    <textarea class="txt_txtarea_font" id="mailContent" name="borrow[mailContent]"  class="editor">{mailContent}</textarea>
+                </div>
+
+                <div id="mailContentShow">
+                    {mailContent}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">邮件接收人:</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" id="mailReceiverNames" class="txt" readonly="readonly" name="borrow[mailReceiverNames]" value="{mailReceiverNames}"/>
+                <input type="hidden" id="mailReceiverIds" class="txt" name="borrow[mailReceiverIds]" value="{mailReceiverIds}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">邮件抄送人:</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" id="mailCReceiverNames" class="txt" readonly="readonly" name="borrow[mailCReceiverNames]" value="{mailCReceiverNames}"/>
+                <input type="hidden" id="mailCReceiverIds" class="txt" name="borrow[mailCReceiverIds]" value="{mailCReceiverIds}"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table class="main_table">
+                    <tr>
+                        <td class="txt_btn" colspan="4">
+                            <input  type="hidden" name="borrow[borrowId]" value="{id}" />
+                            <input  type="hidden" name="borrow[Code]" value="{Code}" />
+                            <input  type="submit" class="txt_btn_a" value="  确  认  " />&nbsp&nbsp&nbsp
+                            <input  type="button" class="txt_btn_a" value="  关  闭  " onclick="closeFun();"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+<script type="text/javascript">
+    $(function(){
+        $("#mailReceiverNames").yxselect_user({
+            mode : 'check',
+            hiddenId: 'mailReceiverIds'
+        });
+
+        $("#mailCReceiverNames").yxselect_user({
+            mode : 'check',
+            hiddenId: 'mailCReceiverIds'
+        });
+
+        $('#mailContent').ckeditor();
+        $('#mailContentInput').hide();
+    })
+</script>
+</div>
+</body>

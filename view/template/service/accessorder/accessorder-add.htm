@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+    <head>
+        <title>新增零配件订单</title>
+        {#commonInclude#}
+        <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+        <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+        <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js" ></script>
+        <script type="text/javascript" src="{#jsPath#}/accessorder-customer-combogrid.js" ></script>
+        <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+        <script type="text/javascript" src="{#jsPath#}/accessorder-area-combogrid.js" ></script>
+        <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+        <script type="text/javascript" src="{#jsPath#}/accessorder-linkman-combogrid.js" ></script>
+        <script type="text/javascript" src="{#jsPath#}/accessorder-add.js" ></script>
+        <script type="text/javascript" src="swfupload/swfupload.js"></script>
+        <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+        <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+        <script type="text/javascript" src="swfupload/handlers.js"></script>
+        <link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+        <script type="text/javascript">
+            var uploadfile;
+            $(function () {
+                uploadfile = createSWFUpload({
+                    "serviceType": "oa_service_accessorder"//业务模块编码，一般取表名
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                addItems();
+                $("#tableName").bind("change", function() {
+                    reloadItems();
+                })
+            });
+        </script>
+    </head>
+
+    <body>
+        <form id="form1" method="post" action="?model=service_accessorder_accessorder&action=add" onsubmit="return checkForm();" >
+            <table class="form_main_table">
+                <tr>
+                    <td colspan="4">
+                        <div class="main_head">
+                            <span class="main_head_title">
+                                新增零配件订单
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">订单前缀</td>
+                    <td class="form_text_right">
+                    <select id="codePrefix" name="accessorder[codePrefix]">
+						<option value="DLPJ">DLPJ</option>
+						<option value="DLGH">DLGH</option>
+						<option value="DLWX">DLWX</option>
+					</select>
+                    </td>
+                    <td class="form_text_left">责任人</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" readOnly id="chargeUserName" name="accessorder[chargeUserName]" value="{chargeUserName}"/>
+                        <input type="hidden" id="chargeUserCode" name="accessorder[chargeUserCode]" value="{chargeUserCode}"/>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">签订日期</td>
+                    <td class="form_text_right" >
+                        <input type="hidden" class="txt" name="accessorder[docDate]" id="docDate" onfocus="WdatePicker()" value="{docDate}" />
+                        {docDate}
+                    </td>
+                    <td class="form_text_left">客户名称</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="accessorder[customerName]" id="customerName" />
+                        <input type="hidden" name="accessorder[customerId]" id="customerId" />
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">客户联系人</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="accessorder[contactUserName]" id="contactUserName" />
+                        <input type="hidden" name="accessorder[contactUserId]" id="contactUserId" />
+                    </td>
+                    <td class="form_text_left">省份</td>
+                    <td class="form_text_right" >
+                        <select class="select" name="accessorder[prov]" id="prov" >
+                        	<option value="">请选择省份</option>                      
+                        </select>
+                        <span class="red">[*]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">联系电话</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="accessorder[telephone]" id="telephone" />
+                    </td>
+
+                    <td class="form_text_left">配件订单金额</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="readOnlyTxtNormal formatMoney" readOnly id="saleAmount" name="accessorder[saleAmount]" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">是否需要开票</td>
+                    <td class="form_text_right" >
+                        <select name="accessorder[isBill]" class="select">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </td>
+                    <td class="form_text_left">发货条件</td>
+                    <td class="form_text_right" >
+                        <select name="accessorder[deliveryCondition]" class="select">
+                            <option value="0">款到发货</option>
+                            <option value="1">货到付款</option>
+                        </select>      		
+
+                    </td>
+                </tr>       
+                <tr>
+                    <td class="form_text_left">归属区域</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="accessorder[areaName]" id="areaName" />
+                        <input type="hidden" name="accessorder[areaId]" id="areaId" />
+                    </td>
+
+                    <td class="form_text_left">区域负责人名称</td>
+                    <td class="form_text_right" >
+                        <input type="text" class="readOnlyTxtNormal" readOnly name="accessorder[areaLeaderName]" id="areaLeaderName" />
+                        <input type="hidden" name="accessorder[areaLeaderCode]" id="reaLeaderCode" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">备注</td>
+                    <td class="form_text_right" colspan="3">
+                        <textarea style="width:600px;" class="txt_txtarea_font" name="accessorder[remark]"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_text_left">附件</td>
+                    <td class="form_text_right" colspan="3">
+                        <div class="upload">
+                            <div class="upload" id="fsUploadProgress"></div>
+                            <div class="upload">
+                                <span id="swfupload"></span>
+                                <input id="btnCancel" type="button"
+                                       value="中止上传" onclick="cancelQueue(uploadfile);"
+                                       disabled="disabled"/> <br/>
+                            </div>
+                            <div id="uploadfileList" class="upload"></div>
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        <table class="main_table" id="itemtable">
+                            <thead>
+                                <tr>
+                                    <td colspan="10" class="form_header">详细</td>
+                                </tr>
+                                <tr class="main_tr_header">
+                                    <th>
+                                        <img  src="images/add_item.png" align="absmiddle" onclick="addItems();"  title="新增物料" alt="新增物料" />
+                                        <input type="hidden" id="itemscount" value="0" />
+                                    </th>
+                                    <th>序号</th>
+                                    <th>物料编号</th>
+                                    <th>物料名称</th>
+                                    <th>规格型号</th>
+                                    <th>单位</th>
+                                    <th>保修期(月)</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>金额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itembody">
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>                <tr>
+                    <td class="txt_btn" colspan="4">
+                        <input type="hidden" name="accessorder[docStatus]" value="WZX" />
+                        <input type="hidden" name="accessorder[ExaStatus]" id="ExaStatus" value="待提交" />
+                        <input type="hidden" id="warranty" value="{warranty}" />
+                        <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                        <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+                        <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

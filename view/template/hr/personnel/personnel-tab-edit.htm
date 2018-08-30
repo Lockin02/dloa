@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>员工档案信息</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var skeyStr="&skey={skey_}";
+		var id = $("#id").val();
+		var userAccount = $("#userAccount").val();
+		var userNo = $("#userNo").val();
+
+		//初始化tabsURL·
+		var tabArr = [
+				"?model=hr_personnel_personnel&action=toEdit&id="+ id+skeyStr,//基本信息
+				"?model=hr_personnel_personnel&action=toInleaveEdit&id="+ id+skeyStr,//入离职信息
+				"?model=hr_personnel_personnel&action=toMyContactEdit&id="+ id+skeyStr,//联系信息
+				"?model=hr_personnel_education&action=toEidtList&userAccount="+ userAccount+"&userNo="+userNo,//教育经历
+				"?model=hr_personnel_work&action=toEidtList&userAccount="+ userAccount+"&userNo="+userNo,//工作经历
+				"?model=hr_personnel_society&action=toEidtList&userAccount="+ userAccount+"&userNo="+userNo,//社会关系
+				"?model=hr_personnel_certificate&action=toEidtList&userAccount="+ userAccount+"&userNo="+userNo,//资格证书
+				"?model=hr_contract_contract&action=tabEditList&userAccount="+ userAccount+"&userNo="+userNo,//合同信息
+				"?model=hr_personnel_attendance&action=personlist&userAccount="+ userAccount+"&userNo="+userNo,//考勤信息
+				"?model=hr_reward_rewardrecords&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,    //薪资信息
+				"?model=hr_incentive_incentive&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//奖惩信息
+				"?model=hr_transfer_transfer&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//调动记录
+				"?model=hr_training_trainingrecords&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//培训记录
+				"?model=hr_tutor_tutorrecords&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//导师经历
+				"?model=hr_personnel_certifyapply&action=pageByPerson&userAccount="+ userAccount+"&userNo="+userNo,//任职资格
+				"?model=hr_project_project&action=tabList&userAccount="+ userAccount+"&userNo="+userNo//项目经历
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+
+</head>
+<body>
+<table width="100%">
+<tr>
+<td>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">入离职信息</a></li>
+	<li><a href="#tab3">联系信息</a></li>
+	<li><a href="#tab4">教育经历</a></li>
+	<li><a href="#tab5">工作经历</a></li>
+	<li><a href="#tab6">社会关系</a></li>
+	<li><a href="#tab7">资格证书</a></li>
+	<li><a href="#tab8">合同信息</a></li>
+	<!-- <li><a href="#tab8">考勤信息</a></li>
+	<li><a href="#tab9">薪资信息</a></li>
+	<li><a href="#tab10">奖惩信息</a></li>
+	<li><a href="#tab12">调动记录</a></li>
+	<li><a href="#tab13">培训记录</a></li>
+	<li><a href="#tab14">导师经历</a></li>
+	<li><a href="#tab15">任职资格</a></li>
+	<li><a href="#tab16">项目经历</a></li> -->
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="about:blank" height="750px" scrolling="auto" frameborder="0" >
+	</iframe>
+	<iframe class="pane" id="iframe2" src="about:blank" height="600px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe4" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe5" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe6" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe7" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe8" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+		<!--  <iframe class="pane" id="iframe9" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe10" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe11" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe12" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe13" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe14" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe15" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>
+	<iframe class="pane" id="iframe16" src="about:blank" height="650px" scrolling="auto" frameborder="0">
+	</iframe>-->
+	</div>
+
+
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{userNo}" id="userNo" />
+<input type="hidden" value="{userAccount}" id="userAccount" />
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

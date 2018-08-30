@@ -1,0 +1,96 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<META NAME="save" CONTENT="history">
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>批量借出</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table" width="50%" border="0" cellpadding="0" cellspacing="0" align="center">
+<form method="POST" action="?model=device_borrow&action=batch_search" onsubmit="return check();">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">批量借出</td>
+	</tr>
+	<tr>
+		<td style="width:130px;text-align:right;">设备类型：</td>
+		<td style="text-align:left;">
+			<select class="sHistory" id="typeid" name="typeid" onchange="get_field(this.value)">
+				<option value="all">全部类型</option>
+				{select_type}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td style="width:130px;text-align:right;">选择要批量输入字段：</td>
+		<td style="text-align:left;">
+			<select class="sHistory" id="field" name="field">
+				<option value="dpcoding">部门编码</option>
+				<option value="device_name">设备名称</option>
+				<option value="coding">机身码</option>
+				<option value="fitting">配件</option>
+				<option value="id">序号</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td style="width:130px;text-align:right;">填写查找内容：<br /><span>注意：每行为一条</span></td>
+		<td style="text-align:left;">
+			<textarea class="sHistory" cols="50" rows="15" id="content" name="content"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td align="center" colspan="2"><input type="submit" value=" 下一步 " /> <input type="reset" value=" 重设 " /></td>
+	</tr>
+</form>
+</table>
+<script type="text/javascript">
+function check()
+{
+	if ($('#field').val()=='')
+	{
+		alert('请选择字段！');
+		return false;
+	}else if ($('#content').val()==''){
+		alert('请输入批量查找内容！');
+		return false;
+	}else{
+		return true;
+	}
+}
+function get_field(typeid)
+{
+	var html ='';
+	html +='<option value="dpcoding">部门编码</option>';
+	html +='<option value="device_name">设备名称</option>';
+	html +='<option value="coding">机身码</option>';
+	html +='<option value="id">序号</option>';
+	if (typeid == 'all')
+	{
+		$('#field').html(html);
+		return;
+	}
+	if (typeid)
+	{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'device_stock',action:'get_field_name',typeid:typeid},
+		function (data)
+		{
+			//alert(data);
+			if (data)
+			{
+				var html ='<option value="">选择批量输入字段</option>';
+				html += '<option value="device_name">设备名称</option>';
+				html +='<option value="id">序号</option>';
+				$('#field').html(unescape(html+data));
+			}
+		}
+		)
+	}else{
+		return false;
+	}
+}
+</script>
+</body>
+</html>

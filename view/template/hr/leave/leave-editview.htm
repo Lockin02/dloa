@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>离职申请</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/interview-editview.js"></script>
+</head>
+<script>
+	$(document).ready(function() {
+		validate({
+			"requireDate" : {
+				required : true
+			}
+		});
+		if($("#actType").val() != "") {
+			$("#closeBtn").hide();
+		}
+
+		function setinfo(){
+			var comfirmQuitDate = $("#comfirmQuitDate").val(); //离职时间
+			var salaryEndDate = $("#salaryEndDate").val(); //离职时间
+			var wordHandover = $("#wordHandover").val(); //工作交接人
+			var leaveid  = $("#id").val(); //ID
+			var itemHtml = "";
+			for(i = 0 ;i < 10 ;i++) {
+				if($("#handitemList_cmp_handContent"+i).length > 0) {
+					var handContent = $("#handitemList_cmp_handContent" + i).val();
+					var recipientName = $("#handitemList_cmp_recipientName" + i).val();
+					var recipientId = $("#handitemList_cmp_recipientId" + i).val();
+					if(handContent != '') {
+						itemHtml += '<input type="hidden"  id="handContent' + i + '"  name="leave[handitem][' + i + '][handContent]" value="' +
+						handContent
+						+ '"/>' +
+						'<input type="hidden" id="isHandover"  name="leave[handitem][' + i + '][recipientName]" value="' +
+						recipientName
+						+ '"/>' +
+						'<input type="hidden"  name="leave[handitem]['+i+'][recipientId]" value="' +
+						recipientId
+						+'"/>';
+					}
+				}
+			}
+			var appendHtml = itemHtml +
+			' <input type="hidden" id="comfirmQuitDate" name="leave[comfirmQuitDate]" value="' +
+			comfirmQuitDate
+			+ '"/>' +
+			' <input type="hidden" id="salaryEndDate" name="leave[salaryEndDate]" value="' +
+			salaryEndDate
+			+ '"/>' +
+			' <input type="hidden" id="id" name="leave[id]" value="' +
+			leaveid
+			+ '"/>' +
+			' <input type="hidden" id="wordHandover" name="" value="' +
+			wordHandover
+			+'"/>';
+			if($(window.parent.document.getElementById("appendHtml")).html() != "") {   //重新选择刚先把前一次追加的内容清空
+				$(window.parent.document.getElementById("appendHtml")).html("");
+			}
+			$(window.parent.document.getElementById("appendHtml")).append(appendHtml);
+		}
+
+		$("#requireDate").blur(function(){
+			setinfo();
+		});
+		$(window.parent.document.getElementById("sub")).bind("click",function(){
+			setinfo();
+			sm=window.parent.document.getElementsByName("result");
+			for (j = 0 ;j < sm.length ;j++) {
+				if(sm[j].checked) {
+					if(sm[j].value=="ok"){
+						if($(window.parent.document.getElementById("appendHtml")).html() == "") {
+							alert("请填写离职相关信息。");
+							return false;
+						}else if($(window.parent.document.getElementById("comfirmQuitDate")).val() == "") {
+							alert("请填写离职日期。");
+							return false;
+						}else if($(window.parent.document.getElementById("salaryEndDate")).val() == "") {
+							alert("请填写工资结算截止日期。");
+							return false;
+						}else if($(window.parent.document.getElementById("wordHandover")).val() == "") {
+							alert("请选择是否指定工作交接人。");
+							return false;
+						}else if($(window.parent.document.getElementById("wordHandover")).val() == "1" && $(window.parent.document.getElementById("isHandover")).length == 0) {
+							alert("*请填写工作任务与工作资料交接信息及交接人.");
+							return false;
+						}
+					}
+				}
+			}
+		});
+	});
+</script>
+<body id="sumbmitHtml">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head">
+					<span class="main_head_title">
+						离职申请
+					</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">员工姓名</td>
+			<td class="form_text_right">
+				{userName}
+			</td>
+			<td class="form_text_left">员工编号</td>
+			<td class="form_text_right">
+				{userNo}
+			</td>
+
+		</tr>
+		<tr>
+			<td class="form_text_left">部门名称</td>
+			<td class="form_text_right">
+				{deptName}
+			</td>
+			<td class="form_text_left">职位名称</td>
+			<td class="form_text_right">
+				{jobName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">合同开始日期</td>
+			<td class="form_text_right">
+				{contractBegin}
+			</td>
+			<td class="form_text_left">合同截止日期</td>
+			<td class="form_text_right">
+				{contractEnd}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">入职日期</td>
+			<td class="form_text_right">
+				{entryDate}
+			</td>
+			<td class="form_text_left">离职类型</td>
+			<td class="form_text_right">
+				{quitTypeName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">期望离职日期</td>
+			<td class="form_text_right">
+				{requireDate}
+			</td>
+			<td class="form_text_left" style="color:blue;">离职日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="comfirmQuitDate" onfocus="WdatePicker()" name="leave[comfirmQuitDate]" value="{comfirmQuitDate}" readonly/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left" style="color:blue;">工资结算截止日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="salaryEndDate" onfocus="WdatePicker()" name="leave[salaryEndDate]" value="{salaryEndDate}" readonly/>
+			</td>
+			<td class="form_text_left" style="color:blue;">工作交接人</td>
+			<td class="form_text_right">
+				<select id="wordHandover" class="select">
+					<option value="">..请选择..</option>
+					<option value="0">无</option>
+					<option value="1">指定交接人</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">离职原因</td>
+			<td class="form_text_right" colspan="3">
+				<div id="quitReson" class="divChangeLine">{quitReson}</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_right" colspan="4">
+				<font color='red'>*请填写工作任务与工作资料交接信息及交接人</font>
+			</td>
+		</tr>
+	</table>
+	<div id="handitemList"></div>
+	<table>
+		<tr id="closeBtn">
+			<td class="txt_btn" colspan="4">
+				<input type="hidden" id="id" value="{id}"/>
+				<input type="hidden" id="actType" value="{actType}"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

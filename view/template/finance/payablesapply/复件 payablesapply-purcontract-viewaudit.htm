@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看付款申请单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-common.js?version=1.0"></script>
+</head>
+<body>
+	<div id="payablesapply">
+	<table class="form_main_table">
+		<tr class="main_head">
+			<td colspan="4">付款申请单</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供 应 商</td>
+			<td class="form_text_right">
+				{supplierName}
+				<input type="hidden" id="supplierId" value="{supplierId}"/>
+				<input type="hidden" id="supplierSkey" value="{supplierSkey}"/>
+				<img src="images/icon/view.gif" title="查看供应商信息" onclick="clickFun(2);"/>
+			</td>
+			<td class="form_text_left">申请单号</td>
+			<td class="form_text_right">
+				{formNo}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">开户银行</td>
+			<td class="form_text_right">
+				{bank}
+			</td>
+			<td class="form_text_left">单据日期</td>
+			<td class="form_text_right">
+				{formDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">银行账号</td>
+			<td class="form_text_right">
+				{account}
+			</td>
+			<td class="form_text_left">结算方式</td>
+			<td class="form_text_right">
+				{payTypeCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">付款币种</td>
+			<td class="form_text_right">
+				{currency}
+			</td>
+			<td class="form_text_left">付款类型</td>
+			<td class="form_text_right">
+				{payForCN}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_text_right">
+				{deptName}
+			</td>
+			<td class="form_text_left">申 请 人</td>
+			<td class="form_text_right" width="30%">
+				{salesman}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总 金 额</td>
+			<td class="form_text_right">
+				<span class="formatMoney">{payMoney}</span>
+			</td>
+			<td class="form_text_left">打印次数</td>
+			<td class="form_text_right">
+				{printCount}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">总金额(大写)</td>
+			<td class="form_text_right">
+				<span id="chinseMoney"></span>
+				<input type="hidden" id="payMoney" value="{payMoney}"/>
+			</td>
+			<td class="form_text_left">源单类型</td>
+			<td class="form_text_right">
+				<b>{sourceTypeCN}</b>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">期望付款日期</td>
+			<td class="form_text_right">
+				<span style="color:blue">{payDate}</span>
+			</td>
+			<td class="form_text_left">付款条件</td>
+			<td class="form_text_right">
+				<span style="color:blue">{payCondition}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">审批付款日期</td>
+			<td class="form_text_right">
+				<input id="payablesapplyId" type="hidden" value="{id}"></input>
+				<input id="tempAuditDate" type = "hidden" value="{auditDate}"></input>
+				<input id="auditDate" type="text"  style="color:blue" onfocus="WdatePicker()" name="auditDate" value="{auditDate}" class="txt Wdate" onchange = "updateAuditDate();"/>
+			</td>
+			<td class="form_text_left">入库日期</td>
+			<td class="form_text_right">
+				<span style="color:blue">{entryDate}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">是否已付款</td>
+			<td class="form_text_right">
+				<span id="isEntrustInfo">{isEntrust}</span>
+			</td>
+			<td class="form_text_left">款项用途</td>
+			<td class="form_text_right">
+				{remark}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">汇入地点(省市)</td>
+			<td class="form_text_right">
+				{place}
+			</td>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right">
+				{businessBelongName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">款项说明</td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_blue" readonly="readonly">{payDesc}</textarea>
+			</td>
+		</tr>
+		<tr class="isAdvPayShow" style="display:none">
+			<td class="form_text_left"><span class="red">提前申请</span></td>
+			<td class="form_text_right" colspan="3">
+				<span class="red">是</span>
+				<input type="hidden" id="isAdvPay" value="{isAdvPay}" />
+			</td>
+		</tr>
+		<tr class="isAdvPayShow" style="display:none">
+			<td class="form_text_left"><span class="red">提前原因</span></td>
+			<td colspan="3" class="form_text_right">
+				<textarea class="textarea_read_blue" readonly="readonly">{advPayReason}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附 件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<thead>
+						<tr align="left">
+							<td colspan="15">
+								<b>款项内容</b> <span style="color:green">(字体为绿色的行只做辅助显示用，实际申请单中没有该行的申请信息)</span>
+							</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>序号</th>
+							<th>源单编号</th>
+							<th title="采购订单金额">订单金额<span class="red">!</span></th>
+							<th title="本次申请金额">申请金额<span class="red">!</span></th>
+							<th title="订单内对应物料的已付货款">已付货款<span class="red">!</span></th>
+							<th title="订单内对应物料的可付余额">可付余额<span class="red">!</span></th>
+							<th title="订单内对应物料的价税合计">价税合计<span class="red">!</span></th>
+							<th>含税单价</th>
+							<th>订单数量</th>
+							<th title="订单内对应物料的已入库数量">入库数量<span class="red">!</span></th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>采购类型</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						{detail}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="innerTd" colspan="4">
+				<table class="form_in_table">
+					<thead>
+						<tr align="left">
+							<td colspan="15">
+								<b>已录发票详细:</b>
+							</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>序号</th>
+							<th>订单编号</th>
+							<th>发票号码</th>
+							<th>发票类型</th>
+							<th>单据日期</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>数量</th>
+							<th>含税单价</th>
+							<th>价税合计</th>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						{addInfo}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+</body>
+</html>

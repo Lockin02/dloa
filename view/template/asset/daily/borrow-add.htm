@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增固定资产借用信息</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+      <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+      <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-agency.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-assetrequireitem.js"></script>
+       <script type="text/javascript" src="view/template/asset/daily/js/borrow-add.js"></script>
+       <script type="text/javascript" src="view/template/asset/daily/js/borrow-validate.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_asset_borrow"//业务模块编码，一般取表名
+	});
+});
+</script>
+</head>
+<body>
+<form  id="form1" action="?model=asset_daily_borrow&action=add" method="post" name="form1" onsubmit="return checkSubmit()" >
+
+<div align="center">
+<table  class='form_main_table' align="center">
+	<tr>
+		<td colspan="4">
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	新增固定资产借用信息
+			    </span>
+			</div>
+		</td>
+	</tr>
+	<tr >
+		<td class="form_text_left">需求单号</td>
+		<td class="form_view_right">
+		    <input id="requireCode" type="text" class="readOnlyTxtNormal" name="borrow[requireCode]" value="{requireCode}"/>
+			<input id="requireId" type="hidden" name="borrow[requireId]" class="txt" value="{requireId}" readOnly/>
+		    </td>
+	    <td class="form_text_left">使用人</td>
+		<td class="form_view_right">
+		 	<input id="chargeManId" type="hidden" name="borrow[chargeManId]" value="{chargeManId}"/>
+            <input id="chargeMan" type="text" name="borrow[chargeMan]" class="txt" value="{chargeMan}" readOnly/>
+
+		   <span class="red">[*]</span></td>
+	</tr>
+	<tr >
+	    <td class="form_text_left">使用部门</td>
+		<td class="form_view_right" >
+		    <input id="deptId" type="hidden" name="borrow[deptId]" value="{deptId}" /><input type="text"
+			name="borrow[deptName]" size="25" id="deptName" value="{deptName}" class="txt" readonly/>
+			<span  class="red">[*]</span></td>
+	    <td class="form_text_left">使用公司</td>
+		<td class="form_view_right">
+		 	<input id="applyCompanyCode" type="hidden" name="borrow[applyCompanyCode]" value="{applyCompanyCode}"/>
+            <input id="applyCompanyName" type="text" name="borrow[applyCompanyName]" class="txt" value="{applyCompanyName}" readOnly/>
+
+		   <span  class="red">[*]</span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">借用日期</td>
+		<td class="form_view_right"><input class="txt" type="text" id="borrowDate" onblur="checkForm(this)"
+			name="borrow[borrowDate]" value="{borrowDate}" size="20" onfocus="WdatePicker()"/> <span id="_linkmanName" class="red">[*]</span></td>
+
+		<td class="form_text_left">预计归还日期</td>
+		<td class="form_view_right"><input class="txt" type="text" id="predictDate" onblur="checkForm(this)"
+			name="borrow[predictDate]" value="{returnDate}" size="20" onfocus="WdatePicker()"/> <span id="_linkmanName" class="red">[*]</span></td>
+
+	</tr>
+	<tr>
+	    <td class="form_text_left">申请人</td>
+		<td class="form_view_right">
+		   	<input id="reposeManId" type="hidden" name="borrow[reposeManId]" value="{reposeManId}"/>
+			<input id="reposeMan" type="text" name="borrow[reposeMan]" value="{reposeMan}" class="txt" readonly/>
+			<span  class="red">[*]</span>
+		</td>
+	    <td class="form_text_left">申请部门</td>
+		<td class="form_view_right" >
+		    <input id="reposeDeptId" type="hidden" name="borrow[reposeDeptId]" value="{reposeDeptId}" /><input type="text"
+			name="borrow[reposeDept]" size="25" id="reposeDept" value="{reposeDept}" class="txt" readonly/>
+			<span  class="red">[*]</span></td>
+	</tr>
+	<tr>
+			<td class="form_text_left">责任区域</td>
+			<td class="form_text_right" colspan=3>
+				 <input type="hidden" class="txt" name="borrow[agencyCode]" id="agencyCode"/>
+				 <input type="text" class="txt" name="borrow[agencyName]" id="agencyName" />
+				<span class="red">[*]</span>
+			</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" colspan=3>
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+		</td>
+	</tr>
+	<tr >
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="5"
+			name="borrow[remark]" style="width:80%">{remark}</textarea></td>
+	</tr>
+	</table>
+<div id="itemTable"></div>
+<div id="borrowTable"></div>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="hidden" name="borrow[ExaStatus]" id="ExaStatus" value="待提交"  />
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+<!--		   <input  type="submit" class="txt_btn_a" value=" 审  核 "/>-->
+<!--		   <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />-->
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>

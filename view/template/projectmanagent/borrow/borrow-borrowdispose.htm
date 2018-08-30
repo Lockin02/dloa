@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+	<link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<!-- 主题css，可切换 -->
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/topoptions.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script>
+     $(function(){
+        disposeA();
+     })
+     function disposeA(){
+
+          var disposeType = $("input[name='dispose']:checked").val();
+          if(disposeType == "退回申请单"){
+              $("#disMail").html("<td class='form_text_left'>单据申请人</td>"+
+                                 "<td class='form_text_right'>"+
+                                    "<input type='text' class='readOnlyTxt' readonly='readonly' name='borrow[proposer]' value='{proposer}'>"+
+                                    "<input type='hidden'  name='borrow[proposerId]' value='{proposerId}'>"+
+                                    "<input type='hidden'  name='borrow[type]' value='back'>");
+              $("#disMailRrmark").html("<td class='form_text_left'>邮件回复信息</td>"+
+                                 "<td class='form_text_right'>"+
+                                    "<textarea class='txt_txtarea_font' name='borrow[remark]'></textarea>");
+          }else if(disposeType == "转至执行部"){
+              $("#disMail").html("<td class='form_text_left'>执行部负责人</td>"+
+                                 "<td class='form_text_right'>"+
+                                    "<input type='text' class='readOnlyTxt' readonly='readonly' name='borrow[executeName]' value='{executeName}'>"+
+                                    "<input type='hidden'  name='borrow[executeNameId]' value='{executeNameId}'>"+
+                                    "<input type='hidden'  name='borrow[type]' value='exe'>");
+              $("#disMailRrmark").html("<td class='form_text_left'>邮件信息</td>"+
+                                 "<td class='form_text_right'>"+
+                                    "<textarea class='txt_txtarea_font' name='borrow[exeRemark]'></textarea>");
+          }
+     }
+
+     function submitR(){
+         var disposeType = $("input[name='dispose']:checked").val();
+	         if(disposeType == '' || disposeType == undefined){
+	            alert("请选择处理方式");
+	            return false;
+	         }
+            return true;
+     }
+</script>
+</head>
+<body>
+<form action="?model=projectmanagent_borrow_borrow&action=executeBorrow" id="form1" method="post" onsubmit="return submitR();">
+<table class="form_main_table">
+<!--    <tr>-->
+<!--        <td colspan="2">-->
+<!--           <b>请选择如何处理单据</b>-->
+<!--        </td>-->
+<!--    </tr>-->
+	<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="hidden" name="borrow[borrowId]" value="{id}" />
+		   <input type="hidden" name="borrow[Code]" value="{Code}" />
+		   <input type="radio" name="dispose"  value="退回申请单" onclick="disposeA();" checked/>退回申请单
+	       <input type="radio" name="dispose"  value="转至执行部" onclick="disposeA();" />转至执行部
+		</td>
+	</tr>
+	<tr id="disMail">
+	</tr>
+	<tr id="disMailRrmark">
+	</tr>
+
+</table>
+<table class="main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="submit" class="txt_btn_a" value=" 确  定 " />
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+			</td>
+		</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,757 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>修改群发任务</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	.table {
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+*{padding: 0; margin: 0;}
+#jobs_str span {color:#000000;}
+hr{ height:1px;border:none;border-top:1px dashed #D3E5FA;}
+#menu {width:300px;margin-left: 10px;height:22px; position:relative}
+#menu li {
+list-style:none;
+float: left;
+border-top:1px solid #D3E5FA;
+border-left:1px solid #D3E5FA;
+border-right:1px solid #D3E5FA;
+line-height:22px;
+width:80px;
+text-align:center;
+margin-left:5px;
+cursor:pointer;
+}
+.no_1 {
+background-image: url(images/media/bluetabactive.gif);
+position:absolute;
+top:0px;
+}
+.no_2 {background: white url(images/media/bluetab.gif) top left repeat-x;position:absolute;left:85px;top:0px;}
+</style>
+<script type="text/javascript">
+	function show_base()
+	{
+		$('#content').css('display','none');
+		$('#base').css('display','');
+		$('.no_1').css('background','url(images/media/bluetabactive.gif)');
+		$('.no_2').css('background','url(images/media/bluetab.gif)');
+	}
+	function show_content()
+	{
+		$('#content').css('display','');
+		$('#base').css('display','none');
+		$('.no_1').css('background','url(images/media/bluetab.gif)');
+		$('.no_2').css('background','url(images/media/bluetabactive.gif)');
+	}
+	
+	function set_time(id)
+	{
+		if (id==1)
+		{
+			$('#tr_week').css('display','');
+			$('#tr_time').css('display','');
+			$('#tr_week_type').css('display','');
+			$('#tr_datetime').css('display','none');
+			if ($('#week_type').val()=='1')
+			{
+				$('#tr_day').css('display','');
+				$('#tr_week').css('display','none');
+			}else{
+				$('#tr_day').css('display','none');
+				$('#tr_week').css('display','');
+			}
+		}else{
+			$('#tr_week').css('display','none');
+			$('#tr_time').css('display','none');
+			$('#tr_week_type').css('display','none');
+			$('#tr_datetime').css('display','');
+			$('#tr_day').css('display','none');
+		}
+	}
+	
+	function show_base()
+	{
+		$('#content').css('display','none');
+		$('#base').css('display','');
+		$('.no_1').css('background','url(images/media/bluetabactive.gif)');
+		$('.no_2').css('background','url(images/media/bluetab.gif)');
+	}
+	function show_content()
+	{
+		$('#content').css('display','');
+		$('#base').css('display','none');
+		$('.no_1').css('background','url(images/media/bluetab.gif)');
+		$('.no_2').css('background','url(images/media/bluetabactive.gif)');
+	}
+	/**
+	 * 全选日或月
+	 * @param {Object} checked
+	 * @param {Object} id
+	 */
+	function all_day_month(checked,id)
+	{
+		$('input[name='+id+']').attr('checked',checked);
+	}
+	
+	function set_day_month(val)
+	{
+		if (val == '1')
+		{
+			$('#tr_day').css('display','');
+			$('#tr_week').css('display','none');
+			$('#tr_month').css('display','none');
+		}else{
+			$('#tr_day').css('display','none');
+			$('#tr_week').css('display','');
+			$('#tr_month').css('display','none');
+		}
+	}
+	
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=edit_task" onsubmit="return check()">
+	<input type="hidden" name="task_id" value="{t_id}" />
+	<input type="hidden" name="key" value="{t_key}"/>
+<div id="menu">
+	<li class="no_1" onmousemove="show_base()">基本信息</li>
+	<li class="no_2" onmousemove="show_content()">群发内容</li>
+</div>
+<table class="table td_height_30"" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="base">
+	<tr>
+		<td align="center" colspan="2"><strong>填写群发任务基本信息</strong></td>
+	</tr>
+	<tr>
+		<td>任务名称：</td>
+		<td align="left">
+			<input type="text" size="30" id="task_name" name="task_name" value="{task_name}" />
+			<span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td>任务级别：</td>
+		<td align="left">
+			<select id="task_level" name="task_level">
+				<option {selected_level_0} value="0">一般</option>
+				<option {selected_level_1} value="1">中等</option>
+				<option {selected_level_2} value="2">紧急</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td width="100">任务类型：</td>
+		<td align="left">
+			<select id="task_type" name="task_type" onchange="set_time(this.value)">
+				<option {selected_type_0} value="0">定时发送</option>
+				<option {selected_type_1} value="1">周期发送</option>
+			</select>
+		</td>
+	</tr>
+	<tr id="tr_week_type" style="display:{tr_week_type}">
+		<td>周期类别：</td>
+		<td align="left">
+			<select id="week_type" name="week_type" onchange="set_day_month(this.value)">
+				<option {selected_week_0} value="0">每周</option>
+				<option {selected_week_1} value="1">每月</option>
+			</select>
+		</td>
+	</tr>
+	<tr id="tr_week" style="display:{tr_week}">
+		<td>选择周期：</td>
+		<td align="left">星期：
+			<input type="checkbox" name="week_date[]" value="0"/>日
+			<input type="checkbox" name="week_date[]" value="1"/>一
+			<input type="checkbox" name="week_date[]" value="2"/>二
+			<input type="checkbox" name="week_date[]" value="3"/>三
+			<input type="checkbox" name="week_date[]" value="4"/>四
+			<input type="checkbox" name="week_date[]" value="5"/>五
+			<input type="checkbox" name="week_date[]" value="6"/>六
+		</td>
+	</tr>
+	<tr id="tr_day" style="display:{tr_day}">
+		<td>选择日期</td>
+		<td align="left">
+			<input type="checkbox" onclick="all_day_month(this.checked,'month_day[]');" />全选  <span>(以下为每月要执行任务的日期)</span><br />
+			<script type="text/javascript">
+				for (var i=1;i<=31;i++)
+				{
+					document.write ('<input type="checkbox" name="month_day[]" value="'+(i<10 ? '0'+i : i )+'" />'+(i<10 ? '0'+i : i ));
+					if (i==16) document.write('<br />');
+				}
+			</script>
+		</td>
+	</tr>
+	<tr id="tr_datetime" style="display:{tr_datetime}">
+		<td>发送时间：</td>
+		<td align="left">
+			<input type="text" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="send_datetime" name="send_datetime" value="{send_time}" />
+			<span>*</span>
+		</td>
+	</tr>
+	<tr id="tr_time" style="display:{tr_time}">
+		<td>发送时间：</td>
+		<td align="left"><input type="text" class="Wdate" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" id="send_time" name="send_time" value="{week_send_time}" /></td>
+	</tr>
+	<tr>
+		<td>目标类型：</td>
+		<td align="left"><input type="radio" {checked_0} name="target_type" onclick="show_select(0);" value="0" />普通 <input type="radio" {checked_1} onclick="show_select(1);" name="target_type" value="1" />高级</td>
+	</tr>
+	<tr id="tr_sql" style="display:{sql_display}">
+			<td>SQL语句：</td>
+			<td align="left">
+					<textarea id="target_sql" name="target_sql" rows="8" cols="80">{target_sql}</textarea><br />
+					<span>注意：查询结果必须返回 email 字段内容为发送目标的邮件地址。<br />
+					例：SELECT email,user_name From user 。<br />
+					返回结果的字段可以作为动态邮件内容，邮件内容中含“{user_name}”标签发送时会把sql查询的结果“user_name”字段内容替换为该标签的内容。</span>
+			</td>
+	</tr>
+	<tr id="tr_select" style="display:{select_display}">
+		<td>发送目标：</td>
+		<td align="left" nowrap>
+			<select id="dept" name="dept" onchange="set_select(this.value,'dept')">
+				<option value="">所有部门</option>
+				<option {selected_dept} value="1">指定部门</option>
+			</select>
+			<span id="select_dept" style="display:{show_dept}"><a href="javascript:set_dept()">选择部门</a></span>
+			<span id="_deptid_"></span>
+			<hr />
+			<select id="area" name="area" onchange="set_select(this.value,'area')">
+				<option value="">所有区域</option>
+				<option {selected_area} value="1">指定区域</option>
+			</select>
+			<span id="select_area" style="display:{show_area}"><a href="javascript:set_area()">选择区域</a></span>
+			<span id="_area_"></span>
+			<hr />
+			<select id="jobs" name="jobs" onchange="set_select(this.value,'jobs')">
+				<option value="">所有职位</option>
+				<option {selected_jobs} value="1">指定职位</option>
+			</select>
+			<span id="select_jobs" style="display:{show_jobs}"><a href="javascript:set_jobs()">选择职位</a></span>
+			<span id="_jobs_id_"></span>
+			<hr />
+			<select id="user" name="user" onchange="set_select(this.value,'user')">
+				<option value="">所有用户</option>
+				<option {selected_user} value="1">指定用户</option>
+			</select>
+			<span id="select_user" style="display:{show_user}"><a href="javascript:set_user()">选择用户</a></span>
+			<span id="_userid_"></span>
+		</td>
+	</tr>
+</table>
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="content" style="display:none">
+	<tr>
+		<td align="left">内容标题：<input type="text" size="40" id="title" name="title" value="{title}" /><span>*</span></td>
+	</tr>
+	<tr>
+		<td><b>请填写群发内容</b></td>
+	</tr>
+	<tr>
+		<td>
+			<input type="hidden" id="content" name="content" value="{content}"/>
+			<input type="hidden" id="body___Config" value=""  />
+			<iframe id="body___Frame" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=content&amp;Toolbar=MyDesign" width="100%" height="350" frameborder="0" scrolling="no"></iframe>
+		</td>
+	</tr>
+</table>
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td><input type="submit" value=" 提交 " /> &nbsp; <input type="button" onclick="self.parent.location.reload();" value=" 返回 " /></td>
+	</tr>
+
+</table>
+<div id="dept_str" style="display:none">{dept}</div>
+<div id="area_str" style="display:none">{area}</div>
+<div id="jobs_str" style="display:none">{jobs}</div>
+<div id="user_str" style="display:none">{user}</div>
+</form>
+<script type="text/javascript">
+	var week = '{week_date}';
+	var day = '{month_day}';
+	var temp_dept = '{target_dept}';
+	var area_id_str = '{target_area}';
+	var jobs_id_str = '{target_jobs}';
+	var oEditor;
+	$(document).ready(function(){
+			oEditor = FCKeditorAPI.GetInstance("content");
+			if (week!='')
+			{
+				var week_arr = week.split(',');
+				var input_week = $('input[name=week_date[]]').get();
+				for(var i=0;i<input_week.length;i++)
+				{
+					for(var j=0;j<week_arr.length;j++)
+					{
+						if (week_arr[j] == input_week[i].value)
+						{
+							input_week[i].checked = true;
+						}
+					}
+				}
+			}
+			
+			if (day!='')
+			{
+				var day_arr = day.split(',');
+				var input_day = $('input[name=month_day[]]').get();
+				for(var i=0;i<input_day.length;i++)
+				{
+					for(var m=0;m<day_arr.length;m++)
+					{
+						if (day_arr[m]==input_day[i].value)
+						{
+							input_day[i].checked = true;
+						}
+					}
+				}
+			}
+			
+			if ($('#dept_str').html()!='')
+			{
+				var input_dept = $('#dept_str input[dept_id[]]:checked').get();
+				var _dept_str = '';
+				for(var i=0;i<input_dept.length;i++)
+				{
+					_dept_str +=input_dept[i].title+'、';
+				}
+				$('#_deptid_').html(_dept_str);
+			}
+			
+			if ($('#area_str').html()!='')
+			{
+				var input_area = $('#area_str input[name=areaid[]]:checked').get();
+				var _area_str = '';
+				for(var i=0;i<input_area.length;i++)
+				{
+					_area_str +=input_area[i].title+'、';
+				}
+				$('#_area_').html(_area_str);
+			}
+			
+			if ($('#jobs_str').html()!='')
+			{
+				var input_jobs = $('#jobs_str input[name=jobsid[]]:checked').get();
+				var _jobs_str = '';
+				for(var i=0;i<input_jobs.length;i++)
+				{
+					_jobs_str +=input_jobs[i].title+'、';
+				}
+				$('#_jobs_id_').html(_jobs_str);
+			}
+			
+			if ($('#user_str').html()!='')
+			{
+				var input_user = $('#user_str input[name=user_id[]]:checked').get();
+				var _user_str = '';
+				for(var i=0;i<input_user.length;i++)
+				{
+					_user_str +=input_user[i].title+'、';
+				}
+				$('#_userid_').html(_user_str);
+			}
+		}
+	);
+	/**
+	 * POST前检验用户输入是否合法
+	 */
+	function check()
+	{
+		if ($('#task_name').val()=='')
+		{
+			alert('任务名称不能为空！');
+			$('#task_name').focus();
+			show_base();
+			return false;
+		}
+		if ($('#task_type').val()=='0')
+		{
+			if ($('#send_datetime').val()=='')
+			{
+				alert('发送日期时间不能为空！');
+				$('#send_datetime').focus();
+				show_base();
+				return false;
+			}
+		}else{
+			if ($('#week_type').val()=='1')
+			{
+				if ($('input[name=month_day[]]:checked').get().length < 1)
+				{
+					alert('请选择每月那日要执行任务！');
+					show_base();
+					return false;
+				}
+			}else{
+				if ($('input[name=week_date[]]:checked').get().length < 1)
+				{
+					alert('请选择每周星期几要执行任务！');
+					show_base();
+					return false;
+				}
+			}
+			if ($('#send_time').val()=='')
+			{
+				alert('发送时间不能为空！');
+				$('#send_time').focus();
+				show_base();
+				return false;
+			}
+		}
+		if ($('input[type=radio][name=target_type]:checked').val() == 1) 
+		{
+			if ($('#target_sql').val() == '') 
+			{
+				alert('查询的SQL语句不能为空！');
+			}
+		}
+		else 
+		{
+			if ($('#dept').val() == '1') 
+			{
+				if ($('input[name=dept_id[]]:checked').get().length < 1) 
+				{
+					alert('您选择了指定部门，请选择最少指定一个部门！');
+					show_base();
+					return false;
+				}
+			}
+			
+			if ($('#area').val() == '1') 
+			{
+				if ($('input[name=areaid[]]:checked').get().length < 1) 
+				{
+					alert('您选择了指定区域，请选择最少指定一个区域！');
+					show_base();
+					return false;
+				}
+			}
+			
+			if ($('#jobs').val() == '1') 
+			{
+				if ($('input[name=jobsid[]]:checked').get().length < 1) 
+				{
+					alert('您选择指定了职位，请选择最少指定一个职位！');
+					show_base();
+					return false;
+				}
+			}
+			
+			if ($('#user').val() == '1') 
+			{
+				if ($('input[name=user_id[]]:checked').get().length < 1) 
+				{
+					alert('您选择指定了用户，请选择最少指定一个用户！');
+					show_base();
+					return false;
+				}
+			}
+		}
+		 if ($('#title').val()=='')
+		 {
+		 	show_content();
+		 	alert('内容标题不能为空！');
+			$('#title').focus();
+			return false;
+		 }
+		 
+		 if (oEditor.GetHTML()=='')
+		{
+			show_content();
+			alert('群发内容不能为空！');
+			return false;
+		}
+		return true;
+	}
+	function set_select(val,id)
+	{
+		if (val)
+		{
+			$('#select_'+id).css('display','');
+			
+			switch (id)
+			{
+				case 'dept':
+					$('#_deptid_').css('display','');
+					break;
+				case 'area':
+					$('#_area_').css('display','');
+					break;
+				case 'jobs':
+					$('#_jobs_id_').css('display','');
+					break;
+				case 'user':
+					$('#_userid_').css('display','');
+					break;
+				
+			}
+		}else{
+			$('#select_'+id).css('display','none');
+			switch (id)
+			{
+				case 'dept':
+					$('#_deptid_').css('display','none');
+					break;
+				case 'area':
+					$('#_area_').css('display','none');
+					break;
+				case 'jobs':
+					$('#_jobs_id_').css('display','none');
+					break;
+				case 'user':
+					$('#_userid_').css('display','none');
+					break;
+				
+			}
+		}
+	}
+	
+	function show_select(val)
+	{
+		if (val==0)
+		{
+			$('#tr_select').css('display','');
+			$('#tr_sql').css('display','none');
+		}else
+		{
+			$('#tr_select').css('display','none');
+			$('#tr_sql').css('display','');
+		}
+	}
+	function all_checked(id,tid,checked){
+		var str = '';
+		$('#TB_ajaxContent input[type=checkbox]').attr('checked', checked);
+		if (checked) {
+			var inputs = $('input[name='+tid+']:checked').get();
+			for (var i = 0; i < inputs.length; i++) {
+				if (i >= 1) 
+					str += '、';
+				str += inputs[i].title;
+			}
+		}
+		$('#'+id).html(str);
+	}
+	//==============部门================
+	function set_dept()
+	{
+		if ($('#dept_str').html()=='')
+		{
+			var rand=Math.random()*100000;
+			$.get('ajax.php',{model:'system_emailtask',action:'get_dept',rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+					$('#dept_str').html(unescape(data));
+					tb_show('选择部门','#TB_show_html?inlineId=dept_str&width=400',false);
+				}
+			}
+			);
+		}else{
+			tb_show('选择部门','#TB_show_html?inlineId=dept_str&width=400',false);
+		}
+	}
+	function add_dept(name,checked)
+	{
+		if (checked && name)
+		{
+			$('#_deptid_').append(name+'、');
+		}else{
+			var str = $('#_deptid_').html();
+			$('#_deptid_').html(str.replace(name+'、',''));
+		}
+	}
+	
+	//==================区域====================
+	function set_area()
+	{
+		if ($('#area_str').html()=='')
+		{
+			var rand=Math.random()*100000;
+			$.get('ajax.php',{model:'system_emailtask',action:'get_area',rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+					$('#area_str').html(unescape(data));
+					tb_show('选择区域','#TB_show_html?inlineId=area_str&width=400',false);
+				}
+			}
+			);
+		}else{
+			tb_show('选择区域','#TB_show_html?inlineId=area_str&width=400',false);
+		}
+	}
+	function add_area(name,checked)
+	{
+		if (checked && name)
+		{
+			$('#_area_').append(name+'、');
+		}else{
+			var str = $('#_area_').html();
+			$('#_area_').html(str.replace(name+'、',''));
+		}
+	}
+	
+	//==================职位======================
+	function set_jobs()
+	{
+		var deptid = $('input[name=dept_id[]]:checked').get();
+		var deptid_str = '';
+		for (var i=0;i<deptid.length;i++)
+		{
+			deptid_str +=deptid[i].value+',';
+		}
+		deptid_str = trim(deptid_str,',');
+		if (($('#jobs_str').html()=='') || (temp_dept != deptid_str))
+		{
+			temp_dept = deptid_str;
+			var rand=Math.random()*100000;
+			$.get('ajax.php',{model:'system_emailtask',action:'get_jobs',deptid_str:deptid_str,rand:rand},
+			function (data)
+			{
+				if (data)
+				{
+					data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+					$('#jobs_str').html(unescape(data));
+					tb_show('选择职位','#TB_show_html?inlineId=jobs_str&width=400',false);
+				}
+			}
+			);
+		}else{
+			tb_show('选择职位','#TB_show_html?inlineId=jobs_str&width=400',false);
+		}
+	}
+	function add_jobs()
+	{
+		var input = $('#TB_ajaxContent input[name=jobsid[]]:checked').get();
+		var str = '';
+		for (var i=0;i<input.length;i++)
+		{
+			str +=input[i].title +'、';
+		}
+		$('#_jobs_id_').html(str);
+	}
+	function all_jobs(id,checked)
+	{
+		$('#dept_'+id+' input[type=checkbox]').attr("checked",checked);
+		add_jobs();
+	}
+	//===================用户=======================
+	function set_user()
+	{
+		//获取选择的部门ID
+		var deptid = $('input[name=dept_id[]]:checked').get();
+		var deptid_str = '';
+		for (var i=0;i<deptid.length;i++)
+		{
+			deptid_str +=deptid[i].value+',';
+		}
+		deptid_str = trim(deptid_str,',');
+		//获取选择的区域ID
+		var areaid = $('input[name=areaid[]]:checked').get();
+		var area_str = '';
+		for (var i=0;i<areaid.length;i++)
+		{
+			area_str +=areaid[i].value+',';
+		}
+		area_str = trim(area_str,',');
+		//获取选择的职位ID
+		var jobsid = $('input[name=jobsid[]]:checked').get();
+		var jobs_str = '';
+		for(var i=0;i<jobsid.length;i++)
+		{
+			jobs_str +=jobsid[i].value+',';
+		}
+		jobs_str = trim(jobs_str,',');
+		if (($('#user_str').html()=='') || (temp_dept != deptid_str) || (area_id_str!=area_str) || (jobs_id_str!=jobs_str))
+		{
+			temp_dept = deptid_str;
+			area_id_str = area_str;
+			jobs_id_str = jobs_str;
+			$.get('ajax.php',{model:'info_notice',action:'get_user_list',deptid_str:deptid_str,area_str:area_str,jobs_str:jobs_str},
+			function (data)
+			{
+				if (data)
+				{
+					data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>';
+					$('#user_str').html(unescape(data));
+					tb_show('选择用户','#TB_show_html?inlineId=user_str&width=400',false);
+				}
+			}
+			);
+		}else{
+			tb_show('选择用户','#TB_show_html?inlineId=user_str&width=400',false);
+		}
+	}
+	
+	function show_jobs_list(id)
+	{
+		var display = $('#TB_ajaxContent .show_jobs_'+id).css('display');
+		if (display=='none')
+		{
+			$('#TB_ajaxContent .show_jobs_'+id).css('display','');
+			$('#TB_ajaxContent .a_jobs_'+id+' img').attr('src','images/work/sub.png');
+		}else{
+			$('#TB_ajaxContent .show_jobs_'+id).css('display','none');
+			$('#TB_ajaxContent .a_jobs_'+id+' img').attr('src','images/work/plus.png');
+		}
+	}
+
+	function show_user_list(id)
+	{
+		var display = $('#TB_ajaxContent .show_user_'+id).css('display');
+		if (display=='none')
+		{
+			$('#TB_ajaxContent .show_user_'+id).css('display','');
+			$('#TB_ajaxContent .a_user_'+id+' img').attr('src','images/work/sub.png');
+		}else{
+			$('#TB_ajaxContent .show_user_'+id).css('display','none');
+			$('#TB_ajaxContent .a_user_'+id+' img').attr('src','images/work/plus.png');
+		}
+	}
+	function set_jobs_checked(id,checked)
+	{
+		$('.show_jobs_'+id+' input[type=checkbox]').attr('checked',checked);
+		show_username();
+	}
+	function set_user_checked(id,checked)
+	{
+		$('.show_user_'+id+' input[type=checkbox]').attr('checked',checked);
+		show_username();
+	}
+	
+	function show_username()
+	{
+		var inputs = $('#TB_ajaxContent input[name=user_id[]]:checked').get();
+		var str = '';
+		for(var i=0;i<inputs.length;i++)
+		{
+			if (i >=1) str +='、';
+			str += inputs[i].title;
+		}
+		$('#_userid_').html(str);
+	}
+	
+	function trim(content,str){
+		var re = '/(^['+str+'])|(['+str+']$)/g';
+　　     return content.replace(eval(re), "");
+
+　　 }
+
+</script>
+</body>
+</html>

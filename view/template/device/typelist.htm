@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<title>类别管理</title>
+<script type="text/javascript" src="js/ajax_check.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript">
+var temp = Array();
+function checkForm()
+{
+	if ($('#typename').val()=='')
+	{
+		alert('类别名称不能为空！');
+		return false;
+	}
+	if($('#deptid').html()!='')
+	{
+		if ($('#deptid').val()=='')
+		{
+			alert('请选择部门！');
+			return false;
+		}else{
+			return true;
+		}
+	}
+	return false;
+}
+function edit(id)
+{
+	temp[id] = $('#tr_'+id).html();
+	var name = $('#name_'+id).html();
+	$('#name_'+id).html('<input type="text" id="typename_'+id+'" name="typename_'+id+'" value="'+name+'"/>');
+	var buttonhtml = '<input type="button" onclick="update('+id+')" value=" 保存 " /> ';
+	buttonhtml +=' <input type="button" onclick="exit_edit('+id+')" value=" 取消 " />';
+	$('#edit_'+id).html(buttonhtml);
+}
+function exit_edit(id)
+{
+	$('#tr_'+id).html(temp[id]);
+	tb_init('#edit_'+id+' a.thickbox');
+}
+function update(id)
+{
+	var rand=Math.random()*100000;
+	var name = $('#typename_'+id).val();
+	if (name=='')
+	{
+		alert('类别名称不能为空！');
+	}else{
+		$.post('ajax.php',{model:'device',action:'update_type',typename:name,id:id,rand:rand},
+		function (data)
+		{
+			if (ajax_check(data))
+			{
+				if (data==1)
+				{
+					$('#tr_'+id).html(temp[id]);
+					$('#name_'+id).html(name);
+				}else{
+					alert('修改失败！');
+				}
+			}
+		}
+		)
+	}
+}
+function del(id)
+{
+	var rand=Math.random()*100000;
+	if (confirm('你确定要删除该条数据吗？'))
+	{
+		if (confirm('再次确认，真的要删除该条数据吗？'))
+		{
+			$.post('ajax.php',{model:'device',action:'del_type',id:id,rand:rand},
+			function (data)
+			{
+				if (ajax_check(data))
+				{
+					if (data==1)
+					{
+						$('#tr_'+id).remove();
+					}else if (data == 2){
+						alert('该类型还有设备数据存在，暂时不能删除！');
+					}
+				}
+			}
+			)
+		}
+	}else{
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<br />
+<table width="80%" align="center" border="0" cellpadding="0" cellspacing="0">
+<form method="POST" action="?model=device&action=add_type"  onsubmit="return checkForm();">
+	<tr bgcolor="#D3E5FA">
+		<td width="70">类型名称：</td>
+		<td width="180"><input type="typename" id="typename" name="typename" value="" /></td>
+		<td>{select_dept}</td>
+		<td><input type="submit" value=" 添　加　"　/></td>
+	</tr>
+</form>
+</table>
+<br />
+<table class="table" width="80%" border="1" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" width="10%"><b>ID</b></td>
+		<td align="center" width="20%"><b>设备类型</b></td>
+		<td align="center"><b>所属部门<b></td>
+		<td align="center" width="40%"><b>操作</b></td>
+	</tr>
+	{list}
+</table>
+
+</body>
+</html>

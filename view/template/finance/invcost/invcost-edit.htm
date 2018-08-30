@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			新增费用发票
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-add.js"></script>
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-combo.js"></script>
+		<script type="text/javascript" src="view/template/finance/invcost/js/invcost-add-formValidator.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				修改费用发票
+			</span>
+		</div>
+		<div class="main_wraper">
+			<form id=form1 action="?model=finance_invcost_invcost&action=edit" method="post">
+				<table class="form_main_table">
+					<tr>
+						<td class="form_text_left">
+							供货单位(供应商)
+						</td>
+						<td class="form_text_right" colspan="3">
+							<input type="hidden" id="supplierId"  name="invcost[supplierId]" value="{supplierId}"/>
+							<input type="text" id="supplierName" class="txt" name="invcost[supplierName]" value="{supplierName}" />
+							<span class="red">
+								[*]
+							</span>
+							<div id="supplierNameTip" class="tipShortTxt"></div>
+						</td>
+					</tr>
+					<tr>
+ 						<td class="form_text_left">
+							发票编号
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" id="objCode" class="txt" name="invcost[objCode]" value="{objCode}"
+							/>{objCode}
+						</td>
+						<td class="form_text_left">
+							发票号码
+							<input type="hidden" name="invcost[id]" value="{id}"/>
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="objNo" class="txt" name="invcost[objNo]" value="{objNo}"
+							/>
+							<span class="red">
+								[*]
+							</span>
+							<div id="objNoTip" class="tipShortTxt">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							采购方式
+						</td>
+						<td class="form_text_right">
+							<select name="invcost[purType]" class="select">
+								{purType}
+							</select>
+						</td>
+						<td class="form_text_left">
+							付款日期
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="payDate" class="txt" name="invcost[payDate]" value="{payDate}" onfocus="WdatePicker()" readonly="readonly" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							纳税登记号
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="taxNo" class="txt" name="invcost[taxNo]" value="{taxNo}"/>
+						</td>
+						<td class="form_text_left">
+							往来科目
+						</td>
+						<td class="form_text_right">
+							<select class="select" name="invcost[subjects]">
+								{subjects}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							开户银行
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="bank" class="txt" name="invcost[bank]" value="{bank}"/>
+						</td>
+						<td class="form_text_left">
+							币别
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="currency" class="txt" name="invcost[currency]" value="{currency}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							汇率
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="excRate" class="txt" name="invcost[excRate]" value="{excRate}" value="{excRate}" />
+						</td>
+						<td class="form_text_left">
+							记账
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="acount" class="txt" name="invcost[acount]" value="{acount}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							部门
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" id="departmentsId" name="invcost[departmentsId]" value="{departmentsId}"/>
+							<input type="text" id="departments" class="txt" name="invcost[departments]" readonly="readonly" value="{departments}"/>
+							<input type="button" value="选 择" title="选择人员" onclick="loadOrgWindowDept('departmentsId','departments');" class="txt_btn_a" />
+							<input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('departmentsId','departments');" class="txt_btn_a" />
+						</td>
+						<td class="form_text_left">
+							业务员
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" id="salesmanId" name="invcost[salesmanId]" value="{salesmanId}"/>
+							<input type="text" id="salesman" class="txt" name="invcost[salesman]" readonly="readonly" value="{salesman}"/>
+							<input type="button" value="选 择" title="选择人员" onclick="loadOrgWindow('salesmanId','salesman');" class="txt_btn_a" />
+							<input type="button" value="清 空" title="清空人员" onclick="clearOrgInfo('salesmanId','salesman');" class="txt_btn_a" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							地址
+						</td>
+						<td class="form_text_right" colspan=3>
+							<textarea id="adress" name="invcost[adress]" class="txt_txtarea_font">{adress}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							总金额
+						</td>
+						<td class="form_text_right">
+							<input type="text" id="allAmount" class="txt" name="invcost[amount]" value="{amount}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							关联合同
+						</td>
+						<td class="form_text_right">
+							{purcontCode}
+						</td>
+					</tr>
+				</table>
+				<table class="form_main_table" id="mytable">
+					<thead>
+						<tr align="left">
+							<td colspan="8">
+								发票明细
+							</td>
+							<td align="center">
+								<input type="hidden" id="invnumber" value="{invnumber}"/>
+								<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+								<img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行" />
+							</td>
+						</tr>
+					</thead>
+					<tbody id="invbody">
+						<tr class="main_tr_header" align="center">
+							<th>
+								序号
+							</th>
+							<th>
+								费用代码
+							</th>
+							<th>
+								费用名称
+							</th>
+							<th>
+								费用类型
+							</th>
+							<th>
+								计量单位
+							</th>
+							<th>
+								数量
+							</th>
+							<th>
+								单价
+							</th>
+							<th>
+								金额
+							</th>
+							<th>
+								操作
+							</th>
+						</tr>
+						{invcostDetail}
+					</tbody>
+				</table>
+				<table class="form_main_table">
+					<tr>
+						<td>
+							<input type="submit" class="txt_btn_a" value="保 存" />
+							<input type="button" class="txt_btn_a" value="返 回" onclick="self.parent.tb_remove();"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+
+</html>

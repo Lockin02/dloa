@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+<link rel="stylesheet" type="text/css" href="js/thickbox.css">
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<script type="text/javascript" src="js/jquery.js">
+</script>
+
+<script type="text/javascript" src="js/thickbox.js">
+</script>
+
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8">
+</script>
+
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8">
+</script>
+
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtask-onekey-add-formValidator.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/ext/ext-base.js"></script>
+<script type="text/javascript" src="js/ext/ext-all.js"></script>
+<script type="text/javascript" src="js/ext/common-ext.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+<script type="text/javascript"
+	src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/tknode_plan_node_combotree.js"></script>
+<title>添加节点</title>
+</head>
+<body>
+<form id="form1" action="?model=rdproject_task_tknode&action=add"
+	method="POST" >
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">节点名称</td>
+		<td class="form_text_right">
+			<input class="txt" type="text" name="tknode[nodeName]"  id="nodeName1"> <span class='red'>[*]</span><br/>
+			<div id="nodeName1Tip" class="dbcolumnTipTxt"></div>
+		</td>
+		<td class="form_text_left">所属节点</td>
+		<td class="form_text_right"><input class="txt" type="text"
+			id="parentName" name="tknode[parentName]"> <input
+			type="hidden" id="parentId" name="tknode[parentId]" value="-1">
+		<input type="hidden" name="tknode[projectName]" value="{projectName}">
+		<input type="hidden" name="tknode[projectId]" value="{projectId}">
+		<input type="hidden" name="tknode[planName]" value="{planName}">
+		<input type="hidden" id="planId" name="tknode[planId]"
+			value="{planId}"></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">节点描述</td>
+		<td class="form_text_right" colspan="3"><textarea
+			name="tknode[remark]" class="txt_txtarea_font"></textarea></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">责任人</td>
+		<td class="form_text_right" colspan="3"><input type="hidden" id="charegeId"
+			name="tknode[charegeId]"> <input type="text"
+			id="charegeName" class="txt" name="tknode[charegeName]" readOnly>
+		<input type="button" value="选 择" class="txt_btn_a"
+			onclick="loadOrgWindow('charegeId','charegeName')"> <input
+			type="button" value="清 空" class="txt_btn_a"
+			onclick="clearOrgInfo('charegeId','charegeName')"> <span class='red'>[*]</span>
+		<br />
+		<div id="charegeNameTip" class="dbcolumnTipTxt"></div>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="4"><input name="" type="submit" class="txt_btn_a"
+			value=" 保存 " onclick="isSave()"> <input name="" type="button" class="txt_btn_a"
+			value=" 返回 " onclick="self.parent.tb_remove();"></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
+<script>
+	function isSave(){
+			if($("#parentName").val()=='请选择...')
+				$("#parentName").val('');
+	}
+</script>
+

@@ -1,0 +1,126 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <title>
+            我的已审批项目
+        </title>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script>
+
+            $(document).ready(function() {
+            	//添加鼠标经过行颜色改变
+                rowsColorChange();
+
+                $(".tr_even,.tr_odd").bind("dblclick",
+                function() {
+                    //location = '?model=management_dashboard';
+                    alert("TODO:查看");
+                });
+
+                var option = {
+					// width : 150,
+					// alias:"1-1",
+					items : [{
+						text : "查看",
+						// 返回true显示菜单，返回flase不显示菜单
+						// showMenuFn : function(row) {
+						// return true;
+						// },
+						alias : "1-2",
+						icon: oa_cMenuImgArr['read'],
+						action : function(row) {
+							showOpenWin('?model=rdproject_project_rdproject&action=rpRead&pjId='
+									+ row.pjId);
+							}
+						},{
+							text : "查看审批",
+							alias : "1-7",
+							icon: oa_cMenuImgArr['readExa'],
+							action : function(row) {
+									var url = "controller/common/readview.php?itemtype=oa_rd_project&pid=" + row.pjId +
+											"&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=750";
+									showThickboxWin( url );
+							}
+						}]
+				};
+
+				$(".tr_even,.tr_odd").contextmenu(option);
+
+            });
+
+            function show_page(page){
+				this.location=location.href;
+			}
+        </script>
+    </head>
+
+    <body>
+        <div class="main_head">
+			<span class="main_head_title">
+                项目列表
+            </span>
+			<input type="button" class="main_head_btn" value="返回列表" onclick="location='{backUrl}'">
+        </div>
+        <div class="tab_line"></div>
+		<div class="main_wraper">
+			<table class="main_table">
+		        <thead>
+		            <tr class="main_tr_header">
+		                <th width="2%">
+		                </th>
+		                <th width="10%">
+		               		 名称
+		                </th>
+		                <th width="11%">
+		                    所属部门
+		                </th>
+		                <th width="7%">
+		                    责任人
+		                </th>
+		                <th width="5%">
+		                    项目状态
+		                </th>
+		                <th width="5%">
+		                    完成率
+		                </th>
+		                <th width="7%">
+		                     偏差率
+		                </th>
+		                <th width="7%">
+		                    当前里程碑
+		                </th>
+		                <th width="7%">
+		                     项目编号
+		                </th>
+		                <th width="7%">
+		                    项目类型
+		                </th>
+		                <th width="8%">
+		                    计划启动日期
+		                </th>
+		                <th width="8%">
+		                     计划关闭日期
+		                </th>
+		                <th width="4%">
+		                    操作
+		                </th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        	{list}
+		        </tbody>
+		    </table>
+		</div>
+		{pageDiv}
+    </body>
+
+</html>

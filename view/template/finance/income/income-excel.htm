@@ -1,0 +1,54 @@
+<html>
+<title>导入EXCEL数据</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/income/js/income-excel.js"></script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            导入到款
+      </span>
+</div>
+<form action="?model=finance_income_income&action=upExcel" ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1" onsubmit="return checkform();">
+<input type="hidden" name="leadExcel" value="true">
+<input type="hidden" name="isCheck" id="isCheck" value="1">
+
+<table class="form_main_table" align="center" width="90%" border="0">
+	<tr>
+		<td class="form_text_left">
+			<label for="file">上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txt" name="inputExcel" id="inputExcel"/>
+		    <input type="button" class="txt_btn_a" value="下载模版" onclick="location='upfile/到款导入表.xls'">
+            <input type="submit" class="txt_btn_a" onclick="changeIsCheck(1)" value=" 导 入[1]">
+            <input type="submit" class="txt_btn_a" onclick="changeIsCheck(2)" value=" 导 入[2]">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right">
+		</td>
+		<td class="form_text_right">
+			注：<br/>
+			<span style="color:blue">导入类型[1]：此类型导入需要关联合同编号，若编号不存在于合同系统中则导入失败。</span><br/>
+			<span style="color:blue">导入类型[2]：此类型导入不需要关联任何业务编号可直接导入到款记录，但其导入数据会两种不同状态单据：<br/>
+				状态1 ：如果导入记录无合同号且金额不为0，则生成单据状态为未分配的单据。<br/>
+				状态2 ：如果导入记录有合同号且金额不为0，则生成单据状态为已分配状态的单据，且单据会保存该合同号，但不与合同中的合同做关联。
+			</span><br/>
+			导入之前请确保excel格式与模板格式保持一致。<br/>
+			到款记录关联合同以鼎利合同号为准。<br/>
+			金额为0或空的数据不会导入到系统中。<br/>
+			<span class="red">导入功能暂不支持单元格公式计算。</span>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

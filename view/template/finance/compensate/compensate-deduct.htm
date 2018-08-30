@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>录入扣款金额</title>
+		{#commonInclude#}
+		 <script type="text/javascript" src="{#jsPath#}/compensate-deduct.js"></script>
+    </head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">录入扣款金额&nbsp;&nbsp;
+		<font color='red'>友情提示：剩余可录入赔偿金额{remaining}</font>
+    </span>
+</div>
+<form id="form1" method="post" action="?model=finance_compensate_compensate&action=deduct" onSubmit="return checkForm();">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">单据编号</td>
+            <td class="form_text_right">{formCode}</td>
+            <input type="hidden" id="compensateId" name="compensate[compensateId]" value="{id}"/>
+            <input type="hidden" id="compensateCode" name="compensate[compensateCode]" value="{formCode}"/>
+        </tr>
+        <tr>
+            <td class="form_text_left">赔偿主体</td>
+            <td class="form_text_right">{dutyTypeName}</td>
+            <input type="hidden" id="dutyType" name="compensate[dutyType]" value="{dutyType}" />
+            <input type="hidden" id="dutyTypeName" name="compensate[dutyTypeName]" value="{dutyTypeName}" />
+        </tr>
+        <tr>
+            <td class="form_text_left">赔偿对象</td>
+            <td class="form_text_right">{dutyObjName}</td>
+            <input type="hidden" id="dutyObjId" name="compensate[dutyObjId]" value="{dutyObjId}" />
+            <input type="hidden" id="dutyObjName" name="compensate[dutyObjName]" value="{dutyObjName}" />
+        </tr>
+        <tr>
+            <td class="form_text_left"><span class="blue">扣款方式</span></td>
+            <td class="form_text_right">
+                <select name="compensate[payType]" id="payType" class="select">
+                    {payType}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><span style="color:blue">本次录入金额</span></td>
+            <td class="form_text_right">
+           	 	<input type="hidden" id="remaining" value="{remaining}" />
+            	<input type="hidden" id="remainingV" value="{remainingV}" />
+            	<input type="text" class="txt formatMoney" id="deductMoney" name="compensate[deductMoney]" />
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right">
+                <textarea class="txt_txtarea_font" name="compensate[remark]" id="remark"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="2">
+                <input type="submit" class="txt_btn_a" id="submitBtn" value="录 入"/>
+                <input type="button" class="txt_btn_a" value="关 闭" onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

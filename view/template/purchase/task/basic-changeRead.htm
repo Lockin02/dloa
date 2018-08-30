@@ -1,0 +1,149 @@
+<html>
+<head>
+    <title>查看采购任务变更通知单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="css/nav_tab.css">
+    <link rel="stylesheet" href="images/style.css" type="text/css">
+    <script type="text/javascript">
+    	function ReceiveChange(id,numb){
+    		if(confirm('确定接收此变更吗？')){
+    			location = "?model=purchase_task_basic&action=receiveChange&id="+id+"&numb="+numb;
+    		}
+    	}
+
+    	function returnChange(id,numb){
+    		if(confirm('确定退回此变更吗？')){
+				location = "?model=purchase_task_basic&action=returnChange&id="+id+"&numb="+numb;
+			}
+    	}
+    </script>
+</head>
+	<body scroll="yes">
+		<table>
+			<tr>
+				<td>
+					<img src="images/sys_config.gif">
+						<b>
+							<font color="#000000">查看采购任务变更通知单</font>
+						</b>
+					</img>
+				</td>
+			</tr>
+		</table>
+	{topPlan}
+		<table border="0" cellspacing="0" cellpadding="0" class="table" align="center" width="1230">
+			<tr align="center" class="tablecontrol"  height="35">
+				<td colspan="4">
+					<font face="宋体" size="3">采购任务</font>
+				</td>
+			</tr>
+			<tr height="28">
+				<td class="tableheader" width="12%">
+					采购任务编号
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;&nbsp;{basic[taskNumb]}
+				</td>
+				<td class="tableheader" width="12%">
+					版本号
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;{basic[taskVersionNumb]}
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="tableheader" width="12%">
+					任务创建日期
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;{basic[createTime]}
+				</td>
+				<td class="tableheader" width="12%">
+					任务创建人
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;{basic[createName]}
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="tableheader" width="12%">
+					任务期望完成时间
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;{basic[dateHope]}
+				</td>
+				<td class="tableheader" width="12%">
+					实际完成日期
+				</td>
+				<td align="left"  width="38%">
+					&nbsp;{basic[dateFact]}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table width="100%" cellspacing='0' cellpadding='0' class="table">
+						<tr height="30px" class="tablecontrol">
+							<td colspan="9">
+								&nbsp;&nbsp;<font>采购任务清单：</font>
+							</td>
+						</tr>
+						<tr height="28" class="TableHeader" align="center">
+							<td width="5%">
+								序号
+							</td>
+							<td  width="20%">
+								设备编号/名称
+							</td>
+							<td width="18%">
+								业务对象编号
+							</td>
+							<td width="10%">
+								采购类型
+							</td>
+							<td width="7%">
+								任务数量
+							</td>
+							<td width="7%">
+								已询价数量
+							</td>
+							<td width="10%">
+								任务下达日期
+							</td>
+							<td width="10%">
+								任务预计完成日期
+							</td>
+							<td>
+								备注
+							</td>
+						</tr>
+						{list}
+					</table>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<td class="tableheader">
+					采购说明
+				</td>
+				<td colspan="3" >
+					<textarea rows="5" id="instruction" name="basic[instruction]" cols="150" readOnly>{basic[instruction]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<td class="tableheader">
+					备注
+				</td>
+				<td colspan="3">
+					<textarea rows="5" id="remark" name="basic[remark]" cols="150" readOnly>{basic[remark]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" class="TableHeader" height="28">
+				<td colspan="6">
+					<input type="button" value="接收变更" class="BigButton" onclick="ReceiveChange('{id}','{numb}');" >&nbsp;
+					<input type="button" value="退回变更" class="BigButton" onclick="returnChange('{id}','{numb}');" >&nbsp;
+					<input type="button" value="返  回" class="BigButton" onclick="location='?model=purchase_task_basic&action=taskMyList&clickNumb=4';" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	<br>
+	</body>
+</html>

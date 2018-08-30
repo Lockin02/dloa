@@ -1,0 +1,104 @@
+
+<HEAD>
+<TITLE>采购发票列表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC" codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-viewlist.js"></script>
+<SCRIPT LANGUAGE="JavaScript" FOR="Report" EVENT="ExportBegin(pOptionObject)">
+<!--
+    if (pOptionObject.ExportType == 1) //gretXLS
+    {
+        Report.DetailGrid.ColumnTitle.RepeatStyle = 1; //grrsNone
+
+        var opt = pOptionObject.AsE2XLSOption;
+        opt.SameAsPrint = false;
+        opt.ExportPageHeaderFooter = false;
+        opt.ExportPageBreak = false;
+    }
+-->
+</SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" FOR="ReportViewer" EVENT="ContentCellClick(pSender)">
+<!--
+
+    if (pSender.Column.Name == "物料编号")
+    {
+        //获取单据Id
+        var formId = Report.FieldByName("id").AsString;
+        var skey = "";
+        $.ajax({
+		    type: "POST",
+		    url: "?model=finance_invpurchase_invpurchase&action=md5RowAjax",
+		    data: { "id" : formId },
+		    async: false,
+		    success: function(data){
+		   	   skey = data;
+			}
+		});
+		showModalWin("?model=finance_invpurchase_invpurchase&action=init&perm=view&id=" + formId +"&skey=" + skey ,1);
+    }
+-->
+</SCRIPT>
+
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td>
+			<input type="button" class="txt_btn_a" onclick="viewFun()" value="查看"/>
+			<input type="button" class="txt_btn_a" onclick="editFun()" value="编辑"/>
+			<input type="button" class="txt_btn_a" onclick="upSearch()" value="上查"/>
+			<input type="button" class="txt_btn_a" onclick="downSearch();" value="下查"/>
+			<input type="button" class="txt_btn_a" onclick="auditFun()" value="审核" id="auditBtn" style="display:none"/>
+			<input type="button" class="txt_btn_a" onclick="unAuditFun()" value="反审核" id="unAuditBtn" style="display:none"/>
+			<input type="button" class="txt_btn_a" onclick="hookFun()" value="钩稽"/>
+			<input type="button" class="txt_btn_a" onclick="unHookFun()" value="反钩稽"/>
+			<input type="button" class="txt_btn_a" onclick="searchFun()" value="高级查询"/>
+			<input type="button" class="txt_btn_a" onclick="clearFun()" value="清空查询"/>
+			<input type="button" class="txt_btn_a" onclick="closeFun()" value="关闭列表"/>
+			<!--input type="button" class="txt_btn_a" onclick="toGrid()" value="转入表格"/>
+			<input type="button" class="txt_btn_a" onclick="allScreen()" value="弹出全屏"/-->
+
+			<input type="hidden" id="formDateBegin" value="{formDateBegin}"/>
+			<input type="hidden" id="formDateEnd" value="{formDateEnd}"/>
+			<input type="hidden" id="supplierId" value="{supplierId}"/>
+			<input type="hidden" id="objNo" value="{objNo}"/>
+			<input type="hidden" id="salesmanId" value="{salesmanId}"/>
+			<input type="hidden" id="exaManId" value="{exaManId}"/>
+			<input type="hidden" id="status" value="{status}"/>
+			<input type="hidden" id="formType" value="{formType}"/>
+			<input type="hidden" id="ExaStatus" value="{ExaStatus}"/>
+			<input type="hidden" id="invType" value="{invType}"/>
+			<input type="hidden" id="productNo" value="{productNo}"/>
+		</td>
+	</tr>
+	<tr height="100%">
+		<td>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/finance/invpurchase/invpurchase-viewlist.grf"
+				,
+				"view/template/finance/invpurchase/invpurchase-viewlist.php"
+				+ "?formDateBegin=" + $("#formDateBegin").val()
+				+ "&formDateEnd=" + $("#formDateEnd").val()
+				+ "&supplierId=" + $("#supplierId").val()
+				+ "&objNo=" + $("#objNo").val()
+				+ "&salesmanId=" + $("#salesmanId").val()
+				+ "&exaManId=" + $("#exaManId").val()
+				+ "&status=" + $("#status").val()
+				+ "&formType=" + $("#formType").val()
+				+ "&ExaStatus=" + $("#ExaStatus").val()
+				+ "&invType=" + $("#invType").val()
+				+ "&productNo=" + $("#productNo").val()
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

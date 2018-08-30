@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>日志考核标准</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+	<link rel="stylesheet" href="css/yxstyle2.css" type="text/css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link type="text/css" href="js/jquery/style/yxtree.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet" />
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet" />
+
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmasstem.js"></script>
+
+	<script type="text/javascript" src="view/template/engineering/assess/js/esmasspro-projectassess.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=engineering_assess_esmasspro&action=projectAssess" onsubmit="return checkform();">
+	<table class="form_main_table" style="width:1000px;margin:auto;align:center" align="center">
+	   <tr>
+	      <td colspan="4">
+	          <div class="main_head2">
+	             <span class="main_head_title">
+	               	设置日志考核标准
+	             </span>
+	         </div>
+	      </td>
+	   </tr>
+        <tr>
+      		<td colspan="4">
+				<fieldset>
+					<legend class="legend">基本信息
+						<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseInfo')"/>
+					</legend>
+					<table class="form_in_table" id="baseInfo">
+				        <tr>
+				      		<td class="form_text_left"><span class="blue">模板名称</span></td>
+				      		<td class="form_text_right" >
+				      			 <input type="text" class="txt" id="templateName" name="esmasspro[templateName]" value="{templateName}"/>
+								<input type="hidden" id="templateId" name="esmasspro[templateId]" value="{templateId}"/>
+				      		</td>
+				      		<td class="form_text_left">考核总分</td>
+				      		<td class="form_text_right" >
+				      			 <input type="text" class="readOnlyTxtNormal" id="baseScore" name="esmasspro[baseScore]" value="{baseScore}" readonly="readonly"/>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left">模板总分</td>
+				      		<td class="form_text_right" >
+				      			<input type="text" class="readOnlyTxtNormal" id="score" name="esmasspro[score]" readonly="readonly" value="{score}"/>
+				      		</td>
+				      		<td class="form_text_left">模板必选合计</td>
+				      		<td class="form_text_right" >
+				      			<input type="text" class="readOnlyTxtNormal" id="needScore" name="esmasspro[needScore]" readonly="readonly" value="{needScore}"/>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left">选用合计</td>
+				      		<td class="form_text_right" colspan="3">
+				      			<input type="text" class="readOnlyTxtNormal" id="useScore" name="esmasspro[useScore]" readonly="readonly" value="{useScore}"/>
+				      			<span class="blue">考核标准选中合计分值必须与考核总分相等</span>
+				      		</td>
+				        </tr>
+				        <tr>
+				      		<td class="form_text_left">启用指标</td>
+				      		<td class="form_text_right" colspan="3">
+								<input type="text" class="readOnlyTxt" style="width:600px" id="useIndexNames" name="esmasspro[useIndexNames]" readonly="readonly" value="{useIndexNames}"/>
+								<input type="hidden" id="useIndexIds" name="esmasspro[useIndexIds]" value="{useIndexIds}"/>
+								<input type="hidden" id="needIndexNames" name="esmasspro[needIndexNames]" value="{needIndexNames}"/>
+								<input type="hidden" id="needIndexIds" name="esmasspro[needIndexIds]" value="{needIndexIds}"/>
+								<input type="hidden" id="indexNames" name="esmasspro[indexNames]" value="{indexNames}"/>
+								<input type="hidden" id="indexIds" name="esmasspro[indexIds]" value="{indexIds}"/>
+				      		</td>
+				        </tr>
+	      			</table>
+      			</fieldset>
+      		</td>
+        </tr>
+        <tr id="indexTr" style="display:none">
+      		<td colspan="4">
+				<fieldset>
+					<legend class="legend">详细指标
+						<img src="images/icon/info_up.gif" id="indexImg" onclick="showAndHide('indexImg','detialInfo')"/>
+					</legend>
+					<table class="form_in_table" id="detialInfo">
+	      				<thead>
+							<tr class="main_tr_header">
+								<th width="5%">
+							 		<img src="images/add_item.png" onclick="addIndex();" title="添加行"/>
+							 	</th>
+							 	<th width="15%">指标名称</th>
+							 	<th width="15%">最大分值</th>
+							 	<th width="15%">最小分值</th>
+							 	<th width="8%">是否必选</th>
+							 	<th width="8%">是否启用</th>
+							 	<th width="15%">选项名称</th>
+							 	<th width="10%">选项分值</th>
+							 	<th>选项操作</th>
+							</tr>
+	   					</thead>
+						<tbody id="indexInfo">{indexInfo}</tbody>
+	      			</table>
+      			</fieldset>
+      		</td>
+        </tr>
+        <tr>
+	   		<td class="form_text_right" colspan="4">
+				<span class="blue">双击指标明细可以修改详细指标信息</span>
+	   		</td>
+        </tr>
+        <tr>
+	   		<td class="txt_btn" colspan="4">
+				<input type="hidden" id="projectId" name="esmasspro[projectId]" value="{projectId}"/>
+				<input type="hidden" id="projectCode" name="esmasspro[projectCode]" value="{projectCode}"/>
+				<input type="hidden" id="projectName" name="esmasspro[projectName]" value="{projectName}"/>
+
+				<input type="hidden" id="id" name="esmasspro[id]" value="{id}"/>
+				<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+				<input type="button" class="txt_btn_a" value=" 清  除 " onclick="ajaxDelete();"/>
+	   		</td>
+        </tr>
+     </table>
+  </form>
+ </body>
+</html>

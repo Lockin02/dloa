@@ -1,0 +1,1277 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<link href="/OM/Themes/default/css.css" rel="stylesheet" type="text/css" />
+<!--以下css为兼容IE6-->
+
+<style type="text/css">
+        html
+        {
+            background: url(/OM/images/main_bg.png) left -1px repeat-x;
+            background-attachment: fixed;
+        }
+        #mContainer
+        {
+            padding: 20px 20px 20px 15px;
+        }
+    </style>
+<script type="text/javascript">
+var Language = {
+  /* -----------------  日期控件  ----------------*/
+  Today:"今天",Year:"年",Month:"月",
+  W0:"日",W1:"一",W2:"二",W3:"三",W4:"四",W5:"五",W6:"六",
+  /* -----------------button text----------------*/
+  Edit:"编辑",
+  Cancel:"取消",
+  Close:"关闭",
+  /* -----------------lable--msg----------------- */
+  Organization:"机构",
+  Department:"部门",
+  Personnel:"人员",
+  DeleteSucceed:"删除成功",
+  DeleteFailured:"删除失败",
+  OperateSucceed:"操作成功",
+  OperateFailured:"操作失败",
+  SaveSucceed:"保存成功",
+  SaveFailured:"保存失败",
+  Expand:"展开",
+  Folding:"折叠",
+  All1:"--全部--",
+  PleaseSelect:"--请选择--",
+  SelfDefault:"--默认自己--",
+  PleaseChoose:"请选择",
+  NotEmpty:"不能为空",
+  NotAuthorized:"没有权限",
+  NoSelected:"没有选择",
+  NotExists:"不存在",
+  AlreadyExists:"已存在",
+  Invalid:"无效",
+  TalentReviews:"人才评语",
+  MsgAddBlacklist:"您确定将当前人才加入黑名单?",
+  Sort:"排序",
+  More:"更多",
+  Reason:"原因",
+  MustNumeric:"必须是数字",
+  Name:"姓名",
+  "Name1":"名称",
+  TalentCategory:"人才类别",
+  TalentRanking:"人才级别",
+  DOB:"出生日期",
+  Age:"年龄",
+  WorkingYears:"工作年限",
+  Education:"学历",
+  Foreignlanguage:"外语水平",
+  GraduationColleges:"毕业院校",
+  GraduationTime:"毕业时间",
+  Major:"专业",
+  Email:"邮箱",
+  IMNO:"IM号码",
+  Mobile:"手机",
+  OfficePhone:"办公电话",
+  FamilyPhone:"家庭电话",
+  IDcard:"身份证",
+  Nationality:"国籍",
+  EthnicGroup:"民族",
+  Height:"身高",
+  Weight:"体重",
+  NativePlace:"籍贯",
+  Residency:"现居住地",
+  Address:"地址",
+  Postcode:"邮编",
+  Registrant:"登记人",
+  Industry:"行业",
+  RegistrationDate:"报到日期",
+  Duty:"职能",
+  ExpectedSalary:"期望薪资",
+  ExpectedLocation:"期望工作地",
+  CurrentCompany:"现任职公司",
+  Position:"职位",
+  YOS:"任职年限",
+  CurrentSalary:"目前薪资",
+  Chinese:"中文",
+  English:"英文",
+  Resume:"简历",
+  Msg_Pes_AddResume:"您没有保存，信息将丢失！确定要切换",
+  ContinueAdd:"您是否要继续添加？",
+  Supplier1:"供应商",
+  Talent:"人才"
+}
+</script>
+
+<script src="../../Js/jquery-1.4.2.min.js" type="text/javascript"></script>
+
+<script src="../../Js/Simple.js" type="text/javascript"></script>
+
+<script src="../../Js/eqccd.js" type="text/javascript"></script>
+
+<script src="../../Js/PES.js" type="text/javascript"></script>
+
+<style type="text/css" media="print">
+        input, .hmstoolbar
+        {
+            display: none;
+        }
+    </style>
+<style type="text/css">
+                em  { color: red; }
+        #tab1 em, #tab2 em, #tab3 em, #tab4 em {display: none;  }
+        .w80{ width: 187px; }
+        #autobox {   width: 182px;  }
+        .evaluate ul  {  padding: 0;  margin: 0; list-style: none;}
+        .evaluate ul li { padding: 0;  margin: 0; line-height: 18px;}
+        .evaluate ul li span { color: #666; }
+        .View, td { line-height: 20px;}
+        #hash label  { cursor: pointer; }
+        #hash a:hover{ color: red; }
+    </style>
+
+<script type="text/javascript">
+        jQuery(function($) {
+            $("#btnPopup").click(function() { window.open("ViewResume.aspx?lan=0");return false;});
+            $("#tab4 textarea").dblclick(function() {
+                if (this.value != "" && this.scrollHeight > 0)
+                    this.rows = (this.scrollHeight / 15);
+            });
+            $(".hmsTitle").click(function(e) {
+                var tag = e.target.tagName;
+                if (tag == "INPUT" || tag == "IMG" || tag == "SELECT") return;
+                var img = this.getElementsByTagName("img")[0];
+                expendBox(img);
+            });
+            $("#_ctl0_WorkForm_R_Resumecn").focus(function() {
+                if (this.rows == 12 || '0' != '0') {
+                    $(this).attr("rows", "24");
+                    //autoSize();
+                }
+            });
+            if (opener != null) {
+                $("#_ctl0_WorkButton_btnBack").val("关闭");
+            }
+            $("#_ctl0_WorkButton_btnBack").click(function() {
+                if (this.value == "返回")
+                    history.back();
+                else
+                    window.close();
+            });
+
+        });
+    </script>
+
+<title></title>
+</head>
+<body class="main">
+<div id="mContainer">
+<form name="aspnetForm" method="post" action="ResumeAdd.aspx"
+	id="aspnetForm"><input type="hidden" name="__EVENTTARGET"
+	id="__EVENTTARGET" value="" /> <input type="hidden"
+	name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" /> <input
+	type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+	value="/wEPDwULLTE4ODI2MDg3NjcPFgIeBXBvcHVwZBYCZg9kFgRmD2QWAgIBDxYCHgRUZXh0BeISPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiPg0KdmFyIExhbmd1YWdlID0gew0KICAvKiAtLS0tLS0tLS0tLS0tLS0tLSAg5pel5pyf5o6n5Lu2ICAtLS0tLS0tLS0tLS0tLS0tKi8NCiAgVG9kYXk6IuS7iuWkqSIsWWVhcjoi5bm0IixNb250aDoi5pyIIiwNCiAgVzA6IuaXpSIsVzE6IuS4gCIsVzI6IuS6jCIsVzM6IuS4iSIsVzQ6IuWbmyIsVzU6IuS6lCIsVzY6IuWFrSIsDQogIC8qIC0tLS0tLS0tLS0tLS0tLS0tYnV0dG9uIHRleHQtLS0tLS0tLS0tLS0tLS0tKi8NCiAgRWRpdDoi57yW6L6RIiwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KICBDYW5jZWw6IuWPlua2iCIsDQogIENsb3NlOiLlhbPpl60iLA0KICAvKiAtLS0tLS0tLS0tLS0tLS0tLWxhYmxlLS1tc2ctLS0tLS0tLS0tLS0tLS0tLSAqLw0KICBPcmdhbml6YXRpb246IuacuuaehCIsDQogIERlcGFydG1lbnQ6IumDqOmXqCIsDQogIFBlcnNvbm5lbDoi5Lq65ZGYIiwNCiAgRGVsZXRlU3VjY2VlZDoi5Yig6Zmk5oiQ5YqfIiwNCiAgRGVsZXRlRmFpbHVyZWQ6IuWIoOmZpOWksei0pSIsDQogIE9wZXJhdGVTdWNjZWVkOiLmk43kvZzmiJDlip8iLA0KICBPcGVyYXRlRmFpbHVyZWQ6IuaTjeS9nOWksei0pSIsDQogIFNhdmVTdWNjZWVkOiLkv53lrZjmiJDlip8iLCANCiAgU2F2ZUZhaWx1cmVkOiLkv53lrZjlpLHotKUiLCAgIA0KICBFeHBhbmQ6IuWxleW8gCIsIA0KICBGb2xkaW5nOiLmipjlj6AiLCAgICANCiAgQWxsMToiLS3lhajpg6gtLSIsICAgDQogIFBsZWFzZVNlbGVjdDoiLS3or7fpgInmi6ktLSIsDQogIFNlbGZEZWZhdWx0OiItLem7mOiupOiHquW3sS0tIiwNCiAgUGxlYXNlQ2hvb3NlOiLor7fpgInmi6kiLA0KICBOb3RFbXB0eToi5LiN6IO95Li656m6IiwNCiAgTm90QXV0aG9yaXplZDoi5rKh5pyJ5p2D6ZmQIiwNCiAgTm9TZWxlY3RlZDoi5rKh5pyJ6YCJ5oupIiwNCiAgTm90RXhpc3RzOiLkuI3lrZjlnKgiLA0KICBBbHJlYWR5RXhpc3RzOiLlt7LlrZjlnKgiLA0KICBJbnZhbGlkOiLml6DmlYgiLA0KICBUYWxlbnRSZXZpZXdzOiLkurrmiY3or4Tor60iLA0KICBNc2dBZGRCbGFja2xpc3Q6IuaCqOehruWumuWwhuW9k+WJjeS6uuaJjeWKoOWFpem7keWQjeWNlT8iLA0KICBTb3J0OiLmjpLluo8iLA0KICBNb3JlOiLmm7TlpJoiLA0KICBSZWFzb246IuWOn+WboCIsDQogIE11c3ROdW1lcmljOiLlv4XpobvmmK/mlbDlrZciLA0KICBOYW1lOiLlp5PlkI0iLA0KICAiTmFtZTEiOiLlkI3np7AiLA0KICBUYWxlbnRDYXRlZ29yeToi5Lq65omN57G75YirIiwNCiAgVGFsZW50UmFua2luZzoi5Lq65omN57qn5YirIiwNCiAgRE9COiLlh7rnlJ/ml6XmnJ8iLA0KICBBZ2U6IuW5tOm+hCIsDQogIFdvcmtpbmdZZWFyczoi5bel5L2c5bm06ZmQIiwNCiAgRWR1Y2F0aW9uOiLlrabljoYiLA0KICBGb3JlaWdubGFuZ3VhZ2U6IuWkluivreawtOW5syIsDQogIEdyYWR1YXRpb25Db2xsZWdlczoi5q+V5Lia6Zmi5qChIiwNCiAgR3JhZHVhdGlvblRpbWU6IuavleS4muaXtumXtCIsDQogIE1ham9yOiLkuJPkuJoiLA0KICBFbWFpbDoi6YKu566xIiwNCiAgSU1OTzoiSU3lj7fnoIEiLA0KICBNb2JpbGU6IuaJi+acuiIsDQogIE9mZmljZVBob25lOiLlip7lhaznlLXor50iLA0KICBGYW1pbHlQaG9uZToi5a625bqt55S16K+dIiwNCiAgSURjYXJkOiLouqvku73or4EiLA0KICBOYXRpb25hbGl0eToi5Zu957GNIiwNCiAgRXRobmljR3JvdXA6IuawkeaXjyIsDQogIEhlaWdodDoi6Lqr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ZAJ0DxYCHwEFD+eOsOS7u+iBjOWFrOWPuGQCdg8WAh8BBQbooYzkuJpkAngPFgIfAQUG6IGM5L2NZAJ6DxYCHwEFDOS7u+iBjOW5tOmZkGQCfA8WAh8BBQznm67liY3olqrph5FkAn4PFgIfAQUG5bGl5Y6GZAJ/DxYEHwIFBue8lui+kR8DaGQCgAEPFgIfAgUG5L+d5a2YZAKBAQ8WAh8BBQzoh6rmiJHor4Tku7dkAoMBDxYCHwEFDOW3peS9nOe7j+WOhmQChQEPFgIfAQUM5pWZ6IKy57uP5Y6GZAKHAQ8WAh8BBQzln7norq3nu4/ljoZkAokBDxYCHwEFDOivreiogOiDveWKm2QCiwEPFgIfAQUP6K6h566X5py66IO95YqbZAKNAQ8WAh8BBQznm7jlhbPmioDog71kAo8BDxYCHwEFBuWkh+azqGQCkQEPFgIfAQUG6ZmE5Lu2ZAKSAQ9kFgICAg8WBB8CBQbkv53lrZgfA2hkApMBDxYCHwEFCeWIm+W7uuS6umQClAEPFgIfAQUJ5ZC057uP5a6HZAKVAQ8WAh8BBQzliJvlu7rml6XmnJ9kApYBDxYCHwEFEzIwMTItMDctMTAgMTU6NDA6MTVkApcBDxYCHwEFBumhtumDqGQCmAEPFgIfAQWGBg0KICAgICAgICAgICAgPHNjcmlwdCB0eXBlPSd0ZXh0L2phdmFzY3JpcHQnPg0KICAgICAgICAgICAgICAgIGZ1bmN0aW9uIGNoZWNrRm9ybShibG9jaykgew0KICAgICAgICAgICAgICAgICAgICAvLyAtLS0tLS0xIOWfuuacrOS/oeaBryAgLS0tLS0tDQogICAgICAgICAgICAgICAgICAgIGlmICghYmxvY2sgfHwgYmxvY2sgPT0gMSkgew0KICAgICAgICAgICAgICAgICAgICAgICANCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgICAvLyAtLS0tLS0yIOS6uuaJjeivhOivrSAgLS0tLS0tDQogICAgICAgICAgICAgICAgICAgIGlmICghYmxvY2sgfHwgYmxvY2sgPT0gMikgew0KICAgICAgICAgICAgICAgICAgICAgICANCiAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgICAvLyAtLS0tLS0zIOW9k+WJjeS7u+iBjC0tLS0tLQ0KICAgICAgICAgICAgICAgICAgICBpZiAoIWJsb2NrIHx8IGJsb2NrID09IDMpIHsNCiAgICAgICAgICAgICAgICAgICAgICAgDQogICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgLy8gLS0tLS0tNCDlsaXljoYtLS0tLS0NCiAgICAgICAgICAgICAgICAgICAgaWYgKCFibG9jayB8fCBibG9jayA9PSA0KSB7DQogICAgICAgICAgICAgICAgICAgICAgIA0KICAgICAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICAgICAgICAgIHJldHVybiB0cnVlOw0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICANCiAgICAgICAgICAgIDwvc2NyaXB0PmRku0LskJOQUj9exyaP6D3TlBTqvAM=" />
+
+<script type="text/javascript">
+<!--
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+// -->
+</script> <script
+	src="/OM/WebResource.axd?d=J5U7FPLxnglTOc3eHD60Q4C6xuA92NCbpSJm64jmIgIffz6frHGVITeIxuXn_FUPLOHNDwM3THgEqRLWyiiKuFfmPaY1&amp;t=634604713351482412"
+	type="text/javascript"></script> <input type="hidden"
+	name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" /> <input
+	type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+	value="/wEWQALayoGgDgLf9LbdDgKPncvFBAL/7cN7Av7tw3sC/u3PewL+7Zd4Av7ti3gC/+3PewL+7aN4Aq3zwfUFApOEvv8DAv/u1d8BAv/u3bwNAviaoOoJAuqfypkEAqW8nQwC0Z2YeQL++t6LBwLu3/P3BQLbjvWZCQLf+P7RDQLqn7LuDwKs++arDQL5/drsBwLYmZRDAvCfmvQMAuLEtfkJAoGnlYkEArbiqfsNArrmoO0LAqW8+ewBAqTD5v4LAuG0u7EJAvfdmIEKAs3p+LUOAs3aj+YDAtuf1s0CAs7hieUFAsbnvbUIArj97/4MAumqh7IEAon+luYPAtvnibsBAq+Eus0KAsnW+akIAovF4p0OAvmup5UNAriM25oHApb7hqcDAq7t25QOAueOkJEDApWfzsgJAvnXwZwOAriMs6QIAqffxqoLAq3SnrwFAs3zspACAsClh7cKApDIjv4MApTWqRECs8rjKQL/u8DFDAKW+tq0Div4QUB7znv8gY7Lc1Cmq5ZtfeUr" />
+
+
+<table cellpadding="0" cellspacing="0" width="100%">
+	<tr id="path">
+		<td>
+		<div class="path">
+		<div class="menublock" id="menublock"><a href="javascript:"
+			class="hover" style="left:0px;z-index:99">简历</a></div>
+		<div class="btnblock" id="btnblock" style="top: 0px"><input
+			name="_ctl0:WorkButton:btnSave" type="submit"
+			id="_ctl0_WorkButton_btnSave" class="button2" value="保存"
+			onclick="return checkForm();" /> <input
+			name="_ctl0:WorkButton:btnBack" type="button"
+			id="_ctl0_WorkButton_btnBack" class="button2" value="返回" /></div>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="content">
+		<div class="form" id="formblock">
+
+		<div style="padding: 10px 15px 20px 15px">
+		<div class="tab" style="position: relative; margin-bottom: 10px;">
+		<a href="javascript:" class="hover"><span class="l"></span><span>
+		中文</span><span class="r"></span></a> <a href="javascript:changeLan(1)"><span
+			class="l"></span><span> 英文</span><span class="r"></span></a> <span
+			id="hash" style='display:none'><a href="#tab22" title="#tab22">&nbsp;&nbsp;&nbsp;&nbsp;人才评语</a>
+		<a href="#tab33">&nbsp;当前任职</a> <a href="#tab44">&nbsp;履历</a> <a
+			href="#tab55">&nbsp;附件</a> <a href="javascript:"
+			onclick="return viewProjectList(0)">&nbsp;职位</a> <a
+			href="javascript:" onclick="return viewLinkRecord(0,0)">&nbsp;面试记录</a><a
+			href="javascript:" onclick="return viewExamDetail(0,1)">
+		&nbsp;考试测评</a> <a href="javascript:" onclick="return viewOperationLog(0)">&nbsp;操作日志</a>
+		</span>
+		<div class="clear"></div>
+
+		</div>
+		<div>
+		<table width="100%" cellspacing="0" cellpadding="1">
+			<thead>
+				<tr class="hmsTitle">
+					<td style="width: 235px" colspan="2"><strong> 原始简历</strong> <input
+						id="btnPopup" type="button" class="button" value="查看" /></td>
+					<td colspan="2" align="right"><span id="analysisTemplate"><span
+						style="text-align: left">(请将简历复制到输入框中，再点击“分析”按钮。) </span> 模版：<select
+						name="_ctl0:WorkForm:ddlAnalyseTemplete"
+						id="_ctl0_WorkForm_ddlAnalyseTemplete">
+						<option selected="selected" value="19">综合导入</option>
+						<option value="29">前程无忧</option>
+						<option value="28">人才热线</option>
+						<option value="26">中华英才旧版</option>
+						<option value="27">JOBCN</option>
+						<option value="18">中华英才</option>
+						<option value="21">智联招聘</option>
+
+					</select> </span>
+					   <input name="_ctl0:WorkForm:btnAnalyse" type="button" id="_ctl0_WorkForm_btnAnalyse" class="button" value="分析" onclick="analyse()" />
+					    <input name="_ctl0:WorkForm:btn00" type="button" id="_ctl0_WorkForm_btn00" class="button" value="保存" onclick="saveInfo(this,'0')" style="display: none" />
+					     <img  src="../../Themes/default/expend0.gif" title="折叠" title="折叠" id="imgresume" style="margin-right: 5px; cursor: pointer" onclick="expendBox(this)" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab0" style="word-break: break-all;">
+				<tr>
+					<td colspan="4"><textarea name="_ctl0:WorkForm:R_Resumecn"
+						id="_ctl0_WorkForm_R_Resumecn" rows="12" cols="100"
+						style="width: 100%" class="Edit"></textarea><label
+						id="_ctl0_WorkForm_R_Resumecn_View" class="View"></label> <input
+						name="_ctl0:WorkForm:R_Resumeen" type="hidden"
+						id="_ctl0_WorkForm_R_Resumeen" /></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<script type="text/javascript">
+                function analyse() {
+                    var url = document.getElementById("aspnetForm").action;
+                    if (url.indexOf("?") >= 0) url = url + "&block=99";
+                    else url = url + "?block=99";
+                    Ajax.post(url, function(r) {
+                        r = "(" + r.replace(',"":""', '') + ")";
+                        alert(r)
+                        var o = eval(r);
+                        for (var x in o) {
+                            if (o[x] == "") continue;
+                            var ele = document.getElementById("_ctl0_WorkForm_" + x);
+                            if (!ele && x != "R_Residence" && x != "R_WorkArea" && x != "R_Industry" && x != "R_position") continue;
+                            var val = unescape(o[x]).replace(/\+/g, " ");
+                            if (ele) ele.value = val;
+                            switch (x) {
+                                case "R_Residence":
+                                case "R_WorkArea":
+                                    if (val != "" && val != -1) {
+                                        var idList = val.split(',');
+                                        for (var i = 0; i < idList.length; i++) {
+                                            switch (i) {
+                                                case 0: analyseChangeArea(idList[i], "_ctl0_WorkForm_" + x + "_Province", idList[1], 0); break;
+                                                case 1: analyseChangeArea(idList[i], "_ctl0_WorkForm_" + x + "_City", idList[2], 0); break;
+                                                case 2: analyseChangeArea(idList[i], "_ctl0_WorkForm_" + x + "_Area", idList[3], 0); break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case "R_Industry":
+                                    if (val != "") {
+                                        var industryList = val.split(',');
+                                        var slt_ctl0_WorkForm_R_Industry_Parent = document.getElementById("_ctl0_WorkForm_R_Industry_Parent");
+                                        UI.bindSelect("_ctl0_WorkForm_R_Industry_Parent", ClientIndustry, industryList[0] == '0' ? ClientIndustry[0].id : industryList[0]);
+                                        var _ctl0_WorkForm_R_Industry_Parent_selected = slt_ctl0_WorkForm_R_Industry_Parent.options[slt_ctl0_WorkForm_R_Industry_Parent.selectedIndex].list;
+                                        UI.bindSelect("_ctl0_WorkForm_R_Industry", _ctl0_WorkForm_R_Industry_Parent_selected, industryList[1] == 0 ? _ctl0_WorkForm_R_Industry_Parent_selected[0].id : industryList[1])
+                                    }
+                                    break;
+                                case "R_position":
+                                    try {
+                                        var positionParent = 0;
+                                        var positionChild = 0;
+                                        if (val.length == 6) {
+                                            positionParent = parseFloat(val.substring(0, 3));
+                                            positionChild = parseFloat(val.substring(3, 6));
+                                        }
+                                        var _ctl0_WorkForm_R_position_Parent = document.getElementById("_ctl0_WorkForm_R_position_Parent");
+                                        UI.bindSelect("_ctl0_WorkForm_R_position_Parent", positions, positionParent == 0 ? positions[0].id : positionParent);
+                                        var _ctl0_WorkForm_R_position_Parent_selected = _ctl0_WorkForm_R_position_Parent.options[_ctl0_WorkForm_R_position_Parent.selectedIndex].list;
+                                        UI.bindSelect("_ctl0_WorkForm_R_position", _ctl0_WorkForm_R_position_Parent_selected, positionChild == 0 ? _ctl0_WorkForm_R_position_Parent_selected[0].id : positionChild)
+                                    } catch (e) { }
+                                    break;
+                            }
+                        }
+                        expendBox(document.getElementById("imgresume"));
+                    }, { resume: encodeURIComponent($("#_ctl0_WorkForm_R_Resumecn").val()), model: jQuery("#_ctl0_WorkForm_ddlAnalyseTemplete option:selected").text() });
+
+                    var ageEle = document.getElementById("_ctl0_WorkForm_R_Age");
+                    var birthdayEle = document.getElementById("_ctl0_WorkForm_R_Birthday");
+                    if (ageEle.value == "" && birthdayEle.value != "")
+                        ageEle.value = new Date().getFullYear() - parseInt(birthdayEle.value.substring(0, 4));
+                    else if (birthdayEle.value == "" && ageEle.value != "")
+                        getBirthday(ageEle);
+                    // 编辑状态下
+                    if ('0' == '0') return;
+                    for (var i = 0; i < 6; i++) {
+                        var btnEdit = document.getElementById("_ctl0_WorkForm_btn" + i);
+                        if (i != 0 && btnEdit && btnEdit.value == Language.Cancel) continue;
+                        editInfo(btnEdit, i);
+                    }
+                }
+            </script>
+
+		<table id="tab11" width="100%" cellspacing="0" cellpadding="1"
+			style="border-collapse: collapse;
+                word-break: break-all; word-wrap: break-word">
+			<thead>
+				<tr class="hmsTitle">
+					<td style="width: 235px" colspan="2"><strong> 基本信息</strong> <em>
+					</em></td>
+					<td colspan="2" align="right"><input
+						name="_ctl0:WorkForm:btn10" type="button"
+						id="_ctl0_WorkForm_btn10" class="button" value="保存"
+						onclick="saveInfo(this,'1')" style="display: none" /> <img
+						src="../../Themes/default/expend0.gif" alt="折叠" title="折叠"
+						style="cursor: pointer" onclick="expendBox(this)" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab1">
+				<tr>
+					<td style="width: 100px">姓名：</td>
+					<td><input name="_ctl0:WorkForm:R_Name" type="text"
+						id="_ctl0_WorkForm_R_Name" class="Edit" /><label
+						id="_ctl0_WorkForm_R_Name_View" class="View"></label><em
+						class="R_Name">*</em></td>
+					<td>照片：</td>
+					<td rowspan="5"><img src="../../images/100.jpeg"
+						id="_ctl0_WorkForm_imgFace" width="84" height="118" title="" /> <span
+						style="vertical-align: bottom">(84*118 像素)</span></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">性别：</td>
+					<td><select name="_ctl0:WorkForm:R_Sex"
+						id="_ctl0_WorkForm_R_Sex" class="Edit w80">
+						<option value="1">男</option>
+						<option value="2">女</option>
+						<option value="3">不详</option>
+					</select> <label id="_ctl0_WorkForm_R_Sex_View" class="View"> </label><em
+						class="R_Sex">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">人才类别：</td>
+					<td><select name="_ctl0:WorkForm:R_ResumeType"
+						id="_ctl0_WorkForm_R_ResumeType" class="Edit w80">
+						<option value="1">候选人才</option>
+						<option value="4">招聘面试中</option>
+						<option value="2">面试通过</option>
+						<option value="3">黑名单</option>
+						<option value="5">成功入职</option>
+						<option value="6">网站投递（未审）</option>
+					</select><label id="_ctl0_WorkForm_R_ResumeType_View" class="View"></label><em
+						class="R_ResumeType">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">人才级别：</td>
+					<td><select name="_ctl0:WorkForm:R_Level"
+						id="_ctl0_WorkForm_R_Level" class="Edit w80">
+						<option value="1">总监</option>
+						<option value="4">普通</option>
+						<option selected="selected" value="2">经理</option>
+						<option value="3">主管</option>
+						<option value="5">员工</option>
+					</select><label id="_ctl0_WorkForm_R_Level_View" class="View"></label><em
+						class="R_Level">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">出生日期：</td>
+					<td><input name="_ctl0:WorkForm:R_Birthday" type="text"
+						id="_ctl0_WorkForm_R_Birthday" class="Edit"
+						onclick="setday(this,null,'_ctl0_WorkForm_R_Age')" /><label
+						id="_ctl0_WorkForm_R_Birthday_View" class="View"></label><em
+						class="R_Birthday">*</em> 年龄： <input name="_ctl0:WorkForm:R_Age"
+						type="text" id="_ctl0_WorkForm_R_Age" class="Edit"
+						style="width: 40px" onblur="getBirthday(this)" maxlength="3"
+						autocomplete="off"
+						onkeyup="this.value=this.value.replace(/\D/g,'');"
+						onpaste="this.value=this.value.replace(/\D/g,'')" /><label
+						id="_ctl0_WorkForm_R_Age_View" class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">工作年限：</td>
+					<td><input name="_ctl0:WorkForm:R_WorkYear" type="text"
+						id="_ctl0_WorkForm_R_WorkYear" class="Edit" /><label
+						id="_ctl0_WorkForm_R_WorkYear_View" class="View"></label><em
+						class="R_WorkYear">*</em></td>
+					<td colspan="2"><input name="_ctl0:WorkForm:R_Face"
+						type="hidden" id="_ctl0_WorkForm_R_Face"
+						value="00de2e9f-7d83-4782-873a-702f24cc8cce" /> <iframe
+						class="Edit"
+						src="ResumeFace.aspx?rid=00de2e9f-7d83-4782-873a-702f24cc8cce"
+						width="250" height="30px" frameborder="0"></iframe></td>
+				</tr>
+				<tr>
+					<td>学历：</td>
+					<td><select name="_ctl0:WorkForm:R_Education"
+						id="_ctl0_WorkForm_R_Education" class="Edit w80">
+						<option value="-1">--请选择--</option>
+						<option value="1">小学</option>
+						<option value="4">中专</option>
+						<option value="2">初中</option>
+						<option value="3">高职</option>
+						<option value="5">高中</option>
+						<option value="6">大专</option>
+						<option selected="selected" value="7">本科/学士</option>
+						<option value="8">硕士</option>
+						<option value="9">博士</option>
+						<option value="10">博士后</option>
+					</select><label id="_ctl0_WorkForm_R_Education_View" class="View"></label><em
+						class="R_Education">*</em></td>
+					<td style="width: 100px">外语水平：</td>
+					<td><script type="text/javascript">
+    jQuery(function($) {
+        // show
+        $("#btnShow").click(function() {
+            var t = $(this).position();
+            $("#divLanguage").show().css({ "top": (t.top + 20) + "px", "left": (t.left - ('250' - 19)) + "px" });
+            // 还原上次选中
+            var arrid = $("#_ctl0_WorkForm_R_Lan1Speak").val().split(',');
+            $("#divLanguage input:checkbox").each(function(i) {
+                for (var i = 0; i < arrid.length; i++) {
+                    if (this.value != arrid[i]) continue;
+                    this.checked = true;
+                    break;
+                }
+            });
+        });
+        // hide
+        $("#btnHide").click(function() { $("#divLanguage").hide().find("input:checkbox").removeAttr("checked"); })
+        // ok
+        $("#btnOk").click(function() {
+            var id = "";
+            var name = "";
+            $("#divLanguage input:checkbox:checked").each(function(i) {
+                if (this.value == "") return true;
+                if (id == "") {
+                    id = this.value;
+                    name = this.title;
+                }
+                else {
+                    id += "," + this.value;
+                    name += "," + this.title;
+                }
+            });
+            $("#_ctl0_WorkForm_R_Lan1Speak").val(id);
+            $("#_ctl0_WorkForm_R_Lan1Speaks").val(name);
+            $("#_ctl0_WorkForm_R_Lan1Speaks_View").val(name);
+            $("#btnHide").trigger("click");
+        });
+    });
+</script> <input type="hidden" name="_ctl0:WorkForm:R_Lan1Speak"
+						id="_ctl0_WorkForm_R_Lan1Speak" /> <input type="text"
+						id="_ctl0_WorkForm_R_Lan1Speaks" class="Edit" /><label
+						id="_ctl0_WorkForm_R_Lan1Speaks_View" class="View"
+						readonly="readonly"></label><input type="button" id="btnShow"
+						value="..." style="width: 20px" class="button" /><em
+						style="display:None" class='R_Lan1Speak'>*</em>
+					<div id="divLanguage" class="hmstoolbar"
+						style="width: 250px;
+    background-color: White; display: none">
+					<div>
+					<table id="_ctl0_WorkForm_ll_dlLan" cellspacing="0" border="0"
+						style="border-collapse:collapse;">
+						<tr>
+							<td>&nbsp;<label><input type="checkbox" value='1'
+								title='英语熟练' />英语熟练</label></td>
+							<td>&nbsp;<label><input type="checkbox" value='2'
+								title='英语精通' />英语精通</label></td>
+							<td>&nbsp;<label><input type="checkbox" value='5'
+								title='日语精通' />日语精通</label></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<label><input type="checkbox" value='4'
+								title='不会' />不会</label></td>
+							<td>&nbsp;<label><input type="checkbox" value='3'
+								title='英语一般' />英语一般</label></td>
+							<td></td>
+						</tr>
+					</table>
+					</div>
+					<div style="text-align: right; margin: 5px 5px 5px 0px"><input
+						type="button" id="btnOk" value='确定' class="button" /> <input
+						type="button" id="btnHide" value='关闭' class="button" /></div>
+					</div>
+
+					<script type="text/javascript">
+    $("#_ctl0_WorkForm_R_Lan1Speak").val('');
+    $("#_ctl0_WorkForm_R_Lan1Speaks").val('');
+</script></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal">毕业院校：</td>
+					<td><input name="_ctl0:WorkForm:R_GraduationColleges"
+						type="text" id="_ctl0_WorkForm_R_GraduationColleges" class="Edit"
+						maxlength="300" /><label
+						id="_ctl0_WorkForm_R_GraduationColleges_View" class="View"></label><em
+						class="R_GraduationColleges">*</em></td>
+					<td style="width: 100px; word-break: normal">毕业时间：</td>
+					<td><input name="_ctl0:WorkForm:R_GraduationTime" type="text"
+						id="_ctl0_WorkForm_R_GraduationTime" class="Edit" /><label
+						id="_ctl0_WorkForm_R_GraduationTime_View" class="View"></label><em
+						class="R_GraduationTime">*</em></td>
+				</tr>
+				<tr>
+					<td>专业：</td>
+					<td colspan="3"><input name="_ctl0:WorkForm:R_Major"
+						type="text" id="_ctl0_WorkForm_R_Major" class="Edit"
+						maxlength="300" /><label id="_ctl0_WorkForm_R_Major_View"
+						class="View"></label><em class="R_Major">*</em></td>
+				</tr>
+				<tr>
+					<td>电子邮件：</td>
+					<td><input name="_ctl0:WorkForm:R_Email" type="text"
+						id="_ctl0_WorkForm_R_Email" class="Edit" maxlength="300" /><label
+						id="_ctl0_WorkForm_R_Email_View" class="View"></label><em
+						class="R_Email">*</em></td>
+					<td style="width: 100px">IM号码：</td>
+					<td><input name="_ctl0:WorkForm:R_QQ" type="text"
+						id="_ctl0_WorkForm_R_QQ" class="Edit" maxlength="50" /><label
+						id="_ctl0_WorkForm_R_QQ_View" class="View"></label><em
+						class="R_QQ">*</em></td>
+				</tr>
+				<tr>
+					<td>手机：</td>
+					<td><input name="_ctl0:WorkForm:R_Mobile" type="text"
+						id="_ctl0_WorkForm_R_Mobile" class="Edit" maxlength="50" /><label
+						id="_ctl0_WorkForm_R_Mobile_View" class="View"></label><em
+						class="R_Mobile">*</em></td>
+					<td style="width: 100px">办公电话：</td>
+					<td><input name="_ctl0:WorkForm:R_zj" type="text"
+						id="_ctl0_WorkForm_R_zj" class="Edit" maxlength="50" /><label
+						id="_ctl0_WorkForm_R_zj_View" class="View"></label><em
+						class="R_zj">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">家庭电话：</td>
+					<td><input name="_ctl0:WorkForm:R_Tel" type="text"
+						id="_ctl0_WorkForm_R_Tel" class="Edit" maxlength="50" /><label
+						id="_ctl0_WorkForm_R_Tel_View" class="View"></label><em
+						class="R_Tel">*</em></td>
+					<td style="width: 100px">身份证：</td>
+					<td><input name="_ctl0:WorkForm:sCardNo" type="text"
+						id="_ctl0_WorkForm_sCardNo" class="Edit"
+						onblur="getBirthday2(this)" /><label
+						id="_ctl0_WorkForm_sCardNo_View" class="View"></label><em
+						class="sCardNo">*</em></td>
+				</tr>
+				<tr>
+					<td>国籍：</td>
+					<td><select name="_ctl0:WorkForm:R_Nation"
+						id="_ctl0_WorkForm_R_Nation" class="Edit w80">
+						<option value="-1">--请选择--</option>
+						<option value="1">中国</option>
+						<option value="602">国外</option>
+					</select><label id="_ctl0_WorkForm_R_Nation_View" class="View"></label><em
+						class="R_Nation">*</em></td>
+					<td style="width: 100px">民族：</td>
+					<td><input name="_ctl0:WorkForm:R_People" type="text"
+						id="_ctl0_WorkForm_R_People" class="Edit" /><label
+						id="_ctl0_WorkForm_R_People_View" class="View"></label><em
+						class="R_People">*</em></td>
+				</tr>
+				<tr>
+					<td>身高：</td>
+					<td><input name="_ctl0:WorkForm:R_High" type="text"
+						id="_ctl0_WorkForm_R_High" class="Edit" /><label
+						id="_ctl0_WorkForm_R_High_View" class="View"></label><em
+						class="R_High">*</em></td>
+					<td style="width: 100px">体重：</td>
+					<td><input name="_ctl0:WorkForm:R_Weight" type="text"
+						id="_ctl0_WorkForm_R_Weight" class="Edit" /><label
+						id="_ctl0_WorkForm_R_Weight_View" class="View"></label><em
+						class="R_Weight">*</em></td>
+				</tr>
+				<tr>
+					<td>籍贯：</td>
+					<td><select style="width:100px" class="Edit"
+						id="_ctl0_WorkForm_R_Residence_Province"
+						name="_ctl0:WorkForm:R_Residence_Province"
+						onchange="changeArea(this,'_ctl0_WorkForm_R_Residence_City')"></select>
+					<select style="width:100px" class="Edit"
+						id="_ctl0_WorkForm_R_Residence_City"
+						name="_ctl0:WorkForm:R_Residence_City"
+						onchange="changeArea(this,'_ctl0_WorkForm_R_Residence_Area')"></select>
+
+					<script type="text/javascript">
+
+var _ctl0_WorkForm_R_Residence_province = [{id:-1,name:'--请选择--'},{id:4,name:'北京'},{id:5,name:'天津'},{id:6,name:'上海'},{id:7,name:'重庆'},{id:8,name:'广东省'},{id:9,name:'江苏省'},{id:10,name:'浙江省'},{id:11,name:'福建省'},{id:12,name:'湖南省'},{id:13,name:'湖北省'},{id:14,name:'山东省'},{id:15,name:'辽宁省'},{id:16,name:'吉林省'},{id:17,name:'云南省'},{id:18,name:'四川省'},{id:19,name:'安徽省'},{id:20,name:'江西省'},{id:21,name:'黑龙江省'},{id:22,name:'河北省'},{id:23,name:'陕西省'},{id:24,name:'海南省'},{id:25,name:'河南省'},{id:26,name:'山西省'},{id:27,name:'内蒙古自治区'},{id:28,name:'广西壮族自治区'},{id:29,name:'贵州省'},{id:30,name:'宁夏回族自治区'},{id:31,name:'青海省'},{id:32,name:'新疆维吾尔自治区'},{id:33,name:'西藏自治区'},{id:34,name:'甘肃省'},{id:35,name:'台湾省'},{id:36,name:'香港特别行政区'},{id:37,name:'澳门特别行政区'}];
+var _ctl0_WorkForm_R_Residence_city = [{id:-1,name:'--请选择--'}];
+
+UI.bindSelect("_ctl0_WorkForm_R_Residence_Province", _ctl0_WorkForm_R_Residence_province, -1==-1?_ctl0_WorkForm_R_Residence_province[0].id:-1);
+UI.bindSelect("_ctl0_WorkForm_R_Residence_City", _ctl0_WorkForm_R_Residence_city, -1==-1?_ctl0_WorkForm_R_Residence_city[0].id:-1);
+
+function applicationPath() {
+        var sPathName = document.location.pathname;
+        var iCount = sPathName.indexOf("/", 1);
+        var sPath = sPathName.substring(0, iCount);
+        return sPath;
+}
+function changeArea(o,id)
+{
+   if(document.getElementById(id)==null) return;
+   Ajax.post(applicationPath()+"/common/mod/ajax.ashx",function(r){
+        if(r!=null){
+             var list = eval(r);
+             UI.bindSelect(id, list, list[0].id);
+        }
+   },{"dll":"Common_Core.dll","class":"Common_Core.BaseData.BaseDataManager","method":"GetAreaChild",cmd:"area",areaid:o.value,lan:0});
+}
+</script><label id="_ctl0_WorkForm_R_Residence_View" class="View"></label><em
+						class="R_Residence">*</em></td>
+					<td style="width: 100px">婚姻状况：</td>
+					<td><select name="_ctl0:WorkForm:R_Marry"
+						id="_ctl0_WorkForm_R_Marry" class="Edit w80">
+						<option value="0">未婚</option>
+						<option value="1">已婚</option>
+						<option value="2">已婚有子</option>
+						<option value="3">离婚</option>
+						<option selected="selected" value="4">不详</option>
+					</select><label id="_ctl0_WorkForm_R_Marry_View" class="View"></label><em
+						class="R_Marry">*</em></td>
+				</tr>
+				<tr>
+					<td>现居住地：</td>
+					<td><select style="width:100px" class="Edit"
+						id="_ctl0_WorkForm_R_WorkArea_Province"
+						name="_ctl0:WorkForm:R_WorkArea_Province"
+						onchange="changeArea(this,'_ctl0_WorkForm_R_WorkArea_City')"></select>
+					<select style="width:100px" class="Edit"
+						id="_ctl0_WorkForm_R_WorkArea_City"
+						name="_ctl0:WorkForm:R_WorkArea_City"
+						onchange="changeArea(this,'_ctl0_WorkForm_R_WorkArea_Area')"></select>
+
+					<select style="width:90px" class="Edit"
+						id="_ctl0_WorkForm_R_WorkArea_Area"
+						name="_ctl0:WorkForm:R_WorkArea_Area"></select> <script
+						type="text/javascript">
+
+var _ctl0_WorkForm_R_WorkArea_province = [{id:-1,name:'--请选择--'},{id:4,name:'北京'},{id:5,name:'天津'},{id:6,name:'上海'},{id:7,name:'重庆'},{id:8,name:'广东省'},{id:9,name:'江苏省'},{id:10,name:'浙江省'},{id:11,name:'福建省'},{id:12,name:'湖南省'},{id:13,name:'湖北省'},{id:14,name:'山东省'},{id:15,name:'辽宁省'},{id:16,name:'吉林省'},{id:17,name:'云南省'},{id:18,name:'四川省'},{id:19,name:'安徽省'},{id:20,name:'江西省'},{id:21,name:'黑龙江省'},{id:22,name:'河北省'},{id:23,name:'陕西省'},{id:24,name:'海南省'},{id:25,name:'河南省'},{id:26,name:'山西省'},{id:27,name:'内蒙古自治区'},{id:28,name:'广西壮族自治区'},{id:29,name:'贵州省'},{id:30,name:'宁夏回族自治区'},{id:31,name:'青海省'},{id:32,name:'新疆维吾尔自治区'},{id:33,name:'西藏自治区'},{id:34,name:'甘肃省'},{id:35,name:'台湾省'},{id:36,name:'香港特别行政区'},{id:37,name:'澳门特别行政区'}];
+var _ctl0_WorkForm_R_WorkArea_city = [{id:-1,name:'--请选择--'}];
+
+var _ctl0_WorkForm_R_WorkArea_area = [{id:-1,name:'--请选择--'}];
+
+UI.bindSelect("_ctl0_WorkForm_R_WorkArea_Province", _ctl0_WorkForm_R_WorkArea_province, -1==-1?_ctl0_WorkForm_R_WorkArea_province[0].id:-1);
+UI.bindSelect("_ctl0_WorkForm_R_WorkArea_City", _ctl0_WorkForm_R_WorkArea_city, -1==-1?_ctl0_WorkForm_R_WorkArea_city[0].id:-1);
+
+UI.bindSelect("_ctl0_WorkForm_R_WorkArea_Area", _ctl0_WorkForm_R_WorkArea_area, -1==-1?_ctl0_WorkForm_R_WorkArea_area[0].id:-1);
+
+function applicationPath() {
+        var sPathName = document.location.pathname;
+        var iCount = sPathName.indexOf("/", 1);
+        var sPath = sPathName.substring(0, iCount);
+        return sPath;
+}
+function changeArea(o,id)
+{
+   if(document.getElementById(id)==null) return;
+   Ajax.post(applicationPath()+"/common/mod/ajax.ashx",function(r){
+        if(r!=null){
+             var list = eval(r);
+             UI.bindSelect(id, list, list[0].id);
+        }
+   },{"dll":"Common_Core.dll","class":"Common_Core.BaseData.BaseDataManager","method":"GetAreaChild",cmd:"area",areaid:o.value,lan:0});
+}
+</script><label id="_ctl0_WorkForm_R_WorkArea_View" class="View"></label><em
+						class="R_WorkArea">*</em></td>
+					<td>供应商：</td>
+					<td><input name="_ctl0:WorkForm:R_companyNameCN" type="text"
+						id="_ctl0_WorkForm_R_companyNameCN"
+						onkeydown="if(window.event.keyCode==13) return false" class="Edit"
+						onkeyup="searchCompany(this,event)" /><input type="button"
+						id="btnChooseCust"
+						onclick="ChooseCust('_ctl0_WorkForm_R_Company','_ctl0_WorkForm_R_companyNameCN',null)"
+						class="button" style="width: 20px" /><input
+						name="_ctl0:WorkForm:R_Company" type="hidden"
+						id="_ctl0_WorkForm_R_Company" value="0" /><label
+						id="_ctl0_WorkForm_R_companyNameCN_View" class="View"></label><em
+						class="R_companyNameCN">*</em></td>
+				</tr>
+				<tr>
+					<td>地址：</td>
+					<td><input name="_ctl0:WorkForm:R_Address" type="text"
+						id="_ctl0_WorkForm_R_Address" class="Edit" style="width: 280px" /><label
+						id="_ctl0_WorkForm_R_Address_View" class="View"></label><em
+						class="R_Address">*</em></td>
+					<td style="width: 100px">邮编：</td>
+					<td><input name="_ctl0:WorkForm:R_Zip" type="text"
+						id="_ctl0_WorkForm_R_Zip" class="Edit" maxlength="6"
+						onkeyup="this.value=this.value.replace(/\D/g,'');"
+						onpaste="this.value=this.value.replace(/\D/g,'')" /><label
+						id="_ctl0_WorkForm_R_Zip_View" class="View"></label><em
+						class="R_Zip">*</em></td>
+				</tr>
+				<tr>
+					<td>登记人：</td>
+					<td><input name="_ctl0:WorkForm:R_Commend1" type="text"
+						id="_ctl0_WorkForm_R_Commend1"
+						onkeydown="if(window.event.keyCode==13) return false"
+						autocomplete="off" onkeyup="return searchCommend(this,event)"
+						class="Edit" value="吴经宇" /><input name="_ctl0:WorkForm:R_Commend"
+						type="hidden" id="_ctl0_WorkForm_R_Commend" value="213" /><label
+						id="_ctl0_WorkForm_R_Commend1_View" class="View"></label><em
+						class="R_Commend">*</em></td>
+					<td>来源：</td>
+					<td><select name="_ctl0:WorkForm:R_ResumeSource"
+						id="_ctl0_WorkForm_R_ResumeSource" class="Edit w80">
+						<option value="1">招聘网站</option>
+						<option value="4">信件投递</option>
+						<option value="2">公司网站</option>
+						<option value="3">招聘邮件</option>
+						<option value="5">猎头推荐</option>
+						<option value="6">其他来源</option>
+						<option value="7">内部员工介绍</option>
+					</select><label id="_ctl0_WorkForm_R_ResumeSource_View" class="View"></label><em
+						class="R_ResumeSource">*</em></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="tab22" width="100%" cellspacing="0" cellpadding="1"
+			id="tab22" style="word-break: break-all;">
+			<thead>
+				<tr class="hmsTitle">
+					<td style="width: 120px" colspan="2"><strong> 人才评语</strong></td>
+					<td colspan="2" align="right"><input
+						name="_ctl0:WorkForm:btn20" type="button"
+						id="_ctl0_WorkForm_btn20" class="button" value="保存"
+						onclick="saveInfo(this,'2')" style="display: none" /> <img
+						src="../../Themes/default/expend0.gif" alt="折叠" title="折叠"
+						style="margin-right: 5px; cursor: pointer"
+						onclick="expendBox(this)" id="img22" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab2">
+				<tr>
+					<td style="width: 100px">适合职能1：</td>
+					<td><!--使用该控件必须引用simple.js--> <script
+						src="/OM/PES/UserControls/FunctionJson.ashx?lan=0"
+						type="text/javascript"></script> <select style="width:130px"
+						class="Edit" id="_ctl0_WorkForm_R_position_Parent"
+						name="_ctl0:WorkForm:R_position_Parent"
+						child="_ctl0_WorkForm_R_position"></select> <select
+						style="width:130px" class="Edit" id="_ctl0_WorkForm_R_position"
+						name="_ctl0:WorkForm:R_position"></select> <script
+						type="text/javascript">
+    var _ctl0_WorkForm_R_position_Parent = document.getElementById("_ctl0_WorkForm_R_position_Parent");
+    UI.bindSelect("_ctl0_WorkForm_R_position_Parent", positions, 0==0?positions[0].id:0);
+    var _ctl0_WorkForm_R_position_Parent_selected =_ctl0_WorkForm_R_position_Parent.options[_ctl0_WorkForm_R_position_Parent.selectedIndex].list;
+    UI.bindSelect("_ctl0_WorkForm_R_position",_ctl0_WorkForm_R_position_Parent_selected , 0==0?_ctl0_WorkForm_R_position_Parent_selected[0].id:0)
+</script> <label id="_ctl0_WorkForm_R_position_View" class="View"> </label><em
+						class="R_position">*</em></td>
+					<td id="_ctl0_WorkForm_trPos1">适合职能2：</td>
+
+					<td><!--使用该控件必须引用simple.js--> <select style="width:130px"
+						class="Edit" id="_ctl0_WorkForm_R_position1_Parent"
+						name="_ctl0:WorkForm:R_position1_Parent"
+						child="_ctl0_WorkForm_R_position1"></select> <select
+						style="width:130px" class="Edit" id="_ctl0_WorkForm_R_position1"
+						name="_ctl0:WorkForm:R_position1"></select> <script
+						type="text/javascript">
+    var _ctl0_WorkForm_R_position1_Parent = document.getElementById("_ctl0_WorkForm_R_position1_Parent");
+    UI.bindSelect("_ctl0_WorkForm_R_position1_Parent", positions, 0==0?positions[0].id:0);
+    var _ctl0_WorkForm_R_position1_Parent_selected =_ctl0_WorkForm_R_position1_Parent.options[_ctl0_WorkForm_R_position1_Parent.selectedIndex].list;
+    UI.bindSelect("_ctl0_WorkForm_R_position1",_ctl0_WorkForm_R_position1_Parent_selected , 0==0?_ctl0_WorkForm_R_position1_Parent_selected[0].id:0)
+</script> <label id="_ctl0_WorkForm_R_position1_View" class="View"> </label><em
+						class="R_position1">*</em></td>
+				</tr>
+				<tr>
+
+					<td><label id="_ctl0_WorkForm_R_position2_View" class="View">
+					</label><em class="R_position3">*</em></td>
+
+					<td><label id="_ctl0_WorkForm_R_position3_View" class="View">
+					</label><em class="R_position3">*</em></td>
+				</tr>
+				<tr>
+
+					<td><label id="_ctl0_WorkForm_R_position4_View" class="View">
+					</label><em class="R_position4">*</em></td>
+
+					<td><label id="_ctl0_WorkForm_R_position5_View" class="View">
+					</label><em class="R_position5">*</em></td>
+				</tr>
+				<tr>
+					<td>爱好：</td>
+					<td><input name="_ctl0:WorkForm:ResumeColumn2" type="text"
+						id="_ctl0_WorkForm_ResumeColumn2" class="Edit" /><label
+						id="_ctl0_WorkForm_ResumeColumn2_View" class="View"></label></td>
+				</tr>
+
+				<tr>
+					<td style="width: 100px; word-break: normal">期望工作地：</td>
+					<td colspan="3"><input name="_ctl0:WorkForm:R_WorkArea_Expect"
+						type="text" id="_ctl0_WorkForm_R_WorkArea_Expect" class="Edit" /><label
+						id="_ctl0_WorkForm_R_WorkArea_Expect_View" class="View"></label><em
+						class="R_WorkArea_Expect">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal">期望薪金：</td>
+					<td><input name="_ctl0:WorkForm:E_Salary" type="text"
+						id="_ctl0_WorkForm_E_Salary" class="Edit" maxlength="100" /><label
+						id="_ctl0_WorkForm_E_Salary_View" class="View"></label><em
+						class="E_Salary">*</em></td>
+					<td style="width: 100px; word-break: normal">报到日期：</td>
+					<td><input name="_ctl0:WorkForm:Availabilily" type="text"
+						id="_ctl0_WorkForm_Availabilily" class="Edit" /><label
+						id="_ctl0_WorkForm_Availabilily_View" class="View"></label><em
+						class="Availabilily">*</em></td>
+				</tr>
+
+			</tbody>
+		</table>
+		<table id="tab33" width="100%" cellspacing="0" cellpadding="1">
+			<thead>
+				<tr class="hmsTitle">
+					<td style="width: 150px" colspan="2"><strong> 当前任职</strong></td>
+					<td colspan="4" align="right"><input
+						name="_ctl0:WorkForm:btn30" type="button"
+						id="_ctl0_WorkForm_btn30" class="button" value="保存"
+						onclick="saveInfo(this,'3')" style="display: none" /> <img
+						src="../../Themes/default/expend0.gif" alt="折叠" title="折叠"
+						style="margin-right: 5px; cursor: pointer"
+						onclick="expendBox(this)" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab3">
+				<tr>
+					<td style="width: 100px">现任职公司：</td>
+					<td><input name="_ctl0:WorkForm:R_CompanyName" type="text"
+						id="_ctl0_WorkForm_R_CompanyName" class="Edit" /><label
+						id="_ctl0_WorkForm_R_CompanyName_View" class="View"></label><em
+						class="R_CompanyName">*</em></td>
+					<td style="width: 100px">行业：</td>
+					<td><!--使用该控件必须引用simple.js--> <script
+						src="/OM/common/mod/BaseDataJson.ashx?lan=0&par=ClientIndustry&all=0"
+						type="text/javascript"></script> <select style="width:138px"
+						class="Edit" id="_ctl0_WorkForm_R_Industry_Parent"
+						name="_ctl0:WorkForm:R_Industry_Parent"
+						child="_ctl0_WorkForm_R_Industry"></select> <select
+						style="width:138px" class="Edit" id="_ctl0_WorkForm_R_Industry"
+						name="_ctl0:WorkForm:R_Industry"></select> <script
+						type="text/javascript">
+    var slt_ctl0_WorkForm_R_Industry_Parent = document.getElementById("_ctl0_WorkForm_R_Industry_Parent");
+    UI.bindSelect("_ctl0_WorkForm_R_Industry_Parent", ClientIndustry, '0'=='0'?ClientIndustry[0].id:'0');
+    var _ctl0_WorkForm_R_Industry_Parent_selected =slt_ctl0_WorkForm_R_Industry_Parent.options[slt_ctl0_WorkForm_R_Industry_Parent.selectedIndex].list;
+    UI.bindSelect("_ctl0_WorkForm_R_Industry",_ctl0_WorkForm_R_Industry_Parent_selected , 0==0?_ctl0_WorkForm_R_Industry_Parent_selected[0].id:0)
+</script> <label id="_ctl0_WorkForm_R_Industry_View" class="View"></label><em
+						class="R_Industry">*</em></td>
+					<td style="width: 100px">职位：</td>
+					<td><input name="_ctl0:WorkForm:R_positions" type="text"
+						id="_ctl0_WorkForm_R_positions" class="Edit" /><label
+						id="_ctl0_WorkForm_R_positions_View" class="View"></label><em
+						class="R_positions">*</em></td>
+				</tr>
+				<tr>
+					<td style="width: 100px">任职年限：</td>
+					<td><input name="_ctl0:WorkForm:R_LastWorkYear" type="text"
+						id="_ctl0_WorkForm_R_LastWorkYear" class="Edit" /><label
+						id="_ctl0_WorkForm_R_LastWorkYear_View" class="View"></label><em
+						class="R_LastWorkYear">*</em></td>
+					<td>目前薪金：</td>
+					<td colspan="3"><input name="_ctl0:WorkForm:C_Salary"
+						type="text" id="_ctl0_WorkForm_C_Salary" class="Edit"
+						maxlength="100" /><label id="_ctl0_WorkForm_C_Salary_View"
+						class="View"></label><em class="C_Salary">*</em></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="tab44" width="100%" cellspacing="0" cellpadding="1"
+			style="word-break: break-all;">
+			<thead>
+				<tr class="hmsTitle">
+					<td style="width: 80px"><strong> 履历</strong></td>
+					<td align="right"><input name="_ctl0:WorkForm:btn40"
+						type="button" id="_ctl0_WorkForm_btn40" class="button" value="保存"
+						onclick="saveInfo(this,'4')" style="display: none" /> <img
+						src="../../Themes/default/expend0.gif" alt="折叠" title="折叠"
+						style="margin-right: 5px; cursor: pointer"
+						onclick="expendBox(this)" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab4">
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					自我评价：</td>
+					<td><textarea name="_ctl0:WorkForm:R_SelfIntro"
+						id="_ctl0_WorkForm_R_SelfIntro" rows="3" cols="70"
+						style="width: 99%" class="Edit"></textarea><label
+						id="_ctl0_WorkForm_R_SelfIntro_View" class="View"> </label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					工作经历：</td>
+					<td><textarea name="_ctl0:WorkForm:R_WorkExper"
+						id="_ctl0_WorkForm_R_WorkExper" rows="7" cols="70"
+						style="width: 99%" class="Edit"></textarea><label
+						id="_ctl0_WorkForm_R_WorkExper_View" class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					教育经历：</td>
+					<td><textarea name="_ctl0:WorkForm:R_Edu"
+						id="_ctl0_WorkForm_R_Edu" rows="4" cols="70" style="width: 99%"
+						class="Edit"></textarea><label id="_ctl0_WorkForm_R_Edu_View"
+						class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					培训经历：</td>
+					<td><textarea name="_ctl0:WorkForm:R_Tran"
+						id="_ctl0_WorkForm_R_Tran" rows="4" cols="70" style="width: 99%"
+						class="Edit"></textarea><label id="_ctl0_WorkForm_R_Tran_View"
+						class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					语言能力：</td>
+					<td><textarea name="_ctl0:WorkForm:R_language"
+						id="_ctl0_WorkForm_R_language" rows="3" cols="70"
+						style="width: 99%" class="Edit"></textarea><label
+						id="_ctl0_WorkForm_R_language_View" class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					计算机能力：</td>
+					<td><textarea name="_ctl0:WorkForm:R_Computer"
+						id="_ctl0_WorkForm_R_Computer" rows="3" cols="70"
+						style="width: 99%" class="Edit"></textarea><label
+						id="_ctl0_WorkForm_R_Computer_View" class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">
+					相关技能：</td>
+					<td><textarea name="_ctl0:WorkForm:R_Skill"
+						id="_ctl0_WorkForm_R_Skill" rows="3" cols="70" style="width: 99%"
+						class="Edit"></textarea><label id="_ctl0_WorkForm_R_Skill_View"
+						class="View"></label></td>
+				</tr>
+				<tr>
+					<td style="width: 100px; word-break: normal" valign="top">备注：
+					</td>
+					<td><textarea name="_ctl0:WorkForm:R_remark"
+						id="_ctl0_WorkForm_R_remark" rows="3" cols="70" style="width: 99%"
+						class="Edit"></textarea><label id="_ctl0_WorkForm_R_remark_View"
+						class="View"></label></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="tab55" width="100%" cellspacing="0" cellpadding="1">
+			<thead>
+				<tr class="hmsTitle">
+					<td><strong> 附件</strong></td>
+					<td align="right"><img src="../../Themes/default/expend0.gif"
+						alt="折叠" title="折叠" style="margin-right: 5px; cursor: pointer"
+						onclick="expendBox(this)" /></td>
+				</tr>
+			</thead>
+			<tbody id="tab5">
+				<tr>
+					<td colspan="2"><script type="text/javascript">
+    var appPath = '/OM';
+    var userName = "1080";
+    var url = '/om/PES/Resumes/ResumeAdd.aspx';
+    var uid = '213';
+</script>
+
+					<style type="text/css">
+    .upload
+    {
+        border-top: solid 1px #ccc;
+        margin-bottom: 5px;
+        border-collapse: collapse;
+    }
+    .upload td
+    {
+        border-bottom: solid 1px #ccc;
+    }
+    .upload label
+    {
+        width: 5px;
+        height: 3px;
+        background: Green;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 1px;
+    }
+    .upload span
+    {
+        vertical-align: middle;
+    }
+    .upload .del
+    {
+        cursor: pointer;
+    }
+</style>
+
+					<script type="text/javascript">
+    function verifyUpload() {
+        var proc = $(".swfuploadprogress");
+        for (var i = 0; i < proc.length; i++) {
+            if (proc[i].innerHTML != "100%") {
+                alert("文件正在上传中");
+                return false;
+            }
+        }
+        return true;
+    }
+    function date2str(d) {
+        var ret = d.getFullYear() + "-";
+        ret += ("00" + (d.getMonth() + 1)).slice(-2) + "-";
+        ret += ("00" + d.getDate()).slice(-2) + " ";
+        ret += ("00" + d.getHours()).slice(-2) + ":";
+        ret += ("00" + d.getMinutes()).slice(-2) + ":";
+        ret += ("00" + d.getSeconds()).slice(-2);
+        return ret;
+    }
+
+
+    function optAtt(id) {
+        window.open(appPath + "/common/Component/down.ashx?id=" + id);
+    }
+    function getext(filename) {
+        var ext = filename.substr(filename.lastIndexOf('.') + 1);
+        if (ext == "docx") ext = "doc";
+        if (ext == "pptx") ext = "ppt";
+        if (ext == "xlst") ext = "xls";
+        if (ext == "zip") ext = "rar";
+        var list = ",doc,gif,jpg,pdf,ppt,txt,xls,rar,";
+        if (list.indexOf("," + ext + ",") > -1) return ext;
+        else return "non";
+    }
+    UI.upload = {
+        init: function(setting) {
+            UI.upload.setting = setting;
+            var s = '<object id="uploadFlash" type="application/x-shockwave-flash" data="';
+            s += setting.flash + '?limit=' + setting.limit + '&button=' + setting.button + '&url=' + escape(setting.url);
+            s += '" width="' + setting.width + '" height="' + setting.height + '">';
+            s += '<param name="movie" value="';
+            s += setting.flash + '?limit=' + setting.limit + '&button=' + setting.button + '&url=' + setting.url;
+            s += '"/><param name="quality" value="high" /><param name="allowScriptAccess" value="always" /></object>';
+            document.getElementById(setting.buttonBox).innerHTML = s;
+            UI.upload.flashObj = document.getElementById("uploadFlash");
+            UI.upload.body = document.getElementById(setting.container);
+        },
+        files: new Array(),
+        index: 0,
+        body: null,
+        setting: null,
+        flashObj: null,
+        alert: function(msg) { alert(msg); },
+        addFile: function(o) {
+            var size = (o.size / 1024).toFixed(2);
+            var tr = document.createElement("tr");
+            tr.id = "file_li_" + UI.upload.index;
+            var date = new Date();
+            var td1 = $.newElement("td", { width: 20, html: "<img title=\"\" src=\"" + appPath + "/images/fileicon/" + getext(o.name) + ".png\" />" });
+            var td2 = $.newElement("td", { html: o.name + "(" + size + "KB)" });
+            var td3 = $.newElement("td", { width: 150, html: "<label></label> <span class=\"swfuploadprogress\"><span>" });
+            var td4 = $.newElement("td", { width: 60, html: userName });
+            var td5 = $.newElement("td", { width: 150, html: date2str(date) });
+            var td6 = $.newElement("td", { width: 20, html: "<img class='del' title='" + o.name + "' onclick='UI.upload.delFile(this)' src=\"" + appPath + "/images/delete.gif\" /><input type='hidden' name='flash_filename' value=\"" + encodeURIComponent(o.name) + "\"/><input type='hidden' name='flash_filesize' value='" + size + "'/>" });
+            tr.appendChild(td1[0]);
+            tr.appendChild(td2[0]);
+            tr.appendChild(td3[0]);
+            tr.appendChild(td4[0]);
+            tr.appendChild(td5[0]);
+            tr.appendChild(td6[0]);
+            tr.onmouseover = function() { this.bgColor = "#f5f5f5"; };
+            tr.onmouseout = function() { this.bgColor = "#ffffff"; };
+            UI.upload.body.appendChild(tr);
+            UI.upload.files[o.name] = tr.id;
+            UI.upload.index++;
+        },
+        delFile: function(o) {
+            var over = o.parentNode.parentNode.getElementsByTagName("span")[0].innerHTML == "100%" ? 1 : 0;
+            UI.upload.flashObj.delFile(o.alt, over);
+            if (over == 1) {
+                Ajax.post(appPath + "/common/mod/AttachUpload.ashx", function(r) {
+                    if (r == "1")
+                        UI.upload.body.removeChild(o.parentNode.parentNode);
+                    else
+                        alert(Language.DeleteFailured);
+                }, { cmd: "delTempAttach", name: o.alt, uid: uid });
+            }
+            else
+                UI.upload.body.removeChild(o.parentNode.parentNode);
+        },
+        updateProgress: function(o, loaded, total) {
+            var tr = document.getElementById(UI.upload.files[o.name]);
+            var per = parseInt(loaded * 100 / total);
+
+            tr.getElementsByTagName("span")[0].innerHTML = per + "%";
+            tr.getElementsByTagName("label")[0].style.width = per + "px";
+            tr.getElementsByTagName("img")[0].setAttribute("over", 1);
+        }
+    }
+</script>
+
+					<table width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="left"></td>
+							<td align="right"><span id="_ctl0_WorkForm_att_btnUpload"></span>
+
+							</td>
+						</tr>
+					</table>
+					<input type="hidden" name="deletelist" id="attach_dellist" />
+					<table class="upload" width="100%" cellpadding="2" cellspacing="0">
+						<tbody id="upload">
+
+						</tbody>
+					</table>
+
+
+					<script type="text/javascript">
+    UI.upload.init({
+        container: "upload",
+        flash: appPath + "/js/upload.swf",
+        url: appPath + "/common/mod/AttachUpload.ashx?uid=" + uid,
+        limit: 10240000,
+        width: 64,
+        height: 22,
+        button: appPath + "/images/upload.png",
+        buttonBox: "_ctl0_WorkForm_att_btnUpload"
+    });
+</script> <script type="text/javascript">
+
+    function ontr(o, color) {
+        o.bgColor = color;
+    }
+    function deleteAttach(x, id) {
+        var o = document.getElementById("attach_dellist");
+        o.value = o.value + "," + id;
+        var tr = x.parentNode.parentNode;
+        tr.parentNode.removeChild(tr);
+    }
+
+</script></td>
+				</tr>
+			</tbody>
+		</table>
+		<table width="100%" cellspacing="0" cellpadding="1" border="0">
+			<tr>
+				<td style="width: 70px">创建人：</td>
+				<td>吴经宇</td>
+				<td style="width: 120px">创建日期：</td>
+				<td>2012-07-10 15:40:15</td>
+			</tr>
+		</table>
+		<div id="backtop"
+			style="text-align: center; cursor: pointer; margin-right: 60px"
+			class="hmstoolbar" onclick="window.location.hash='';">顶部↑</div>
+		</div>
+		</div>
+
+		<script type="text/javascript">
+        var hidUser = document.getElementById("_ctl0_WorkForm_R_Commend");
+        var txtUser = document.getElementById("_ctl0_WorkForm_R_Commend1");
+        var hidCompany = document.getElementById("_ctl0_WorkForm_R_Company");
+        var txtCompany = document.getElementById("_ctl0_WorkForm_R_companyNameCN");
+        var birthday = document.getElementById("_ctl0_WorkForm_R_Birthday");
+        var age = document.getElementById("_ctl0_WorkForm_R_Age");
+        var ulEvaluate = $("#ulEvaluate");
+        var userName = '吴经宇';
+        var rid = $.request.queryString("id");
+        var projectId = '0';
+    </script> <script type="text/javascript" src="../../Js/PESResume.js"></script>
+
+		<script type='text/javascript'>
+                function checkForm(block) {
+                    // ------1 基本信息  ------
+                    if (!block || block == 1) {
+
+                    }
+                    // ------2 人才评语  ------
+                    if (!block || block == 2) {
+
+                    }
+                    // ------3 当前任职------
+                    if (!block || block == 3) {
+
+                    }
+                    // ------4 履历------
+                    if (!block || block == 4) {
+
+                    }
+                    return true;
+                }
+
+            </script> <script type="text/javascript">
+
+        changeUI(views, edits, 'Edit');
+
+    </script> <script type="text/javascript">
+        function f_frameStyleResize(targObj) {
+            if (targObj.name == "main") return;
+            var targWin = targObj.parent.document.all[targObj.name];
+            if (targWin != null) {
+                var HeightValue = targObj.document.body.scrollHeight;
+                targWin.style.pixelHeight = HeightValue;
+            }
+        }
+        function f_iframeResize() {
+            f_frameStyleResize(self);
+        }
+        window.onload = f_iframeResize;
+
+    </script></div>
+		<div class="grid"></div>
+		</td>
+	</tr>
+</table>
+
+<script language="javascript" type="text/javascript">
+            var obj = document.getElementsByTagName("input");
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].className == "Line") continue;
+                if (obj[i].type == "text" && obj[i].className.indexOf("noborder") == -1) { obj[i].className += " Line" }
+            }
+            function userinfo(id) {
+                window.open('/OM/Settings/UserInfo.aspx?PK_ID=' + id, "_blank", "height=" + 450 + ",width=" + 550 + ",toolbar=no,status=no,resizable=yes,scrollbars=auto");
+            }
+        </script> <script src="../../Js/jCalendar.js" type="text/javascript"></script>
+
+
+
+
+<script type="text/javascript">
+<!--
+
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+// -->
+</script></form>
+</div>
+</body>
+
+
+</html>

@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<title>title</title>
+		<script type="text/javascript" src="js/jquery.js">
+		</script>
+		<script type="text/javascript" src="js/thickbox.js">
+		</script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="images/style.css" type="text/css">
+	</head>
+	<body>
+		<br/>
+		<form method="post" action="?model=device_quit&action=search_list" onsubmit="return check();">
+			<div>
+				退库原因：<input type="text" id="temp_notes" name="temp_notes" value="" /><span> 如果下列每条记录的退库原因不填写时则使用该退库原因补充。</span>
+			</div>
+			{list}
+			<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+				<tr>
+					<td colspan="13" style="text-align:center;">
+						<input type="submit" value=" 下一步 " /><input type="button" onclick="history.back();" value=" 返回 " />
+					</td>
+				</tr>
+			</table>
+		</form>
+		<script type="text/javascript">
+			
+			$('table').css('width', parent.ajaxContentW);
+			function check()
+			{
+			    var mycheck = true;
+			    var s = $('input[type=checkbox][name=id[]]:checked').get();
+			    var selected = false;
+			    for (var i = 0; i < s.length; i++) 
+			    {
+			        if (s[i].checked == true) 
+			        {
+			            selected = true;
+			            if ($('input[name=amount[' + s[i].value + ']]').val() == ''||$('input[name=amount[' + s[i].value + ']]').val() == 0) 
+			            {
+			                alert('请填写退库数量!');
+			                $('input[name=amount[' + s[i].value + ']]').focus();
+			                return false;
+			            }
+			            
+			            if ($('#temp_notes').val() == '' && $('input[name=notes[' + s[i].value + ']]').val() == '') 
+			            {
+			                alert('请填写退库原因！');
+			                $('input[name=notes[' + s[i].value + ']]').focus();
+			                return false;
+			            }
+			            //break;
+			        }
+			    }
+			    if (selected == false) 
+			    {
+			        alert('最少需要选择一条数据！');
+			        return false;
+			    }
+			    return true;
+			}
+			
+			function checkmax(id, obj)
+			{
+			    if (obj.value != '') 
+			    
+			    {
+			        if (obj.value >(Number($('#amount_' + id).html())-Number($('#borrows_'+id).html()))) 
+			        {
+			            alert('退库数量不能大于库存数量！');
+			            obj.value = '';
+			            return false;
+			        }
+			    }
+			}
+			
+			function set_all(chekced, typeid)
+			{
+			    $('#type_' + typeid + ' input[type=checkbox]:[disabled=false]').attr('checked', chekced);
+			}
+		</script>
+	</body>
+</html>

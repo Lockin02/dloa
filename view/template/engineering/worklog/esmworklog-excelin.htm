@@ -1,0 +1,78 @@
+<!DOCTYPE>
+<html>
+<title>导入EXCEL数据</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 获取截止提示
+        $.ajax({
+            url: "?model=engineering_baseinfo_esmdeadline&action=getTips",
+            success: function (data) {
+                if (data != "") {
+                    $("#showTips").html(data);
+                }
+            }
+        });
+
+        // 绑定表单提交时间
+        $("form").submit(function() {
+            if ($("#inputExcel").val() == "") {
+                alert('没有选择EXCEL文件');
+                return false;
+            } else {
+                $("#submitBtn").attr("disabled", true);
+            }
+        });
+    });
+</script>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+        导入日志
+    </span>
+</div>
+<form action="?model=engineering_worklog_esmworklog&action=excelIn" enctype="multipart/form-data" method="post">
+
+    <table class="form_main_table" width="90%">
+        <tr>
+            <td class="form_text_left">
+                <label>上传文件:</label>
+            </td>
+            <td class="form_text_right">
+                <input type="file" class="txtlong" name="inputExcel" id="inputExcel"/>
+                <input type="hidden" id="submitTag_" name="submitTag_" value="{submitTag_}"/>
+                <input type="submit" id="submitBtn" class="txt_btn_a" value=" 导 入 "/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                <label>模板下载</label>
+            </td>
+            <td class="form_text_right">
+                <input type="button" class="txt_btn_a" value="日志导入模板" onclick="location='upfile/工程日志导入模板.xls'"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_right"></td>
+            <td class="form_text_right">
+                导入功能说明：<br/>
+			<span id="remarkInfo" style="color:blue">
+				1.日志导入时，请以从上往下递增的顺序对日志的日期进行排序。<br/>
+				2.如果导入的日志已存在，则会更新对应的日志。<br/>
+				3.如果所导入的日志对应日期之后已填报日志，则日志中进度会显示'--'，但任务中进度会正常计算。<br/>
+				4.支持负完成量导入，用于冲减项目进度。<br/>
+                <span id="showTips" class="red"></span>
+			</span>
+            </td>
+        </tr>
+        <tr id="loading" style="display:none">
+            <td colspan="2">
+                <img src="images/loading1.gif"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="images/style.css" type="text/css" />
+</head>
+<body>
+<form method="post" action="?model={t_model}&action=add" onSubmit="return check();">
+	<input type="hidden" id="administrator" name="administrator" value="" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加标签类型</td>
+	</tr>
+	<tr>
+		<td width="100">标签属性：</td>
+		<td align="left">
+			<select id="level" name="level">
+				<option value="1">标签一</option>
+				<option value="2">标签二</option>
+				<option value="3">标签三</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>标签名称：</td>
+		<td align="left">
+			<input type="text" id="typename" name="typename" value="" />
+			<span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td>管理员：</td>
+		<td align="left">
+			<span id="usernamelist"></span>
+			<hr />
+			输入姓名：<input type="text" id="username" name="username" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 添加 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var userid = Array();
+	var tid = 0;
+	$(document).ready(function()
+	{
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				width:150,
+				//width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+ 
+			};
+		function set_url(table,field,id)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+		$("#username").autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				var username = unescape(data);
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+				function(data)
+				{
+					if (data)
+					{
+						
+						userid[tid] = unescape(data);
+						$('#usernamelist').append('<div id="user_'+tid+'">'+username+'<a href="javascript:del('+tid+')">删除</a></div>');
+						tid++;
+						$('#username').val('').focus();
+					}
+				}
+				);
+			}
+		});
+
+	});
+	function del(id)
+	{
+		$('#user_'+id).remove();
+		delete userid[id];
+		var temp = Array();
+		for(key in userid)
+		{
+			if (userid[key] && userid[key]!='undefined')
+			{
+				temp[key] = userid[key];
+			}
+		}
+		userid = temp;
+	}
+	function check()
+	{
+		if ($('#typename').val()=='')
+		{
+			alert('标签名称不能为空！');
+			return false;
+		}
+		if (userid.length > 0)
+		{
+			var admin_userid ='';
+			for (key in userid)
+			{
+				admin_userid +=userid[key]+',';
+			}
+			$('#administrator').val(admin_userid);
+		}else
+		{
+			$('#administrator').val('');
+		}
+		
+		return true;
+	}
+	
+</script>
+</body>
+</html>

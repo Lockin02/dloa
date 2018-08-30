@@ -1,0 +1,98 @@
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="view/template/engineering/manage/js/rd-menu-list.js"></script>
+		<script type="text/javascript" src="view/template/engineering/baseinfo/js/milestone-add.js"></script>
+<script>
+	function show_page(page){
+		this.location="?model=engineering_baseinfo_rdmilestoneinfo&action=milestonelist"
+	}
+
+	$(document).ready(function() {
+		$('#projectType').val('{projectTypeVal}');//选中值
+
+		topTabShow(arrayTop,"rdMilestone");
+	});
+
+</script>
+</head>
+<body >
+<div class="tab_options"></div>
+<div class="main_wraper">
+
+<table class="main_table_search">
+		<tr>
+			<td>
+			<input type="button" class="txt_btn_a" id="addButton" value="增加" onclick="addMilestone()">
+			<input type="button" class="txt_btn_a" value="删除" onclick="deleteObjs('engineering_baseinfo_rdmilestoneinfo');">
+			<!--
+			<input type="button" class="txt_btn_a" value="导出到Excel" onclick="export2Excel()">
+			 -->
+
+			</td>
+
+		</tr>
+	</table>
+<table class="form_main_table">
+		<tr>
+			<td  class="form_text_left">项目类型</td>
+			<td class="form_text_right">
+				<select class="select" id="projectType" name="rdmilestone[projectType]" onchange="selectType(this.value)">
+				<option value="typeoption">请选择</option>
+					{projectType}
+				</select>
+		</tr>
+
+</table>
+<!-- 这个版本是直接对应“类型-里程碑点”2010年10月26日注释 -->
+	<table  class="main_table">
+	<thead>
+		<tr class="main_tr_header" >
+			<th width="5%"><input type="checkbox" name="titlecb" onClick="checkAll();" ></th>
+			<th width="5%">序号</th>
+			<th width="5%">里程碑ID</th>
+			<th width="20%">里程碑名称</th>
+			<th width="10%">创建人</th>
+			<th width="10%">创建日期</th>
+			<th>描述</th>
+			<th width="8%">操作</th>
+		</tr>
+	</thead>
+		{list}
+
+<!--
+	<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="5%"><input type="checkbox" name="titlecb" onClick="checkAll();" ></th>
+			<th width="5%">序号</th>
+			<th width="20%">模板名称</th>
+			<th width="">描述</th>
+			<th width="">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{templateList}
+	</tbody>
+-->
+	</table>
+</div>
+{pageDiv}
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>修改调拨单</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/allocation-stockinfo-combogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/allocation-customer-combogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-order.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/allocation-contract-combogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allorder.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-borrow.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/allocation-reldoc-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/allocation-edit.js"></script>
+</head>
+<script type="text/javascript">
+    function reloadRelDocType() {
+        $("#relDocCode").yxcombogrid_borrow("remove").val("");
+        $("#relDocId").val("");
+
+        if ($("#relDocType").val() == "DBDYDLXJY") {
+            reloadBorrowCombo();
+        }
+    }
+    $(document).ready(function () {
+        reloadItemProduct();
+        reloadItemStock();
+        $("#pickName").yxselect_user({
+            hiddenId: 'pickCode',
+            isGetDept: [true, "deptCode", "deptName"],
+            isShowLeft: true
+        });
+        $("#deptName").yxselect_dept({
+            hiddenId: 'deptCode'
+        });
+        /** 邮件发送到 */
+        if ($("#TO_NAME").length > 0) {
+            $("#TO_NAME").yxselect_user({
+                hiddenId: 'TO_ID',
+                mode: 'check'
+            });
+        }
+
+        $("#relDocType").bind("change", function () {
+            reloadRelDocType();
+        });
+        //判断是否有审核权限
+        if ("{auditLimit}" != "1") {
+            $("#auditButton").hide();
+            $("#trEmail1").hide();
+            $("#trEmail2").hide();
+        }
+
+        //控制出库用途
+        controlUseOption();
+
+        //根据出库用途设置默认仓库
+        //reSetStock();
+        $("#toUse").bind("change", function () {
+            reSetStock();
+        });
+
+        $("#tableDiv").width(document.documentElement.clientWidth - 30);
+    });
+</script>
+<body>
+<form id="form1" method="post" action="?model=stock_allocation_allocation&action=edit"
+      onsubmit="return checkForm(false);">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head2">
+                    <span class="main_head_title">
+                        调拨单
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">单据编号</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readOnly name="allocation[docCode]" id="docCode"
+                       value="{docCode}"/>
+            </td>
+            <td class="form_text_left">借试用申请编号</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readOnly name="allocation[contractCode]" id="contractCode"
+                       value="{contractCode}"/>
+                <input type="hidden" name="allocation[contractId]" id="contractId" value="{contractId}"/>
+                <input type="hidden" name="allocation[contractType]" id="contractType" value="{contractType}"/>
+                <input type="hidden" name="allocation[contractName]" id="contractName" value="{contractName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">单据日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[auditDate]" id="auditDate" onfocus="WdatePicker()"
+                       value="{auditDate}"/>
+                <input type="hidden" class="readOnlyTxtNormal" name="allocation[docCode]" value="{docCode}"/>
+            </td>
+            <td class="form_text_left">出库用途</td>
+            <td class="form_text_right">
+                <select id="toUse" class="select" name="allocation[toUse]">
+                    {toUse}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">借出开始日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[outStartDate]" onfocus="WdatePicker()"
+                       value="{outStartDate}"/>
+            </td>
+            <td class="form_text_left">借出结束日期</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[outEndDate]" onfocus="WdatePicker()"
+                       value="{outEndDate}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">客户(单位)名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[customerName]" id="customerName"
+                       value="{customerName}"/>
+                <input type="hidden" name="allocation[customerId]" id="customerId" value="{customerId}"/>
+            </td>
+            <td class="form_text_left">客户联系人</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[linkmanName]" value="{linkmanName}"/>
+                <input type="hidden" name="allocation[linkmanId]" value="{linkmanId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">职员名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[pickName]" id="pickName" value="{pickName}"/>
+                <input type="hidden" name="allocation[pickCode]" id="pickCode" value="{pickCode}"/>
+            </td>
+            <td class="form_text_left">部门</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[deptName]" id="deptName" value="{deptName}"/>
+                <input type="hidden" name="allocation[deptCode]" id="deptCode" value="{deptCode}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">调出仓库名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[exportStockName]" id="exportStockName"
+                       value="{exportStockName}"/>
+                <input type="hidden" name="allocation[exportStockId]" id="exportStockId" value="{exportStockId}"/>
+                <input type="hidden" name="allocation[exportStockCode]" id="exportStockCode"
+                       value="{exportStockCode}"/>
+            </td>
+            <td class="form_text_left">调入仓库名称</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="allocation[importStockName]" id="importStockName"
+                       value="{importStockName}"/>
+                <input type="hidden" name="allocation[importStockId]" id="importStockId" value="{importStockId}"/>
+                <input type="hidden" name="allocation[importStockCode]" id="importStockCode" value="{importStockCode}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">源单类型</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readonly value="{relDocTypeName}"/>
+                <input type="hidden" name="allocation[relDocType]" id="relDocType" value="{relDocType}"/>
+            </td>
+            <td class="form_text_left">源单编号</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readonly name="allocation[relDocCode]" id="relDocCode"
+                       value="{relDocCode}"/>
+                <input type="hidden" name="allocation[relDocId]" id="relDocId" value="{relDocId}"/>
+                <input type="hidden" name="allocation[relDocName]" id="relDocName" value="{relDocName}"/>
+                <input type="hidden" name="allocation[rObjCode]" id="rObjCode" value="{rObjCode}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">制单</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="readOnlyTxtNormal" id="createName" readOnly name="allocation[createName]"
+                       value="{createName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea style="width: 80%" name="allocation[remark]">{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <div id="tableDiv" style="width: 1000px; height: 300px; overflow-y: auto; overflow-x: auto">
+                    <table class="main_table" id="itemtable">
+                        <thead>
+                        <tr>
+                            <td colspan="15" class="form_header">
+                                物料清单
+                                &nbsp;&nbsp; <span id="proTipInfo" style="color:#6CA6CD;text-align:center"></span>
+                            </td>
+                        </tr>
+                        <tr class="main_tr_header">
+                            <th>
+                                <img src="images/add_item.png" align="absmiddle" onclick="addItems();" title="新增物料"
+                                     alt="新增物料"/>
+                                <input type="hidden" id="itemscount" value="{itemscount}"/>
+                            </th>
+                            <th>序号</th>
+                            <th>物料编码</th>
+                            <th>K3编码</th>
+                            <th>物料名称</th>
+                            <th>规格型号</th>
+                            <th>单位</th>
+                            <th>数量</th>
+                            <th>单位成本</th>
+                            <th>成本</th>
+                            <th>调出仓库</th>
+                            <th>调入仓库</th>
+                            <th>序列号</th>
+                            <th>备注</th>
+                            <th>有效期至</th>
+                        </tr>
+                        </thead>
+                        <tbody id="itembody">
+                        {allocationItems}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr id="trEmail1">
+            <td class="form_text_left">是否发送邮件
+            </td>
+            <td colspan="3" class="form_text_right">
+                <input type="radio" name="allocation[email][issend]" value="y" checked="checked"
+                       onclick="checkEmailTA(this)"/>是
+                <input type="radio" name="allocation[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+            </td>
+        </tr>
+        <tr id="trEmail2">
+            <td class="form_text_left">邮件发送至
+            </td>
+            <td colspan="3" id="maildiv" class="form_text_right">
+                <input type="text" id="TO_NAME" class="txtlong" name="allocation[email][TO_NAME]" readonly="readonly"/>
+                <input type="hidden" id="TO_ID" name="allocation[email][TO_ID]" readonly="readonly"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" name="allocation[id]" value="{id}"/>
+                <input type="hidden" name="allocation[docStatus]" id="docStatus" value="{docStatus}"/>
+                <input type="submit" class="txt_btn_a" value="保  存"/>
+                <input type="button" class="txt_btn_a" id="auditButton" value="审  核" onclick="confirmAudit()"/>
+                <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <div align="left">提示:<font color="#4876FF">
+        <b>A.双击物料数量可以选择序列号. B.借用|试用|维修时调出仓库默认为借出仓,调出仓库默认为旧设备仓. C. 归还时调出仓库默认为旧设备仓,调出仓库默认为借出仓. D.借出仓库不是公司真实存在的仓库!</b>
+    </font></div>
+</form>
+</body>
+</html>

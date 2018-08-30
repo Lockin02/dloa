@@ -1,0 +1,507 @@
+<html>
+	<head>
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<title>库存管理</title>
+		<script type="text/javascript" src="js/jquery.js">
+		</script>
+		<script type="text/javascript" src="js/jquery.tablegrid.js">
+		</script>
+		<script type="text/javascript" src="js/thickbox.js">
+		</script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="images/style.css" type="text/css">
+		<style type="text/css">
+		<!-- #leftright, #topdown {
+		    position: absolute;
+		    left: 0;
+		    top: 0;
+		    width: 2px;
+		    height: 2px;
+		    layer-background-color: #6699cc;
+		    background-color: #6699cc;
+		    z-index: 100;
+		    font-size: 0px;
+		}
+		
+		.none {
+		    display: none;
+		}
+		
+		.td_bj {
+		    background: #ECECFF;
+		}
+		
+		.total {
+		    background: #EBF1F1;
+		}
+		
+		.zhuhai {
+		    background: #EED9BB;
+		}
+		
+		.beijing {
+		    background: #CFF3CF;
+		}
+		
+		.shenyang {
+		    background: #D7D7E3;
+		}
+		-->
+		</style>
+	</head>
+	<script language="JavaScript">
+		<!--
+		var mouse = false;
+		if (document.all && !window.print) 
+		{
+		    leftright.style.width = document.body.clientWidth - 6
+		    topdown.style.height = document.body.clientHeight - 1
+		}
+		else if (document.layers) 
+		{
+		    document.leftright.clip.width = window.innerWidth
+		    document.leftright.clip.height = 5
+		    document.topdown.clip.width = 5
+		    document.topdown.clip.height = window.innerHeight
+		}
+		function followmouse1()
+		{
+		    //move cross engine for IE 4+
+		    if (mouse == true) 
+		    {
+		        leftright.style.pixelTop = document.body.scrollTop + event.clientY + 1
+		        topdown.style.pixelTop = document.body.scrollTop
+		        if (event.clientX < document.body.clientWidth - 2) 
+		            topdown.style.pixelLeft = document.body.scrollLeft + event.clientX + 1
+		        else 
+		            topdown.style.pixelLeft = document.body.clientWidth - 2
+		    }
+		}
+		
+		function followmouse2(e)
+		{
+		    //move cross engine for NS 4+
+		    if (mouse == true) 
+		    {
+		        document.leftright.top = e.y + 6
+		        document.topdown.top = pageYOffset
+		        document.topdown.left = e.x + 6
+		    }
+		}
+		
+		if (document.all) 
+		{
+		    document.onmousemove = followmouse1
+		}
+		else if (document.layers) 
+		{
+		    window.captureEvents(Event.MOUSEMOVE)
+		    window.onmousemove = followmouse2
+		}
+		function regenerate()
+		{
+		    window.location.reload()
+		}
+		
+		function regenerate2()
+		{
+		    setTimeout("window.onresize=regenerate", 400)
+		}
+		
+		function cross()
+		{
+		    if (mouse == true) 
+		    {
+		        document.getElementById('leftright').style.display = 'none';
+		        document.getElementById('topdown').style.display = 'none';
+		        document.getElementById('mouse').value = '鼠标十字';
+		        mouse = false;
+		    }
+		    else 
+		    {
+		        document.getElementById('leftright').style.display = '';
+		        document.getElementById('topdown').style.display = '';
+		        document.getElementById('mouse').value = '取消十字';
+		        mouse = true;
+		    }
+		}
+		
+		if ((document.all && !window.print) || document.layers) 
+		{
+		    //if the user is using IE 4 or NS 4, both NOT IE 5+
+		    window.onload = regenerate2
+		}
+		//-->
+	</script>
+	<body>
+		<div id="leftright" style="width:expression(document.body.clientWidth);display:none;">
+		</div>
+		<div id="topdown" style="height:expression(document.body.clientHeight);display:none;">
+		</div>
+		<br/>
+		<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+			<tr>
+				<td>
+					类型筛选：
+					<select id="typeid" name="typeid" onChange="onChanges();">
+						<option value="">全部类别</option>
+						{select_type}
+					</select>
+                     <input type="text" id="typeName" name="typeName"   value="{typeName}"  />
+                <input type="button" value=" 查询　" onClick="onChanges();" />
+				</td>
+				<!--<td>
+				盘点查询：
+				<select id="year" name="year">
+				<option value="2010">2010</option>
+				<option value="2010">2009</option>
+				<option value="2010">2008</option>
+				<option value="2010">2007</option>
+				<option value="2010">2006</option>
+				<option value="2010">2005</option>
+				<option value="2010">2004</option>
+				<option value="2010">2003</option>
+				<option value="2010">2002</option>
+				<option value="2010">2001</option>
+				</select>年　
+				<select id="month" name="month">
+				{select_month}
+				</select>月
+				<input type="submit" value=" 查询　"　/>
+				</td>-->
+               
+                
+				<td>
+					<input type="button" alt="?model=device_import&action=upfile&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=500" title="导入数据" value="导入数据" class="thickbox" />
+				</td>
+				<td>
+					<input type="button" onClick="export_data();" title="导出库存数据" value="导出库存数据"/>
+				</td>
+                <td>
+					<input type="button" onClick="exportInfoData();" title="导出库存详情" value="导出库存详情"/>
+				</td>
+				<td>
+					<input type="button" alt="?model=device_quit&action=order_list&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800" title="设备退库记录" value="设备退库记录" class="thickbox" />
+				</td>
+				<td>
+					<input type="button" alt="?model=device_service&action=order_list&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800" title="设备维修记录" value="设备维修记录" class="thickbox" />
+				</td>
+				<td>
+					<input type="button" alt="?model=device_stock&action=logManage&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800" title="操作记录" value=" 操作记录 " class="thickbox" />&nbsp;&nbsp;<input type="button" alt="?model=device_stock&action=show_add&placeValuesBefore&TB_iframe=true&modal=false&height=300&width=400" title="添加新设备" value=" 添加设备 " class="thickbox" />
+				</td>
+			</tr>
+		</table>
+		<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="grid">
+			<tr>
+				<td colspan="1" id="show" style="background:#D3E5FA">
+					<input type="button" id="mouse" onClick="tr_on();" value="详细显示" />
+				</td>
+				<td colspan="23" align="center" style="background:#D3E5FA">
+					库存总表
+				</td>
+			</tr>
+			<tr class="tableheader">
+				<td rowspan="2">
+					设备类别
+				</td>
+				<td width="124" rowspan="2">
+					设备名称
+				</td>
+                <td width="50" rowspan="2">
+					预算价格
+				</td>
+				<td width="50" rowspan="2">
+					单位
+				</td>
+				<td colspan="3">
+					库存总数
+				</td>
+				<td colspan="3" class="none">
+					珠海
+				</td>
+				<td colspan="3" class="none">
+					西安
+				</td>
+				<td colspan="3" class="none">
+					沈阳
+				</td>
+				<td colspan="3" class="none">
+					广州
+				</td>
+				<td class="none" rowspan="2">
+					上月总数
+				</td>
+				<td class="none" rowspan="2">
+					本月添加
+				</td>
+				<td class="none" rowspan="2">
+					本月丢失
+				</td>
+				<td class="none" rowspan="2">
+					平均单价
+				</td>
+				<td class="none" rowspan="2">
+					每天折价
+				</td>
+				<td class="none" rowspan="2">
+					使用率
+				</td>
+				<td class="none" rowspan="2">
+					本月盘点
+				</td>
+				<td class="none" rowspan="2">
+					备注
+				</td>
+				<td width="180" rowspan="2">
+					操作
+				</td>
+			</tr>
+			<tr>
+				<td class="total">
+					总数
+				</td>
+				<td class="total">
+					借用
+				</td>
+				<td class="total">
+					剩余
+				</td>
+				<td class="none zhuhai">
+					总数
+				</td>
+				<td class="none zhuhai">
+					借用
+				</td>
+				<td class="none zhuhai">
+					剩余
+				</td>
+				<td class="none beijing">
+					总数
+				</td>
+				<td class="none beijing">
+					借用
+				</td>
+				<td class="none beijing">
+					剩余
+				</td>
+				<td class="none shenyang">
+					总数
+				</td>
+				<td class="none shenyang">
+					借用
+				</td>
+				<td class="none shenyang">
+					剩余
+				</td>
+				<td class="none guangzhou">
+					总数
+				</td>
+				<td class="none guangzhou">
+					借用
+				</td>
+				<td class="none guangzhou">
+					剩余
+				</td>
+			</tr>
+			{list}
+		</table>
+		<script type="text/javascript">
+			var temp = Array();
+			$(document).ready(function()
+			{
+			    /*设置隔行变色*/
+			    //$("tbody tr:odd").css("background-color","#ece9dc");
+			    /*设置鼠标划过时变色*/
+			    /*单行变色*/
+			    var trodd = $("#grid tbody tr:odd");
+			    var treven = $("#grid tbody tr:even");
+			    
+			    trodd.mouseover(function()
+			    {
+			        $(this).css("background", "#FFFFC8");
+			    })
+			    trodd.mouseout(function()
+			    {
+			        $(this).css("background", "#ffffff");
+			    });
+			    
+			    treven.mouseover(function()
+			    {
+			        $(this).css("background", "#FFFFC8");
+			    })
+			    treven.mouseout(function()
+			    {
+			        $(this).css("background", "#FFFFFF");
+			    });
+			});
+			function edit(id, key)
+			{
+			    temp[id] = $('#tr_' + id).html();
+			    var unit = $('#unit_' + id).html();
+			    var device_name = $('#device_name_' + id + ' a').html();
+				var budgetPrice = $('#budgetPrice_' + id).html();
+			    var lose = $('#lose_' + id).html();
+			    var notse = $('#notse_' + id).html();
+			    var discount = $('#discount_' + id).html();
+			    var inventory = $('#inventory_' + id).html();
+			    $('#unit_' + id).html('<input type="text" size="4" id="new_unit_' + id + '" value="' + unit + '" />');
+			    $('#device_name_' + id).html('<input type="text" size="15" id="new_device_name_' + id + '" value="' + device_name + '" />');
+				$('#budgetPrice_' + id).html('<input type="text" size="15" id="new_budgetPrice_' + id + '" value="' + budgetPrice + '" />');
+			    $('#lose_' + id).html('<input type="text" size="5" id="new_lose_' + id + '" value="' + lose + '" />');
+			    $('#notse_' + id).html('<input type="text" size="8" id="new_notse_' + id + '" value="' + notse + '" />');
+			    $('#discount_' + id).html('<input type="text" size="4" id="new_discount_' + id + '" value="' + discount + '" />');
+			    $('#inventory_' + id).html('<input type="text" size="4" id="new_inventory_' + id + '" value="' + inventory + '" />');
+			    $('#edit_' + id).html('<input type="button" onclick="save(' + id + ',\'' + key + '\');" value="保存"/> <input type="button" onclick="exit_edit(' + id + ')" value="取消" />');
+				$("#new_budgetPrice_"+ id ).keyup(function(){  
+					 $(this).val($(this).val().replace(/[^0-9.]/g,'')); 
+                 }).bind("paste",function(){  //CTR+V事件处理  
+						$(this).val($(this).val().replace(/[^0-9.]/g,''));   
+				 }).css("ime-mode", "disabled");
+			}
+			
+			function del(id, key)
+			{
+			    if (id > 0) 
+			    {
+			        if (confirm('您确定要删除该设备吗？')) 
+			        {
+			            $.post('ajax.php?', 
+			            {
+			                model: '{t_model}',
+			                action: 'del_device',
+			                id: id,
+			                key: key,
+			                rand: Math.random(0, 99999)
+			            }, function(data)
+			            {
+			                if (data == 1) 
+			                {
+			                    $('#tr_' + id).remove();
+			                }
+			                else if (data == -1) 
+			                {
+			                    alert('该设备还有记录存在，暂时不能删除！');
+			                }
+			                else 
+			                {
+			                    alert('删除失败，请于管理员联系！');
+			                }
+			            });
+			        }
+			    }
+			}
+			
+			function update(id, key)
+			{
+			    if (id > 0) 
+			    {
+			        if (confirm('您确定要更新该设备吗？')) 
+			        {
+			            $.post('?model=device_stock&action=update_stockdata', 
+			            {
+			                id: id,
+			                key: key,
+			                rand: Math.random(0, 99999)
+			            }, function(data)
+			            
+						{
+			                if (data==1)
+							{
+								 alert('更新成功！');
+			                    window.location.reload();
+			                }
+			                else 
+			                {
+			                    alert('更新失败，请于管理员联系！');
+			                }
+			            });
+			        }
+			    }
+			}
+			
+			function save(id, key)
+			{
+				
+				
+		
+			    var rand = Math.random() * 100000;
+			    var device_name = $('#new_device_name_' + id).val();
+				var budgetPrice = $('#new_budgetPrice_' + id).val();
+			    var unit = $('#new_unit_' + id).val();
+			    var discount = $('#new_discount_' + id).val();
+			    var lose = $('#new_lose_' + id).val();
+			    var notse = $('#new_notse_' + id).val();
+			    var inventory = $('#new_inventory_' + id).val();
+			    $.post('ajax.php', 
+			    {
+			        model: 'device_stock',
+			        action: 'model_update',
+			        device_name: device_name,
+					budgetPrice:budgetPrice,
+			        unit: unit,
+			        lose: lose,
+			        notse: notse,
+			        inventory: inventory,
+			        discount: discount,
+			        id: id,
+			        key: key,
+			        rand: rand
+			    }, function(data)
+			    {
+			        if (data == 1) 
+			        {
+			            $('#tr_' + id).html(temp[id]);
+			            $('#device_name_' + id + ' a').html(device_name);
+						 $('#budgetPrice_' + id).html(budgetPrice);
+			            $('#unit_' + id).html(unit);
+			            $('#discount_' + id).html(discount);
+			            $('#lose_' + id).html(lose);
+			            $('#notse_' + id).html(notse);
+			            $('#inventory_' + id).html(inventory);
+			        }
+			        else 
+			        {
+			            alert('修改失败！');
+			        }
+			    })
+			}
+			
+			function exit_edit(id)
+			{
+			    $('#tr_' + id).html(temp[id]);
+			    tb_init('#device_name_' + id + ' a.thickbox');
+			    tb_init('#edit_' + id + ' a.thickbox');
+			}
+			
+			function tr_off()
+			{
+			    //$('.none').css('display','none');
+			    $('.none1').removeClass('none1').addClass('none');
+			    $('#show').html('<input type="button" onclick="tr_on()" value="详细显示" />');
+			}
+			
+			function tr_on()
+			{
+			    //$('.none').css('display','block');
+			    $('.none').removeClass('none').addClass('none1');
+			    $('#show').html('<input type="button" onclick="tr_off()" value="精简显示" />');
+			}
+			
+			function export_data()
+			{
+			    var typeid = $('#typeid').val();
+			    location.href = '?model=device_export&action=total&typeid=' + typeid;
+			}
+			function exportInfoData(){
+				 location.href = '?model=device_export&action=exportInfoData'
+			}
+			function onChanges(){
+				
+			  var typeid=$('#typeid').val();
+			  var typeName=$('#typeName').val();
+			  location.href='?model=device_stock&action=showlist&typeid='+typeid+'&typeName='+typeName;
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,145 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <title>列表显示</title>
+        <script type="text/javascript" src="js/jquery.js"></script>
+
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+		<script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+		<script type="text/javascript" src="js/ext/common-ext.js"></script>
+		<link type="text/css" rel="stylesheet" href="js/ext/resources/css/ext-all.css" />
+		<link type="text/css" rel="stylesheet" href="js/ext/css/styles.css" />
+		<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+		<script type="text/javascript" src="view/template/common/combogrid/TemplatePlanComboGrid.js"></script>
+
+		<script type="text/javascript" src="view/template/rdproject/plan/js/rdplan-import.js"></script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+		<script>
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_rd_project_plan"//业务模块编码，一般取表名
+			});
+		});
+		</script>
+
+    </head>
+
+    <body>
+    	<form method="POST" id="form1" action="?model=rdproject_template_rdtplan&action=add" onkeypress="return NoSubmit(event);">
+        <table class="form_main_table">
+        	<tr>
+				<td class="main_tr_header" colspan="4">从模板导如计划</td>
+			</tr>
+            <tr>
+                <td class="form_text_left">
+                    项目名称
+                </td>
+                <td class="form_text_right">
+                    {projectName}
+                    <input type="hidden" name="rdplan[projectName]" value="{projectName}" />
+                    <input type="hidden" name="rdplan[projectId]" value="{projectId}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    上级计划
+                </td>
+                <td class="form_text_right">
+                    {parentName}
+                    <input type="hidden" name="rdplan[parentId]" value="{parentId}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    选择模板
+                </td>
+                <td class="form_text_right">
+                    <input type="hidden" id="templateId" name="rdplan[templateId]" />
+                    <input type="text" id="templateName" name="rdplan[templateName]" class="txt">
+                    <span class='red'>[*]</span>
+                    <div id="templateNameTip" class="tipShortTxt"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    计划名称
+                </td>
+                <td class="form_text_right">
+                    <input type="text" id="planName" name="rdplan[planName]" class="txt">
+                    <span class='red'>[*]</span>
+                    <div id="planNameTip" class="tipShortTxt"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    计划启动日期
+                </td>
+                <td class="form_view_right">
+                    <input type="text" class="txt" id="planDateStart" name="rdplan[planBeginDate]" onfocus="WdatePicker()" readonly />
+                    <span class='red'>[*]</span>
+                    <div id="planDateStartTip" class="tipShortTxt"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    计划完成日期
+                </td>
+                <td class="form_view_right">
+                    <input type="text" class="txt" id="planDateClose" name="rdplan[planEndDate]" onfocus="WdatePicker()" readonly />
+                    <span class='red'>[*]</span>
+                    <div id="planDateCloseTip" class="tipShortTxt"></div>
+                </td>
+            </tr>
+			<tr>
+				<td class="form_text_left">
+					描述
+				</td>
+				<td class="form_view_right">
+                    <textarea id="description" name="rdplan[description]" class="txt_txtarea_font"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">附件</td>
+				<td class="form_text_right" colspan="3">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span> <input
+					id="btnCancel" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+
+				</td>
+			</tr>
+            <tr>
+                <td class="txt_btn" colspan="2">
+                    <input name="" type="submit" class="txt_btn_a" value=" 保存 " />
+                    <input name="" type="button" class="txt_btn_a" value=" 返回 " onclick="self.parent.tb_remove();"/>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </body>
+
+</html>

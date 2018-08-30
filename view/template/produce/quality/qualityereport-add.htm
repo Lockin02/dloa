@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>新增检验报告</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"> </script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-qualityprogram.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/quaprogram-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/qualityereport-add.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/qualityereport-common.js"></script>
+    <!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+	<script type="text/javascript" src="swfupload/handlers.js"> </script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+        $(function() {
+            uploadfile = createSWFUpload({
+                 "serviceType": "oa_produce_quality_ereport"
+             });
+        });
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=produce_quality_qualityereport&action=add" onsubmit="return checkForm()">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head2">
+                    <span class="main_head_title">新增检验报告</span>
+                    <input type="button" class="main_head_btn txt_btn_a" onclick="quickSetPass();" value="快捷操作:设置全部合格"/>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">报 告 人</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" readonly id="examineUserName"
+                       name="qualityereport[examineUserName]" value="{examineUserName}"/>
+                <input type="hidden" id="examineUserId" name="qualityereport[examineUserId]" value="{examineUserId}"/>
+            </td>
+            <td class="form_text_left"><span class="blue">报告日期</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt Wdate" id="docDate" onfocus="WdatePicker()" name="qualityereport[docDate]"
+                       value="{docDate}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">质检方案</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="qualityPlanName" name="qualityereport[qualityPlanName]"/>
+                <input type="hidden" id="qualityPlanId" name="qualityereport[qualityPlanId]"/>
+            </td>
+            <td class="form_text_left">质检标准</td>
+            <td class="form_text_right">
+                <span id="standardHtml"><select id="standardId" name="qualityereport[standardId]" class="select"
+                        onchange="standardFile(this.value);changeName('standardId','standardName');">
+                    <option></option>
+                </select>
+                </span>
+                <input type="hidden" id="standardName" name="qualityereport[standardName]"/>
+                <span id="fileImage"></span>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">质检方式</td>
+            <td class="form_text_right">
+                <select name="qualityereport[qualityType]" id="qualityType" class="select"
+                        onchange="changeCheckType();">
+                    <option value="ZJFSQJ">全检</option>
+                    <option value="ZJFSCJ">抽检</option>
+                </select>
+            </td>
+            <td class="form_text_left"><span id="checkNumNeed">抽检数量</span></td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="checkNum" name="qualityereport[checkNum]"
+                       readonly="readonly"/>
+            </td>
+        </tr>
+        <tr style="display:none;">
+            <td class="form_text_left">报检数量</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="supportNum" name="qualityereport[supportNum]"
+                       readonly="readonly"/>
+            </td>
+            <td class="form_text_left">合格数量</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="qualitedNum" name="qualityereport[qualitedNum]"
+                       value="0" readonly="readonly"/>
+            </td>
+        </tr>
+        <tr style="display:none;">
+            <td class="form_text_left">不合格数量</td>
+            <td class="form_text_right" colspan="3">
+                <input type="text" class="readOnlyTxtNormal" id="produceNum" name="qualityereport[produceNum]" value="0"
+                       readonly="readonly"/>
+            </td>
+        </tr>
+       	<tr>
+			<td class="form_text_left">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+			<td class="form_text_right" colspan="3">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload"></div>
+				</div>
+			</td>
+			<td class="form_text_left" id="ducumentTd" style="display:none;">报告分类</td>
+			<td class="form_text_right" style="display:none;">
+				<input type="text" readOnly id="parentName" class="txt" name="ducument[typeName]" />
+				<input type="hidden" id="parentId" name="ducument[typeId]" />
+				<span class="red">[*]</span>
+					<div id="parentIdTip" class="tipShortTxt"></div>
+			</td>
+	    </tr>
+	    <tr style="display:none;" id="relCodeTr">
+            <td class="form_text_left">计划单号</td>
+            <td class="form_text_right">
+                {planCode}
+            </td>
+            <td class="form_text_left">合同编号</td>
+            <td class="form_text_right">
+                {contractCode}
+            </td>
+        </tr>
+        <tr style="display:none;" id="guideDocTr">
+			<td class="form_text_left">指引文件</td>
+			<td class="form_text_right">
+				<input type="text" readOnly id="guideDocName" class="txt" name="qualityereport[guideDocName]" />
+				<input type="hidden" id="guideDocId" name="qualityereport[guideDocId]" />
+			</td>
+			<td class="form_text_right" colspan="3">
+				<div class="upload"></div>
+			</td>
+        </tr>
+        <tr style="display:none;">
+		    <td class="form_text_left">备注:</td>
+		    <td class="form_text_right" colspan="3" id="remark">
+		        <textarea class="txt_txtarea_font" name="qualityereport[remark]"></textarea>
+		    </td>
+		</tr>
+    </table>
+    <div id="ereportequitem"></div>
+    <div id="itemTable"></div>
+    <div id="failureItem"></div>
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">是否邮件通知</td>
+            <td colspan="3" class="form_text_right">
+                <input type="radio" name="qualityereport[mailInfo][issend]" value="y" checked="checked"
+                       onclick="checkEmailTA(this)"/>是
+                <input type="radio" name="qualityereport[mailInfo][issend]" value="n" onclick="checkEmailTA(this)"/>否
+            </td>
+        </tr>
+        <tr id="maildiv">
+            <td class="form_text_left">邮件接收人</td>
+            <td colspan="3" class="form_text_right">
+                <input type="text" name="qualityereport[mailInfo][TO_NAME]" id="TO_NAME" class="txtbiglong"
+                       readonly="readonly" value="{sendName}"/>
+                <input type="hidden" name="qualityereport[mailInfo][TO_ID]" id="TO_ID" readonly="readonly"
+                       value="{sendUserId}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="hidden" id="mainId" name="qualityereport[mainId]" value="{mainId}"/>
+                <input type="hidden" id="mainCode" name="qualityereport[mainCode]" value="{mainCode}"/>
+                <input type="hidden" id="relDocType" name="qualityereport[relDocType]" value="{relDocType}"/>
+                <input type="hidden" id="applyId" name="qualityereport[applyId]" value="{applyId}"/>
+
+                <input type="submit" class="txt_btn_a" onclick="audit('WSH');" value=" 提  交 "/>&nbsp;&nbsp;
+                <input type="submit" class="txt_btn_a" onclick="audit('BC');" value=" 保  存 "/>&nbsp;&nbsp;
+                <input type="hidden" name="qualityereport[auditStatus]" id="auditStatus" value="BC"/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

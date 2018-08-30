@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css"/>
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+<script src="js/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+<script  type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="module/ajax_search/sea.js"></script>
+<title></title>
+</head>
+<style>
+<!--
+.ui-jqgrid-sortable {
+	font-weight:normal;
+	font-size:12px;
+	height:24px;
+}
+.ui-jqgrid-title {
+	clear:both;
+	font-size:12px;
+	height:24px;
+	line-height:20px;
+}
+.ui-helper-clearfix {
+	height:24px;
+}
+.ui-row-ltr td {
+	border-top:0px #DDDDDD solid;
+	border-left:0px #DDDDDD solid;
+	border-right:0px #DDDDDD solid;
+}
+
+.ui-widget-content jqgrow ui-row-ltr{
+ 	border-left:0px #DDDDDD solid;
+}
+.ui-jqgrid tr.ui-row-ltr td {
+  border-right-color: inherit;
+  border-right-style:none;
+  border-right-width: 1px;
+}
+.ui-state-default ui-th-column ui-th-ltr{
+	border-right-style:hidden;
+	border-left:0px #DDDDDD solid;
+	}
+	
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	border-right-style:hidden;
+	border-right:0px #DDDDDD solid;
+	}
+.ui-jqgrid .ui-jqgrid-htable th div{
+	 height: 24px;
+    line-height: 24px;
+	
+	}
+table td{
+	 height: 22px;
+    line-height: 15px;
+	
+	}
+.ui-jqgrid tr.jqgrow td {
+    border-bottom-color: #C2D5E3;
+    border-bottom-style:dashed;
+    border-bottom-width: 1px;
+	border-right-color: #C2D5E3;
+    border-right-style:dashed;
+    border-right-width: 1px;
+    font-weight: normal;
+    height: 24px;
+    overflow: hidden;
+    padding: 0 2px;
+    white-space: pre;
+}
+.ui-widget-content a {
+  color: #362B36;
+ 
+}
+.ui-widget-content a:link { text-decoration: none;}
+
+.ui-widget-content a:active { text-decoration:underline}
+
+.ui-widget-content a:hover { text-decoration:underline;color: red}
+
+.ui-widget-content a:visited { text-decoration: none;color: green}
+.flb
+{
+	height: 15px;
+	line-height: 15px;
+	padding: 10px 10px 10px;
+}
+.flbc
+{
+	background: url("images/lore/cls.gif") no-repeat scroll 0 0 transparent;
+	float: left;
+	height: 20px;
+	overflow: hidden;
+	width: 20px;
+}
+.flbc:hover { background-position: 0 -20px; }
+.fwinmask { background:url(images/lore/background.png) repeat-x; }
+-->
+</style>
+<body>
+<div id="listd" style='float:left; width:97%; margin:10px;'>
+<div id="plists"></div>
+  <table  id="list" class="scroll"  border="0" width="100%" cellpadding="0" cellspacing="0" >
+  </table>
+  <div id="plist"></div>
+ </div>
+<div id="upfileshow" style="position:absolute;width:498px;left:10px; z-index: 201; top:10px; min-height:110px; border:1px #AED0EA solid; display:none" class="fwinmask">
+<div style="cursor:move;" id="reply" class="flb"> <span  style="float:left; text-align:left;color:#000" ><strong>打回详情</strong></span> 
+   <a href="javascript:;" class="flbc" onclick="hideWindow()" style="float:right; text-align:right" title="关闭"></a> </div>
+ <table  id="showinfo"  border="0" width="100%" cellpadding="0" cellspacing="0"  class="iframetable" >
+   </table>
+</div>
+<div id="showreport" style="position:absolute;width:498px;left:10px; z-index: 201; top:10px; min-height:110px; border:1px #AED0EA solid; display:none" class="fwinmask">
+<div style="cursor:move;" id="reports" class="flb"> <span  style="float:left; text-align:left;color:#000" ><strong>纠错详情</strong></span> 
+   <a href="javascript:;" class="flbc" onclick="hideWindows()" style="float:right; text-align:right" title="关闭"></a> </div>
+ <table  id="showreportinfo"  border="0" width="100%" cellpadding="0" cellspacing="0"  class="iframetable" >
+   </table>
+</div>
+<div id="sug" style="position: absolute;"></div>
+<script type="text/javascript"> 
+var rand=Math.random()*100000;
+var height = $(window).height()>650?$(window).height():650;
+jQuery(document).ready(function(){ 
+jQuery("#list").jqGrid({
+   	url:'?model=lore_index&action=countdata',
+	datatype: "json",
+    colNames:['员工名称','文章数','回复数','浏览数','结束时间','会仪类型','操 作','操 作','start','id','打回数','纠错数'],
+  	colModel:[
+		{name:'user_name',index:'user_name',width:250,editable:true, align:"left"},	
+   		{name:'amount',index:'articleconut', width:100, align:"center"},
+		{name:'ascount',index:'reviewconut', width:100, align:"center"},
+		{name:'browse',index:'browseconut', width:100,align:"center"},
+		{name:'creater',index:'creater', width:15, align:"center",hidden:true},
+		{name:'ascounts',index:'ascounts', width:10, align:"center",hidden:true},
+   		{name:'browses',index:'browses', width:10, align:"center",hidden:true},		
+   		{name:'levels',index:'levels', width:10,align:"center",hidden:true},
+		{name:'status',index:'status',width:15,align:"center",hidden:true},
+		{name:'cid',index:'cid',width:15,align:"center",hidden:true},
+		{name:'backconut',index:'backconut', width:100,align:"center"},
+		{name:'notifyconut',index:'notifyconut', width:100,align:"center",hidden:true}
+   	],
+	rowNum:20,
+   	rowList:[20,30],
+   	height: height-170,
+	align:'center',
+   	pager: '#plist',
+	autowidth: true, 
+    viewrecords: true, 
+	rownumbers: true, 
+    sortorder: "desc",
+    sortname: 'class', 
+	//striped: true,
+	caption:"<span id='headname' style='height:24px;'><strong style='color:#2779AA'>统计</strong>"
+			 +"<img src='images/search.gif' alt='搜索' height='24' align='middle'/>"
+			 +"<span style='color:#2779AA;font-weight:normal'>类型：</span>"
+			 +"<select name='typeclass' id='typeclass'><option value='1'>用户</option><option value='2'>审批人</option></select>"
+			 //+"<span style='color:#2779AA;font-weight:normal'>标签：</span>"
+			// +"<select name='tagsall' id='tagsall'><option value='-1'>所有标签</option>{taglist}</select>"
+			 +"<span style='color:#2779AA;font-weight:normal'>&nbsp;&nbsp;发布时间：</span>"
+			 +"<input name='sdate' id='sdate' onclick=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+			 +"onfocus=\"WdatePicker({el:$dp.$('sdate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" " 
+			 +"style='cursor: hand;width:120px;' value=''/>&nbsp;<span style='color:#2779AA;font-weight:normal'> 至：</span>"
+			 +"<input name='edate' style='cursor: hand;width:120px;'id='edate' onclick=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\""
+			 +" onfocus=\"WdatePicker({el:$dp.$('edate'),dateFmt:'yyyy-MM-dd HH:mm:ss'})\" value=''/>&nbsp; "
+			 +"<span style='color:#2779AA;font-weight:normal'>发布人：</span>"
+			 +"<input id='username' name='username' style='width: 175px;' onclick='setdiv(this)'"
+			 +"onfocus='setdiv(this)' onblur=losefouse() onkeydown='keydown(this)' onpropertychange=\""
+			 +"change(this,'user','USER_NAME','module/ajax_search/')\" type='text'>"
+			 +"<input type='hidden' name='userid' id='userid'/>"
+			 //+"<span style='color:#2779AA;font-weight:normal'>关键字：</span>"
+			 //+"<input name='keywords' type='text' style='width:200px;' id='keywords' value=''  />"
+			 +"&nbsp;<input type='button' id='subm' name='subm'  value=' 搜索  ' align='middle' />"
+			 +"&nbsp;&nbsp;<input type='button' id='toexcel' alt='' value='  导出Excel  ' ></span>",
+
+       afterInsertRow:function (rowid, rowData){
+		    var typeclass=$("#typeclass").val();
+			if(typeclass=='1'){
+		    img='&nbsp;&nbsp;<img src="images/lore/bgflag.png" width="15" height="25" onclick="showreturns(this,\''+rowData.creater+'\')"/>';
+			jQuery("#list").jqGrid('setRowData',rowid,{backconut:rowData.backconut+img});
+			jQuery("#list").setGridParam().showCol("backconut").trigger("reloadGrid");
+			 jQuery("#list").setGridParam().hideCol("notifyconut").trigger("reloadGrid");
+			 jQuery("#list").jqGrid('setRowData',rowid,{user_name:'<a href="?model=lore_index&action=list&userid='+rowData.creater
+																	+'" target="_parent" >'+rowData.user_name+'</a>'});
+			}else{
+			 img='&nbsp;&nbsp;<img src="images/lore/bgflag.png" width="15" height="25" onclick="showreports(this,\''+rowData.creater+'\')"/>';
+			 jQuery("#list").jqGrid('setRowData',rowid,{notifyconut:rowData.notifyconut+img});
+			 jQuery("#list").setGridParam().hideCol("backconut").trigger("reloadGrid");
+			 jQuery("#list").setGridParam('setRowData',rowData.notifyconut,{width:250}).showCol("notifyconut").trigger("reloadGrid");
+			}
+			
+    }
+	
+})
+   
+	jQuery("#list").jqGrid('navGrid','#plist',{add:false,edit:false,del:false,search:false});
+
+	$("#subm").bind("click", function(e){
+					submits();
+          });
+	$("#typeclass").bind("click", function(e){
+					subseach();
+          });
+		  
+  	$("#toexcel").bind("click", function(e){
+		//var tagsearch=$("#tagsall").val();
+		var tagsearch='';
+		var sdate=$("#sdate").val();
+		var edate=$("#edate").val();
+		var typeclass= $("#typeclass").val();
+		var username= $("#username").val();
+    	location.href="?model=lore_index&action=countoexcel&operation=tripmanager&typeclassid="+typeclass+"&status="+tagsearch+"&sdate="+sdate+"&edate="+edate+"&username="+username+"&rand="+rand;
+   });
+		
+}); 
+    function modify(key,cid,name){
+	   tb_show('修改'+name+'信息', '?model=lore_index&action=showapply&cid='+cid+'&rand_key='
+			   +key+'&placeValuesBefore&TB_iframe=true&modal=false&height=550&width=900');
+	 }
+	
+	 function submits(){
+		var tagsearch=$("#tagsall").val();
+		var sdate=$("#sdate").val();
+		var edate=$("#edate").val();
+		var typeclass= $("#typeclass").val();
+		var username= $("#username").val();
+    	jQuery("#list").jqGrid('setGridParam',{url:"?model=lore_index&action=countdata&typeclassid="+typeclass+"&status="+tagsearch+"&sdate="+sdate+"&edate="+edate+"&username="+username,page:1}).trigger("reloadGrid");	
+	 }
+	 function subseach(){
+		 hideWindow();
+		 hideWindows();
+		var typeclass=$("#typeclass").val();
+    	jQuery("#list").jqGrid('setGridParam',{url:"?model=lore_index&action=countdata&typeclassid="+typeclass,page:1}).trigger("reloadGrid");	
+	 }
+	 
+	$(function(){
+	var top,left,move=false;
+    $("#reply").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#upfileshow").css("top"));
+		left=e.pageX-parseInt($("#upfileshow").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#upfileshow").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+}) 
+	 $(function(){
+	var top,left,move=false;
+    $("#reports").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#showreport").css("top"));
+		left=e.pageX-parseInt($("#showreport").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#showreport").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+}) 
+function showreturns(objct,userid){
+	hideWindows();
+	if(userid){
+		 $.post('?model=lore_index&action=showreturn',{userid:userid,rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+					  	offsets=$(objct).offset();
+						$("#upfileshow").css("top",offsets.top+25);
+						$("#upfileshow").css("left",offsets.left-500);
+						$("#upfileshow").css('display','block'); 
+						  $('#showinfo').html('<tr style="width:100%;" ><td  style="width:10%; text-align:center; background-color:#E0EEF7; color:#2779AA">审批人</td><td style="width:80%;text-align:center;background-color:#E0EEF7; color:#2779AA">文章名称</td><td style="width:10%;text-align:center;background-color:#E0EEF7; color:#2779AA">日期</td></tr>'+data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  
+				  });
+	}
+	
+}
+function showreports(objct,userid){
+	hideWindow();
+	if(userid){
+		 $.post('?model=lore_index&action=showreport',{userid:userid,rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+					  	offsets=$(objct).offset();
+						$("#showreport").css("top",offsets.top+25);
+						$("#showreport").css("left",offsets.left-500);
+						$("#showreport").css('display','block'); 
+						  $('#showreportinfo').html('<tr style="width:100%;" ><td  style="width:10%; text-align:center; background-color:#E0EEF7; color:#2779AA">纠错人</td><td style="width:80%;text-align:center;background-color:#E0EEF7; color:#2779AA">文章名称</td><td style="width:10%;text-align:center;background-color:#E0EEF7; color:#2779AA">日期</td></tr>'+data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  
+				  });
+	}
+	
+}
+function pages(userid,page){
+	if(userid){
+		 $.post('?model=lore_index&action=showreport',{userid:userid,page:page,rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+					  	
+						  $('#showreportinfo').html('<tr style="width:100%;" ><td  style="width:10%; text-align:center; background-color:#E0EEF7; color:#2779AA">纠错人</td><td style="width:80%;text-align:center;background-color:#E0EEF7; color:#2779AA">文章名称</td><td style="width:10%;text-align:center;background-color:#E0EEF7; color:#2779AA">日期</td></tr>'+data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  
+				  });
+	}
+	
+}
+
+function hideWindow(){
+	 $("#upfileshow").fadeOut("slow"); 
+}
+function hideWindows(){
+	 $("#showreport").fadeOut("slow"); 
+}
+function showreport(url){
+	aI=url.split('?');
+	aS=aI[1].split('&');
+	aT=aS[4].split('=');
+	if(aT[1]){
+		 $.post('?'+aI[1],{rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+						  $('#showreportinfo').html('<tr style="width:100%;" ><td  style="width:10%; text-align:center; background-color:#E0EEF7; color:#2779AA">纠错人</td><td style="width:80%;text-align:center;background-color:#E0EEF7; color:#2779AA">文章名称</td><td style="width:10%;text-align:center;background-color:#E0EEF7; color:#2779AA">日期</td></tr>'+data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  
+				  });
+	}
+	
+}
+function showreturn(url){
+	aI=url.split('?');
+	aS=aI[1].split('&');
+	aT=aS[4].split('=');
+	if(aT[1]){
+		 $.post('?'+aI[1],{rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+					  	 
+						  $('#showinfo').html('<tr style="width:100%;" ><td  style="width:10%; text-align:center; background-color:#E0EEF7; color:#2779AA">审批人</td><td style="width:80%;text-align:center;background-color:#E0EEF7; color:#2779AA">文章名称</td><td style="width:10%;text-align:center;background-color:#E0EEF7; color:#2779AA">日期</td></tr>'+data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  
+				  });
+	}
+}
+	
+/*
+  $("#username").bind("keydown", function(e){
+					get_userid();
+     });
+	 $("#username").bind("keyup", function(e){
+					get_userid();
+     });
+	 $("#username").bind("keypress", function(e){
+					get_userid();
+     });
+	  $("#username").bind("blur", function(e){
+					get_userid();
+     });
+     function get_userid(){
+			$('#userid').val('');
+			var rand=Math.random()*100000;
+			if($("#username").val().replace(/\s/gi,"")!="")
+			  {
+            	  var user_id=$("#username").val().replace(/\s/gi,"");
+				  $.post('?model=lore_index&action=userinfo',{username:user_id,rand:rand},
+				  function (data)
+				  {
+					  if(data)
+					  {	
+					  alert(data);
+						  $('#userid').val(data);
+					  }else{
+						 $('#userid').val('');
+					  }
+				  }
+			  )
+			  }
+		  }
+*/		
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>编辑资产折旧信息</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+	<script type="text/javascript">
+		$(function() {
+			/**
+			 * 验证信息
+			 */
+			validate({
+				"depr" : {
+					required : true,
+					custom : ['money']
+				}
+			});
+		});
+		function changeDepr(){
+			var depr=$("#depr").val();
+			var olddepr=$("#olddepr").val();
+			if($("#deprRemain").val()==0){
+				$("#depr").val(olddepr);
+				alert("该资产本期已经折旧完！");
+			}else{
+				var origina=$("#origina").val();
+				var initDepr=$("#initDepr").val();
+				var locNetVal=origina-initDepr-depr;
+				$("#localNetValue").val(locNetVal);
+				var sal=$("#salvage").val();
+				var remain=origina-sal-initDepr-depr;
+				$("#deprRemain").val(remain);
+			}
+		}
+	</script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">
+编辑资产折旧信息 </span></div>
+<form id="form1" method="post"
+	action="?model=asset_balance_balance&action=edit" name="form1">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">资产编号</td>
+		<td class="form_view_right">
+			<input  type="hidden" id="id" name="balance[id]" value="{id}" />
+			<input type="text" class="readOnlyText" id="assetCode" value="{assetCode}"/>
+		</td>
+		<td class="form_text_left">资产名称</td>
+		<td class="form_view_right">
+			<input type="hidden" id="assetId" name="balance[assetId]"  class="readOnlyText" value="{assetId}"/>
+			<input type="text" name="balance[assetName]" class="readOnlyText" id="assetName" value="{assetName}"/>
+		</td>
+	</tr>
+ 	<tr>
+		<td class="form_text_left">资产原值</td>
+		<td class="form_view_right">
+			<input type="text" id="origina" name="balance[origina]"  class="readOnlyText" value="{origina}"/>
+		</td>
+		<td class="form_text_left">目前净值</td>
+		<td class="form_view_right">
+			<input type="text" id=localNetValue name="balance[localNetValue]"  class="readOnlyText" value="{localNetValue}"/>
+		</td>
+	</tr>
+ 	<tr>
+ 		<td class="form_text_left">期初累计折旧</td>
+		<td class="form_view_right">
+			<input type="text" name="balance[initDepr]" class="readOnlyText" id="initDepr" value="{initDepr}" />
+		</td>
+		<td class="form_text_left">当期折旧率</td>
+		<td class="form_view_right">
+			<input type="text" name="balance[deprRate]" id="deprRate" class="readOnlyText" value="{deprRate}"/>
+		</td>
+	</tr>
+ 	<tr>
+ 		<td class="form_text_left">本期计提折旧额</td>
+		<td class="form_view_right">
+			<input type="text" id="depr" name="balance[depr]"  class="txt" value="{depr}" onchange="changeDepr();"/>
+			<input type="hidden" id="olddepr" name="balance[olddepr]"  class="txt" value="{depr}"/>
+		</td>
+		<td class="form_text_left">本期应提折旧额</td>
+		<td class="form_view_right">
+			<input type="text" name="balance[deprShould]" id="deprShould"  class="readOnlyText" value="{deprShould}"/>
+		</td>
+	</tr>
+ 	<tr>
+		<td class="form_text_left">剩余折旧额</td>
+		<td class="form_view_right" colspan="3">
+			<input type="text" id="deprRemain" name="balance[deprRemain]"  class="readOnlyText" value="{deprRemain}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">预计净残值</td>
+		<td class="form_view_right"><input type="text" id="salvage"
+			name="balance[salvage]" class="readOnlyText" value="{salvage}"readOnly/></td>
+		<td class="form_text_left">预计使用期间数</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[estimateDay]" id="estimateDay" class="readOnlyText" value="{estimateDay}" readOnly/></td>
+	</tr>
+ 	<tr>
+		<td class="form_text_left">期间</td>
+		<td class="form_view_right">
+			<input type="text" name="balance[period]" id="period" class="readOnlyText" value="{period}"/>
+		</td>
+		<td class="form_text_left">年度</td>
+		<td class="form_view_right">
+			<input type="text" id="years" name="balance[years]" class="readOnlyText" value="{years}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="submit" class="txt_btn_a" value=" 保  存 " />
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();" />
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>

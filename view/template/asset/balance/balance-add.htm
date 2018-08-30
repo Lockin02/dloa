@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>添加资产折旧</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/balance-add.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+</script>
+
+<body>
+<div class="main_head"><span class="main_head_title"> 折旧管理
+</span></div>
+<form id="form1" method="post"
+	action="?model=asset_balance_balance&action=add" name="form1">
+	 <input type="hidden" id="flag" name="flag" value="{flag}">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">卡片编号</td>
+		<td class="form_view_right"><input type="text"
+			class="readOnlyText" id="assetCode" readonly/></td>
+		<td class="form_text_left">资产名称</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[assetName]" class="txt" id="assetName" readonly /></td>
+	</tr>
+
+	<input type="hidden" id="assetId" name="balance[assetId]" class="txt" />
+	<input type="hidden" name="balance[initDepr]" class="txt" id="initDepr" />
+	<input type="hidden" id="depr" name="balance[depr]" class="txt" />
+	<input type="hidden" name="balance[deprRate]" id="deprRate" class="txt" />
+	<input type="hidden" id="deprRemain" name="balance[deprRemain]" class="txt" />
+	<input type="hidden" name="balance[deprShould]" id="deprShould" class="txt" />
+	<input type="hidden" name="balance[period]" id="period" class="txt" />
+	<input type="hidden" id="years" name="balance[years]" class="txt" />
+
+	<input type="hidden" id="origina" name="balance[origina]" class="txt" />
+	<input type="hidden" name="balance[buyDepr]" id="buyDepr" class="txt" />
+	<input type="hidden" id="beginTime" name="balance[beginTime]" class="txt" />
+	<input type="hidden" name="balance[estimateDay]" id="estimateDay" class="txt" />
+	<input type="hidden" id="alreadyDay" name="balance[alreadyDay]" class="txt" />
+	<input type="hidden" name="balance[depreciation]" id="depreciation" class="txt" />
+	<input type="hidden" id="salvage"	name="balance[salvage]" class="txt" />
+	<input type="hidden" name="balance[netValue]" id="netValue" class="txt" />
+	<input type="hidden" id="deprName" name="balance[deprName]" class="txt" />
+	<input type="hidden" id="deprTime" name="balance[deprTime]" class="txt" value="{deprTime}" />
+	<input type="hidden" id="wirteDate" name="balance[wirteDate]" class="txt"/>
+
+ 	<!--
+ 		<input type="text" id="isDel" name="balance[isDel]" class="txt"/>
+ 		<input type="text" id="isTemp" name="balance[isTemp]" class="txt"/>
+
+	<tr>
+		<td class="form_text_left">资产id</td>
+		<td class="form_view_right"><input type="text" id="assetId"
+			name="balance[assetId]" class="txt" /></td>
+		<td class="form_text_left">期初累计折旧</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[initDepr]" class="txt" id="initDepr" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">本期计提折旧额</td>
+		<td class="form_view_right"><input type="text" id="depr"
+			name="balance[depr]" class="txt" /></td>
+		<td class="form_text_left">当期折旧率</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[deprRate]" id="deprRate" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">剩余折旧额</td>
+		<td class="form_view_right"><input type="text" id="deprRemain"
+			name="balance[deprRemain]" class="txt" /></td>
+		<td class="form_text_left">本期应提折旧额</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[deprShould]" id="deprShould" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">工作量</td>
+		<td class="form_view_right"><input type="text" id="workLoad"
+			name="balance[workLoad]" class="txt" /></td>
+		<td class="form_text_left">期间</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[period]" id="period" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">年度</td>
+		<td class="form_view_right" colspan="3"><input type="text"
+			id="years" name="balance[years]" class="txt" /></td>
+	</tr>
+ 	-->
+	<!-- 资产卡片的相关数据 -->
+<!--
+	<tr>
+		<td class="form_text_left">购进原值</td>
+		<td class="form_view_right"><input type="text" id="origina"
+			name="balance[origina]" class="txt" /></td>
+		<td class="form_text_left">购进累计折旧</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[buyDepr]" id="buyDepr" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开始使用日期</td>
+		<td class="form_view_right"><input type="text" id="beginTime"
+			name="balance[beginTime]" class="txt" /></td>
+		<td class="form_text_left">预计使用期间数</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[estimateDay]" id="estimateDay" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">已使用期间数</td>
+		<td class="form_view_right"><input type="text" id="alreadyDay"
+			name="balance[alreadyDay]" class="txt" /></td>
+		<td class="form_text_left">累计折旧</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[depreciation]" id="depreciation" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">预计净残值</td>
+		<td class="form_view_right"><input type="text" id="salvage"
+			name="balance[salvage]" class="txt" /></td>
+		<td class="form_text_left">净值</td>
+		<td class="form_view_right"><input type="text"
+			name="balance[netValue]" id="netValue" class="txt" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">折旧方式</td>
+		<td class="form_view_right"><input type="text" id="deprName"
+			name="balance[deprName]" class="txt" /></td>
+		<td class="form_text_left">折旧日期</td>
+		<td class="form_view_right">
+			<input type="text" id="deprTime" name="balance[deprTime]" class="txt" value="{deprTime}" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">入账日期</td>
+		<td class="form_view_right" colspan="3">
+			<input type="text" id="wirteDate" name="balance[wirteDate]" class="txt"/>
+		</td>
+	</tr>
+	 	-->
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input type="submit"class="txt_btn_a" value=" 开始折旧 " id="deprBtn"/>&nbsp;&nbsp;&nbsp;
+		<input type="button" class="txt_btn_a" value="查询折旧信息" onclick="toList()"/>&nbsp;&nbsp;&nbsp;
+		<input type="reset" class="txt_btn_a" value=" 清 空 " onclick="reload()"/>
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>

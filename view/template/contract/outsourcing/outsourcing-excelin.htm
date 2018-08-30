@@ -1,0 +1,80 @@
+<html>
+<title>导入EXCEL数据</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript">
+		//表单验证方法
+		function checkform(){
+			if($("#inputExcel").val() =="" ){
+				alert("请选择需要导入的EXCEL文件");
+				return false;
+			}
+
+		//	alert("当前功能未完成");
+			$("#loading").show();
+
+			return true;
+		}
+    </script>
+
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            导入项目
+      </span>
+</div>
+<form action="?model=contract_outsourcing_outsourcing&action=excelIn" ENCTYPE="multipart/form-data" method="POST" id="form1" onsubmit="return checkform();">
+
+<table class="form_main_table" width="90%">
+	<tr>
+		<td class="form_text_left">
+			<label>执行操作:</label>
+		</td>
+		<td class="form_text_right">
+			<input type="radio" name="actionType" value="0" title="合同导入功能" checked="checked"/>
+			<span id="span0">导入合同</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txtlong" name="inputExcel" id="inputExcel"/>
+            <input type="submit" class="txt_btn_a" value=" 导 入">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>模板下载</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="button" id="button0" class="txt_btn_a" value="外包合同导入模板" onclick="location='upfile/外包合同导入模板.xls'"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right">
+		</td>
+		<td class="form_text_right">
+			导入功能说明：<br/>
+			<span id="remarkInfo" style="color:blue">
+				1.此功能用于导入外包合同，对于系统中已存在的合同，导入后会<span class="red">更新</span>该合同。<br/>
+				2.此功能导入的付款信息和开票信息将会作为初始金额导入系统中，<br/>
+				在计算合同付款合计和开票合计时会将此金额与财务系统中的金额叠加计算。
+			</span><br/><br/>
+			注：<br/>
+			<span class="red">1. 导入功能暂不支持单元格公式计算。</span><br/>
+			<span class="red">2. 单元格内请勿带特殊符号。</span><br/>
+			<span class="red">3. 模板中带 * 的字段为必填，其余字段可不填。</span>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

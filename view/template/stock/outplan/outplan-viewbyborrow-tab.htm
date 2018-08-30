@@ -1,0 +1,88 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var id = $("#id").val();
+		var oldId = $("#oldId").val();
+        var skeyStr="&skey={skey_}";
+        var objType=$('#objType').val();
+        var initTip = $('#initTip').val();
+        var linkId = $('#linkId').val();
+        if(linkId==''){
+			$('.confirm').hide();
+        }
+ 	var tabArr = [
+ 					"?model=projectmanagent_borrow_borrow&action=init&perm=view&id=" + id + skeyStr,
+                    "?model=projectmanagent_borrow_borrowequ&action=toEquView&&perm=view&linkId="+linkId + skeyStr,
+ 					"?model=stock_outplan_outplan&action=listByOrderId&id=" + oldId + "&objType=" + objType + skeyStr,
+ 					"?model=stock_outplan_ship&action=listByOrder&orderId=" + oldId + "&objType=" + objType + skeyStr,
+ 					"?model=purchase_plan_basic&action=contPurchPage&orderId=" + oldId + "&objType=" + objType + skeyStr,
+ 					"?model=produce_apply_produceapply&action=toPageFromDoc&relDocId=" + oldId + "&relDocType=BORROW" + skeyStr,
+                 	"?model=stock_allocation_allocation&action=relDocPage&relDocType=DBDYDLXFH&relDocId=" + oldId+"&initTip="+initTip,
+                  	"?model=common_changeLog&action=toBorrowChangeList&objId=" + oldId + skeyStr,
+               		"?model=common_changeLog&action=toBorrowEquChangeList&logObj=borrow&objId=" + linkId
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{oldId}" id="oldId" />
+<input type="hidden" value="{linkId}" id="linkId" />
+<input type="hidden" value="{objType}" id="objType" />
+<input type="hidden" value="{initTip}" id="initTip" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">借用申请</a></li>
+    <li class='confirm'><a href="#tab2">物料确认查看</a></li>
+	<li><a href="#tab3">发货计划列表</a></li>
+	<li><a href="#tab4">发货单列表</a></li>
+	<li><a href="#tab5">采购申请列表</a></li>
+	<li><a href="#tab6">生产任务列表</a></li>
+	<li><a href="#tab7">调拨单列表</a></li>
+	<li><a href="#tab8">变更历史</a></li>
+	<li class='confirm'><a href="#tab9">物料变更历史</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe8" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe9" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

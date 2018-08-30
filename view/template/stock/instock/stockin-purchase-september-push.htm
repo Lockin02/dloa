@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>下推外购入库单</title>
+{#commonInclude#}
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/stockin-stockinfo-combogrid.js" ></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-arrival.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/stockin-arrival-combogrid.js" ></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/stockin-productinfo-combogrid.js" ></script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-allcontract.js" ></script>
+<script type="text/javascript"
+	src="{#jsPath#}/stockin-contract-combogrid.js" ></script>
+</head>
+<script type="text/javascript" >
+
+
+	$(document).ready(function(){
+		reloadItemStock();
+
+		//判断是否有审核权限
+		if({auditLimit}!="1"){
+			$("#auditButton").hide();
+		}
+
+		//设置从表的仓库默认值
+		var itemscount = $('#itemscount').val();
+		for(var i=0;i<=itemscount;i++){
+			$("#inStockId"+i).val($("#inStockId").val());
+			$("#inStockCode"+i).val($("#inStockCode").val());
+			$("#inStockName"+i).val($("#inStockName").val());
+		}
+
+	})
+
+	function confirmAudit() {// 审核确认
+		var auditDate = $("#auditDate").val();
+			if (confirm("审核后单据将不可修改，你确定要审核吗?")) {
+				$("#form1").attr("action",
+						"?model=stock_instock_stockin&action=addPre&actType=audit");
+				if (checkForm()) {
+						$("#docStatus").val("YSH");
+						$("#form1").submit();
+				}
+			}
+	}
+
+	// 删除
+	function delItem(obj) {
+		if (confirm('确定要删除该行？')) {
+			var rowNo = obj.parentNode.parentNode.rowIndex - 2;
+			$(obj).parent().parent().hide();
+			$(obj).parent().append('<input type="hidden" name="stockin[items]['
+					+ rowNo + '][isDelTag]" value="1" id="isDelTag' + rowNo
+					+ '" />');
+			reloadItemCount();
+		}
+	}
+
+	// 蓝色单录入序列号
+	function toAddSerialNo(el, elNum) {
+		alert("暂未开放!");
+	}
+
+	/**
+	 * 渲染物料清单收料仓库combogrid
+	 */
+	function reloadItemStock() {
+		var itemscount = $('#itemscount').val();
+		for (var i = 0; i < itemscount; i++) {
+			$("#inStockName" + i).yxcombogrid_stockinfo("remove");
+			$("#inStockName" + i).yxcombogrid_stockinfo({
+						hiddenId : 'inStockId' + i,
+						nameCol : 'stockName',
+						gridOptions : {
+							showcheckbox : false,
+							event : {
+								'row_dblclick' : function(i) {
+									return function(e, row, data) {
+										$('#inStockCode' + i).val(data.stockCode);
+									}
+								}(i)
+							}
+						}
+					})
+		}
+	}
+
+	function checkForm() {// 表单校验
+		if($("#auditDate").val()>'2011-08-31'){
+			alert("单据日期不能大于9月份");
+			return false;
+		}
+
+		var itemscount = $("#itemscount").val();
+		var deleteCount = 0;
+		for (var i = 0; i < itemscount; i++) {
+			if ($("#isDelTag" + i).val() == 1) {
+				deleteCount = deleteCount + 1;
+			}
+
+		}
+		if (deleteCount == itemscount) {
+			alert("请新增物料信息...");
+			return false;
+		}
+		if (itemscount < 1) {
+			alert("请选择物料信息...");
+			return false;
+		} else {
+			for (var i = 0; i < itemscount; i++) {
+				if ($("#isDelTag" + i).val() != 1) {
+					if ($("#productId" + i).val() == "") {
+						alert("物料信息不能为空，请选择...");
+						return false;
+					}
+					if ($("#inStockId" + i).val() == ""
+							|| parseInt($("#inStockId" + i).val()) == 0) {
+						alert("收料仓库不能为空，请选择...");
+						return false;
+					}
+					if (!isNum($("#actNum" + i).val())) {// 判断数量
+						alert("实收数量" + "<" + $("#actNum" + i).val() + ">" + "填写有误!");
+						$("#actNum" + i).focus();
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+</script>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	<font color="blue">下推9月份前外购入库单</font>
+    </span>
+</div>
+<form action="?model=stock_instock_stockin&action=addPre" method="post"  id="form1" onsubmit="return checkForm();">
+<table class="form_main_table">
+<tr>
+
+		<td  class="form_text_left">单据日期</td>
+		<td class="form_text_right">
+			<input type="text" id="auditDate" name="stockin[auditDate]" onfocus="WdatePicker()" value="{auditDate}" class="txt" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">采购方式</td>
+		<td class="form_text_right" >
+			<select class="select" name="stockin[purchMethod]" >
+				{purchMethod}
+			</select>
+		</td>
+		<td class="form_text_left">往来科目</td>
+		<td class="form_text_right" >
+			<select class="select" name="stockin[accountingCode]" >
+				{accountingCode}
+			</select>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">源单类型</td>
+		<td class="form_text_right" >
+			 <input type="text"  id="relDocTypeName" class="readOnlyTxtNormal" value="{relDocTypeName}" />
+			 <input type="hidden" name="stockin[relDocType]" id="relDocType" value="{relDocType}" />
+		</td>
+		<td class="form_text_left">源单编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" name="stockin[relDocCode]" value="{relDocCode}"  />
+			 <input type="hidden" name="stockin[relDocId]" value="{relDocId}" />
+			 <input type="hidden" name="stockin[relDocName]" value="{relDocName}" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right" >
+			 <input type="text" id="supplierName" class="readOnlyTxtNormal" name="stockin[supplierName]" value="{supplierName}" />
+			 <input type="hidden" id="supplierId" name="stockin[supplierId]" value="{supplierId}" />
+		</td>
+		<td class="form_text_left">付款日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="stockin[payDate]"  onfocus="WdatePicker()" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">合同编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="contractCode" name="stockin[contractCode]" />
+			 <input type="hidden" id="contractId" name="stockin[contractId]"  />
+			 <input type="hidden" id="contractType" name="stockin[contractType]"  />
+		</td>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" id="contractName" name="stockin[contractName]"  />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">收料仓库名称</td>
+		<td class="form_text_right" >
+			 <input type="text" id="inStockName" class="txt" name="stockin[inStockName]" value="{inStockName}" />
+			 <input type="hidden" id="inStockId"  name="stockin[inStockId]" value="{inStockId}"  />
+			 <input type="hidden" id="inStockCode" name="stockin[inStockCode]"  />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">采购订单编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" id="purOrderCode" name="stockin[purOrderCode]" value="{purOrderCode}" />
+			 <input type="hidden" id="purOrderId" name="stockin[purOrderId]" value="{purOrderId}" />
+		</td>
+		<td class="form_text_left">采购员名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxtNormal" id="purchaserName" name="stockin[purchaserName]" value="{purchaserName}" />
+			 <input type="hidden" id="purchaserCode" name="stockin[purchaserCode]" value="{purchaserCode}" />
+		</td>
+</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td colspan=3 class="form_text_right"><textarea style="width:80%;" class="txt_txtarea_font"
+			 name="stockin[remark]">9月份前入库单补录</textarea></td>
+	</tr>
+<tr><td colspan="4">
+<table class="main_table" id="itemtable">
+ 			<thead>
+							<tr>
+								<td colspan="15" class="form_header">
+									物料清单
+								</td>
+							</tr>
+                            <tr class="main_tr_header">
+                                <th>
+                                    <!-- <img  src="images/add_item.png" align="absmiddle" onclick="addItems();"  title="新增物料" alt="新增物料" /> -->
+              						<input type="hidden" id="itemscount" value="{itemscount}"/>
+								</th>
+
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    物料编码
+                                </th>
+                                <th>
+                                    物料分类
+                                </th>
+                                <th>
+                                    K3编码
+                                </th>
+                                <th>
+                                    物料名称
+                                </th>
+                                <th>
+                                    规格型号
+                                </th>
+                                <th>
+                                    单位
+                                </th>
+                                <th>
+                                  批次号
+                                </th>
+                                <th>
+                                    应收数量
+                                </th>
+                                <th>
+                                    实收数量
+                                </th>
+                                <th>
+                                    质检合格数
+                                </th>
+                                <th>
+                                    收料仓库
+                                </th>
+                                <th>
+                                    单价
+                                </th>
+                                <th>
+                                    金额
+                                </th>
+						</tr>
+			</thead>
+			<tbody id="itembody">
+			{stockinItems}
+			</tbody>
+</table>
+</td></tr>
+<tr><td colspan="4">
+<table class="form_main_table">
+
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" id="isRed" name="stockin[isRed]" value="0" />
+			<input type="hidden" id="docStatus" name="stockin[docStatus]" value="WSH"  />
+			<input type="hidden" name="stockin[docType]" value="{docType}"  />
+			<input type="button" id="auditButton" value=" 审 核 " class="txt_btn_a" onclick="return confirmAudit();" />
+			<input type="button" value=" 返 回 " class="txt_btn_a" onclick="closeFun()" />
+		</td>
+	</tr>
+
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>

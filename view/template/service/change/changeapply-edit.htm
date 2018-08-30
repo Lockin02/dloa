@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑设备更换申请单</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-repairReduce.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/changeapply-reduce-combogrid.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/changeapply-edit.js" ></script>
+
+</head>
+<body>
+<form id="form1" method="post" action="?model=service_change_changeapply&action=edit" onsubmit="return checkForm();">
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	编辑设备更换申请单信息
+             </span>
+         </div>
+      </td>
+   </tr>
+       <tr>
+      		<td class="form_text_left">单据编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" readOnly name="changeapply[docCode]" id="docCode" value="{docCode}"/>
+      		</td>
+       </tr>
+<tr>
+            <td class="form_text_left">源单类型</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden"  name="changeapply[relDocType]" id="relDocType" value="{relDocType}"/>
+      			 <input type="text" class="readOnlyText" readOnly  value="{relDocTypeName}" />
+      		</td>
+      		<td class="form_text_left">源单编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" readOnly name="changeapply[relDocCode]" id="relDocCode" value="{relDocCode}" />
+				 <input type="hidden" name="changeapply[relDocName]" id="relDocName" value="{relDocName}" />
+      			 <input type="hidden" name="changeapply[rObjCode]" id="rObjCode" value="{rObjCode}" />
+      			 <input type="hidden" name="changeapply[relDocId]" id="relDocId" value="{relDocId}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">客户名称</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" readOnly name="changeapply[customerName]" id="customerName" value="{customerName}"/>
+      			  <input type="hidden" name="changeapply[customerId]" id="customerId" value="{customerId}"/>
+      		</td>
+      		<td class="form_text_left">申请人名称</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" readOnly name="changeapply[applyUserName]" id="applyUserName" value="{applyUserName}"/>
+      			  <input type="hidden" name="changeapply[applyUserCode]" id="applyUserCode" value="{applyUserCode}"/>
+      			  <span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">客户地址</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="text" class="readOnlyText" readOnly name="changeapply[adress]" style="width:80%;" id="adress" value="{adress}" />
+      		</td>
+       </tr>
+          <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right"  colspan="3">
+      			<textarea style="width:600px;" class="txt_txtarea_font" name="changeapply[remark]" >{remark}</textarea>
+      		</td>
+       </tr>
+       <tr>
+				<td colspan="4">
+				<table class="main_table" id="itemtable">
+					<thead>
+						<tr>
+							<td colspan="8" class="form_header">清单详细</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>
+								<input type="hidden" id="itemscount" value="0" />
+							</th>
+							<th>序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>规格型号</th>
+							<th>单位</th>
+							<th>序列号</th>
+							<th>更换原因</th>
+						</tr>
+					</thead>
+					<tbody id="itembody">
+						{itemsList}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+	           <input  type="hidden" name="changeapply[id]" value="{id}" />
+			   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+	           <input  type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+			   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+</table>
+</form>
+</body>
+</html>

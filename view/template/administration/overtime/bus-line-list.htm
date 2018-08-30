@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table" width="50%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">班车线路列表</td>
+		<td><input type="button" alt="?model={t_model}&action=add&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=250" title="添加新线路" class="thickbox" value="添加线路" /></td>
+	</tr>
+	<tr class="tableheader">
+		<td width="50">ID</td>
+		<td>站点</td>
+		<td width="200">操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	
+	var arr = Array();
+	function edit(id)
+	{
+		arr[id] = $('#ac_'+id).html();
+		var tmp = $('#td_'+id).html();
+		$('#td_'+id).html('<input type="text" id="station_'+id+'" value="'+tmp+'" />');
+		$('#ac_'+id).html('<input type="button" onclick="save('+id+')" value=" 确定 " /><input type="button" onclick="exit('+id+')" value=" 取消 " />');
+	}
+	function exit(id)
+	{
+		$('#td_'+id).html($('#station_'+id).val());
+		$('#ac_'+id).html(arr[id]);
+	}
+	
+	function save(id)
+	{
+		var station = $('#station_'+id).val();
+		var key = $('#key_'+id).val();
+		if (station=='')
+		{
+			alert('站点名称不能为空！');
+			return false;
+		}else{
+			$.post('ajax.php?model={t_model}&action=edit',{id:id,station:station,key:key,rand:Math.random(0,9999)},
+			function (data)
+			{
+				if (data==1)
+				{
+					$('#td_'+id).html(station);
+					$('#ac_'+id).html(arr[id]);
+				}else{
+					alert('修改失败！');
+				}
+			}
+			);
+		}
+	}
+	
+	function del(id)
+	{
+		if (confirm('您确定要删除该站点吗？'))
+		{
+			var key = $('#key_'+id).val();
+			$.post('ajax.php?model={t_model}&action=del',{id:id,key:key,rand:Math.random(0,9999)},
+			function (data)
+			{
+				if (data==1)
+				{
+					$('#tr_'+id).remove();
+				}else{
+					alert('删除失败！');
+				}
+			}
+			);
+		}
+	}
+</script>
+</body>
+</html>

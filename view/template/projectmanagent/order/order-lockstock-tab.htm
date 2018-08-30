@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>销售合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script> <script
+	type="text/javascript" src="js/jquery/tab/tabs.js"></script> <script
+	type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+</head>
+<script type="text/javascript">
+
+$(function() {
+	var orderId=$('#orderId').val();
+	var orderCode=$('#orderCode').val();
+ 	var tabArr = [
+                 "?model=projectmanagent_order_order&action=toLokStockByOrder&id="+orderId,
+                  "?model=purchase_external_external&action=toAdd&purchType=order&sourceId="+orderId+"&souceCode="+orderCode,
+				  "?model=log_operation_operation&action=developing"
+    			];
+    $("#tabs1").tabs(".panes > iframe",{
+        history: true,
+        onClick:function(i,e) {
+			var actTabId="#iframe" + (parseInt(e) + 1);
+	   	 	if($(actTabId).attr("src") == ""){
+	   			$(actTabId).attr("src",tabArr[e]);
+	   	 	}
+   		}
+    });
+});
+
+    </script>
+<body>
+<form id="lockForm" action="?model=stock_lock_lock&action=batchAdd"
+	method="post">
+<table class='form_main_table'>
+	<tr>
+		<td colspan="4" class="form_header">
+
+		<font class="form_header">
+		   订单处理
+        </font>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">订单号</td>
+		<td class="form_text_right">
+		{orderCode}
+		</td>
+		<td class="form_text_left">订单名称</td>
+		<td class="form_text_right">{orderName}</td>
+	</tr>
+</table>
+<div>
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">锁定库存</a></li>
+	<li><a href="#tab2">下达采购计划</a></li>
+	<li><a href="#tab3">下达生产计划</a></li>
+
+</ul>
+<input type="hidden" id="orderId" value="{orderId}" />
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="400px" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="580px" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="300px" frameborder="0">
+</iframe></div>
+</div>
+<!-- table>
+				<tr><td><input type="button" class="txt_btn_a" value="下达采购计划" onclick=""/></td></tr>
+				<tr><td><input type="button" class="txt_btn_a" value="下达生产计划" onclick=""/></td></tr>
+			</table> -->
+</form>
+</body>
+</html>

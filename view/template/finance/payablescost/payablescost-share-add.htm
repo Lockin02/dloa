@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>费用分摊</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+		
+		<!-- email -->
+		<script type="text/javascript" src="js/common/email.js"></script>
+		<!-- 验证组件 -->
+		<script type="text/javascript" src="js/jquery/validation/validationEngine.js"></script>
+		<script type="text/javascript" src="js/jquery/validation/validationEngine-cn.js"></script>
+		<script type="text/javascript" src="js/jquery/validation/validationForm.js"></script>
+		
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-expensemodel.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+		
+	<script type="text/javascript" src="view/template/finance/payablesapply/js/payablesapply-common.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/payablescost-share-add.js" ></script>
+   <!--  <script type="text/javascript" src="{#jsPath#}/payablescost-share-common.js" ></script> -->
+
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=finance_payablescost_payablescost&action=share" onsubmit="return checkform();">
+		<table class="form_main_table">
+      		<tr>
+	      		<td colspan="4">
+		            <div class="main_head2">
+			            <span class="main_head_title">
+			            	申请单id: {payapplyId} ,
+			            	申请单号 ：{payapplyCode} ,
+			            	申请金额 ：<span class="formatMoney">{payapplyMoney}</span>
+			            </span>
+		            </div>
+	            </td>
+			</tr>
+		</table>
+		<table class="form_main_table">
+		<!-- 
+			<tr align="left">
+				<td colspan="5">
+					分摊明细
+				</td>
+				<td width="5%" align="center">
+					<input type="hidden" id="detailNo" value="1"/>
+			 		<img src="images/collapsed.gif" onclick="detailAdd('invbody','detailNo');" title="添加行"/>
+			 	</td>
+			</tr>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th width="5%">序 号</th>
+					<th>分摊类型</th>
+					<th>分摊对象</th>
+					<th>费用类型</th>
+					<th>分摊金额</th>
+					<th>操 作</th>
+				</tr>
+				<tr align="center">
+					<td>1</td>
+					<td>
+				    	<select name="payablescost[detail][1][shareType]" id="shareType1" class="txtmiddle" onchange="changeShareType(1,this.value)"></select>
+					</td>
+					<td>
+						<input type="text" class="txt" name="payablescost[detail][1][shareObjName]" id="shareObjName1" readonly="readonly"/>
+						<input type="text" class="txt" name="payablescost[detail][1][shareObjCode]" id="shareObjCode1" readonly="readonly" style="display:none"/>
+						<input type="hidden" name="payablescost[detail][1][shareObjId]" id="shareObjId1"/>
+					</td>
+					<td>
+						<select name="payablescost[detail][1][feeType]" id="feeType1" class="txtmiddle"><option></option></select>
+					</td>
+					<td>
+						<input type="text" class="txtmiddle formatMoney" name="payablescost[detail][1][shareMoney]" id="shareMoney1" value="{payapplyMoney}" onblur='reCalMoney()'/>
+					</td>
+					<td>
+						<img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行"/>
+					</td>
+				</tr>
+				
+			</tbody>
+			<tr class="tr_count">
+				<td></td>
+				<td>合计</td>
+				<td></td>
+				<td></td>
+				<td><input type="text" id="shareMoneyCount" value="{payapplyMoney}" class="readOnlyTxtMiddleCount formatMoney" readonly="readonly"/></td>
+				<td></td>
+			</tr>
+			 -->
+			 <tr>
+					<td colspan="6"><div id="payDetail"></div></td>
+				</tr>
+				
+		</table>
+		<table class="form_main_table"><tr>
+				<td class="txt_btn" colspan="4">
+					<span class='red'>先选择分摊类型，再选择分摊的实际人员、部门、项目</span>
+	      		</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input id="payDetailMoneyHidden" type="hidden" name="payablesapply[payDetail][payapplyMoney]" readonly="readonly" value="0"/>
+					<input type="hidden" name="payablescost[payapplyId]" id="payapplyId" value="{payapplyId}""/>
+					<input type="hidden" name="payablescost[payapplyCode]" id="payapplyCode" value="{payapplyCode}"/>
+					<input type="hidden" name="payablescost[payapplyMoney]" id="payMoney" value="{payapplyMoney}"/>
+
+	      		    <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	      		</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

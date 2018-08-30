@@ -1,0 +1,284 @@
+<html>
+<head>
+    <title>采购任务</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+		<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/changejudge.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+    <script type="text/javascript">
+
+    	function myDatePick(value){
+    		WdatePicker({el:$dp.$(value)});
+    	}
+
+		function checkSumbit(){
+			if( confirm("确定提交变更采购任务吗？") ){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		function LoadWindow(toid,toname){
+			URL="module/user_select_single/index.php?ID=2&toid="+toid+"&toname="+toname;
+			loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+			loc_y=document.body.scrollTop+event.clientY-event.offsetY+170;
+			//window.open(URL,"read_notify","height=400,width=550,status=1,toolbar=no,menubar=no,location=no,scrollbars=yes,top=150,left=150,resizable=yes");
+			window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:450px;dialogHeight:450px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+		}
+
+		function clear_user(toid,toname){
+			document.getElementById(toid).value="";
+			document.getElementById(toname).value="";
+		}
+
+		function myload(){
+
+			$(".taskAmount").bind("change",function(){
+				var thisVal = parseInt( $(this).val() );
+				var nextVal = parseInt( $(this).next().val() );
+				var orderNumb = parseInt( $(this).next().next().val() );
+				if(thisVal>nextVal){
+					alert("请不要超过最大可下达数量 "+nextVal);
+					$(this).attr("value",nextVal);
+				}else if(thisVal<orderNumb){
+					alert("输入的值不能小于已下订单数量");
+					$(this).attr("value",nextVal);
+				}else if(thisVal<0){
+					alert("请不要输入负数");
+					$(this).attr("value",nextVal);
+				}else if($(this).val()==""){
+					alert("任务数量不能为空");
+					$(this).attr("value",nextVal);
+				}else {
+					$(this).attr("value",thisVal);
+				}
+			});
+
+		}
+		$(function() {
+			$.formValidator.initConfig({
+				formid : "form1",
+				onerror : function(msg){
+				},
+				onsuccess: function(){
+		//			return true;
+				}
+			});
+
+		    $("#dateHope").formValidator({
+		        onshow: "请选择期望完成日期",
+		        onfocus: "请选择日期，不能小于任务下达日期",
+		        oncorrect: "OK"
+		    }).inputValidator({
+		        min: "1900-01-01",
+		        max: "2100-01-01",
+		        type: "date",
+		        onerror: "请选择期望完成日期"
+		    }).compareValidator({
+				desid : "sendTime",
+				operateor : ">=",
+				onerror : "期望完成日期不能小于任务下达日期"
+			});
+
+
+		    $("#sendUserId").formValidator({
+		        onshow: "请选择负责人",
+		        onfocus: "请选择负责人",
+		        oncorrect: "OK"
+		    }).inputValidator({
+		        min:1,
+		        onerror: "请选择负责人"
+    });
+			/**选择组织机构和人员*/
+			$("#sendName").yxselect_user({
+						hiddenId : 'sendUserId'
+			});
+			$("#TO_NAME").yxselect_user({
+						hiddenId : 'TO_ID',
+						mode:'check'
+			});
+		});
+
+    </script>
+</head>
+	<body scroll="auto" onload="myload();initFileds()">
+
+<div class="main_head">
+    <span class="main_head_title">
+      	变更采购任务
+    </span>
+</div>
+<div class="main_wraper">
+  	<form id='form1' name='form1' action="?model=purchase_task_basic&action=change" method="post"  onsubmit="return checkModification()" >
+	<input type="hidden" name="basic[oldId]" value="{basic[id]}"/>
+	<input type="hidden" name="basic[taskNumb]" value="{basic[taskNumb]}"/>
+	<table width="90%" class="main_table" align="center">
+	<!--
+		<tr class="main_header">
+				<td class="form_header" colspan="4" align="center">
+					采购任务
+				</td>
+			</tr> -->
+			<tr height="28">
+				<td class="form_text_left" align="center">
+					采购任务编号
+				</td>
+				<td class="form_view_right" colspan="3" align="left">
+					&nbsp;{basic[taskNumb]}
+				</td>
+			</tr>
+			<tr align="center" >
+				<td class="form_text_left" width="12%">
+					任务下达日期
+				</td>
+				<td class="form_view_right" align="left"  width="38%">
+				&nbsp;<input class="txt" type="hidden" id="sendTime" name="basic[sendTime]" size="20" maxlength="20" class="BigInput" value="{basic[sendTime]}" />
+					{basic[sendTime]}
+				</td>
+				<td class="form_text_left" width="12%">
+					希望完成日期
+				</td>
+				<td align="left"  width="38%" class="form_view_right">
+					&nbsp;<input class="txt" type="text" id="dateHope" name="basic[dateHope]" size="20" maxlength="20" class="BigInput" value="{basic[dateHope]}" onfocus="WdatePicker()" readonly />
+                    <span class="red">[*]</span>
+			        <div id="dateHopeTip" class="tipShortTxt"></div>
+
+				</td>
+			</tr>
+			<tr align="center">
+				<td class="form_text_left">
+					负责人
+				</td>
+				<td align="left" colspan="3" class="form_view_right">
+					<input class="txt" type="text" id="sendName" name="basic[sendName]"  value="{basic[sendName]}" readonly/>
+					<input type="hidden" id="sendUserId" name="basic[sendUserId]" value="{basic[sendUserId]}"/>
+				    <span class="red">[*]</span>
+			        <div id="sendUserIdTip" class="tipShortTxt"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table width="100%" cellspacing='0' cellpadding='0' class="main_table">
+						<tr height="30px" class="form_main_table">
+							<td colspan="11" class="form_header">
+								采购任务清单：
+							</td>
+						</tr>
+						<tr height="28" class="main_tr_header" align="center">
+							<th   align="center" width="5%">
+								序号
+							</th>
+							<th>
+								设备编号/名称
+							</th>
+							<th>
+								规格型号
+							</th>
+							<th>
+								单位
+							</th>
+							<th>
+								采购类型
+							</th>
+							<th width="8%">
+								原数量
+							</th>
+							<th width="8%">
+								已下达订单数量
+							</th>
+							<th width="12%">
+								任务数量
+							</th>
+							<th width="12%">
+								希望完成时间
+							</th>
+							<th>
+								备注
+							</th>
+							<th>
+								重新下达任务
+							</th>
+						</tr>
+						{list}
+					</table>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<tr>
+					<td class="form_text_left">
+						变更原因
+					</td>
+					<td colspan="3" class="form_text_right">
+						<textarea rows="5" id="changereason" name="basic[changeReason]" cols="108"></textarea>
+					</td>
+				</tr>
+				<tr>
+				<td class="form_text_left">
+					采购说明
+				</td>
+				<td class="form_view_right" colspan="3" >
+					<textarea rows="5" id="instruction" name="basic[instruction]" cols="108">{basic[instruction]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" height="90px">
+				<td class="form_text_left">
+					备注
+				</td>
+				<td class="form_view_right" colspan="3">
+					<textarea rows="5" id="remark" name="basic[remark]" cols="108">{basic[remark]}</textarea>
+				</td>
+			</tr>
+			<tr>
+		   		<td class="form_text_left">是否发送邮件
+		       	</td>
+		   		<td colspan="3" class="form_text_right">
+		   			<input type="radio" name="basic[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+		      		<input type="radio" name="basic[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+				</td>
+			</tr>
+		   	<tr>
+		   		<td class="form_text_left">邮件发送至
+		       	</td>
+		       	<td colspan="3" id="maildiv" class="form_text_right">
+				    <input type="text" class="txtlong" name="basic[email][TO_NAME]" id="TO_NAME" value="{basic[sendName]}" readonly="readonly"/>
+		    		<input type="hidden" name="basic[email][TO_ID]" id="TO_ID" value="{basic[sendUserId]}," readonly="readonly"/>
+			    </td>
+		   	</tr>
+			<tr align="center" class="" height="28">
+				<td colspan="6">
+				<!--
+					<input type="hidden" name="basic[id]" value="{basic[id]}" />
+					<input type="hidden" name="basic[taskVersionNumb]" value="{basic[taskVersionNumb]}" > -->
+					<input type="hidden" name="basic[dateFact]" value="{basic[dateFact]}" >
+					<input class="txt_btn_a" type="submit" value="变  更" class="BigButton" >&nbsp;
+					<input class="txt_btn_a" type="button" value="返  回" class="BigButton" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	</body>
+</html>

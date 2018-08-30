@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>查看费用明细</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/esmcostdetail-viewinworklog.js" ></script>
+</head>
+
+<body>
+	<table class="form_main_table" style="width:1000px;margin:auto;align:center" align="center">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+						查看费用明细
+					</span>
+				</div>
+			</td>
+		</tr>
+        <tr>
+			<td>
+				<fieldset><legend class="legend">基 本 信 息
+					<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+				</legend>
+				<table class="form_in_table" id="baseTbl">
+			        <tr>
+			      		<td class="form_text_left">日志日期</td>
+			      		<td class="form_text_right" >
+			      			{executionDate}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">项目名称</td>
+			      		<td class="form_text_right" >
+			      			{projectName}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">任务名称</td>
+			      		<td class="form_text_right" >
+			      			{activityName}
+			      		</td>
+			        </tr>
+			        <tr>
+			      		<td class="form_text_left">超权限申请</td>
+			      		<td class="form_text_right" >
+			      			<span id="showExcApplyView"></span>
+			      			<input type="hidden" id="excApplyId" value="{excApplyId}"/>
+			      			<input type="hidden" id="excApplyCode" value="{excApplyCode}"/>
+			      		</td>
+			        </tr>
+				</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="6">
+				<fieldset><legend class="legend"><b>费 用 信 息</b>
+					<img src="images/icon/info_up.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl')"/>
+				</legend>
+				<img id="imgLoading" src="images/loading1.gif" style="display:none"/>
+					<table class="form_in_table">
+						<thead>
+							<tr class="main_tr_header">
+								<th width="12%">费用大类</th>
+								<th width="12%">费用小类</th>
+								<th width="9%">费用金额</th>
+								<th width="10%">发票类型</th>
+								<th width="9%">发票金额</th>
+								<th width="8%">发票数量</th>
+								<th>备 注</th>
+								<th width="9%">确认结果</th>
+							</tr>
+						</thead>
+						<tbody id="invbody">
+							{detail}
+						</tbody>
+						<tr class="tr_count">
+							<td>合计</td>
+							<td></td>
+							<td><span class="formatMoney">{countMoney}</span></td>
+							<td></td>
+							<td><span class="formatMoney">{invoiceMoney}</span></td>
+							<td>{invoiceNumber}</td>
+							<td colspan="2"></td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+      			<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

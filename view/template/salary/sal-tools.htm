@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+<script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+<script type="text/javascript" src="js/jquery.validate.js"></script>
+<script>
+jQuery(document).ready(function(){
+    $('#edituserForm').validate({
+        submitHandler: function(){
+            amSubmitFun();
+        }
+    });
+});
+
+//修改提交
+function amSubmitFun(){
+    var rand=Math.random()*100000;
+    var id=$('#user_key').val();
+    var amount=$('#amount').val();
+    var gjjam=$('#gjjam').val();
+    var shbam=$('#shbam').val();
+    var getam=$('#getam').val();
+    var otheram=$('#otheram').val();
+    var othdelam=$('#othdelam').val();
+    var comedt=$('#comedt').val();
+    var leavedt=$('#leavedt').val();
+    var passdt=$('#passdt').val();
+    var amsg="";
+    if(amount==""&&getam==""){
+    	$('#resdt').html('请输入基本工资或实发工资');
+    	return false;
+    }
+    $.post('?model=salary&action=sal_tools_in',{
+        rand:rand,amount:amount,getam:getam,gjjam:gjjam,shbam:shbam,otheram:otheram,othdelam:othdelam
+        ,comedt:comedt,passdt:passdt,leavedt:leavedt
+        },
+        function (data)
+        {
+        	$('#resdt').html(data);
+        }
+    )
+    
+}
+
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+        <div id="hr_user_new"  >
+            <form id="edituserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 100%;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 35px; text-align: center;" class="ui-widget-header ui-corner-all" colspan="4">
+                            工资计算
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" width="15%"> 基本工资：</td>
+                        <td width="35%">
+                            <input id="amount" name="amount" type="text" style="width: 80px;" />
+                        </td>
+                        <td class="tl"> 实发工资：</td>
+                        <td >
+                            <input id="getam" name="getam" type="text" style="width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td class="tl"> 公积金：</td>
+                        <td >
+                            <input id="gjjam" name="gjjam" type="text" style="width: 80px;" />
+                        </td>
+                        <td class="tl"> 社保费：</td>
+                        <td >
+                            <input id="shbam" name="shbam" type="text" style="width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 其他补贴：</td>
+                        <td >
+                            <input id="otheram" name="otheram" type="text" style="width: 80px;" />
+                        </td>
+                        <td class="tl"> 其他扣除：</td>
+                        <td >
+                            <input id="othdelam" name="othdelam" type="text" style="width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 入职日期：</td>
+                        <td >
+                            <input id="comedt" name="comedt" type="text" style="width: 80px;" />
+                        </td>
+                        <td class="tl"> 转正日期：</td>
+                        <td >
+                            <input id="passdt" name="passdt" type="text" style="width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 离职日期：</td>
+                        <td >
+                            <input id="leavedt" name="leavedt" type="text" style="width: 80px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 计算结果：</td>
+                        <td colspan="3">
+                            <font id="resdt" color="red" size=3;>
+                            </font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="center">
+                            <input type="submit" id="newuserSub" value="计算"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+</body>
+</html>

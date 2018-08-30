@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>查看采购申请</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="view/template/purchase/plan/js/basic-execute-view.js"></script>
+
+</head>
+<body scroll="auto">
+<div class="main_head">
+    <span class="main_head_title">
+      	查看采购申请
+    </span>
+    <span id='viewChangeLog'></span>
+</div>
+
+<div class="main_wraper">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">采购申请编号</td>
+            <td colspan="3" class="form_text_right">{planNumb}</td>
+        </tr>
+        <tr>
+            <td class="form_text_left">采购类型</td>
+            <td class="form_text_right">{purchTypeCName}</td>
+            <td class="form_text_left">采购部门</td>
+            <td class="form_text_right">
+                {purchDepart}
+                <input type="hidden" id="isTemp" value="{isTemp}">
+                <input type="hidden" id="ExaStatus" value="{ExaStatus}">
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请日期</td>
+            <td class="form_text_right">{sendTime}</td>
+            <td class="form_text_left">希望完成时间</td>
+            <td class="form_text_right">{dateHope}</td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请部门</td>
+            <td class="form_text_right">
+                {department}
+            </td>
+            <td class="form_text_left">申请人名称</td>
+            <td class="form_text_right">{sendName}</td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                归属公司
+            </td>
+            <td class="form_text_right">
+                {basic[businessBelongName]}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="10" class="form_header">采购申请清单
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th width="5%">序号</th>
+                        <th width="15%">物料编号/名称</th>
+                        <th width="7%">规格型号</th>
+                        <th width="7%">单位</th>
+                        <th width="7%">申请数量</th>
+                        <th width="7%">已下达数量</th>
+                        <th width="12%">申请日期</th>
+                        <th width="12%">希望交货期</th>
+                        <th width="12%">实际完成时间</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    {list}
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">采购说明</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="instruction" class="textarea_read" name="basic[instruction]"
+                          readonly>{instruction}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="remark" class="textarea_read" name="basic[remark]" readonly>{remark}</textarea>
+            </td>
+        </tr>
+        <tr id="executeView">
+            <td colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="7" class="form_header">采购执行情况
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th>序号</th>
+                        <th>物料编号/名称</th>
+                        <th>申请数量</th>
+                        <th>下达任务数量</th>
+                        <th>询价数量</th>
+                        <th>订单数量</th>
+                        <th>入库数量</th>
+                    </tr>
+                    </thead>
+                    {listExecute}
+                </table>
+            </td>
+        </tr>
+        <tr align="center" class="footform" height="28">
+            <td colspan="4">
+                <input type="button" value="返  回" class="txt_btn_a" onclick="history.back();">
+            </td>
+        </tr>
+    </table>
+    <br>
+</div>
+</body>
+<script>
+    var isTemp = $("#isTemp").val();
+    if (isTemp == 1) {
+        $b = $("<input type='button' value='查看变更历史' class='txt_btn_a' />");
+        $("#viewChangeLog").append($b);
+        $b.click(function () {
+            window.open("?model=common_changeLog&action=toPlanList&logObj=purchaseplan&originalId=&objId={id}");
+        });
+    }
+</script>
+</html>

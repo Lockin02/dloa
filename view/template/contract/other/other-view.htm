@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看其他合同</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <!-- 核心组件 -->
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/jquery/woo.js"></script>
+    <script type="text/javascript" src="js/jquery/component.js"></script>
+
+    <script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+    <script type="text/javascript" src="js/common/approval.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/other-view.js"></script>
+</head>
+<body>
+<style>
+    #EXT1,#EXT2,#EXT3,#EXT4,#EXT1-2,.extTR{display: none;}
+</style>
+<table class="form_main_table" style="width:1100px;margin:auto;text-align:center" align="center">
+<tr>
+    <td class="innerTd" colspan="6">
+        <div class="main_head2">
+            <span class="main_head_title">
+                查看其他合同  - {fundTypeName}
+            </span>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">款项性质</td>
+    <td class="form_text_right_three">
+        {fundType}
+        <input type="hidden" id="fundType" value="{orgFundType}"/>
+    </td>
+    <td class="form_text_left_three payForBusinessMainTd" style="display: none">付款业务类型</td>
+    <td class="form_text_right_three payForBusinessMainTd" style="display: none" colspan="3">
+        {payForBusinessName}
+        <div style="display: none">
+            <select id="payForBusinessMain" autocomplete="off" class="txt">
+                {payForBusinessOpts}
+            </select>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">鼎利合同号</td>
+    <td class="form_text_right_three">
+        {orderCode}
+    </td>
+    <td class="form_text_left_three">合同名称</td>
+    <td class="form_text_right_three">
+        {orderName}
+    </td>
+    <td class="form_text_left_three">合同负责人</td>
+    <td class="form_text_right_three">
+        {principalName}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">签约公司</td>
+    <td class="form_text_right_three">
+        {signCompanyName}
+    </td>
+    <td class="form_text_left_three">公司省份</td>
+    <td class="form_text_right_three">
+        {proName}
+    </td>
+    <td class="form_text_left_three">负责人部门</td>
+    <td class="form_text_right_three">
+        {deptName}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">合同金额</td>
+    <td class="form_text_right_three">
+        <span class="formatMoney">{orderMoney}</span>
+    </td>
+    <td class="form_text_left_three">合同税率(%)</td>
+    <td class="form_text_right_three">
+        {taxPoint}
+    </td>
+    <td class="form_text_left_three">合同金额(不含税)</td>
+    <td class="form_text_right_three">
+        <span class="formatMoney">{moneyNoTax}</span>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">合同发票类型</td>
+    <td class="form_text_right_three">
+        {invoiceTypeName}
+    </td>
+    <td class="form_text_left_three">需要盖章</td>
+    <td class="form_text_right_three">
+        {isNeedStamp}
+    </td>
+    <td class="form_text_left_three">盖章类型</td>
+    <td class="form_text_right_three">
+        {stampType}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">已经盖章</td>
+    <td class="form_text_right_three">
+        {isStamp}
+    </td>
+    <td class="form_text_left_three">申 请 人</td>
+    <td class="form_text_right_three">
+        {createName}
+    </td>
+    <td class="form_text_left_three">录入日期</td>
+    <td class="form_text_right_three">
+        {createDate}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">签收状态</td>
+    <td class="form_text_right_three">
+        {signedStatusCN}
+    </td>
+    <td class="form_text_left_three">签 收 人</td>
+    <td class="form_text_right_three">
+        {signedMan}
+    </td>
+    <td class="form_text_left_three">签收日期</td>
+    <td class="form_text_right_three">
+        {signedDate}
+    </td>
+</tr>
+<tr id="projectInfo" style="display:none">
+    <td class="form_text_left_three">费用归属部门</td>
+    <td class="form_text_right_three">
+        {otherFeeDeptName}
+    </td>
+    <td class="form_text_left_three">项目类型</td>
+    <td class="form_text_right_three">
+        {projectTypeName}
+        <input type="hidden" id="projectId" value="{projectId}"/>
+        <input type="hidden" id="projectType" value="{projectType}"/>
+    </td>
+    <td class="form_text_left_three">项目名称</td>
+    <td class="form_text_right_three">
+        {projectName}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">联 系 人</td>
+    <td class="form_text_right_three">
+        {linkman}
+    </td>
+    <td class="form_text_left_three">联系电话</td>
+    <td class="form_text_right_three">
+        {phone}
+    </td>
+    <td class="form_text_left_three">签约日期</td>
+    <td class="form_text_right_three">
+        {signDate}
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">归属公司</td>
+    <td class="form_text_right_three">
+        {businessBelongName}
+    </td>
+    <td class="form_text_left_three">返款金额</td>
+    <td class="form_text_right_three formatMoney">
+        {returnMoney}
+    </td>
+    <td class="form_text_left_three">合同币种</td>
+    <td class="form_text_right_three">
+        {currency}
+    </td>
+</tr>
+
+    <tr id="EXT1" class="extTR">
+        <td class="form_text_left_three">商机编号</td>
+        <td class="form_text_right_three">
+            {chanceCode}
+        </td>
+        <td class="form_text_left_three prefBidDateWrap">预计投标日期</td>
+        <td class="form_text_right_three prefBidDateWrap" colspan="3">
+            {prefBidDate}
+        </td>
+    </tr>
+
+    <tr id="EXT2" class="extTR">
+        <td class="form_text_left_three">销售合同编号</td>
+        <td class="form_text_right_three">
+            {contractCode}
+        </td>
+        <td class="form_text_left_three">项目预计结束时间</td>
+        <td class="form_text_right_three">
+            {projectPrefEndDate}
+        </td>
+        <td class="form_text_left_three">延后回款天数</td>
+        <td class="form_text_right_three">
+            {delayPayDays}
+        </td>
+    </tr>
+
+    <tr id="EXT1-2" class="extTR">
+        <td class="form_text_left_three">是否是银行保函</td>
+        <td class="form_text_right_three" colspan="3">
+            {isBankbackLetterStr}
+        </td>
+        <!--<td class="form_text_left_three backLetterEndDateWrap" {isBankbackLetterDateShow}>保函结束日期</td>-->
+        <!--<td class="form_text_right_three backLetterEndDateWrap" colspan="3" {isBankbackLetterDateShow}>-->
+            <!--{backLetterEndDate}-->
+        <!--</td>-->
+        <td class="form_text_left_three">缓冲天数</td>
+        <td class="form_text_right_three">
+            <span id="bufferDays">{bufferDays}</span>
+        </td>
+    </tr>
+
+    <tr id="EXT3" class="extTR">
+        <td class="form_text_left_three">预计回款时间</td>
+        <td class="form_text_right_three" colspan="5">
+            {prefPayDate}
+        </td>
+    </tr>
+
+    <tr id="EXT4" class="extTR">
+        <td class="form_text_left_three">源单类型</td>
+        <td class="form_text_right_three">
+            {codeType}
+        </td>
+        <td class="form_text_left_three">源单编号</td>
+        <td class="form_text_right_three" {td0ColSpan}>
+            {codeValue}
+        </td>
+        <td class="form_text_left_three" {displayTd1}>保证金关联其他类合同</td>
+        <td class="form_text_right_three" colspan="3" {displayTd1}>
+            {hasRelativeContract}
+            <a href="index1.php?model=contract_other_other&action=&action=viewTab&id={relativeContractId}" target="_blank">{relativeContract}</a>
+        </td>
+    </tr>
+
+<tr>
+    <td class="form_text_left_three">联系地址</td>
+    <td class="form_text_right_three" colspan="5">
+        <textarea class="textarea_read" readonly="readonly" rows="4">{address}</textarea>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">款项条件</td>
+    <td class="form_text_right_three" colspan="5">
+        <textarea class="textarea_read" readonly="readonly" rows="4">{fundCondition}</textarea>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">合同内容</td>
+    <td class="form_text_right_three" colspan="5">
+        <textarea class="textarea_read" readonly="readonly" rows="4">{description}</textarea>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">备 注</td>
+    <td class="form_text_right_three" colspan="5">
+        <textarea class="textarea_read" readonly="readonly" rows="4">{remark}</textarea>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left_three">关闭原因</td>
+    <td class="form_text_right_three" colspan="5">
+        <textarea class="textarea_read" id="closeReason" readonly="readonly" rows="5">{closeReason}</textarea>
+    </td>
+</tr>
+    <tr>
+        <td class="form_text_left_three">附&nbsp;&nbsp;&nbsp;&nbsp;件</td>
+        <td class="form_text_right_three" colspan="5">
+            <div class="upload">
+                <div id="uploadfileList" class="upload">{file}</div>
+            </div>
+        </td>
+    </tr>
+<tr id="flightsBalanceTr" style="display:none;">
+    <td colspan="6">
+        <fieldset>
+            <legend class="legend">订票结算信息</legend>
+            <div id="tt" style="width:1080px;height:250px">
+                <div title="费用汇总" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=0"></div>
+                <div title="部门费用" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=1"></div>
+                <div title="合同项目费用" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=2"></div>
+                <div title="研发项目费用" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=3"></div>
+                <div title="售前费用" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=4"></div>
+                <div title="售后费用" style="padding:10px"
+                     href="?model=flights_balance_balance&action=costForShow&id={projectId}&costDetail=5"></div>
+            </div>
+        </fieldset>
+    </td>
+</tr>
+<tr>
+    <td colspan="6"></td>
+</tr>
+<tr>
+    <td class="innerTd" colspan="6">
+        <table class="form_in_table">
+            <tr>
+                <td class="td_table" id="approvalView">
+                    <input type="hidden" id="pid" value="{id}"/>
+                    <input type="hidden" id="itemType" value="oa_sale_other"/>
+                    <input type="hidden" id="isChange" value="1"/>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr id="btn">
+    <td class="txt_btn" colspan="6">
+        <input type="hidden" id="id" value="{id}"/>
+        <input type="hidden" id="showBtn" value="{showBtn}"/>
+        <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+    </td>
+</tr>
+</table>
+</body>
+</html>

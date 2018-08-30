@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>列表显示</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+<link rel="stylesheet" type="text/css" href="js/thickbox.css">
+<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+<script type="text/javascript" src="js/jquery.js">
+</script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="view/template/rdproject/project/js/rdproject-read-topTab.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript">
+            $(document).ready(function() {
+                //添加鼠标经过行颜色改变
+                rowsColorChange();
+                topTabShow(arrayTop, "pjTask","{pjId}");
+            });
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toProjectTaskPage";
+			}
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				this.location="?model=rdproject_task_rdtask&action=toProjectTaskPage&projectId="+$("#projectId").val()+"&"+searchfield+"="+searchvalue;
+			}
+			</script>
+
+          <script>
+
+			$().ready(function() {
+			 var option = {
+                    width: 150,
+                    items: [{
+                        text: "查看",
+                        icon: "images/ico1.gif",
+                        alias: "1-1",
+                        action: function(row){
+                        	showThickboxWin('?model=rdproject_task_rdtask&action=toReadTask&id='
+								+ row.pid
+								+ '&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800');
+                        }
+                    }],
+                    onShow: applyrule,
+                    onContextMenu: BeforeContextMenu
+                  };
+               $(".tr_even,.tr_odd").contextmenu(option);
+                      			//隐藏右键某些操作
+                function applyrule(menu) {
+				switch(this.pstatus){
+                		case "TG":{  menu.applyrule({
+                            name: "ZT",
+                            disable: true,
+                            items: ["1-2"]
+                        	});break;
+                        };
+                        default:{
+                        menu.applyrule({
+                            name: "other",
+                            disable: true,
+                            items: []
+                        	});break;
+                        };
+                        }
+                }
+               //右键触发前操作
+               function BeforeContextMenu() {
+                    return true;
+                }
+                  })
+		</script>
+</head>
+<body>
+<div class="tab_options"></div>
+<div class="main_head"><span class="main_head_title">
+项目任务列表 </span></div>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" value="" /> <input
+			type="hidden" id="projectId" value="{projectId}" /> 按 <select
+			id="searchfield" class="select">
+			<option value="name">任务名称</option>
+			<option value="chargeName">责任人</option>
+			<option value="publicName">发布人</option>
+			<option value="status">状态</option>
+			<option value="priority">优先级</option>
+		</select> <input type="button" value=" 搜索 " class="txt_btn_a"
+			onclick="search()" /></td>
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="3%">序号</th>
+			<th width="3%">提示灯</th>
+			<th width="15%">任务名称</th>
+
+			<th width="10%">优先级</th>
+			<th width="10%">状态</th>
+			<th width="6%">完成率</th>
+			<th width="6%">偏差率</th>
+			<th width="8%">责任人</th>
+			<th width="8%">发布人</th>
+			<th width="10%">最近更新时间</th>
+			<th width="10%">计划完成时间</th>
+			<th width="5%">任务类型</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+</table>
+</div>
+{pageDiv}
+</body>
+
+</html>

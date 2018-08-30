@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>赠送申请单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-chance.js"></script>
+
+	<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+
+	<script type="text/javascript" src="view/template/projectmanagent/present/js/present-add.js"></script>
+	<script type="text/javascript" src="view/template/projectmanagent/present/js/present-add-list.js"></script>
+
+    <script>
+
+	    function sub(){
+	        if($("#customerName").val() == ''){
+	           alert("客户名称不能为空！");
+	           return false;
+	        }
+	        if($("#areaName").val() == ''){
+	            alert("归属区域不能为空！");
+	            return false;
+	        }
+	        if($("#feeMan").val() == ''){
+	            alert("费用承担人不能为空！");
+	            return false;
+	        }
+			if($("#customTypeName").val() == ''){
+				alert("客户类型不能为空！");
+				return false;
+			}
+			if($("#province").val() == ''){
+				alert("省份不能为空！");
+				return false;
+			}
+			if($("#moduleName").val() == ''){
+				alert("归属板块不能为空！");
+				return false;
+			}
+	        if($("#businessBelongName").val() == ''){
+				alert("归属公司不能为空！");
+				return false;
+			}
+	     if($("#productInfo").yxeditgrid('getCurShowRowNum') == '0'){
+	       alert("产品清单不能为空！");
+	       return false;
+	     }
+	        return true;
+	    }
+
+    </script>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_present_present&action=add" id="form1" method="post" onsubmit="return sub();">
+
+	<table class="form_main_table">
+         <div class="main_head"><span class="main_head_title">赠送申请单</span></div>
+<!--	    <tr>-->
+<!--			<td  class="form_text_left"><span style="color:blue">编号</span></td>-->
+<!--			<td class="form_view_right">-->
+<!--				 <input class="txt" type="text" name="present[Code]" id="Code" />-->
+<!--			</td>-->
+<!--		</tr>-->
+        <tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+			     <input type="hidden" id="SingleTypeT" name="present[SingleType]" value="{SingleType}"/>
+				 <select class="select" id="SingleType" onchange="singleSelect();"></select>
+			</td>
+			<td  class="form_text_left">源单编号</td>
+			<td class="form_view_right" id="single">
+
+			</td>
+		</tr>
+		<tr>
+		    <td  class="form_text_left"><span style="color:blue">客户名称</span></td>
+			<td class="form_view_right">
+				<input class="txt" type="text" name="present[customerName]" id="customerName" value="{customerName}"/>
+				<input type="hidden" name="present[customerNameId]" id="customerNameId" value="{customerId}"/>
+			</td>
+			<td class="form_text_left">交货日期</td>
+			<td class="form_view_right">
+			    <input type="text" class="txt" name="present[deliveryDate]" id="deliveryDate" onfocus="WdatePicker()" />
+			</td>
+		</tr>
+		<tr>
+		    <td class="form_text_left_con"><span style="color:blue">归属区域:</span></td>
+				<td class="form_text_right_con">
+				   <input type="text" class="txt" name="present[areaName]" id="areaName" value="{areaName}"/>
+				   <input type="hidden" name="present[areaCode]" id="areaCode" value="{areaCode}"/>
+			</td>
+			<td class="form_text_left_con">区域负责人:</td>
+				<td class="form_text_right_con">
+				    <input type="text" class="readOnlyTxtNormal" readonly name="present[areaPrincipal]" id="areaPrincipal" value="{areaPrincipal}"/>
+				    <input type="hidden" class="txt" name="present[areaPrincipalId]" id="areaPrincipalId" value="{areaPrincipalId}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请人</td>
+			<td class="form_view_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[salesName]" id="salesName" value="{salesName}"/>
+				<input type="hidden" name="present[salesNameId]" id="salesNameId" value="{salesNameId}"/>
+			</td>
+			<td class="form_text_left">申请日期</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[createTime]" value="{createTime}" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">客户类型</td>
+			<td class="form_view_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[customTypeName]" id="customTypeName" value=""/>
+				<input type="hidden" name="present[customTypeId]" id="customTypeId" value=""/>
+			</td>
+			<td class="form_text_left">省份</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[province]" id="province" value="" />
+				<input type="hidden" class="readOnlyTxtNormal" readonly="readonly" name="present[provinceId]" id="provinceId" value="" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">归属板块</td>
+			<td class="form_view_right">
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="present[moduleName]" id="moduleName" value=""/>
+				<input type="hidden" name="present[module]" id="module" value=""/>
+			</td>
+			<td class="form_text_left">归属公司</td>
+			<td class="form_text_right">
+				<select class="txt" id="businessBelongNameOpt" style="display:none"></select>
+				<input type="text" class="readOnlyTxtNormal" readonly="readonly" id="businessBelongNameRead" value=""/>
+				<input type="hidden" name="present[businessBelongName]" id="businessBelongName" value=""/>
+				<input type="hidden" name="present[businessBelong]" id="businessBelong" value=""/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left"><span style="color:blue">费用承担人</span></td>
+			<td class="form_text_right" colspan="3">
+				<input type="text" class="txt" readonly="readonly" name="present[feeMan]" id="feeMan" />
+				<input type="hidden" name="present[feeManId]" id="feeManId" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请理由</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="present[reason]" id="reason"  class="txt_txtarea_font1000"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea name="present[remark]" id="remark"  class="txt_txtarea_font1000"></textarea>
+			</td>
+		</tr>
+		<tr id="productH" style="display:none;text-align:left;">
+			<td><b onclick="hideList('product');">产品清单</b>
+			  <img src="images/icon/icon002.gif" onclick="hideList('product');" title="展开" alt="新增选项" /></td>
+		</tr>
+		<tr id="product">
+			<td colspan="6" class="innerTd">
+			<fieldset style="width:200"><legend style="text-align:left">
+			  <b onclick="hideList('product');">产品清单</b>
+			    <img src="images/icon/icon002.gif" onclick="hideList('product');" title="隐藏" alt="新增选项" /></legend>
+				<div id="productInfo"></div>
+			</fieldset>
+			</td>
+		</tr>
+
+<tr>
+<td colspan="4">
+<table class="main_table">
+		<tr>
+			<td class="txt_btn" colspan="4">
+			    <!--			    商机下推借试用单据 冗余信息 --开始-->
+                <input type="hidden" value="{chanceCode}" id="chanceCodeT" />
+                <input type="hidden" value="{chanceId}" id="chanceIdT" />
+                <!--			    商机下推借试用单据 冗余信息 --结束-->
+                <!--			    合同下推借试用单据 冗余信息 --开始-->
+				<input type="hidden" id="contractCodeT" value="{contractCode}"/>
+				<input type="hidden" id="contractNameT" value="{contractName}"/>
+				<input type="hidden" id="contractIdT" value="{contractId}"/>
+                <!--			    合同下推借试用单据 冗余信息 --结束-->
+			    <input type="hidden" name="present[createName]" value="{createName}" />
+			    <input type="hidden" name="present[createId]" value="{createId}" id="createId"/>
+			    <input type="hidden" name="present[ExaStatus]" value="未审批" />
+				<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="toSave();"/>
+		        <input type="submit" class="txt_btn_a" value=" 提交 " onclick="toApp();" />
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();" />
+			</td>
+		</tr>
+	</table>
+	</td>
+	</tr>
+	</table>
+</form>
+</div>
+</body>

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>打印发货单</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/Lodop6.058/LodopFuncs.js"></script>
+<object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+	<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0 pluginspage="js/Lodop6.058/install_lodop.exe"></embed>
+</object>	
+</head>
+<body>
+<div id="table1">
+<table class="form_main_table">
+	<tr>
+		<td>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4" align="left">
+				<img src='images/sjdl.jpg'></img><br/>
+				<b style = "font-size:18px;font-family:Arial;">Dingli Communications</b><br/>
+				<b style = "font-size:12px;font-family:宋体;">珠海市港湾大道科技五路8号</b><br/>
+				<b style = "font-size:12px;font-family:Arial;">Tel:0756-339 1933   Fax:0756-339 1900</b><br/>
+				<b style = "font-size:12px;font-family:Arial;">email:tech_support@dinglicom.com</b>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="4">
+				<h3>发货单</h3>
+				</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">发货方式
+				      	<input type="hidden" id="id" name="ship[id]" value="{id}"/>
+				      	<input type="hidden" id="docType" name="ship[docType]" value="{docType}"/>
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input type="hidden" id="shipType" value="{shipType}"/>
+						 <input type="checkbox" name="ship[shipType]" value="order" {order} disabled/>&nbsp;发货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="borrow" {borrow} disabled/>&nbsp;借用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="lease" {lease} disabled/>&nbsp;租用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="trial" {trial} disabled/>&nbsp;试用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="change" {change} disabled/>&nbsp;更换&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货单号</td>
+				<td class="form_text_right" width="30%"><input type="hidden"
+					id="docType" name="ship[docType]" value="{docType}" /> {shipCode}</td>
+				<td class="form_text_left">发货计划编号</td>
+				<td class="form_text_right">{planCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">鼎利合同号</td>
+				<td class="form_text_right">{docCode}</td>
+				<td class="form_text_left">客户合同号</td>
+				<td class="form_text_right">{customerContCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right"><input type="hidden"
+					id="customerId" class="txt" name="ship[customerId]"
+					value="{customerId}" /> {customerName}</td>
+				<td class="form_text_left">联系人</td>
+				<td class="form_text_right"><input type="hidden" id="linkmanId"
+					class="txt" name="ship[linkmanId]" value="{linkmanId}" />
+				{linkman}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">手机号</td>
+				<td class="form_text_right">{mobil}</td>
+				<td class="form_text_left">邮寄单号</td>
+				<td class="form_text_right">{companyName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">邮寄单号</td>
+				<td class="form_text_right" colspan="3">{mailCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货地址</td>
+				<td class="form_text_right" colspan="3">{address}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备注</td>
+				<td class="form_text_right" colspan="3"><textarea
+					class="textarea_read" readonly>{remark}</textarea></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan="7">物料清单 <img src="images/verpic_open.gif"
+						onclick="dis('invbody')" title="缩放" /></td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th>序号</th>
+<!-- 					<th>产品线</th>-->
+					<th>产品编号</th>
+					<th>产品名称</th>
+					<th>规格型号</th>
+					<th>合同数量</th>
+					<th>本次发货数量</th>
+					<th>备注</th>
+				</tr>
+				{products}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<tr>
+	<td colspan="4">
+		<table class="form_main_table">
+		<tr>
+				<td class="form_text_left">出库人</td>
+				<td class="form_text_right" width="30%">
+					 {outstockman}
+				</td>
+				<td class="form_text_left">发货人</td>
+				<td class="form_text_right" >
+					 {shipman}
+				</td>
+		</tr>
+		<tr>
+				<td class="form_text_left">发货日期</td>
+				<td class="form_text_right" >
+			         {shipDate}
+				</td>
+				<td class="form_text_left">审核人</td>
+				<td class="form_text_right" >
+					 {auditman}
+				</td>
+		</tr>
+		<tr id="signTr">
+				<td class="form_text_left">签收人</td>
+				<td class="form_text_right" >
+					{signman}
+					 <input type="hidden" id="isSign" value="{isSign}"/>
+				</td>
+				<td class="form_text_left">签收日期</td>
+				<td class="form_text_right" >
+					{signDate}
+				</td>
+		</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" align="left">
+			<b style = "font-size:12px;font-family:Arial;">
+				欢迎使用我公司的产品！请贵司收货人收到货后于三个工作日内签返发货回单，传真至0756-3630389，<br/>
+				或扫描后发邮件至jin.yang@dinglicom.com;发货如有疑问，请致电杨锦或郑娟娟：0756-3626024，<br/>
+				维修如有疑问，请致电何花0756－3626022；
+			</b>
+		</td>
+	</tr>
+</table>
+</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+				<input type="button" class="txt_btn_a" onclick="javascript:previewDom('table1');" value="打  印" />
+				<input type="button" class="txt_btn_a" onclick="javascript:printDesign('table1');" value="页面设置"/>
+				</td>
+			</tr>
+		</table>
+</body>
+</html>

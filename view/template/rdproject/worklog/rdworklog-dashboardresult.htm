@@ -1,0 +1,185 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>
+			个人仪表盘
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen"/>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="FusionCharts/js/FusionCharts.js"></script>
+		<script type="text/javascript">
+			var beginDate = "{beginDate}";
+			var overDate = "{overDate}";
+			var memberId = "{memberId}";
+			$().ready(function(){
+
+
+			//计划部分开始
+				$("#showLoadCharts").bind("click",function(){
+					$("#dash_charts").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=showLoadCharts&beginDate=" + beginDate + "&overDate=" + overDate + "&memberId=" + memberId);
+				})
+
+				$("#dashSchedule").bind("click",function(){
+					$("#dash_charts").attr("src","index1.php?model=rdproject_worklog_rdworklog&action=showLoadByTask&beginDate=" + beginDate + "&overDate=" + overDate + "&memberId=" + memberId);
+				})
+
+				$("#dashClick").toggle(
+					function () {
+						$("#dashimg").attr("src","images/icon/icon002.gif");
+    					$("#dash").hide();
+  					},
+					function () {
+						$("#dashimg").attr("src","images/icon/icon001.gif");
+    					$("#dash").show();
+  					}
+				);
+				//计划部分结束
+				$('#showLoadCharts').click();
+			})
+
+			function flag(){
+			    var aa = $("#flag").val();
+			    if(aa == 'flag'){
+			        location='?model=rdproject_worklog_rdworklog&action=teamDashBoard';
+			    }else {
+			        location='?model=rdproject_worklog_rdworklog&action=dashBoard';
+			    }
+			}
+
+		</script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				个人仪表盘结果
+			</span>
+			<input type="button" class="main_head_btn" value="返  回" onclick="flag();" />
+		    <input type="hidden" id="flag" value="{flag}"/>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td width="100%">
+						工作量统计
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<tr>
+					<td width="100%">
+						<table class="main_table_search">
+							<tr>
+								<td width="100%" colspan="20">
+									工作量总计
+								</td>
+							</tr>
+						</table>
+						<table class="form_main_table">
+							{workloadCount}
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="main_table_search">
+							<tr>
+								<td width="100%" colspan="20">
+									工作量分布
+								</td>
+							</tr>
+						</table>
+						<table class="form_main_table">
+							{dateList}
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br />
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td width="100%">
+						当前任务统计
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<tr>
+					<td width="100%">
+						<table class="main_table_search">
+							<tr>
+								<td>
+									按任务统计
+								</td>
+							</tr>
+						</table>
+						<table class="form_main_table">
+							{statuslist}
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="main_table_search">
+							<tr>
+								<td width="100%">
+									按项目统计
+								</td>
+							</tr>
+						</table>
+						<table class="form_main_table">
+							{projectWorklogList}
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br />
+		<!--div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td width="100%">
+						工作量分布图
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td>
+						{pic_one}
+					</td>
+				</tr>
+			</table>
+		</div-->
+		<div class="main_wraper">
+			<table class="main_table" >
+				<thead>
+				<tr class="main_tr_header" >
+					<td class="main_td_align_left" >
+						<div id="dashClick">个人仪表盘图表 <img id="dashimg" src="images/icon/icon001.gif" /></div>
+					</td>
+				</tr>
+				</thead>
+			</table>
+			<div id="dash">
+				<table class="main_table" >
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<input type="radio" id="showLoadCharts" name="dashresult" />项目工作量分布图
+							<input type="radio" id="dashSchedule" name="dashresult" />任务工作量分布图
+						</td>
+					</tr>
+					<tr class="tr_even">
+						<td colspan="4" class="main_td_align_left" >
+							<iframe height="500px" width="100%" frameborder=0 id="dash_charts" ></iframe >
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</body>
+</html>

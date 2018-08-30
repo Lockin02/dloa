@@ -1,0 +1,153 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>添加采购计划</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="view/template/purchase/external/js/external-add-delete.js"> </script>
+<script type="text/javascript" src="view/template/purchase/plan/js/basic-add-validator.js"> </script>
+<script type="text/javascript" src="view/template/purchase/plan/js/basic-add.js"> </script>
+
+
+</head>
+<body>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>
+			<img src="images/sys_config.gif">
+			<b><font color="#000000">下达采购计划</font></b>
+		</td>
+	</tr>
+</table>
+<form id='form1' name='form1' action="?model=purchase_plan_basic&action=add" method="post">
+<table class="form_main_table">
+	<tr >
+		<td colspan="4" class="form_header">
+			<font class="form_header">采购计划</font>
+		</td>
+	</tr>
+	<!--
+	<tr>
+		<td class="form_text_left">采购计划编号</td>
+		<td colspan="3" class="form_text_right">
+			<input type="text" class="txtlong"  name="basic[planNumb]" id="planNumb">
+			<span class="red">[*]</span>
+		</td>
+	</tr>-->
+	<tr>
+		<td class="form_text_left" width="20%">采购计划类型</td>
+		<td class="form_text_right" colspan="3">
+			补库采购
+			<input type="hidden" name='basic[objAssType]' value='stock' />
+			<input type="hidden" name="basic[purchType]" value="stock" />
+			<input type="hidden" name='basic[objAssCode]' id='objAssCode' value='{fillupCode}' />
+			<input type="hidden" name='basic[objAssId]' id='objAssId' value='{fillUpId}' />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">部门</td>
+		<td class="form_text_right" >
+			<input type="hidden" id="depId" name="basic[departId]" />
+			<input type="text" class="txt" id="depName" name="basic[department]" readonly/>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindowDept('depId','depName')" />
+            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('depId','depName')" />
+			<span class="red">[*]</span>
+			<br />
+			<div id="depNameTip" class="tipShortTxt" ></div>
+		</td>
+
+		<td class="form_text_left" width="20%">下达人名称</td>
+		<td class="form_text_right" width="30%">
+			<input type="hidden" id="sendUserId" name="basic[sendUserId]" value="{sendUserId}"/>
+			<input type="text" class="txt" id="sendName" name="basic[sendName]" value="{sendName}" readonly />
+            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('sendUserId','sendName')" />
+            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('sendUserId','sendName')" />
+            <span class="red">[*]</span>
+			<div id="sendNameTip" class="tipShortTxt" ></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">下达时间</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="sendTime" name="basic[sendTime]" value="{sendTime}" onfocus="WdatePicker()" value="" readonly />
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="sendTimeTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">期望完成时间</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="dateHope" name="basic[dateHope]"  value="{dateHope}" onfocus="WdatePicker()" value="" readonly />
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="dateHopeTip" class="tipShortTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">采购说明</td>
+		<td class="form_text_right" colspan="3">
+			<textarea  id="instruction" class="txt_txtarea_font" name="basic[instruction]" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			<textarea  id="remark" class="txt_txtarea_font" name="basic[remark]" ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="4" class="td_table">
+		<table id="mytable" class="main_table_nested">
+			<thead>
+				<tr>
+					<td colspan="6" class="form_header"><font class="form_header">采购计划清单</font>
+					<input type="hidden" id="invnumber" value="0" />
+							<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+					</td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th width="15%">设备编号</th>
+					<th width="20%">设备名称</th>
+					<th width="10%">采购计划数量</th>
+					<th width="20%">采购计划下达日期</th>
+					<th width="20%">采购计划预期望完成日期</th>
+					<th width="20%">备注</th>
+				</tr>
+				{list}
+			</tbody>
+			</table>
+		</td>
+	</tr>
+	<tr align="center" class="footform" height="28">
+		<td colspan="4">
+			<input type="submit" value=" 提  交 " class="txt_btn_a" >
+			<input type="button" value=" 返  回 " class="txt_btn_a" onclick="self.parent.tb_remove();">
+		</td>
+	</tr>
+</table>
+</form>
+<br>
+</div>
+</body>
+</html>

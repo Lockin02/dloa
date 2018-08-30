@@ -1,0 +1,217 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>审核月报列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>部门：
+		<select id="dept_name" name="dept_name" onchange="show_list();">
+			<option value="">所有部门</option>
+			{select_dept}
+		</select>
+		<td>年月：
+			<select id="year" name="year" onchange="show_list();">
+				<option value="">所有年份</option>
+				<option value="2010">2010</option>
+				<option value="2011">2011</option>
+				<option value="2012">2012</option>
+				<option value="2013">2013</option>
+				<option value="2014">2014</option>
+				<option value="2015">2015</option>
+				<option value="2016">2016</option>
+				<option value="2017">2017</option>
+				<option value="2018">2018</option>
+				<option value="2019">2019</option>
+				<option value="2020">2020</option>
+			</select>
+			年
+			<select id="month" name="month" onchange="show_list();">
+				<option value="">所有月份</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+			</select>
+			月
+			状态：
+			<select id="status" name="status" onchange="show_list();">
+				<option value="">所有状态</option>
+				<option value="0">待审核</option>
+				<option value="1">已通过审核</option>
+				<option value="-1">被打回</option>
+			</select> 
+			领导评分：
+			<select id="score" name="score" onchange="show_list();">
+				<option value="">所有评分</option>
+				<option value="优">优</option>
+				<option value="良">良</option>
+				<option value="中">中</option>
+				<option value="差">差</option>
+			</select> 
+			提交人：<input type="text" size="12" id="username" name="username" value="{username}" /> 
+					<input type="hidden" id="userid" name="userid" value="" />
+			审核领导：<input type="text" size="12" id="audit_name" name="audit_name" value="{audit_name}" /> 
+					<input type="hidden" id="audit_userid" name="audit_userid" value="" />
+		</td>
+		
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="7">审核月报列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>提交人</td>
+		<td>审核领导</td>
+		<td>提交时间</td>
+		<td>月报名称</td>
+		<td>审核状态</td>
+		<td>领导评分</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<div id="sug"></div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		//提交人
+		$("#username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].user_name,
+							result:row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.user_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						$('#userid').val(data.user_id);
+					}else{
+						$('#userid').val('');
+					}
+					show_list();
+		});
+		//审核人
+		$("#audit_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].user_name,
+							result:row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.user_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						$('#audit_userid').val(data.user_id);
+					}else{
+						$('#audit_userid').val('');
+					}
+					show_list();
+		});
+	});
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	set_selected('year');
+	set_selected('month');
+	set_selected('status');
+	set_selected('score');
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	function show_list()
+	{
+		var dept_name = $('#dept_name').val();
+		var year = $('#year').val();
+		var month = $('#month').val();
+		var status = $('#status').val();
+		var score = $('#score').val();
+		var userid = $('#userid').val();
+		var audit_userid = $('#audit_userid').val();
+		location.href='?model={t_model}&action={t_action}&dept_name='+dept_name+'&score='+score+'&status='+status+'&month='+month+'&year='+year+'&userid='+userid+'&audit_userid='+audit_userid;
+	}
+</script>
+</body>
+</html>

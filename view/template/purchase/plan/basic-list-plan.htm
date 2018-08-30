@@ -1,0 +1,326 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+		//搜索
+		function search(){
+			var searchvalue=$.trim($('#searchvalue').val());
+			var purchType=$('#purchType').val();
+			var searchCol=$('#searchCondition').val();
+			location="?model=purchase_plan_basic&action=planList&searchvalue="+searchvalue+"&purchType="+purchType+"&searchCol="+searchCol;
+		}
+
+		var show_page = function(page) {
+			clearNum();
+		};
+
+		//类型分类
+		function searchPurchType(obj){
+			var purchType=$(obj).attr('value');
+			location="?model=purchase_plan_basic&action=planList&purchType="+purchType;
+		}
+
+		//清空
+		function clearNum(){
+			var purchType=$('#purchType').val();
+			location="?model=purchase_plan_basic&action=planList&purchType="+purchType;
+		}
+
+		//批量更新状态
+		function updateSate(){
+			location="?model=purchase_plan_basic&action=updateStateEnd";
+		}
+
+		//form提交判断
+		function purchForm(){
+			var idsArry = $(checkListIdStr).val();
+			if( idsArry==null||idsArry==""){
+				alert("请至少选择一条可下达的采购物料信息");
+			}else{
+			//alert(idsArry)
+				var result = $.ajax({
+					url: '?model=purchase_plan_basic&action=chkDataAvailable',
+					data: 'ids=' + idsArry,
+					dataType: 'html',
+					type: 'post',
+					async: false
+				}).responseText;
+				var resultObj = (result != '')? eval("("+result+")") : '';
+				if(resultObj != '' && resultObj.errorType != ''){
+					switch (resultObj.errorType){
+						case "businessBelong":
+							alert("不能同时下达不同归属公司的采购");
+							break;
+					}
+				}else{
+					parent.location.href = "?model=purchase_plan_basic&action=toAddTask&idsArry="+idsArry+"&businessBelong="+resultObj.businessBelong;
+				}
+			}
+		}
+
+		//导出批次物料
+		function exportPurEqu(){
+				showThickboxWin( "?model=purchase_plan_basic&action=toExportProduceEqu&formType=blue&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=600");
+		}
+
+		//导出采购申请物料
+		function exportPlanEqu(){
+				showThickboxWin( "?model=purchase_plan_basic&action=toExportPlanEqu&formType=blue&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=600");
+		}
+
+		function selectButton(obj,id,purchaseType){
+			var purchType=$('#purchType').val();
+			var skeyVal=$("#check"+id).val();
+			//TODO:
+			//alert(obj.value);
+			var objVal = $(obj).attr('value');
+			if( objVal == "read" ){
+				if(purchaseType=='oa_asset_purchase_apply'){
+					showThickboxWin('?model=asset_purchase_apply_apply&action=purchView&id='
+							+ id
+							+ '&perm=view&placeValuesBefore&TB_iframe=true&modal=false&height=900&width=1000');
+				}else{
+					parent.location.href = "?model=purchase_plan_basic&action=read&id="+id+"&purchType="+purchType+"&skey="+skeyVal;
+				}
+			}else if( objVal == "end" ){
+				if( confirm("确定完成此申请吗") ){
+					location.href = "?model=purchase_plan_basic&action=end&id="+id;
+				}
+			}else if( objVal == "close" ){
+				if(purchaseType=='oa_asset_purchase_apply'){//固定资产采购申请关闭
+					showThickboxWin('?model=asset_purchase_apply_apply&action=toClose&id='
+							+ id
+							+ '&perm=view&placeValuesBefore&TB_iframe=true&modal=false&height=900&width=1000');
+				}else{
+					parent.location.href = "?model=purchase_plan_basic&action=toClose&id="+id+"&purchType="+purchType+"&skey="+skeyVal;
+				}
+			}else if( objVal == "confrimProduct" ){
+				parent.location.href = "?model=purchase_plan_basic&action=toConfirmProduct&id="+id+"&purchType="+purchType+"&skey="+skeyVal;
+			}else if( objVal == "confrimUser" ){
+				if(purchaseType=='oa_asset_purchase_apply'){
+					parent.location.href = '?model=asset_purchase_apply_apply&action=toConfirmUser&id='+ id;
+				}else{
+					parent.location.href = "?model=purchase_plan_basic&action=toConfirmUser&id="+id+"&purchType="+purchType+"&skey="+skeyVal;
+				}
+			}else if( objVal == "feedback"){
+			       parent.location.href = "?model=purchase_plan_basic&action=toFeedback&id="+id+"&purchType="+purchType+"&skey="+skeyVal;
+			}
+
+		}
+    </script>
+	<script>
+	$(function() {
+       document.onkeydown = function(e){
+                var ev = document.all ? window.event : e;
+                if(ev.keyCode==13) {
+                    document.getElementById("searchBtn").click();
+
+                }
+            }
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+			var h=document.body.clientHeight;
+            if(h<200){
+                setTimeout( function(){
+                    var h=document.body.clientHeight;
+                    $("#bodyDiv").attr("style","height:"+(h-132)+"px;overflow-y:scroll;");
+                    $("th[id^='th']").each(function(){
+                        var id=$(this).attr('id');
+                        var ththObj=$("td[name^='td"+id+"']");
+                        if(ththObj.length > 0){
+                            var w=ththObj.eq(0).width();
+                            $(this).width(w);
+                        }
+                    });
+                }, 1 * 200 );
+            }else{
+                $("#bodyDiv").attr("style","height:"+(h-132)+"px;overflow-y:scroll;");
+                $("th[id^='th']").each(function(){
+                    var id=$(this).attr('id');
+                    var ththObj=$("td[name^='td"+id+"']");
+                    if(ththObj.length > 0){
+                        var w=ththObj.eq(0).width();
+                        $(this).width(w);
+                    }
+                });
+            }
+
+			var searchCol=$('#searchCol').val();
+			$("select[id='searchCondition'] option").each(function(){
+				if($(this).val()==searchCol){
+					$(this).attr("selected","selected");
+				}
+			});
+
+			var purchType=$('#purchType').val();
+			$("select[id='searchPurchType'] option").each(function(){
+				if($(this).val()==purchType){
+					$(this).attr("selected","selected");
+				}
+			});
+		});
+	</script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+</head>
+<body scroll="no" >
+<div class="main_wraper">
+<table class="main_table"  style="width:97.5%">
+	<thead>
+  <tr class="main_table_search">
+		<td colspan="20">
+			<select id="searchCondition" class="" id="searchCondition">
+			    <option value="planNumbUnion,departmentUnion,sendNameUnion,productNumbUnion,productNameUnion,sourceNumbUnion,batchNumbUnion">所有</option>
+			    <option value="planNumbUnion">申请编号</option>
+			    <option value="departmentUnion">申请部门</option>
+			    <option value="sendNameUnion">申请人</option>
+			    <option value="productNumbUnion">物料编号</option>
+			    <option value="productNameUnion">物料名称</option>
+			    <option value="sourceNumbUnion">申请源单据号</option>
+			    <option value="batchNumbUnion">批次号</option>
+		  	</select>
+			&nbsp;<input type="text" name="searchvalue" id="searchvalue" value="{searchvalue}">
+			<input type="hidden" id="searchCol" value="{searchCol}">
+			<input type="button" class="txt_btn_a" value="搜 索"   id="searchBtn"  onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+			&nbsp;
+			&nbsp;采购类型：
+			<select class="" id="searchPurchType" onchange="searchPurchType(this)" >
+			    <option  value="">所有</option>
+			    <option  value="oa_sale_order,HTLX-XSHT">销售合同采购</option>
+			    <option  value="oa_sale_service,HTLX-FWHT">服务合同采购</option>
+			    <option  value="oa_sale_lease,HTLX-ZLHT">租赁合同采购</option>
+			    <option  value="oa_sale_rdproject,HTLX-YFHT">研发合同采购</option>
+			    <!--
+			    <option  value="oa_borrow_borrow">借试用采购</option>
+			    <option  value="oa_present_present">赠送采购</option> -->
+			    <option value="assets,oa_asset_purchase_apply">资产采购</option>
+			    <option value="stock,oa_present_present">补库采购</option>
+			    <option value="oa_borrow_borrow">借试用合同</option>
+			    <option  value="produce">生产采购</option>
+			    <option value="rdproject">研发采购</option>
+		  	</select>
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<input type="button" class="txt_btn_a" value="下达采购任务" onclick="purchForm()"/>
+			<input type="hidden" id="idsArry" name="idsArry" value="{idsArry}">
+			<input type="hidden" id="purchType" value="{purchType}">
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<!-- <input type="button" class="txt_btn_a" value="批量关闭采购申请" onclick="updateSate()"/> -->
+		  	&nbsp;&nbsp;
+	    	<input type="button" class="txt_btn_a" value="导出批次物料" onclick="exportPurEqu()"/>
+	    	&nbsp;&nbsp;
+	    	<input type="button" class="txt_btn_a" value="导出申请物料" onclick="exportPlanEqu()"/>
+    </td>
+  </tr>
+	    <tr class="main_tr_header">
+	        <th  id="th01">
+	        	<p class="allImg">序号<br/>
+	            	<img src="images/expanded.gif" />
+        	</p>
+	        </th>
+	        <th id="th02">
+	        	<p class="checkAll">采购申请编号<br/>
+	            	<input type="checkbox" />
+            </p>
+	        </th>
+	        <th width="8%" id="th03">
+           申请部门
+	        </th>
+	        <th width="8%" id="th04">
+           申请人
+	        </th>
+	        <th width="10%" id="th05">
+            采购类型
+	        </th>
+	         <th width="10%" id="th14">
+           确认状态
+	        </th>
+	        <th width="55%" class="td_table">
+	            <table class="main_table_nested" frame=void>
+            	<tr>
+	            		<th colspan="7">
+            			采购申请-物料信息
+	            		</th>
+            	</tr>
+            	<tr>
+	            		<th id="th06">
+			            物料编号<br>名称
+				        </th>
+				        <th  width="10%" id="th13">
+			            采购<br>负责人
+				        </th>
+				        <th  width="10%" id="th07">
+			            原申请<br>数量
+				        </th>
+				        <th  width="10%" id="th07">
+			            审批<br>数量
+				        </th>
+				        <th  width="10%" id="th08">
+			            未下达<br>数量
+				        </th>
+				        <th  width="10%" id="th09">
+			            库存<br>数量
+				        </th>
+				        <th  width="15%" id="th10">
+			            	在途总数<br>量(补库)
+				        </th>
+				        <th  width="15%" id="th12">
+			            希望<br>完成日期
+				        </th>
+            	</tr>
+            </table>
+	        </th>
+	        <th width="80" id="th11">
+			操作
+			</th>
+    </tr>
+	  </thead>
+	</table>
+    <div id="bodyDiv">
+    <table class="main_table" >
+    <tbody >
+    {list}
+    </tbody>
+	</table>
+	</div>
+</div>
+{pageDiv}
+</body>
+</html>

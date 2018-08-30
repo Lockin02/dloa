@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>其他合同收款单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-other.js"></script>
+	<script type="text/javascript" src="view/template/finance/income/js/income-combo.js"></script>
+	<script type="text/javascript" src="view/template/finance/income/js/income-income-other-add.js"></script>
+</head>
+<body>
+	<div class="main_head"><span class="main_head_title">其他合同收款单</span>
+	</div>
+	<form id="form1" action="?model=finance_income_income&action=addOther" method="post" onsubmit="return toSubmit();">
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					其他合同号
+				</td>
+				<td class="form_text_right" colspan="3">
+					<input id="objCode" type="text" class="txtlong" name="income[incomeAllots][1][objCode]"/>
+					<input id="objId" type="hidden" name="income[incomeAllots][1][objId]"/>
+					<input id="rObjCode" type="hidden" name="income[incomeAllots][1][rObjCode]"/>
+					<input id="objType" type="hidden" name="income[incomeAllots][1][objType]"/>
+					<span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					客户名称
+				</td>
+				<td class="form_text_right">
+					<input id="incomeUnitName" type="text" class="txt" name="income[incomeUnitName]"/>
+					<input id="incomeUnitId" type="hidden" name="income[incomeUnitId]"/>
+					<input id="contractUnitId" type="hidden" name="income[contractUnitId]"/>
+					<input id="contractUnitName" type="hidden" name="income[contractUnitName]"/>
+					<span class="red">[*]</span>
+				</td>
+				<td class="form_text_left">
+					客户省份
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="income[province]" id="province"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					进账单号
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="income[inFormNum]"/>
+				</td>
+				<td class="form_text_left">
+					结算类型
+				</td>
+				<td class="form_text_right">
+					<select name="income[incomeType]" class="select">
+						{incomeTypeList}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					收款银行
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="income[bank]"/>
+				</td>
+				<td class="form_text_left">
+					银行帐号
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="income[account]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					单据金额
+				</td>
+				<td class="form_text_right">
+					<input id="incomeMoney" type="text" class="txt formatMoney" name="income[incomeMoney]" onblur="countAll();"/>
+					<span class="red">[*]</span>
+				</td>
+				<td class="form_text_left">
+					单据时间
+				</td>
+				<td class="form_text_right">
+					<input id="incomeDate" type="text" name="income[incomeDate]" class="txt" onfocus="WdatePicker()" value="{incomeDate}" readonly/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">归属公司</td>
+				<td class="form_text_right_three" colspan="3">
+					<input type="text" class="txt" readonly="readonly" name="income[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+					<span class="red" >[*]</span>
+					<input type="hidden" name="income[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+				 	<input type="hidden" name="income[formBelong]" id="formBelong" value="{formBelong}" />
+				 	<input type="hidden" name="income[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">是否为以前期间调整
+				</td>
+				<td colspan="3" class="form_text_right">
+					<input type="radio" name="income[isAdjust]" value="1"/>是
+					<input type="radio" name="income[isAdjust]" value="0" checked="checked"/>否
+					<span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注信息
+				</td>
+				<td colspan="3" class="form_text_right">
+					<input type="text" class="txtbiglong" name="income[remark]"/>
+				</td>
+			</tr>
+			<tr>
+			   	<td class="form_text_left">是否发送邮件
+			    </td>
+			   	<td colspan="3" class="form_text_right">
+			   		<input type="radio" name="income[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+			      	<input type="radio" name="income[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+				</td>
+			</tr>
+			<tr id="maildiv">
+			   	<td class="form_text_left">收件人
+			    </td>
+			    <td colspan="3" class="form_text_right">
+					<input type="text" class="txtlong" name="income[email][TO_NAME]" id="TO_NAME" readonly="readonly"/>
+			    	<input type="hidden" name="income[email][TO_ID]" id="TO_ID"/>
+				</td>
+			</tr>
+			<tr id="mailccdiv">
+			   	<td class="form_text_left">抄送
+			    </td>
+			    <td colspan="3" class="form_text_right">
+					<input type="text" class="txtlong" name="income[email][ADDNAMES]" id="ADDNAMES" value="{sendName}" readonly="readonly"/>
+			    	<input type="hidden" name="income[email][ADDIDS]" id="ADDIDS" value="{sendUserId}"/>
+
+			    	<input type="hidden" id="sendUserId" value="{sendUserId}"/>
+			    	<input type="hidden" id="sendName" value="{sendName}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<input type="submit" class="txt_btn_a" value="保存"/>
+					<input type="button" class="txt_btn_a" value="返回" onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

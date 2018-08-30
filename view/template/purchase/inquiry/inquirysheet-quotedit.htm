@@ -1,0 +1,157 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+<title>报价单</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="view/template/purchase/inquiry/js/inquirysheet-add.js"></script>
+    <script>
+		$(function() {
+			var quote=$("#quote").val();
+			var quotes=moneyFormat2(quote);
+			$("#quotes").val(quotes);
+		});
+			$(document).ready(function() {
+
+				var paymentCondition=$("#paymentCondition").val();
+				if(paymentCondition=="YFK"){
+					$("#payRatio").show();
+				}else{
+					$("#payRatio").hide();
+				}
+
+				var payRatio=$("#ratio").val();              /**生成预付款比例下拉选择 option[text='"+payRatio+"']*/
+
+				for(i=5;i<101;i++){
+					$("#payRatio").append('<option id="payRatio'+i+'" value="'+i+'%">'+i+'%</option>');
+					var ratio=i+"%";
+					if(ratio==payRatio){
+						$("#payRatio"+i).attr("selected","selected");
+					}
+					i=i+4;
+				}
+
+				$("#paymentCondition").bind("change",function(){          /**付款条件发生改变时，隐藏和显示预付款比例下拉选择*/
+					var paymentCondition=$("#paymentCondition").val();
+					if(paymentCondition=="YFK"){
+						$("#payRatio").show();
+					}else{
+						$("#payRatio").val("");
+						$("#payRatio").hide();
+					}
+				});
+
+			})
+		function checkSumbit(){
+			var arrivalDate = $("#arrivalDate").val();
+			if( arrivalDate==null || arrivalDate=="" ){
+				alert("请选择交货日期");
+				return false;
+			}else{
+				setParentQuote();
+			}
+		}
+
+    </script>
+</head>
+<body onload="readQuote();">
+<div class="main_head">
+    <span class="main_head_title">
+      	报价单
+    </span>
+</div>
+<div class="form_mian">
+   <form id="form1" method="post" action="?model=purchase_inquiry_inquirysupp&action=addEditPro" onsubmit="return checkSumbit();">
+    <input type="hidden" name="inquirysupp[id]" value="{id}">
+    <input type="hidden" name="" value="{supplierId}"/>
+    <input type="hidden" name="" value="{supplierName}"/>
+    <input type="hidden" name="" id="quoteId" value="{quoteId}"/>
+	<input type="hidden" value="{payRatio}" id="ratio"/>
+    <table class="form_main_table">
+		<tr>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right">{supplierName}
+            </td>
+			<td class="form_text_left" >总报价</td>
+			<td class="form_text_right">
+			<!--
+				<div id="quoteread"></div>
+			 -->
+
+				<input type="text" id="quotes" class="readOnlyText" value="" readonly/>
+				<input type="hidden" id="quote" name="inquirysupp[quote]" value="{quote}" readonly/>
+			</td>
+        </tr>
+        <tr>
+			<td class="form_text_left" >税率</td>
+			<td class="form_text_right">
+				<select type="text" id="taxRate" class="select"  name="inquirysupp[taxRate]">{taxRate}</select>
+			</td>
+			<td class="form_text_left" >交货日期</td>
+			<td class="form_text_right">
+				<input type="text" id="arrivalDate" class="txt" value="{arrivalDate}"  name="inquirysupp[arrivalDate]" onfocus="WdatePicker()"  readonly/>
+		    	<span class="red">[*]</span>
+			</td>
+        </tr>
+          <tr align="center">
+          	<td class="form_text_left">付款条件</td>
+          	<td class="form_text_right" colspan="3">
+				<select class="select" id="paymentCondition" name="inquirysupp[paymentCondition]">
+					{paymentCondition}
+				</select>
+	            &nbsp;
+	            <select class="selectmiddel" id="payRatio" name="inquirysupp[payRatio]">
+				</select>
+         	</td>
+         </tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			<textarea rows="5" id="remark" class="txt_txtarea_font" name=inquirysupp[remark]" >{remark}</textarea>
+		</td>
+	</tr>
+	</table>
+
+	<table class="main_table">
+	     <thead>
+	     <input type="hidden" id="pronumber" value="{proNumber}"/>
+
+	     </thead>
+	     <tbody  id="mytable" >
+	       <tr class="main_tr_header">
+	         <th>序号</th>
+	         <th>物料编号/名称</th>
+	         <th width="5%">单位</th>
+	         <th>询价<br>总数量</th>
+	         <th>含税单价</th>
+			<th class="td_table" width="50%">
+				<table  class="main_table_nested" frame=void>
+			         <th width="10%">数量</th>
+			         <th width="20%">含税单价</th>
+			         <th width="20%">税率(%)</th>
+			         <!--
+			         <th >税额</th> -->
+			         <th width="20%">交货日期</th>
+			         <th width="20%">运输方式</th>
+				</table>
+			</th>
+	       </tr>
+	     {equsEditList}
+		 </tbody>
+  </table>
+  <table class="form_main_table">
+		<tr>
+            <td colspan="11">
+                <input type="submit" class="txt_btn_a" onclick="" value=" 保 存 "/>&nbsp;&nbsp;&nbsp;
+                <input type="button" class="txt_btn_a" value=" 关 闭 " onclick="self.parent.tb_remove();"/>
+            </td>
+         </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>
+

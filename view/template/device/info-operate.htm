@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>操作记录</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript">
+	var num = 0;
+	function SetwinHeight(ifnameid) {
+		var dw = (document.documentElement.clientHeight == 0 ? document.body.clientHeight
+				: document.documentElement.clientHeight);
+		var wh = (document.documentElement.clientWidth ? document.body.clientWidth
+				: document.documentElement.clientWidth);
+		//var h = dw - 50 + 2 * ((dw - 550) / 50);
+		var ifm = document.getElementById(ifnameid);
+		var subWeb = document.frames ? document.frames[ifnameid].document
+				: ifm.contentDocument;
+		if (ifm != null && subWeb != null) {
+			if (num > 0) {
+				ifm.height = Math.max((subWeb.body.scrollHeight - 60),
+						(dw - 60));
+				ifm.width = Math.max(subWeb.body.scrollWidth,wh);
+			}
+			num++;
+		}
+	}
+</script>
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0"
+	align="center" id="mytable">
+	<tr>
+		<td align="center"><a
+			href="?model=device_borrow&action=noedevice_list&typeid={typeid}&list_id={list_id}&id={tid}"
+			target="iframe">借还记录</a></td>
+		<td align="center"><a
+			href="?model=device_service&action=info_list&tid={tid}"
+			target="iframe">维修记录</a></td>
+		<td align="center"><a
+			href="?model=device_stock&action=shift_list&tid={tid}"
+			target="iframe">转库记录</a></td>
+         <td align="center"><a
+			href="?model=device_stock&action=infoLog&id={tid}&tableName=device_info"
+			target="iframe">操作记录</a></td>
+	</tr>
+</table>
+<hr></hr>
+<table width="98%" border="0" cellpadding="0" cellspacing="0"
+	align="center">
+	<tr>
+		<td align="center"><iframe width="100%" height="450" id="iframe"
+			name="iframe" onload="SetwinHeight('iframe')"
+			src="?model=device_borrow&action=noedevice_list&typeid={typeid}&list_id={list_id}&id={tid}"
+			scrolling="no" frameborder="0" marginwidth="0" marginheight="0">
+		</iframe></td>
+	</tr>
+</table>
+
+</body>
+</html>

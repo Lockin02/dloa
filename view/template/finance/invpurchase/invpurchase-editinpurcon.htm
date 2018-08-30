@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<title>
+			修改采购发票
+		</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-add.js"></script>
+	    <script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-edit-formValidator.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				修改采购发票信息 -- {formTypeCN}
+			</span>
+		</div>
+		<form id="form1" method="post" action="?model=finance_invpurchase_invpurchase&action=edit" onkeypress="return NoSubmit(event);">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						供应商名称
+					</td>
+					<td class="form_text_right" width="30%">
+						<input type="text" value="{supplierName}" class="readOnlyTxtNormal" readonly="readonly"/>
+					</td>
+					<td class="form_text_left">
+						地址
+					</td>
+					<td class="form_text_right">
+						<input type="text" value="{address}" class="readOnlyTxtNormal" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						发票号码
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[objNo]" value="{objNo}" id="objNo" />
+						<span class="red">[*]</span>
+					    <div id="objNoTip" class="tipShortTxt"></div>
+					</td>
+					<td class="form_text_left">
+						付款日期
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" onfocus="WdatePicker()" readOnly name="invpurchase[payDate]" value="{payDate}" id="payDate" />
+						<span class="red">[*]</span>
+						<div id="payDateTip" class="tipShortTxt">
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						发票类型
+					</td>
+					<td class="form_text_right">
+						<select class="txt" name="invpurchase[invType]" id="invType">
+							{invType}
+						</select>
+					</td>
+					<td class="form_text_left">
+						采购方式
+					</td>
+					<td class="form_text_right">
+						<select name="invpurchase[purType]" class="select">
+							{purType}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						开户银行
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[bank]" value="{bank}"/>
+					</td>
+					<td class="form_text_left">
+						业务类型
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[busType]" value="{busType}"  id="busType"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						币别
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[currency]" value="{currency}"
+						/>
+					</td>
+					<td class="form_text_left">
+						汇率
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[excRate]" value="{excRate}"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						源单类型
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[sourceType]" value="{sourceType}"
+						/>
+					</td>
+					<td class="form_text_left">
+						原单编号
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[menuNo]" value="{menuNo}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						往来科目
+					</td>
+					<td class="form_text_right">
+						<select class="select" name="invpurchase[subjects]">
+							{subjects}
+						</select>
+					</td>
+					<td class="form_text_left">
+						单据日期
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[formDate]" value="{formDate}" onfocus="WdatePicker()"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						总金额
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="readOnlyTxtNormal formatMoney" name="invpurchase[amount]" id="allAmount" value="{amount}" readonly="readonly"/>
+					</td>
+					<td class="form_text_left">
+						税率(%)
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[taxRate]" id="taxRate" value="{taxRate}" onblur="countAll();" />
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+				<tr align="left">
+					<td colspan="10">
+						详细：
+					</td>
+					<td width="5%" align="center">
+						<input type="hidden" id="invnumber" value="{invnumber}"/>
+				 		<img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+				 	</td>
+				</tr>
+				<tbody id="invbody">
+					<tr class="main_tr_header" align="center">
+						<th width="5%">序号</th>
+						<th>物料代码</th>
+						<th>物料名称</th>
+						<th>规格型号</th>
+						<th>单位</th>
+						<th width="8%">数量</th>
+						<th width="10%">单价(不含税)</th>
+						<th width="10%">金额</th>
+						<th width="10%">税额</th>
+						<th width="10%">价税合计</th>
+						<th width="5%">操作</th>
+					</tr>
+					{invpurdetail}
+				</tbody>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						主管
+					</td>
+					<td class="form_text_right">
+						<input type="hidden"" name="invpurchase[headId]" id="headId" value="{headId}"/>
+						<input type="text" class="txt" name="invpurchase[head]" id="head" value="{head}" readonly="readonly"/>
+						<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('headId','head')"/>
+                        <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('headId','head')"/>
+					</td>
+					<td class="form_text_left">
+						部门
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="invpurchase[departmentsId]" id="departmentsId" value="{departmentsId}"/>
+						<input type="text" class="txt" id="departments" name="invpurchase[departments]" value="{departments}" readonly="readonly"/>
+						<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindowDept('departmentsId','departments')"/>
+                        <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('departmentsId','departments')"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						记账
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="invpurchase[acount]" value="{acount}"
+						/>
+					</td>
+					<td class="form_text_left">
+						业务员
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="invpurchase[salesmanId]" id="salesmanId" value="{salesmanId}"/>
+						<input type="text" class="txt" name="invpurchase[salesman]" id="salesman" value="{salesman}" readonly="readonly"/>
+						<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('salesmanId','salesman')"/>
+                        <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('salesmanId','salesman')"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						创建人
+					</td>
+					<td class="form_text_right">
+						{createName}
+					</td>
+					<td class="form_text_left">
+						创建时间
+					</td>
+					<td class="form_text_right">
+						{createTime}
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						备注
+					</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="txt_txtarea_font" name="invpurchase[remark]">{remark}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="4">
+						<input type="hidden" name="invpurchase[id]" value="{id}"/>
+						<input type="submit" class="txt_btn_a" value="保  存" />
+						<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun()"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+
+</html>

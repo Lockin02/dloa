@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>更新信息</title>
+{#commonInclude#}
+<script>
+	function updateObjCode(objType){
+		$("#msg").html("正在更新中,如果单据数量较多,会占用一定的时间...");
+		$.ajax({
+			url:'?model=common_contract_allsource&action=createObjCode&objType='+objType,
+			success:function(data){
+				if(data==1){
+					alert('更新成功.');
+					$("#msg").html('更新成功.');
+				}else{
+					alert('程序出错,更新失败.失败原因:'+data);
+					$("#msg").html('更新失败.失败原因:'+data);
+				}
+
+			}
+		});
+	}
+</script>
+</head>
+<body align="center" valign="center">
+<table class="form_main_table">
+<tr>
+	<td>
+		<input type="button"  value="合同" class="txt_btn_a" onclick="updateObjCode('oa_contract_contract')"/></td>
+	<td>
+
+ 	</td>
+ 	</tr>
+
+ <tr>
+ 	<td>
+		<input type="button" value="借试用申请" class="txt_btn_a" onclick="updateObjCode('oa_borrow_borrow')"/></td>
+	<td>
+		<input type="button" value="赠送合同" class="txt_btn_a" onclick="updateObjCode('oa_present_present')"/>
+ 	</td>
+</tr>
+</table>
+<div id="msg"></div>
+</body>
+</html>

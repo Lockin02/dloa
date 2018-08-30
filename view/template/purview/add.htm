@@ -1,0 +1,293 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+<form method="POST" action="?model=purview&action=new_add" onsubmit="return check();">
+	<tr>
+		<td width="100" align="right">权限类型：</td>
+		<td align="left">
+			<input type="radio" checked name="type" onclick="show_model();" value="1" /> 模块
+			<input type="radio" name="type" onclick="show_func();" value="0" /> 函数
+		</td>
+	</tr>
+	<tr>
+		<td align="right">所属栏目：</td>
+		<td align="left">
+			<select id="menuid" name="menuid" onchange="show_select_model(this.value);">
+			<option value="">请选择栏目</option>
+			{menu_select}
+			</select>
+			<span id="_menuid">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">权限名称：</td>
+		<td align="left">
+			<input type="text" id="name" name="name" value="" />
+			<span id="_name">*</span>	
+		</td>
+	</tr>
+	<tr id="model">
+		<td align="right">模块类名：</td>
+		<td align="left">
+			<input type="text" id="models" name="models" value="" />
+			<span id="_models">*</span>	
+		</td>
+	</tr>
+	<tr id="select_model" style="display:none;">
+		<td align="right">选择模块：</td>
+		<td align="left">
+			<select id="modelid" name="modelid">
+				<option value="">请先选择栏目</option>
+			</select>
+			<span id="_modelid">*</span>
+		</td>
+	</tr>
+	<tr id="func" style="display:none;">
+		<td align="right">限制函数：</td>
+		<td align="left">
+			<input type="text" id="func" name="func" value="" />
+			<span id="func">*</span>	
+		</td>
+	</tr>
+	<tr>
+		<td align="right">详细控制：</td>
+		<td align="left"><input type="radio" onclick="show_control(1);" name="control" value="1" />是 
+		<input type="radio" onclick="show_control(0);" checked name="control" value="0" />否</td>
+	</tr>
+</table>
+<table border="0" width="98%" cellpadding="0" cellspacing="0" id="control_list" style="display:none;">
+	<tr id="tr_1">
+		<td >控制名：<input type="text" class="control_name" size="10" name="control_name[1]" value="" /></td>
+		<td >方式：<select name="typeid[1]" id="type_1" onchange="show_act_input(1);">
+			<option value="0">是或否</option>
+			<option value="1">对应设置函数</option>
+			<option value="2">对应表名</option>
+			</select>
+		</td>
+		<td id="td_1"></td>
+		<td id="_link_1"></td>
+                <td id="pv_ini_1">自带权限：<textarea id="pv_ini_1" name="pv_ini[1]"></textarea></td>
+		<div id="field_1" style="display:none;"></div>
+	</tr>
+</table>
+	<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr id="tr_add" style="display:none;">
+		<td colspan="2" style="text-align:center;"><input type="button" onclick="add_control()" value=" 增加控制 " /></td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align:center;height:50px;"><input type="submit" value=" 提交 " /> 
+			<input type="button" onclick="self.parent.tb_remove();" value=" 返回 " />
+		</td>
+	</tr>
+</form>
+</table>
+<script type="text/javascript">
+var control_str = $('#tr_1').html();
+var temp = 1;
+var field_arr = Array();
+function check()
+{
+	if ($('#menuid').val()=='')
+	{
+		$('#_menuid').html('请选择栏目！');
+		return false;
+	}else{
+		$('#_menuid').html('*');
+	}
+	if ($('#name').val()=='')
+	{
+		$('#_name').html('请填写权限名称！');
+		return false;
+	}else{
+		$('#_name').html('*');
+	}
+	if ($('input[name=type]:checked').val()==1)
+	{
+		if ($('#models').val()=='')
+		{
+			$('#_models').html('请填写模块类名！');
+			return false;
+		}else{
+			$('#models').html('*');
+		}
+	}else{
+		if ($('#modelid').val()=='')
+		{
+			$('#_modelid').html('请选择模块！');
+			return false;
+		}else{
+			$('#_modelid').html('*');
+		}
+	}
+	if ($('input[name="control"]:checked').val()==1)
+	{
+		var input = $('.control_name').get();
+		var select = $('#control_list select').get();
+		for(var i=0;i<input.length;i++)
+		{
+			if (input[i].value=='')
+			{
+				alert('控制名称不能为空！');
+				input[i].focus();
+				return false;
+			}
+			if (select[i].value > 0)
+			{
+				id = select[i].id.replace('type_','');
+				if ($('#act_'+id).val()=='')
+				{
+					if (select[i].value ==1)
+					{
+						alert('对应设置函数不能为空！');
+						$('#act_'+id).focus();
+						return false;
+					}else{
+						alert('对应表名不能为空！');
+						$('#act_'+id).focus();
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+function show_model()
+{
+	$('#select_model').css('display','none');
+	$('#func').css('display','none');
+	$('#model').css('display','');
+}
+function show_func()
+{
+	$('#func').css('display','');
+	$('#model').css('display','none');
+	//$('#select_model').css('display','');
+}
+function show_select_model(menuid)
+{
+	var typeid = $('input[name=type]:checked').val();
+	var rand=Math.random()*100000;
+	if (typeid!='1' && menuid)
+	{
+		$.post('ajax.php',{model:'purview',action:'show_menu_model',menuid:menuid,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#modelid').html(unescape(data));
+				$('#select_model').css('display','');
+			}
+		}
+		)
+	}
+}
+function show_act_input(id)
+{
+	if ($('#type_'+id).val() > 0)
+	{
+		if ($('#td_'+id).html()!='')
+		{
+			$('#act_'+id).css('display','');
+		}else{
+			$('#td_'+id).html(' <input size="30" id="act_'+id+'" type="text" name="act['+id+']" value="" />');
+		}
+	}else{
+		if ($('#td_'+id).html()!='')
+		{
+			$('#act_'+id).css('display','none');
+		}else{
+			$('#td_'+id).html('');
+		}
+	}
+	if ($('#type_'+id).val() ==2)
+	{
+		if ($('#_link_'+id).html()!='')
+		{
+			$('#link_'+id).css('display','');
+		}else{
+			$('#_link_'+id).html('<a id="link_'+id+'" onclick="javascript:show_field('+id+');" href="#">选择字段</a>');
+		}
+	}else{
+		$('#link_'+id).css('display','none');
+	}
+}
+function show_control(typeid)
+{
+	if (typeid==1)
+	{
+		$('#control_list').css('display','');
+		$('#tr_add').css('display','');
+	}else{
+		$('#control_list').css('display','none');
+		$('#tr_add').css('display','none');
+	}
+}
+function add_control()
+{
+	temp++;
+	str = control_str.replace('td_1','td_'+temp);
+	str = str.replace('type_1','type_'+temp);
+	str = str.replace('typeid[1]','typeid['+temp+']');
+	str = str.replace('control_name[1]','control_name['+temp+']');
+	str = str.replace('show_act_input(1)','show_act_input('+temp+')');
+	str = str.replace('_link_1','_link_'+temp);
+	str = str.replace('field_1','field_'+temp);
+        str = str.replace('pv_ini[1]','pv_ini['+temp+']');
+	str +='<td><a href="javascript:del_control('+temp+');">删除</a></td></td>';
+	$('#control_list').append('<tr id="tr_'+temp+'">'+str+'</tr>');
+}
+function show_field(id)
+{
+	var act = $('#act_'+id).val();
+	if ($('#act_'+id).val()=='')
+	{
+		alert('请输入表名！');
+	}else{
+		if ($('#field_'+id).html()=='')
+		{
+			field_arr[id] =act;
+			get_table(act,id);
+		}else if (field_arr[id] != $('#act_'+id).val())
+		{
+			field_arr[id] =act;
+			get_table(act,id);
+		}else{
+			tb_show('选择字段','#TB_inline_html?inlineId=field_'+id+'&width=300',false);
+		}
+	}
+}
+function get_table(table,id)
+{
+	$.post('ajax.php',{model:'purview',action:'get_table_checkbox',table:table,id:id},
+	function (data)
+	{
+		if (data == -1)
+		{
+			alert('您输入的表名不存在数据库！');
+		}else if (data == -2){
+			alert('非法参数！');
+		}else{
+			$('#field_'+id).html(unescape(data));
+			$('#field_'+id).append('<p width="100%" style="text-align:center;"><input type="button" onclick="tb_remove()" value=" 确定 " /></p>')
+			tb_show('选择字段','#TB_inline_html?inlineId=field_'+id+'&width=300',false);
+		}
+	}
+	)
+}
+function del_control(id)
+{
+	$('#tr_'+id).remove();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>提交{LAST_MONTH}月份月报</title>
+<link rel="stylesheet" type="text/css" href="module/ajax_search/sea.css">
+
+<link rel="stylesheet" href="images/style.css" type="text/css"/>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+	
+<style type="text/css">
+	.table {
+	border-collapse: collapse;
+	border:1px solid #000000;
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	border:1px solid #000000;
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+input[type=text]
+{
+	background-color:#e1e1e1;
+}
+textarea {background-color:#e1e1e1;}
+</style>
+<script type="text/javascript">
+	var chck = 0;
+	$(document).ready(function()
+	{
+		$("#boss").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name',{
+				multiple: false,
+				mustMatch: true,
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse:function(data)
+				{
+					var rows = [];
+					var row =  eval(unescape(data));
+					for (var i=0;i<row.length;i++)
+					{
+						rows[i]=
+						{
+							data:row[i],
+							value:row[i].user_name,
+							result:row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row.user_name;
+				}
+			
+			}).result(function(evnet,data,formatted){
+					if (data)
+					{
+						$('#audit_userid').val(data.user_id);
+					}
+		});
+		//获取审批人
+		project_id = $('#project_id').val();
+		GetAudit(project_id);
+	});
+	function check()
+	{
+		$('#save').val(chck);
+		if (chck==1)
+		{
+			return true;
+		}
+		if ($('#dept_name').val()=='')
+		{
+			alert('请选择所在部门！');
+			$('#dept_name').focus();
+			return false;
+		}
+		if ($('#boss').val()=='')
+		{
+			alert('审批领导姓名不能为空！');
+			$('#boss').focus();
+			return false;
+		}
+		if ($('#audit_userid').val()=='')
+		{
+			alert('审批领导姓名不正确！');
+			$('#boss').focus();
+			return false;
+		}
+		//==============上月工作计划内容
+		var last_system_num = {new_task_num};
+		var last_content = $('form [name=last_content[]]').get();
+		var end_date = $('form .new_last_date[name=end_date[]]').get();
+		var last_score = $('form select[name=score[]] option:selected').get();
+		var last_explain = $('form textarea[name=last_explain[]]').get();
+		var count = last_content.length;
+		
+		var last_new_num = count;
+		
+		for(var i=0;i<count;i++)
+		{
+			if ($.trim(last_content[i].value)!='' && $.trim(end_date[i].value)=='')
+			{
+				alert('请选择要求完成日期！');
+				end_date[i].focus('');
+				return false;
+			}else if ($.trim(last_content[i].value)=='' && $.trim(end_date[i].value)!=''){
+				alert('请填写工作内容！');
+				last_content[i].focus();
+				return false;
+			}else if ($.trim(last_content[i].value)!='' && $.trim(end_date[i].value)!='' && $.trim(last_explain[i].value)=='' && $.trim(last_score[i].value)=='优'){
+				alert('请填写自评说明！');
+				last_explain[i].focus();
+				return false;
+			}else if ($.trim(last_content[i].value)!='' && $.trim(end_date[i].value)!='' && $.trim(last_score[i].value)=='优' && $.trim(last_explain[i].value).length <= 3)
+			{
+				alert('自评说明必须大于3个字符！');
+				last_explain[i].focus();
+				return false;
+			}
+			
+		}
+		
+		var other_content = $('form textarea[name=other_content[]]').get();
+		var other_end_date = $('form .other[name=other_end_date[]]').get();
+		var other_score = $('form [name=other_score[]] option:selected').get();
+		var other_explain = $('form [name=other_explain[]]').get();
+		count = other_content.length;
+		if (last_system_num==1 && last_new_num == 1 && count==1)
+		{
+			if ($.trim(last_content[0].value)=='' && $.trim(other_content[0].value)=='')
+			{
+				alert('上月工作计划内容最少要填写一项！');
+				last_content[0].focus();
+				return false;
+			}
+		}
+		for(var i=0;i<count;i++)
+		{
+			if ($.trim(other_content[i].value)!='' && $.trim(other_end_date[i].value)=='')
+			{
+				alert('请选择要求完成日期！');
+				other_end_date[i].focus('');
+				return false;
+			}else if ($.trim(other_content[i].value)=='' && $.trim(other_end_date[i].value)!=''){
+				alert('请填写工作内容！');
+				other_content[i].focus();
+				return false;
+			}else if ($.trim(other_content[i].value)!='' && $.trim(other_end_date[i].value)!='' && $.trim(other_score[i].value)=='优' && $.trim(other_explain[i].value)==''){
+				alert('请填写自评说明！');
+				other_explain[i].focus();
+				return false;
+			}else if ($.trim(other_content[i].value)!='' && $.trim(other_end_date[i].value)!='' && $.trim(other_score[i].value)=='优' && $.trim(other_explain[i].value).length <=3){
+				alert('自评说明必须大于3个字符！');
+				other_explain[i].focus();
+				return false;
+			}
+		}
+		//========================下月计划工作内容
+		var system_text = $('form .system[name=ask[]]').get();
+		count = system_text.length;
+		var system_num = count;
+		for (var i=0;i<count;i++)
+		{
+			if ($.trim(system_text[i].value)=='')
+			{
+				alert('请填写完成的标准和要求！');
+				system_text[i].focus();
+				return false;
+			}
+		}
+		var next_end_date = $('form .next_end_date[name=next_end_date[]]').get();
+		var next_content = $('form textarea[name=next_content[]]').get();
+		var new_ask = $('form .new_ask[name=ask[]]').get();
+		count = next_end_date.length;
+		if (system_num < 1 && $.trim(next_content[0].value)=='')
+		{
+			alert('下月工作计划至少要填写一项！');
+			next_content[0].focus();
+			return false;
+		}
+		for (var i=0;i<count;i++)
+		{
+			if ($.trim(next_content[i].value)!='' && $.trim(next_end_date[i].value)=='')
+			{
+				alert('请选择要求完成日期！');
+				next_end_date[i].focus();
+				return false;
+				
+			}else if ($.trim(next_content[i].value)=='' && $.trim(next_end_date[i].value)!=''){
+				alert('请填写工作内容！');
+				next_content[i].focus();
+				return false;
+			}else if ($.trim(next_content[i].value)!='' && $.trim(new_ask[i].value)=='')
+			{
+				alert('请填写完成的标准和要求！');
+				new_ask[i].focus();
+				return false;
+			}else if ($.trim(new_ask[i].value)!='' && $.trim(next_content[i].value)==''){
+				alert('请填写工作内容！');
+				next_content[i].focus();
+				return false;
+			}else if ($.trim(new_ask[i].value)!='' && $.trim(next_end_date[i].value)=='')
+			{
+				alert('请选择要求完成日期！');
+				next_end_date[i].focus();
+				return false;
+			}
+		}
+		//=======建议或想法
+		
+		if ($.trim($('#share').val())=='')
+		{
+			alert('请填写建议或想法！');
+			$('#share').focus();
+			return false;
+		}else if ($.trim($('#share').val()).length <=4){
+			alert('建议或想法必须大于4个字符！');
+			$('#share').focus();
+			return false
+		}
+		
+		if ($.trim($('#study').val())==''){
+			alert('请填写上月的学习内容及结果！');
+			$('#study').focus();
+			return false;
+		}else if ($.trim($('#study').val()).length <=4){
+			alert('学习内容及结果的内容必须大于4个字符！');
+			$('#study').focus();
+			return false;
+		}
+		$('input[type=submit]').attr('disabled',true);
+		
+		return true;
+	}
+</script>
+</head>
+<body>
+<br />
+<form name="form" method="post" action="?model=develop_monthly&action=add" onsubmit="return check();">
+<input type="hidden" id="audit_userid" name="audit_userid" value=""/>
+<input type="hidden" name="month" value="{LAST_MONTH}"/>
+<input type="hidden" id="save" name="save" value="0" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td width="4%">姓名</td>
+		<td width="10%">{USER_NAME}</td>
+		<td width="30%" align="left">所在部门
+			<select id="dept_name" style="padding-left" name="dept_name">
+				<option value="">请选择部门</option>
+				{select_dept}
+			</select>
+		</td>
+		<td colspan="4" align="left">项目组 <select id="project_id" name="project_id" onchange="GetAudit(this.value);">
+			<option value="">选择项目组</option>
+			{porject_option}
+		</select></td>
+		<td colspan="2" align="left">审批领导 <input type="text" size="15" name="boss" id="boss" value="" /></td>
+		<td >提交月报时间{DATE}</td>
+	</tr>
+	<tr>
+		<td colspan="10" align="left"><b>
+		一、上月工作总结（{LAST_MONTH}月）</b></td>
+	</tr>
+	<tr>
+		<td width="4%" id="task_num" rowspan="{rowspan}"><b>
+		上月工作计划完成情况</b></td>
+		<td width="38%" colspan="3" rowspan="2">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td width="6%" rowspan="2">
+		<p align="center"><b>优先级</b></td>
+		<td  width="9%" rowspan="2">
+		<p align="center"><b>要求完成时间</b></td>
+		<td  width="10%" rowspan="2">
+		<p align="center"><b>是否按时完成</b></td>
+		<td  width="34%" colspan="3">
+		<p align="center"><b>完成的质量<br>
+		</b>（优/良/中/差）</td>
+	</tr>
+	<tr>
+		<td align="center" width="4%">自评</td>
+		<td>自评说明</td>
+		<td align="center" width="8%">操作</td>
+	</tr>
+	{LAST_MONTH_TASK}
+	{LAST_MONTH_OTHER_TASK}
+	<tr id="task_{new_task_num}">
+		<td width="38%" colspan="3" align="left"><textarea style="width:99%" name="last_content[]" cols="40" rows="5"></textarea></td>
+		<td width="6%">{level}</td>
+		<td width="9%"><input type="text" size="12" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-#{%M-1}-%d'})"  class="Wdate new_last_date" name="end_date[]" value="" /></td>
+		<td width="9%">
+			<select name="ontime[]">
+				<option selected value="是">是</option>
+				<option value="否">否</option>
+				<option value="进行中">进行中</option>
+			</select>
+		</td>
+		<td width="4%">{score_select}</td>
+		<td width="19%"><textarea style="width:99%" name="last_explain[]" cols="20" rows="5"></textarea></td>
+		<td width="8%"><input type="button" onclick="add_task({new_task_num})" value="增加一项"></td>
+	</tr>
+	{PMS_LAST_MONTH_TASK_LIST}
+	<tr>
+		<td width="4%" id="other_task_num" rowspan="3"><b>
+		计划外工作</b></td>
+		<td width="44%" colspan="4" rowspan="2">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td  width="18%" colspan="2" rowspan="2">
+		<p align="center"><b>完成时间</b></td>
+		<td  width="34%" colspan="3">
+		<p align="center"><b>完成的质量<br>
+		</b>（优/良/中/差）</td>
+	</tr>
+	<tr>
+		<td align="center" width="4%">自评</td>
+		<td>自评说明</td>
+		<td align="center" width="8%">操作</td>
+	</tr>
+	<tr id="other_task_1">
+		<td width="44%" colspan="4"><textarea style="width:99%" cols="40" rows="5" name="other_content[]"></textarea></td>
+		<td width="18%" colspan="2"><input type="text" size="12" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-#{%M-1}-%d'})" class="Wdate other" name="other_end_date[]" value="" /></td>
+		<td width="4%">{other_score_select}</td>
+		<td width="19%"><textarea style="width:100%" name="other_explain[]" cols="20" rows="5"></textarea></td>
+		<td width="8%"><input type="button" onclick="add_other_task(1);" value="增加一项"/></td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="10">
+		<p align="left"><b>上级评价：上月总体工作质量及工作总量得分：</b>
+		<input type="checkbox" disabled="true" name="C1" value="ON">优&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="checkbox" disabled="true" name="C2" value="ON">良&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="checkbox" disabled="true" name="C3" value="ON">中&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		<input type="checkbox" disabled="true" name="C4" value="ON">差</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="10">
+		<p align="left"><b>
+		二、下月工作计划（{MONTH}月）</b></td>
+	</tr>
+	<tr>
+		<td width="41%"  colspan="4">
+		<p align="center"><b>
+		工作内容</b></td>
+		<td width="6%" >
+			<b>优先级</b></td>
+		<td  width="9%"><b>要求完成时间</b></td>
+		<td  width="35%" colspan="3"><b>
+		完成的标准和要求</b></td>
+		<td width="8%"><b>操作</b></td>
+	</tr>
+	{NEXT_MONTH_TASK}
+	<tr id="next_task_{next_task_num}">
+		<td width="41%"  colspan="4"><textarea style="width:99%" cols="40" rows="5" name="next_content[]"></textarea></td>
+		<td width="6%" >{next_level}</td>
+		<td  width="9%"><input type="text" size="12" readonly onClick="WdatePicker()" class="Wdate next_end_date" name="next_end_date[]" value="" /></td>
+		<td  width="35%" colspan="3"><textarea style="width:99%" cols="40" rows="5" class="new_ask" name="ask[]"></textarea></td>
+		<td width="8%"><input type="button" onclick="add_next_task({next_task_num});" value="增加一项"/></td>
+	</tr>
+	{PMS_NEXT_MONTH_TASK_LIST}
+	<tr>
+		<td width="96%"  colspan="10">
+		<p class="MsoNormal" align="left"><b>
+		三、工作中存在的问题及解决的办法；可以和其它同事分享的经验；其它建议或想法：</b><br />
+		<textarea style="width:99%" cols="40" rows="5" id="share" name="share"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td width="96%"  colspan="10">
+		<p class="MsoNormal" align="left"><b>
+		四、上月学习的内容及成果：</b><br />
+		<textarea style="width:99%" cols="40" rows="5" id="study" name="study"></textarea>
+		</td>
+	</tr>
+	<!--
+	<tr>
+		<td width="96%"  colspan="10">
+		<p class="MsoNormal" align="left"><b>
+		上级总体评价及改善建议：</b><br />
+		<textarea style="width:99%" disabled="true" cols="40" rows="5">该处由您的领导填写。</textarea>
+		</td>
+	</tr>
+	-->
+	<tr>
+		<td width="96%"  colspan="10" height="108"> <input type="submit" name="submit" onclick="chck = 0;" value=" 提交月报 "/> <input type="submit" onclick="chck = 1;" name="submit" value="保存不提交"/><input type="button" onclick="self.parent.location.reload();" value=" 关闭返回 "></td>
+	</tr>
+</table>
+</form>
+<table style="display:none" id="temp">
+	<tr id="task_task_id">
+		<td width="38%" colspan="3" align="left"><textarea style="width:100%" cols="40" rows="5" name="last_content[]"></textarea></td>
+		<td width="6%">{level}</td>
+		<td width="9%"><input type="text" size="12" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-#{%M-1}-%d'})" class="Wdate new_last_date" name="end_date[]" value="" /></td>
+		<td width="9%">
+			<select name="ontime[]">
+				<option selected value="是">是</option>
+				<option value="否">否</option>
+				<option value="进行中">进行中</option>
+			</select>
+		</td>
+		<td width="4%">{score_select}</td>
+		<td width="19%"><textarea style="width:100%" name="last_explain[]" cols="20" rows="5"></textarea></td>
+		<td width="8%"><input type="button" onclick="del_task(task_id)" value="删除该项"></td>
+	</tr>
+</table>
+<table style="display:none" id="other_temp">
+	<tr id="other_task_task_id">
+		<td width="44%" colspan="4"><textarea style="width:100%" cols="40" rows="5" name="other_content[]"></textarea></td>
+		<td width="18%" colspan="2"><input type="text" size="12" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd',startDate:'%y-#{%M-1}-%d'})" class="Wdate other" name="other_end_date[]" value="" /></td>
+		<td width="4%">{other_score_select}</td>
+		<td width="19%"><textarea style="width:100%" name="other_explain[]" cols="20" rows="5"></textarea></td>
+		<td width="8%"><input type="button" onclick="del_other_task(task_id);" value="删除该项"/></td>
+	</tr>
+</table>
+<table style="display:none" id="next_temp">
+<tr id="next_task_task_id">
+		<td width="41%"  colspan="4"><textarea style="width:100%" cols="40" rows="5" name="next_content[]"></textarea></td>
+		<td width="6%" >{next_level}</td>
+		<td  width="9%"><input type="text" size="12" readonly onClick="WdatePicker()" class="Wdate next_end_date" name="next_end_date[]" value="" /></td>
+		<td  width="35%" colspan="3"><textarea style="width:100%" cols="40" rows="5" class="new_ask" name="ask[]"></textarea></td>
+		<td width="8%"><input type="button" onclick="del_next_task(task_id);" value="删除该项"/></td>
+	</tr>
+</table>
+<div id="sug"></div>
+<script type="text/javascript">
+	var last_num = {new_task_num};
+	var next_num = {next_task_num};
+	var other_num = 1;
+	var add_last_num = null;
+	var add_other_num = null;
+	var add_next_num = null;
+	//========上月
+	function add_task(id)
+	{
+		last_num ++;
+		if (add_last_num == null)
+		{
+			add_last_num = id;
+		}else{
+			add_last_num++;
+		}
+		var str =$('#temp').html();
+		var num = $('#task_num').attr('rowSpan');
+		$('#task_num').attr('rowSpan',(Number(num)+1));
+			str = str.replace(/task_id/gi,last_num);
+			//str = str.replace(/<TBODY(.+?)>/ig,'');
+			str = str.replace(/<TBODY>/ig,'');
+			str = str.replace(/<\/TBODY>/ig,'');
+			$('#task_'+add_last_num).after(str);
+		
+	}
+	function del_task(id)
+	{
+		var content = $('#task_'+id+' textarea').val();
+		var bool = true;
+		if (content!='')
+		{
+			if (confirm('您确定要删除已经填写了工作内容的工作项吗？'))
+			{
+				bool = true;
+			}else{
+				bool = false
+			}
+		}
+		if (bool == true) {
+		
+			$('#task_' + id).remove();
+			var num = $('#task_num').attr('rowSpan');
+			$('#task_num').attr('rowSpan', (Number(num) - 1));
+		}
+	}
+	//========计划外
+	function add_other_task(id)
+	{
+		other_num ++ ;
+		if (add_other_num == null)
+		{
+			add_other_num = id;
+		}else{
+			add_other_num++;
+		}
+		var str = $('#other_temp').html();
+		var num = $('#other_task_num').attr('rowSpan');
+		$('#other_task_num').attr('rowSpan',(Number(num)+1));
+			str = str.replace(/task_id/gi,other_num);
+			//str = str.replace(/<TBODY(.+?)>/ig,'');
+			str = str.replace(/<TBODY>/ig,'');
+			str = str.replace(/<\/TBODY>/ig,'');
+			$('#other_task_'+add_other_num).after(str);
+	}
+	function del_other_task(id)
+	{
+		var content = $('#other_task_'+id+' textarea').val();
+		var bool = true;
+		if (content!='')
+		{
+			if (confirm('您确定要删除已经填写了内容的工作项吗？'))
+			{
+				bool = true;
+			}else{
+				bool = false;
+			}
+		}
+		if (bool == true) {
+		
+		
+			$('#other_task_' + id).remove();
+			var num = $('#other_task_num').attr('rowSpan');
+			$('#other_task_num').attr('rowSpan', (Number(num) - 1));
+		}
+	}
+	//=========下月
+	function add_next_task(id)
+	{
+		next_num ++;
+		if (add_next_num == null)
+		{
+			add_next_num = id;
+		}else{
+			add_next_num++;
+		}
+		var str = $('#next_temp').html();
+			str = str.replace(/task_id/gi,next_num);
+			//str = str.replace(/<TBODY(.+?)>/ig,'');
+			str = str.replace(/<TBODY>/ig,'');
+			str = str.replace(/<\/TBODY>/ig,'');
+			$('#next_task_'+add_next_num).after(str);
+	}
+	//=========删除下月工作计划
+	function del_next_task(id){
+		var content = $('#next_task_' + id + ' textarea').val();
+		var bool = true;
+		if (content != '') {
+			if (confirm('您确定要删除已经填写了工作内容的工作项吗？')) {
+				bool = true;
+			}
+			else {
+				bool = false;
+			}
+		}
+		if (bool == true) 
+		{
+			$('#next_task_' + id).remove();
+		}
+	}
+	
+	function get_userid()
+	{
+		var username = $('#boss').val();
+		$('#audit_userid').val('');
+		if (username!='')
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,dept_id:32,rand:Math.random(0,999)},
+				function (data)
+				{
+					if (data)
+					{
+						$('#audit_userid').val(unescape(data));
+					}else{
+						alert('您输入的审批领导姓名不正确！');
+					}
+				}
+			);
+			
+		}
+	}
+	/**
+	 * 按项目获取审批人
+	 * @param {Object} project_id
+	 */
+	function GetAudit(project_id)
+	{
+		if (project_id!='')
+		{
+			$.post('?model=develop_monthly&action=get_audit',{project_id:project_id,rand:Math.random(0,9999)},function(data){
+				if (data!=-1 && data!='')
+				{
+					auditinfo = unescape(data).split('|');
+					$('#audit_userid').val(auditinfo[0]);
+					$('#boss').val(auditinfo[1]);
+				}else{
+					alert('您选择的项目没有设置项目经理或产品经理');
+				}
+			});
+		}
+	}
+</script>
+</body>
+</html>

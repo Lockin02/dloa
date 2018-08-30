@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增延期申请</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/common/dateUtil.js"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="{#jsPath#}/extension-add.js" ></script>   </head>
+
+<body>
+   <form id="form1" method="post" action="?model=projectmanagent_trialproject_extension&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增延期申请
+             </span>
+            </div>
+            </td>
+         </tr>
+ <tr>
+		<td colspan="6">
+		<fieldset><legend style="text-align:left"><b >试用项目信息</b></legend>
+		<table cellpadding="2" width="100%" id="contractinfo"   style="bcontract-collapse:collapse;background-color:#F3F6FA;" >
+
+         <tr>
+            <td class="form_text_left">项目编号</td>
+      		<td class="form_text_right" >
+      			 {projectCode}
+      		</td>
+      		<td class="form_text_left">项目名称</td>
+      		<td class="form_text_right" >
+      			 {projectName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">试用开始时间</td>
+      		<td class="form_text_right" >
+      			 {beginDate}
+      		</td>
+      		<td class="form_text_left"><span class="red">试用结束时间</span></td>
+      		<td class="form_text_right" >
+      			 {closeDate}
+      			 <input type="hidden" id="endDateOld" name="extension[endDateOld]" value="{closeDate}" />
+      		</td>
+       </tr>
+       <tr>
+       		<td class="form_text_left">工期(天)</td>
+      		<td class="form_text_right" >
+      			 {projectDays}
+      			 <input type="hidden" id="oldProjectDays" name="extension[oldProjectDays]" value="{projectDays}" />
+      		</td>
+      	<!--</tr>-->
+       <!--<tr>-->
+            <!--<td class="form_text_left">预计试用费用金额</td>-->
+      		<!--<td class="form_text_right" >-->
+				<!--<input type="text" class="text" name="extension[budgetMoney]" id="budgetMoney"  value="{budgetMoney}"/>-->
+      		<!--</td>-->
+      		<td class="form_text_left">确认试用费用金额</td>
+      		<td class="form_text_right formatMoney" >
+				<input type="text" class="text" name="extension[budgetMoney]" id="budgetMoney"  value="{budgetMoney}"/>
+      			 {affirmMoney}
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">商机编号</td>
+      		<td class="form_text_right" >
+      			 {chanceCode}
+      		</td>
+      		<td class="form_text_left">预计合同金额</td>
+      		<td class="form_text_right" >
+      			 {planContractMoney}
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">预计签约时间</td>
+      		<td class="form_text_right" >
+      			 {planSignDate}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">客户名称</td>
+      		<td class="form_text_right" >
+      			 {customerName}
+      		</td>
+      		<td class="form_text_left">客户类型</td>
+      		<td class="form_text_right" >
+      		     {customerTypeName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">所属省份:</td>
+			<td class="form_text_right">
+			   {province}
+		    </td>
+			<td class="form_text_left">所属城市:</td>
+			<td class="form_text_right">
+			   {city}
+			</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">归属区域</td>
+      		<td class="form_text_right" >
+      			 {areaName}
+      		</td>
+      		<td class="form_text_left">区域负责人</td>
+      		<td class="form_text_right" >
+      			{areaPrincipal}
+      		</td>
+       </tr>
+       <tr>
+		    <td align="center" colspan="2">附件 &nbsp;{file}</td>
+		    <td class="form_text_left">申请人</td>
+      	 	<td class="form_text_right" >
+      			 {applyName}
+      		</td>
+	   </tr>
+       <tr>
+      		<td class="form_text_left">客户联系方式</td>
+      		<td class="form_text_right" colspan="3">
+      		      <div id="remark" class="divChangeLine">{customerWay}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">试用要求描述</td>
+      		<td class="form_text_right" colspan="3">
+      		     <div id="remark" class="divChangeLine">{projectDescribe}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">执行意见</td>
+      		<td class="form_text_right" colspan="3">
+      		      <div id="remark" class="divChangeLine">{executive}</div>
+      		</td>
+       </tr>
+       <tr>
+       		<td colspan="6">
+				<div id="productInfo"></div>
+			</td>
+       </tr>
+    </table>
+	</fieldset>
+	</td>
+	</tr>
+ <tr>
+		<td colspan="6">
+		<fieldset><legend style="text-align:left"><b>延期申请</b></legend>
+		<table cellpadding="2" width="100%" id="contractinfo"   style="bcontract-collapse:collapse;background-color:#F3F6FA;" >
+       <tr>
+      		<td class="form_text_left"><span id="ED">项目延期至</span></td>
+      		<td class="form_text_right" >
+      		     <input type="hidden" name="extension[affirmMoney]" value="{affirmMoney}" />
+      		     <input type="hidden" name="extension[affirmMoneyOld]" value="{affirmMoney}" />
+      		     <input type="hidden" class="txt" name="extension[trialprojectId]" value="{id}"/>
+      			 <input type="hidden" class="txt" name="extension[trialprojectCode]" value="{projectCode}"/>
+      			 <input type="text" class="txt" name="extension[extensionDate]" onfocus="WdatePicker()" onblur="timeInterval();" id="extensionDate"/>
+				<font id="extensionDateTips" color="red"></font>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span id="PD">项目工期延长(天)</span></td>
+      		<td class="form_text_right">
+      			<input type="text" class="txt" name="extension[newProjectDays]" onblur="timeIntervals()" id="newProjectDays"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">延期申请原因</td>
+      		<td class="form_text_right" >
+      		     <textarea class="txt_txtarea_font" name="extension[extensionReason]" id="extensionReason"></textarea>
+      		</td>
+       </tr>
+    </table>
+	</fieldset>
+	</td>
+	</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      			<input  type="hidden"  id="trialprojectId" value="{id}" />
+      		   <input  type="submit" class="txt_btn_a" value=" 确  定 " onclick="sub()"/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

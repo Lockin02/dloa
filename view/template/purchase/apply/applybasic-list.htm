@@ -1,0 +1,161 @@
+<html>
+<head>
+    <title>采购申请单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxegrid.js"></script>
+	<script type="text/javascript" src="js/jquery/menu/yxmenu.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue=$('#applyNumb').val();
+			location="?model=purchase_apply_applybasic&action=myList&clickNumb={clickNumb}&applyNumb="+searchvalue;
+		}
+
+		function selectButton(obj){
+			//TODO:
+			alert(obj.value);
+		}
+
+		function selectBut(obj,id){
+			$trParent=$(obj).parent().parent();
+			var value=$(obj).val();
+			var str = "";
+			if(value=="value1"){
+				//$trParent.find("input.jCheck").each(function(){
+				//	if( $(this).attr("checked") ){
+				//		str += "," + $(this).val();
+				//	}
+				//});
+			}
+			else if(value=="read"){
+				location="?model=purchase_apply_applybasic&action=read&id="+id;
+			}else if(value=="readExa"){
+				location="?model=purchase_apply_applybasic&action=read&seeExa=yes&id="+id;
+			}
+		}
+    </script>
+</head>
+<body>
+<!--
+<table border="0" width="100%" cellspacing="0" cellpadding="3" class="small">
+  <tr>
+    <td class="Big"><img src="images/sys_config.gif"><b><font color="#000000"> 采购申请单</font></b>
+    </td>
+  </tr>
+</table>
+{topPlan}
+ -->
+<div class="main_wraper">
+<table id="myTab"  class="main_table_search">
+	<tr class="tablecontrol" height="28px">
+		<td colspan="15" align="left">
+			&nbsp;采购申请单编号：<input type="text" name="applyNumb" id="applyNumb" value="{applyNumb}">
+			<input type="button" class="txt_btn_a" value="搜索"  onclick="search();">
+		</td>
+	</tr>
+</table>
+<table class="main_table">
+<thead>
+    <tr height="28" class="main_tr_header" align="center">
+        <th    height="30" width="4%">
+        	<p class="allImg">
+            	序号<br/>
+            	<img src="images/expanded.gif" />
+        	</p>
+        </th>
+        <th   >
+        	<p class="checkAll">
+            	采购申请<br/>单编号<br/>
+            </p>
+        </th>
+        <th   width="8%">
+            预计到<br/>货时间
+        </th>
+        <th   width="8%">
+            供应商
+        </th>
+        <th   width="6%">
+            状态
+        </th>
+        <th width="45%" class="td_table">
+            <table class="main_table_nested" frame=void>
+            	<tr>
+            		<th colspan="7">
+            			采购申请单-设备信息
+            		</th>
+            	</tr>
+            	<tr>
+            		<th >
+			            设备编号<br>名称
+			        </th>
+			        <th  width="20%">
+			            采购类型
+			        </th>
+			        <th  width="13%">
+			            申请总数
+			        </th>
+			        <th  width="13%">
+			            未到货数
+			        </th>
+			        <th  width="13%">
+			            申请单价
+			        </th>
+            	</tr>
+            </table>
+        </th>
+        <th width="120">
+			操作
+		</th>
+    </tr>
+  </thead>
+    {list}
+</table>
+{pageDiv}
+</div>
+</body>
+</html>

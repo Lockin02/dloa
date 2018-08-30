@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head><title>新增合同结转记录</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-order.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-serviceContract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rentalcontract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-orderRdproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockout.js"></script>
+    <script type="text/javascript" src="view/template/projectmanagent/carriedforward/js/carriedforward-combo.js"></script>
+    <script type="text/javascript" src="view/template/projectmanagent/carriedforward/js/carriedforward-edit.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	修改合同结转表信息
+    </span>
+</div>
+<form id="form1" method="post" action="?model=projectmanagent_carriedforward_carriedforward&action=edit" onsubmit="return checkform();">
+<table class="form_main_table">
+   <tr>
+		<td class="form_text_left">合同类型</td>
+		<td class="form_text_right" >
+			<select name="carriedforward[saleType]" id="saleType" class="select" onchange="initGrid(this.value)">
+				<option value="">请选择合同类型</option>
+				{saleType}
+			</select>
+		</td>
+   </tr>
+   <tr>
+		<td class="form_text_left">合同编号</td>
+		<td class="form_text_right" >
+			 <input type="hidden" name="carriedforward[saleId]" id="saleId" value="{saleId}" />
+			 <input type="text" class="txt" name="carriedforward[saleCode]" id="saleCode" value="{saleCode}" />
+			 <span class="red">[*]</span>
+		</td>
+   </tr>
+   <tr>
+		<td class="form_text_left">出库单据编号</td>
+		<td class="form_text_right" >
+			 <input type="hidden" id="orgOutStockId" value="{outStockId}"/>
+			 <input type="hidden" name="carriedforward[outStockId]" id="outStockId" value="{outStockId}"/>
+			 <input type="hidden" name="carriedforward[outStockType]" id="outStockType" value="{outStockType}"/>
+			 <input type="text" class="txt" name="carriedforward[outStockCode]" id="outStockCode" onfocus="toStockout()" value="{outStockCode}"/>
+			 <span class="red">[*]</span>
+		</td>
+   </tr>
+   <tr>
+		<td class="form_text_left">勾稽日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="carriedforward[thisDate]" id="thisDate" value="{thisDate}" onfocus="WdatePicker();"/>
+			 <span class="red">[*]</span>
+		</td>
+   </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+         <input type="hidden" name="carriedforward[id]" id="id" value="{id}" />
+		   <input type="submit" class="txt_btn_a" value="保  存"/>
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+   </tr>
+</table>
+</form>
+</body>
+</html>

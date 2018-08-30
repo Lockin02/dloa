@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+   <base target="_self"/>
+   <title></title>
+     {#commonInclude#}
+   <script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-borrowturnlist.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+   <script>
+      //重新加载数据
+      function reloadData(){
+    	  //先清空搜索条件
+    	  $("#borrowequGrid").yxgrid("addParam","","");
+    	  //重新设置搜索条件
+    	  var extParam = {};
+    	  //客户
+    	  if($.trim($("#customerId").val()) != ''){
+    		  extParam['customerId'] = $("#customerId").val();
+    	  }
+    	  //销售负责人
+    	  if($.trim($("#salesNameId").val()) != ''){
+    		  extParam['salesNameIds'] = $("#salesNameId").val();
+    	  }
+    	  //借试用单编号
+    	  if($.trim($("#borrowCode").val()) != ''){
+    		  extParam['Code'] = $("#borrowCode").val();
+    	  }
+    	  //物料编号
+    	  if($.trim($("#productCode").val()) != ''){
+    		  extParam['productCodetoCon'] = $("#productCode").val();
+    	  }
+    	  //物料名称
+    	  if($.trim($("#productName").val()) != ''){
+    		  extParam['productNametoCon'] = $("#productName").val();
+    	  }
+    	  //序列号搜索
+    	  if($.trim($("#serialName").val()) != ''){
+    		  extParam['serialName3'] = $("#serialName").val();
+    	  }
+    	  //清空所有checkbox选中的行id并重新加载数据
+    	  $("#borrowequGrid").yxgrid("removeAllCheckedRowIds").yxgrid("setExtParam",extParam).yxgrid("reload");
+          //渲染借试用转销售数据id串
+          getBorrowequIds(extParam);
+      }
+	  $(function (){
+	     if($("#borrowId").val() == ''){
+	    	//客户渲染
+	        $("#customerName").yxcombogrid_customer({
+				hiddenId : 'customerId',
+				gridOptions : {
+					showcheckbox : false
+				}
+			});
+	    	//销售负责人渲染
+	    	$("#salesName").yxselect_user({
+	    		mode : 'check',
+	    		hiddenId : 'salesNameId'
+	    	});
+	     }else{
+	    	 //客户名称、销售负责人、借试用单编号只读
+	         $("#customerName,#salesName,#borrowCode").attr('readonly',true).removeClass('txt').addClass('readOnlyTxtNormal');
+	     }
+	  })
+   </script>
+</head>
+<body>
+<table class="form_main_table">
+    <tr>
+	    <td class="form_text_left_con"><span>客户名称:</span></td>
+		<td class="form_text_right_con">
+		    <input type="hidden" class="txt" id="customerId" value="{customerId}"/>
+		    <input type="text" class="txt" id="customerName" value="{customerName}"/>
+		    <input type="hidden" id="borrowId" value="{borrowId}" />
+		</td>
+		<td class="form_text_left_con"><span>销售负责人:</span></td>
+		<td class="form_text_right_con">
+		    <input type="text" class="txt" id="salesName" value="{salesName}"/>
+		    <input type="hidden" id="salesNameId" value="{salesNameId}" />
+		</td>
+    </tr>
+    <tr>
+	    <td class="form_text_left_con"><span>借用单编号:</span></td>
+		<td class="form_text_right_con">
+		    <input type="text" class="txt" id="borrowCode" value="{borrowCode}"/>
+		</td>
+		<td class="form_text_left_con"><span>物料编号:</span></td>
+		<td class="form_text_right_con">
+		    <input type="text" class="txt" id="productCode"/>
+		</td>
+    </tr>
+    <tr>
+	    <td class="form_text_left_con"><span>物料名称:</span></td>
+		<td class="form_text_right_con">
+		    <input type="text" class="txt" id="productName"/>
+		</td>
+		<td class="form_text_left_con"><span>序列号:</span></td>
+		<td class="form_text_right_con">
+		    <input type="text" class="txt" id="serialName"/>
+		</td>
+    </tr>
+    <tr>
+	    <td class="txt_btn" colspan="4">
+	        <input type="button" class="txt_btn_a" value=" 查  询 " onclick="reloadData();"/>
+	    </td>
+    </tr>
+</table>
+   <table id="borrowequGrid" style="display: none"></table>
+   <input type="hidden" id="borrowequIds" />
+</body>
+</html>

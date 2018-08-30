@@ -1,0 +1,62 @@
+<html>
+<head>
+<title></title>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+
+
+
+
+<script type="text/javascript">
+$(function() {
+
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=projectmanagent_borrow_borrow&action=toBorrowShipments&limits=" + $('#limits').val(),
+    			"?model=projectmanagent_borrow_borrow&action=toBorrowShipped&limits=" + $('#limits').val(),
+    			"?model=projectmanagent_borrow_borrow&action=toSeaShipments&limits=" + $('#limits').val(),
+    			];
+
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+		   	 if($(actTabId).attr("src") == ""){
+		   		$(actTabId).attr("src",tabArr[e]);
+	    	}
+    }});
+
+	if( $('#limits').val()=='客户' ){
+		$('#personnel').hide();
+	}
+
+});
+
+    </script>
+
+</head>
+<body scroll="auto">
+<input type="hidden" id="limits" value="{limits}"/>
+<div>
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >未完成借试用发货</a></li>
+        <li><a href="#tab2" >已完成借试用发货</a></li>
+  	    <li id="personnel"><a href="#tab3" >未完成的海外借试用</a></li>
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "" height="93%" frameborder= "0">
+            </iframe>
+            <iframe class="pane" id="iframe2"  src= "" height="93%" frameborder= "0">
+            </iframe>
+            <iframe class="pane" id="iframe3"  src= "" height="93%" frameborder= "0">
+            </iframe>
+    </div>
+
+</div>
+
+</body>
+</html>

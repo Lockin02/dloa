@@ -1,0 +1,140 @@
+<html>
+<head>
+    <title>采购任务</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+		<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/changejudge.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+    <script type="text/javascript">
+		$(function() {
+			/**选择组织机构和人员*/
+			$("#sendName").yxselect_user({
+						hiddenId : 'sendUserId'
+			});
+			$("#TO_NAME").yxselect_user({
+						hiddenId : 'TO_ID',
+						mode:'check'
+			});
+		});
+		function checkAllData(){
+			var booble=true;
+			if($.trim($("#feedbackRemark").val())==""){   //判断是否选择了物料
+				alert("请输入反馈内容!");
+				booble=false;
+			}
+			if($("#TO_ID").val()==""){   //判断是否选择了物料
+				alert("请选择邮件收件人!");
+				booble=false;
+			}
+			return booble;
+		}
+
+    </script>
+</head>
+	<body scroll="auto">
+
+<div class="main_head">
+    <span class="main_head_title">
+      	采购任务反馈
+    </span>
+</div>
+<div class="main_wraper">
+  	<form id='form1' name='form1' action="?model=purchase_task_basic&action=feedback" method="post"  onsubmit="return checkAllData()" >
+	<input type="hidden" name="basic[id]" value="{id}"/>
+	<table width="90%" class="main_table" align="center">
+		   	<tr>
+		   		<td class="form_text_left">邮件收件人
+		       	</td>
+		       	<td colspan="3" id="maildiv" class="form_text_right">
+				    <input type="text" class="txtlong" name="basic[email][TO_NAME]" id="TO_NAME" value="{sendName}" readonly="readonly"/>
+		    		<input type="hidden" name="basic[email][TO_ID]" id="TO_ID" value="{sendId}" readonly="readonly"/>
+		   			<input type="hidden" name="basic[email][issend]" value="y"/>
+		   			<span class="red">[*]</span>
+			    </td>
+		   	</tr>
+			<tr align="center" height="90px">
+				<td class="form_text_left">
+					反馈内容
+				</td>
+				<td class="form_view_right" colspan="3">
+					<textarea rows="5" id="feedbackRemark" name="basic[feedbackRemark]" cols="108"></textarea><span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table width="100%" cellspacing='0' cellpadding='0' class="main_table">
+						<tr height="30px" class="form_main_table">
+							<td colspan="20" class="form_header">
+								采购任务清单：
+							</td>
+						</tr>
+						<tr height="28" class="main_tr_header" align="center">
+							<th width="5%">
+								序号
+							</th>
+							<th  width="15%">
+								物料编号/名称
+							</th>
+							<th>
+								规格型号
+							</th>
+							<th>
+								单位
+							</th>
+							<th>
+								采购类型
+							</th>
+							<th>
+								任务数量
+							</th>
+							<th >
+								期望到货时间
+							</th>
+							<th  >
+								源单编号
+							</th>
+							<th>
+								源单名称
+							</th>
+							<th  >
+								项目名称
+							</th>
+							<th  >
+								申请/使用人
+							</th>
+						</tr>
+						</tr>
+						{list}
+					</table>
+				</td>
+			</tr>
+			<tr align="center" class="" height="28">
+				<td colspan="6">
+					<input class="txt_btn_a" type="submit" value="提  交" class="BigButton" >&nbsp;
+					<input class="txt_btn_a" type="button" value="返  回" class="BigButton" onclick="history.back();" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>
+	</body>
+</html>

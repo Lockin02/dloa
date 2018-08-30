@@ -1,0 +1,165 @@
+<html>
+<head>
+	<title>新增入库产品序列号</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+   <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	添加入库产品序列号
+    </span>
+</div>
+<form id="form1" method="post" action="?model=stock_productserialno_serialno&action=add" onsubmit="return checkNum();"  name="form1">
+<table class="form_main_table">
+<!--
+<tr>
+		<td class="form_text_left">入库申请单编号</td>
+		<td class="form_text_right"  colspan="3">
+			 <input type="text" class="readOnlyTxt" name="serialno[storageAppCode]" value="{storageAppCode}"/>
+
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyTxt" name="serialno[sequence]"  value="{sequence}"/>
+		</td>
+</tr>
+-->
+<tr>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right" >
+			<input type="hidden" class="readOnlyTxt" name="serialno[storageAppId]"  value="{storageAppId}"/>
+			<input type="text" class="readOnlyTxt" name="serialno[productName]"  value="{productName}"/>
+		</td>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right" >
+			<input type="hidden" class="readOnlyTxt" name="serialno[productId]"  value="{productId}"/>
+			<input type="text" class="readOnlyTxt" name="serialno[productCode]"  value="{productCode}"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right"   colspan="3">
+			 <textarea style="width:100%" name="storageapply[remark]"></textarea>
+		</td>
+</tr>
+</table>
+		<table class="main_table" id="sequenceList">
+			<tr>
+				<td colspan="8" class="main_tr_header">物料<{productName}>序列号清单</td>
+			</tr>
+			<tbody id="itemtable">
+			<tr class="main_tr_header">
+				<th>序号</th>
+				<th>序列号</th>
+				<th><input type="hidden" id="coutNumb" name="coutNumb" value="1" />
+				<img src="images/collapsed.gif" onclick="add();" title="添加行"/></th>
+			</tr>
+				<div id="mess_box" style=" height:400px width:400px;OVERFLOW-y:auto;">
+					{list}
+				</div>
+
+			</tbody>
+		</table>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" class="readOnlyTxt"   value="{rowNum}" id="rowNum"/>
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关 闭 " onclick="self.parent.tb_remove();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
+<script type="text/javascript">
+	/*
+	$(document).ready(function(){
+		for(var i=0;i<rowNum;i++){
+			add();
+		}
+	})*/
+
+	function checkNum(){
+		var flag = true;
+		var serialno = true;
+		var rowNum = $("#rowNum").val();
+		if($("#sequenceList tr").size()!=rowNum*1+2){
+			alert("你输入的序列号和申请入库的数量不符,请重新输入!")
+			flag = false;
+		}
+		$("input.serialno").each(function() {
+			if ($(this).val() == '') {
+				serialno = false;
+				flag = false;
+			}
+		});
+		if( serialno == false ){
+			alert("序列号不能为空");
+		}
+		return flag;
+	}
+/**
+ * 动态添加从表数据
+ */
+	function add() {
+		var mycount =document.getElementById("coutNumb").value * 1 + 1;
+		var itemtable=document.getElementById("itemtable");
+		i = itemtable.rows.length;
+			oTR = itemtable.insertRow([i]);
+		oTR.className = "TableData";
+		oTR.align = "center";
+		oTR.height = "28px";
+		var oTL1 = oTR.insertCell([0]);
+		oTL1.innerHTML = i;
+		var oTL2 = oTR.insertCell([1]);
+		oTL2.innerHTML = '<input type="text"  class="serialno txt" name="serialno[sequence]['
+				+ mycount + '][sequence]" id="sequence' + mycount
+				+ '" onblur="return snRepeatCheck(this,this.value);"/>';
+	    oTL3 = oTR.insertCell([2]);
+		oTL3.innerHTML = '<img src="images/closeDiv.gif" onclick="mydel(this,\'itemtable\');" title="删除行">';
+		document.getElementById("coutNumb").value = document
+				.getElementById("coutNumb").value
+				* 1 + 1;
+	}
+
+	function mydel(obj, itemtable) {
+		if (confirm('确定要删除该行？')) {
+			var rowNo = obj.parentNode.parentNode.rowIndex;
+			var itemtable = document.getElementById(itemtable);
+			itemtable.deleteRow(rowNo-1);
+			var myrows = itemtable.rows.length;
+			for (i = 1; i < myrows; i++) {
+				itemtable.rows[i].childNodes[0].innerHTML = i;
+			}
+		}
+	}
+    function snRepeatCheck(objEl,objValue){
+    	if( objValue != ''){
+	    $.get(
+	    	'index1.php',
+	    	{model:'stock_productserialno_serialno',action:'checkRepeat',sequence:objValue},
+			function (data){
+				if(data==0){
+					alert("本序列号产品已入库");
+					objEl.value='';
+					return false;
+				}
+			})
+		}
+    }
+</script>

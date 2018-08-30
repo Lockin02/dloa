@@ -1,0 +1,131 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>新增成本调整单</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gbk"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="view/template/finance/costajust/js/costajust-add.js"></script>
+	<script type="text/javascript" src="view/template/finance/costajust/js/costajust-va.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	添加成本调整单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=finance_costajust_costajust&action=add" onsubmit="return checkform();">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">单据类型</td>
+		<td class="form_text_right" colspan="3" >
+			 <select class="select" name="costajust[formType]">
+			 	{formType}
+			 </select>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right" >
+			 <input type="hidden" id="stockId" name="costajust[stockId]" />
+			 <input type="hidden" id="stockCode" name="costajust[stockCode]" />
+			 <input type="text" id="stockName" class="txt" name="costajust[stockName]" />
+			 <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="formDate" name="costajust[formDate]" onfocus="WdatePicker()"/>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">
+			部门
+		</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="deptName" name="costajust[deptName]" readonly="readonly"/>
+			<input type="hidden" name="costajust[deptId]" id="deptId"/>
+		</td>
+		<td class="form_text_left">
+			业务员
+		</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="costajust[salesman]" id="salesman" readonly="readonly"/>
+			<input type="hidden" name="costajust[salesmanId]" id="salesmanId"/>
+		</td>
+    </tr>
+</table>
+<table class="form_main_table">
+	<tr align="left">
+		<td colspan="6">
+			详细：
+		</td>
+		<td width="5%" align="center">
+			<input type="hidden" id="invnumber" value="1"/>
+	 		<img src="images/collapsed.gif" onclick="dynamic_add('invbody','invnumber');" title="添加行"/>
+	 	</td>
+	</tr>
+	<tbody id="invbody">
+		<tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th width="15%">物料代码</th>
+			<th width="25%">物品名称</th>
+			<th width="15%">规格型号</th>
+			<th width="15%">调整金额</th>
+			<th>备注</th>
+			<th width="5%">操作</th>
+		</tr>
+		<tr align="center">
+			<td>1</td>
+			<td>
+				<input type="text" name="costajust[detail][1][productNo]" id="productNo1" class="txtmiddle" readonly="readonly"/>
+			</td>
+			<td>
+				<input type="text" name="costajust[detail][1][productName]" id="productName1" class="readOnlyTxtNormal" readonly="readonly"/>
+				<input type="hidden" name="costajust[detail][1][productId]" id="productId1"/>
+			</td>
+			<td>
+				<input type="text" name="costajust[detail][1][productModel]" id="productModel1" class="readOnlyTxtItem" readonly="readonly"/>
+			</td>
+			<td>
+				<input type="text" name="costajust[detail][1][money]" id="money1" class="txtmiddle"/>
+			</td>
+			<td>
+				<input type="text" name="costajust[detail][1][remark]" id="remark1" class="txtmiddle"/>
+			</td>
+			<td>
+				<img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行"/>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<table class="form_main_table">
+    <tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="submit" class="txt_btn_a" value="保  存"/>
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

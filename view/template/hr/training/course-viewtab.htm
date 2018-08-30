@@ -1,0 +1,60 @@
+<html>
+<head>
+<title></title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+
+
+
+
+<script type="text/javascript">
+$(function() {
+
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=hr_training_course&action=toView&id=" + $('#id').val(),
+    			"?model=hr_training_teachrecords&action=pageByCourse&courseId=" + $('#id').val(),
+    			"?model=hr_training_trainingrecords&action=pageByCourse&courseId=" + $('#id').val(),
+    			];
+
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+   		 var actTabId="#iframe" + (parseInt(e) + 1);
+		   	 if($(actTabId).attr("src") == ""){
+		   		$(actTabId).attr("src",tabArr[e]);
+	    	}
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body scroll="auto">
+<input type="hidden" id="id" value="{id}"/>
+<div>
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >课程基本信息</a></li>
+        <li><a href="#tab2" >授课记录</a></li>
+        <li><a href="#tab3" >培训记录</a></li>
+    </ul>
+
+    <!-- tab "panes" -->
+    <div class="panes">
+            <iframe class="pane" id="iframe1"  src= "" height="93%" frameborder= "0" >
+            </iframe>
+            <iframe class="pane" id="iframe2"  src= "" height="93%" frameborder= "0">
+            </iframe>
+            <iframe class="pane" id="iframe3"  src= "" height="93%" frameborder= "0">
+            </iframe>
+    </div>
+
+</div>
+
+</body>
+</html>

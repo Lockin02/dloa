@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>新增项目里程碑</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-milestonechange.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/changemilestone-add.js" ></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	新增项目里程碑
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_changemilestone_changemilestone&action=add">
+<table class="form_main_table">
+    <tr>
+		<td class="form_text_left">里程碑名称</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" name="changemilestone[milestoneName]" id="milestoneName"/>
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left">状态</td>
+		<td class="form_text_right">
+			 <select id="status" class="select" name="changemilestone[status]">
+				{status}
+			 </select>
+			 <span class="red">[*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">计划开始</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="changemilestone[planBeginDate]" id="planBeginDate" onfocus="WdatePicker()"/>
+			 <span class="red"> [*]</span>
+		</td>
+		<td class="form_text_left">计划完成</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="changemilestone[planEndDate]" id="planEndDate" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+			 <span class="red"> [*]</span>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">实际开始</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="changemilestone[actBeginDate]" id="actBeginDate" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left">实际结束</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="changemilestone[actEndDate]" id="actEndDate" onfocus="WdatePicker()" onblur="actTimeCheck(this)"/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">项目编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" name="changemilestone[projectCode]" id="projectCode" value="{projectCode}"readonly/>
+			 <input type="hidden" name="changemilestone[projectId]" id="projectId" value="{projectId}"/>
+		</td>
+		<td class="form_text_left">项目名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" name="changemilestone[projectName]" id="projectName" value="{projectName}"readonly/>
+		</td>
+    </tr>
+    <tr>
+		<td class="form_text_left">前置里程碑</td>
+		<td class="form_text_right" colspan="3">
+			 <input type="text" class="txt" name="changemilestone[preMilestoneName]" id="preMilestoneName"/>
+			 <input type="hidden" name="changemilestone[preMilestoneId]" id="preMilestoneId"/>
+			 <input type="hidden" name="changemilestone[changePreId]" id="changePreId"/>
+		</td>
+    </tr>
+       <tr>
+		<td class="form_text_left">备注说明</td>
+		<td class="form_text_right" colspan="3">
+			 <textarea class="txt_txtarea_font" name="changemilestone[remark]" id="remark" rows="4" cols="78"></textarea>
+		</td>
+   </tr>
+    <tr>
+		<td class="txt_btn" colspan="4">
+			 <input type="hidden" name="changemilestone[changeId]" id="changeId" value="{changeId}"/>
+			 <input type="hidden" name="changemilestone[versionNo]" value="{versionNo}"/>
+		   <input type="submit" class="txt_btn_a" value="保  存"/>
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

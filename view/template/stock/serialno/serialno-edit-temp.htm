@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>临时修改物料序列号</title>
+{#commonInclude#}
+</head>
+
+<script type="text/javascript" >
+
+	function checkForm(){
+			//后台进行重复性校验
+			var checkResult=true;
+			$.ajax({
+				type : "POST",
+				async : false,
+				url : "?model=stock_serialno_serialno&action=checkRepeat",
+				data : {
+					serialNo:$("#sequence").val(),
+					productId:$("#productId").val(),
+					id:$("#id").val()
+				},
+				success : function(result) {
+					if (result == 0){
+						alert("序列号《"+$("#sequence").val()+"》库存中已存在!");
+						checkResult=false;
+					}
+				}
+			})
+			return checkResult;
+	}
+	
+</script>
+<body>
+<div class="main_head"><span class="main_head_title">
+物料序列号校正 </span></div>
+<form id="form1" method="post"	action="?model=stock_serialno_serialno&action=edit" onsubmit="return checkForm();" >
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">物料编号</td>
+		<td class="form_text_right">
+			 <input type="text" class="readOnlyTxtNormal" id="productCode" name="serialno[productCode]" value="{productCode}"  />
+			 <input type="hidden"  id="productId" name="serialno[productId]" value="{productId}"  />
+		</td>
+
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right">
+			 <input type="text" class="readOnlyTxtNormal" name="serialno[productName]" value="{productName}"  />
+		</td>
+</tr> 
+<tr>
+		<td class="form_text_left">所在仓库名称</td>
+		<td class="form_text_right">
+			 <input type="text" class="readOnlyTxtNormal" name="serialno[stockName]" value="{stockName}"  />
+		</td>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" name="serialno[sequence]" id="sequence" value="{sequence}"  />
+		</td>
+</tr>      
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" class="txt" name="serialno[id]" id="id" value="{id}" /> 
+			<input type="submit" class="txt_btn_a" value="  保存 " /> 
+			<input type="button" class="txt_btn_a" value="  取消  " onclick="closeFun()" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

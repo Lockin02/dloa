@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+ <head>
+  <title>修改盘亏基本信息 </title>
+   {#commonInclude#}
+    <script type="text/javascript" src="view/template/stock/check/js/checkinfo-shortage-edit.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-inventory.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+    <script>
+		$(document).ready(function(){
+
+			//判断是否有审核权限
+			if({auditLimit}!="1"){
+				$("#auditButton").hide();
+			}
+	})
+	</script>
+ </head>
+
+ <body>
+<form id="form1" method="post" action="?model=stock_check_checkinfo&action=edit" name="form1" onsubmit="return checkForm();">
+<table class="form_main_table">
+<tr>
+  <td colspan="4">
+     <div class="main_head">
+        <span class="main_head_title">
+      	修改盘亏毁损
+       </span>
+     </div>
+     </td>
+</tr>
+<tr>
+         <td class="form_text_left">单据编号</td>
+		<td class="form_text_right">
+			 <input type="text"  id="docCode" name="checkinfo[docCode]" value="{docCode}"  class="readOnlyTxtNormal"/>
+		</td>
+		<td class="form_text_left">单据日期</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" id="docDate" name="checkinfo[docDate]" value="{createTime}" onfocus="WdatePicker()"/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right" >
+			 <input type="hidden" class="txt" id="checkType" name="checkinfo[checkType]" value="SHORTAGE"/>
+			 <input type="hidden" class="txt" id="stockId" name="checkinfo[stockId]" value="{stockId}" />
+			 <input type="hidden" class="txt" id="stockCode" name="checkinfo[stockCode]" value="{stockCode}" />
+			 <input type="text" class="txt" id="stockName" name="checkinfo[stockName]" value="{stockName}"/>
+		</td>
+
+		<td class="form_text_left">经办人</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" id="dealUserName" name="checkinfo[dealUserName]" value="{dealUserName}" />
+			 <input type="hidden" class="txt" id="dealUserId" name="checkinfo[dealUserId]" value="{dealUserName}" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">制单</td>
+		<td class="form_text_right">
+			<input type="text" class="readOnlyTxtNormal" id="createName" readOnly name="stockin[createName]" value="{createName}" /> 
+		</td>	
+</tr>
+<tr>
+	<td colspan="4">
+	  <div >
+			<table class="main_table" id="itemtable">
+				<thead>
+					<tr>
+						<td colspan="14" class="form_header">
+							物料清单&nbsp; <img  src="images/add_item.png" align="absmiddle" onclick="addItems();"  title="新增物料" alt="新增物料" />
+						</td>
+					</tr>
+	              	<tr class="main_tr_header">
+		                <th>
+		                      序号
+		                </th>
+		                <th>
+		                      物料编码
+		                </th>
+		                <th>
+		                      物料名称
+		                </th>
+		                <th>
+		                      规格型号
+		                </th>
+		                <th>
+		                      单位
+		                </th>
+						<th>
+		                      批次号
+		                </th>
+		                <th>
+		                      帐存数量
+		                </th>
+		                <th>
+		                      实存数量
+		                </th>
+		                <th>
+		                      调整数量
+		                </th>
+		                <th>
+		                      单价
+		                </th>
+		                <th>
+		                      金额
+		                </th>
+		                <th>
+		                      收料仓库
+		                </th>
+		                <th>
+		                      备注
+		                </th>
+		               	<th>
+							操作
+							<input type="hidden" id="itemscount" value="{itemscount}"/>
+							<img src="images/collapsed.gif" onclick="addItems()" title="添加行" />
+						</th>
+					</tr>
+				</thead>
+				<tbody id="itembody">
+				{list}
+				</tbody>
+			</table>
+		</div>
+	</td>
+</tr>
+<tr>
+		<td class="txt_btn" colspan="4">
+         <input  type="hidden" name="checkinfo[id]" value="{id}" />
+         <input type="hidden" name="checkinfo[checkType]" value="SHORTAGE" id="checkType" />
+         <input type="hidden" name="checkinfo[auditStatus]" id="auditStatus" value="WPD"  />
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		    <input type="button" id="auditButton" value=" 审 核 " class="txt_btn_a"   onclick="return confirmAudit();" />
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+ </body>
+</html>
+

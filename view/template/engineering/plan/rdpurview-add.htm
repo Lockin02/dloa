@@ -1,0 +1,78 @@
+<html>
+
+    <head>
+    	<title>添加外部成员</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script>
+			$(document).ready(function() {
+				$.formValidator.initConfig({
+					formid : "form1",
+					onerror : function(msg) {
+					},
+					onsuccess : function() {
+						if (confirm("你输入成功,确定提交吗?")) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				});
+
+				$("#userName").formValidator({
+					onshow : "请选择人员",
+					onfocus : "不可输入，请选择",
+					oncorrect : "您选择的人员有效"
+				}).inputValidator({
+					min : 1,
+					onerror : "请选择人员"
+				});
+			})
+		</script>
+    </head>
+
+    <body>
+        <div class="form_main">
+	        <form method="POST" id="form1" action="?model=engineering_plan_rdpurview&action=add">
+	            <table class="form_main_table">
+	                <tr>
+	                    <td class="form_text_left">
+	                        人员
+	                    </td>
+	                    <td class="form_text_right">
+	                        <input type="text" id="userName" name="rdpurview[userName]" class="txt" readonly="readonly"/>
+	                        <input type="hidden" id="userId" name="rdpurview[userId]"/>
+	                        <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('userId','userName')">
+	                        <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('userId','userName')">
+							<span class='red'>[*]</span>
+							<div id="userNameTip" class="tipShortTxt"></div>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="form_text_left">
+	                        权限
+	                    </td>
+	                    <td class="form_text_right">
+	                        <input type="radio" name="rdpurview[purviewKey]" checked="checked" value="0"/>只读
+	                        <input type="radio" name="rdpurview[purviewKey]" value="1" />所有者
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td colspan="2">
+	                    	<input type="hidden" id="planId" name="rdpurview[planId]" value="{pnId}">
+	                        <input type="submit" class="txt_btn_a" value="保存">
+	                        <input type="button" class="txt_btn_a" value="取消" onclick="self.parent.tb_remove();">
+	                    </td>
+	                </tr>
+	            </table>
+	        </form>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+   <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+     <LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+    <script type="text/javascript">
+
+
+
+$(function() {
+	//初始化tabsURL
+ 	var tabArr=[
+    			"?model=engineering_task_esmtask&action=esmtaskdone",
+    			"?model=engineering_task_esmtask&action=esmtaskdoing",
+    			"?model=engineering_task_esmtask&action=esmtaskundo",
+    			"?model=engineering_task_esmtask&action=esmtaskaudit"
+    			];
+	//绑定事件(待抽出来)
+    $("#tabs1").tabs(".panes > iframe",{
+    		history: true,onClick:function(i,e) {
+   		 	var actTabId="#iframe" + (parseInt(e) + 1);
+            $(actTabId).attr("src",tabArr[e]);
+    }});
+
+
+});
+
+    </script>
+
+</head>
+<body>
+<div>
+    <!-- the tabs -->
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1">已完成</a></li>
+        <li><a href="#tab2">在执行</a></li>
+        <li><a href="#tab3">未执行</a></li>
+        <li><a href="#tab4">待审核</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+
+            <iframe class="pane"  id="iframe1"   scrolling="no" src= "about:blank" height="800px"  frameborder= "0" >
+            </iframe>
+            <iframe class="pane"  id="iframe2" scrolling="no"    src= "about:blank" height="800px"  frameborder= "0">
+            </iframe>
+            <iframe class="pane"  id="iframe3" scrolling="no"  src= "about:blank" height="800px"  frameborder= "0">
+            </iframe>
+            <iframe class="pane"  id="iframe4" scrolling="no"  src= "about:blank" height="800px"  frameborder= "0">
+            </iframe>
+    </div>
+
+</div>
+
+
+</body>
+</html>

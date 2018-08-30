@@ -1,0 +1,539 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看工程项目</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	查看工程项目信息
+    </span>
+</div>
+<table class="form_main_table">
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">
+					基 本 信 息
+					<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+				</legend>
+				<table class="form_in_table" id="baseTbl">
+					<tr>
+				   		<td class="form_text_left_three">归属区域</td>
+						<td class="form_text_right_three">
+							{officeName}
+						</td>
+						<td class="form_text_left_three">项目编号</td>
+						<td class="form_text_right_three">
+							{projectCode}
+						</td>
+						<td class="form_text_left_three">项目名称</td>
+						<td class="form_text_right_three">
+							{projectName}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">工程进度</td>
+						<td class="form_text_right_three">
+							 {projectProcess}&nbsp;%
+						</td>
+						<td class="form_text_left_three" title="实时费用进度">
+							费用进度
+						</td>
+						<td class="form_text_right_three" >
+							 <span>{feeAllProcess}</span>&nbsp;%
+						</td>
+						<td class="form_text_left_three" title="实时进度差距">
+							进度差距
+						</td>
+						<td class="form_text_right_three">
+							<span>{processGap}</span>&nbsp;%
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">毛 利 率</td>
+						<td class="form_text_right_three">
+							{exgross}&nbsp;%
+						</td>
+						<td class="form_text_left_three">项目状态</td>
+						<td class="form_text_right_three">
+							{statusName}
+						</td>
+						<td class="form_text_left_three">审批状态</td>
+						<td class="form_text_right_three">
+							{ExaStatus}
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">项目国家</td>
+						<td class="form_text_right_three" >
+							{country}
+						</td>
+						<td class="form_text_left_three">项目省份</td>
+						<td class="form_text_right_three">
+							{province}
+						</td>
+						<td class="form_text_left_three">项目城市</td>
+						<td class="form_text_right_three">
+							{city}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">项目所在地</td>
+						<td class="form_text_right_three">
+							{place}
+						</td>
+						<td class="form_text_left_three">产品线</td>
+						<td class="form_text_right">
+							{productLineName}
+						</td>
+						<td class="form_text_left_three">项目所属部门</td>
+						<td class="form_text_right" >
+							{deptName}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">最近更新</td>
+						<td class="form_text_right" colspan="5">
+							{updateTime}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">详 细 信 息
+					<img src="images/icon/info_up.gif" id="detailImg" onclick="showAndHide('detailImg','detailTbl')"/>
+				</legend>
+				<table class="form_in_table" id="detailTbl">
+					<tr>
+						<td class="form_text_left_three">预计开始</td>
+						<td class="form_text_right_three">
+							{planBeginDate}
+						</td>
+						<td class="form_text_left_three">预计结束</td>
+						<td class="form_text_right_three">
+							{planEndDate}
+						</td>
+						<td class="form_text_left_three">预计工期</td>
+						<td class="form_text_right_three">
+							<span>{expectedDuration}</span>
+							<span id="expectedDurationUnit" style="display:none">天</span>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">实际开始</td>
+						<td class="form_text_right_three">
+							{actBeginDate}
+						</td>
+						<td class="form_text_left_three">实际结束</td>
+						<td class="form_text_right_three">
+							{actEndDate}
+						</td>
+						<td class="form_text_left_three">实际工期</td>
+						<td class="form_text_right_three">
+							<span>{actDuration}</span>
+							<span id="actDurationUnit" style="display:none">天</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">已实施天数</td>
+						<td class="form_text_right">
+							<span>{workedDays}</span>
+							<span id="workedDaysUnit" style="display:none">天</span>
+						</td>
+						<td class="form_text_left_three">预计还需</td>
+						<td class="form_text_right" colspan="3">
+							<span>{needDays}</span>
+							<span id="needDaysUnit" style="display:none">天</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">总 人 数</td>
+						<td class="form_text_right_three">
+							<span>{peopleNumber}</span>
+							<span id="needDaysUnit" style="display:none">人</span>
+						</td>
+						<td class="form_text_left_three">鼎利人数</td>
+						<td class="form_text_right_three">
+							<span>{dlPeople}</span>
+							<span id="dlPeopleUnit" style="display:none">人</span>
+						</td>
+						<td class="form_text_left_three">外包人数</td>
+						<td class="form_text_right_three">
+							<span>{outsourcingPeople}</span>
+							<span id="outsourcingPeopleUnit" style="display:none">人</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">外包类型</td>
+						<td class="form_text_right_three">
+							{outsourcingName}
+						</td>
+						<td class="form_text_left_three">外包方式</td>
+						<td class="form_text_right_three">
+							{outsourcingTypeName}
+						</td>
+						<td class="form_text_left_three">外包分担工作</td>
+						<td class="form_text_right_three">
+							{outsourcingJob}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">日志填报期限</td>
+						<td class="form_text_right">
+							{maxLogDay}
+						</td>
+						<td class="form_text_left_three">免录项目日志</td>
+						<td class="form_text_right" colspan="3">
+							{isWithoutLog}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">预 算 决 算
+					<img src="images/icon/info_up.gif" id="budgetImg" onclick="showAndHide('budgetImg','budgetTbl')"/>
+				</legend>
+				<table class="form_in_table" id="budgetTbl">
+					<tr>
+						<td class="form_text_left_three">总 预 算</td>
+						<td class="form_text_right_three" >
+							<span class="formatMoney">{budgetAll}</span>
+						</td>
+						<td class="form_text_left_three" title="总决算 = 现场决算 + 人力决算 + 设备决算 + 外包决算">
+							总 决 算</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feeAll}</span>
+						</td>
+						<td class="form_text_left_three">挣 值</td>
+						<td class="form_text_right_three" >
+							<span class="formatMoney">{earnedValue}</span>
+						</td>
+				    </tr>
+					<tr>
+						<td class="form_text_left_three">现场预算</td>
+						<td class="form_text_right_three" >
+							<span class="formatMoney">{budgetField}</span>
+						</td>
+						<td class="form_text_left_three" title="此决算为报销系统中的实时报销费用及应付费用分摊金额之和">
+							现场决算
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feeField}</span>
+						</td>
+						<td class="form_text_left_three">人均挣值</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{perEarnedValue}</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">人力预算(元)</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetPerson}</span>
+						</td>
+						<td class="form_text_left_three">人力预算(天)</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetPeople}</span>
+						</td>
+						<td class="form_text_left_three">人天预算(天)</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetDay}</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three" title="实时人力决算">
+							人力决算(元)
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feePerson}</span>
+						</td>
+						<td class="form_text_left_three" title="实时人力决算">
+							人力决算(天)
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feePeople}</span>
+						</td>
+						<td class="form_text_left_three" title="实时人天决算">
+							人天决算(天)
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feeDay}</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">设备预算</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetEqu}</span>
+						</td>
+						<td class="form_text_left_three" title="实时设备决算">
+							设备决算
+						</td>
+						<td class="form_text_right_three" >
+							<span class="formatMoney">{feeEqu}</span>
+						</td>
+						<td class="form_text_left_three">外包预算</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetOutsourcing}</span>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">
+							外包决算
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feeOutsourcing}</span>
+						</td>
+						<td class="form_text_left_three">
+							其他预算
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{budgetOther}</span>
+						</td>
+						<td class="form_text_left_three">
+							其他决算
+						</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{feeOther}</span>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">负 责 人 员
+					<img src="images/icon/info_up.gif" id="managerImg" onclick="showAndHide('managerImg','managerTbl')"/>
+				</legend>
+				<table class="form_in_table" id="managerTbl">
+					<tr>
+				   		<td class="form_text_left_three">项目经理</td>
+						<td class="form_text_right_three">
+							{managerName}
+						</td>
+						<td class="form_text_left_three">服务经理</td>
+						<td class="form_text_right_three">
+							{areaManager}
+						</td>
+						<td class="form_text_left_three">技术经理</td>
+						<td class="form_text_right_three">
+							{techManager}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">客户姓名</td>
+						<td class="form_text_right_three">
+							{customerLinkMan}
+						</td>
+						<td class="form_text_left_three">销售负责人</td>
+						<td class="form_text_right_three">
+							{salesman}
+						</td>
+						<td class="form_text_left_three">研发责任人</td>
+						<td class="form_text_right_three">
+							{rdUser}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">项 目 分 类
+					<img src="images/icon/info_up.gif" id="projectInfoImg" onclick="showAndHide('projectInfoImg','projectInfoTbl')"/>
+				</legend>
+				<table class="form_in_table" id="projectInfoTbl">
+					<tr>
+						<td class="form_text_left_three">客户类型</td>
+						<td class="form_text_right_three" >
+							{customerTypeName}
+						</td>
+						<td class="form_text_left_three">项目属性</td>
+						<td class="form_text_right">
+							{attributeName}
+						</td>
+						<td class="form_text_left_three">长/短 期</td>
+						<td class="form_text_right_three">
+							{cycleName}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">项目类别</td>
+						<td class="form_text_right_three">
+							{categoryName}
+						</td>
+						<td class="form_text_left_three">性 质 1</td>
+						<td class="form_text_right_three">
+							{natureName}
+						</td>
+						<td class="form_text_left_three">性 质 2</td>
+						<td class="form_text_right_three">
+							{nature2Name}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">方案及平台</td>
+						<td class="form_text_right_three">
+							{platformName}
+						</td>
+						<td class="form_text_left_three">网 络</td>
+						<td class="form_text_right_three">
+							{netName}
+						</td>
+						<td class="form_text_left_three">建立方式</td>
+						<td class="form_text_right_three">
+							{createTypeName}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">签定方式</td>
+						<td class="form_text_right_three">
+							{signTypeName}
+						</td>
+						<td class="form_text_left_three">工具类型</td>
+						<td class="form_text_right_three" colspan="3">
+							{toolType}
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">合 同 信 息
+					<img src="images/icon/info_up.gif" id="contractImg" onclick="showAndHide('contractImg','contractTbl')"/>
+				</legend>
+				<table class="form_in_table" id="contractTbl">
+					<tr>
+						<td class="form_text_left_three">鼎利合同号</td>
+						<td class="form_text_right_three" >
+							{contractCode}
+						</td>
+						<td class="form_text_left_three">合同业务号</td>
+						<td class="form_text_right_three">
+							{rObjCode}
+						</td>
+						<td class="form_text_left_three">客户名称</td>
+						<td class="form_text_right">
+							{customerName}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">合同国家</td>
+						<td class="form_text_right_three" >
+							{contractCountry}
+						</td>
+						<td class="form_text_left_three">合同省份</td>
+						<td class="form_text_right_three">
+							{contractProvince}
+						</td>
+						<td class="form_text_left_three">合同城市</td>
+						<td class="form_text_right_three">
+							{contractCity}
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">合同金额</td>
+						<td class="form_text_right_three">
+							<span class="formatMoney">{contractMoney}</span>
+						</td>
+						<td class="form_text_left_three">工作占比</td>
+						<td class="form_text_right" colspan="3">
+							{workRate}&nbsp;%
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">描 述 信 息
+					<img src="images/icon/info_up.gif" id="descImg" onclick="showAndHide('descImg','descTbl')"/>
+				</legend>
+				<table class="form_in_table" id="descTbl">
+				    <tr>
+						<td class="form_text_left_three">项目描述</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="textarea_read">{description}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">工作量描述</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="textarea_read">{workDescription}</textarea>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">备注说明</td>
+						<td class="form_text_right" colspan="5">
+							<textarea class="textarea_read">{remark}</textarea>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr id="closeInfo">
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">关 闭 信 息
+					<img src="images/icon/info_up.gif" id="closeImg" onclick="showAndHide('closeImg','closeTbl')"/>
+				</legend>
+				<table class="form_in_table" id="closeTbl">
+				    <tr>
+						<td class="form_text_left_three">关闭日期</td>
+						<td class="form_text_right" colspan="5">
+							{closeDate}
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">关闭说明</td>
+						<td class="form_text_right" colspan="5">
+							<pre>{closeDesc}</pre>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="6">
+			<table class="form_in_table">
+				<tr>
+					<td class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{id}"/>
+						<input type="hidden" id="itemType" value="oa_esm_project"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+			<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</body>
+</html>

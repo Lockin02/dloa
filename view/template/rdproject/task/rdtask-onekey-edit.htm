@@ -1,0 +1,189 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtk_onekey_tab.js"></script>
+
+<script type="text/javascript" src="js/ext/ext-base.js"></script>
+<script type="text/javascript" src="js/ext/ext-all.js"></script>
+<script type="text/javascript" src="js/ext/common-ext.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="js/ext/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="js/ext/css/styles.css" />
+<script type="text/javascript" src="js/ext/ux/grid/MyGrid.class.js"></script>
+<script type="text/javascript"
+	src="js/ext/ux/combox/MyGridComboBox.class.js"></script>
+<script type="text/javascript"
+	src="view/template/common/combogrid/rdProjectinfoComboGrid.js"></script>
+<script type="text/javascript"
+	src="view/template/rdproject/task/js/rdtk_onekey_projectinfo-list.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_rd_task"//业务模块编码，一般取表名
+	});
+});
+</script>
+<script type="text/javascript">
+		function changePlanDuration(sDayEl,eDayEl,el,e2){//自动计算计划工期
+			var subday=plusDateInfo(sDayEl,eDayEl)
+			$("#"+el).val(subday);
+			$("#"+e2).val(subday*8);
+		}
+</script>
+</head>
+<body>
+<form action="?model=rdproject_task_rdtask&action=editOneKey"
+	method="POST" name="form1" onsubmit="return check_all()">
+<table class="form_main_table">
+	<tr>
+		<td class="main_tr_header" colspan="4">基本信息</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务名称</td>
+		<td class="form_text_right" colspan="3">
+			<input id="id" type="hidden" name="rdtask[id]" value={id}>
+			<input type="hidden" name="rdtask['status']" value="{status}">
+			<input class="txt" type="text" id="name" value="{name}" name="rdtask[name]"><span class='red'>[*]</span>
+
+		</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">所属项目</td>
+		<td class="form_view_right"><input type="text"
+			name="rdtask[projectName]" id="projectName" value="{projectName}"> <input
+			type="hidden" id="projectId" name="rdtask[projectId]">
+		<span class='red'>[*]</span></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务类型</td>
+		<td class="form_text_right"><select class="select"
+			name="rdtask[taskType]" value="{taskType}">
+			{taskType}
+		</select><span class='red'>[*]</span></td>
+		<td class="form_text_left">优先级</td>
+		<td class="form_text_right"><select class="select"
+			name="rdtask[priority]">
+			{priority}
+		</select><span class='red'>[*]</span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">计划开始日期</td>
+		<td class="form_text_right"><input class="txt" type="text" onblur="changePlanDuration('planBeginDate','planEndDate','planDuration','appraiseWorkload')"
+			name="rdtask[planBeginDate]" onfocus="WdatePicker()" id="planBeginDate"></td>
+		<td class="form_text_left">计划完成日期</td>
+		<td class="form_text_right"><input class="txt" type="text" onblur="changePlanDuration('planBeginDate','planEndDate','planDuration','appraiseWorkload')"
+			name="rdtask[planEndDate]" onfocus="WdatePicker()" id="planEndDate"></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">估计工作量</td>
+		<td class="form_text_right"><input class="txt" type="text" id="appraiseWorkload"
+			name="rdtask[appraiseWorkload]"></td>
+		<td class="form_text_left">计划工期</td>
+		<td class="form_text_right"><input class="txt" type="text" readOnly
+			name="rdtask[planDuration]" id="planDuration" ></td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">责任人</td>
+		<td class="form_view_right"><input type="hidden" id="chargeId"
+			name="rdtask[chargeId]"> <input type="text" class="txt"
+			id="chargeName" name="rdtask[chargeName]" size="40"
+			value="{chargeName}" readonly> <input type="button"
+			value="选 择" class="txt_btn_a"
+			onclick="loadOrgWindow('chargeId','chargeName')"> <input
+			type="button" value="清 空" class="txt_btn_a"
+			onclick="clearOrgInfo('chargeId','chargeName')"> <span class='red'>[*]</span>
+		</td>
+		<td class="form_text_left">审核人</td>
+		<td class="form_view_right"><input type="hidden" id="auditId"
+			name="rdtask[auditId]"> <input type="text" class="txt"
+			size="40" name="rdtask[auditName]" id="auditName" value="{auditName}"
+			readonly> <input type="button" value="选 择" class="txt_btn_a"
+			onclick="loadOrgWindow2('auditId','auditName')"> <input
+			type="button" value="清 空" class="txt_btn_a"
+			onclick="clearOrgInfo('auditId','auditName')"></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">参与人</td>
+		<td class="form_view_right" colspan="3">
+			<input type="hidden" id="actUserId"  name="rdtask[tkactuser][actUserId]">
+			<input type="text" class="txt"  size="40" name="rdtask[tkactuser][userName]" id="userName" value=""  readonly>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow2('actUserId','userName')">
+			<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('actUserId','userName')"></td>
+
+	</td>
+
+	<tr>
+		<td class="form_text_left">任务描述</td>
+		<td class="form_text_right" colspan="3"><textarea
+			style="width:700" name="rdtask[remark]" value="{remark}"
+			class="txt_txtarea_font"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4"><input type="hidden" id="id" name="task[id]"
+			value="{id}" /> <input type="submit" class="txt_btn_a" value="发布 ">
+		<input name="" type="button" class="txt_btn_a" value="发布&amp;新建 ">
+		<input name="" type="button" class="txt_btn_a" value="保存 "> <input
+			name="" type="button" class="txt_btn_a" value="保存&amp;新建 "> <input
+			name="" type="button" class="txt_btn_a"
+			onclick="self.parent.tb_remove();" value="返回 "></td>
+	</tr>
+</table>
+</form>
+
+<script type="text/javascript">
+function check_all()
+{
+    if ($('#name').val()=='')
+    {
+        alert('任务名称不能为空！');
+        $('#name').focus();
+        return false;
+    }
+    return true;
+}
+</script>
+</body>
+</html>
+

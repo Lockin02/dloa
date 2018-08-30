@@ -1,0 +1,218 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta http-equiv="Content-Language" content="zh_cn"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+	<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css"/>
+	<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet"/>
+	<!-- 主题css，可切换 -->
+	<link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#chargeUserName").yxselect_user({
+				hiddenId: 'chargeUserCode'
+			});
+			//仓库树
+			$("#parentName").yxcombotree({
+				hiddenId: 'parentId',
+				treeOptions: {
+					event: {
+						"node_click": function(event, treeId, treeNode) {
+							// alert(treeId)
+						},
+						"node_change": function(event, treeId, treeNode) {
+							// alert(treeId)
+						}
+					},
+					url: "?model=stock_stockinfo_stockinfo&action=getTreeDataByParentId"
+				}
+			});
+
+			//分公司
+			$("#businessBelongName").yxcombogrid_branch({
+				hiddenId: 'businessBelong',
+				width: 400
+			});
+		});
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	仓库基本信息
+    </span>
+</div>
+<form id="form1" action="?model=stock_stockinfo_stockinfo&action=edit" method="POST">
+	<table class="form_main_table" id="edit">
+		<tr>
+			<td class="form_text_left">仓库代码：</td>
+			<td colspan=3 class="form_text_right">
+				<input type="text" class="txt" id="stockCode" name="stockinfo[stockCode]" value="{stockCode}"/>
+				<span class='red'>[*]</span>
+				<span id="stockCodeTip" class="tipShortTxt"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">仓库名称：</td>
+			<td colspan=3 class="form_text_right">
+				<input type="text" class="txt" id="stockName" name="stockinfo[stockName]" value="{stockName}"/>
+				<span class='red'>[*]</span>
+				<span id="stockNameTip" class="tipShortTxt"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">上级仓库：</td>
+			<td colspan=3 class="form_text_right">
+				<input type="text" readOnly id="parentName" class="txt" name="stockinfo[parentName]"
+					   value="{parentName}"/>
+				<input type="hidden" id="parentId" name="stockinfo[parentId]" value="{parentId}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">仓库用途：</td>
+			<td colspan=3 class="form_text_right">
+				<select class="select" id="stockUseCode" name="stockinfo[stockUseCode]">
+					{stockUseCode}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">归属公司：</td>
+			<td colspan=3 class="form_text_right">
+				<input type="text" name="stockinfo[businessBelongName]" class="txt" id="businessBelongName"
+					   value="{businessBelongName}" readonly="readonly"/>
+				<input type="hidden" name="stockinfo[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+				<input type="hidden" name="stockinfo[formBelong]" id="formBelong" value="{formBelong}"/>
+				<input type="hidden" name="stockinfo[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+				<span class='red'>[*]</span>
+				<span id="businessBelongNameTip" class="tipShortTxt"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">仓库类型：</td>
+			<td colspan=3 class="form_text_right">
+				<select class="select" id="stockType" name="stockinfo[stockType]">
+					{stockType}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">仓库管理员：</td>
+			<td colspan=3 class="form_text_right">
+				<input class="txt" type="text" id="chargeUserName" name="stockinfo[chargeUserName]"
+					   value="{chargeUserName}"/>
+				<input type="hidden" id="chargeUserCode" name="stockinfo[chargeUserCode]" value="{chargeUserCode}"/>
+		</tr>
+		<tr>
+			<td class="form_text_left">仓库地址：</td>
+			<td colspan=3 class="form_text_right">
+				<input style="width:500px" id="adress" name="stockinfo[adress]" value="{adress}"/></td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注：</td>
+			<td colspan=3 class="form_text_right">
+				<textarea style="width:500px" id="remark" name="stockinfo[remark]">{remark}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="hidden" name="stockinfo[id]" value="{id}"/>
+				<input type="submit" value=" 保 存 " class="txt_btn_a">
+				<input type="button" value=" 返 回 " onclick="self.parent.tb_remove();" class="txt_btn_a">
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.formValidator.initConfig({
+			formid: "form1",
+			//autotip: true,
+			onerror: function(msg) {
+			}
+		});
+
+		/** 验证仓库代码* */
+		$("#stockCode").formValidator({
+			onshow: "请输入仓库代码",
+			onfocus: "仓库代码不能为空",
+			oncorrect: "仓库代码有效"
+		}).inputValidator({
+			min: 1,
+			max: 50,
+			empty: {
+				leftempty: false,
+				rightempty: false,
+				emptyerror: "不能存在空格"
+			},
+			onerror: "仓库代码不能为空，请重新输入"
+		}).ajaxValidator({
+			type: "get",
+			url: "index1.php",
+			data: "model=stock_stockinfo_stockinfo&action=checkStockCode&id={id}",
+			datatype: "json",
+			success: function(data) {
+				return data == "1";
+			},
+			buttons: $("#submitSave"),
+			error: function() {
+				alert("服务器没有返回数据，可能服务器忙，请重试");
+			},
+			onerror: "该仓库代码已重复，请更换",
+			onwait: "正在对仓库代码进行合法性校验，请稍候..."
+		});
+
+		/** 验证仓库名称* */
+		$("#stockName").formValidator({
+			onshow: "请输入仓库名称",
+			onfocus: "仓库名称不能为空",
+			oncorrect: "仓库名称有效"
+		}).inputValidator({
+			min: 1,
+			max: 50,
+			empty: {
+				leftempty: false,
+				rightempty: false,
+				emptyerror: "不能存在空格"
+			},
+			onerror: "仓库名称不能为空，请重新输入"
+		});
+
+		/** 归属公司 **/
+		$("#businessBelongName").formValidator({
+			onshow: "请输入归属公司",
+			onfocus: "归属公司不能为空",
+			oncorrect: "归属公司有效"
+		}).inputValidator({
+			min: 1,
+			max: 50,
+			empty: {
+				leftempty: false,
+				rightempty: false,
+				emptyerror: "不能存在空格"
+			},
+			onerror: "归属公司不能为空，请重新输入"
+		});
+	});
+</script>

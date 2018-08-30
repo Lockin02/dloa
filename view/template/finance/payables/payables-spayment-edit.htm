@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+    	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-purchcontract.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-other.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsourccontract.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+		<script type="text/javascript" src="view/template/finance/payables/js/payables-detailcombo.js"></script>
+        <script type="text/javascript" src="view/template/finance/payables/js/payables-spayment-add.js"></script>
+        <script type="text/javascript" src="view/template/finance/payables/js/payables-spayment-add-va.js"></script>
+		<title>预付款单</title>
+	</head>
+<body>
+<form id="form1" method="post" action="?model=finance_payables_payables&action=edit">
+<div class="main_head"><span class="main_head_title">编辑应付付款单</span></div>
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">供应商名称</td>
+		<td class="form_text_right">
+			<input id="supplierName" type="text" class="txt" name="payables[supplierName]" value="{supplierName}"/>
+			<input id="supplierId" type="hidden" name="payables[supplierId]" value="{supplierId}"/>
+			<span class="red">[*]</span>
+			<div id="supplierNameTip" class="dbcolumnTipTxt"></div>
+		</td>
+		<td class="form_text_left">申请单号</td>
+		<td class="form_text_right">
+			<input type="text" value="{payApplyNo}" class="readOnlyTxtNormal" readonly="readonly"/>
+			<input type="hidden" name="payables[payApplyId]" value="{payApplyId}" class="readOnlyTxtNormal" readonly="readonly"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">付款银行</td>
+		<td class="form_text_right">
+			<input type="text" name="payables[bank]" class="txt" value="{bank}"/>
+		</td>
+		<td class="form_text_left">银行账号</td>
+		<td class="form_text_right">
+			<input type="text" name="payables[account]" class="txt" value="{account}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">付款时间</td>
+		<td class="form_text_right">
+			<input id="formDate" type="text"  onfocus="WdatePicker()" name="payables[formDate]" class="txt" value="{formDate}"/>
+		</td>
+		<td class="form_text_left">结算方式</td>
+		<td class="form_text_right">
+			<select id="payType" name="payables[payType]" class="txt"/>
+				{payType}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">部门</td>
+		<td class="form_text_right" width="30%">
+			<input id="deptName" type="text" name="payables[deptName]" class="txt" value="{deptName}" readonly="readonly"/>
+			<input id="deptId" type="hidden" name="payables[deptId]" value="{deptId}"/>
+		</td>
+		<td class="form_text_left">业务员</td>
+		<td class="form_text_right">
+			<input id="salesman" type="text" name="payables[salesman]" class="txt" value="{salesman}" readonly="readonly"/>
+			<input id="salesmanId" type="hidden" name="payables[salesmanId]" value="{salesmanId}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">单据金额</td>
+		<td class="form_text_right">
+			<input id="amount" type="text" name="payables[amount]" class="readOnlyTxtNormal formatMoney" value="{amount}" readonly="readonly"/>
+		</td>
+		<td class="form_text_left">归属公司</td>
+		<td class="form_text_right">
+			<input name="payables[businessBelongName]" id="businessBelongName" class="txt" value="{businessBelongName}" readonly="readonly"/>
+			<input type="hidden" name="payables[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+			<input type="hidden" name="payables[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+			<input type="hidden" name="payables[formBelong]" id="formBelong" value="{formBelong}"/>
+			<span class="red">[*]</span>
+			<div id="businessBelongNameTip" class="dbcolumnTipTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td colspan="3" class="form_text_right">
+			<textarea class="txt_txtarea_font" name="payables[remark]">{remark}</textarea>
+		</td>
+	</tr>
+</table>
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr>
+			<td align="left" colspan="5">详细</td>
+			<td width="5%">
+				<input type="hidden" id="coutNumb" name="coutNumb" value="{coutNumb}" />
+				<img src="images/collapsed.gif" onclick="add();" title="添加行"/>
+			</td>
+		</tr>
+	</thead>
+	<tbody id="mytbody">
+        <tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th width="14%">源单类型</th>
+			<th width="25%">源单编号</th>
+			<th width="14%">金额</th>
+			<th>付款明细</th>
+			<th width="5%">删除</th>
+		</tr>
+		{detail}
+	</tbody>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td>
+			<input type="hidden" value="{id}" name="payables[id]"/>
+			<input type="hidden" value="{formType}" name="payables[formType]"/>
+
+			<input type="submit" value=" 提交 " class="txt_btn_a"/>
+			<input type="button" onclick="self.parent.tb_remove();" value=" 返回 "  class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

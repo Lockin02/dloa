@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/stockinfo-add.js" ></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=report_report_stockinfo&action=add" >
+      <table class="form_main_table">
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">设备类型</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="budgetTypeName" name="stockinfo[budgetTypeName]" />
+      			 <input type="hidden" id="budgetTypeId" name="stockinfo[budgetTypeId]"/>
+      		</td>
+　　　　　　　<td colspan="2">
+                  <img src="images/icon/icon095.gif" onclick="removeProduct()"/>
+      			 <span style="color:blue"> 提示：如需手工输入请点击 设备名称/编号 前的图标</span>
+            </td>
+       </tr>
+       <tr>
+            <td class="form_text_left">
+      		  <img src="images/menu/a.gif" onclick="removeProduct()"/>
+      		  <span style="color:blue">设备名称</span>
+      		</td>
+      		<td class="form_text_right">
+      			 <input type="text" class="txt" id="equName" name="stockinfo[equName]" />
+      		</td>
+            <td class="form_text_left" >
+               <img src="images/menu/a.gif" onclick="removeProduct()"/>
+                设备编号
+            </td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="equCode" name="stockinfo[equCode]" />
+      			 <input type="hidden" class="txt" id="equId" name="stockinfo[equId]" />
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">
+               <img src="images/menu/a.gif" onclick="removeLinkEqu()"/>
+                 选择关联设备<span id="tagName" style="color:red">(物料)</span>
+            </td>
+      		<td class="form_text_right"  colspan="3">
+      		     <img src="images/icon/icon095.gif" onclick="removeProduct()"/>
+      			 <span style="color:blue"> 提示：点击前面的图标，可切换选择物料或分类</span>
+      			 <input type="text" class="txtbiglong" id="linkequNames" name="stockinfo[linkequNames]" />
+      			 <input type="hidden" class="txtbiglong" id="linkequIds" name="stockinfo[linkequIds]" />
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">规格型号</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="text" class="txtbiglong" id="pattern" name="stockinfo[pattern]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">单位</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="unitName" name="stockinfo[unitName]" />
+      		</td>
+      		<td class="form_text_left">品牌</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="brand" name="stockinfo[brand]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">采购时间(天)</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="purTime" name="stockinfo[purTime]" />
+      		</td>
+      		<td class="form_text_left">是否停产</td>
+      		<td class="form_text_right" >
+      			 <select class="select" name="stockinfo[isStop]">
+      			     <option value="0">否</option>
+      			     <option value="1">是</option>
+      			 </select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">正常交付时间(天)</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="DeliverTime" name="stockinfo[DeliverTime]" />
+      		</td>
+      		<td class="form_text_left">缺货交付时间(天)</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="unDeliverTime" name="stockinfo[unDeliverTime]" />
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">支持网络</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="hidden" class="txtbiglong" id="netWork" name="stockinfo[netWork]" />
+      			 {newWorkStr}
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">支持软件/应用终端</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="hidden" class="txtbiglong" id="software" name="stockinfo[software]" />
+      			 {softWareStr}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">库存数量</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="stockNum" name="stockinfo[stockNum]" readonly/>
+      		</td>
+      		<td class="form_text_left">旧设备数量</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="oldNum" name="stockinfo[oldNum]" readonly/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">累计需求</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="demandNum" name="stockinfo[demandNum]" readonly/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">备注</td>
+      		<td class="form_text_right" colspan="3">
+      			<textarea style="width:600px;" id="remark" class="txt_txtarea_font" name="stockinfo[remark]"></textarea>
+      		</td>
+       </tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input type="hidden" id="linkequType" name="stockinfo[linkequType]" value="0" />
+      		   <input type="hidden" class="txt" id="dataType" name="stockinfo[dataType]" value="{dataType}"/>
+      		   <input type="hidden" class="txt" id="useStatus" name="stockinfo[useStatus]" value="1"/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

@@ -1,0 +1,119 @@
+// 取得当前时间
+// <script type="text/javascript">
+// $("#payTime").val(formatDate(new Date()));
+// </script>
+
+// 选择省份
+$(function() {
+
+	$("#customerProvince").yxcombogrid_province({
+				hiddenId : 'clustomerProvinceId',
+				gridOptions : {
+					showcheckbox : false
+				}
+			});
+	$("#createSection").yxselect_dept({
+				hiddenId : 'createSectionId'
+			});
+	$("#createName").yxselect_user({
+				hiddenId : 'createNameId'
+			});
+	// 线索来源
+	cluesSourceArr = getData('XSLY');
+	addDataToSelect(cluesSourceArr, 'cluesSource');
+		// addDataToSelect(cluesSourceArr, 'customerListTypeArr1');
+	});
+
+function reloadCombo() {
+	// alert( $("#customerLinkman").yxcombogrid('grid').param );
+	$("#customerLinkman").yxcombogrid('grid').reload;
+}
+// 客户联系人
+function reloadCombo() {
+	// alert( $("#customerLinkman").yxcombogrid('grid').param );
+	$("#customerLinkman").yxcombogrid('grid').reload;
+
+}
+
+$(function() {
+
+			$("#provincecity").yxcombogrid_province({
+						hiddenId : 'provinceId',
+						gridOptions : {
+							showcheckbox : false
+						}
+					});
+		});
+
+$(function() {
+			$("#customerName").yxcombogrid_customer({
+				hiddenId : 'customerId',
+				gridOptions : {
+					showcheckbox : false,
+					// param :{"contid":$('#contractId').val()},
+					event : {
+						'row_dblclick' : function(e, row, data) {
+							var getGrid = function() {
+								return $("#customerLinkman")
+										.yxcombogrid_linkman("getGrid");
+							}
+							var getGridOptions = function() {
+								return $("#customerLinkman")
+										.yxcombogrid_linkman("getGridOptions");
+							}
+							if (getGrid().reload) {
+								getGridOptions().param = {
+									customerId : data.id
+								};
+								getGrid().reload();
+							} else {
+								getGridOptions().param = {
+									customerId : data.id
+								}
+							}
+
+							$("#customerType").val(data.TypeOne);
+							$("#customerProvince").val(data.Prov);
+							$("#customerId").val(data.id);
+							// $("#customerLinkman").yxcombogrid('grid').param={}
+							// $("#customerLinkman").yxcombogrid('grid').reload;
+						}
+					}
+				}
+			});
+			// customerId = $("#customerId").val()
+			// $("#customerId").val(customerId)
+			$("#customerLinkman").yxcombogrid_linkman({
+						hiddenId : 'customerLinkmanId',
+						gridOptions : {
+							reload : true,
+							showcheckbox : false,
+							// param : param,
+							event : {
+								'row_dblclick' : function(e, row, data) {
+									// alert( $('#customerId').val() );
+									// unset($('#customerId'));
+									$("#customerName").val(data.customerName);
+									$("#customerId").val(data.customerId);
+									$("#customerTel").val(data.mobile);
+									$("#customerEmail").val(data.email);
+								}
+							}
+						}
+					});
+
+		});
+
+$(function() {
+	// 客户类型
+	customerTypeArr = getData('KHLX');
+	addDataToSelect(customerTypeArr, 'customerType');
+		// addDataToSelect(customerTypeArr, 'customerListTypeArr1');
+	});
+// 跟踪页面-- 跟踪类型
+$(function() {
+
+			trackTypeArr = getData('GZLX');
+			addDataToSelect(trackTypeArr, 'trackType');
+
+		});

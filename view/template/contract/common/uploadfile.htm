@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>销售合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-orderTempCode.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+<script type="text/javascript" src="View/template/projectmanagent/order/js/order-orderadd.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/order/js/order-add-formValidator.js"></script>
+<script>
+
+      function orderSign(obj) {
+         if(obj.value == "是"){
+            document.getElementById("orderCodeDiv").style.display="";
+            document.getElementById("condition").style.display="";
+            toSelect();
+            $("#myequ").children().remove();
+            $("#productNumber").val(0);
+            $("#myinv").children().remove();
+            $("#InvNum").val(0);
+            $("#mypay").children().remove();
+            $("#PayNum").val(0);
+            $("#mytra").children().remove();
+            $("#TraNumber").val(0);
+            $("#orderCode").attr("disabled",false);
+            $("#orderTempMoney_v").unFormValidator(true);
+            $("#orderMoney_v").unFormValidator(false);
+            $("#orderState").attr('checked',true);
+            if( $("#orderInput").val() == '0'){
+              $("#orderTempCode").unFormValidator(true);
+              $("#orderCode").unFormValidator(false);
+              $("#orderTempCode").attr('class',"readOnlyTxtNormal");
+            }
+         }else {
+            document.getElementById("orderCodeDiv").style.display="none";
+            document.getElementById("condition").style.display="none";
+            $("#orderTempCode").yxcombogrid_orderTempCode('destroy');
+            $("#orderTempCode").attr('readonly',false);
+            $("#orderCode").val("");
+            $("#orderCode").attr("disabled",true);
+            $("#orderTempMoney_v").unFormValidator(false);
+            $("#orderMoney_v").unFormValidator(true);
+            $("#orderState").attr('checked',false);
+            $("#orderState1").attr('checked',false);
+            if($("#orderInput").val() == '0'){
+               $("#orderTempCode").unFormValidator(false);
+               $("#orderCode").unFormValidator(true);
+               $("#orderTempCode").attr('class',"txt");
+               $("#orderTempCode").attr('readOnly',false);
+            }
+         }
+      }
+
+      function parent(obj){
+         if(obj.value == "是"){
+            document.getElementById("parentOrder").style.display="";
+            $("#parentOrder").attr("disabled",false);
+         }else{
+            document.getElementById("parentOrder").style.display="none";
+            $("#parentOrder").attr("disabled",true);
+         }
+      }
+
+</script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_sale_order"//业务模块编码，一般取表名
+	});
+});
+
+
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=projectmanagent_order_order&action=add">
+<table class="form_main_table">
+	 <tr>
+				<td class="form_text_left">附件</td>
+				<td class="form_text_right" colspan="3">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span>
+				   <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+
+				</td>
+	</tr>
+
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="toSave();"/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

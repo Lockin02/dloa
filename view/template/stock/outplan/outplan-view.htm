@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>查看发货计划</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+<script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+<script type="text/javascript" src="js/jquery/component.js">
+        </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8">
+        </script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8">
+        </script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-product.js">
+		</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-customer.js">
+		</script>
+<script type="text/javascript"
+	src="js/jquery/combo/business/yxcombogrid-stockinfo.js">
+		</script>
+<!--<script type="text/javascript"-->
+<!--	src="view/template/stock/outplan/js/outplan-add.js">-->
+        </script>
+<script type="text/javascript"
+	src="view/template/stock/outplan/js/outplan-view.js">
+        </script>
+<script type="text/javascript"
+	src="view/template/stock/outplan/js/outplan-BToOEqu-view.js">
+        </script>
+<script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script>
+//发货类型非换货需求的，不显示保修状况
+$(function(){
+	if($('#docType').val() != "oa_contract_exchangeapply"){
+		$('#isWarranty').hide();
+		$('#isWarranty').next("td").hide();
+		$('#isWarranty').prev("td").attr("colspan",3);
+	}
+});
+</script>
+</head>
+<body>
+<form id="form1" method="post" name="form1">
+<table class="form_main_table">
+	<tr>
+		<div class="main_head"><span class="main_head_title">
+		查看发货计划<input type="hidden" id="pageAction" value="{pageAction}" /> <input
+			type="button" class="txt_btn_a" id="changeTipsBtn" value="取消变更提示"
+			onclick="cencleTips();" /> </span></div>
+	</tr>
+	<tr>
+		<td>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">发货计划编号</td>
+				<td class="form_text_right" colspan="3"><input type="hidden"
+					class="txt" id="id" value="{id}" /> <input type="hidden"
+					class="txt" id="planId" name="outplan[id]" value="{id}" /> <input
+					type="hidden" class="txt" id="changeTips"
+					name="outplan[changeTips]" value="{changeTips}" /> <input
+					type="hidden" class="txt" name="outplan[docType]" id="docType"
+					value="{docType}" /> {planCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">源单号</td>
+				<td class="form_text_right" width=30%>{docCode}</td>
+				<td class="form_text_left">源单名称</td>
+				<td class="form_text_right">{docName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right" colspan=3>{customerName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">周次</td>
+				<td class="form_text_right">{week}</td>
+				<td class="form_text_left">性质</td>
+				<td class="form_text_right">{type}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">下达日期</td>
+				<td class="form_text_right">{planIssuedDate}</td>
+				<td class="form_text_left">计划发货日期</td>
+				<td class="form_text_right">{shipPlanDate}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货仓库</td>
+				<td class="form_text_right">{stockName}</td>
+				<td class="form_text_left" id="isWarranty">保修状况</td>
+				<td class="form_text_right">{isWarrantyName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货地址</td>
+				<td class="form_text_right" colspan="3"><span
+					class="divChangeLine">{address}</span></td>
+			</tr>
+			<tr>
+				<td class="form_text_left">采购人员关注重点</td>
+				<td class="form_text_right" colspan="3">
+					<div id="divChangeLine" class="divChangeLine" >{purConcern}</div>
+			</tr>
+			<tr>
+				<td class="form_text_left">发货人员关注</td>
+				<td class="form_text_right" colspan="3">
+					<div id="divChangeLine" class="divChangeLine" >{shipConcern}</div></td>
+			</tr>
+			<tr>
+				<td class="form_text_left">附件</td>
+				<td class="form_text_right" colspan="3">
+					<div id="files">
+						{files}
+					</div>
+				</td>
+			</tr>
+			<tr class="Feedback">
+				<td class="form_text_left">是否发货</td>
+				<td class="form_text_right"><input type="radio"
+					name="outplan[isShipped]" value="1" />&nbsp;是 <input type="radio"
+					name="outplan[isShipped]" value="0" checked />&nbsp;否</td>
+				<td class="form_text_left">是否按时发货</td>
+				<td class="form_text_right"><input type="radio"
+					name="outplan[isOnTime]" value="1" />&nbsp;是 <input type="radio"
+					name="outplan[isOnTime]" value="0" checked />&nbsp;否</td>
+			</tr>
+			<tr class="Feedback">
+				<td class="form_text_left">延期原因归类</td>
+				<td class="form_text_right"><input type="text" class="txt"
+					name="outplan[delayType]" /></td>
+			</tr>
+			<tr class="Feedback">
+				<td class="form_text_left">未发具体原因</td>
+				<td class="form_text_right" colspan="3"><textarea
+					name="outplan[delayReason]" class="txt_txtarea_font"
+					id="delayReason"></textarea></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr id="borrowTr">
+		<td>
+		<div id="BToOEqu"></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan=9">物料清单&nbsp;&nbsp;&nbsp; <input type="button"
+						id="showHiddenItemBtn" class="txt_btn_a" value="显示/隐藏变更删除列"
+						onclick="showHiddenItem();" /></td>
+					<td align="center" width="4%"><input type="hidden"
+						id="invnumber" value="1" /> <img src="images/verpic_open.gif"
+						onclick="dis('invbody')" title="缩放" /></td>
+				</tr>
+			</thead>
+			<tbody id="invbody">
+				<tr class="main_tr_header">
+					<th>序号</th>
+					<!--                        <th>
+                            产品线
+                        </th>-->
+					<th>产品编号</th>
+					<th>产品名称</th>
+					<th>规格型号</th>
+					<th>出货仓库名称</th>
+					<th>数量</th>
+					<th>单位</th>
+					<th>已出库数量</th>
+					<th>赠送</th>
+					<th>即时库存</th>
+				</tr>
+				{products}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+	<table class="form_main_table">
+		<tr>
+			<td class="txt_btn" colspan="4"><input type="button"
+				class="txt_btn_a" value="关  闭" onclick="closeFun();" /></td>
+		</tr>
+	</table>
+	<font id="ifChange" color="blue">提示：本页面中，<font color="red">红色</font>字体表示变更过的项。</font>
+	</div>
+</form>
+</body>
+</html>

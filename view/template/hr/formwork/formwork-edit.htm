@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑人资模板设置</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/formwork-edit.js" ></script>
+      <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+   <script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+   <script>
+	$(document).ready(function() {
+		$( 'textarea.editor' ).ckeditor();
+		var content = $("#content").html();
+		$("#formworkContent").val(content);
+	});
+</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_formwork_formwork&action=edit" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	编辑人资模板设置信息
+             </span>
+         </div>
+      </td>
+   </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">模板名称</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="formworkName" name="formwork[formworkName]" value="{formworkName}"/>
+      		</td>
+      		<td class="form_text_left">是否启用</td>
+      		<td class="form_text_right" >
+      			 <input type="radio" name="formwork[isUse]" value="0" {yes}/>启用
+      			 <input type="radio" name="formwork[isUse]" value="1" {no}/>关闭
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">模板内容</td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea  id="formworkContent" name="formwork[formworkContent]" class="editor"></textarea>
+      		</td>
+       </tr>
+        <tr>
+      		<td id="content" style="display:none">
+      		    {formworkContent}
+      		</td>
+       </tr>
+           <tr>
+   		<td class="txt_btn" colspan="4">
+            <input  type="hidden" id="id" name="formwork[id]" value="{id}" />
+   		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+   		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+   		</td>
+        </tr>
+     </table>
+  </form>
+ </body>
+</html>

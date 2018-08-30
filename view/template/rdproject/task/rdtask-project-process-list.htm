@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>项目任务进展视图</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/datePicker.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript">
+
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toProTkProcessPage";
+			}
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				this.location="?model=rdproject_task_rdtask&action=toProTkProcessPage&pjId={pjId}&"+searchfield+"="+searchvalue;
+			}
+			function changeList(){
+					var startDate=$("#startDate").val();
+					var endDate=$("#endDate").val();
+					var projectId=$("#pjId").val();
+
+					if(startDate!=""&&endDate!=""){
+						if( endDate < startDate){
+							alert('截止日期必须大于开始日期！');
+							$("#endDate").val('')
+						}else{
+							this.location="?model=rdproject_task_rdtask&action=toProTkProcessPage&beginDate="+startDate+"&endDate="+endDate+"&pjId="+projectId;
+						}
+					}else
+						alert("请输入起止时间");
+			}
+</script>
+
+
+</head>
+<body>
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" value="" />
+			 <input type="hidden" id="pjId" value="{pjId}" />
+			 按 <select	id="searchfield" class="select">
+			<option value="name">任务名称</option>
+			<!-- option value="chargeName">责任人</option>
+			<option value="publicName">发布人</option -->
+		</select> <input type="button" value=" 搜索 " class="txt_btn_a"
+			onclick="search()" /></td>
+		<td>
+			开始日期:<input type="text" class="txt" onfocus="WdatePicker()" id="startDate">&nbsp 截止时间:<input type="text" class="txt" onfocus="WdatePicker()" id="endDate">
+			&nbsp&nbsp<input type="button" value=" 确定 " class="txt_btn_a" onclick="changeList()" />
+		</td>
+
+	</tr>
+</table>
+<table class="main_table">
+	<thead>
+	{tbhead}
+	</thead>
+</table>
+</div>
+{pageDiv}
+</body>
+
+</html>

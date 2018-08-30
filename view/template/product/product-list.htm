@@ -1,0 +1,540 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <script type="text/javascript">
+        var product_audit='{product_audit}';
+        var product_manager = '{product_manager}';
+        $(function(){
+            $('#tt').datagrid({
+            	view: detailview,
+				detailFormatter:function(index,row){
+					return '<div id="ddv-' + index + '" style="padding:5px 0;"></div>';
+				},onExpandRow: function(index,row){
+					$('#ddv-'+index).panel({
+						border:false,
+						cache:false,
+						href:'?model={t_model}&action=get_project&id='+row.id,
+						onLoad:function(){
+							$('#tt').datagrid('fixDetailRowHeight',index);
+						}
+					});
+					$('#tt').datagrid('fixDetailRowHeight',index);
+				},
+            	title: '以下记录可双击显示详细信息',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:40,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',
+                columns: [[/*{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, */{
+                    field: 'typename',
+                    title: '产品类型',
+                    width: 200,
+                    align: 'left'
+                },{
+                    field: 'product_name',
+                    title: '中文名称',
+                    width: 180,
+                    align: 'left',
+                    editor: 'text'
+                },{
+                	field: 'en_product_name',
+                	title:'英文名称',
+                	width:180,
+                	align:'left'
+                },/*{
+                	field:'hasp',
+                	title:'产品HASP号',
+                	width:75,
+                	align:'center'
+                },*/{
+                	field:'state',
+                	title:'产品状态',
+                	width:70,
+                	align:'left',
+                	formatter: function(value, row, index){
+                		if (value == 1){
+                			return '成熟';
+                		}else if (value == 0){
+                			return '不成熟'
+                		}else if (value == 2){
+                			return '定型中';
+                		}else if (value == 3){
+                			return '停止维护';
+                		}
+                	}
+                },{
+                	field: 'status',
+                	title:'审批状态',
+                	width:60,
+                	align:'left',
+                	formatter: function(value, row, index){
+                		if (value == 1)
+                		{
+                			return '已通过';
+                		}else if (value == -1){
+                			return '<a href="javascript:show_remark('+index+');" title="查看被打回理由">被打回</a>';
+                		}else if (value == 0){
+                			return '<span style="color:red">待审批</span>';
+                		}
+                	}
+                },{
+                	field: 'manager_name',
+                	title:'产品经理',
+                	width:70,
+                	align:'left'
+                },{
+                	field: 'assistant_name',
+                	title:'产品助理',
+                	width:100,
+                	align:'left'
+                },{
+                	field: 'description',
+                	title:'描述',
+                	width:250,
+                	align:'left',
+                	formatter: function(value, row, index){
+                		return '<span title="'+value+'">'+value+'</span>';
+                	}
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                    	var a = '<a href="#" onclick="show_info(' + index + ')">查看</a> | ';
+                        var e = '<a href="#" onclick="edit(' + index + ')">修改</a> | ';
+                        var d = '<a href="#" onclick="del(' + index + ')">删除</a>';
+                        var b = ' | <a href="#" onclick="audit(' + index + ')">审核</a>';
+                        if (product_audit !='')
+                        {
+                        	return a+e+d+b;
+                        }else if (product_manager != ''){
+                        	return a+e;
+                        }else{
+                        	return '<a href="#" onclick="show_info(' + index + ')">查看详细</a>';
+                        }
+                            
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				},
+				onDblClickRow:function(index,row){
+					show_info(index);
+				}
+            });
+            
+            if (product_manager != '' || product_audit !='')
+    		{
+    			$('#tt').datagrid('getPager').pagination({
+    				buttons : [ {
+    					iconCls : 'icon-add',
+    					text : '申请添加产品',
+    					handler : function() {
+    						add();
+    					}
+    				} ]
+    			});
+    		}
+            
+            $("#manager_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#manager').val(data.user_id);
+                }
+                else {
+                    $('#manager').val('');
+                }
+            });
+            $("#assistant_name").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: true,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            });
+
+        });
+        //详细
+        function show_info(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            for(field in row)
+            {
+            	if (field == 'status')
+            	{
+            		$('#_'+field).html(row[field]== 1 ? '已通过' : (row[field]==-1 ? '被打回' : '待审批'));
+            	}else if (field == 'state'){
+            		
+            		var str = row.state == 1 ? '成熟':(row.state == 0 ? '不成熟':(row.state==2 ? '定型中' : '停止维护'));
+            		$('#_'+field).html(str);
+            	}else{
+            		$('#_'+field).html(row[field]);
+            	}
+            }
+            $('#show').window({title:'查看 '+row.product_name+' 产品详细信息'});
+            $('#show').window('open');
+        }
+        //增加
+        function add()
+        {
+        	$('#add div div input[type=hidden]').val('');
+        	$('#add div div input[type=text]').val('');
+        	$('#add div div select').attr('value','');
+        	$('#add div div textarea').val('');
+        	$('#add').window({title:'申请添加产品'});
+        	$('#add').window('open');
+        }
+        //修改
+        function edit(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            for(field in row)
+            {
+            	$('#'+field).val(row[field]);
+            }
+            $('#add').window({title:'修改产品 '+row.product_name});
+        	$('#add').window('open');
+        }
+        //保存
+        function save()
+        {
+        	var id = $('#id').val();
+        	var manager = $('#manager').val();
+        	var assistant_name = $('#assistant_name').val();
+        	var product_name = $('#product_name').val();
+        	var en_product_name = $('#en_product_name').val();
+        	var typeid = $('#typeid').val();
+        	var hasp = $('#hasp').val();
+        	var state = $('#state').val();
+        	var description = $('#description').val();
+        	
+        	var msg = '';
+        	if (product_name == '') msg +=' - 请填写中文名称!\r\n';
+        	if (typeid == '') msg +=' - 请选择产品类型！\r\n';
+        	if (state == '') msg +=' - 请选择产品状态！\r\n';
+        	if (manager == '') msg += '- 请填写产品经理！\r\n';
+        	if (description == '') msg +=' - 请填写产品描述！';
+        	
+        	if (msg !='')
+        	{
+        		alert(msg);	
+        	}else{
+        		$.post('?model={t_model}&action=save',{
+        			id:id,
+        			manager:manager,
+        			assistant_name:assistant_name,
+        			product_name:product_name,
+        			en_product_name:en_product_name,
+        			typeid:typeid,
+        			hasp:hasp,
+        			state:state,
+        			description:description,
+        			rand:Math.random()
+        		},function (data){
+        			if (data == 1)
+        			{
+        				$('#add').window('close');
+        				$('#tt').datagrid('reload');
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+        				});
+        			}else{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作失败，请与OA管理员联系！',
+	                        timeout: 3000,
+	                        showType: 'show'
+        				});
+        			}
+        		})
+        	}
+        	
+        }
+        //审批
+        function audit(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            $('#product_id').val(row.id);
+            $('input[type=radio][name=status][value=1]').attr('checked',true);
+            $('#remark').val('');
+            $('#audit').dialog({title:'审批 '+row.product_name});
+            $('#audit').dialog('open');
+        }
+        //设置备注标题
+        function set_remark_title(val)
+        {
+        	if (val == 1)
+        	{
+        		$('#remark_title').html('备注说明：');
+        	}else{
+        		$('#remark_title').html('打回理由：');
+        	}
+        }
+        //保存审批
+        function save_audit()
+        {
+        	var id = $('#product_id').val();
+        	var status = $('input[type=radio][name=status]:checked').val();
+        	var remark = $('#remark').val();
+        	if (status == -1 && remark=='')
+        	{
+        		alert('请填写打回理由！');
+        		return false;
+        	}else {
+        		$.post('?model={t_model}&action=save_audit',{id:id,status:status,remark:remark,rand:Math.random()},function(data){
+        			if (data == 1)
+        			{
+        				$('#audit').dialog('close');
+        				$('#tt').datagrid('reload');
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+        				});
+        			}else{
+        				$.messager.show({
+	                        title: '提示',
+	                        msg: '操作失败，请与OA管理员联系！',
+	                        timeout: 3000,
+	                        showType: 'show'
+        				});
+        			}
+        		});
+        	}
+        }
+        //删除
+        function del(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            $.messager.confirm('删除确认','您确定要删除 '+row.product_name+' 产品吗？',function(r){
+            	if (r){
+            		$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random()},function(data){
+            			if (data == 1){
+	        				$('#tt').datagrid('reload');
+	        				$.messager.show({
+		                        title: '提示',
+		                        msg: '操作成功！',
+		                        timeout: 3000,
+		                        showType: 'show'
+	        				});
+            			}else{
+            				$.messager.show({
+    	                        title: '提示',
+    	                        msg: '操作失败，请与OA管理员联系！',
+    	                        timeout: 3000,
+    	                        showType: 'show'
+            				});
+            			}
+            		});
+            	}
+            });
+        }
+        
+        function show_remark(index)
+        {
+        	$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+            
+            $.messager.alert('打回理由',row.remark);
+        }
+        function GetSearch()
+        {
+        	var keyword = $('#keyword').val();
+        	var typeid = $('#select_typeid').val();
+        	$('#tt').datagrid({
+                url: '?model={t_model}&action=list_data&typeid='+typeid+'&keyword='+keyword
+            });
+            $('#tt').datagrid('reload');
+        }
+        </script>
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; width:100px;}
+       		.show_info p {margin:0px; padding:0px; width:600px; float:left; height:25px;}
+			.show_info span {width:200px; display:block; float:left;}
+        	a {text-decoration:none;}
+        </style>
+    </head>
+    <body>
+        <table id="tt" toolbar="#tb"></table>
+        <div id="tb" style="padding:5px;height:auto;">
+			<div>
+				类型筛选: 
+				<select id="select_typeid" name="select_typeid" onchange="GetSearch();">
+				<option value="">所有类型</option>
+				{type_option}
+				</select>
+				关键字:
+				<input type="text" name="keyword" id="keyword" value="" />
+				<a href="#" class="easyui-linkbutton" onclick="GetSearch();" iconCls="icon-search">search</a>
+			</div>
+		</div>
+        
+        <div id="show" region="center" border="false" class="easyui-window" closed="true" style="width:650px;height: 400px;padding: 5px;">
+	        <div class="easyui-layout" fit="true">
+		        <div class="show_info" region="center" border="false">
+		        	<p>
+						<label>中文名称：</label><span id="_product_name"></span>
+						<label>英文名称：</label><span id="_en_product_name"></span>
+					</p>
+					<p>
+						<label>产品类型：</label><span id="_typename"></span>
+					</p>
+					<p>
+						<label>产品经理：</label><span id="_manager_name"></span>
+						<label>产品助理：</label><span id="_assistant"></span>
+					</p>
+					<p>
+						<label>产品状态：</label><span id="_state"></span>
+						<label>审批状态：</label><span id="_status"></span>
+					</p>
+					<p style="height:60px;">
+						<label style=" line-height: 70px;">产品描述：</label>
+						<span id="_description" style="width: 80%; float: left; line-height: 25px;"></span>
+					</p>
+		        </div>
+		        <div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="$('#show').window('close');" value=" 关闭返回 " />
+				</form>
+			</div>
+		        
+	       </div>
+       </div>
+       <div id="add" region="center" border="false" class="easyui-window" closed="true" style="width:650px;height: 400px;padding: 5px;">
+	        <div class="easyui-layout" fit="true">
+		        <div class="show_info" region="center" border="false">
+		        	<input type="hidden" id="id" name="id" />
+		        	<input type="hidden" id="manager" name="manager" />
+		        	<p>
+						<label>中文名称：</label><span><input type="text" id="product_name" name="product_name" value="" /></span>
+						<label>英文名称：</label><span ><input type="text" id="en_product_name" name="en_product_name" value="" /></span>
+					</p>
+					<p>
+						<label>产品类型：</label><span><select id="typeid" name="typeid"><option value="">请选择产品类型</option>{type_option}</select></span>
+					</p>
+					<p>
+						<label>产品HASP号：</label><span><input type="text" id="hasp" name="hasp" value="" /></span>
+						<label>产品状态：</label>
+						<span>
+							<select id="state" name="state">
+								<option value="">请选择产品状态</option>
+								<option value="1">成熟</option>
+								<option value="0">不成熟</option>
+								<option value="2">定型中</option>
+								<option value="3">停止维护</option>
+							</select>
+						</span>
+					</p>
+					<p>
+						<label>产品经理：</label><span><input type="text" id="manager_name" name="manager_name" value="" /></span>
+						<label>产品助理：</label><span><input type="text" id="assistant_name" name="assistant_name" value="" /></span>
+					</p>
+					<p style="height:60px;">
+						<label style=" line-height: 70px;">描述：</label>
+						<textarea style="width:80%;height:60px;" id="description" name="description"></textarea>
+						</span>
+					</p>
+		        </div>
+		        <div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定提交 " />
+				<input type="button" onclick="$('#add').window('close');" value=" 取消返回 " />
+				</form>
+			</div>
+		        
+	       </div>
+       </div>
+       
+       <div id="audit" class="easyui-dialog" icon="icon-save" closed="true" style="width:400px;height: 200px;">
+       		<div style="text-align: center; height: 30px; line-height: 30px">
+       			<input type="hidden" id="product_id" value="" />
+       			<input type="radio" checked onclick="set_remark_title(1);" name="status" value="1" /> 通过 
+       			<input type="radio" name="status" onclick="set_remark_title(-1);" value="-1" /> 打回 
+       		</div>
+       		<div>
+       			<table>
+       				<tr>
+       					<td width="60" id="remark_title">备注说明:</td>
+       					<td><textarea rows="6" style="width:300px;height: 60px;" id="remark" name="remark"></textarea></td>
+       				</tr>
+       			</table>
+       		</div>
+       		<div id="dlg-buttons" style="text-align: center;height: 50px;line-height: 50px;">
+				<a href="#" class="easyui-linkbutton" onclick="javascript:save_audit();">确定</a>
+				<a href="#" class="easyui-linkbutton" onclick="javascript:$('#audit').dialog('close')">返回</a>
+			</div>
+       </div>
+    </body>
+</html>

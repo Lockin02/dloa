@@ -1,0 +1,58 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>查看质检申请单</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/qualityapplyitem-confirmpass.js"></script>
+</head>
+<body>
+
+<table class="form_main_table">
+    <tr>
+        <td colspan="4">
+            <div class="main_head2"><span class="main_head_title">
+		确认物料质检放行</span></div>
+        </td>
+    </tr>
+</table>
+<div id="itemTable"></div>
+<table class="form_main_table">
+    <tr>
+        <td class="form_text_left">放行原因
+        </td>
+        <td colspan="3" class="form_text_right">
+            <textarea class="txt_txtarea_font" id="passReason"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">是否邮件通知
+        </td>
+        <td colspan="3" class="form_text_right">
+            <input type="radio" name="issend" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+            <input type="radio" name="issend" value="n" onclick="checkEmailTA(this)"/>否
+        </td>
+    </tr>
+    <tr id="maildiv">
+        <td class="form_text_left">邮件接收人
+        </td>
+        <td colspan="3" class="form_text_right">
+            <input type="text" id="TO_NAME" class="txtlong" readonly="readonly" value="{sendName}"/>
+            <input type="hidden" id="TO_ID" readonly="readonly" value="{sendUserId}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="txt_btn" colspan="4">
+            <input type="hidden" id="defaultUserName" readonly="readonly" value="{sendName}"/>
+            <input type="hidden" id="defaultUserCode" readonly="readonly" value="{sendUserId}"/>
+
+            <input type="hidden" id="id" value="{id}"/>
+            <input type="hidden" id="isDamagePass" value="{isDamagePass}"/>
+            <input type="button" class="txt_btn_a" value=" 损坏放行 " style="display:none;" id="damageBtn"
+                   onclick="damagePass();"/>
+            <input type="button" class="txt_btn_a" value=" 确认放行 " onclick="confirmPass();"/>
+            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

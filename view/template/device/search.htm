@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+/*table td{
+		white-space:normal; word-break:break-all;
+		table-layout:fixed;
+	}*/
+</style>
+</head>
+<body>
+<br />
+<form method="post" action="?model=device_stock&action=search" onsubmit="return check()">
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<span style="display:none;"><select name="symbol[]"><option selected value="cn">包含　　</option></select></span>
+		<td width="210">归属部门：<select style="width:150px;" id="dept_id" name="dept_id" onchange="show_type(this.value)"><option value="">所有部门</option>{select_dept}</select></td>
+		<td width="280">设备类型：<select id="typeid" name="typeid" onchange="show_field(this.value)"><option value="">请选择设备类型</option>{select_type}</select></td>
+		<td width="130">设备状态:<select id="state" name="state">
+			<option value="">全部</option>
+			<option value="0">可借用</option>
+			<option value="1">被借用</option>
+			<option value="2">待确认</option>
+			<option value="3">维修中</option>
+			<option value="4">已退库</option>
+			</select>
+		</td>
+		<td width="180">搜索内容：<select id="field" name="field[]"><option value="">请选择搜索内容</option></select></td>
+		<td width="146">关键字：<input type="text" size="12" id="keyword" name="keyword[]" value="{keyword}"/>
+		<td width="100"><input type="submit" value=" 查询 " /> <a id="adv" href="javascript:show_search_adv();">{button}</a></td>
+		<td align="center" id="show_device"></td>
+	</tr>
+	<tr>
+		<td colspan="3"></td>
+		<td colspan="4" align="left">
+			<table id="where" border="0" cellpadding="0" cellspacing="0" style="display:{none};">
+				{search_list}
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
+<div id="tr_temp" style="display:none;">
+	<tr id="tr_0">
+		<td>搜索内容：<select name="field[]">
+				<option value=""></option>
+			</select>
+		</td>
+		<td width="80">
+			<select name="symbol[]">
+				<option value="eq">等于　　</option>
+				<option value="ne">不等　　</option>
+				<option value="lt">小于　　</option>
+				<option value="le">小于等于</option>
+				<option value="gt">大于　　</option>
+				<option value="ge">大于等于</option>
+				<option value="bw">开始于</option>
+				<option value="bn">不开始于</option>
+				<option value="in">属于　　</option>
+				<option value="ni">不属于</option>
+				<option value="ew">结束于</option>
+				<option value="en">不结束于</option>
+				<option selected value="cn">包含　　</option>
+				<option value="nc">不包含</option>
+			</select>
+		</td>
+		<td>
+			关键字：<input type="text" size="12" name="keyword[]" value="" />
+		</td>
+		<td id="edit_0" width="130">
+			<input type="button" onclick="copy(0);" value=" 复制 " />
+		</td>
+	</tr>
+</div>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" style="table-layout:inherit;">
+	{list}
+</table>
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td style="text-align:center;height:50px;"><input type="button" onclick="add();" value=" 批量添加到货物车 " /></td>
+	</tr>
+</table>
+<div id="show_cart" style="display:none"></div>
+<script type="text/javascript">
+	var typeid = "{typeid}";
+	var field = "{field}";
+	var deptid = "{dept_id}";
+	var state = '{state}';
+	$(document).ready(function()
+	{
+		if (deptid!='')
+		{
+			show_type(deptid);
+		}
+		if (typeid!='')
+		{
+			var options = $('#typeid option').get();
+			for (var i=0;i<options.length;i++)
+			{
+				if (options[i].value == typeid)
+				{
+					options[i].selected = true;
+				}
+			}
+			show_field(typeid,true);
+		}
+		if (state!='')
+		{
+			var options = $('#state option').get();
+			for (var i=0;i<options.length;i++)
+			{
+				if (options[i].value == state)
+				{
+					options[i].selected = true;
+				}
+			}
+		}
+		set_selected('typeid');
+		set_selected('state');
+		set_selected('dept_id');
+		show_device_num();
+	});
+	
+	function show_search_adv()
+	{
+		if ($('#where').css('display')=='block')
+		{
+			$('#where').css('display','none');
+			$('#where').html('');
+			$('#adv').html('高级');
+		}else
+		{
+			$('#where').css('display','block');
+			$('#where').html($('#tr_temp').html());
+			$('#where select[name=field[]]').html($('#field').html());
+			$('#adv').html('关闭');
+		}
+	}
+	var tid = {tid};
+	function copy(id)
+	{
+		tid++;
+		var temp = $('#tr_'+id).html();
+		temp = '<tr id="tr_'+tid+'">'+temp+'<tr />';
+		temp = temp.replace('copy('+id+')','copy('+tid+')');
+		temp = temp.replace('edit_'+id,'edit_'+tid);
+		$('#where').append(temp);
+		if (id==0)
+		{
+			$('#edit_'+tid).append('<input type="button" onclick="del_tr('+tid+')" value="删除" />');
+		}
+		
+		
+	}
+	
+	function del_tr(id)
+	{
+		$('#tr_'+id).remove();
+	}
+	function check()
+	{
+
+		if ($('#dept_id').val()==''&&$('#typeid').val()==''&&$('#keyword').val()=='')
+		{
+			alert('请选择设备类型！');
+			return false;
+		}
+		var keywords = $('form input[name=keyword[]]').get();
+		var fields = $('form select[name=field[]]').get();
+		if (keywords.length > 1)
+		{
+			for (var i=0;i<keywords.length;i++)
+			{
+				if (i > 0 && fields[i].options[fields[i].options.selectedIndex].value=='')
+				{
+					alert('请选择搜索内容！');
+					fields[i].focus();
+					return false;
+				}
+			}
+		}
+		/*if ($('#field').val()=='')
+		{
+			alert('请选择搜索内容！');
+			return false;
+		}*/
+		return true;
+	}
+	function apply_check()
+	{
+		var inputs = $('#TB_ajaxContent input[type=checkbox][name=id[]]:checked').get();
+		if (inputs.length < 1)
+		{
+			alert('最少需要选择一条记录！');
+			return false;
+		}
+		
+		return true;
+	}
+	function set_all(chekced,type_id)
+	{
+		if (type_id)
+		{
+			$('#type_'+type_id+' input[type=checkbox]:[disabled=false]').attr('checked',chekced);
+		}else
+		{
+			$('input[type=checkbox]:[disabled=false]').attr('checked',chekced);
+		}
+		
+	}
+	function set_selected_all(chekced,type_id)
+	{
+		if (type_id)
+		{
+			$('#TB_ajaxContent input[type=checkbox]:[disabled=false]').attr('checked',chekced);
+			$('#show_cart input[type=checkbox]').attr('checked',chekced);
+		}else
+		{
+			$('#TB_ajaxContent input[type=checkbox]:[disabled=false]').attr('checked',chekced);
+		}
+		
+	}
+	function show_type(dept_id)
+	{
+		$.post('ajax.php',{model:'device_stock',action:'select_type',dept_id:dept_id,rand:Math.random(0,9999)},
+			function(data)
+			{
+				if (data)
+				{
+					$('#typeid').html(unescape(data));
+					if (typeid!='')
+					{
+						var options = $('#typeid option').get();
+						for (var i=0;i<options.length;i++)
+						{
+							if (options[i].value == typeid)
+							{
+								options[i].selected = true;
+							}
+						}
+						show_field(typeid);
+					}else
+					{
+						show_field($('#typeid').val());
+					}
+				}else
+				{
+					$('#typeid').html('<option value="">该部门没有设备类型可选</option>');
+				}
+			}
+		);
+	}
+	function show_field(mytypeid,loads)
+	{
+		if (mytypeid != '')
+		{
+			$.post('ajax.php',{model:'device_stock',action:'get_field_name',typeid:mytypeid,rand:Math.random(0,99999)},
+				function(data)
+				{
+					if (data)
+					{
+						
+						if (field!='')
+						{
+							if (mytypeid!=typeid && loads==false)
+							{
+								$('select[name=field[]]').html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>'+unescape(data));
+							}else
+							{
+								$('select[name=field[]]').eq(0).html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>'+unescape(data));
+							}
+							typeid = mytypeid;
+							var op = $('#field option').get();
+							for (var i = 0 ;i<op.length;i++)
+							{
+								if (op[i].value==field)
+								{
+									op[i].selected = true;
+								}
+							}
+						}else 
+						{
+							if(loads==true)
+							{
+								$('select[name=field[]]').eq(0).html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>'+unescape(data));
+							}else
+							{
+								$('select[name=field[]]').html('<option value="">请选择搜索内容</option><option value="device_name">设备名称</option>'+unescape(data));
+							}
+							
+						}
+					}
+				}
+			);
+		}
+	}
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	
+	function show_cart()
+	{
+		var info = getCookie('info');
+		if (info && info!=undefined)
+		{
+			$.post('ajax.php',{model:'{t_model}',action:'get_device_in',info:info,rand:Math.random(0,9999)},
+				function(data)
+				{
+					data = unescape(data).replace(/type="checkbox"/g,'type="checkbox" checked');
+					data = data.replace('set_all','set_selected_all');
+					if (data)
+					{
+						html = '';
+						html +='<form id="form" method="post" action="?model=device_apply&action=show_add" onsubmit="return apply_check();">';
+						html += unescape(data);
+						html +='<table width="100%"><tr><td align="center">';
+						html +='<input type="button" onclick="del();" value="删除选中" /> ';
+						html +=' <input type="submit" value="申请借用选中的" /> ';
+						html +='<input type="button" onclick="tb_remove();" value="返回继续" />'
+						html +='</td></tr></table></form>';
+						html = html.replace('width="98%"','width="100%"');
+						$('#show_cart').html(html);
+						tb_show('我的货物车','#TB_show_html?inlineId=show_cart&height=600',false);
+					}else
+					{
+						
+					}
+				}
+			);
+		}else
+		{
+			alert('对不起，您的货物车尚未有任何设备！');
+		}
+	}
+	function del()
+	{
+		var inputs = $('#TB_ajaxContent input[type=checkbox][name=id[]]').get();
+		var info='';
+		if (inputs.length > 0)
+		{
+			for (var i=0;i<inputs.length;i++)
+			{
+				if (inputs[i].checked == true)
+				{
+					$('#tr_'+inputs[i].value).remove();
+					$('#TB_ajaxContent #tr_'+inputs[i].value).remove();
+				}else
+				{
+					info += inputs[i].value+',';
+				}
+			}
+			if (info.length > 0)
+			{
+				info = info+'0';
+				info = info.replace(',0','');
+				addCookie('info',info,0);
+				show_device_num();
+			}else
+			{
+				delCookie('info');
+				show_device_num();
+			}
+		}else
+		{
+			alert('最少要选中一条记录才可以进行此操作！');
+		}
+	}
+	function add(id)
+	{
+		var info = getCookie('info');
+		if (id) 
+		{
+			if (info) 
+			{
+				var arr = info.split(',');
+				var addinfo = true;
+				for (var i = 0; i < arr.length; i++) 
+				{
+					if (arr[i] == id) 
+					{
+						addinfo = false
+					}
+				}
+				if (addinfo == true) 
+				{
+					addCookie("info", info + ',' + id);
+					alert('成功将该设备添加到货物车中！');
+				}
+				else 
+				{
+					alert('该设备已在货物车中！');
+				}
+			}
+			else 
+			{
+				addCookie("info", id);
+				alert('成功将该设备添加到货物车中！');
+			}
+		}else
+		{
+			var inputs = $('input[type=checkbox][name=id[]]:checked').get();
+			if (inputs.length > 0)
+			{
+				if (info) 
+				{
+					var arr = info.split(',');
+					for (var j = 0; j < inputs.length; j++) 
+					{
+						var addinfo = true;
+						for (var i = 0; i < arr.length; i++) 
+						{
+							if (arr[i] == inputs[j].value) 
+							{
+								addinfo = false
+							}
+						}
+						if (addinfo == true) 
+						{
+							info +=','+inputs[j].value;
+						}
+					}
+					addCookie('info',info);
+					alert('成功将该设备添加到货物车中！');
+				}
+				else 
+				{
+					var str = '';
+					for (var i = 0; i < inputs.length; i++) 
+					{
+						str += inputs[i].value + ',';
+					}
+					if (str != '') 
+					{
+						str = str + "niuzi";
+						str = str.replace(',niuzi','');
+						addCookie('info', str);
+					}
+					alert('成功将该设备添加到货物车中！');
+				}
+			}else
+			{
+				alert('至少要选择一样设备才可以进行此操作！');
+			}
+		}
+		show_device_num();
+		scroll(0,0);
+	}
+	
+	function show_device_num()
+	{
+		var device_num = 0;
+		var info = getCookie('info');
+		if (info)
+		{
+			var arr = info.split(',');
+			device_num = arr.length;
+		}
+		$('#show_device').html('<a href="javascript:show_cart();">我的货物车</a>，共有 <span>'+device_num+'</span> 件货物');
+	}
+	
+	function addCookie(objName,objValue,objHours)
+	{//添加cookie
+	    var str = objName + "=" + escape(objValue);
+	    if(objHours > 0)
+		{//为0时不设定过期时间，浏览器关闭时cookie自动消失
+		     var date = new Date();
+		     var ms = objHours*3600*1000;
+		     date.setTime(date.getTime() + ms);
+		     str += "; expires=" + date.toGMTString();
+	    }
+	    document.cookie = str;
+   }
+  
+   function getCookie(objName)
+   {//获取指定名称的cookie的值
+   		//alert(document.cookie);
+	    var arrStr = document.cookie.split("; ");
+	    for(var i = 0;i < arrStr.length;i ++)
+		{
+			temp = arrStr[i].split('=');
+			if (temp[0]==objName)
+			{
+				return unescape(temp[1]);
+				break;
+			}
+    	} 
+   }
+  
+   function delCookie(name){//为了删除指定名称的cookie，可以将其过期时间设定为一个过去的时间
+    var date = new Date();
+    date.setTime(date.getTime() - 10000);
+    document.cookie = name + "=null; expires=" + date.toGMTString();
+   }
+
+</script>
+</body>
+</html>

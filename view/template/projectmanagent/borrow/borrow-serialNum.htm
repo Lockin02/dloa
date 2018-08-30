@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>销售合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script>
+function mydel(obj,mytable) {
+	if (confirm('确定要删除该行？')) {
+		var rowNo = obj.parentNode.parentNode.rowIndex * 1 -1;
+		var mytable = document.getElementById(mytable);
+		mytable.deleteRow(rowNo-1);
+		var myrows = mytable.rows.length;
+		for (i = 0; i < myrows; i++) {
+			mytable.rows[i].childNodes[0].innerHTML = i+1;
+		}
+	}
+}
+
+function sub(){
+	var serialName=[];
+	var serialId=[];
+	var num = $("#num").val();
+	var inputId=$("#inputId").val();
+	var sid=$("#sid").val();
+	$("input[id^='name']").each(function(){
+				serialName.push($(this).val());
+			})
+    $("input[id^='id']").each(function(){
+				serialId.push($(this).val());
+			})
+			if(serialName){
+				window.parent.$("#" + inputId).val(serialName);
+				window.parent.$("#"+ sid).val(serialId);
+				closeFun();
+			}
+}
+</script>
+</head>
+<body>
+<table class="form_main_table">
+    <div class="main_head"><span class="main_head_title">序列号选择</span></div>
+<tr>
+		<td class="form_text_right" colspan="4">&nbsp;&nbsp;
+		<font color='blue'> 温馨提示：</br>
+		&nbsp&nbsp&nbsp&nbsp请正确选择不多于 “<span class="red">{amount}</span>” 个序列号，将多余的删除
+		<font /></td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table" id="link">
+     <thead>
+			<tr>
+				<td colspan="5" class="form_header"> 序列号 </td>
+			</tr>
+			<tr class="main_tr_header">
+				<th width="5%"> 序号 </th>
+				<th> 序列号 </th>
+				<th> 删除 </th>
+			</tr>
+      </thead>
+	 <tbody id="list">
+		{serial}
+	</tbody>
+</table>
+
+
+<tr>
+<td colspan="6">
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		<input type="hidden" id="num" value="{num}" />
+		<input type="hidden" id="inputId" value="{inputId}" />
+		<input type="hidden" id="sid" value="{sid}" />
+		<input type="submit" class="txt_btn_a" value="  保  存  " onclick="sub();"/>
+		<input type="button" class="txt_btn_a" value="  关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>

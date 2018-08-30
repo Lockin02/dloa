@@ -1,0 +1,123 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="POST" action="?model={t_model}&action=save_data" onsubmit="return check();">
+	<input type="hidden" id="filename" name="filename" value="{filename}" />
+	<input type="hidden" id="sheet" name="sheet" value="{p_sheet}" />
+	<input type="hidden" id="hang" name="hang" value="{p_hang}" />
+	<input type="hidden" id="start_data" name="start_data" value="{p_start_data}" />
+	<input type="hidden" id="operation" name="operation" value="{p_operation}" />
+	<input type="hidden" id="dept_id" name="dept_id" value="{p_dept_id}" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" style="display:{none}" id="show_type">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">选择设置</td>
+	</tr>
+	{type_select}
+	{device_select}
+	{area_select}
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="list">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">选择对应的字段内容</td>
+	</tr>
+	<tr id="no_0">
+		<td align="left">将：<select name="content[]">
+			{content_select}
+			</select>
+		导入到<select name="field[]">
+			<option value="">选择数据库列</option>
+			{field_select}
+			</select></td>
+		<td><input type="button" onclick="add()" value=" 增加 " /></td>
+	</tr>
+</table>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center"><input type="submit" value=" 开始导入 " /></td>
+	</tr>
+</table>
+
+</form>
+<script type="text/javascript">
+	var id = 0;
+	function check()
+	{
+		if ($('#typename').html())
+		{
+			if ($('#typename').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为设备类别！');
+				return false;
+			}
+		}
+		if ($('#device').html())
+		{
+			if ($('#device').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为设备名称！');
+				return false;
+			}
+		}
+		if ($('#area').html())
+		{
+			if ($('#area').val()=='')
+			{
+				alert('请选择对应的Excel内容列作为库存区域！');
+				return false;
+			}
+		}
+		
+		var contents = $('select[name=content[]] option:selected').get();
+		var fields = $('select[name=field[]] option:selected').get();
+		if (contents.length < 1) 
+		{
+			alert('最少要选择导入一列Excel数据！');
+			return false;
+		}
+		for(var i = 0;i<contents.length;i++)
+		{
+			if (contents[i].value=='')
+			{
+				alert('请选择要导入的Excel内容列');
+				return false;
+			}
+			
+			if (fields[i].value=='')
+			{
+				alert('请选择导入的对应的数据列');
+				return false;
+			}
+		}
+		show_load();
+		return true;
+	}
+	function add()
+	{
+		id++;
+		var html = $('#no_0').html();
+		html = html.replace('增加','删除');
+		html = html.replace('add()','del('+id+')');
+		$('#list').append('<tr id="no_'+id+'">'+html+'</tr>');
+	}
+	function del(id)
+	{
+		$('#no_'+id).remove();
+	}
+	function show_load()
+	{
+		tb_show('','#TB_inline_html?&inlineId=mydiv&modal=true&height=55&width=250');
+	}
+</script>
+<div id="mydiv" style="display:none">正在导入数据，请不要关闭此窗口！</div>
+</body>
+</html>

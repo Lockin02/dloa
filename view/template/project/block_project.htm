@@ -1,0 +1,359 @@
+<iframe name="updata" style="display: none;"></iframe>
+<form id="export_frm" name="export_frm"  method="post" >
+	<input type="hidden" id="export_keyword" name="export_keyword" value="" />
+	<input type="hidden" id="export_rand" name="export_rand" value="" />
+	<input type="hidden" id="export_projectType" name="export_projectType" value="" />
+	<input type="hidden" id="export_ipoType" name="export_ipoType" value="" />
+	<input type="hidden" id="export_zfType" name="export_zfType" value="" />
+	<input type="hidden" id="export_projectStatus" name="export_projectStatus" value="" />
+	<input type="hidden" id="export_dept" name="export_dept" value="" />
+	<input type="hidden" id="export_stage" name="export_stage" value="" />
+</form>
+
+<!-- grid -->
+<table id="project_grid" toolbar="#project_grid_tb" ></table>
+
+<!-- search bar -->
+<div id="project_grid_tb" style="padding:5px;height:auto;">
+	<div>
+		<span>搜索关键字：</span><input type="text" id="keyword" name="keyword" value="" style="width: 100px;"/>
+		项目类型: <select id='s_project_type' ></select>
+		项目阶段：<select id='s_project_stage'>
+					<option value="" selected >请选择</option>
+					<option value='0'></option>
+					<option value='1'>研究阶段</option>
+					<option value='2'>开发阶段</option>
+				</select>
+		部门：<select id="s_dept" name="s_dept"></select>
+		募投类型: <select id="s_project_ipo_type"></select>
+		<br/>
+		政府项目类型：<select id="s_zf_type"></select>
+						
+		项目状态：<select id='s_project_status' >
+					<option value="" selected >请选择</option>
+					<option value="all">全部</option>
+					<option value="0">进行中</option>
+					<option value="1">未开始</option>
+					<option value="2">已完成</option>
+					<option value="3">已取消</option>
+					<!-- <option value="4">未审核</option>  -->
+					<!-- <option value="5">已审核</option>  -->
+					<option value="6">已关闭</option>
+				</select>
+		<a href="#" class="easyui-linkbutton" onclick="getSearch();" iconCls="icon-search">search</a>
+		&nbsp;&nbsp;
+		<a href="#" onclick="encode_rule()">项目编码规则</a>
+	</div>
+</div>
+
+<!-- view -->
+<div id="show_info" class="easyui-dialog" title="查看项目详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:450px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div id="info" region="center" border="false">
+			<p>
+				<label>项目名称：</label><span id="_name"></span><label>项目编码：</label><span id="_number"></span>
+			</p>
+			<p>
+				<label>募投项目：</label><span id="_ipo_name"></span><label>项目状态：</label><span id="_status"></span><label>项目阶段：</label><span id="_stage"></span>
+			</p>
+			<p>
+				<label>项目类型：</label><span id="_project_type_name"></span><label id='_show_extra_label' style='display: none;'>编号：</label><span id="_extra" style='display: none;' ></span>
+			</p>
+			<p>
+				<label>产品经理：</label><span id="_manager_name"></span><label>项目助理：</label><span id="_assistant_name"></span>
+			</p>
+			<p>
+				<label>所属部门：</label><span id="_dept_name"></span><label>优先级：</label><span id="_priority"></span>
+			</p>
+			<p>
+				<label>开始日期：</label><span id="_begin_date"></span><label>结束日期：</label><span id="_end_date"></span>
+			</p>
+			<p>
+				<label >关联产品：</label><span id="_product_id_str"></span><label >政府项目：</label><span id="_zf_name"></span>
+			</p>				
+			<p style="height:100px; overflow-y:auto; ">
+				<label style=" line-height: 70px;">描述：</label><span id="_description" style='width: 80%'></span>
+			</p>
+			<div style="height:100px; overflow-y:auto; width: 95%; ">
+				<table id="_member_tab" class="table" width="80%" border="0" cellpadding="0" cellspacing="0" align="center" >
+					<thead>
+						<tr bgcolor="#D3E5FA">
+							<td align="center" colspan="4">项目人员</td>
+							<td colspan="1" >
+								&nbsp;
+							</td>
+						</tr>
+						<tr class="tableheader">
+							<td width="60px" >成员</td>
+							<td width="80px" >进入</td>
+							<td width="80px" >离开</td>
+							<td width="50px" >占比</td>
+							<td width="50px" >职能</td>
+							<!-- <td>操作</td>  -->
+						</tr>
+					</thead>
+					<tbody id="_member_info_table"></tbody>
+				</table>
+			</div>
+		</div>
+		<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<input type="button" onclick="closeDialog('show_info');" value=" 关闭返回 " />
+		</div>
+	</div>
+</div>
+
+<!-- add/edit -->
+<div id="add" class="easyui-window" title="添加项目" iconCls="icon-edit" modal="false" closed="true" style="width:700px;height:530px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div id="info" region="center" border="false">
+		<input type="hidden" name="id" id="id" value="" />
+			<p>
+				<label>项目名称：</label>
+				<span style="width:400px;">
+					<input type="text" size="50" name="name" id="name" value="" /><i>*</i>
+				</span>
+			</p>
+			<p style=" margin-top: 5px;">
+				<label>项目编码：</label>
+				<span>
+					<input type="text" id="number" name="number" value="" />
+				</span>
+				<label>募投项目：</label>
+				<span>
+					<select id=ipo_id name="ipo_id">
+					</select>
+				</span>
+			</p>
+			<p>
+				<label>项目状态：</label>
+				<span>
+					<select id="status" name="status">
+						<option value="0">进行中</option>
+						<option value="1">未开始</option>
+						<option value="2">已完成</option>
+						<option value="3">已取消</option>
+						<!-- <option value="4">未审核</option>  -->
+						<!-- <option value="5">已审核</option>  -->
+						<option value="6">已关闭</option>
+					</select>
+				</span>
+				<label>项目阶段：</label>
+				<span>
+					<select id="stage" name="stage">
+						<option value="0"></option>
+						<option value="1">研究阶段</option>
+						<option value="2">开发阶段</option>
+					</select>
+				</span>
+			</p>
+			<p>
+				<label>项目类型：</label>
+				<span>
+					<select id="project_type" name="project_type" onchange="addExtraInput(this.value);" >
+					</select>
+				</span>
+				<b id='showExtra'>
+				</b>
+			</p>
+			<p>
+				<label>项目经理：</label>
+				<span>
+					<input type="text" id="manager_name" name="manager_name" value="" /><!-- <i>*</i>  -->
+				</span>
+				<label>项目助理：</label>
+				<span>
+					<input type="text" id="assistant_name" name="assistant_name" value="" />
+				</span>
+			</p>
+			<p>
+				<label>所属部门：</label>
+				<span>
+					<select id="dept_id" name="dept_id">
+					</select>
+					<!-- <i>*</i> -->
+				</span>
+				<label>优先级：</label>
+				<span>
+					<select id="priority" name="priority">
+						<option value="1">低</option>
+						<option value="2">中</option>
+						<option selected="selected" value="3">高</option>
+					</select>
+				</span>
+			</p>
+			<p>
+				<label>开始日期：</label>
+				<span>
+					<input type="text" readonly onClick="WdatePicker();" class="Wdate" id="begin_date" name="begin_date" value="" /><i>*</i>
+				</span>
+				<label>结束日期：</label>
+				<span>
+					<input type="text" readonly onClick="WdatePicker({minDate:'#F{$dp.$D(\'begin_date\')}'});" class="Wdate" id="end_date" name="end_date" value="" /><i>*</i>
+				</span>
+			</p>
+			 <p style=" margin-top: 5px;">
+			 	<label>政府项目：</label>
+				<span>
+					<select id=zf_id name="zf_id"  multiple="multiple" style="width:150px; height: 100px;">
+					</select>
+					<!-- <i>*</i>  -->
+				</span>
+				<label>关联产品：</label>
+				<span>
+					<select name="product_id_str" id="product_id_str" style="width:150px; height: 100px;" multiple="multiple">
+					</select>
+				</span>
+			 </p>
+			<p style=" margin-top: 5px;" >
+				<label style=" line-height: 90px;">项目描述：</label>
+				<textarea style="width:80%;height:80px;" id="description" name="description"></textarea>
+			</p>
+			<p style="text-align: center; margin-top: 5px;">
+				<table id="member_tab" class="table" width="80%" border="0" cellpadding="0" cellspacing="0" align="center">
+					<thead>
+						<tr bgcolor="#D3E5FA">
+							<td align="center" colspan="5">项目人员</td>
+							<td colspan="1" >
+								<input type="button" onclick="showMemberOperate();" title="添加成员" class="thickbox" value="添加成员" />
+							</td>
+						</tr>
+						<tr class="tableheader">
+							<th width="60px" >成员</th>
+							<th width="80px" >进入</th>
+							<th width="80px" >离开</th>
+							<th width="80px" >占比</th>
+							<th width="50px" >职能</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="member_info_table">
+					</tbody>
+				</table>
+			</p>
+		</div>
+		<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<input type="button" id="save" onclick="save();"  value=" 确定提交 " />
+			<input type="button" onclick="closeDialog('add');" value=" 取消关闭 " />
+		</div>
+	</div>
+</div>
+
+<!-- 人员列表  -->
+<div id="show_list" class="easyui-dialog" title="查看项目详细信息" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:450px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div id="info" region="center" border="false" style="margin-left: 25px; margin-top: 5px;">
+			<div style="width:40%; float:left;">
+				<select id="dept_for_member" name="dept_for_member" onchange="getDeptId();">
+						<option value="">请选择部门</option>
+						{dept_option}
+				</select>
+				<select name="user_list" id="user_list" style="width:180px;height:250px;" multiple="multiple"></select>
+			</div>
+			<div style="width:20%; float:left;" >
+				<input type="button" name="add_member_to" id="add_member_to" value="加入"  >
+				<input type="button" name="remove_member_to" id="remove_member_to" value="移除" >
+				<input type="button" name="add_all_member_to" id="add_all_member_to" value="全部加入"  >
+				<input type="button" name="remove_all_member_to" id="remove_all_member_to" value="全部移除" >
+			</div>
+			<div style="float:left;">
+			<select name="selected_user_list" id="selected_user_list" style="width:180px;height:270px;" multiple="multiple"></select>
+			</div>
+		</div>
+		<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<input type="button" id="save" onclick="save_member();"  value=" 确定提交 " />
+			<input type="button" onclick="closeDialog('show_list');" value=" 关闭返回 " />
+		</div>
+	</div>
+</div>	
+
+<div id="encode_rule" class="easyui-dialog" title="编码规则" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:480px;padding:5px;">
+	<div class="easyui-layout" fit="true">
+		<div id="info" region="center" border="false">
+			<br/>
+			<p style="line-height:17px;">
+				<table class="table" border="1" cellpadding="0" cellspacing="0" align="center" >
+					<tr bgcolor="#D3E5FA">
+						<th align="center" >编号字段</th>
+						<th align="center" >长度</th>
+						<th align="center" >说明</th>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">项目前缀</td>
+						<td width="50px" align="center">4</td>
+						<td width="350px" align="left">DLRDXM（固定不变）</td>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">公司缩写</td>
+						<td width="50px" align="center">2</td>
+						<td width="350px" align="left">
+							鼎利：DL<br/>世源：SY<br/>贝软：BR<br/>贝讯：BX<br/>鼎元：DY<br/>AmZtel：AZ
+						</td>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">项目类型</td>
+						<td width="50px" align="center">2</td>
+						<td width="350px" align="left">
+							基础（jc）<br/>产品（cp）<br/>合同（ht）<br/>商机（sj）<br/>挂账（gz）<br/>资源（zy）
+						</td>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">立项年度</td>
+						<td width="50px" align="center">4</td>
+						<td width="350px" align="left">yyyy（如：2012）</td>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">年度立项序号</td>
+						<td width="50px" align="center">2</td>
+						<td width="350px" align="left">某一年度立项序号（如01，指的是某年第一个立项项目）</td>
+					</tr>
+					<tr class="tableheader">
+						<td width="100px" align="center">分隔符</td>
+						<td width="50px" align="center">1</td>
+						<td width="350px" align="left">-</td>
+					</tr>
+				</table>
+			</p>
+			<br/>
+			<p><strong>编码举例：DLRDXM-DL-jc-2012-01</strong></p>
+			<p><strong>注：</strong>项目立项后，研发助理根据《项目立项申请表》在OA上建立相应的项目信息，并对项目进行编号。合同(ht)项目编号，附上合同编号；商机(sj)项目编号，附上商机编号(如有销售商机)。</p>
+		</div>
+		<div region="south" border="false" style="text-align:center;height:30px;line-height:25px;">
+			<input type="button" onclick="$('#encode_rule').dialog('close');" value=" 关闭返回 " />
+		</div>
+	</div>
+</div>	
+
+<!-- 导入 -->
+<div id="import_div" class="easyui-dialog" title="导入" iconCls="icon-edit" modal="false" closed="true" style="width:650px;height:250px;padding:5px;">
+	<div id="import_file_div" style="text-align: center; height: 30px; line-height: 30px">
+			<form id="import_form" name="import_form" method="post" enctype="multipart/form-data" target="updata" >
+			<br/>
+			<table align="center" >	
+				<tr>
+					<td>
+						<span>导入文件:</span><input type="file" id="upfile" name="upfile">
+					</td>
+					<!-- 
+					<td>
+						<a href="./attachment/demo/demo.xlsx">DEMO文件下载</a>
+					</td>
+					 -->
+				</tr>
+				
+				<tr>
+					<td colspan="2">
+						<input type="button" id="import_submit" name="import_submit" value="上传" onclick="uploadMethod();">
+					</td>
+				</tr>
+			</table>
+		</form>
+     </div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		autoComplete();
+		process_project_grid();
+		searchOption();
+		memberSelectOperate();
+	});
+</script>

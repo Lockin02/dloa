@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			编辑订票信息
+		</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="{#jsPath#}/message-back.js"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=flights_message_message&action=back">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								退票
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								原机票信息
+								<img src="images/icon/info_up.gif" id="baseImg_a" onclick="showAndHide('baseImg_a','baseTbl_a');"/>
+							</legend>
+							<table class="form_in_table" id="baseTbl_a">
+								<tr>
+									<td class="form_text_left">
+										乘机日期
+									</td>
+									<td class="form_text_right" width="30%">
+										{startDate}
+									</td>
+									<td class="form_text_left">
+										乘 机 人
+									</td>
+									<td class="form_text_right">
+										{airName}
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										车次/航班号
+									</td>
+									<td class="form_text_right">
+										{flightNumber}
+									</td>
+									<td class="form_text_left">
+										实际订票额
+									</td>
+									<td class="form_text_right">
+										<span class="blue formatMoney">{actualCost}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										票面价格
+									</td>
+									<td class="form_text_right formatMoney" width="30%">
+										{fullFare}
+									</td>
+									<td class="form_text_left">
+										机场建设费
+									</td>
+									<td class="form_text_right formatMoney">
+										{constructionCost}
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										燃油附加费
+									</td>
+									<td class="form_text_right formatMoney">
+										{fuelCcharge}
+									</td>
+									<td class="form_text_left">
+										服务费
+									</td>
+									<td class="form_text_right formatMoney">
+										{serviceCharge}
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								退票信息
+								<img src="images/icon/info_up.gif" id="changedImg_b" onclick="showAndHide('changedImg_b','changedTbl_b');"/>
+							</legend>
+							<table class="form_in_table" id="changedTbl_b">
+								<tr>
+									<td class="form_text_left">
+										机票总金额
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="actualCost" value="{actualCost}" />
+									</td>
+									<td class="form_text_left">
+										<span class="blue">核算日期</span>
+									</td>
+									<td class="form_text_right" width="30%">
+										<input type="text" id="auditDate" class="txt" name="message[auditDate]" onfocus="WdatePicker()" value="{auditDate}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											退票金额
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="costBack" onblur="calMoney();" name="message[costBack]" />
+									</td>
+									<td class="form_text_left">
+										退票手续费
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal formatMoney" id="feeBack" readonly="readonly" name="message[feeBack]" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											退票原因
+										</span>
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_font" id="changeReason" name="message[changeReason]" style="width:620px;"></textarea>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								发送邮件
+								<img src="images/icon/info_up.gif" id="mailImg_c" onclick="showAndHide('mailImg_c','mailTbl_c');"/>
+							</legend>
+							<table class="form_in_table" id="mailTbl_c">
+								<tr>
+							   		<td class="form_text_left">是否发送邮件
+							       	</td>
+							   		<td colspan="3" class="form_text_right">
+							   			<input type="radio" name="message[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+							      		<input type="radio" name="message[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+									</td>
+								</tr>
+								<tr id="maildiv">
+							   		<td class="form_text_left">收件人
+							       	</td>
+							       	<td colspan="3" class="form_text_right">
+									    <input type="text" class="txtlong" name="message[email][TO_NAME]" value="{airName}" id="TO_NAME" readonly="readonly"/>
+							    		<input type="hidden" name="message[email][TO_ID]" id="TO_ID" value="{airId}" readonly="readonly"/>
+								    </td>
+						   		</tr>
+							   	<tr id="mailccdiv">
+							   		<td class="form_text_left">抄送
+							       	</td>
+							       	<td colspan="3" class="form_text_right">
+									    <input type="text" class="txtlong" name="message[email][ADDNAMES]" id="ADDNAMES" readonly="readonly"/>
+							    		<input type="hidden" name="message[email][ADDIDS]" id="ADDIDS" readonly="readonly"/>
+
+							    		<input type="hidden" id="sendUserId"/>
+							    		<input type="hidden" id="sendName"/>
+								    </td>
+							   	</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="4">
+						<input type="hidden" class="txt" id="id" name="message[orgId]" value="{id}"/>
+						<input type="submit" class="txt_btn_a" value=" 保  存 " />
+						<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

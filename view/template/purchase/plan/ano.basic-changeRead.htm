@@ -1,0 +1,162 @@
+<html>
+<head>
+    <title>查看采购计划变更通知单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="css/nav_tab.css">
+    <link rel="stylesheet" href="images/style.css" type="text/css">
+    <script type="text/javascript">
+    	function ReceiveChange(id,numb){
+    		if(confirm('确定接收此变更吗？')){
+    			location = "?model=purchase_plan_basic&action=receiveChange&id="+id+"&numb="+numb;
+    		}
+    	}
+
+    	function returnChange(id,numb){
+    		if(confirm('确定退回此变更吗？')){
+				location = "?model=purchase_plan_basic&action=returnChange&id="+id+"&numb="+numb;
+			}
+    	}
+    </script>
+</head>
+	<body>
+	<!--
+		<table>
+			<tr>
+				<td>
+					<img src="images/sys_config.gif">
+						<b>
+							<font color="#000000">查看采购计划变更通知单</font>
+						</b>
+					</img>
+				</td>
+			</tr>
+		</table>
+	{topPlan}
+	 -->
+<div class="main_wraper">
+	<table  class="main_table">
+			<tr align="center" class="main_tr_header">
+				<td colspan="4">
+					<font face="宋体" size="3">采购计划</font>
+				</td>
+			</tr>
+			<tr>
+				<td class="formtd1" >
+					采购计划编号
+				</td>
+				<td colspan="3" >
+					&nbsp;{basic[planNumb]}
+				</td>
+			</tr>
+			<tr>
+				<td class="formtd1" >
+					计划类型
+				</td>
+				<td>
+					&nbsp;{basic[purchTypeCName]}
+				</td>
+				<td class="formtd1" >
+					版本号
+				</td>
+				<td>
+					&nbsp;{basic[planVersionNumb]}
+				</td>
+			</tr>
+			<tr>
+				<td class="formtd1">
+					计划创建日期
+				</td>
+				<td>
+					&nbsp;{basic[createTime]}
+				</td>
+				<td class="formtd1">
+					计划创建人
+				</td>
+				<td>
+					&nbsp;{basic[createName]}
+				</td>
+			</tr>
+			<tr>
+				<td class="formtd1">
+					计划期望完成时间
+				</td>
+				<td>
+					&nbsp;{basic[dateHope]}
+				</td>
+				<td class="formtd1" >
+					实际完成日期
+				</td>
+				<td>
+					&nbsp;{basic[dateEnd]}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table width="100%" cellspacing='0' cellpadding='0' class="table">
+						<tr height="30px" class="tablecontrol">
+							<td colspan="9">
+								&nbsp;&nbsp;<font>采购计划清单：</font>
+							</td>
+						</tr>
+						<tr height="28" class="TableHeader" align="center">
+							<td width="5%">
+								序号
+							</td>
+							<td  width="15%">
+								设备编号/名称
+							</td>
+							<td width="15%">
+								业务对象编号
+							</td>
+							<td width="7%">
+								计划数量
+							</td>
+							<td width="7%">
+								已下达数量
+							</td>
+							<td width="12%">
+								计划下达日期
+							</td>
+							<td width="12%">
+								计划预计完成日期
+							</td>
+							<td width="12%">
+								实际完成时间
+							</td>
+							<td>
+								备注
+							</td>
+						</tr>
+						{list}
+					</table>
+				</td>
+			</tr>
+			<tr >
+				<td class="formtd1">
+					采购说明
+				</td>
+				<td colspan="3" >
+					<textarea rows="5" id="instruction" name="basic[instruction]" cols="120" readOnly>{basic[instruction]}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="formtd1">
+					备注
+				</td>
+				<td colspan="3">
+					<textarea rows="5" id="remark" name="basic[remark]" cols="120" readOnly>{basic[remark]}</textarea>
+				</td>
+			</tr>
+			<tr align="center" class="TableHeader" height="28">
+				<td colspan="6">
+					<input type="button" value="接收变更" class="BigButton" onclick="ReceiveChange('{id}','{numb}');" >&nbsp;
+					<input type="button" value="退回变更" class="BigButton" onclick="returnChange('{id}','{numb}');" >&nbsp;
+
+					<input type="button" value="返  回" class="BigButton" onclick="location='?model=purchase_plan_basic&action=planList&clickNumb=3';" >&nbsp;
+				</td>
+			</tr>
+		</table>
+	<br>
+</div>
+	</body>
+</html>

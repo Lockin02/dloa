@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>到款</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="view/template/finance/income/js/income-combo.js"></script>
+	<script type="text/javascript" src="view/template/finance/income/js/income-add-validator.js"></script>
+</head>
+<body>
+	<div class="main_head"><span class="main_head_title">录入到款</span>
+	</div>
+	<form id=form1 action="?model=finance_income_income&action=add" method="post" >
+		<div class="main_wraper">
+			<table class="form_main_table">
+				<tr>
+					<td class="form_text_left">
+						到款单位
+					</td>
+					<td class="form_text_right" colspan="3">
+					    <input id="incomeUnitName" type="text" class="txtlong" name="income[incomeUnitName]"/>
+						<input id="incomeUnitId" type="hidden" name="income[incomeUnitId]"/>
+					    <input id="contractUnitId" type="hidden" name="income[contractUnitId]"/>
+						<input id="contractUnitName" type="hidden" name="income[contractUnitName]"/>
+						<span class="red">[*]</span>
+						<span id="incomeUnitNameTip" class="dbcolumnTipTxt"></span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						客户省份
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="income[province]" id="province"/>
+					</td>
+					<td class="form_text_left">
+						到款类型
+					</td>
+					<td class="form_text_right">
+						<select name="income[sectionType]" class="select">
+							{sectionTypeList}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						进账单号
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="income[inFormNum]"/>
+					</td>
+					<td class="form_text_left">
+						到款方式
+					</td>
+					<td class="form_text_right">
+						<select name="income[incomeType]" class="select">
+							{incomeTypeList}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						到款金额
+					</td>
+					<td class="form_text_right">
+						<input id="incomeMoney" type="text" class="txt formatMoney" name="income[incomeMoney]" value="0"/>
+					</td>
+					<td class="form_text_left">
+						到款日期
+					</td>
+					<td class="form_text_right">
+						<input id="incomeDate" type="text" name="income[incomeDate]" class="txt" value="{incomeDate}" onfocus="WdatePicker()" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three">归属公司</td>
+					<td class="form_text_right_three"  colspan="3">
+						<input type="text" class="txt" readonly="readonly" name="income[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+						<span class="red"  id="radioSpan">[*]</span>
+						<input type="hidden" name="income[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+					 	<input type="hidden" name="income[formBelong]" id="formBelong" value="{formBelong}" />
+					 	<input type="hidden" name="income[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						备注
+					</td>
+					<td colspan="3" class="form_text_right">
+						<textarea class="txt_txtarea_font" name="income[remark]"></textarea>
+					</td>
+				</tr>
+				<tr>
+			   		<td class="form_text_left">是否发送邮件
+			       	</td>
+			   		<td colspan="3" class="form_text_right">
+			   			<input type="radio" name="income[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+			      		<input type="radio" name="income[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+					</td>
+				</tr>
+			   	<tr>
+			   		<td class="form_text_left">邮件发送至
+			       	</td>
+			       	<td colspan="3" id="maildiv" class="form_text_right">
+					    <input type="text" class="txtlong" name="income[email][TO_NAME]" id="TO_NAME" readonly="readonly"/>
+			    		<input type="hidden" name="income[email][TO_ID]" id="TO_ID" readonly="readonly"/>
+				    </td>
+			   	</tr>
+				<tr>
+					<td colspan="4">
+						<input type="submit" class="txt_btn_a" value="保 存"/>
+						<input type="button" class="txt_btn_a" value="返 回" onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</body>
+</html>

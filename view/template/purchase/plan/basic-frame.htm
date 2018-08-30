@@ -1,0 +1,69 @@
+<!--
+<html>
+<frameset rows="*"  cols="150,*" frameborder="1"  framespacing="0" id="frame" name="frame" >
+    <frame name="left" scrolling="auto"  src="?model=purchase_plan_basic&action=leftPanel" frameborder="0"/>
+    <frame name="main" src="?model=purchase_plan_basic&action=planList" scrolling="auto" frameborder="0"/>
+</frameset>
+</html>
+-->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>采购申请</title>
+	<!-- link rel="stylesheet" type="text/css" href="css/tab.css"/ -->
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+	<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+
+<script type="text/javascript">
+	$(function() {
+		var purchType = $("#purchType").val();
+
+		//初始化tabsURL
+		var tabArr = [
+				"?model=purchase_plan_basic&action=toTabList&purchType="+purchType,
+				"?model=purchase_plan_basic&action=planEndList&purchType="+ purchType,
+				"?model=purchase_plan_basic&action=planChangeList&purchType="+ purchType
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+</head>
+<body style="overflow-x:hidden;overflow-y:hidden">
+<input type="hidden" id="purchType" value="{purchType}">
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">在执行的采购申请</a></li>
+	<!-- <li><a href="#tab2">资产采购申请</a></li> -->
+	<li><a href="#tab2">已关闭的采购申请</a></li>
+	<li><a href="#tab3">变更的采购申请</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1" src="about:blank" scrolling="auto" frameborder= "0" height="98%">
+	</iframe>
+	<iframe class="pane" id="iframe2" src="about:blank" scrolling="auto" frameborder= "0" height="98%">
+	</iframe>
+	<iframe class="pane" id="iframe3" src="about:blank" scrolling="no" frameborder="0"  height="98%">
+	</iframe>
+	<iframe class="pane" id="iframe4" src="about:blank" height="100%" scrolling="yes" frameborder="0">
+	</iframe>
+</div>
+</div>
+<!--
+<iframe src="?model=purchase_plan_basic&action=toIndexMenu&purchType={purchType}" id="menu" align="left" width="17%" height="100%" marginwidth="0" marginheight="0" frameborder="0" scrolling="no"> </iframe>
+<iframe src="?model=purchase_plan_basic&action=toTabList&purchType={purchType}" id="main" align="right" width="83%" height="100%" marginwidth="0" marginheight="0" frameborder="0" scrolling="yes"> </iframe>
+ -->
+
+</body>
+</html>

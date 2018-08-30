@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<style type="text/css">@import url(js/plupload/css/plupload.queue.css);</style>  
+<link rel="stylesheet" type="text/css" media="screen" href="images/style.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/plupload/js/gears_init.js"></script>
+<script type="text/javascript" src="js/plupload/js/plupload.full.min.js"></script>  
+<script type="text/javascript" src="js/plupload/js/jquery.plupload.queue.min.js"></script> 
+<title></title>
+</head>
+<style>
+.ui-jqgrid-sortable
+{
+	font-weight:normal;
+	font-size:12px;
+	height:24px;
+}
+.ui-jqgrid-title
+{
+	clear:both;
+	font-size:12px;
+	height:24px;
+	line-height:20px;
+}
+.ui-helper-clearfix { height:24px; }
+.ui-row-ltr td
+{
+	border-top:0px #DDDDDD solid;
+	border-left:0px #DDDDDD solid;
+}
+.flb
+{
+	height: 15px;
+	line-height: 15px;
+	padding: 10px 10px 10px;
+}
+.flbc
+{
+	background: url("images/lore/cls.gif") no-repeat scroll 0 0 transparent;
+	float: left;
+	height: 20px;
+	overflow: hidden;
+	width: 20px;
+}
+.flbc:hover { background-position: 0 -20px; }
+.fwinmask { background:url(images/lore/background.png) repeat-x; }
+</style>
+<body>
+<form action="?model=lore_index&action=editposts" method="post" onsubmit="return clickform()">
+<input type="hidden" id="key" name="key" value="{key}"/>
+<input type="hidden" id="cid" name="cid" value="{cid}"/>
+<table width="99%" id="tagsid" border="0" cellpadding="0" cellspacing="0" align="center" class="iframetable" style="margin-left:5px;" >
+  <tr >
+    <td colspan="2" align="center">标 题：</td>
+    <td width="64%"><input name="title" id="title" type="text"  size="60" value="{title}"/></td>
+    <td colspan="2">当前时间：<span id="time_area"></span></td>
+    </tr>
+    {tag1}
+    <!--
+  <tr>
+    <td width="4%" rowspan="3" align="center" valign="middle">属 性</td>
+    <td width="6%" align="center" valign="middle"> 标签一</td>
+    <td colspan="3" style="white-space: normal;" >{tag1}</td>
+    </tr>
+  <tr>
+    <td align="center" valign="middle">标签二</td>
+    <td colspan="3" style="white-space: normal;" >{tag2}</td>
+    </tr>
+  <tr>
+    <td align="center" valign="middle">标签三</td>
+    <td colspan="3" style="white-space: normal;" >{tag3}</td>
+    </tr>
+    -->
+  <tr>
+    <td colspan="5"><input type="hidden" id="body_content" name="body_content" value="{content}"/>
+			<input type="hidden" id="body___Config" value=""  />
+			<iframe id="body___Frame" src="module/htmledit/fckeditor/editor/fckeditor.html?InstanceName=body_content&amp;Toolbar=MyDesign" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
+</td>
+    </tr>
+     <tr>
+   <td colspan="2" align="center" valign="middle">文&nbsp;档&nbsp;类&nbsp;型：</td>
+    <td colspan="5"><input name="doctype" id="doctype"  type="radio" value="1" {doctype1} />普通文档&nbsp;&nbsp;
+    				<input name="doctype" id="doctype"  type="radio" value="2" {doctype2}/>机密文档</td>
+    </tr>
+  <tr>
+   <td colspan="2" align="center" valign="middle">申&nbsp;请&nbsp;等&nbsp;级：</td>
+    <td colspan="5"><input name="levels" id="levels"  type="radio" value="1" {levels1} />常用&nbsp;&nbsp;
+    				<input name="levels" id="levels"  type="radio" value="2" {levels2}/>精华&nbsp;&nbsp;
+    				<input name="levels" id="levels"  type="radio" value="3" {levels3}/>重要</td>
+    </tr>
+  <tr>
+    <td colspan="2" rowspan="2" align="center" valign="middle">关联知识条：</td>
+    <td colspan="4"><input name="relatedterms" id="relatedterms" type="text"  size="60"/> <input name="search" id="search" value="搜 索" type="button" /></td>
+    </tr>
+   <tr>
+    <td colspan="4"  width="100%" id="rewordtd"  style="white-space:normal; display:block" >{rewordtd}</td>
+   </tr>
+  <tr>
+    <td colspan="2" align="center" valign="middle">关&nbsp;&nbsp;&nbsp;键&nbsp;&nbsp;&nbsp;词：</td>
+    <td colspan="3"><input name="rewords" id="rewords" type="text"  size="100" value="{rewords}"/></td>
+   <!-- <td width="9%" align="center" valign="middle"></td>-->
+  </tr>
+   <tr>
+    <td colspan="2"  align="left" valign="middle"  style="white-space: normal;"> <input name="upfileid" id="upfileid" value="添加附件" type="button" /></td>
+    <td colspan="3" align="left" valign="bottom" style="white-space: normal;">
+  <span id='att'>{attachment}</span><input name="delf" id="delf" value="删除附件" type="button" /></td><td>
+    </td></tr>
+  <tr>
+    <td colspan="5" id="uploaders" style="width: 100%; height: 50px; display:none" align="center" valign="bottom">
+   </td>
+    </tr>
+  <tr height="50">
+    <td colspan="5" align="center" valign="bottom"><span style="float:left; width:45%; text-align:right"><input name="conform" id="conform" value=" 提 交 "  type="submit" /></span><span style="float:left; padding-left:10px; width:40%; text-align:left"><input name="save" id="save" value="保存到草稿箱" type="submit" style="display:{dishow}"/></span>
+    <input type="hidden" id="cflag" name="cflag" value=""/></td>
+    </tr>
+</table>
+<div id="upfileshow" style="position:absolute; width:500px;left:200px; top:107px; z-index: 201;height:310px; border:1px solid #AED0EA; display:none" class="fwinmask">
+<div style="cursor:move;" id="reply" class="flb"> <span  style="float:left; text-align:left;color:#000" ><strong>附件上传</strong></span> 
+   <a href="javascript:;" class="flbc" onclick="hideWindow()" style="float:right; text-align:right" title="关闭"></a> </div>
+<div id="uploader" style="height: 50px; width:100%"></div>
+</div>
+</form>
+<script type="text/javascript">
+if($("input[name='upfilesdel[]']").val()){
+	$('#delf').show();
+}else{
+	$('#delf').css('display','none');
+	}
+function hideWindow(){
+	 $("#upfileshow").fadeOut("slow"); 
+}	
+$("#conform").bind("click", function(e){
+	var dis='{dishow}';
+	if(dis=='none'){
+		$("#cflag").val('submission');
+	}else{
+		$("#cflag").val('conform');
+	}
+ });
+
+$("#save").bind("click", function(e){
+		$("#cflag").val('save');
+    });	
+$("#upfileid").bind("click", function(e){
+	//var vv=$(this).offset();
+		//$("#uploader").css('display','block');
+		if($("#upfileshow").css('display')=='block'){
+		   $("#upfileshow").fadeOut("slow"); 
+		}else{
+			//$("#uploader").css("top",vv.top);
+		//$("#uploader").css("left",vv.left+50);
+			$("#upfileshow").css('display','block'); 
+				
+		}
+     });
+$(function(){
+	var top,left,move=false;
+	$("#reply").click(function(){
+	}).mousedown(function(e){
+		top=e.pageY-parseInt($("#upfileshow").css("top"));
+		left=e.pageX-parseInt($("#upfileshow").css("left"));
+		move=true;
+	});
+	$(document).mousemove(function(e){
+		if(move){
+		var x= e.pageX-left;
+		var y= e.pageY-top;
+		$("#upfileshow").css({"left":x,"top":y});
+		}
+	}).mouseup(function(){
+		move=false;
+	})
+})
+var rand=Math.random()*100000;
+var most_num=4;//最多上传图片数量
+var small=1;//是否生成缩略图1为是0为不生成
+var count_num=0;
+jQuery(document).ready(function() {  
+ 	$("#uploader").pluploadQueue({
+								 url:'index1.php?model=lore_index&action=upfile&rand='+rand,
+								 runtimes: 'browserplus,flash,gears,html4,html5,silverlight',
+								 //runtimes: 'gears,html5,html4,flash,silverlight,browserplus',
+								 //runtimes: 'browserplus,flash,gears,html4,html5,silverlight',
+								// runtimes : 'gears,flash,silverlight,browserplus,html5',  
+								 max_file_size: '100mb',  
+								 chunk_size: '10mb',  
+								 unique_names: true,  
+								 //resize: {width : 320, height : 150, quality : 90},  
+								 filters: [  
+									{title : "all files", extensions : "doc,docx,ppt,pptx,xls,rar,pdf,txt,zip,avi,crt,iso,xml,csv,ini,cmd"}  
+								 ],  
+								 flash_swf_url : 'js/plupload/js/plupload.flash.swf',  
+								 silverlight_xap_url : 'js/plupload/js/plupload.silverlight.xap'  
+     });
+ });
+$("#delf").bind("click", function(e){
+	var listid='';
+	$("input[name='upfilesdel[]']:checked").each(function(){
+          //listid+= "'"+$(this).val()+"',";
+		  listid+= $(this).val()+",";
+    });
+	listid=listid.substr(0,listid.length-1);
+	var rand_key=$("#key").val();
+	if(listid){								
+		$.post('?model=lore_index&action=delupfiles',{listid:listid,rand_key:rand_key,rand:rand},
+					function (data)
+					{
+						if(data)
+						{
+							$("#att").html(data);
+							
+						}else{
+							//$("#rewordtd").css('display','none');
+							alert("删除失败");
+						}
+					 }
+					);
+		}
+
+});
+timeview();
+function timeview()
+{
+	var T_today=new Date();
+	timestr=T_today.toLocaleString();
+	var strdate=T_today.getFullYear()+'-'+(T_today.getMonth()+1)+'-'+T_today.getDate();
+	timestr=timestr.substr(timestr.indexOf(":")-2);
+	$("#time_area").html(strdate+' '+timestr);
+	T_today.setSeconds(T_today.getSeconds()+1);
+	window.setTimeout( "timeview()", 1000 );
+}
+$("#search").bind("click", function(e){
+		related=$("#relatedterms").val();
+		if(related){								
+		$.post('?model=lore_index&action=searchcorrelation',{rewords:related,rand:rand},
+					function (data)
+					{
+						if(data)
+						{
+							$("#rewordtd").css('display','block');
+							$("#rewordtd").css('white-space','normal');
+							$("#rewordtd").html(data);
+							var Count=0;	
+							$("input[type='checkbox'][name='reterms[]']").bind("click", function(e){
+																								 
+								if($(this).attr("checked")){
+									 Count++;
+								}else{
+									Count--;
+								}													  
+								if(Count>5){
+									alert("此属性最多只能选5项！");
+									$(this).removeAttr("checked"); 
+									Count--;
+								}
+								});
+						}else{
+							$("#rewordtd").css('display','none');
+							alert("无关联词");
+						}
+					 }
+					);
+		}
+});
+var CheckCount=$("#tagsid input[type='checkbox']:checked").size();
+				//+$("input[type='checkbox']:checked").size()
+				//+$("input[type='checkbox']:checked").size();		
+function ontagsall(object){
+	//$("input[type='checkbox'][name='"+object+"[]']").click(function(){
+	if($("input[type='checkbox'][id='"+object+"']").attr("checked")){
+	  CheckCount++;
+	}else{
+		CheckCount--;
+		}													  
+	if(CheckCount>4){
+		alert("此属性最多只能选4项！");
+			$("input[type='checkbox'][id='"+object+"']").removeAttr("checked"); 
+			CheckCount--;
+		}
+
+	/*
+	if($("input[type='checkbox'][name='"+object+"']").attr("checked")){
+	  CheckCount++;
+	}else{
+		CheckCount--;
+		}													  
+	if(CheckCount>4){
+		alert("此属性最多只能选4项！");
+			$("input[type='checkbox'][name='"+object+"']").removeAttr("checked"); 
+			CheckCount--;
+		}
+	*/
+	//});
+	
+}
+$("input[type='checkbox'][name='tag1[]']").click(function(){					  
+	if($(this).attr("checked")){
+	  CheckCount++;
+	}else{
+		CheckCount--;
+		}													  
+	
+	if(CheckCount>4){
+		alert("此属性最多只能选4项！");
+			$(this).removeAttr("checked"); 
+			CheckCount--;
+		}
+								
+});
+$("input[type='checkbox'][name='tag2[]']").click(function(){
+	 if($(this).attr("checked")){
+	  CheckCount++;
+	}else{
+		CheckCount--;
+		}	
+	if(CheckCount>4){
+		alert("此属性最多只能选4项！");
+			$(this).removeAttr("checked"); 
+			CheckCount--;
+		}
+									
+});
+$("input[type='checkbox'][name='tag3[]']").click(function(){
+		if($(this).attr("checked")){
+	  CheckCount++;
+	}else{
+		CheckCount--;
+		}	
+    	if(CheckCount>4){
+			alert("此属性最多只能选4项！");
+			$(this).removeAttr("checked"); 
+			CheckCount--;
+		}
+									
+});
+//window.setTimeout('view()', 1000 );
+
+function view(){
+	//FCKeditorAPI.GetInstance("body_content").SetHTML($('#temp').html());
+}
+function clickform(){
+	var oEditor = FCKeditorAPI.GetInstance("body_content");
+	 var replycontent=oEditor.GetHTML();
+	if(!$('#title').val().replace(/^\s\s*/, '')){
+		 alert('标题不能为空！');return false;
+	}
+	if(CheckCount<=0){
+		alert('请选择属性！'); return false; 
+	}
+	if(!replycontent.replace(/^\s\s*/, '')){
+		alert('文章内容不能为空！'); return false; 
+	}
+
+}
+</script>
+</body>
+</html>

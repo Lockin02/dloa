@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			新增订票信息
+		</title>
+		{#commonInclude#}
+		<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+		<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-ticket.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/message-addpush.js"></script>
+		<script type="text/javascript" src="{#jsPath#}/message-common.js"></script>
+		<!-- 引入公用费用归属部分 -->
+		<script type="text/javascript" src="view/template/finance/expense/js/costtype-init.js"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=flights_message_message&action=add">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								新增订票信息
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								基本信息
+								<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl');"/>
+							</legend>
+							<table class="form_in_table" id="baseTbl">
+								<tr>
+									<td class="form_text_left">
+										订票需求号
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal" readonly id="requireNo" name="message[requireNo]" value="{requireNo}" />
+										<input type="hidden" class="txt" id="requireId" name="message[requireId]" value="{requireId}" />
+									</td>
+									<td class="form_text_left">
+										<span class="blue">订票机构</span>
+									</td>
+									<td class="form_text_right">
+										<input id="organizationId" type="hidden" name="message[organizationId]"/>
+										<input id="organization" type="text" name="message[organization]" class="txt"/>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								订票要求
+								<img src="images/icon/info_up.gif" id="ReqImg_d" onclick="showAndHide('ReqImg_d','ReqTbl_d');"/>
+							</legend>
+							<table class="form_in_table" id="ReqTbl_d">
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											机票类型
+										</span>
+									</td>
+									<td class="form_text_right" colspan="3">
+										&nbsp;
+										<input type="radio" name="message[ticketType]" value="10" onclick="changeType(this.value)"/>
+										单程 &nbsp;&nbsp;
+										<input type="radio" name="message[ticketType]" value="11" onclick="changeType(this.value)"/>
+										往返 &nbsp;&nbsp;
+										<input type="radio" name="message[ticketType]" value="12" onclick="changeType(this.value)"/>
+										联程
+
+										<input type="hidden" id="ticketTypeHidden" value="{ticketType}"/>
+									</td>
+								</tr>
+								<!-- 单程 -->
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											出发城市:
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{startPlace}" id="startPlace" name="message[startPlace]"
+										/>
+									</td>
+									<td class="form_text_left" id="startTimes_a">
+										<span style="color:blue;">
+											出发日期
+										</span>
+									</td>
+									<td class="form_text_right" id="startTimes_b">
+										<input type="text" class="txt" value="{startDate}" name="message[startDate]" id="startDate" onfocus="WdatePicker()"/>
+									</td>
+								</tr>
+								<tr id="middles" style="display:none;">
+									<td class="form_text_left">
+										<span style="color:blue;">
+											中转城市
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{middlePlace}" id="middlePlace"
+										name="message[middlePlace]" />
+									</td>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											第二天中转日期
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" value="{twoDate}" id="twoDate" name="message[twoDate]"
+										onfocus="WdatePicker()" />
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span style="color:blue;">
+											到达城市
+										</span>
+									</td>
+									<td class="form_text_right" colspan="3">
+										<input type="text" class="txt" value="{endPlace}" id="endPlace" name="message[endPlace]"
+										/>
+									</td>
+									<td class="form_text_left" id="hlTimes_a" style="display:none;">
+										<span style="color:blue;">
+											返回日期
+										</span>
+									</td>
+									<td class="form_text_right" id="hlTimes_b" style="display:none;">
+										<input type="text" class="txt" value="{comeDate}" value="" id="comeDate"
+										name="message[comeDate]" onfocus="WdatePicker()" />
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<fieldset>
+							<legend class="legend">
+								费用归属
+								<img src="images/icon/info_up.gif" id="feeImg_c" onclick="showAndHideDiv('feeImg_c','feeTbl_c');"/>
+							</legend>
+							<div class="form_in_table" id="feeTbl_c">
+							</div>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+			<div id="itemTable">
+			</div>
+			<table class="form_main_table">
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								发送邮件
+								<img src="images/icon/info_up.gif" id="mailImg_e" onclick="showAndHide('mailImg_e','mailTbl_e');"/>
+							</legend>
+							<table class="form_in_table" id="mailTbl_e">
+								<tr>
+							   		<td class="form_text_left">是否发送邮件
+							       	</td>
+							   		<td colspan="3" class="form_text_right">
+							   			<input type="radio" name="message[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+							      		<input type="radio" name="message[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+									</td>
+								</tr>
+								<tr id="maildiv">
+							   		<td class="form_text_left">收件人
+							       	</td>
+							       	<td colspan="3" class="form_text_right">
+									    <input type="text" class="txtlong" name="message[email][TO_NAME]" id="TO_NAME" readonly="readonly" value="{requireName}"/>
+							    		<input type="hidden" name="message[email][TO_ID]" id="TO_ID" readonly="readonly" value="{requireId}"/>
+								    </td>
+						   		</tr>
+							   	<tr id="mailccdiv">
+							   		<td class="form_text_left">抄送
+							       	</td>
+							       	<td colspan="3" class="form_text_right">
+									    <input type="text" class="txtlong" name="message[email][ADDNAMES]" id="ADDNAMES" readonly="readonly"/>
+							    		<input type="hidden" name="message[email][ADDIDS]" id="ADDIDS" readonly="readonly"/>
+
+							    		<input type="hidden" id="sendUserId"/>
+							    		<input type="hidden" id="sendName"/>
+								    </td>
+							   	</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table">
+				<tr>
+					<td class="txt_btn" colspan="4">
+                        <input type="hidden" id="deptIsNeedProvince" value="{deptIsNeedProvince}"/>
+                        <input type="hidden" id="deptIsNeedCustomerType" value="{deptIsNeedCustomerType}"/>
+						<input type="hidden" id="id" value="{requireId}" />
+						<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+						<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

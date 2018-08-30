@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>更新项目</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/esmproject-updateProject.js"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+        更新项目
+        <span id="trip" style="display:none;">
+            <span><img id="imgLoading" style="display:none;vertical-align:middle;" src="js/jquery/images/grid/load.gif"/></span>
+            <span id="showMsg"></span>
+        </span>
+    </span>
+</div>
+<table class="form_main_table">
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend">
+                    服务项目更新
+                </legend>
+                <table class="form_in_table">
+                    <tr>
+                        <td class="form_text_left">
+                            <label>执行操作:</label>
+                        </td>
+                        <td class="form_text_right">
+                            <input type="radio" id="radio5" name="actionType" value="5" checked="checked"
+                                   title="更新报销支付" onclick="changeInfo(this.value)"/>
+                            <label id="span5" for="radio5" class="green">更新报销支付</label>
+
+                            <input type="radio" id="radio1" name="actionType" value="1" title="更新人力决算"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="span1" for="radio1">更新人力决算</label>
+
+                            <input type="radio" id="radio4" name="actionType" value="4" title="更新设备决算"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="span4" for="radio4">更新设备决算</label>
+
+                            <!--<input type="radio" id="radio2" name="actionType" value="2" title="更新毛利率"-->
+                                   <!--onclick="changeInfo(this.value)"/>-->
+                            <!--<label id="span2" for="radio2">更新毛利率</label>-->
+
+                            <input type="radio" id="radio6" name="actionType" value="6" title="项目收入存档"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="span6" for="radio6">项目收入存档</label>
+
+                            <input type="radio" id="radio7" name="actionType" value="7" title="决算数据存档"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="span7" for="radio7">决算数据存档</label>
+
+                            <input type="radio" id="radio8" name="actionType" value="8" title="更新项目数据"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="span8" for="radio8">更新项目数据</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            <label>更新范围:</label>
+                        </td>
+                        <td class="form_text_right">
+                            <span id="range1" val='1' style="display:none;">
+                                <select id="year">{yearStr}</select>年
+                                <select id="month">{monthStr}</select>月
+                            </span>
+                            <span id="range2" val='2' style="display:none;">
+                                项目编号：
+                                <input type="text" class="txt" id="projectCode"/>
+                                项目状态：
+                                <select id="status">
+                                    <option value="">全部</option>
+                                    {status}
+                                </select>
+                            </span>
+                            <span id="range4" val='4' style="display:none;">
+                                <select id="yearEqu">{yearStr}</select>年
+                                <select id="monthEqu">{monthStr}</select>月
+                            </span>
+                            <span id="range5" val='5'>
+                                <select id="yearField">{yearStr}</select>年
+                                <select id="monthField">{monthStr}</select>月
+                                项目编号：
+                                <input type="text" class="txt" id="projectCode5" style="width:150px;"/>
+                            </span>
+                            <span id="range6" val='6' style="display:none;">
+                                项目编号：
+                                <input type="text" id="incomeProjectCode" style="width:150px;"/>
+                            </span>
+                            <span id="range7" val='7' style="display:none;">
+                                决算类型：
+                                <select id="budgetType">
+                                    <option value="budgetPerson">人力</option>
+                                    <option value="budgetField">报销支付</option>
+                                    <option value="budgetEqu">设备</option>
+                                    <option value="budgetOutsourcing">外包</option>
+                                    <option value="budgetOther">其他</option>
+                                </select>
+                                年：
+                                <input type="text" id="year7" style="width:60px;" value="{thisYear}"/>
+                                月：
+                                <input type="text" id="month7" style="width:60px;" value="{thisMonth}"/>
+                                项目编号：
+                                <input type="text" id="feeProjectCode" style="width:150px;"/>
+                            </span>
+                            <span id="range8" val='8' style="display:none;">
+                                项目编号：
+                                <input type="text" id="projectCode8" style="width:150px;"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                        </td>
+                        <td class="form_text_right">
+                            <span id="condition1" val='1' style="display:none;">
+                                <button id="confirmSalary" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition2" val='2' style="display:none;">
+                                <button id="confirmExgross" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition3" val='3' style="display:none;">
+                                <button id="confirmRemapping" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition4" val='4' style="display:none;">
+                                <button id="confirmEquFee" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition5" val='5'>
+                                <button id="confirmFieldFee" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition6" val='6' style="display:none;">
+                                <button id="confirmProjectIncome" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition7" val='7' style="display:none;">
+                                <button id="confirmFeeVersion" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="condition8" val='8' style="display:none;">
+                                <button id="confirmProjectInfo" class="txt_btn_a">确认更新</button>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend">
+                    产品项目更新
+                </legend>
+                <table class="form_in_table">
+                    <tr>
+                        <td class="form_text_left">
+                            <label>执行操作(产品项目):</label>
+                        </td>
+                        <td class="form_text_right">
+                            <input {showDataModify} type="radio" id="radioc0" name="actionType" value="c0" title="数据操作"
+                                   onclick="changeInfo(this.value)"/>
+                            <label {showDataModify} id="spanc0" for="radioc0">数据操作</label>
+
+                            <!--<input type="radio" id="radioc1" name="actionType" value="c1" title="更新收入版本"-->
+                                   <!--onclick="changeInfo(this.value)"/>-->
+                            <!--<label id="spanc1" for="radioc1">更新收入版本</label>-->
+
+                            <!--<input type="radio" id="radioc2" name="actionType" value="c2" title="更新成本版本"-->
+                                   <!--onclick="changeInfo(this.value)"/>-->
+                            <!--<label id="spanc2" for="radioc2">更新成本版本</label>-->
+
+                            <input type="radio" id="radioc3" name="actionType" value="c3" title="更新项目冗余数据"
+                                   onclick="changeInfo(this.value)"/>
+                            <label id="spanc3" for="radioc3">更新项目冗余数据</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                        </td>
+                        <td class="form_text_right">
+                            <!--    产品项目更新   开始     -->
+                            <span id="conditionc0" val='c0' style="display:none;">
+                                <button id="updateConprojectData" class="txt_btn_a">数据更新</button>&nbsp;&nbsp;
+                                <button id="saveConprojectVersion" class="txt_btn_a">保存版本</button>
+                            </span>
+                             <span id="conditionc1" val='c1' style="display:none;">
+                                <button id="confirmIncome_c" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="conditionc2" val='c2' style="display:none;">
+                                <button id="confirmCost_c" class="txt_btn_a">确认更新</button>
+                            </span>
+                            <span id="conditionc3" val='c3' style="display:none;">
+                                <button id="updateConproject" class="txt_btn_a">确认更新</button>
+                                项目编号：
+                                <input type="text" class="txt" id="projectCodec3" style="width:150px;" placeholder="不填项目时默认更新全部"/>
+                            </span>
+                            <!--    产品项目更新   结束     -->
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+</table>
+
+<table class="form_main_table" width="90%">
+    <tr>
+        <td class="form_text_right">
+            功能说明:<br/>
+            <span id="remarkInfo1" val='1' style="color:blue;display:none;">
+                1.确认更新后，系统会将人员的工资数据更新到项目人力决算中。<br/>
+                2.如果更新完成后再次更新，系统会将最新的数据覆盖到当前人力决算数据中，不会导致重复。
+            </span>
+            <span id="remarkInfo2" val='2' style="color:blue;display:none;">
+                1.确认更新后，系统会自动计算出项目毛利率，同时更新到项目表和毛利率记录表。<br/>
+                2.系统更新会花费较多时间，请尽量小范围更新。<br/>
+                3.如果需要更新多个项目，请以逗号“,”（英文）分隔。
+            </span>
+            <span id="remarkInfo3" val='3' style="color:blue;display:none;">
+                1.确认更新后，系统会自动更新正式项目和PK项目的关联关系到映射表中。<br/>
+            </span>
+            <span id="remarkInfo4" val='4' style="color:blue;display:none;">
+                1.确认更新后，系统会将设备决算更新到项目设备决算中。<br/>
+                2.选中的年月信息，用来匹配新OA资产折旧部分。
+            </span>
+            <span id="remarkInfo5" val='5' style="color:blue;">
+                1.确认更新后，系统会将项目的报销金额更新到项目现场决算（一般报销内容）和人力决算（补贴）中。<br/>
+                2.公式中包含关联PK的现场决算。<br/>
+            </span>
+            <span id="remarkInfo6" val='6' style="color:blue;display:none;">
+                1.确认更新后，系统会将当天的项目收入信息进行存档处理。<br/>
+                2.以【年-月-日】为版本号，取当前时间节点数据。
+            </span>
+            <span id="remarkInfo7" val='7' style="color:blue;display:none;">
+                1.确认更新后，系统会将当天的项目收入信息进行存档处理。<br/>
+                2.以【年-月-1】为版本号，每个月只会有一份数据，报销、人力、设备取更新报销支付、更新人力决算、更新设备决算的值，其他类型直接取实时值。
+            </span>
+            <span id="remarkInfo8" val='8' style="color:blue;display:none;">
+                1.确认更新后，系统会更新项目表中的板块、板块ID、合同金额、税点、扣款、营收、营收预留、销售区域、销售区域ID。
+            </span>
+
+            <span id="remarkInfoc0" val='c0' style="color:blue;display:none;">
+            </span>
+            <span id="remarkInfoc1" val='c1' style="color:blue;display:none;">
+                1.确认更新后，系统会将当天的项目收入信息进行存档处理。<br/>
+                2.以【年-月-1】为版本号，每个月只会有一份数据，取当前时间节点数据。
+            </span>
+            <span id="remarkInfoc2" val='c2' style="color:blue;display:none;">
+                1.确认更新后，系统会将当天的项目车成本信息进行存档处理。<br/>
+                2.以【年-月-1】为版本号，每个月只会有一份数据，取当前时间节点数据。
+            </span>
+            <span id="remarkInfoc3" val='c3' style="color:blue;display:none;">
+            </span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

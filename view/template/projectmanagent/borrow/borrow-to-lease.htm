@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>新建出租合同</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"> </script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+   <script type="text/javascript" src="js/jquery/grid/yxsubgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-orderTempCode.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-currency.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allorder.js"></script>
+
+<script type="text/javascript" src="js/validate.js"> </script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="View/template/contract/rental/js/rentalcontract-add.js"></script>
+    <script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-tolease-formValidator.js"></script>
+    	<script type="text/javascript" src="view/template/common/js/order-proCity.js"></script>
+	<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"> </script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"> </script>
+		<script type="text/javascript" src="swfupload/handlers.js"> </script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+		<script>
+		            var uploadfile;
+		            $(function() {
+		                uploadfile = createSWFUpload({
+		                    "serviceType": "oa_sale_lease",
+		                    "serviceId": "{id}"
+		                });
+		                uploadfile2=createSWFUpload({
+						    "serviceType":"oa_sale_lease2",//业务模块编码，一般取表名
+						    "serviceId": "{id}"
+						},{
+							button_placeholder_id:'swfupload2',
+							fileListId:'uploadfileList2',
+							progressTarget:'fsUploadProgress2'
+						});
+		            });
+
+
+		</script>
+		<!-- 附件上传结束 -->
+<script>
+      function orderSign(obj) {
+         if(obj.value == "是"){
+            document.getElementById("orderCodeDiv").style.display="";
+            document.getElementById("condition").style.display="";
+            toSelect();
+            $("#invbody").children().remove();
+            $("#productNumber").val(0);
+            $("#mytra").children().remove();
+            $("#TraNumber").val(0);
+            $("#orderCode").attr("disabled",false);
+            $("#orderState").attr('checked',true);
+            $("#orderTempMoney_v").unFormValidator(true);
+            $("#orderMoney_v").unFormValidator(false);
+            if( $("#orderInput").val() == '0'){
+              $("#orderTempCode").unFormValidator(true);
+              $("#orderCode").unFormValidator(false);
+              $("#orderTempCode").attr('class',"readOnlyTxtNormal");
+            }
+            $("#tempInfo").html("合并临时合同号");
+         }else {
+            document.getElementById("orderCodeDiv").style.display="none";
+            document.getElementById("condition").style.display="none";
+            $("#orderTempCode").yxcombogrid_allorder('remove');
+            $("#orderTempCode").attr('readonly',false);
+            $("#orderCode").val("");
+            $("#orderCode").attr("disabled",true);
+            $("#orderState").attr('checked',false);
+            $("#orderTempMoney_v").unFormValidator(false);
+            $("#orderMoney_v").unFormValidator(true);
+            if($("#orderInput").val() == '0'){
+               $("#orderTempCode").unFormValidator(false);
+               $("#orderCode").unFormValidator(true);
+               $("#orderTempCode").attr('class',"txt");
+               $("#orderTempCode").attr('readOnly',false);
+            }
+            $("#tempInfo").html("临时合同号");
+            $("#invbody").children().remove();
+            $("#productNumber").val(0);
+            $("#orderTempCode").val("");
+         }
+        }
+      function parent(obj){
+         if(obj.value == "是"){
+            document.getElementById("parentOrder").style.display="";
+            $("#parentOrder").attr("disabled",false);
+         }else{
+            document.getElementById("parentOrder").style.display="none";
+            $("#parentOrder").attr("disabled",true);
+         }
+        }
+
+       //选择序列号
+		function serialNum(borrowId,productId,num){
+			 var amount = $("#bornumber"+num).val();
+			 showThickboxWin('?model=projectmanagent_borrow_borrow&action=serialNum&borrowId=' + borrowId + '&productId=' + productId + '&num=' + num + '&amount=' + amount
+						     + "&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=800");
+		}
+</script>
+</head>
+
+<body>
+
+<form action="?model=projectmanagent_borrow_borrow&action=toLeaseAdd" id="form1" method="post" >
+	<table class="form_main_table">
+	<div class="main_head"> <span class="main_head_title">租赁合同</span></div>
+    <tr>
+        <td class="form_text_left">是否签约</td>
+        <td class="form_text_right" >
+        	<input type="radio" name="rentalcontract[sign]" value="是" onclick="orderSign(this);"/>是
+            <input type="radio" name="rentalcontract[sign]" value="否" onclick="orderSign(this);" checked/>否
+        </td>
+        <td class="form_text_left">合同属性</td>
+        <td class="form_text_right">
+           <input type="hidden" name="rentalcontract[orderNatureName]" id="orderNatureName"/>
+           <select class="select" name="rentalcontract[orderNature]" id="orderNature" >
+                  <option value="">请选择</option>
+           </select>
+           <span class="red">[*]</span>
+        </td>
+        <td class="form_text_left">是否有父合同</td>
+        <td class="form_text_right">
+        	<input type="radio" name="rentalcontract[parent]" value="是" onclick="parent(this);"/>是
+            <input type="radio" name="rentalcontract[parent]" value="否" onclick="parent(this);" checked/>否
+        </td>
+
+     </tr>
+     <tr id="condition" style="display:none">
+        <td class="form_text_left">纸质合同状态</td>
+        <td class="form_text_right" colspan="5">
+        	<input type="radio" name="rentalcontract[orderstate]" value="已提交" />已提交
+            <input type="radio" name="rentalcontract[orderstate]" value="已拿到" id="orderState" />已拿到
+        </td>
+    </tr>
+    <tr id="parentOrder" style="display:none">
+        <td class="form_text_left">父合同名称</td>
+        <td class="form_text_right" colspan="5">
+          <input type="text" class="txt" name="rentalcontract[parentOrder]" />
+        </td>
+    </tr>
+    <tr>
+		<td  class="form_text_left">鼎利合同号</td>
+		<td class="form_view_right">
+		     <div id="orderCodeDiv" style="display:none">
+			 <input class="txt" type="text" name="rentalcontract[orderCode]" id="orderCode" disabled="disabled"/>
+			 <span id="_orderCode" class="red">[*]</span>
+			 <div id="orderCodeTip" class="tipShortTxt"></div>
+			 </div>
+		</td>
+		<td  class="form_text_left" id="tempInfo">临时合同号</td>
+		<td class="form_view_right">
+			<input class="txt" type="text" name="rentalcontract[orderTempCode]" id="orderTempCode" />
+			<input type="hidden"  id="orderId" />
+			<span id="_orderCode" class="red">[*]</span>
+		   <div id="orderTempCodeTip" class="tipShortTxt"></div>
+		</td>
+		<td  class="form_text_left">合同名称</td>
+		<td class="form_view_right">
+			<input class="txt" type="text" name="rentalcontract[orderName]" id="orderName" />
+			<span class="red">[*]</span>
+			<div id="orderNameTip" class="tipShortTxt">
+		</td>
+	</tr>
+    <tr>
+	   <td class="form_text_left">金额币别</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="rentalcontract[currency]" id="currency" value="人民币"/>
+	   </td>
+	    <td class="form_text_left">预计金额(人民币)</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt formatMoney" name="rentalcontract[orderTempMoney]" id="orderTempMoney"/>
+		   <div id="orderTempMoney_vTip" class="tipShortTxt"></div>
+	   </td>
+	   <td class="form_text_left">签约金额(人民币)</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt formatMoney" name="rentalcontract[orderMoney]" id="orderMoney"/>
+		   <div id="orderMoney_vTip" class="tipShortTxt"></div>
+	   </td>
+	</tr>
+    <tr id="currencyRate" style="display:none">
+        <td class="form_text_left">汇率</td>
+		<td class="form_text_right">
+		   <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="rentalcontract[rate]" id="rate" value="1" onblur="conversion();"/>
+	   </td>
+        <td class="form_text_left">预计金额<span id="cur"></span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt formatMoney" name="rentalcontract[orderTempMoneyCur]" id="orderTempMoneyCur" onblur="conversion();"/>
+
+	   </td>
+	   <td class="form_text_left">签约金额<span id="cur1"></span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt formatMoney" name="rentalcontract[orderMoneyCur]" id="orderMoneyCur" onblur="conversion();"/>
+
+	   </td>
+
+	</tr>
+	<tr>
+		<td  class="form_text_left">客户名称</td>
+		<td class="form_view_right">
+			<input class="txt" type="text" name="rentalcontract[tenant]" id="tenant" />
+			<input type="hidden" name="rentalcontract[tenantId]" id="tenantId" />
+			<span class="red">[*]</span>
+		   <div id="tenantIdTip" class="tipShortTxt"></div>
+		</td>
+
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+			<select class="select" name="rentalcontract[customerType]" id="customerType">
+			</select>
+			<input type="hidden" class="txt" name="rentalcontract[customerProvince]" id="customerProvince_v" />
+		</td>
+		<td class="form_text_left">发票类型</td>
+	    <td class="form_text_right">
+		   <select class="select" name="rentalcontract[invoiceType]" id="invoiceType">
+	 	   </select>
+	    </td>
+	</tr>
+	<tr>
+        <td class="form_text_left">所属省份</td>
+		<td class="form_text_right">
+		   <select class="select" name="rentalcontract[orderProvinceId]" id="province" ></select>
+		   <input type="hidden" name="rentalcontract[orderProvince]" id="provinceName" />
+		   <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">所属城市</td>
+		<td class="form_text_right">
+		   <select class="select" name="rentalcontract[orderCityId]" id="city" ></select>
+		   <input type="hidden" name="rentalcontract[orderCity]" id="cityName" />
+		   <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">合同归属区域</td>
+        <td class="form_text_right">
+          <input type="text"  class="txt"  name="rentalcontract[areaName]" id="areaName" />
+          <input type="hidden" name="rentalcontract[areaCode]" id="areaCode" />
+         <span class="red">[*]</span>
+          <!--销售员-->
+           <input type="hidden" class="txt" name="rentalcontract[saleman]" id="saleman" value="{saleman}"/>
+           <input type="hidden" name="rentalcontract[salemanId]" id="salemanId" value="{salemanId}" />
+          <!--创建人、创建时间-->
+          <input type="hidden" name="rentalcontract[createName]" id="createName" value="{createName}" class="readOnlyTxtNormal" readonly="readonly"/>
+		  <input type="hidden" name="rentalcontract[createId]" id="createId" value="{createId}" />
+		  <input type="hidden" name="rentalcontract[createTime]" id="createTime" value="{createTime}" class="readOnlyTxtNormal" readonly="readonly"/>
+        </td>
+    </tr>
+	<tr>
+		<td  class="form_text_left">承租方负责人</td>
+		<td class="form_view_right">
+			<input type="text" class="txt" name="rentalcontract[tenantName]" id="tenantName" />
+			<input type="hidden" name="rentalcontract[tenantNameId]" id="tenantNameId" />
+		</td>
+		<td  class="form_text_left">技术负责人</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="rentalcontract[scienceMan]" id="scienceMan" />
+			<input type="hidden" name="rentalcontract[scienceManId]" id="scienceManId" />
+		</td>
+		<td class="form_text_left">区域负责人</td>
+		<td class="form_text_right" >
+           <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="rentalcontract[areaPrincipal]" id="areaPrincipal" />
+		   <input type="hidden" name="rentalcontract[areaPrincipalId]" id="areaPrincipalId_v" />
+		</td>
+	</tr>
+
+	<tr>
+		<td  class="form_text_left">承租开始日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="rentalcontract[beginTime]" id="beginTime" onfocus="WdatePicker()"/>
+		</td>
+		<td  class="form_text_left">承租截止日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" name="rentalcontract[closeTime]" id="closeTime" onfocus="WdatePicker()"/>
+		</td>
+		<td  class="form_text_left">合同负责人</td>
+		<td class="form_view_right">
+			<input type="text" class="txt" name="rentalcontract[hiresName]" id="hiresName" value="{hiresName}" readonly="readonly"/>
+		    <input type="hidden" name="rentalcontract[hiresId]" id="hiresId" value="{hiresId}" />
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">支付详情</td>
+		<td class="form_text_right" colspan="5">
+			<textarea name="rentalcontract[details]" class="txt_txtarea_font"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="5">
+			<textarea name="rentalcontract[remark]" class="txt_txtarea_font"></textarea>
+		</td>
+
+	<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+		</td>
+		<td class="form_text_left">合同文本</td>
+		<td class="form_text_right">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress2"></div>
+		<div class="upload"><span id="swfupload2"></span> <input
+			id="btnCancel2" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList2" class="upload"></div>
+		</div>
+		</td>
+		<td class="form_text_left"><span class="red">发货条件</span></td>
+		<td class="form_text_right">
+            <select class="select" id="shipCondition" name="rentalcontract[shipCondition]">
+                  <option value="">请选择</option>
+                  <option value="0">立即发货</option>
+                  <option value="1">通知发货</option>
+            </select>
+            <span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<table class="form_main_table" id="mytable">
+			<thead>
+				<tr align="left">
+					<td colspan="11" class="form_header">借试用转销售产品清单</td>
+					<td align="center" width="4%">
+					   <input type="hidden" id="borproductNumber" value="1" />
+					   <img src="images/verpic_open.gif" onclick="dis('borrowequ')" title="缩放" />
+				</tr>
+				<tr class="main_tr_header">
+					<td style="text-align:center" width="5%">序号</td>
+					<td style="text-align:center" width="10%">产品编号</td>
+					<td style="text-align:center" width="13%">产品名称</td>
+					<td style="text-align:center" width="10%">型号/版本</td>
+					<td style="text-align:center" width="8%" title="双击选择序列号">数量<span class="red" title="双击选择序列号">[*]</span></td>
+					<td style="text-align:center" width="8%">单价</td>
+					<td style="text-align:center" width="8%">金额</td>
+					<td style="text-align:center" width="8%">计划交货日期</td>
+					<td style="text-align:center" width="8%">保修期(月)</td>
+					<td style="text-align:center" width="8%">加密配置</td>
+					<td style="text-align:center" width="4%">合同内</td>
+					<td style="text-align:center" width="5%">操作</td>
+				</tr>
+			</thead>
+			<tbody id="borrowequ">
+				{borrowequ}
+			</tbody>
+		</table>
+		</td>
+	</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="12" class="form_header">产品清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="productNumber" value="1" />
+			  <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="dynamic_add('invbody','productNumber');" title="添加行" /></td>
+		</tr>
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="5%">序号</td>
+			<td style="text-align:center" width="10%">产品编号</td>
+			<td style="text-align:center" width="16%">产品名称</td>
+			<td style="text-align:center" width="10%">型号/版本</td>
+			<td style="text-align:center" width="10%">数量</td>
+			<td style="text-align:center" width="10%">单价</td>
+			<td style="text-align:center" width="10%">金额</td>
+			<td style="text-align:center" width="9%">保修期(月)</td>
+			<td style="text-align:center" width="9%">承租开始日期</td>
+			<td style="text-align:center" width="9%">承租截止日期</td>
+			<td style="text-align:center" width="8%">加密配置</td>
+            <td style="text-align:center" width="4%">合同内</td>
+			<td style="text-align:center" width="5%">操作</td>
+		</tr>
+	</thead>
+	<tbody id="invbody">
+		<tr id="equTab_1"><td>1</td>
+			<td><input type="text" name="rentalcontract[rentalcontractequ][1][productNo]" id="productNo1" class="txtmiddle" />
+			    <input type="hidden" name="rentalcontract[rentalcontractequ][1][unitName]" id="unitName1" /></td>
+			<td><input type="hidden" id="productId1" name="rentalcontract[rentalcontractequ][1][productId]" />
+			    <input type="text" name="rentalcontract[rentalcontractequ][1][productName]" id="productName1" class="txt"/>&nbsp<img src="images/icon/icon105.gif" onclick="conInfo('productId1','1');" title="查看配置信息"/></td>
+			<td><input type="text" name="rentalcontract[rentalcontractequ][1][productModel]" id="productModel1" class="txtmiddle" /></td>
+			<td><input type="text" name="rentalcontract[rentalcontractequ][1][number]" id="number1" class="txtshort" onblur="FloatMul('number1','price1','money1')" onchange="amount('number1')"/></td>
+			<td><input type="text" name="rentalcontract[rentalcontractequ][1][price]" id="price1" class="txtshort formatMoney" onblur="FloatMul('number1','price1','money1')" /></td>
+			<td><input type="text" name="rentalcontract[rentalcontractequ][1][money]" id="money1" class="txtshort formatMoney" onblur="FloatMul('number1','price1','money1')"/></td>
+			<td nowrap width="8%"><input type="text" class="txtshort" name="rentalcontract[rentalcontractequ][1][warrantyPeriod]" id="warrantyPeriod1" /></td>
+		    <td><input type="text" class="txtshort" name="rentalcontract[rentalcontractequ][1][proBeginTime]" id="proBeginTime1" onfocus="WdatePicker()"/></td>
+		    <td><input type="text" class="txtshort" name="rentalcontract[rentalcontractequ][1][proEndTime]" id="proEndTime1" onfocus="WdatePicker()"/></td>
+			<td><input type="hidden" id="licenseId1" name="rentalcontract[rentalcontractequ][1][license]"/>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License('licenseId1');"/>
+			    <input type="hidden" name="rentalcontract[rentalcontractequ][1][isCon]" id="isCon1" />
+			    <input type="hidden" name="rentalcontract[rentalcontractequ][1][isConfig]" id="isConfig1" />
+			    <input type="hidden" name="rentalcontract[rentalcontractequ][1][remark]" id="remark1" /></td>
+            <td width="4%"><input type="checkbox" name="rentalcontract[rentalcontractequ][1][isSell]" id="isSell1" checked="checked" /></td>
+			<td><img src="images/closeDiv.gif" onclick="mydel(this,'invbody')" title="删除行" id="Del1"/></td>
+		</tr>
+	</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="main_table" id="pre" >
+            <thead>
+		<tr align="left">
+			<td colspan="11" class="form_header">自定义清单</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="PreNum" value="1" />
+			  <img src="images/verpic_open.gif" onclick="dis('mycustom')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="pre_add('mycustom','PreNum');" title="添加行" /></td>
+		</tr>
+        <tr class="main_tr_header">
+				<td style="text-align:center" nowrap width="5%">
+					序号
+				</td>
+				<td style="text-align:center" nowrap>
+					产品编号
+				</td>
+				<td nowrap style="text-align:center">
+					产品名称
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					产品型号
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					数量
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					单价
+				</td>
+				<td nowrap width="8%" style="text-align:center">
+					金额
+				</td>
+				<td nowrap style="text-align:center">
+					计划交货日期
+				</td>
+				<td nowrap width="15%" style="text-align:center">
+					备注
+				</td>
+				<td style="text-align:center" width="8%">加密配置</td>
+				<td width="4%" style="text-align:center">
+					合同内
+				</td>
+				<td nowrap width="5%" style="text-align:center">
+					操作
+				</td>
+			</tr>
+	</thead>
+		<tbody id="mycustom">
+			<tr align="center">
+				<td nowrap>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="rentalcontract[customizelist][1][productCode]" id="PequID1" />
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="rentalcontract[customizelist][1][productName]" id="PequName1" />
+				</td>
+				<td nowrap width="8%" align="center">
+					<input class="txtshort" type="text" name="rentalcontract[customizelist][1][productModel]" id="PreModel1" />
+				</td>
+				<td>
+					<input class="txtshort" type="text" name='rentalcontract[customizelist][1][number]' id='PreAmount1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')" onchange="amount('PreAmount1')"/>
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name='rentalcontract[customizelist][1][price]' id='PrePrice1' onblur="FloatMul('PreAmount1','PrePrice1','CountMoney1')" size="8" maxlength="40" />
+				</td>
+				<td>
+					<input class="txtshort formatMoney" type="text" name="rentalcontract[customizelist][1][money]" id="CountMoney1"  />
+				</td>
+				<td align="center">
+					<input class="txtshort" type="text" name="rentalcontract[customizelist][1][projArraDT]" id="PreDeliveryDT1" onfocus="WdatePicker()"  />
+				</td>
+				<td>
+					<input class="txt" type="text" name="rentalcontract[customizelist][1][remark]" id="PRemark1" size="18" maxlength="100" />
+				</td>
+				<td>
+				<input type="hidden" id="cuslicenseId1" name="rentalcontract[customizelist][1][license]"/>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License('cuslicenseId1');"/>
+			    </td>
+				<td width="4%">
+					<input type="checkbox" name="rentalcontract[customizelist][1][isSell]" id="customizelistSell1" checked="checked" />
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mycustom')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table">
+	<thead>
+		<tr>
+			<td colspan="7" class="form_header">
+					培训计划
+			</td>
+			<td align="center" width="5%">
+				<input type="hidden" id="TraNumber" name="TraNumber" value="1" />
+				<img src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放" />
+				<img src="images/collapsed.gif" onclick="train_add('mytra','TraNumber')" title="添加行" />
+			</td>
+		</tr>
+		<tr class="main_tr_header">
+			<td nowrap width="5%" style="text-align:center">
+				序号
+			</td>
+			<td nowrap width="8%" style="text-align:center">
+				培训开始时间
+			</td>
+			<td nowrap width="8%" style="text-align:center">
+				培训结束时间
+			</td>
+			<td nowrap width="8%" style="text-align:center">
+				参与人数
+			</td>
+			<td nowrap width="18%" style="text-align:center">
+				培训地点
+			</td>
+			<td nowrap style="text-align:center">
+				培训内容
+			</td>
+			<td nowrap width="20%" style="text-align:center">
+				培训工程师要求
+			</td>
+			<td nowrap width="5%" style="text-align:center">
+				操作
+			</td>
+		</tr>
+	</thead>
+	<tbody id="mytra">
+		<tr align="center" id="traTab_1">
+			<td width="5%">
+				1
+			</td>
+			<td>
+				<input class="txtshort" type="text" name="rentalcontract[trainingplan][1][beginDT]" id="TraDT1" onfocus="WdatePicker()" />
+			</td>
+			<td>
+				<input class="txtshort" type="text" name="rentalcontract[trainingplan][1][endDT]" id="TraEndDT1" onfocus="WdatePicker()" />
+			</td>
+			<td>
+				<input class="txtshort" type="text" name="rentalcontract[trainingplan][1][traNum]"/>
+			</td>
+			<td>
+				<textarea name="rentalcontract[trainingplan][1][adress]" rows="3" style="width: 100%"></textarea>
+			</td>
+			<td>
+				<textarea name="rentalcontract[trainingplan][1][content]" rows="3" style="width: 100%"></textarea>
+			</td>
+			<td>
+				<textarea name="rentalcontract[trainingplan][1][trainer]" rows="3" style="width: 100%"></textarea>
+			</td>
+			<td>
+				<img src="images/closeDiv.gif" onclick="mydel(this,'mytra')" title="删除行" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="6">
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		    <input type="hidden" name="rentalcontract[orderInput]" value="{orderInput}" id="orderInput" />
+		    <input type="hidden" name="rentalcontract[state]" value="0" />
+		    <input type="hidden" name="rentalcontract[state]" value="0" />
+		    <input type="hidden" name="rentalcontract[ExaStatus]" value="未审批" />
+			<input name="" type="submit" class="txt_btn_a" value=" 保  存 " />
+			<input name="" type="submit" class="txt_btn_a" value=" 提交审批 " onclick="comitToApp();" />
+		</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>

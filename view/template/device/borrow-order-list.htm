@@ -1,0 +1,74 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>借出订单设备列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="POST" action="?model=device_borrow&action=return_device_list&orderid={t_id}" onsubmit="return check();" id="list">
+	<input type="hidden" id="type" name="type" value="" />
+	{list}
+	<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+		<tr>
+			<td colspan="15" style="text-align:center;">{turn_button}{del_link}<input type="submit" onclick="$('#type').val(2);" value=" 批量归还 " /></td>
+		</tr>
+	</table>
+</form>
+</table>
+<script type="text/javascript">
+function check()
+{
+	var s = $('input[type=checkbox][name=id[]]').get();
+	var selected = false;
+	var type = $('#type').val();
+	for (var i=0;i<s.length;i++)
+	{
+		if (s[i].checked == true)
+		{
+			selected = true;
+			break;
+		}
+	}
+	if (selected == false)
+	{
+		alert('最少需要选择一条数据！');
+		return false;
+	}
+	if (type==1)
+	{
+		var tmp = $('input[type=checkbox][name=id[]]:checked').get();
+		if (tmp.length < 1)
+		{
+			alert('最少需要选择一条数据！');
+			return false;
+		}else{
+			for (var i=0;i<tmp.length;i++)
+			{
+				if ($('#state_'+tmp[i].value).html()=='已确认')
+				{
+					alert('已确认的设备不能移除！');
+					return false;
+				}
+			}
+		}
+		
+		if (confirm('您确定要移除选中的设备吗？'))
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+}
+function set_all(checked,id)
+{
+	$('#type_'+id+' input[type=checkbox][disabled=false]').attr('checked',checked);
+}
+</script>
+</body>
+</html>

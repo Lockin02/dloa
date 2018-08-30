@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>合同启动执行</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+		<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType": "oa_contract_sales",
+					"serviceId": "{contractId}",
+					"serviceNo": "{contNumber}"
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td ><img src="images/sys_config.gif" >
+					<b>
+						合同启动执行
+					</b>
+				</td>
+			</tr>
+		</table>
+		<form method="post" id="form1" action="?model=contract_sales_sales&action=beginAction">
+			<table width='500' class='form_main_table' align="center">
+				<tr>
+					<td class="form_header">签约状态：</td>
+				</tr>
+				<tr class="main_foot_wraper" style="text-align:center">
+					<td nowrap >
+						{signStatus}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						合同附件 &nbsp;
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress">
+							</div>
+							<div class="upload">
+								<span id="swfupload"></span>
+								<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+								disabled="disabled" />
+								<br />
+							</div>
+							<div id="uploadfileList" class="upload">
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td nowrap align="center">
+						<input type="hidden" name="sales[id]" id="contractId" value="{contractId}">
+						<input class="txt_btn_a" type="submit" value="确定" />&nbsp;
+						<input class="txt_btn_a" type="button" value="取消" onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

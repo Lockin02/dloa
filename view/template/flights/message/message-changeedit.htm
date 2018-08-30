@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>改签</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="{#jsPath#}/message-change.js"></script>
+	</head>
+	<body>
+		<form id="form1" method="post" action="?model=flights_message_message&action=changeEdit">
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+						<div class="main_head2">
+							<span class="main_head_title">
+								修改改签信息
+							</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								原机票信息
+								<img src="images/icon/info_up.gif" id="baseImg_a" onclick="showAndHide('baseImg_a','baseTbl_a');"/>
+							</legend>
+							<table class="form_in_table" id="baseTbl_a">
+								<tr>
+									<td class="form_text_left">
+										乘机时间
+									</td>
+									<td class="form_text_right" width="30%">
+										{flightTime}
+									</td>
+									<td class="form_text_left">
+										乘 机 人
+									</td>
+									<td class="form_text_right">
+										{airName}
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										车次/航班号
+									</td>
+									<td class="form_text_right">
+										{flightNumber}
+									</td>
+									<td class="form_text_left">
+										实际订票额
+									</td>
+									<td class="form_text_right">
+										<span class="blue formatMoney">{actualCost}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										票面价格
+									</td>
+									<td class="form_text_right formatMoney" width="30%">
+										{fullFare}
+									</td>
+									<td class="form_text_left">
+										机场建设费
+									</td>
+									<td class="form_text_right formatMoney">
+										{constructionCost}
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										燃油附加费
+									</td>
+									<td class="form_text_right formatMoney">
+										{fuelCcharge}
+									</td>
+									<td class="form_text_left">
+										服务费
+									</td>
+									<td class="form_text_right formatMoney">
+										{serviceCharge}
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<fieldset>
+							<legend class="legend">
+								改签后机票信息
+								<img src="images/icon/info_up.gif" id="changedImg_b" onclick="showAndHide('changedImg_b','changedTbl_b');"/>
+							</legend>
+							<table class="form_in_table" id="changedTbl_b">
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											乘机时间
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="flightTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'});" readonly="readonly" name="message[flightTime]" value="{flightTime}"/>
+									</td>
+									<td class="form_text_left">
+										<span class="blue">
+											到达时间
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="arrivalTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'});" readonly="readonly" name="message[arrivalTime]" value="{arrivalTime}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											实际订票额
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="readOnlyTxtNormal formatMoney" id="actualCost" name="message[actualCost]" value="{actualCost}" readonly="readonly"/>
+										<input type="hidden" id="costDiff" name="message[costDiff]" value="0"/>
+										<input type="hidden" id="beforeCost" name="message[beforeCost]" value="{actualCost}"/>
+									</td>
+									<td class="form_text_left">
+										<span class="blue">
+											改签航班号
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt" id="flightNumber" name="message[flightNumber]" value="{flightNumber}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											票面价格
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="fullFare" name="message[fullFare]" value="{fullFare}" onblur="calActCost();"/>
+									</td>
+									<td class="form_text_left">
+										<span class="blue">
+											改签手续费
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="feeChange" name="message[feeChange]" value="{feeChange}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											机场建设费
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="constructionCost" name="message[constructionCost]" value="{constructionCost}" onblur="calActCost();"/>
+									</td>
+									<td class="form_text_left">
+										<span class="blue">
+											燃油附加费
+										</span>
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="fuelCcharge" name="message[fuelCcharge]" value="{fuelCcharge}" onblur="calActCost();"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										服务费
+									</td>
+									<td class="form_text_right">
+										<input type="text" class="txt formatMoney" id="serviceCharge" name="message[serviceCharge]" value="{serviceCharge}" onblur="calActCost();"/>
+									</td>
+									<td class="form_text_left">
+										<span class="blue">核算日期</span>
+									</td>
+									<td class="form_text_right" width="30%">
+										<input type="text" id="auditDate" class="txt" name="message[auditDate]" onfocus="WdatePicker()" value="{auditDate}"/>
+									</td>
+								</tr>
+								<tr>
+									<td class="form_text_left">
+										<span class="blue">
+											改签原由
+										</span>
+									</td>
+									<td class="form_text_right" colspan="3">
+										<textarea class="txt_txtarea_font" id="changeReason" name="message[changeReason]" style="width:620px;">{changeReason}</textarea>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn">
+						<input type="hidden" class="txt" id="id" name="message[id]" value="{id}"/>
+						<input type="hidden" class="txt" name="message[orgId]" value="{orgId}"/>
+						<input type="submit" class="txt_btn_a" value=" 保  存 " />
+						<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

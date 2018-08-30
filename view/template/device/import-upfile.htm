@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="POST" action="?model={t_model}&action={t_action}" enctype="multipart/form-data"   onsubmit="return check()">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">导入EXCEL文件数据</td>
+	</tr>
+	<tr>
+		<td align="right">操作类型：</td>
+		<td align="left">
+			<input type="radio" checked name="operation" onclick="set_list('import')" value="import" />导入 
+			<input type="radio" name="operation" onclick="set_list('update')" value="update" />更新 
+		</td>
+	</tr>
+	<tr style="display:{admin_none}">
+		<td align="right">选择部门：</td>
+		<td align="left">
+			<select id="dept_id" name="dept_id" onchange="get_type();">
+				<option value="">选择部门</option>
+				{dept_select}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">选择设备类别：</td>
+		<td align="left">
+			<select id="typeid" name="typeid" onchange="get_device_option()">
+				<option value="">指定列自动生成</option>
+				{type_select}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">选择设备名称：</td>
+		<td align="left">
+			<select id="list_id" name="list_id">
+				<option value="">指定列自动生成</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">选择库存区域：</td>
+		<td align="left">
+			<select id="area" name="area">
+				<option value="">指定列为区域</option>
+				{area_select}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">需导入第：</td>
+		<td align="left"><input type="text" size="5" id="sheet" name="sheet" onKeyUp="if(this.value=='0'){this.value=1;}else{this.value=this.value.replace(/\D/g,'')}" value="1" /> 张工作表</td>
+	<tr>
+		<td align="right">表头所在行：</td>
+		<td align="left"><input type="text" size="5" id="hang" name="hang" onKeyUp="if(this.value=='0'){this.value=1;}else{this.value=this.value.replace(/\D/g,'')}" value="1"></td>
+	</tr>
+	<tr>
+		<td align="right">起始数据行：</td>
+		<td align="left"><input type="text" size="5" id="start_data" name="start_data" onKeyUp="if(this.value=='0'){this.value=1;}else{this.value=this.value.replace(/\D/g,'')}" value="2" /></td>
+	</tr>
+	<tr>
+		<td align="right">Excel数据文件：</td>
+		<td align="left"><input type="file" id="upfile" name="upfile" value="" /></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 下一步 " /></td>
+	</tr>
+</table>
+<form>
+<script type="text/javascript">
+	var list_str = $('#list_id').html();
+function check()
+{
+	if ($('#hang').val()=='')
+	{
+		alert('指定表头行不能为空！');
+		return false;
+	}
+	var filename = $('#upfile').val();
+	var arr = filename.split('.');
+	var filetype = arr[arr.length-1];
+	if (filetype == 'xlsx' || filetype == 'xls')
+	{
+		show_load();
+		return true;
+	}else{
+		alert('对不起，数据文件类型必须为Excel文件的2003版或2007版！')
+		return false;
+	}
+	
+}
+
+function set_list(id)
+{
+	if (id=='update')
+	{
+		$('#list_id').html('<option value="on">不指定</option>'+list_str);
+	}else{
+		$('#list_id').html()
+	}
+}
+
+function get_type()
+{
+	var dept_id = $('#dept_id').val();
+	if (dept_id)
+	{
+		$.post('ajax.php',{model:'device_stock',action:'select_type',dept_id:dept_id,rand:Math.random(0,9999)},
+		function (data)
+		{
+			if (data)
+			{
+				$('#typeid').html('<option value="">指定列自动生成</option>'+unescape(data));
+			}else{
+				$('#typeid').html('<option value="">指定列自动生成</option>');
+			}
+		}
+		)
+	}
+}
+
+function get_device_option()
+{
+	typeid = $('#typeid').val();
+	if (typeid)
+	{
+		$.post('ajax.php',{model:'device_stock',action:'get_device_option',typeid:typeid,rand:Math.random(0,9999)},
+		function (data)
+		{
+			if (data) 
+			{
+				if ($('input[name=operation]:checked').val()=='update')
+				{
+					$('#list_id').html('<option value="on">不指定</option><option value="">指定列自动生成</option>'+unescape(data));
+				}else{
+					list_str = unescape(data);
+					$('#list_id').html('<option value="">指定列自动生成</option>'+unescape(data));
+				}
+				
+			}else{
+				$('#list_id').html('<option value="">指定列自动生成</option>');
+			}
+		}
+		)
+		
+		
+	}
+}
+
+function show_load()
+{
+	tb_show('','#TB_inline_html?&inlineId=mydiv&modal=true&height=55&width=250');
+}
+</script>
+<div id="mydiv" style="display:none">正在上传数据，请不要关闭此窗口！</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<HTML>
+<HEAD>
+<TITLE>外包数据库</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC" codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<style type="text/css">
+	tr {
+		text-align:right;
+	}
+	tr td{
+		padding-right:10px;
+		padding-left:10px;
+	}
+	select{
+		width:120px;
+	}
+</style>
+<script>
+	var Report;
+	var ReportViewer;
+	function OnReportViewerContentCellDblClick(Sender){
+		if (Sender.Column.Name == "外包合同编号")
+	    {
+	        //演示超链接功能，在这里做打开链接任务，这里用弹出消息框代替
+	        if(!ReportViewer){
+				ReportViewer = document.getElementById("ReportViewer");
+				Report = ReportViewer.Report;
+	        }
+	        var formId = Report.FieldByName("id").AsString;
+	        var formStatus = Report.FieldByName("status").AsString;
+	        var formExaStatus = Report.FieldByName("ExaStatus").AsString;
+	        var skey = "";
+	        if (formStatus == '4') {
+		        $.ajax({
+				    type: "POST",
+				    url: "?model=contract_outsourcing_outsourcing&action=md5RowAjax",
+				    data: { "id" : formId },
+				    async: false,
+				    success: function(data){
+						skey = data;
+					}
+				});
+				showModalWin("?model=contract_outsourcing_outsourcing&action=viewTab&id=" + formId + "&skey=" + skey,1);
+
+	        }else {
+	        	if (formExaStatus == '待提交' || formExaStatus == '部门审批') {
+			        $.ajax({
+					    type: "POST",
+					    url: "?model=contract_outsourcing_outsourcing&action=md5RowAjax",
+					    data: { "id" : formId },
+					    async: false,
+					    success: function(data){
+							skey = data;
+						}
+					});
+					showModalWin("?model=contract_outsourcing_outsourcing&action=viewAlong&id=" + formId + "&skey=" + skey,1);
+				}else {
+					$.ajax({
+					    type: "POST",
+					    url: "?model=contract_outsourcing_outsourcing&action=md5RowAjax",
+					    data: { "id" : formId },
+					    async: false,
+					    success: function(data){
+							skey = data;
+						}
+					});
+					showModalWin("?model=contract_outsourcing_outsourcing&action=viewTab&id=" + formId + "&skey=" + skey,1);
+				}
+	        }
+	    }
+	}
+
+	function searchBtn(){
+		location.href="?model=outsourcing_report_report&action=toOutsourcingReport"
+			+ "&projectCode=" +  $.trim($("#projectCode").val())
+			+ "&projectName=" +  $.trim($("#projectName").val())
+			+ "&orderCode=" + $.trim($("#orderCode").val())
+			+ "&signCompanyName=" + $.trim($("#signCompanyName").val())
+			+ "&nature=" + $.trim($("#nature").val())
+			+ "&natureName=" +  $.trim($("#nature").find("option:selected").text())
+			+ "&itemStatus=" + $.trim($("#itemStatus").val())
+			+ "&itemStatusName=" +  $.trim($("#itemStatus").find("option:selected").text())
+	}
+
+	function reset(){
+		location.href="?model=outsourcing_report_report&action=toOutsourcingReport";
+	}
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+
+<table border="0" width="100%" height="100%" class="form_main_table">
+		<tr>
+			<td align="left">
+				搜索条件：
+			</td>
+		</tr>
+		<tr>
+		<td>
+		<table class="form_main_table">
+				<tr>
+					<td class="form_text_left_three">
+						项目编号
+					</td>
+					<td class="form_text_right_three">
+						<input class="txt" name="projectCode" id="projectCode" value="{projectCode}"/>
+					</td>
+					<td class="form_text_left_three">
+						项目名称
+					</td>
+					<td class="form_text_right_three">
+						<input class="txt" name="projectName" id="projectName" value="{projectName}">
+					</td>
+					<td class="form_text_left_three">
+						外包合同编号
+					</td>
+					<td class="form_text_right_three">
+						<input class="txt" id="orderCode" name="orderCode" value="{orderCode}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three">
+						外包供应商
+					</td>
+					<td class="form_text_right_three">
+						<input class="txt" id="signCompanyName" name="signCompanyName" value="{signCompanyName}">
+					</td>
+					<td class="form_text_left_three">
+						项目类型
+					</td>
+					<td class="form_text_right_three">
+						<input type="hidden" id="natureName" name="natureName" value="{natureName}">
+						<select class="txt" id="nature" name="nature" >
+      			 			<option value=""></option>
+      			 			{nature}
+      			 		</select>
+					</td>
+					<td class="form_text_left_three">
+						项目状态
+					</td>
+					<td class="form_text_right_three">
+						<input type="hidden" id="itemStatusName" name="itemStatusName" value="{itemStatusName}">
+						<select class="txt" id="itemStatus" name="itemStatus" >
+      			 			<option value=""></option>
+      			 			{itemStatus}
+      			 		</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="6" align="center">
+						<input type="button" class="txt_btn_a" onclick="searchBtn();" value=" 查 询 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" class="txt_btn_a" onclick="reset();" value=" 重 置 "/>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewerEvent("view/template/outsourcing/report/report-outsourcing.grf"
+				,"view/template/outsourcing/report/report-outsourcing.php"
+				+ "?projectCode=" +  $.trim($("#projectCode").val())
+				+ "&projectName=" +  $.trim($("#projectName").val())
+				+ "&orderCode=" + $.trim($("#orderCode").val())
+				+ "&signCompanyName=" + $.trim($("#signCompanyName").val())
+				+ "&nature=" + $.trim($("#nature").val())
+				+ "&natureName=" +  $.trim($("#nature").find("option:selected").text())
+				+ "&itemStatus=" + $.trim($("#itemStatus").val()),
+				"<param name=RowSelection value=false>"
+	            + "<param name='OnContentCellDblClick' value='OnReportViewerContentCellDblClick'>"
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

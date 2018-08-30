@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="zh_cn" />
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css"/>
+        <link type="text/css" href="js/jquery/style/yxmenu.css" media="screen" rel="stylesheet"/>
+        <!-- 主题css，可切换 -->
+        <link type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" rel="stylesheet"/>
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="js/jquery/woo.js"></script>
+        <script type="text/javascript" src="js/jquery/component.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+        <script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>        
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>        
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"> </script>
+	    <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+       	<script>
+	        $(function() {
+	        	// 新增分类信息 选择物料类型
+	        	$("#parentName").yxcombotree({
+	        		hiddenId : 'parentId',
+	        		treeOptions : {
+	        			url : "?model=produce_document_documenttype&action=getTreeDataByParentId"
+	        		}
+	        	});
+	        });
+		</script>
+		<title>
+			添加文档类型信息
+		</title>
+	</head>
+	<body>
+	<div class="main_head">
+    <span class="main_head_title">
+      	文档分类信息
+    </span>
+</div>
+	<div align="center">
+		<form action="?model=produce_document_documenttype&action=add" id="form1" method="POST" >
+		<table class="form_main_table"  >
+			
+				<tr>
+					<td class="form_text_left">文档类型</td>
+					<td class="form_text_right">
+						 <input type="text" id="type" class="txt" name="documenttype[type]"  />
+							<span class="red">[*]</span>
+							<div id="typeTip" class="tipShortTxt"></div>
+					</td>
+					<td class="form_text_left">所属分类</td>
+					<td class="form_text_right">
+						<input type="text" readOnly id="parentName" class="txt" name="documenttype[parentName]" value="{parentName}" />
+						<input type="hidden" id="parentId"  name="documenttype[parentId]" value="{parentId}" />
+						<span class="red">[*]</span>
+							<div id="parentIdTip" class="tipShortTxt"></div>
+						</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">顺序</td>
+					<td class="form_text_right" colspan="3">
+						<input id="orderNum" class="txt" name="documenttype[orderNum]"  onkeypress="return event.keyCode>=48&&event.keyCode<=57" />
+					</td>
+					<td class="form_text_left" style="display:none;">是否启用</td>
+					<td class="form_text_right" style="display:none;">
+						<input type="checkbox" id="isUse" name="documenttype[isUse]"  value="1" checked/>
+					</td>
+				</tr>
+				<tr align="center" class="tableheader" height="30">
+					<td colspan="4">
+						<input type="submit" class="txt_btn_a" value="保存" >
+						<input type="button" class="txt_btn_a" value="返回" onclick="self.parent.tb_remove();">
+					</td>
+				</tr>			
+		</table>
+		</form>
+	</div>
+	</body>
+
+</html>
+<script type="text/javascript">
+$(document).ready(function() {
+    $.formValidator.initConfig({
+    	formid: "form1",
+        //autotip: true,
+        onerror: function(msg) {
+        }
+    });
+
+	/** 验证物料类型 * */
+	$("#type").formValidator({
+		onshow : "请输入文档类型名称",
+		onfocus : "文档类型不能为空",
+		oncorrect : "文档类型有效"
+	}).inputValidator({
+		min : 1,
+		max : 50,
+		onerror : "文档类型名称不能为空，请重新输入"
+	});
+
+	$("#parentId").formValidator({
+		onshow : "请选择所属文档分类",
+		onfocus : "所属文档分类不能为空",
+		oncorrect : "所属文档分类有效"
+	}).inputValidator({
+		min : 1,
+		max : 50,
+		onerror : "所属文档分类不能为空，请选择"
+	});
+
+	})
+</script>

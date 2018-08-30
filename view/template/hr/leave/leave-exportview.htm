@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>转正考核信息导出</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/leave-public.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+</head>
+<body>
+	<form id="exportForm" action="?model=hr_leave_leave&action=ExamineExport" ENCTYPE="multipart/form-data" method="post" name="form1">
+		<table  class="form_main_table">
+			<tr>
+				<div class="main_head">
+					<span class="main_head_title">
+						离职信息导出
+					</span>
+				</span>
+			</div>
+		</tr>
+		<tr>
+			<td class="form_text_left">单据编号</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[leaveCode]" id="leaveCode" class="txt"/>
+			</td>
+			<td class="form_text_left">员工编号</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[userNo]" id="userNo" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">离职员工</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[userName]" id="userName" class="txt"/>
+			</td>
+			<td class="form_text_left">单据状态</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[state]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="1">未确认状态</option>
+					<option value="2.1">已确认状态</option>
+					<option value="2.2">待更新状态</option>
+					<option value="3">已更新状态</option>
+					<option value="4">已关闭状态</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">员工确认状态</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[userSelfCstatus]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="WQR">未确认</option>
+					<option value="YQR">已确认</option>
+				</select>
+			</td>
+			<td class="form_text_left">交接清单状态</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[handoverCstatus]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="1">未发起</option>
+					<option value="WQR">未确认</option>
+					<option value="YQR">已确认</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公司</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[companyName]" id="companyName" class="txt"/>
+			</td>
+			<td class="form_text_left">直属部门</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[deptName]" id="leaveDeptName" class="txt" readonly/>
+				<input type="hidden" name="leave[deptId]" id="deptId"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">二级部门</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[deptNameS]" id="leaveDeptNameS" class="txt" readonly/>
+				<input type="hidden" name="leave[deptIdS]" id="deptIdS"/>
+			</td>
+			<td class="form_text_left">三级部门</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[deptNameT]" id="leaveDeptNameT" class="txt" readonly/>
+				<input type="hidden" name="leave[deptIdT]" id="deptIdT"/>
+			</td>
+
+		</tr>
+		<tr>
+            <td class="form_text_left">四级部门</td>
+            <td class="form_text_right" >
+                <input type="text" name="leave[deptNameF]" id="leaveDeptNameF" class="txt" readonly/>
+                <input type="hidden" name="leave[deptIdF]" id="deptIdF"/>
+            </td>
+
+            <td class="form_text_left">职位</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[jobName]" id="jobName" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">离职类型</td>
+			<td class="form_text_right" >
+				<select id="quitTypeCode" name="leave[quitTypeCode]" class="select">
+					<option value="">---请选择---</option>
+				</select>
+			</td>
+			<td class="form_text_left">期望离职日期</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[requireDate]" class="txtshort" id="requireDate" onfocus="WdatePicker()"/> 至  <input type="text" name="leave[requireDate2]" class="txtshort" id="requireDate2" onfocus="WdatePicker()"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">离职日期</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[leaveDate]" class="txtshort" id="leaveDate" onfocus="WdatePicker()"/> 至 <input type="text" name="leave[leaveDate2]" class="txtshort" id="leaveDate2" onfocus="WdatePicker()"/>
+			</td>
+			<td class="form_text_left">工资结算截止日期</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[salaryEndDate]" class="txtshort" id="salaryEndDate" onfocus="WdatePicker()"/> 至 <input type="text" name="leave[salaryEndDate2]" class="txtshort" id="salaryEndDate2" onfocus="WdatePicker()"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">工资支付日期</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[salaryPayDate]" class="txtshort" id="salaryPayDate" onfocus="WdatePicker()"/> 至 <input type="text" name="leave[salaryPayDate2]" class="txtshort" id="salaryPayDate2" onfocus="WdatePicker()"/>
+			</td>
+            <td class="form_text_left">入职日期</td>
+            <td class="form_text_right" >
+                <input type="text" name="leave[entryDate]" class="txtshort" id="entryDate" onfocus="WdatePicker()"/> 至 <input type="text" name="leave[entryDate2]" class="txtshort" id="entryDate2" onfocus="WdatePicker()"/>
+            </td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公积金减员</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[fundReduction]" id="fundReduction" class="txt"/>
+			</td>
+			<td class="form_text_left">用工终止</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[employmentEnd]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="是">是</option>
+					<option value="否">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">办公软件状态</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[softSate]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="0">未关闭</option>
+					<option value="1">已关闭</option>
+				</select>
+			</td>
+			<td class="form_text_left">审批状态</td>
+			<td class="form_text_right" >
+				<select id="handoverCstatus" name="leave[ExaStatus]" class="select">
+					<option value="" selected="selected">---请选择---</option>
+					<option value="未提交">未提交</option>
+					<option value="部门审批">部门审批</option>
+					<option value="完成">完成</option>
+					<option value="打回">打回</option>
+				</select>
+			</td>
+		</tr>
+	<!--
+	<tr>
+		<td class="form_text_left">离职原因</td>
+		<td class="form_text_right">
+			<select name="leave[quitReson]" id="quitReson">
+      				<option>对公司的情况不满意</option>
+      				<option>个人情况</option>
+      		</select>
+		</td>
+		<td colspan="2" align="left" id="comReason">
+       			<input type="checkbox" name="leave[checkbox][]" value="对薪酬福利不满意^nbsp" />对薪酬福利不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="对公司晋升渠道（发展空间）不满^nbsp" />对公司晋升渠道（发展空间）不满&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="对企业文化不满意^nbsp" />对企业文化不满意<br>
+       			<input type="checkbox" name="leave[checkbox][]" value="对管理方式不满意^nbsp" />对管理方式不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="对所在团队的工作能力或氛围不满意^nbsp" />对所在团队的工作能力或氛围不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="对同事不满意（不好相处）^nbsp" />对同事不满意（不好相处）<br>
+       			<input type="checkbox" name="leave[checkbox][]" value="对上级领导不满意^nbsp" />对上级领导不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       		</td>
+       		<td colspan="2" align="left" id="perReason">
+       			<input type="checkbox" name="leave[checkbox][]" value="个人能力不胜任现岗位^nbsp" />个人能力不胜任现岗位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="与个人职业发展方向或兴趣爱好不符^nbsp" />与个人职业发展方向或兴趣爱好不符&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="个人能力发挥受限制^nbsp" />个人能力发挥受限制<br>
+       			<input type="checkbox" name="leave[checkbox][]" value="自身能力不能很好地提升^nbsp" />自身能力不能很好地提升&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="家庭环境缘故^nbsp" />家庭环境缘故&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="身体原因^nbsp" />身体原因&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="工作太辛苦^nbsp" />工作太辛苦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       			<input type="checkbox" name="leave[checkbox][]" value="工作压力太大^nbsp" />工作压力太大<br>
+       			<input type="checkbox" name="leave[checkbox][]" value="学习进修^nbsp" />学习进修&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       		</td>
+       	</tr> -->
+		<tr>
+            <td class="form_text_left">社保减员</td>
+            <td class="form_text_right" >
+                <input type="text" name="leave[pensionReduction]" class="txt" id="pensionReduction"/>
+            </td>
+			<td class="form_text_left">进度备注</td>
+			<td class="form_text_right" >
+				<input type="text" name="leave[remark]" id="remark" class="txt"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+				<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

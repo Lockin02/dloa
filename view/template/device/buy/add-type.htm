@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta name="GENERATOR" content="Zend Studio" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <title>添加类型</title>
+        <script type="text/javascript" src="js/jquery.js">
+        </script>
+        <script type="text/javascript" src="js/thickbox.js">
+        </script>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css">
+    </head>
+    <body>
+        <br/>
+        <table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+            <tr bgcolor="#D3E5FA">
+                <td align="center" colspan="2">
+                    添加类型
+                </td>
+            </tr>
+            <tr>
+                <td width="100">
+                    所属部门：
+                </td>
+                <td align="left">
+                    <select>
+                        <option value="">请选择所属部门</option>
+                        {select_dept}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    类型名称：
+                </td>
+                <td align="left">
+                    <input type="text" id="typename" name="typename" value="" />
+                </td>
+            </tr>
+        </table>
+        <table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="input">
+            <tr bgcolor="#D3E5FA">
+                <td>
+                    自定申请模板
+                </td>
+                <td width="150" align="right">
+                    <input type="button" onclick="add();" value=" 添加表单 "/>
+                </td>
+            </tr>
+        </table>
+        <div id="temp" style="display:none">
+            <tr>
+                <td align="left">
+                    表单名称：<input type="text" size="12" name="filed_name[]" value="" /> 表单类型：
+                    <select id="type" name="type" onchange="show_input();">
+                        <option value="text">文本</option>
+                        <option value="textarea">多行文本</option>
+                        <option value="radio">单选</option>
+                        <option value="checkbox">多选</option>
+                        <option value="select">下拉</option>
+                    </select>
+                    <span id="sp_">必填：
+                        <select>
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                       	 默认值：<input type="text" name="default" value=""/>
+					</span>
+				</td>
+				<td width="150" align="right">
+					排序：<input type="text" size="5" name="level" value="{level}"/><input type="button" onclick="del()" value=" 删除 "/>
+                </td>
+            </tr>
+        </div>
+		<div id="radio" style="display:none">
+			<table class="table">
+				<tr>
+					<td>名称：<input type="text" size="10" name="radio_name" value="" /></td>
+					<td>值：<input type="text" size="8" name="radio_value" value="" /></td>
+					<td>
+						<input type="radio" checked name="radio_checked" value="0"/>未选中
+						<input type="radio" name="radio_checked" value="1"/>已选中
+					</td>
+					<td><input type="button" onclick="add_radio()" value=" 添加 "/></td>
+				</tr>
+				<tr class="tableheader">
+					<td colspan="4">预缆样式</td>
+				</tr>
+				<tr>
+					<td class="show_radio" colspan="4" align="left"></td>
+				</tr>
+				<tr>
+					<td colspan="4"><input type="button" onclick="tb_remove();" value=" 确定 " /></td>
+				</tr>
+			</table>
+		</div>
+		<div id="checkbox" style="display:none">
+			<table class="table">
+				<tr>
+					<td>名称：<input type="text" size="10" name="checkbox_name" value="" /></td>
+					<td>值：<input type="text" size="8" name="checkbox_value" value="" /></td>
+					<td>
+						<input type="radio" checked name="checkbox_checked" value="0"/>未选中
+						<input type="radio" name="checkbox_checked" value="1"/>已选中
+					</td>
+					<td><input type="button" onclick="add_checkbox()" value=" 添加 "/></td>
+				</tr>
+				<tr class="tableheader">
+					<td colspan="4">预缆样式</td>
+				</tr>
+				<tr>
+					<td class="show_checkbox" colspan="4" align="left"></td>
+				</tr>
+				<tr>
+					<td colspan="4"><input type="button" onclick="tb_remove();" value=" 确定 " /></td>
+				</tr>
+			</table>
+		</div>
+        <script type="text/javascript">
+            var num = 0;
+			var temp_id = '';
+            /**
+             * 增加
+             */
+            function add()
+            {
+                num++;
+                var input = $('input[name=level]').get();
+                var level = input.length;
+                html = $('#temp').html();
+                html = html.replace('del()', 'del(' + num + ')');
+                html = html.replace('<TR>', '<TR id="tr_' + num + '">');
+                html = html.replace('{level}', level);
+                html = html.replace('sp_', 'sp_' + num);
+				html = html.replace('show_input()','show_input('+num+',this.value)');
+                $('#input').append(html);
+            }
+            
+            /**
+             * 删除
+             * @param {Object} id
+             */
+            function del(id)
+            {
+                $('#tr_' + id).remove();
+            }
+           function set_id(id)
+			{
+				temp_id = id;
+			}
+            function show_input(id,types)
+            {
+                if (types == 'radio') 
+                {
+					$('#sp_'+id).html('<a href="javascript:tb_show(\'添加单选项\',\'#TB_show_html?inlineId=radio&width=450\');set_id('+id+');">添加选项</a> ');
+                }
+                else if (types == 'checkbox')
+                {
+                	$('#sp_'+id).html('<a href="javascript:tb_show(\'添加多选项\',\'#TB_show_html?inlineId=checkbox&width=450\');set_id('+id+');">添加选项</a> ');
+                }
+                
+            }
+			//***************单选项*******************************
+			var radio_num = 0;
+			function add_radio()
+			{
+				var name = $('#TB_ajaxContent input[type=text][name=radio_name]').val();
+				var val = $('#TB_ajaxContent input[type=text][name=radio_value]').val();
+				var checkeds = $('#TB_ajaxContent input[type=radio][name=checkbox_checked]:checked').val();
+				if (name=='')
+				{
+					alert('名称不能为空！');
+					return false;
+				}else if (val == '')
+				{
+					alert('单选项值不能为空！');
+					return false;
+				}
+				radio_num++;
+				var checked = $('#TB_ajaxContent input[type=radio][name=radio_checked]:checked').val()==1 ? 'checked' : '';
+				var radio_inputs = $('#TB_ajaxContent input[type=radio][name=radio_test]:checked').get();
+				if (radio_inputs.length > 0 && checked!='')
+				{
+					$('#TB_ajaxContent input[type=radio][name=radio_test]:checked').attr('checked',false);
+				}
+				$('#TB_ajaxContent .show_radio').append('<span class="span_'+radio_num+'"><input type="radio" '+checked+' name="radio_test" value="'+val+'" />'+name+' <a href="javascript:radio_del('+radio_num+')">删除</a><br /></span>');
+				$('#radio .show_radio').append('<span class="span_'+radio_num+'"><input type="radio" '+checked+' name="radio_test" value="'+val+'" />'+name+' <a href="javascript:radio_del('+radio_num+')">删除</a><br /></span>');
+	
+				$('#sp_'+temp_id).append('<span id="show_radio_'+radio_num+'"><input type="radio" '+checked+' name="radio_test" value="'+val+'" />'+name+' </span>');
+				
+				$('#sp_'+temp_id).append('<input type="hidden" class="radio_hi_val_'+radio_num+'" name="radio['+temp_id+']['+radio_num+'][val]" value="'+val+'" />');
+				$('#sp_'+temp_id).append('<input type="hidden" class="radio_hi_name_'+radio_num+'" name="radio['+temp_id+']['+radio_num+'][name]" value="'+name+'" />');
+				$('#sp_'+temp_id).append('<input type="hidden" class="radio_hi_checked_'+radio_num+'" name="radio['+temp_id+']['+radio_num+'][checked]" value="'+checkeds+'" />');
+				
+				$('#TB_ajaxContent input[type=text][name=radio_name]').val('');
+				$('#TB_ajaxContent input[type=text][name=radio_value]').val('');
+				
+			}
+			
+			function radio_del(id)
+			{
+				$('#TB_ajaxContent .span_'+id).remove();
+				$('#radio .span_'+id).remove();
+				$('#show_radio_'+id).remove();
+				$('#sp_'+temp_id+' .radio_hi_val_'+id).remove();
+				$('#sp_'+temp_id+' .radio_hi_name_'+id).remove();
+				$('#sp_'+temp_id+' .radio_hi_checked_'+id).remove();
+			}
+			//******************多选项**************************
+			var checkbox_num = 0;
+			function add_checkbox()
+			{
+				var name = $('#TB_ajaxContent input[type=text][name=checkbox_name]').val();
+				var val = $('#TB_ajaxContent input[type=text][name=checkbox_value]').val();
+				var checkeds = $('#TB_ajaxContent input[type=radio][name=checkbox_checked]:checked').val();
+				if (name == '') 
+				{
+					alert('名称不能为空！');
+					return false;
+				}
+				else 
+					if (val == '') 
+					{
+						alert('多选项值不能为空！');
+						return false;
+					}
+				checkbox_num++;
+				var checked = $('#TB_ajaxContent input[type=radio][name=checkbox_checked]:checked').val() == 1 ? 'checked' : '';
+				
+				$('#TB_ajaxContent .show_checkbox').append('<span class="span_' + checkbox_num + '"><input type="checkbox" ' + checked + ' name="checkbox_test" value="' + val + '" />' + name + ' <a href="javascript:checkbox_del(' + checkbox_num + ')">删除</a><br /></span>');
+				$('#checkbox .show_checkbox').append('<span class="span_' + checkbox_num + '"><input type="checkbox" ' + checked + ' name="checkbox_test" value="' + val + '" />' + name + ' <a href="javascript:checkbox_del(' + checkbox_num + ')">删除</a><br /></span>');
+				
+				$('#sp_' + temp_id).append('<span id="show_checkbox_' + checkbox_num + '"><input type="checkbox" ' + checked + ' name="checkbox_test" value="' + val + '" />' + name + ' </span>');
+				//隐藏部分
+				$('#sp_' + temp_id).append('<input type="hidden" class="checkbox_hi_val_' + checkbox_num + '" name="checkbox[' + temp_id + '][' + checkbox_num + '][val]" value="' + val + '" />');
+				$('#sp_' + temp_id).append('<input type="hidden" class="checkbox_hi_name_' + checkbox_num + '" name="checkbox[' + temp_id + '][' + checkbox_num + '][name]" value="' + name + '" />');
+				$('#sp_' + temp_id).append('<input type="hidden" class="checkbox_hi_checked_' + checkbox_num + '" name="checkbox[' + temp_id + '][' + checkbox_num + '][checked]" value="' + checkeds + '" />');
+				
+				
+				$('#TB_ajaxContent input[type=text][name=checkbox_name]').val('');
+				$('#TB_ajaxContent input[type=text][name=checkbox_value]').val('');
+			}
+			function checkbox_del(id)
+			{
+				$('#TB_ajaxContent .span_'+id).remove();
+				$('#checkbox .span_'+id).remove();
+				$('#show_checkbox_'+id).remove();
+				$('#sp_'+temp_id+' .checkbox_hi_val_'+id).remove();
+				$('#sp_'+temp_id+' .checkbox_hi_name_'+id).remove();
+				$('#sp_'+temp_id+' .checkbox_hi_checked_'+id).remove();
+			}
+        </script>
+    </body>
+</html>

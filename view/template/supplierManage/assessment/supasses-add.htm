@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增供应商评估</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="{#jsPath#}/supasses-add.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-supplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-scheme.js"></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=supplierManage_assessment_supasses&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	供应商评估
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left">评估类型</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <select class="select" id="assessType" name="supasses[assessType]">
+	      			 <option></option>
+	      			 {assessType}
+      			 </select>
+				<span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">供应商名称</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="suppId" name="supasses[suppId]" />
+      			 <input type="text" class="txt" id="suppName" name="supasses[suppName]"  onclick="checkSelectSupp();" />
+				<span class="red">[*]</span>
+      		</td>
+      		<td class="form_text_left">评估方案名称</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="assessId" name="supasses[assessId]" />
+      			 <input type="text" class="txt" id="assessName" name="supasses[assessName]" onclick="checkAssesType();" readonly/>
+      			 <input type="hidden" class="txt" id="assessCode" name="supasses[assessCode]" />
+				<span class="red">[*]</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">供应商电话</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="suppTel" name="supasses[suppTel]" />
+      		</td>
+      		<td class="form_text_left">供应商联系人</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="suppLinkName" name="supasses[suppLinkName]" />
+      		</td>
+       </tr>
+       <tr id="newsupp">
+      		<td class="form_text_left">供应商来源</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="suppSource" name="supasses[suppSource]" />
+      		</td>
+      		<td class="form_text_left">是否首评</td>
+      		<td class="form_text_right" >
+      			 <input type="radio" class="" id="" name="supasses[isFirst]" value="1" checked/>首评
+      			 <input type="radio" class="" id="" name="supasses[isFirst]" value="2"/>第二次评估
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">地址及邮编</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="text" class="txtbiglong" id="suppAddress" name="supasses[suppAddress]" />
+      		</td>
+       </tr>
+       <tr>
+       </tr>
+       <tr>
+      		<td class="form_text_left">主营产品</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <input type="text" class="txtbiglong" id="mainProduct" name="supasses[mainProduct]" />
+      		</td>
+       </tr>
+       <tr>
+			<td class="form_text_left">附件</td>
+			<td colspan="3" class="form_text_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+						<br />
+					</div>
+					<div id="uploadfileList" class="upload">
+					</div>
+				</div>
+			</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">评估发起人</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="assesManId" name="supasses[assesManId]" value="{assesManId}"/>
+      			 <input type="text" class="readOnlyText" id="assesManName" name="supasses[assesManName]" value="{assesManName}" readonly/>
+      		</td>
+      		<td class="form_text_left">考核小组</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="menberId" name="supasses[menber][assesManId]" value="{assesManId}"/>
+      			 <input type="text" class="txtlong" id="menberName" name="supasses[menber][assesManName]" value="{assesManName}" readonly/>
+      		</td>
+       </tr>
+       <tr >
+      		<td class="form_text_left">总分</td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" class="readOnlyText" id="totalNum" name="supasses[totalNum]" readonly/>
+      		</td>
+       </tr>
+       <tr id="yearsupp">
+      		<td class="form_text_left">所属等级</td>
+      		<td class="form_text_right" colspan="3">
+      			 <input type="text" class="readOnlyText" id="suppGrade" name="supasses[suppGrade]" readonly/>
+      		</td>
+       </tr>
+</table>
+
+ <div id="suppassesTable"></div>
+
+<table class="form_main_table">
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+               &nbsp; &nbsp; &nbsp;
+               <input type="submit" id="submitApp" value=" 提交审批 " class="txt_btn_a" onclick="toSubmit()"/>
+               <!--
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+                -->
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

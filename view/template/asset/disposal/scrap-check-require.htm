@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>核对资产报废申请</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/scrap-check.js" ></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	核对资产报废申请
+    </span>
+</div>
+<form id="form1" method="post" action="?model=asset_disposal_scrap&action=confirmRequire" name="form1" >
+	<table class="form_main_table">
+	         <tr>
+				<td class="form_text_left">
+					报废单编号
+				</td>
+				<td class="form_text_right" width="33%">{billNo}
+				</td>
+				<td class="form_text_left">
+					报废总数
+				</td>
+				<td class="form_text_right">{scrapNum}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					申请人
+				</td>
+				<td class="form_text_right">{proposer}
+				</td>
+				<td class="form_text_left">
+					申请部门
+				</td>
+				<td class="form_text_right">{deptName}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					申请时间
+				</td>
+				<td class="form_text_right">{scrapDate}
+				</td>
+				<td class="form_text_left">
+					报废原因
+				</td>
+				<td class="form_text_right"><span id="reason">{reason}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					报废处理
+				</td>
+				<td class="form_text_right">{scrapDeal}
+				</td>
+				<td class="form_text_left">
+					公司入账
+				</td>
+				<td class="form_text_right"><span id="reason">{hasAccount}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					缴款人
+				</td>
+				<td class="form_text_right">{payer}
+				</td>
+				<td class="form_text_left">
+					缴款费用
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="scrap[amount]" id="amount" class="txt formatMoney" value="{amount}" /><span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					总残值
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="scrap[salvage]" id="salvage" class="readOnlyTxtNormal formatMoney" value="{salvage}" readonly/><span class="red">[*]</span>
+				</td>
+				<td class="form_text_left">
+					总净值
+				</td>
+				<td class="form_text_right">
+					<input type="text" name="scrap[netValue]" id="netValue" class="readOnlyTxtNormal formatMoney" value="{netValue}" readonly/><span class="red">[*]</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">附件</td>
+				<td class="form_text_right"> &nbsp;{file}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备注</td>
+				<td colspan="6" class="form_text_right">
+					<textarea class="txt_txtarea_font" rows="6" name="scrap[remark]" id="remark"  cols="78">{remark}</textarea>
+				</td>
+		    </tr>
+	</table>
+	<div id="purchaseProductTable"></div>
+	<table class="form_main_table">
+			<tr>
+	   		<td class="form_text_left">是否邮件通知
+	       	</td>
+	   		<td colspan="3" class="form_text_right">
+	   			<input type="radio" name="scrap[mailInfo][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+	      		<input type="radio" name="scrap[mailInfo][issend]" value="n" onclick="checkEmailTA(this)"/>否
+			</td>
+		</tr>
+	   	<tr id="maildiv">
+	   		<td class="form_text_left">邮件接收人
+	       	</td>
+	       	<td colspan="3" class="form_text_right">
+			    <input type="text" name="scrap[mailInfo][TO_NAME]" id="TO_NAME" class="txtbiglong" value="{mailName}" readonly="readonly"/>
+	    		<input type="hidden" name="scrap[mailInfo][TO_ID]" id="TO_ID" value="{mailId}" />
+		    </td>
+	   	</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+			   <input type="hidden" id="allocateID" name="scrap[id]" value="{id}"/>
+			   <input type="button" class="txt_btn_a" value=" 核  对 " onclick="confirmCheck();" />
+			   <input type="button" class="txt_btn_a" value=" 打  回 " onclick="confirmBack();" />
+			   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

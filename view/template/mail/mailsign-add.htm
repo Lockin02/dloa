@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>邮寄签收</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/email.js"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js" ></script>
+	<script type="text/javascript" src="js/util.js" ></script>
+	<script type="text/javascript"
+		src="js/jquery/combo/business/yxselect-user.js"></script>
+	<script>
+		$(document).ready(function(){
+		    $("#ADDNAMES").yxselect_user({
+				mode : 'check', // 选择模式 :single 单选 check 多选
+				hiddenId : 'ADDIDS'
+			});
+
+
+		    $("#TO_NAME").yxselect_user({
+				mode : 'check', // 选择模式 :single 单选 check 多选
+				hiddenId : 'TO_ID'
+			});
+		});
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	邮寄签收
+    </span>
+</div>
+<form action="?model=mail_mailsign&action=add" method="post" onsubmit="return check_all()">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">客户签收人</td>
+		<td class="form_text_right">
+			<input type="text" id="signMan" name="mailsign[signMan]" class="txt" value="{signMan}"/>
+			<input type="hidden" id="signMan" name="mailsign[invoiceUnitName]" value="{invoiceUnitName}"/>
+			<input type="hidden" id="signMan" name="mailsign[customerName]" value="{customerName}"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">签收日期</td>
+		<td class="form_text_right">
+			<input id="signDate" type="text" name="mailsign[signDate]" class="txt" value="" onfocus="WdatePicker()"/>
+			<span class="red">[*]</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">签收信息</td>
+		<td class="form_text_right" colspan="4">
+			<textarea rows="3" name="mailsign[signPath]" class="txt_txtarea_font"></textarea>
+		</td>
+	</tr>
+	<tr>
+   		<td class="form_text_left">邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="mailsign[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+      		<input type="radio" name="mailsign[email][issend]" value="n" onclick="checkEmailTA(this)"/>否
+		</td>
+	</tr>
+   	<tr>
+   		<td class="form_text_left">收件人
+       	</td>
+       	<td colspan="3" id="maildiv" class="form_text_right">
+		    <input type="text" class="txt" name="mailsign[email][TO_NAME]" id="TO_NAME" value="{salesman}"/>
+    		<input type="hidden" name="mailsign[email][TO_ID]" id="TO_ID" value="{salesmanId}"/>
+	    </td>
+   	</tr>
+   	<tr>
+   		<td class="form_text_left">抄送
+       	</td>
+       	<td colspan="3" id="mailccdiv" class="form_text_right">
+		    <input type="text" class="txt" name="mailsign[email][ADDNAMES]" id="ADDNAMES" readonly="readonly"/>
+    		<input type="hidden" name="mailsign[email][ADDIDS]" id="ADDIDS"/>
+	    </td>
+   	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="hidden" name="mailsign[mailInfoId]" value="{id}"/>
+			<input type="hidden" name="mailsign[docCode]" value="{docCode}"/>
+			<input type="hidden" name="mailsign[mailNo]" value="{mailNo}"/>
+			<input type="submit" value=" 提交 " class="txt_btn_a"/>
+			<input type="button" value=" 返回 " onclick="self.parent.tb_remove();" class="txt_btn_a"/>
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+$("#signDate").val(formatDate(new Date()));
+function check_all()
+{
+	if ($('#signMan').val()=='')
+	{
+		alert('签收人不能为空');
+		return false;
+	}
+	if ($('#signDate').val()=='')
+	{
+		alert('签收日期不能为空');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

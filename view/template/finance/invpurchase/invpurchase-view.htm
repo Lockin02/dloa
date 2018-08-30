@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>
+			查看采购发票
+		</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+		<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-view.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				查看采购发票信息 - {formTypeCN}
+			</span>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					供应商名称
+				</td>
+				<td class="form_text_right" width="30%">
+					{supplierName}
+				</td>
+				<td class="form_text_left">
+					单据编号
+				</td>
+				<td class="form_text_right">
+					{objCode}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					发票号码
+				</td>
+				<td class="form_text_right">
+					{objNo}
+				</td>
+				<td class="form_text_left">
+					付款日期
+				</td>
+				<td class="form_text_right">
+					{payDate}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					发票类型
+				</td>
+				<td class="form_text_right">
+					{invType}
+				</td>
+				<td class="form_text_left">
+					采购方式
+				</td>
+				<td class="form_text_right">
+					{purType}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					开户银行
+				</td>
+				<td class="form_text_right">
+					{bank}
+				</td>
+				<td class="form_text_left">
+					业务类型
+				</td>
+				<td class="form_text_right">
+					{busType}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					币 别
+				</td>
+				<td class="form_text_right">
+					{currency}
+				</td>
+				<td class="form_text_left">
+					汇 率
+				</td>
+				<td class="form_text_right">
+					{excRate}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					源单类型
+				</td>
+				<td class="form_text_right">
+					{sourceTypeCN}
+					<input type="hidden" id="sourceType" value="{sourceType}"/>
+				</td>
+				<td class="form_text_left">
+					源单编号
+				</td>
+				<td class="form_text_right">
+					<a href="#" onclick="toLoca()" title="点击查看单据">{menuNo}</a>
+					<input type="hidden" id="menuNo" value="{menuNo}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					往来科目
+				</td>
+				<td class="form_text_right">
+					{subjects}
+				</td>
+				<td class="form_text_left">
+					单据日期
+				</td>
+				<td class="form_text_right">
+					{formDate}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					税率(%)
+				</td>
+				<td class="form_text_right">
+					{taxRate}
+				</td>
+				<td class="form_text_left">
+					总税额
+				</td>
+				<td class="form_text_right formatMoney" id="view_formAssessment">
+					{formAssessment}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					总金额
+				</td>
+				<td class="form_text_right formatMoney" id="view_amount">
+					{amount}
+				</td>
+				<td class="form_text_left">
+					价税合计
+				</td>
+				<td class="form_text_right formatMoney" id="view_formCount">
+					{formCount}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					地址
+				</td>
+				<td class="form_text_right">
+					{address}
+				</td>
+				<td class="form_text_left">
+					归属公司
+				</td>
+				<td class="form_text_right">
+					{businessBelongName}
+				</td>
+			</tr>
+			<tr>
+				<td class="innerTd" colspan="4">
+					<table class="form_in_table">
+						<thead>
+							<tr align="left">
+								<td colspan="13">
+									详细：
+									<input type="hidden" id="invnumber" value="{invnumber}"/>
+								</td>
+							</tr>
+							<tr class="main_tr_header">
+								<th width="4%">序号</th>
+								<th width="8%">物料编号</th>
+								<th>物料名称</th>
+								<th width="8%">规格型号</th>
+								<th width="5%">单位</th>
+								<th width="5%">数量</th>
+								<th width="7%">单价</th>
+								<th width="7%">含税单价</th>
+								<th width="7%">金额</th>
+								<th width="7%">税额</th>
+								<th width="7%">价税合计</th>
+								<th width="10%">源单编号</th>
+								<th width="10%">订单编号</th>
+							</tr>
+						</thead>
+						<tbody id="invbody">
+							{invpurdetail}
+						</tbody>
+						<tr class="tr_count">
+							<td colspan="2">合计</td>
+							<td colspan="3"></td>
+							<td id="numberAll"></td>
+							<td colspan="2"></td>
+							<td id="amountAll"></td>
+							<td id="assessmentAll"></td>
+							<td id="allCountAll"></td>
+							<td colspan="2"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					主管
+				</td>
+				<td class="form_text_right" width="30%">
+					{head}
+				</td>
+				<td class="form_text_left">
+					记账
+				</td>
+				<td class="form_text_right">
+					{acount}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					部门
+				</td>
+				<td class="form_text_right">
+					{departments}
+				</td>
+				<td class="form_text_left">
+					业务员
+				</td>
+				<td class="form_text_right">
+					{salesman}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					审核人
+				</td>
+				<td class="form_text_right">
+					{exaMan}
+				</td>
+				<td class="form_text_left">
+					审核日期
+				</td>
+				<td class="form_text_right">
+					{ExaDT}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					创建人
+				</td>
+				<td class="form_text_right">
+					{createName}
+				</td>
+				<td class="form_text_left">
+					创建时间
+				</td>
+				<td class="form_text_right">
+					{createTime}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					备注
+				</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="textarea_read" readonly="readonly">{remark}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun()"/>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

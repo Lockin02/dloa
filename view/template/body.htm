@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js">
+        </script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js">
+        </script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0; /* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden; /* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            
+            .jqgtabs ul li {
+                line-height: 12px;
+            }
+            
+            /*Splitter style */
+            #LeftPane { /* optional, initial splitbar position */
+                overflow: auto;
+                border: 1px;
+            }
+            
+            /*
+             Right-side element of the splitter.
+             */
+            #RightPane {
+                padding: 0px;
+                overflow: auto;
+                border: 1px;
+            }
+            
+            #tabs div {
+                border-right-width: 1px;
+                border-bottom-width: 1px;
+                border-left-width: 1px;
+                border-right-color: #AED0EA;
+                border-bottom-color: #AED0EA;
+                border-left-color: #AED0EA;
+            }
+            
+            .ui-tabs-nav li {
+                position: relative;
+            }
+            
+            .ui-tabs-selected a span {
+                padding-right: 10px;
+            }
+            
+            .ui-tabs-close {
+                display: none;
+                position: absolute;
+                top: 3px;
+                right: 0px;
+                z-index: 800;
+                width: 16px;
+                height: 14px;
+                font-size: 10px;
+                font-style: normal;
+                cursor: pointer;
+            }
+            
+            .ui-tabs-selected .ui-tabs-close {
+                display: block;
+            }
+            
+            .ui-layout-west .ui-jqgrid tr.jqgrow td {
+                border-bottom: 0px none;
+            }
+            
+            .ui-datepicker {
+                z-index: 1200;
+            }
+            
+            .rotate { /* for Safari */
+                -webkit-transform: rotate(-90deg);
+                /* for Firefox */
+                -moz-transform: rotate(-90deg);
+                /* for Internet Explorer */
+                filter: progid :DXImageTransform.Microsoft.BasicImage ( rotation = 3 );
+            }
+            
+            .ui-layout-toggler-west-open {
+            	background-image: url(js/jqgrid/css/images/ui-icons_2e83ff_256x240.png);
+            	background-position: -102px -20px;
+            }
+            
+            .ui-layout-toggler-west-closed {
+            	background-image: url(js/jqgrid/css/images/ui-icons_2e83ff_256x240.png);
+            	background-position: -38px -20px;
+            }
+        </style>
+        <script type="text/javascript">
+            <!--
+            jQuery(document).ready(function(){
+                //$('#switcher').themeswitcher();
+                
+                $('body').layout({
+                    resizerClass: 'ui-state-default',
+                    togglerLength_open: 10,
+                    togglerLength_closed: 10,
+                    west__onresize: function(pane, $Pane){
+                        jQuery("#west-grid").jqGrid('setGridWidth', $Pane.innerWidth() - 2);
+                        $('#RightPane').css('diplay', '');
+                    }
+                });
+                
+                $.jgrid.defaults = $.extend($.jgrid.defaults, {
+                    loadui: "enable"
+                });
+                var maintab = jQuery('#tabs', '#RightPane').tabs({
+                    add: function(e, ui){
+                        // append close thingy
+                        $(ui.tab).parents('li:first').append('<span class="ui-tabs-close ui-icon ui-icon-close" title="Close Tab"></span>').find('span.ui-tabs-close').click(function(){
+							maintab.tabs('remove', $('li', maintab).index($(this).parents('li:first')[0]));
+                        });
+                        // select just added tab
+                        maintab.tabs('select', '#' + ui.panel.id);
+                    }
+                });
+                jQuery("#west-grid").jqGrid({
+                    url: "?model=index&action=menu",
+                    datatype: "json",
+                    height: "auto",
+                    mType: 'GET',
+                    treeGridModel: 'adjacency',
+                    colNames: ["id", "菜单导航", "url"],
+                    colModel: [{
+                        name: "id",
+                        width: 1,
+                        hidden: true,
+                        key: true
+                    }, {
+                        name: "name"
+                    }, {
+                        name: "url",
+                        width: 1,
+                        hidden: true
+                    }],
+                    treeGrid: true,
+                    //caption: "Меню",
+                    ExpandColumn: "name",
+                    ExpandColClick: true,
+                    autowidth: false,
+                    width: 196,
+                    rowNum: 380,
+                    treeIcons: {
+                        leaf: 'ui-icon-document-b'
+                    },
+                    onSelectRow: function(rowid){
+                        var treedata = $("#west-grid").jqGrid('getRowData', rowid);
+                        if (treedata.isLeaf == "true") {
+                            //treedata.url
+                            var st = "#tabs-" + treedata.id;
+                            if ($(st).html() != null) 
+							{
+								$('#ifr-' + treedata.id).attr('src',treedata.url);
+                                maintab.tabs('select', st);
+                            }
+                            else 
+							{
+                                //$(st,"#tabs").load(treedata.url);
+								maintab.tabs('add', st, treedata.name);
+								$istr = '<iframe id="ifr-' + treedata.id + '" name="ifr-' + treedata.id + '" onload="SetCwinHeight(this)" src="' + treedata.url + '"  width="100%"  marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0"/>';
+								$(st, "#tabs").append($istr);
+								$(st).css({
+									padding: '0',
+									margin: '0'
+								});
+                                /*$.ajax({
+                                 url: treedata.url+'&jqgrid=1',
+                                 type: "GET",
+                                 dataType: "html",
+                                 complete : function (req, err) {
+                                 $(st,"#tabs").append(unescape(req.responseText));
+                                 }
+                                 });*/
+                            }
+                        }
+                    }
+                });
+            });
+            //*****获取IFRAME高度******/
+            function SetCwinHeight(obj){
+                var dw = document.documentElement.clientHeight;
+                if (obj.name == 'ifr-1') {
+                    obj.height = dw - 55 + 2 * ((dw - 550) / 55);
+                }
+                else {
+                    obj.height = dw - 50 + 2 * ((dw - 550) / 50);
+                }
+            }
+            
+            /*function SetCwinHeight(obj) {
+             if (obj.contentDocument && obj.contentDocument.body.offsetHeight) {
+             obj.height = obj.contentDocument.body.offsetHeight;
+             } else if (obj.Document && obj.Document.body.scrollHeight) {
+             obj.height = obj.Document.body.scrollHeight;
+             }else{
+             }
+             } */
+            function SetwinHeight(ifnameid){
+                var dw = document.documentElement.clientHeight;
+                var h = dw - 50 + 2 * ((dw - 550) / 50);
+                var ifm = document.getElementById(ifnameid);
+                var subWeb = document.frames ? document.frames[ifnameid].document : ifm.contentDocument;
+                if (ifm != null && subWeb != null) {
+                    ifm.height = Math.max((subWeb.body.scrollHeight + 40), h);
+                    //ifm.height = subWeb.body.scrollHeight;
+                }
+            }
+            
+            -->
+        </script>
+    </head>
+    <body>
+        <div id="LeftPane" class="ui-layout-west ui-widget ui-widget-content">
+            <table id="west-grid">
+            </table>
+        </div>
+        <div id="RightPane" class="ui-layout-center ui-helper-reset ui-widget-content" style="display: none;">
+            <!-- Tabs pane -->
+            <div id="switcher">
+            </div>
+            <div id="tabs" class="jqgtabs" style="padding-bottom: 0px; margin-bottom: 0px;">
+                <ul>
+                    <li>
+                        <a href="#tabs-1">首页</a>
+                    </li>
+                </ul>
+                <div id="tabs-1" style="font-size: 12px; padding: 0px; margin: 0px; padding-left: 5px; padding-top: 5px;">
+                    <iframe id="ifr-1" name="ifr-1" onload="SetCwinHeight(this)" src="?model=index&action=main" marginwidth="0" marginheight="0" vspace="0" hspace="0" width="100%" height="900" frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

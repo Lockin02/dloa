@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <style type="text/css"></style>
+		<script type="text/javascript">
+			var dept_id;
+			var dept_select;
+			var jobs_select;
+			var project_select;
+			var dept = eval('{dept}');
+			var jobs = eval('{jobs}');
+			var project = eval('{project}');
+			var temp = [{'jobs_id':'55','jobs_name':'niuzi'}];
+			var RowIndex = 0;
+			$(function(){
+				$('#tt').datagrid({
+					title:'员工评价人管理',
+					iconCls:'icon-edit',
+					pagination:true,
+					singleSelect:true,
+					pageSize: 20,
+					idField:'id',
+					url:'?model={t_model}&action=manage_list_data',
+					columns:[[
+						{field:'id',title:'ID',width:50,align: 'center'},
+						{field:'user_name',title:'被评价人',width:100,align: 'center'},
+						{field:'evaluators',title:'评价人',width:250,align: 'center'},
+						{field:'dept_id',title:'所属部门',width:100,align: 'center',
+							formatter:function(value){
+								for(var i=0; i<dept.length; i++){
+									if (dept[i].DEPT_ID == value) return dept[i].DEPT_NAME;
+								}
+								return value;
+							},
+							editor: {
+								type: 'combobox',
+								options: {
+									valueField: 'DEPT_ID',
+									textField: 'DEPT_NAME',
+									data: dept,
+									required: true,
+									editable:false,
+									onSelect:function(record)
+									{
+										var row = $('#tt').datagrid('getSelected');
+										var index = $('#tt').datagrid('getRowIndex', row);
+										var editors = $('#tt').datagrid('getEditors', index);
+										var jobs_obj = editors[1];
+										jobs_obj.target.combobox({
+											width:200,
+											listWidth:200,
+											valueField:'jobs_id',
+											textField: 'jobs_name',
+											required: true,
+											editable:false,
+											url:'?model=general_hrms_field&action=get_jobs&dept_id='+record.DEPT_ID
+											
+											});
+									}
+								}
+							}
+						},
+						{field:'jobs_id',title:'所属职位',width:130,align: 'center',
+							formatter:function(value){
+								for(var i=0; i<jobs.length; i++){
+									if (jobs[i].jobs_id == value) return jobs[i].jobs_name;
+								}
+								return value;
+							},
+							editor: {
+								type: 'combobox',
+								options: {
+									valueField: 'jobs_id',
+									textField: 'jobs_name',
+									data: jobs,
+									required: true,
+									editable:false
+								}
+							}
+						},
+						{field:'project_name',title:'所在项目组',width:150,align: 'center'},
+						{field:'date',title:'最后更新时间',width:150,align:'center'},
+						{field:'action',title:'操作',width:80,align:'center',
+						formatter:function(value,row,index){
+							if (row.editing){
+								var s = '<a href="#" onclick="saverow('+index+')">保存</a> ';
+								var c = '<a href="#" onclick="cancelrow('+index+')">取消</a>';
+								return s+c;
+							} else {
+								var e = '<a href="#" onclick="editrow('+index+')">修改</a> ';
+								var d = '<a href="#" onclick="deleterow('+index+')">删除</a>';
+								return e+d;
+							}
+						}
+					}
+					]],
+					onBeforeEdit:function(index,row){
+						row.editing = true;
+						updateActions();
+					},
+					onAfterEdit:function(index,row){
+						var ac = 'add';
+						var msg = '添加';
+						if (row.id)
+						{
+							ac = 'edit';
+							msg = '修改';
+						}else{
+							ac = 'add';
+							msg = '添加';
+						}
+						
+						$.post('?model=general_hrms_field&action='+ac,{id:row.id,dept_id:row.dept_id,jobs_id:row.jobs_id,field_name:row.field_name},function(data){
+							if (data == 1)
+							{
+								row.editing = false;
+								updateActions();
+								$('#tt').datagrid('reload');
+									$.messager.show({
+									title: '提示',
+									msg: msg+'成功！',
+									timeout: 3000,
+									showType: 'show'
+								});
+							}else{
+								$.messager.alert('提示','操作失败，请与OA管理员联系！');
+							}
+						});
+					},
+					onCancelEdit:function(index,row){
+						row.editing = false;
+						updateActions();
+					}
+
+				});
+				
+				
+				dept_select = $('#dept_select').combobox({
+					url:"?model={t_model}&action=dept_data",
+					valueField:'dept_id',
+					textField:'dept_name',
+					onSelect:function(data){
+						var keyword = $('#keyword').val();
+						var project_id = project_select.combobox('getValue');
+						$('#tt').datagrid({url:'?model={t_model}&action=manage_list_data&dept_id='+data.dept_id+'&project_id='+project_id});
+						$('#tt').datagrid('reload');
+						dept_id = data.dept_id;
+						jobs_select.combobox({url:"?model={t_model}&action=get_jobs&type=list&dept_id="+dept_id});
+						show_add_button();
+					}
+				});
+				
+				jobs_select = $('#jobs_select').combobox({
+							url:"?model={t_model}&action=get_jobs&type=list",
+							valueField:'jobs_id',
+							textField:'jobs_name',
+							editable:false,
+							onSelect: function(data){
+								var project_id = project_select.combobox('getValue');
+								$('#tt').datagrid({url:'?model={t_model}&action=manage_list_data&dept_id'+dept_id+'&jobs_id='+data.jobs_id+'&project_id='+project_id});
+								$('#tt').datagrid('reload');
+								show_add_button();
+							}
+							});
+				project_select = $('#project_select').combobox({
+							//url:"?model={t_model}&action=get_project&type=list",
+							data:project,
+							valueField:'project_id',
+							textField:'project_name',
+							editable:false,
+							onSelect: function(data){
+								var jobs_id =jobs_select.combobox('getValue');
+								$('#tt').datagrid({url:'?model={t_model}&action=manage_list_data&dept_id'+dept_id+'&jobs_id='+jobs_id+'&project_id='+data.project_id});
+								$('#tt').datagrid('reload');
+								show_add_button();
+							}
+							});
+				show_add_button(); //显示添加按钮
+			//绑定被评价人输入框
+            $("#username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                multiple: false,
+                mustMatch: true,
+                width: 100,
+                max: 200,
+                //dataType: 'json',
+                parse: function(data){
+                    var rows = [];
+                    var row = eval(unescape(data));
+                    for (var i = 0; i < row.length; i++) {
+                        rows[i] = {
+                            data: row[i],
+                            value: row[i].user_name,
+                            result: row[i].user_name
+                        }
+                    }
+                    //alert(rows.length);
+                    return rows;
+                },
+                formatItem: function(row, i, n){
+                    return row.user_name;
+                }
+                
+            }).result(function(evnet, data, formatted){
+                if (data) {
+                    $('#user_id').val(data.user_id);
+                }
+                else {
+                    $('#user_id').val('');
+                }
+            });
+			//绑定评价人输入框
+            $("#TO_NAME").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+				multiple: true,
+				mustMatch: true,
+				multipleSeparator: ',',
+				width: 100,
+				max: 200,
+				//dataType: 'json',
+				parse: function(data){
+					var rows = [];
+					var row = eval(unescape(data));
+					for (var i = 0; i < row.length; i++) {
+						rows[i] = {
+							data: row[i],
+							value: row[i].user_name,
+							result: row[i].user_name
+						}
+					}
+					//alert(rows.length);
+					return rows;
+				},
+				formatItem: function(row, i, n){
+					return row.user_name;
+				}
+			});
+		});
+		/**
+		 * 添加按钮
+		 */	
+		function show_add_button()
+		{
+			$('#tt').datagrid('getPager').pagination({
+					buttons:[{
+						iconCls:'icon-add',
+						text:'添加被评价人',
+						handler:function(){
+							insert();
+						}
+					}],
+					onBeforeRefresh:function(ageNumber,pageSize)
+					{
+						return true;
+					}
+				});
+		}
+		function updateActions(){
+			var rowcount = $('#tt').datagrid('getRows').length;
+			for(var i=0; i<rowcount; i++){
+				$('#tt').datagrid('updateRow',{
+					index:i,
+					row:{action:''}
+				});
+			}
+		}
+		//修改
+		function editrow(index){
+			//$('#tt').datagrid('beginEdit', index);
+			$('#tt').datagrid('selectRow', index);
+            var row = $('#tt').datagrid('getSelected');
+			$('#TO_ID').val(row.evaluators_userid ? row.evaluators_userid+',' : '');
+			$('#id').val(row.id);
+			$('#user_id').val(row.user_id);
+			$('#username').val(row.user_name);
+			$('#TO_NAME').val(row.evaluators ? row.evaluators+',' : '');
+			$('#add').window('setTitle', '修改被评价人');
+			$('#add').window('open');
+		}
+		/**
+		 * 删除
+		 * @param {Object} index
+		 */
+		function deleterow(index){
+			$.messager.confirm('确认提示','您确定要删除该被评价人吗？',function(r){
+				if (r){
+					$.messager.confirm('再次确认提示','您确认要删除该被评价人吗？',function(rr){
+					if (rr)
+					{
+						$('#tt').datagrid('selectRow',index);
+						var row = $('#tt').datagrid('getSelected');
+						if (row.id)
+						{
+							$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random()},function(data){
+								var msg;
+								if (data == 1)
+								{
+									msg = '删除成功';
+									$('#tt').datagrid('deleteRow', index);
+									updateActions();
+								}else{
+									msg = '删除失败，请与OA管理员联系！';
+								}
+								$('#tt').datagrid('reload');
+										$.messager.show({
+										title: '提示',
+										msg: msg,
+										timeout: 3000,
+										showType: 'show'
+								});
+							});
+						}
+					}
+					});
+				}
+			});
+		}
+		function saverow(index){
+			$('#tt').datagrid('endEdit', index);
+		}
+		function cancelrow(index){
+			$('#tt').datagrid('cancelEdit', index);
+		}
+
+		/**
+		 * 显示添加
+		 */
+		function insert(){
+			$('#id').val('');
+			$('#username').val('');
+			$('#user_id').val('');
+			$('#TO_NAME').val('');
+			$('#add').window('open');
+		}
+		/**
+		 * 提交添加
+		 */
+		function post()
+		{
+			var id=$('#id').val();
+			var user_id = $('#user_id').val();
+			var evaluators = $('#TO_NAME').val();
+			var msg;
+			var  action = 'add';
+			if (id)
+			{
+				msg = '修改';
+			}else{
+				msg = '添加';
+			}
+			if (user_id == '')
+			{
+				alert('请填写被评介人姓名！');
+				$('#username').focus();
+				return false;
+			}
+			
+			if (evaluators == '')
+			{
+				alert('请填写评介人，可以填写多个！');
+				$('#TO_NAME').focus();
+				return false;
+			}
+			$('a.easyui-linkbutton').linkbutton('disable');
+			$.post('?model={t_model}&action=save_evaluators',{id:id,user_id:user_id,evaluators:evaluators,rand:Math.random(0,999)},function(data){
+				if (data == 1)
+				{
+					$.messager.show({
+                        title: '提示',
+                        msg:msg+'成功！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+					$('#tt').datagrid('reload');
+					$('#add').window('close');
+				}else if (data = -1){
+					alert('添加失败，请与管理员联系！');
+				}
+				$('.easyui-linkbutton').linkbutton('enable');
+			});
+		}
+		/**
+		 * 检查用户是都已经存在列表中
+		 * @param {Object} username
+		 */
+		function check_user(username)
+		{
+			if (username) {
+			
+				$.post('?model={t_model}&action=check_user', {
+					username: username
+				}, function(data){
+					if (data == 1) {
+						$('#show_user_error').html('被评介人已经存在列表中，请重新填写！');
+						$('#user_id').val();
+						$('#username').val('');
+					}
+					else 
+						if (data == -1) {
+						//不存在
+						$('#show_user_error').html('');
+						}
+						else {
+							alert(data);
+						}
+				});
+			}
+		}
+		/**
+		 * 弹出选择用户
+		 */
+		function User_LoadWindow()
+		{
+			 URL="module/user_select";
+			 loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+			 loc_y=document.body.scrollTop+event.clientY-event.offsetY+140;
+			 window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:420px;dialogHeight:405px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+		}
+		/**
+		 * 关闭
+		 */
+		function close_window()
+		{
+			$('#add').window('close');
+		}
+		</script>
+    </head>
+    <body>
+        <table id="tt" toolbar="#tb"></table>
+		<div id="tb" style="padding:5px;height:auto">
+			<div>
+				部门筛选: 
+				<input id="dept_select" style="width:200px;"/>
+				职位筛选：
+				<select id="jobs_select" style="width:200px;"  name="jobs_id">
+					<option selected="selected" value="">所有职位</option>
+				</select>
+				项目组筛选：
+				<select id="project_select" style="width:200px;" name="project">
+					<option selected="selected" value="">所有项目组</option>
+				</select>
+			</div>
+		</div>
+		<div id="add" class="easyui-window" title="添加被评价人" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:450px;height:200px;padding:5px;">
+			<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+				<form name="form1">
+				<input type="hidden" name="TO_ID" id="TO_ID" value="" />
+				<input type="hidden" id="id" value="" />
+				<input type="hidden" id="user_id" value="" />
+				<p><label style="width:100px;text-align:right;">被评 价人：</label><input size="15" type="text" id="username" onblur="check_user(this.value);" value="" /><span id="show_user_error" style="color:red;"></span></p>
+				<p><label style="width:100px;text-align:right;">评 价 人：</label><input size="40" type="text" id="TO_NAME" name="TO_NAME" value="" /> <input type="button" onclick="User_LoadWindow();" value="选择"></p>
+				</form>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<a class="easyui-linkbutton" iconCls="icon-ok" href="javascript:post();">Ok</a>
+				<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:close_window();">Cancel</a>
+			</div>
+			</div>
+
+		</div>
+    </body>
+</html>

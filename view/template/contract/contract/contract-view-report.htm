@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>合同列表</title>
+	{#commonInclude#}
+	<script type="text/javascript">
+		$(function () {
+			$("#contractList").yxeditgrid({
+				url : '?model=contract_contract_contract&action=listJson',
+				param : {
+					ids : $('#ids').val(),
+					isTemp : '0'
+				},
+				type : 'view',
+				colModel : [{
+					name : 'id',
+					display : 'id',
+					type : 'hidden'
+				},{
+					name : 'contractCode',
+					display : '合同编号',
+					width : '15%',
+					process : function (v, row) {
+						return '<a href="javascript:void(0)" onclick="javascript:showModalWin(\'?model=contract_contract_contract&action=toViewTab&id='
+								+ row.id
+								+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false\')">'
+								+ "<font color = '#4169E1'>" + v + "</font>" + '</a>';
+							}
+				},{
+					name : 'contractName',
+					display : '合同名称',
+					width : '25%'
+				},{
+					name : 'contractType',
+					display : '合同类型',
+					datacode : 'HTLX',
+					width : '10%'
+				},{
+					name : 'businessBelongName',
+					display : '签约公司',
+					width : '15%'
+				},{
+					name : 'ExaDTOne',
+					display : '建立时间',
+					width : '10%'
+				},{
+					name : 'customerName',
+					display : '客户名称',
+					width : '25%'
+				}]
+			});
+		});
+	</script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td>
+				<div id="contractList"></div>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" id="ids" value="{ids}"/>
+</body>
+</html>

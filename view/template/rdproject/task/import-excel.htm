@@ -1,0 +1,55 @@
+<html>
+<title>EXCEL数据导入</title>
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>导入任务</title>
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen">
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<script type="text/javascript" src="js/jquery/jquery.js"></script>
+<body>
+<form action="?model=rdproject_task_rdtask&action=upExcel"
+ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1">
+<input type="hidden" name="leadExcel" value="true">
+<table align="center" width="100%" border="0">
+	<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      	<font color="blue">研发任务导入</font>
+			    </span>
+			</div>
+	</tr>
+	<tr>
+		<td align="center">
+			<input type="hidden" id="planId" value="{planId}">
+			<input type="hidden" id="planName" value="{planName}">
+			<label for="file">上传文件:</label> <input type="file" name="inputExcel" />
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<input type="button" onclick="javascript:window.open('upfile/研发统一导入模板.xls')" class="txt_btn_a" value="下载模版">
+			<input type="submit" class="txt_btn_a" onclick="toSubmit();" value="&nbsp;导入&nbsp;">
+		</td>
+	</tr>
+	<span class="red">
+</table>
+</form>
+<script>
+	function importFun(){
+		window.open('?model=rdproject_task_rdtask&action=downImportTemplate');
+	}
+	function toSubmit(){
+		document.getElementById('form1').action="?model=rdproject_task_rdtask&action=upExcel&planId="+$('#planId').val() + "&planName=" + $('#planName').val();
+	}
+</script>
+</body>
+</html>
+	注意事项：<br>
+	1.导入表中，项目必须已存在，并且，项目名称和项目编码必须对应同一个项目。<br>
+	2.导入表中，若所导入的任务对应的计划不为空，则该计划必须是已经存在的。<br>
+		&nbsp 若导入的任务对应的计划名称为空。则默认导入的为临时任务。<br>
+	3.导入表中，项目责任人必须是项目成员的一员，否则，导入后该责任人无法看到该导入的任务

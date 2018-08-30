@@ -1,0 +1,213 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+ <script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="view/template/rdproject/task/js/rdtk_viewtask_tab.js"></script>
+
+<script type="text/javascript">
+	            $(document).ready(function() {
+            	//显示tab表头
+                topTabShow(mtkTabInfo, "1","{id}");
+
+
+            });
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toReadTask&id={taskId}";
+			}
+	function search() {
+		var searchfield = $('#searchfield').val();
+		var searchvalue = $('#searchvalue').val();
+		this.location = "?model=rdproject_task_rdtask&action=toReadTask&id={taskId}&"
+				+ searchfield + "=" + searchvalue;
+
+	}
+</script>
+</head>
+<body>
+<div class="tab_options"></div>
+<table class="form_main_table">
+	<tr>
+		<td class="main_tr_header" colspan="4">基本信息</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务名称</td>
+		<td class="form_text_right" colspan="3">{name}</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">所属项目</td>
+		<td class="form_view_right">{projectName}</td>
+		<td class="form_text_left">发布人</td>
+		<td class="form_view_right">{publishName}</td>
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务类型</td>
+		<td class="form_text_right">{tasktype}</td>
+		<td class="form_text_left">优先级</td>
+		<td class="form_text_right">{Priority}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">最近更新时间</td>
+		<td class="form_view_right">{updateTime}</td>
+		<td class="form_text_left">创建日期</td>
+		<td class="form_view_right">{createTime}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">所属计划</td>
+		<td class="form_view_right">{planName}</td>
+		<td class="form_text_left">里程碑</td>
+		<td class="form_view_right">{markStoneName}</td>
+	</tr>
+
+
+	<tr>
+		<td class="form_text_left">责任人</td>
+		<td class="form_view_right">{chargeName}</td>
+		<td class="form_text_left">审核人</td>
+		<td class="form_view_right">{auditUserNames}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">完成率</td>
+		<td class="form_view_right">{effortRate}</td>
+		<td class="form_text_left">已投入工作量</td>
+		<td class="form_view_right">{putWorkload}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">参与人</td>
+		<td class="form_view_right" colspan="3">{actUserNames}</td>
+
+	</tr>
+
+	<tr>
+		<td class="form_text_left">任务描述</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read">{remark}</textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">验收标准</td>
+		<td class="form_text_right" colspan="3"></td>
+	</tr>
+</table>
+<table class="form_main_table">
+<tr>
+		<td class="main_tr_header" >执行日报</td>
+	</tr>
+	<tr>
+
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						输入关键字：
+						<input type="text" id="searchvalue" class="txt" name="searchvalue" />
+						按
+						<select id="searchfield" class="select">
+							<option value="createName">
+							日报填写人
+							</option>
+						</select>
+						<input type="button" value=" 搜索 " onclick="search();" class="txt_btn_a" />
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							序号
+						</th>
+						<th width="8%">
+							日报填写人
+						</th>
+						<th width="8%">
+							当日完成率
+						</th>
+						<th width="8%">
+							当日投入工作量
+						</th>
+						<th width="10%">
+							执行日期
+						</th>
+						<th width="10%">
+							描述
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+	</tr>
+</table>
+<table class="form_main_table">
+
+	<tr>
+		<td class="main_tr_header" colspan="4">对比分析</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">计划开始日期</td>
+		<td class="form_text_right">{planBeginDate}</td>
+		<td class="form_text_left">计划完成日期</td>
+		<td class="form_text_right">{planEndDate}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">实际开始日期</td>
+		<td class="form_view_right">{actBeginDate}</td>
+		<td class="form_text_left">实际完成日期</td>
+		<td class="form_view_right">{actEndDate}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">任务提交日期</td>
+		<td class="form_view_right">{subDate}</td>
+		<td class="form_text_left">审批日期</td>
+		<td class="form_view_right">{auditDate}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">偏差率</td>
+		<td class="form_view_right">{warpRate}</td>
+		<td class="form_text_left"> 变更次数</td>
+		<td class="form_view_right">{changeNum}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">估计工作量</td>
+		<td class="form_text_right">{appraiseWorkload}</td>
+		<td class="form_text_left">实际工作量</td>
+		<td class="form_text_right">{actWorkload}</td>
+	</tr>
+
+
+	<tr>
+		<td class="form_text_left">计划工期(天)</td>
+		<td class="form_text_right">{planDuration}</td>
+		<td class="form_text_left">实际工期(天)</td>
+		<td class="form_view_right">{realDuration}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3"></td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td colspan="4"> <input name="" type="button" class="txt_btn_a"
+			onclick="closeFun();" value="关闭"></td>
+	</tr>
+</table>
+</body>
+</html>
+

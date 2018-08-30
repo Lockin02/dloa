@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+    <title>新增销售负责人管理</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/saleperson-add.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=system_saleperson_saleperson&action=add" onsubmit="return sub();">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="4">
+                <div class="main_head">
+             <span class="main_head_title">
+               	新增销售负责人管理
+             </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><span style="color:blue">负责人名称</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="personName" readonly name="saleperson[personName]"/>
+                <input type="hidden" class="txt" id="personId" readonly name="saleperson[personId]"/>
+            </td>
+            <td class="form_text_left">所属部门</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="deptName" readonly name="saleperson[deptName]"/>
+                <input type="hidden" class="txt" id="deptId" readonly name="saleperson[deptId]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">归属区域</td>
+            <td class="form_text_right">
+                <input type="text" class="txt" id="salesAreaName" readonly name="saleperson[salesAreaName]"/>
+                <input type="hidden" class="txt" id="salesAreaId" readonly name="saleperson[salesAreaId]"/>
+            </td>
+            <td class="form_text_left">区域负责人</td>
+            <td class="form_text_right">
+                <input type="text" class="readOnlyTxtNormal" id="salesManNames" readonly name="saleperson[areaName]"/>
+                <input type="hidden" class="txt" id="salesManIds" readonly name="saleperson[areaNameId]"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left"><span style="color:blue">是否为行业总监</span></td>
+            <td class="form_text_right" colspan="3">
+                <select class="select" id="isDirector" name="saleperson[isDirector]" onchange="isdirector(this)">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+            <!--<td class="form_text_left">区域负责人</td>-->
+            <!--<td class="form_text_right" >-->
+            <!--<input type="text" class="txt" id="areaName" readonly name="saleperson[areaName]" />-->
+            <!--<input type="hidden" class="txt" id="areaNameId" readonly name="saleperson[areaNameId]" />-->
+            <!--</td>-->
+        </tr>
+        <tr>
+            <td class="form_text_left"><span style="color:blue">归属公司</span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="saleperson[businessBelongName]" id="businessBelongName"
+                       value="{businessBelongName}" readonly="readonly"/>
+                <input type="hidden" name="saleperson[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                <input type="hidden" name="saleperson[formBelong]" id="formBelong" value="{formBelong}"/>
+                <input type="hidden" name="saleperson[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+            </td>
+            <td class="form_text_left"><span style="color:blue">执行区域</span></td>
+            <td class="form_text_right">
+                <input type="hidden" id="exeDeptCode" name="saleperson[exeDeptCode]" />
+                <input type="text" class="txt" id="exeDeptName" name="saleperson[exeDeptName]" readonly/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <table class="main_table" width="100%" id="" cellspacing='1'
+                       cellpadding='0'>
+                    <thead>
+                    <tr style="background-color:#EFF7FF">
+                        <td>国家</td>
+                        <td>省份</td>
+                        <td>城市</td>
+                        <td>客户类型</td>
+                        <td>是否启用</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            中国
+                            <input type="hidden" readonly class="txtmiddle" id="countryName" value="中国"/>
+                            <input type="hidden" class="txtmiddle" id="countryId" value="1"/>
+                        </td>
+                        <td>
+                            <input type="text" class="txtmiddle" readonly id="provinceName"/>
+                            <input type="hidden" class="txtmiddle" id="provinceId" value=""/>
+                        </td>
+                        <td>
+                            <input type="text" class="txtlong" readonly id="cityName"/>
+                            <input type="hidden" class="txtmiddle" id="cityId" value=""/>
+                        </td>
+                        <td>
+                            <input type="text" class="txtlong" readonly id="customerTypeName"/>
+                            <input type="hidden" class="txtmiddle" id="customerType" value=""/>
+                        </td>
+                        <td>
+                            <select class="selectshort" id="isUse">
+                                <option value="0">启用</option>
+                                <option value="1">禁用</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="button" class="txt_btn_a" value=" 添加 " onclick="addInfo()"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset style="width:200">
+                    <legend class="legend" onclick="showAndHideDiv('infoImg','info')">明细信息
+                        <img src="images/icon/info_up.gif" id="infoImg"/>
+                    </legend>
+                    <div id="info"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td class="txt_btn" colspan="4">
+                <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

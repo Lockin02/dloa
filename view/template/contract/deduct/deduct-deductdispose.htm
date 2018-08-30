@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>扣款处理</title>
+    {#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/deductdispose.js"></script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=contract_deduct_deduct&action=dedispose"  onsubmit="return sub();">
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	扣款处理
+             </span>
+         </div>
+      </td>
+   </tr>
+<tr>
+      		<td class="form_text_left">合同名称</td>
+      		<td class="form_text_right" >
+      			{contractName}
+      		</td>
+      		<td class="form_text_left">合同编号</td>
+      		<td class="form_text_right" >
+      			{contractCode}
+      			<input type="hidden" name="deduct[contractId]" id="contractId" value="{contractId}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">合同金额</td>
+      		<td class="form_text_right" >
+      			{contractMoney}
+      		</td>
+      		<td class="form_text_left">扣款金额</td>
+      		<td class="form_text_right" >
+      			{deductMoney}
+      			<input type="hidden" name="deduct[deductMoney]" id="deductMoney" value="{deductMoney}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">扣款原因</td>
+      		<td class="form_text_right" colspan="3">
+      		     <div id="remark" class="divChangeLine">{deductReason}</div>
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left"><span style="color:blue">处理方式</span></td>
+            <td class="form_text_right" colspan="3">
+               <input type="radio" name="deduct[deductDispose]" value="deductMoney" {disa}/>扣款
+               &nbsp&nbsp
+               <input type="radio" name="deduct[deductDispose]" value="badMoney" {disb}/>坏账
+            </td>
+       </tr>
+		<tr>
+			<td colspan="4" class="innerTd">
+				<div id="checkTable"></div>
+			</td>
+		</tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+         <input  type="hidden" name="deduct[id]" id="id" value="{id}" />
+         <input  type="hidden" id="thisDate" value="{thisDate}" />
+		   <input  type="submit" class="txt_btn_a" value=" 确  定 "/>&nbsp&nbsp
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

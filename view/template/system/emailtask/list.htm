@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>群发任务列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	table td{
+		white-space:normal; word-break:break-all;
+		table-layout:fixed;
+	}
+</style>
+</head>
+<body>
+<br />
+<form method="get">
+<input type="hidden" name="model" value="{t_model}" />
+<input type="hidden" name="action" value="task_list" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>类型:
+			<select id="task_type" name="task_type">
+				<option value="">全部类型</option>
+				<option value="0">定时发送</option>
+				<option value="1">周期发送</option>
+			</select> 
+		</td>
+		<td>
+			 级别:
+			<select id="level" name="level">
+				<option value="">全部级别</option>
+				<option value="2">紧急</option>
+				<option value="1">中等</option>
+				<option value="0">一般</option>
+			</select>
+		</td>
+		<td> 用户:<input type="text" size="12" id="username" name="username" value="{username}" /></td>
+		<td>
+			 时间:
+			<input type="text" id="start_date" name="start_date" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" value="{start_date}" />
+			至
+			<input type="text" id="end_date" name="end_date" class="Wdate" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="{end_date}" />
+		</td>
+		<td>
+			 关键字:<input type="text" size="15" id="keyword" name="keyword" value="{keyword}" />
+		</td>
+		<td>
+			<input type="submit" value=" 查询 ">
+		</td>
+	</tr>
+</table>
+</form>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="12">邮件任务列表</td>
+		<td colspan="2"><input type="button" alt="?model={t_model}&action=add_task&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700" class="thickbox" title="添加新任务" value="添加任务" /></inout></td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>提交人</td>
+		<td>任务名称</td>
+		<td>任务级别</td>
+		<td>任务类型</td>
+		<td>执行周期</td>
+		<td>邮件标题</td>
+		<td>任务执行时间</td>
+		<td>实际开始执束时间</td>
+		<td>执行束结束时间</td>
+		<td>发送成功</td>
+		<td>发送失败</td>
+		<td>发送状态</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+	/**
+	 * 获取URL参数
+	 * @param {Object} name
+	 */
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	/**
+	 * 设置下拉
+	 * @param {Object} id
+	 */
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	set_selected('task_type');
+	set_selected('level');
+	
+	function show_task(id,key)
+	{
+		if (id && key)
+		{
+			tb_show('查看任务','?model=system_emailtask_index&action=show_task&id='+id+'&key='+key+'&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700',false);
+		}
+	}
+	/**
+	 * 删除任务
+	 * @param {Object} id
+	 * @param {Object} key
+	 */
+	function del(id,key)
+	{
+		if (confirm('您确定要删除该条任务吗？'))
+		{
+			tb_show('删除用户','?model=system_emailtask_index&action=del&id='+id+'&key='+key+'&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=300',false);
+		}else{
+			
+		}
+		
+	}
+	/**
+	 * 暂停或恢复任务
+	 * @param {Object} id
+	 * @param {Object} key
+	 * @param {Object} send
+	 */
+	function pause(id,key,send)
+	{
+		var edit_temp = $('#td_'+id).html();
+		var tid = id;
+		var p = false;
+		if (send==1)
+		{
+			if (confirm('您确定要暂停该任务吗？'))
+			{
+				p = true;
+			}else{
+				p = false;
+			}
+		}else{
+			if (confirm('您确定要恢复该任务吗？'))
+			{
+				p = true;
+			}else{
+				p = false;
+			}
+		}
+		if (p==true)
+		{
+			$.post('ajax.php?model=system_emailtask&action=update_pause&id',{id:id,key:key,send:send,rand:Math.random(0,9999)},
+				function (data)
+				{
+					if (data==1)
+					{
+						if (send==0)
+						{
+							edit_temp = edit_temp.replace('('+id+',\''+key+'\','+send+')','('+id+',\''+key+'\',1)')
+							$('#td_'+id).html(edit_temp.replace('<SPAN>恢复<\/SPAN>','暂停'));
+						}else{
+							edit_temp = edit_temp.replace('('+id+',\''+key+'\','+send+')','('+id+',\''+key+'\',0)')
+							$('#td_'+id).html(edit_temp.replace('暂停','<SPAN>恢复</SPAN>'));
+						}
+					}else{
+						
+					}
+				}
+			
+			)
+		}else{
+			return ;
+		}
+	}
+</script>
+</body>
+</html>

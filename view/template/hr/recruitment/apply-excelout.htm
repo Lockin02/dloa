@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>增员申请导出</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js"></script>
+</head>
+<body>
+	<form id="exportForm" action="?model=hr_recruitment_apply&action=excelOut" ENCTYPE="multipart/form-data" method="POST" name="form1">
+		<table  class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							增员申请信息导出
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">单据编号</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[formCode]" id="formCode" class="txt"/>
+				</td>
+				<td class="form_text_left_three">填表人</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[formManName]" id="formManName" class="txt"/>
+				</td>
+				<td class="form_text_left_three">接口人</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[resumeToName]" id="resumeToName" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">直属部门</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[deptNameO]" id="deptNameO" class="txt"/>
+				</td>
+				<td class="form_text_left_three">二级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[deptNameS]" id="deptNameS" class="txt"/>
+				</td>
+				<td class="form_text_left_three">三级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[deptNameT]" id="deptNameT" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">四级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[deptNameF]" id="deptNameF" class="txt"/>
+				</td>
+				<td class="form_text_left_three">工作地点</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[workPlace]" id="workPlace" class="txt"/>
+				</td>
+				<td class="form_text_left_three">职位类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="postType" name="apply[postType]">
+						<option value="">不限</option>
+						{postType}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">需求职位</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[positionName]" id="positionName" class="txt"/>
+				</td>
+				<td class="form_text_left_three">级  别</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[positionLevel]" id="positionLevel" class="txt"/>
+				</td>
+				<td class="form_text_left_three">所在项目组</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[projectGroup]" id="projectGroup" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">是否紧急</td>
+				<td class="form_text_right_three">
+					<input type="radio"	name="apply[isEmergency]" value="" checked />&nbsp;不限&nbsp; &nbsp;
+					<input type="radio" name="apply[isEmergency]" value="1"/>&nbsp;是&nbsp;	&nbsp;
+					<input type="radio" name="apply[isEmergency]" value="0"/>&nbsp;否&nbsp;
+				</td>
+				<td class="form_text_left_three">填表时间</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" readonly name="apply[formDateBef]" id="formDateBef" onfocus="WdatePicker()"/> ~
+					<input type="text" style="width:87px" readonly name="apply[formDateEnd]" id="formDateEnd" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left_three">申请通过时间</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" readonly name="apply[ExaDTBef]" id="ExaDTBef" onfocus="WdatePicker()"/> ~
+					<input type="text" style="width:87px" readonly name="apply[ExaDTEnd]" id="ExaDTEnd" onfocus="WdatePicker()"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">下达日期</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" readonly name="apply[assignedDateBef]" id="assignedDateBef" onfocus="WdatePicker()"/> ~
+					<input type="text" style="width:87px" readonly name="apply[assignedDateEnd]" id="assignedDateEnd" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left_three">录用日期</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" readonly name="apply[createTimeBef]" id="createTimeBef" onfocus="WdatePicker()"/> ~
+					<input type="text" style="width:87px" readonly name="apply[createTimeEnd]" id="createTimeEnd" onfocus="WdatePicker()"/>
+				</td>
+				<td class="form_text_left_three">到岗时间</td>
+				<td class="form_text_right_three">
+					<input type="text" style="width:87px" readonly name="apply[entryDateBef]" id="entryDateBef" onfocus="WdatePicker()"/> ~
+					<input type="text" style="width:87px" readonly name="apply[entryDateEnd]" id="entryDateEnd" onfocus="WdatePicker()"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">增员类型</td>
+				<td class="form_text_right_three">
+					<select class="select" id="addTypeCode" name="apply[addTypeCode]">
+						<option value="">不限</option>
+						{addTypeCode}
+					</select>
+				</td>
+				<td class="form_text_left_three">招聘负责人</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[recruitManName]" id="recruitManName" class="txt"/>
+				</td>
+				<td class="form_text_left_three">招聘协助人</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[assistManName]" id="assistManName" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">需求原因</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[applyReason]" id="applyReason" class="txt"/>
+				</td>
+				<td class="form_text_left_three">工作职责</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[workDuty]" id="workDuty" class="txt"/>
+				</td>
+				<td class="form_text_left_three">任职要求</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[jobRequire]" id="jobRequire" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">关键要点</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[keyPoint]" id="keyPoint" class="txt"/>
+				</td>
+				<td class="form_text_left_three">注意事项</td>
+				<td class="form_text_right_three">
+					<input name="apply[attentionMatter]" id="attentionMatter" class="txt"/>
+				</td>
+				<td class="form_text_left_three">部门领导喜好</td>
+				<td class="form_text_right_three">
+					<input type="text" name="apply[leaderLove]" id="leaderLove" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">进度备注</td>
+				<td class="form_text_right_three" colspan="3">
+					<input type="text" name="apply[applyRemark]" id="applyRemark" class="txt"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">单据状态</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="checkbox" name="apply[state][]" value="1"/>未下达&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="2"/>招聘中&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="3"/>暂停&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="4"/>完成&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="7"/>取消&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[state][]" value="8"/>提交
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">审批状态</td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="checkbox" name="apply[ExaStatus][]" value="未提交"/>未提交&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="打回"/>打回&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="部门审批"/>部门审批&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="apply[ExaStatus][]" value="完成"/>完成&nbsp;&nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="submit" class="txt_btn_a" value=" 导  出 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

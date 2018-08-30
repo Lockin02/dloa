@@ -1,0 +1,50 @@
+<HTML>
+<HEAD>
+<TITLE>合同明细</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script>
+	function searchBtn(){
+		this.location = "?model=projectmanagent_orderreport_orderreport&action=detailSearch";
+	}
+
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="95%">
+    <tr height="100%">
+		<input type="button" id="searchBtn" onclick="searchBtn();" value=" 查  询 "/>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="beginDT" value="{beginDT}"/>
+			<input type="hidden" id="endDT" value="{endDT}"/>
+			<input type="hidden" id="orderType" value="{orderType}"/>
+			<input type="hidden" id="area" value="{area}"/>
+			<input type="hidden" id="principal" value="{principal}"/>
+			<input type="hidden" id="customerName" value="{customerName}"/>
+			<input type="hidden" id="customerType" value="{customerType}"/>
+			<input type="hidden" id="complete" value="{complete}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/projectmanagent/orderreport/orderdetailreport.grf"
+				,"view/template/projectmanagent/orderreport/detailreportSql.php?" + "&beginDT=" + document.getElementById("beginDT").value
+				                                                                  + "&endDT=" + document.getElementById("endDT").value
+				                                                                   + "&area=" + document.getElementById("area").value
+				                                                                   + "&principal=" + document.getElementById("principal").value
+				                                                                   + "&orderType=" + document.getElementById("orderType").value
+				                                                                   + "&customerName=" + document.getElementById("customerName").value
+				                                                                   + "&customerType=" + document.getElementById("customerType").value
+				                                                                   + "&complete=" + document.getElementById("complete").value
+
+				)
+			</script>
+		</td>
+	</tr>
+
+</table>
+</BODY>
+</HTML>

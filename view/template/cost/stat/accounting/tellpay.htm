@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+	<title>付款</title>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="images/head/head.css"/>
+    <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.jclock.js"></script>
+	<script>
+		$(function(){
+			$('#tt').datagrid({
+				url: '{data_url}',
+				title: '付款信息',
+				width: 900,
+				height: 600,
+				fitColumns: true,
+                nowrap:false,
+                rownumbers:true,
+				showFooter:true,
+				columns:[[
+					{field:'name',title:'姓名',width:120},
+					{field:'pno',title:'项目编号',width:100,align:'right'},
+					{field:'am',title:'金额',width:100,align:'right'},
+					{field:'acc',title:'账号',width:180,align:'left'},
+					{field:'bank',title:'开户行',width:180,align:'left'}
+				]],
+				onHeaderContextMenu: function(e, field){
+					e.preventDefault();
+					if (!$('#tmenu').length){
+						createColumnMenu();
+					}
+					$('#tmenu').menu('show', {
+						left:e.pageX,
+						top:e.pageY
+					});
+				}
+			});
+		});
+
+		function createColumnMenu(){
+			var tmenu = $('<div id="tmenu" style="width:100px;"></div>').appendTo('body');
+			var fields = $('#tt').datagrid('getColumnFields');
+			for(var i=0; i<fields.length; i++){
+				$('<div iconCls="icon-ok"/>').html(fields[i]).appendTo(tmenu);
+			}
+			tmenu.menu({
+				onClick: function(item){
+					if (item.iconCls=='icon-ok'){
+						$('#tt').datagrid('hideColumn', item.text);
+						tmenu.menu('setIcon', {
+							target: item.target,
+							iconCls: 'icon-empty'
+						});
+					} else {
+						$('#tt').datagrid('showColumn', item.text);
+						tmenu.menu('setIcon', {
+							target: item.target,
+							iconCls: 'icon-ok'
+						});
+					}
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+    <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-print" onclick="location.href='{xls_url}'">导出</a>
+	<table id="tt"></table>
+
+</body>
+</html>

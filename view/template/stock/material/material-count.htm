@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+	<title>BOM清单</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+	<script>
+		var attributeNameStr = "{attributeNameStr}";
+		var publicUrl = "?model={t_model}";
+	</script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+	<link rel="stylesheet" type="text/css" href="view/template/stock/material/css/material-management.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jeasyui_newest/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/jeasyui_newest/datagrid/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="view/template/stock/material/js/manage-base.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/manage-materials-tree.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/manage-configuration-grid.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/manage-review-grid.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/material-management.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/material-export.js" ></script>
+	<script type="text/javascript" src="view/template/stock/material/js/material-count.js" ></script>
+	<style>
+		.sf_td{border-color: #ccc;border-style: dotted;border-width: 0 1px 1px 0;}
+		.sf_bg{background: linear-gradient(to bottom, #f9f9f9 0px, #efefef 100%) repeat-x scroll 0 0 rgba(0, 0, 0, 0);}
+	</style>
+</head>
+<body>
+
+     <div id='main'>
+     	<div id='top' style='width: auto;padding-top:1px'>
+     		<table id='operation_table' ></table>
+     	</div>
+     	<div id='left' style="margin-top:35px;">
+     		<ul id="materials_tree"></ul>
+     	</div>
+     	<div id='FDIV'>
+     		<ul id="F_tree"></ul>
+     	</div>
+     	<div id='right' style="margin-top:35px;">
+     		<div id='div_statistics'></div>
+			<div id='product_div' style="width: 100%; display: block;">
+	    		<table id='parts_table' style='width: auto;'></table>
+	    		<table id="config_table" style='height:450px;'></table>
+
+	    		<div id="bom_detail_box"></div>
+	    	</div>
+	    	<div id='product_sheet' style="width:100%">
+		</div>
+     </div>
+     <div id="public_dialog" class="easyui-dialog" title="" data-options="iconCls:'icon-save', closed:true" style="width:400px;height:200px;padding:10px; z-index:10000;">
+	 	<div id='dialog_data_board' style='width: 100%;'></div>
+	    <div id='dialog_data'></div>
+	 </div>
+
+	 <div id='div_details'></div>
+	 <div id='div_statistical'></div>
+	 <div id='div_inspect'>
+	 	<div id='div_inspect_load'></div>
+	 </div>
+	 <div id='finishedSave' style="display:none;">
+	 	<span style="margin:3px;">成品名称</span><input id='finishedName' type='text' style="width:215px;margin:3px;"/>
+	 	<span style="margin:3px;">成品编号</span><input id='CPCode' type='text' style="width:215px;margin:3px 0px 3px 3px;"/>
+	 </div>
+	 <div id='finishedInfo'></div>
+	 <div id='editSF'></div>
+	 <div id="open-import" class="easyui-window" title="导入BOM" style="width:450px;height:120px"
+        data-options="iconCls:'icon-save',closed:true,collapsible:false,minimizable:false,maximizable:false,resizable:false">
+    	<div style="width:430px;heigth:120px;">
+
+    	<form id='uploadForm' name='uploadForm' method='post' action="?model={t_model}&action=import_excel" enctype='multipart/form-data' target='public_iframe' >
+	 		<table width='90%' style='padding:10px;'>
+	 		<tr>
+	 			<td>
+	 				<input type='file' id='upload_excel_file' name='upload_excel_file'  />
+	 			</td>
+	 		</tr>
+	 		</table>
+
+	 	<div style='position:absolute; right:20px; bottom:20px;'>
+	 		<!-- <input type='submit' id='uploadButton' name='uploadButton' value='上传' /> -->
+	 		<a href="#" class="easyui-linkbutton" onclick="$('#uploadForm').submit();">上传</a>
+	 		<a href='view/template/stock/material/template/bom_template.xlsx' class="easyui-linkbutton">下载导入模版</a>
+	 		<!-- <a href="#" class="easyui-linkbutton" onclick="closePublicDialog();">关闭</a> -->
+	 	</div>
+		</form>
+	 	</div>
+	</div>
+	<iframe id='public_iframe' name='public_iframe' style='display: none;' ></iframe>
+	<!-- <div id="material-type"><table id='material-type-table'></table></div> -->
+    <!-- <table class="form_main_table" style='width: 100%;'>
+       <tr>
+
+      		<td class="form_text_left" style="min-width: 55px"><span class=blue>BOM名称</span></td>
+      		<td class="form_text_right" style="min-width: 205px" >
+      			 <input type="text" class="txt" id="productName" name="material[productName]" readonly/>
+      			 <input type="hidden" class="txt" id="productId" name="material[productId]" readonly/>
+      		</td>
+      		<td class="form_text_left" style="min-width: 50px"  >物料编码</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="productCode" name="material[productCode]" readonly/>
+      		</td>
+
+      		<td class="form_text_left" style="min-width: 50px" ><span class=blue>需求数量</span></td>
+      		<td class="form_text_right">
+      			 <input type="text" class="txt" id="materialNum" name="material[materialNum]" onblur="checkNumb();" style="width: 150px;"/>
+      		</td>
+      		<td class="form_text_left" style="min-width: 50px" >规格型号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyText" id="pattern" name="material[pattern]" readonly/>
+      			 <input type="hidden" class="readOnlyText" id="unitName" name="material[unitName]" readonly/>
+      		</td>
+       </tr>
+     </table>
+     <table class="form_main_table" style="width: 100%;">
+   	 <tr>
+   		<td class="txt_btn" align="right">
+   			<input  type="button" class="txt_btn_a" value=" 导出 " onclick="doExport();"/>
+   		   <input  type="button" class="txt_btn_a" value=" 导入 " onclick="doImport();"/>
+   		   <input  type="button" class="txt_btn_a" value=" 生成采购申请单 " onclick="applyPurchase();"/>
+
+   		</td>
+       </tr>
+   </table> -->
+   <div style='width: 100%; '>
+   	<table id="materialCountGrid" style="width: auto;"></table>
+   </div>
+</body>
+</html>

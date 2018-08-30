@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js">
+        </script>
+        <script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js">
+        </script>
+        <script type="text/javascript" src="js/thickbox.js">
+        </script>
+        <script>
+            var wh = parent.document.documentElement.clientHeight;
+            
+            $(function()
+			{
+		     try {
+                $('#uidatagrid').datagrid(
+                {
+                    fit: true,
+                    fitColumns: true,
+                    remoteSort: false,
+                    nowrap: true,
+                    collapsible: true,
+                    idField: 'key',
+                    url: '?model=system_organizer_mailgroup_index&action=indexdata',
+                    sortName: 'type',
+                    sortOrder: 'desc',
+     				striped: true,
+                    rownumbers: true,
+                    pagination: true,
+                    pageSize: 20,
+                    pageList: [20, 25, 30],
+                    columns: [[			
+                    {
+                        field: 'groupname',
+                        title: '组名',
+                        width: 40,
+                        align: 'center',
+                        sortable: true
+                    }, 
+                    {
+                        field: 'type',
+                        title: '归属',
+                        width: 40,
+                        align: 'center',
+                        sortable: true
+                    }, 
+                    {
+                        field: 'cout',
+                        title: '组员数量',
+                        width: 20,
+                        align: 'center',
+                        sortable: false
+                    }, 
+                    {
+                        field: 'sender',
+                        title: '发信人员',
+                        width: 80,
+                        align: 'center',
+                        sortable: false
+                    }, 
+                    {
+                        field: 'description',
+                        title: '描述',
+                        width: 40,
+                        align: 'center',
+                        sortable: true
+                        
+                    }, 
+                    {
+                        field: 'flag',
+                        title: '操作',
+                        width: 40,
+                        align: 'center',
+                        sortable: false,
+                        formatter: function(value, row, index)
+                        {
+                            var html = '';
+                            if (value == 1) 
+                            {
+                               html = '<a title="查看：'+row.groupname+' 通讯组" class="thickbox" href="javascript:" onclick="detail(\''+row.groupname+'\',\''+row.id+'\',\''+row.key+'\')">查看</a>'
+                                      + '&nbsp;&nbsp;|&nbsp;&nbsp;<a title="修改：'+row.groupname+' 通讯组" class="thickbox" href="javascript:" onclick="edit(\''+row.groupname+'\',\''+row.id+'\',\''+row.key+'\')">修改</a>'
+                                      + '&nbsp;&nbsp;|&nbsp;&nbsp;<a title="删除：'+row.groupname+' 通讯组" class="thickbox" href="javascript:" onclick="del(\''+row.groupname+'\',\''+row.id+'\',\''+row.key+'\')">删除</a>';
+                            }
+                            else if (value == 2) 
+                            {
+                                html = '<a title="查看：'+row.groupname+' 通讯组"  class="thickbox"  href="javascript:" onclick="detail(\''+row.groupname+'\',\''+row.id+'\',\''+row.key+'\')">查看</a>'
+                            }
+                            return html;
+                            
+                        }
+                        
+                    }, {
+                        field: 'id',
+                        title: 'id',
+                        width: 40,
+                        align: 'center',
+                         hidden: true
+                    }, 
+                    {
+                        field: 'key',
+                        title: 'key',
+                        width: 40,
+                        align: 'center',
+                         hidden: true
+                    }]]
+                });
+                
+                $('#search').linkbutton(
+                {
+                    plain: false
+                });
+                $('#apply').linkbutton(
+                {
+                    plain: false
+                });
+                $('.datagrid-toolbar').css('line-height', '28px');
+                $('#tabdiv').css('height', (wh - 130 + 2 * ((wh - 400) / 80)));
+                $('#formid').css('height', (wh - 130 + 2 * ((wh - 400) / 80)));
+                
+                } catch (e) {
+	           
+            }
+            });
+			
+            function searchs()
+            {
+                $('#uidatagrid').datagrid('reload', 
+                {
+                    type: $('#type').val(),
+                    keyword: $('#keyword').val(),
+                    rand: Math.random()
+                })
+            }
+			 function edit(name,id,key)
+            {
+              tb_show('修改：'+name+' 通讯组', '?model=system_organizer_mailgroup_index&action=edit&id='+id+'&key='+ key +'&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700');
+            }
+			function detail(name,id,key)
+            {
+               tb_show('查看：'+name+' 通讯组', '?model=system_organizer_mailgroup_index&action=detail&id='+id+'&key=' + key + '&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700');
+            }
+			 function del(name,id,key)
+		        {
+			        if (confirm('即将删除的通讯组无法恢复，您确定要删除'+name+'该通讯组吗？'))
+			        {
+			        	tb_show('删除通讯组','?model={t_model}&action=del&id='+id+'&key='+key+'&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=300',false);
+			        }
+		        }
+            function add()
+            {    
+			   var  add='{add}';
+			     if(add)
+				 {
+				 	tb_show('添加通讯组', '?model={t_model}&action=add&placeValuesBefore&TB_iframe=true&modal=false&height=500&width=700');
+				 }else
+				 {
+				 	alert('你没有权限');
+				 }
+                   
+            }
+        </script>
+    </head>
+    <style type="text/css"> 
+        .datagrid-cell {
+        }
+    </style>
+    <body id="tabdiv" class="easyui-layout">
+        <div region="center" border="false">
+            <table id="uidatagrid" border="false" toolbar="#tb" cellpadding="0" cellspacing="0">
+            </table>
+            <div id="tb" style="">
+                          归属类型：
+                    <select name="type" id="type">
+                        <option value="0">所有归属</option>
+                        <option value="1">部门</option>
+                        <option value="2">区域</option>
+                    </select>
+		  关键字：<input type="text" name='keyword'  id='keyword' style=" width:150px;">		
+                    <a href="#" class="easyui-linkbutton" onClick="searchs();" iconCls="icon-search">搜 索</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" class="easyui-linkbutton" onClick="add();" iconCls="icon-add">添加通讯组</a>
+         
+            </div>
+        </div>
+    </body>
+</html>

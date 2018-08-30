@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>修改预付款</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript" src="js/jquery/woo.js"></script>
+    <script type="text/javascript" src="js/jquery/component.js"></script>
+    <script type="text/javascript" src="js/jquery/dump.js"></script>
+
+    <script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+    <script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/income/js/income-detailcombo.js"></script>
+	<script type="text/javascript" src="view/template/finance/income/js/income-refund-addbypush.js"></script>
+</head>
+<body>
+	<div class="main_head"><span class="main_head_title">生成应收退款</span>
+	</div>
+	<form id="form1" action="?model=finance_income_income&action=add" method="post" onsubmit="return toSubmit();">
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">
+					客户名称
+				</td>
+				<td class="form_text_right">
+                    <input id="incomeUnitName" type="text" class="readOnlyText" readonly="readonly" name="income[incomeUnitName]" value="{incomeUnitName}"/>
+					<input id="incomeUnitId" type="hidden" name="income[incomeUnitId]" value="{incomeUnitId}"/>
+				    <input id="contractUnitId" type="hidden" name="income[contractUnitId]" value="{contractUnitId}"/>
+					<input id="contractUnitName" type="hidden" name="income[contractUnitName]" value="{contractUnitName}"/>
+					<input id="incomeUnitType" type="hidden" name="income[incomeUnitType]" value="{incomeUnitType}"/>
+					<input id="areaName" type="hidden" name="income[areaName]" value="{areaName}"/>
+					<input id="areaId" type="hidden" name="income[areaId]" value="{areaId}"/>
+				    <input id="managerId" type="hidden" name="income[managerId]" value="{managerId}"/>
+					<input id="managerName" type="hidden" name="income[managerName]" value="{managerName}"/>
+				</td>
+                <td class="form_text_left">
+                    客户省份
+                </td>
+                <td class="form_text_right">
+                    <input type="text" class="readOnlyText" readonly="readonly" name="income[province]" id="province" value="{province}"/>
+                </td>
+			</tr>
+			<tr>
+                <td class="form_text_left">
+                    进账单号
+                </td>
+                <td class="form_text_right">
+                    <input type="text" class="readOnlyText" readonly="readonly" name="income[inFormNum]" value="{inFormNum}"/>
+                </td>
+				<td class="form_text_left">
+					结算类型
+				</td>
+				<td class="form_text_right">
+					<select name="income[incomeType]" class="select">
+						{incomeTypeList}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">
+					收款银行
+				</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyText" readonly="readonly" name="income[bank]" value="{bank}"/>
+				</td>
+                <td class="form_text_left">
+                    银行帐号
+                </td>
+                <td class="form_text_right">
+                    <input type="text" class="readOnlyText" readonly="readonly" name="income[account]" value="{account}"/>
+                </td>
+			</tr>
+            <tr>
+                <td class="form_text_left">
+                    单据金额
+                </td>
+                <td class="form_text_right">
+                    <input id="incomeMoney" type="text" class="readOnlyTxtNormal formatMoney" name="income[incomeMoney]" value="{incomeMoney}" readonly="readonly"/>
+                    <input id="allotAble" type="hidden" name="income[allotAble]" value="{allotAble}"/>
+                </td>
+                <td class="form_text_left">
+                    单据币别
+                </td>
+                <td class="form_text_right">
+                    <input id="currency" type="text" class="readOnlyTxtNormal" name="income[currency]" value="{currency}" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr id="currencyInfo" style="display:none;">
+                <td class="form_text_left">
+                    单据金额(<span id="currencyShow"></span>)
+                </td>
+                <td class="form_text_right">
+                    <input id="incomeCurrency" type="text" class="readOnlyTxtNormal formatMoney" name="income[incomeCurrency]" value="{incomeCurrency}" readonly="readonly"/>
+                    <input id="allotCurrency" type="hidden" name="income[allotCurrency]" value="{allotCurrency}"/>
+                </td>
+                <td class="form_text_left">
+                    汇率
+                </td>
+                <td class="form_text_right">
+                    <input id="rate" type="text" class="readOnlyTxtNormal" name="income[rate]" value="{rate}" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left_three">归属公司</td>
+                <td class="form_text_right_three">
+                    <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="income[businessBelongName]" id="businessBelongName" value="{businessBelongName}"/>
+                    <input type="hidden" name="income[businessBelong]" id="businessBelong" value="{businessBelong}"/>
+                    <input type="hidden" name="income[formBelong]" id="formBelong" value="{formBelong}" />
+                    <input type="hidden" name="income[formBelongName]" id="formBelongName" value="{formBelongName}"/>
+                </td>
+                <td class="form_text_left">
+                    单据日期
+                </td>
+                <td class="form_text_right">
+                    <input id="incomeDate" type="text" name="income[incomeDate]" class="txt" onfocus="WdatePicker()" value="{incomeDate}" readonly/>
+                    <span class="red">[*]</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_text_left">
+                    备注
+                </td>
+                <td colspan="3" class="form_text_right">
+                    <input type="text" class="txtbiglong" name="income[remark]" value="{remark}" style="width: 655px;"/>
+                </td>
+            </tr>
+        </table>
+        <table class="form_main_table">
+            <tr>
+                <td colspan="4" class="innerTd">
+                    <div id="allotTable"></div>
+                </td>
+            </tr>
+        </table>
+        <table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<input type="hidden" name="income[formType]" value="{thisFormType}"/>
+					<input type="hidden" name="income[belongId]" id="id" value="{id}"/>
+					<input type="submit" class="txt_btn_a" value=" 保 存 "/>
+					<input type="button" class="txt_btn_a" value=" 返 回 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

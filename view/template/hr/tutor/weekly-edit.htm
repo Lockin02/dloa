@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>批复周报</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/weekly-edit.js" ></script>
+   <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+   <script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+   <script type="text/javascript" src="js/common/email.js"></script>
+
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_tutor_weekly&action=edit" onsubmit="return sub();">
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	批复周报
+             </span>
+         </div>
+      </td>
+   </tr>
+ <tr>
+ 			<input type="hidden" name="weekly[studentName]" value="{studentName}" />
+ 			<input type="hidden" name="weekly[userName]" value="{userName}" />
+      		<td class="form_text_left_three">学员姓名</td>
+      		<td class="form_text_right_three" >
+      			 {studentName}
+      		</td>
+      		<td class="form_text_left_three" >学员部门名称</td>
+      		<td class="form_text_right_three">
+      			{studentDeptName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">试用期岗位</td>
+      		<td class="form_text_right_three" >
+      			{studentJob}
+      		</td>
+      		<td class="form_text_left_three" >导师姓名</td>
+      		<td class="form_text_right_three">
+      			 {userName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">上周工作总结</td>
+      		<td class="form_text_right_three" colspan="3">
+      			 <div id="lastweekSummary" class="divChangeLine">{lastweekSummary}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">下周工作计划</td>
+      		<td class="form_text_right_three" colspan="3">
+      			 <div id="nextweekSummary" class="divChangeLine">{nextweekSummary}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">工作中存在的问题</td>
+      		<td class="form_text_right_three" colspan="3">
+      			 <div id="problem" class="divChangeLine">{problem}</div>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">意见、建议、想法</td>
+      		<td class="form_text_right_three" colspan="3">
+      		    <div id="idea" class="divChangeLine">{idea}</div>
+      		</td>
+       </tr>
+
+<tr>
+      		<td class="form_text_left_three" >导师指导意见</td>
+      		<td class="form_text_right_three"  colspan="3">
+                  <textarea class="txt_txtarea_font" id="guideIdea" name="weekly[guideIdea]"></textarea>
+      		</td>
+</tr>
+
+<tr>
+		<td class="form_text_left_three">批复日期</td>
+		<td class="form_text_right_three" >
+			 <input type="hidden" class="readOnlyTxtNormal" id="signDate" onfocus="WdatePicker()" readonly  name="weekly[signDate]" value="{signDate}"  />
+			 {signDate}
+		</td>
+</tr>
+		<tr style="display:none">
+   		<td class="form_text_left_three_three">是否邮件通知
+       	</td>
+   		<td colspan="3" class="form_text_right">
+   			<input type="radio" name="weekly[email][issend]" value="y" checked="checked" onclick="checkEmailTA(this)"/>是
+<!--      		<input type="radio" name="weekly[email][issend]" value="n" onclick="checkEmailTA(this)"/>否-->
+		</td>
+	</tr>
+   	<tr id="maildiv">
+   		<td class="form_text_left_three">收件人
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" class="readOnlyTxtLong" name="weekly[email][TO_NAME]" id="TO_NAME" value="{studentName}" readonly="readonly"/>
+    		<input type="hidden" name="weekly[email][TO_ID]" value="{studentAccount}" id="TO_ID"/>
+	    </td>
+   	</tr>
+   	<tr id="mailccdiv">
+   		<td class="form_text_left_three">抄送
+       	</td>
+       	<td colspan="3" class="form_text_right">
+		    <input type="text" style="width:250px" class="txt800" name="weekly[email][ADDNAMES]" id="ADDNAMES" readonly="readonly"  value="{studentSuperior}"/>
+    		<input type="hidden" name="weekly[email][ADDIDS]" id="ADDIDS" />
+	    </td>
+   	</tr>
+           <tr>
+   		<td class="txt_btn" colspan="4">
+            <input  type="hidden" id="id" name="weekly[id]" value="{id}" />
+            <input  type="hidden" id="isSign" name="weekly[isSign]" value="1" />
+   		   <input  type="submit" class="txt_btn_a" value=" 确  认 " />
+   		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+   		</td>
+        </tr>
+     </table>
+  </form>
+ </body>
+</html>

@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript">
+            function check()
+            {
+                return true;
+            }
+            function save(action)
+            {
+                if(!check())
+                    return;
+                document.all.form1.action="insert_summary.php?flag=<?php echo $flag;?>&do="+action;
+                document.all.form1.submit();
+            }
+            function turnback()
+            {
+                location.href="turnBackToCostMan.php?BillNo=<?php echo $BillNo;?>";
+                //    if(confirm('确认打回? 打回后单子将返回报销人!'))
+                //        location.href="?STEP=ToCostMan&BillNo=<?php echo $BillNo;?>";
+            }
+        </script>
+        <style type="text/css">
+            .tabp{
+                border-bottom: 1px;
+                border-collapse: separate;
+                empty-cells: show;
+                vertical-align: top;
+            }
+            .tabtr td{
+                height: 30px;
+            }
+            .cuttable{
+
+            }
+            .cutline{
+                border-bottom: 1px ;
+                border-bottom-style: dashed;
+            }
+            .buttoninfo{
+                margin-top: 20px;
+                width: 23%;
+                float: left;
+                font-size: 12pt;
+                white-space: nowrap;
+                margin-left: 5px;
+                text-align: left;
+            }
+            .extab{
+                border-top: 1px;
+                border-collapse: separate;
+                empty-cells: show;
+                vertical-align: top;
+            }
+            .extr td{
+                height: 28px;
+            }
+            .intable{
+                border: 0px;
+                font-size: 11pt;
+                text-align: center;
+            }
+            .intable td{ padding: 1px; height: 23px;}
+            .trall td{ padding: 1px; height: 25px;}
+            .maneytd{ text-align: right; font-size: 9pt; }
+            .indt{ font-size: 9pt;}
+            .trtop td{ height: 33px; }
+        </style>
+        <style media=print type="text/css">
+            .Noprint{display:none;}
+            .PageNext{page-break-after:   always;}
+            .WriteBg{
+                BACKGROUND:white;
+            }
+            .pInput{ border: 0px;}
+        </style>
+        <script>
+            function printClick(){
+                try{
+                    var payee=$('#payee').val();
+                    var username=$('#username').val();
+                    if(payee!=username){
+                        var rand=Math.random()*100000;
+                        $.post('?model=cost_bill_billcheck&action=payee_ch',{
+                            rand:rand,payee:payee,billno:'{billno}'
+                            },
+                            function (data)
+                            {
+                                if(data=="1"){
+                                    document.all.WebBrowser.ExecWB(6,6);
+                                }else{
+                                    alert('数据读取失败，请重新刷新！');
+                                }
+                            }
+                        )
+                    }else{
+                        document.all.WebBrowser.ExecWB(6,6);
+                    }
+                }catch(e){
+                    alert("安全提示，请把站点设置成安全站点，详情请点击：“帮助” !");
+                }
+            }
+            function helpClick(){
+               window.open("general/costmanage/print/help/help.html",null);
+            }
+        </script>
+    </head>
+    <body topmargin="5">
+        <table border="0" cellspacing="0" cellpadding="0" class="small Noprint" width="100%">
+            <tr>
+                <td class="Big">
+                    <img src="images/w_fActionEdit.gif">
+                    <b><font color="#000000">打印发票清单</font></b>
+                </td>
+            </tr>
+            <tr align="left">
+                <td class="Big" height="30">
+                    <OBJECT id=WebBrowser classid=CLSID:8856F961-340A-11D0-A96B-00C04FD705A2 height=0 width=0>
+                    </OBJECT>
+                    <input     type='button'   value='直接打印'     onclick="printClick()">
+                    <input     type='button'   value='页面设置'     onclick=document.all.WebBrowser.ExecWB(8,1)>
+                    <input     type='button'   value='打印预览'     onclick=document.all.WebBrowser.ExecWB(7,1)>
+                    <input     type='button'   value='帮助'     onclick="helpClick()">
+                </td>
+            </tr>
+        </table>
+        <table  align="center" class="cuttable" border="0" cellspacing="0" cellpadding="0">
+            <tr><td ><font color="red">未能提供打印数据，因报销清单和发票清单总金额不一致，请手工填写发票清单。</font></td></tr>
+        </table>
+    </body>
+</html>

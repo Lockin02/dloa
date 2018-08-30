@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript">
+	function check()
+	{
+		if ($('#product_id').val()=='')
+		{
+			alert('请选择所属产品！');
+			return false;
+		}else if ($('#version').val()=='')
+		{
+			alert('产品版本号不能为空！');
+			return false;
+		}else if ($('#description').val()=='')
+		{
+			alert('请填写Bug信息描述！');
+			return false;
+		}
+	}
+	var temp = 0;
+	function file_input(obj)
+	{
+		temp++;
+		$(obj).after('<a href="javascript:del_input('+temp+')">删除</a>');
+		$('#file_input').append('<div id="temp_'+(temp+1)+'"><input type="file" id="ipt_'+temp+'" size="55" onchange="file_input(this);" name="file_str[]" value="231213" /></div>');
+		obj.onchange = new Function();
+	}
+	function del_input(id)
+	{
+		$('#temp_'+id).remove();
+	}
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=add" enctype="multipart/form-data" onsubmit=" return check();">
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr class="tableheader">
+    	<td colspan="2" align="center"><strong>提交产品Bug</strong></td>
+ 	</tr>
+	<tr>
+		<td align="right" width="100">所属产品：</td>
+		<td align="left">
+			<select id="product_id" name="product_id">
+				<option value="">请选择所属产品</option>
+				{options}
+			</select>
+			<span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">产品版本号：</td>
+		<td align="left">
+			<input type="text" size="35" id="version" name="version" value="" />
+			<span>*含日期，例：Navigator 2.9.8.3(0126)</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><span>*</span>Bug详细描述：</td>
+		<td align="left">
+			<textarea rows="8" style="width:99%" id="description" name="description"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">Bug截图：</td>
+		<td align="left" id="file_input">
+			<div id="temp_1"><input type="file" size="55" id="upfile" name="file_str[]" onchange="file_input(this);" value="" /></div>
+		</td>
+	<tr>
+		<td align="right">Bug数据路径：</td>
+		<td align="left">
+			<input type="text" size="60" id="data_info" name="data_info" value="" /><span>*</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">提出单位：</td>
+		<td align="left">
+			<input type="text" size="40" id="unit" name="unit" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right">提出人：</td>
+		<td align="left">
+			<input type="text" size="40" id="contact" name="contact" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right">提出人手机：</td>
+		<td align="left">
+			<input type="text" size="40" id="mobile" name="mobile" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td align="right">提出人Email：</td>
+		<td align="left">
+			<input type="text" size="40" id="email" name="email" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="height:50px;">
+			<input type="submit" value=" 确定提交 "/>
+			<input type="button" onclick="parent.tb_remove();" value=" 关闭返回 "/>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

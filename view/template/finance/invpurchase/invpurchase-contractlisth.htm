@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>
+			采购发票
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+		<script type="text/javascript" src="view/template/finance/invpurchase/js/invpurchase-contractlisth.js"></script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				采购发票 - 我的采购发票
+			</span>
+			<input type="button" class="main_head_btn" value="返  回" onclick="history.go(-1)"/>
+		</div>
+		<div class="main_wraper">
+			<table class="main_table_search">
+				<tr>
+					<td>
+						输入关键字：
+						<input type="text" id="searchvalue" class="txt" name="searchvalue" />
+						按
+						<select id="searchfield" class="select">
+							<option>
+								请选择
+							</option>
+							<option value="supplierName">
+								供应商名称
+							</option>
+						</select>
+						<input type="button" value=" 搜索 " onclick="search()" class="txt_btn_a" />
+						<input title=" 录入" type="button" value="添加发票" class="txt_btn_a" onclick="showOpenWin('?model=finance_invpurchase_invpurchase&action=toAdd')"/>
+						<select id="status" onchange="selectAudit(this.options[this.selectedIndex].value)">
+							<option value="">
+								全部
+							</option>
+							<option value="CGFPZT-WSH">
+								未审核
+							</option>
+							<option value="CGFPZT-BFGJ">
+								部分钩稽
+							</option>
+							<option value="CGFPZT-WGJ">
+								未钩稽
+							</option>
+							<option value="CGFPZT-YGJ">
+								已钩稽
+							</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<table class="main_table">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="5%">
+							<img src="images/collapsed.gif" id="changeImage" title="展开/叠起 所有"/>序号
+						</th>
+						<th width="12%">
+							发票编号
+						</th>
+						<th>
+							供应商名称
+						</th>
+						<th>
+							付款日期
+						</th>
+						<th>
+							状态
+						</th>
+						<th width="50%" class="td_table">
+							<table width="100%" align="center" class="main_table_nested">
+				            	<tr>
+				            		<td colspan="6">
+				            			发票条目
+				            		</td>
+				            	</tr>
+				            	<tr>
+				            		<td width="16%">
+							            物料编号
+							        </td>
+							        <td width="25%">
+							            物料名称
+							        </td>
+							        <td width="12%">
+							        	单位
+							        </td>
+							        <td width="15%">
+							        	数量
+							        </td>
+							        <td width="16%">
+							        	单价(元)
+							        </td>
+							        <td width="16%">
+							            金额(元)
+							        </td>
+				            	</tr>
+				            </table>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{list}
+				</tbody>
+			</table>
+		</div>
+		{pageDiv}
+	</body>
+<script>
+	$('#status').val('{status}');//选中值类
+</script>
+</html>

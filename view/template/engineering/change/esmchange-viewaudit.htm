@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>工程项目变更</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="{#jsPath#}/esmchange-view.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/esmchange-common.js"></script>
+    <script type="text/javascript" src="js/common/approval.js"></script>
+</head>
+<body>
+<div class="main_head2">
+    <span class="main_head_title">
+      	工程项目变更申请单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_change_esmchange&action=add">
+    <table class="form_main_table">
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">
+                        基 本 信 息
+                        <img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+                    </legend>
+                    <table class="form_in_table" id="baseTbl">
+                        <tr>
+                            <td class="form_text_left_three">归属区域</td>
+                            <td class="form_text_right_three">
+                                {officeName}
+                                <input type="hidden" id="id" name="esmchange[id]" value="{id}"/>
+                            </td>
+                            <td class="form_text_left_three">项目编号</td>
+                            <td class="form_text_right_three">
+                                {projectCode}
+                            </td>
+                            <td class="form_text_left_three">项目名称</td>
+                            <td class="form_text_right_three">
+                                {projectName}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">所属国家</td>
+                            <td class="form_text_right_three">
+                                {country}
+                            </td>
+                            <td class="form_text_left_three">所属省份</td>
+                            <td class="form_text_right_three">
+                                {province}
+                            </td>
+                            <td class="form_text_left_three">所属城市</td>
+                            <td class="form_text_right_three">
+                                {city}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">项目所在地</td>
+                            <td class="form_text_right_three" colspan="5">
+                                {place}
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">详 细 信 息
+                        <img src="images/icon/info_up.gif" id="detailImg"
+                             onclick="showAndHide('detailImg','detailTbl')"/>
+                    </legend>
+                    <table class="form_in_table" id="detailTbl">
+                        <tr>
+                            <td class="form_text_left_three">预计开始</td>
+                            <td class="form_text_right_three">
+                                {planBeginDate}
+                            </td>
+                            <td class="form_text_left_three">预计结束</td>
+                            <td class="form_text_right_three">
+                                {planEndDate}
+                            </td>
+                            <td class="form_text_left_three">预计工期</td>
+                            <td class="form_text_right_three">
+                                {expectedDuration}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">实际开始</td>
+                            <td class="form_text_right_three">
+                                {actBeginDate}
+                            </td>
+                            <td class="form_text_left_three">实际结束</td>
+                            <td class="form_text_right_three">
+                                {actEndDate}
+                            </td>
+                            <td class="form_text_left_three">实际工期</td>
+                            <td class="form_text_right_three">
+                                {actDuration}
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset>
+                    <legend class="legend">预 算 决 算
+                        <img src="images/icon/info_up.gif" id="budgetImg"
+                             onclick="showAndHide('budgetImg','budgetTbl')"/>
+                    </legend>
+                    <table class="form_in_table" id="budgetTbl">
+                        <tr>
+                            <td class="form_text_left_three">总 预 算</td>
+                            <td class="form_text_right_three">
+                                <span class="formatMoney">{newBudgetAll}</span>
+                            </td>
+                            <td class="form_text_left_three">现场预算</td>
+                            <td class="form_text_right_three">
+                                <span class="formatMoney">{newBudgetField}</span>
+                            </td>
+                            <td class="form_text_left_three">设备预算</td>
+                            <td class="form_text_right_three">
+                                <span class="formatMoney">{newBudgetEqu}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left_three">人力预算(元)</td>
+                            <td class="form_text_right_three">
+                                <span class="formatMoney">{newBudgetPerson}</span>
+                            <td class="form_text_left_three">外包预算</td>
+                            <td class="form_text_right_three">
+                                <span class="formatMoney">{newBudgetOutsourcing}</span>
+                            </td>
+                            <td class="form_text_left_three">其他预算</td>
+                            <td class="form_text_right" colspan="3">
+                                <span class="formatMoney">{newBudgetOther}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset class="fieldset">
+                    <legend class="legend">项 目 计 划
+                        <img src="images/icon/info_up.gif" id="activityImg"
+                             onclick="showAndHide('activityImg','esmactivity')"/>
+                    </legend>
+                    <table class="form_in_table" id="esmactivity">
+                        <thead>
+                        <tr class="main_tr_header">
+                            <th style="width:30px">序号</th>
+                            <th style="width:250px">任务名称</th>
+                            <th style="width:70px">工作占比(%)</th>
+                            <th style="width:100px">预计开始</th>
+                            <th style="width:90px">预计结束</th>
+                            <th style="width:70px">预计工期</th>
+                            <th style="width:70px">工作量</th>
+                            <th style="width:60px">单位</th>
+                            <!--th style="width:80px">费用预算</th-->
+                            <th>工作内容</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {esmactivity}
+                        </tbody>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset class="fieldset">
+                    <legend class="legend">项 目 预 算
+                        <img src="images/icon/info_up.gif" id="esmbudgetImg"
+                             onclick="showAndHideDiv('esmbudgetImg','esmbudget')"/>
+                    </legend>
+                    <div id="esmbudget"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset class="fieldset">
+                    <legend class="legend">项 目 设 备
+                        <img src="images/icon/info_up.gif" id="esmequImg"
+                             onclick="showAndHideDiv('esmequImg','esmequ')"/>
+                    </legend>
+                    <div id="esmequ"></div>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <fieldset class="fieldset">
+                    <legend class="legend">变 更 说 明
+                        <img src="images/icon/info_up.gif" id="changeResonImg"
+                             onclick="showAndHide('changeResonImg','changeResonTbl')"/>
+                    </legend>
+                    <table class="form_in_table" id="changeResonTbl">
+                        <tr>
+                            <td class="form_text_right">
+                                {changeDescription}
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

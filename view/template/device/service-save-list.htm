@@ -1,0 +1,92 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>设备维修列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<!--startprint-->
+<form method="POST" action="?model=device_service&action=device_service_apply&type=save_order" onsubmit="return check()">
+<input type="hidden" name="username" value="{username}" />
+<input type="hidden" name="budget_date" value="{budget_date}" />
+<input type="hidden" name="operatorid" value="{operatorid}" />
+<input type="hidden" name="email" value="{email}" />
+<table width="640" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td>接收人：{username}</td>
+		<td>预计完成日期：{budget_date}</td>
+	</tr>
+	<tr>
+		<td colspan="2">办理人：{operator}</td>
+	</tr>
+</table>
+<br />
+<table class="table" width="640" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="9">设备维修列表</td>
+	</tr>
+	<tr	class="tableheader">
+		<td>序号</td>
+		<td>设备类型</td>
+		<td>设备名称</td>
+		<td>部门编码</td>
+		<td>机身码</td>
+		<td>配件</td>
+		<td>维修数量</td>
+		<td>预计完成日期</td>
+		<td>维修原因</td>
+	</tr>
+	{list}
+</table>
+<table width="640" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" class="YesPrint">
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;" >接收人签名：</td>
+		<td style="border:0px;">代办人签字：</td>
+	</tr>
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;">日期：{date}</td>
+		<td style="border:0px;">日期：{date}</td>
+	</tr>
+</table>
+<!--endprint-->
+<table width="640" border="0" cellpadding="0" cellspacing="0" align="center" style="border:0px;" class="noprint">
+<tr>
+		<td colspan="10" style="border:0px;text-align:center;">
+		<input type="submit" value=" 提交保存记录 " />
+		<input type='button' class="BigInput" value='直接打印' onclick="printClick(1)">   
+		<input type='button' class="BigInput" value='打印预览' onclick="printClick()">
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+var myprint = false;
+function check()
+{
+	if (myprint==false)
+	{
+		if (confirm('您还没有打印该借用记录，确定要提交吗？'))
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+function printClick(type)
+{
+	if (type==1)
+	{
+		myprint = true;
+		window.open("?model=print", "newwin", "width=700,toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}else{
+		myprint = false;
+		window.open("?model=print", "newwin", "width=700,toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}
+}
+</script>
+</body>
+</html>

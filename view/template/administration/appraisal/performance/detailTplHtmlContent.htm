@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<script type="text/javascript" src="module/ckeditor/ckeditor.js"></script> 
+<title></title>
+</head>
+<style type="text/css">
+    body{
+        margin:0px;padding:0px;border:0px;width:100%;height:100%;overflow:hidden;
+    }
+    </style>
+<body>
+<div class="mini-fit" id="form" >
+<fieldset>
+<legend  class="legend" onclick="showAndHideDiv('asImg','asInfo')">模板详情
+	<img id="asImg" src="images/icon/info_up.gif">
+</legend>
+    <div title="模板内容" cache="false" >
+	  <div region="center" border="false">
+			<textarea id="content" name="content" ></textarea>
+	</div>
+	</div>
+ </fieldset>   
+</div>
+<div class="mini-toolbar" style="text-align:center;margin:0px; border-bottom:0px; border-left:0px; border-right:0px;" > <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a></div>
+<script type="text/javascript"> 
+//绑定编辑器
+            var editor1 = CKEDITOR.replace('content', {
+                toolbar: [['Source', 'Preview', '-', 'Templates'], ['Bold', 'Italic', 'Strike', 'NumberedList', 'BulletedList', '-', 'Link', 'Table', 'percentage'], ['Styles', 'Format'], ['TextColor', 'BGColor', 'Font', 'FontSize'], ['tags']],
+                height: 380
+                //uiColor : '#9AB8F3'
+            });
+ keyId='{keyId}';
+ $.ajax({
+                url: "?model=administration_appraisal_performance_item&action=getTplHtmlContentData",
+                type: "post",
+                data: {keyId:keyId},
+                success: function (text) {
+					if(text){
+						 CKEDITOR.instances.content.setData(text)
+					}
+                }
+            });		
+ mini.parse();
+ function submitForm() {
+            var form = new mini.Form("#form");
+			     form.validate();
+            if (form.isValid() == false) return false;
+            var content = CKEDITOR.instances.content.getData();
+			if (content == null || content == '') {
+                alert('模板内容不能为空！');
+                CKEDITOR.instances.content.focus('');
+                return false;
+            }
+            $.ajax({
+                url: "?model=administration_appraisal_performance_item&action=addTplHtmlContent",
+                type: "post",
+                data: { content:content,id:keyId},
+                success: function (text) {
+					if(text==2){
+						alert('提交成功！');
+						CloseWindow("save");
+						//grid.reload();
+					}else{
+					    alert('提交失败！');	
+					}
+                }
+            });
+        }
+ function CloseWindow(action) {
+   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	else window.close();          
+	window.parent.grid.load();  
+}
+ function onCancel(e) {
+    CloseWindow("cancel");
+}
+				
+</script>
+</body>
+</html>

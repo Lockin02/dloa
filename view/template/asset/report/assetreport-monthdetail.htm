@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>月新增资产明细表</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+	<script src="webreport/CreateControl.js" type="text/javascript"></script>
+	<script src="webreport/GRInstall.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+
+	<script type="text/javascript" src="view/template/asset/report/js/assetreport-monthdetail.js"></script>
+</head>
+<body style="margin:0">
+<table style="width:100%;">
+	<tr>
+		<td>
+			<table style="width:100%">
+				<tr>
+					<td class="form_text_right" width="60%">
+						日期类型 ：
+						<select class="select" id="dateType" style="width:100px;">
+							<option value="buyDate">购置日期</option>
+							<option value="wirteDate">入账日期</option>
+						</select>
+						<input type="hidden" id="dateTypeHidden" value="{dateType}"/>
+						年份 ：
+						<input type="text" class="txtshort Wdate" id="year" value="{year}" onfocus="WdatePicker({dateFmt:'yyyy'});"/>
+						月份 ：
+						<input type="text" class="txtshort Wdate" id="month" value="{month}" onfocus="WdatePicker({dateFmt:'MM'});"/>
+						公司 ：
+						<select class="select" id="company" style="width:100px;">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="companyHidden" value="{company}"/>
+						部门：
+						<input type="text" class="txt" id="deptName" value="{deptName}" readonly="readonly"/>
+		      			<input type="hidden" id="deptId" value="{deptId}"/>
+						行政区域：
+						<select class="select" id="agencyCode" style="width:100px;">
+							<option value="all">全部</option>
+						</select>
+						<input type="hidden" id="agencyCodeHidden" value="{agencyCode}"/>
+						<input type="hidden" id="assetName" value="{assetName}"/>
+						<input type="hidden" id="useStatusName" value="{useStatusName}"/>
+						<input type="hidden" id="deptIdStr" value="{deptIdStr}"/>
+						<input type="hidden" id="userId" value="{userId}"/>
+						<input type="hidden" id="deptLimit" value="{deptLimit}"/>
+						<input type="hidden" id="agencyLimit" value="{agencyLimit}"/>
+
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="search();" value=" 查  询 "/>
+
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+	//区域权限
+	var agencyCodeStr;
+	$.ajax({
+		type : 'POST',
+		url : '?model=asset_assetcard_assetcard&action=getAgencyStr',
+		async : false,
+		success : function(data) {
+			agencyCodeStr = data;
+		}
+	});
+	var dataUrl =
+	"view/template/asset/report/assetreport-monthdetail.php"
+	+ "?dateType=" + $("#dateTypeHidden").val()
+	+ "&year=" + $("#year").val()
+	+ "&month=" + $("#month").val()
+	+ "&company=" + $("#companyHidden").val()
+	+ "&deptId=" + $("#deptId").val()
+	+ "&agencyCode=" + $("#agencyCodeHidden").val()
+	+ "&agencyCodeStr=" + agencyCodeStr
+	+ "&deptIdStr=" + $("#deptIdStr").val()
+	+ "&userId=" + $("#userId").val();
+	//用查询显示控件展现报表
+	CreateDisplayViewerEx("100%", "92%",
+	"view/template/asset/report/assetreport-monthdetail.grf",dataUrl,
+	true,
+	"<param name='OnContentCellDblClick' value='OnContentCellDblClick'>");
+</script>
+</body>
+</html>

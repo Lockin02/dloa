@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<title>申请采购</title>
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<!-- <script type="text/javascript" src="view/template/purchase/external/js/external-add-delete.js"> </script> -->
+<script type="text/javascript" src="view/template/purchase/external/js/external-contadd-validator.js"> </script>
+<script type="text/javascript" src="view/template/purchase/external/js/external-cont-add.js"> </script>
+<script>
+		$(document).ready(function(){
+		$("#instruction").val('请填写采购时需要特别注意的事项');
+			$("#instruction").attr("color",'#AAAAAA');
+ 			window.document.getElementById("instruction").style.color='#AAAAAA';
+		    $("#purchDepart").yxselect_dept({
+				hiddenId : 'purchDepartId'
+			});
+		    $("#sendName").yxselect_user({
+				hiddenId : 'sendUserId',
+				isGetDept:[true,"depId","depName"]
+			});
+			if($("#purchType1").val()==""){
+				$("#back").hide();
+			}
+		});
+</script>
+		<script>
+				$(function(){
+				    $("#TO_NAME").yxselect_user({
+						hiddenId : 'TO_ID',
+						mode : 'check'
+					})
+				});
+				function ismailFun(){
+					if( document.getElementsByName("basic[ismail]")[1].checked ){
+						$('#mailTr').hide();
+					}else{
+						$('#mailTr').show();
+					}
+				}
+		</script>
+</head>
+<body scroll="auto">
+<form id='form1' name='form1' action="?model=purchase_external_external&action=add" method="post" onsubmit="return checkAllData();">
+	<table class="form_main_table">
+		<tr>
+			<div class="main_head">
+			    <span class="main_head_title">
+			      申请采购
+					<input type='hidden' id='purchType1' name=external[purchType] value="{purchType}"/>
+					<input type="hidden" class="txt" id="qualityList" name="" value='{qualityList}'/>
+					<input type='hidden' id='sourceId1' value="{sourceID}"/>
+					<input type='hidden' id='sourceName1' value="{sourceName}"/>
+			    </span>
+			</div>
+		</tr>
+		<tr>
+			<td class="form_text_left" >申请类型</td>
+			<td class="form_text_right" colspan="3">
+				<span>{purchTypeName}
+					<input type="hidden" name="basic[rObjCode]" value="{objCode}"/>
+					<input type="hidden" name="basic[purchType]" value="{purchType}"/>
+					<input type="hidden" id="fromConFlag" value="1"/>
+				</span>
+			</td>
+<!--		    <td class="form_text_left">检验方式</td>-->
+<!--			<td class="form_text_right">-->
+<!--			 <select name="basic[testType]" id="testType" class="txt">-->
+<!--			  <option value="">请选择...</option>-->
+<!--			  <option value="0">免检</option>-->
+<!--			  <option value="1">全检</option>-->
+<!--			  <option value="2">抽检</option>-->
+<!--             </select>-->
+<!--             <span class="red">[*]</span>-->
+<!--             <br/>-->
+<!--             <div id="testTypeTip" class="tipShortTxt" ></div>-->
+<!--             </td>-->
+		</tr>
+		<tr>
+			<td class="form_text_left">源单据号</td>
+			<td class="form_text_right">
+				<input type="hidden"  class="txt" id="sourceID" name="basic[sourceID]" value="{sourceID}"/>
+				<input type="text"  class="readOnlyText" id="sourceNumb" name="basic[sourceNumb]" value="{sourceNumb}"/>
+			</td>
+			<td class="form_text_left">源单名称</td>
+			<td class="form_text_right">
+				<input type="text"  class="readOnlyText" id="contractName" name="basic[contractName]" value="{contractName}"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请日期</td>
+			<td class="form_text_right">
+				<input type="text" class="readOnlyText" id="sendTime" name="basic[sendTime]"  value="{sendTime}" readonly />
+				<!--
+			    <span class="red">[*]</span>
+			    <br/>
+				<div id="sendTimeTip" class="tipShortTxt"></div>
+				 -->
+			</td>
+			<td class="form_text_left">期望完成日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="dateHopeAll" name="basic[dateHope]" onfocus="WdatePicker()" onchange="dateHopeAllFun();" readonly />
+			    <span class="red">[*]</span>
+			    <br/>
+				<div id="dateHopeAllTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请人名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" id="sendName" name="basic[sendName]" value="{sendName}" readonly />
+				<input type="hidden" id="sendUserId" name="basic[sendUserId]" value="{sendUserId}" />
+	            <span class="red">[*]</span>
+				<br />
+				<div id="sendNameTip" class="tipShortTxt" ></div>
+			</td>
+			<td class="form_text_left">申请部门</td>
+			<td class="form_text_right" >
+			<input type="hidden" id="depId" name="basic[departId]" value="{departId}"/>
+			<input type="text" class="readOnlyText" id="depName" name="basic[department]" value="{department}" readonly/>
+			<!--
+			<span class="red">[*]</span>
+			<br />
+			<div id="depNameTip" class="tipShortTxt" ></div>
+			 -->
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购部门</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt" id="purchDepart" name="basic[purchDepart]" readonly value="{purchDepart}"/>
+				<input type="hidden" id="purchDepartId" name="basic[purchDepartId]" value="{purchDepartId}"/>
+				<span class="red">[*]</span>
+				<br />
+				<div id="purchDepartTip" class="tipShortTxt" ></div>
+			</td>
+			<td class="form_text_left">电话</td>
+			<td class="form_text_right">
+				<input type="text"  class="txt" id="phone" name="basic[phone]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">采购说明</td>
+			<td class="form_text_right" colspan="3">
+					<textarea  id="instruction" class="txt_txtarea_font" name="basic[instruction]"  onfocus="if (value=='请填写采购时需要特别注意的事项'){value ='';this.style.color='#000000'}" onblur="if (value==''){value='请填写采购时需要特别注意的事项';this.style.color='#AAAAAA'}"></textarea>
+		</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">备注</td>
+			<td class="form_text_right" colspan="3">
+				<textarea  id="remark" class="txt_txtarea_font" name="basic[remark]" ></textarea>
+			</td>
+		</tr>
+		<!-- <tr>
+			<td class="innerTd" colspan="4">
+<div id="tableDiv" style="width: 1330px; height: 300px; overflow-y: auto; overflow-x: auto">
+				<table id="mytable" class="form_in_table">
+						<tr>
+							<td colspan="15" align="left"  class="form_header">采购申请清单
+							</td>
+							<td align="center">
+									<input type="hidden" id="invnumber" value="0" />
+									<img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+									<img id="addLine" src="images/collapsed.gif" onclick="dynamic_add_newContract('invbody','rowNum');" title="添加行" />
+								</td>
+						</tr>
+						<tr class="main_tr_header">
+							<th>序号</th>
+							<th>物料编号</th>
+							<th>物料名称</th>
+							<th>物料型号</th>
+							<th>单位</th>
+							<th>采购属性</th>
+							<th>检验方式</th>
+							<th>库存数量</th>
+							<th>合同数量</th>
+							<th>已出库数量</th>
+							<th>已申请数量</th>
+							<th>申请数量</th>
+							<th>申请日期</th>
+							<th>希望交货日期</th>
+							<th>备注</th>
+							<th>操作</th>
+						</tr>
+					<tbody id="invbody">
+						{detail}
+					</tbody>
+				</table>
+				</div>
+			</td>
+		</tr> -->
+		</table>
+		<div id="itemTable"></div>
+		<table class="form_main_table">
+       	<tr>
+				<td class="form_text_left">是否发送邮件</td>
+				<td class="form_text_right" colspan="3">
+					 <input type="radio" name="basic[ismail]" value="1" onclick="ismailFun();" checked/>&nbsp;是&nbsp;&nbsp;
+					 <input type="radio" name="basic[ismail]" value="0" onclick="ismailFun();"/>&nbsp;否&nbsp;&nbsp;
+				</td>
+		</tr>
+		<tr id="mailTr">
+				<td class="form_text_left">邮件接收者</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" name="basic[email][TO_NAME]" class="txtbiglong" id="TO_NAME" value="{TO_NAME}"/>
+					<input type="hidden" name="basic[email][TO_ID]" class="text" id="TO_ID" value="{TO_ID}"/>
+				</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<input type="hidden" id="tDay" value="{sendTime}"/>
+				<input type="hidden" id="contractId" value="{contractId}"/>
+				<input type="hidden" id="purchType" value="{purchType}"/>
+				<input type="hidden" id="equIds" value="{equIds}"/>
+				<input type="submit" value="下  达" class="txt_btn_a" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input id="back" type="button" value="关 闭" class="txt_btn_a" onclick="closeFun();"/>
+			</td>
+		</tr>
+		</table>
+	</form>
+</body>
+</html>

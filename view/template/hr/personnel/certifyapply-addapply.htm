@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增任职资格信息</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/certifyapply-addapply.js" ></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_personnel_certifyapply&action=addApply" >
+	<input type="hidden"  id="thisYear" value="{thisYear}"/>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+					<span class="main_head_title">
+               			任职资格申请表
+					</span>
+           		</div>
+           	</td>
+		</tr>
+		<tr>
+			<td>
+				<fieldset><legend><b>员工个人信息</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left_three">员工姓名</td>
+							<td class="form_text_right_three" >
+								<input type="text" class="readOnlyTxtNormal" name="certifyapply[userName]" id="userName" readonly="readonly" value="{userName}"/>
+								<input type="hidden" name="certifyapply[userAccount]" id="userAccount" value="{userAccount}"/>
+								<input type="hidden" name="certifyapply[userNo]" id="userNo" value="{userNo}"/>
+							</td>
+							<td class="form_text_left_three">所属部门</td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal" name="certifyapply[deptName]" id="deptName" readonly="readonly" value="{deptName}"/>
+								<input type="hidden" name="certifyapply[deptId]" id="deptId" value="{deptId}"/>
+							</td>
+							<td class="form_text_left_three">现 职 务</td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal" name="certifyapply[jobName]" id="jobName" readonly="readonly" value="{jobName}"/>
+								<input type="hidden" name="certifyapply[jobId]" id="jobId" value="{jobId}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">现职务起始日期</span></td>
+							<td class="form_text_right_three" >
+								 <input type="text" class="txt Wdate" onfocus="WdatePicker()"  name="certifyapply[jobBeginDate]" id="jobBeginDate" value="{entryDate}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">最高学历</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" name="certifyapply[highEducationName]" id="highEducationName" value="{highEducationName}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">最高学历专业</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" name="certifyapply[professionalName]" id="professionalName" value="{professionalName}"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">毕业日期</span></td>
+							<td class="form_text_right_three" >
+								 <input type="text" class="txt Wdate" onfocus="WdatePicker()" name="certifyapply[graduationDate]" id="graduationDate" value="{graduationDate}"/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">入职日期</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="readOnlyTxtNormal"  name="certifyapply[entryDate]" id="entryDate" value="{entryDate}" readonly/>
+							</td>
+							<td class="form_text_left_three"><span style="color:blue">累计工作年限</span></td>
+							<td class="form_text_right_three">
+								<input type="text" class="txt" name="certifyapply[workExperience]" id="workExperience" value=""/>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three"><span style="color:blue">现任岗位<br/>关键职责<br/>（最主要的<br/>5项）</span></td>
+							<td class="form_text_right" colspan="5">
+								<textarea class=txt_txtarea_biglong id="workContent" name="certifyapply[workContent]" style="height:100px"></textarea>
+				      		</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<fieldset><legend><b>本专业领域经历(入职前入职后)</b></legend>
+					<div id="certifyapplyexp"></div>
+				</fieldset>
+			</td>
+		</tr>
+		<!--
+		<tr>
+			<td>
+				<fieldset><legend><b>现 任 职 情 况</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left_three">上次认证日期</td>
+							<td class="form_text_right_three" width="30%">
+								 <input type="text" class="txt Wdate" onfocus="WdatePicker()" name="certifyapply[lastCertifyDate]" value="{lastCertifyDate}"/>
+							</td>
+							<td class="form_text_left_three">现属通道</td>
+							<td class="form_text_right_three" >
+								<select name="certifyapply[nowDirection]" id="nowDirection" class="select">
+									<option value="无">无</option>
+									{nowDirection}
+								</select>
+							</td>
+							<td class="form_text_left_three">现属级别</td>
+							<td class="form_text_right_three" >
+								<select name="certifyapply[nowLevel]" id="nowLevel" class="select">
+									<option value="无">无</option>
+									{nowLevel}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">现属级等</td>
+							<td class="form_text_right" colspan="5">
+								<select name="certifyapply[nowGrade]" id="nowGrade" class="select">
+									<option value="无">无</option>
+									{nowGrade}
+								</select>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		-->
+		<tr>
+			<td>
+				<fieldset><legend><b>申 请 信 息</b></legend>
+					<table cellpadding="2" width="100%">
+						<tr>
+							<td class="form_text_left_three"><span class="blue">申请日期</span></td>
+							<td class="form_text_right_three" width="30%">
+								 <input type="text" class="txt Wdate" onfocus="WdatePicker()" name="certifyapply[applyDate]" value="{thisDate}"/>
+							</td>
+							<td class="form_text_left_three">
+								<span class="blue">申请通道</span>
+							</td>
+							<td class="form_text_right_three" >
+								<select name="certifyapply[careerDirection]" id="careerDirection" class="select">
+									{careerDirection}
+								</select>
+							</td>
+							<td class="form_text_left_three"><span class="blue">申请级别</span></td>
+							<td class="form_text_right_three" >
+								<select name="certifyapply[baseLevel]" id="baseLevel" class="select">
+									{baseLevel}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_text_left_three">
+								申请级等
+							</td>
+							<td class="form_text_right" >
+								<select name="certifyapply[baseGrade]" id="baseGrade" class="select">
+									{baseGrade}
+								</select>
+							</td>
+							<td class="form_text_left_three">
+								<span class="blue">认证方向</span>
+							</td>
+							<td class="form_text_right" colspan="3">
+								<select name="certifyapply[certifyDirection]" id="certifyDirectionCode" class="select">
+									{certifyDirection}
+								</select>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4" align="left">
+				<span class=red>填写提示：<br/>
+				<!-- 1.请根据申请通道选择对应的认证方向: 1)无认证方向则选择"不分方向"; 2)技术支持通道：售前支持方向、售后服务方向;3) 网优工程通道：网络评估方向、网络优化方向. -->
+				1.请根据申请通道选择对应的认证方向: 1)无认证方向则选择"不分方向"; 2)开发类通道: 开发、架构、项目管理; 3)测试类："交付文档整理"和"售后技术支持"、测试; 4)产品管理类：不分方向.
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="4">
+			 <input type="submit" class="txt_btn_a" value=" 提  交 " onclick="toApp();" />
+				<input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+				<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看应付其他发票</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="view/template/finance/cost/js/costHook-init.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/invother-view.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/invother-common.js"></script>
+</head>
+<body>
+<table class="form_main_table">
+    <tr>
+        <td colspan="6">
+            <div class="main_head2">
+                <span id="formTitle" class="main_head_title">
+                    查看其他发票 - {invoiceCode}
+                </span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            供 应 商
+        </td>
+        <td class="form_text_right_three">
+            {supplierName}
+        </td>
+        <td class="form_text_left_three">
+            付款日期
+        </td>
+        <td class="form_text_right_three">
+            {payDate}
+        </td>
+        <td class="form_text_left_three">单据日期</td>
+        <td class="form_text_right_three">
+            {formDate}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">发票号码</td>
+        <td class="form_text_right_three">
+            {invoiceNo}
+        </td>
+        <td class="form_text_left_three">
+            发票类型
+        </td>
+        <td class="form_text_right_three">
+            {invTypeCN}
+        </td>
+        <td class="form_text_left_three">往来科目</td>
+        <td class="form_text_right_three">
+            {subjects}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            开户银行
+        </td>
+        <td class="form_text_right_three">
+            {bank}
+        </td>
+        <td class="form_text_left_three">
+            币&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别
+        </td>
+        <td class="form_text_right_three">
+            {currency}
+        </td>
+        <td class="form_text_left_three">
+            汇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率
+        </td>
+        <td class="form_text_right_three">
+            {excRate}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            税 率(%)
+        </td>
+        <td class="form_text_right_three">
+            {taxRate}
+        </td>
+        <td class="form_text_left_three">
+            源单类型
+        </td>
+        <td class="form_text_right_three">
+            {sourceTypeCN}
+        </td>
+        <td class="form_text_left_three">
+            源单编号
+        </td>
+        <td class="form_text_right_three">
+            {menuNo}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            总 税 额
+        </td>
+        <td class="form_text_right_three">
+            <span class="formatMoney">{formAssessment}</span>
+            <input type="hidden" id="formAssessment" value="{formAssessment}"/>
+        </td>
+        <td class="form_text_left_three">
+            总 金 额
+        </td>
+        <td class="form_text_right_three">
+            <span class="formatMoney">{amount}</span>
+            <input type="hidden" id="amount" value="{amount}"/>
+        </td>
+        <td class="form_text_left_three">
+            价税合计
+        </td>
+        <td class="form_text_right_three">
+            <span class="formatMoney">{formCount}</span>
+            <input type="hidden" id="formCount" value="{formCount}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            业 务 员
+        </td>
+        <td class="form_text_right_three">
+            {salesman}
+        </td>
+        <td class="form_text_left_three">
+            部门名称
+        </td>
+        <td class="form_text_right_three">
+            {departments}
+        </td>
+        <td class="form_text_left_three">
+            总 数 量
+        </td>
+        <td class="form_text_right_three">
+            {formNumber}
+            <input type="hidden" id="formNumber" value="{formNumber}"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            归属公司
+        </td>
+        <td class="form_text_right_three">
+            {businessBelongName}
+        </td>
+        <td class="form_text_left_three finalAmount" style="display: none">
+            决算金额
+        </td>
+        <td class="form_text_right_three finalAmount" style="display: none">
+            <span class="formatMoney">{finalAmount}</span>
+            <input type="hidden" id="finalAmount" value="{finalAmount}"/>
+        </td>
+        <td class="form_text_left_three finalAmount" style="display: none">归属月份</td>
+        <td class="form_text_right_three finalAmount" style="display: none">
+            {period}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">
+            单位地址
+        </td>
+        <td class="form_text_right_three" colspan="5">
+            {address}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">备注说明</td>
+        <td class="form_text_right_three" colspan="5">
+            {remark}
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left_three">附 件</td>
+        <td class="form_text_right_three" colspan="5">
+            <div class="upload">
+                <div id="uploadfileList" class="upload">{file}</div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="innerTd" colspan="6">
+            <div id="innerTable"></div>
+        </td>
+    </tr>
+    <tr id="payDetailTr" style="display:none;">
+        <td class="innerTd" colspan="6">
+            <div id="shareGrid"></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="txt_btn" colspan="6">
+            <input type="hidden" id="id" value="{id}"/>
+            <input type="hidden" id="sourceType" value="{sourceType}"/>
+            <input type="hidden" id="isRed" value="{isRed}"/>
+            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: center;
+               padding-right: 1px;
+               width: 120px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','员工号','姓名','公司','部门','职务','员工类型','入职日期','离职日期','结算月'
+                        ,'基本工资','事假','病假','离职当月出勤天数','事病假扣除','实际工资小计','各项补贴'
+                        ,'社保费','公积金','个人所得税','其他扣除','离职福利','离职福利税金','其余税后需发','实发离职工资'
+                        ,'账号','开户行',' 备注','comcode','ck','pid','事假备注','小计备注'
+                        ,'各项补贴备注','社保费备注','公积金备注','其他扣除备注','个人所得税备注','离职福利备注','结算状态'
+                        ,'离职月份'
+                        ,'离职当月出勤天数备注','其余税后需发备注'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:100, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'usercard',index:'h.usercard', width:100, align:'right', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'username',index:'u1.user_name', width:100, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'com',index:'u1.company', width:100, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'dept',index:'d.dept_name', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'job',index:'j.name', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'expflag',index:'h.expflag', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'comedt',index:'s.comedt', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'leavedt',index:'s.leavedt', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'lpd',index:'p.pyear',width:60 },
+                        {name:'baseam',index:'p.baseam', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'ph',index:'p.PerHolsDays', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'sh',index:'p.SickHolsDays', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'wdt',index:'p.wdt',width:100,align:'right' },
+                        {name:'hda',index:'p.HolsDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'bna',index:'p.BaseNowAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'sra',index:'p.SpeRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'shb',index:'p.ShbAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'gjj',index:'p.GjjAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'pc',index:'p.PayCesse', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'sda',index:'p.AccDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'ara',index:'p.AccRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'arac',index:'p.AccRewAmCes', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'oara',index:'p.OtherAccRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'ptol',index:'p.PayTotal', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'acc',index:'s.acc', width:140, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'accbank',index:'s.accnsnk', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'remark',index:'p.remark', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'comcode',index:'s.company',hidden:true ,key:true ,width:40 },
+                        {name:'ck',index:'ck',hidden:true ,key:true ,width:40 },
+                        {name:'pid',index:'p.id',hidden:true ,key:true ,width:40 },
+                        
+                        {name:'hdar',index:'p.hdar',hidden:true ,key:true ,width:40 },
+                        {name:'bnar',index:'p.bnar',hidden:true ,key:true ,width:40 },
+                        {name:'srar',index:'p.srar',hidden:true ,key:true ,width:40 },
+                        {name:'shbr',index:'p.shbr',hidden:true ,key:true ,width:40 },
+                        {name:'gjjr',index:'p.gjjr',hidden:true ,key:true ,width:40 },
+                        {name:'sdar',index:'p.sdar',hidden:true ,key:true ,width:40 },
+                        {name:'pcr',index:'p.pcr',hidden:true ,key:true ,width:40 },
+                        {name:'arar',index:'p.arar',hidden:true ,key:true ,width:40 },
+                        {name:'plf',index:'s.payleaveflag' ,key:true ,width:40 },
+                        {name:'pmon',index:'p.pmon',hidden:true ,key:true ,width:40 },
+                        {name:'wdtr',index:'p.wdtr',hidden:true ,key:true ,width:40 },
+                        {name:'oarar',index:'p.oarar',hidden:true ,key:true ,width:40 },
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-136+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#FF9900';
+                        if(rowData.ck=='yes'){
+                            cl='green';
+                            be = "<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='查询' title='' onclick=\"printFun('"+rowData.key+"')\" />";
+                        }else{
+                            be ="-";
+                        }
+                        if(rowData.plf=='已结算'){
+                            var cl='#FF9900';
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usercard','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                    },
+                    messages:{
+                    }
+                });
+            });
+            //打印
+            function printFun(id){
+            
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                tb_show('离职工资详情', '?model=salary&action=hr_leave_print'
+                    +'&uname='+rowData.username+'&com='+rowData.com+'&exp='+rowData.expflag
+                    +'&dept='+rowData.dept+'&job='+rowData.job+'&comedt='+rowData.comedt
+                    +'&leavedt='+rowData.leavedt+'&baseam='+rowData.baseam+'&hda='+rowData.hda
+                    +'&bna='+rowData.bna+'&sra='+rowData.sra+'&shb='+rowData.shb
+                    +'&gjj='+rowData.gjj+'&sda='+rowData.sda+'&pc='+rowData.pc
+                    +'&ara='+rowData.ara+'&ptol='+rowData.ptol+'&acc='+rowData.acc+'&accbank='+rowData.accbank
+                    +'&hdar='+rowData.hdar+'&bnar='+rowData.bnar+'&srar='+rowData.srar+'&shbr='+rowData.shbr
+                    +'&gjjr='+rowData.gjjr+'&sdar='+rowData.sdar+'&pcr='+rowData.pcr+'&arar='+rowData.arar
+                    +'&ph='+rowData.ph+'&sh='+rowData.sh
+                    +'&wdt='+rowData.wdt+'&wdtr='+rowData.wdtr
+                    +'&oara='+rowData.oara+'&oarar='+rowData.oarar
+                    +'&arac='+rowData.arac
+                    +'&TB_iframe=true'
+                );
+                    
+            }
+            function printFunJ(){
+                
+                var id=$('#user_key').val();
+                printFun(id);
+                paCloseFun('hr_user_new');
+            }
+            //结算
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_com').html(rowData.com);
+                $('#user_comcode').val(rowData.comcode);
+                $('#user_exp').html(rowData.expflag);
+                $('#user_dept').html(rowData.dept);
+                $('#user_job').html(rowData.job);
+                $('#user_comedt').html(rowData.comedt);
+                $('#user_leavedt').val(rowData.leavedt);
+                $('#user_baseam').val(rowData.baseam);
+                $('#user_ph').val(rowData.ph);
+                $('#user_sh').val(rowData.sh);
+                $('#user_hda').html(rowData.hda);
+                $('#user_bna').html(rowData.bna);
+                $('#user_sra').val(rowData.sra);
+                $('#user_shb').val(rowData.shb);
+                $('#user_gjj').val(rowData.gjj);
+                $('#user_sda').val(rowData.sda);
+                $('#user_pc').html(rowData.pc);
+                $('#user_ara').val(rowData.ara);
+                $('#user_ptol').html(rowData.ptol);
+                $('#user_acc').val(rowData.acc);
+                $('#user_accbank').val(rowData.accbank);
+                $('#user_pid').val(rowData.pid);
+                $('#user_remark').val(rowData.remark);
+                
+                $('#user_hda_remark').val(rowData.hdar);
+                $('#user_bna_remark').val(rowData.bnar);
+                $('#user_sra_remark').val(rowData.srar);
+                $('#user_shb_remark').val(rowData.shbr);
+                $('#user_gjj_remark').val(rowData.gjjr);
+                $('#user_sda_remark').val(rowData.sdar);
+                $('#user_pc_remark').val(rowData.pcr);
+                $('#user_ara_remark').val(rowData.arar);
+                
+                
+                $('#ldt_gjj').html(rowData.pmon+'月支付');
+                $('#ldt_shb').html(rowData.pmon+'月支付');
+                $('#user_leavepdt').val(rowData.lpd);
+                
+                $('#user_wdt').val(rowData.wdt);
+                $('#user_wdt_remark').val(rowData.wdtr);
+                $('#user_arac').val(rowData.arac);
+                $('#user_oara').val(rowData.oara);
+                $('#user_oara_remark').val(rowData.oarar);
+                
+            }
+            function djClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_dept').html(rowData.olddept);
+                $('#user_leavedt').val('');
+                $('#hr_user_new_name').html('员工冻结');
+                $('#hr_user_new_dt').html('冻结日期');
+                $('#user_com').val(rowData.compt);
+                $('#actflag').val('dj');
+            }
+            function amSubmitFun(){
+                $('#newuserSub').attr('disabled',true);
+                var rand=Math.random()*100000;
+                var user_key=$('#user_key').val();
+                var user_comcode=$('#user_comcode').val();
+                var user_comedt=$('#user_comedt').html();
+                var user_leavedt=$('#user_leavedt').val();
+                var user_baseam=$('#user_baseam').val();
+                var user_ph=$('#user_ph').val();
+                var user_sh=$('#user_sh').val();
+                var user_sra=$('#user_sra').val();
+                var user_shb=$('#user_shb').val();
+                var user_gjj=$('#user_gjj').val();
+                var user_sda=$('#user_sda').val();
+                var user_ara=$('#user_ara').val();
+                var user_acc=$('#user_acc').val();
+                var user_accbank=$('#user_accbank').val();
+                var user_pid=$('#user_pid').val();
+                var user_remark=$('#user_remark').val();
+                
+                var user_hda_remark=$('#user_hda_remark').val();
+                var user_bna_remark=$('#user_bna_remark').val();
+                var user_sra_remark=$('#user_sra_remark').val();
+                var user_shb_remark=$('#user_shb_remark').val();
+                var user_gjj_remark=$('#user_gjj_remark').val();
+                var user_sda_remark=$('#user_sda_remark').val();
+                var user_pc_remark=$('#user_pc_remark').val();
+                var user_ara_remark=$('#user_ara_remark').val();
+                
+                var user_wdt=$('#user_wdt').val();
+                var user_wdt_remark=$('#user_wdt_remark').val();
+                var user_oara=$('#user_oara').val();
+                var user_oara_remark=$('#user_oara_remark').val();
+                var user_leavepdt=$('#user_leavepdt').val();
+                var user_arac=$('#user_arac').val();
+                
+                $.post('?model=salary&action=cal_leave_in',{
+                    rand:rand,key:user_key
+                    ,comcode:user_comcode,leavedt:user_leavedt,baseam:user_baseam,ph:user_ph,sh:user_sh
+                    ,sra:user_sra,shb:user_shb,gjj:user_gjj,sda:user_sda,ara:user_ara
+                    ,acc:user_acc,accbank:user_accbank,comedt:user_comedt,pid:user_pid,remark:user_remark
+                    ,hdar:user_hda_remark,bnar:user_bna_remark,srar:user_sra_remark,shbr:user_shb_remark
+                    ,gjjr:user_gjj_remark,sdar:user_sda_remark,pcr:user_pc_remark,arar:user_ara_remark
+                    ,wdt:user_wdt,wdtr:user_wdt_remark
+                    ,oara:user_oara,oarar:user_oara_remark
+                    ,lpd:user_leavepdt,arac:user_arac
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                        }else{
+                            alert('结算成功！');
+                        }
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                        $('#newuserSub').attr('disabled',false);
+                        return false;
+                    }
+                )
+                return false;
+            }
+            function onChange(ty){
+                if(ty=='acc'){
+                    $('#actflag').val='acc';
+                    //alert(obj.id);
+                }else{
+                    $('#newuserSub').attr('disabled',true);
+                    $('#actflag').val='pay';
+                    var rand=Math.random()*100000;
+                    var user_key=$('#user_key').val();
+                    var user_comcode=$('#user_comcode').val();
+                    var user_comedt=$('#user_comedt').html();
+                    var user_leavedt=$('#user_leavedt').val();
+                    var user_baseam=$('#user_baseam').val();
+                    var user_ph=$('#user_ph').val();
+                    var user_sh=$('#user_sh').val();
+                    var user_sra=$('#user_sra').val();
+                    var user_shb=$('#user_shb').val();
+                    var user_gjj=$('#user_gjj').val();
+                    var user_sda=$('#user_sda').val();
+                    var user_ara=$('#user_ara').val();
+                    var user_acc=$('#user_acc').val();
+                    
+                    var user_wdt=$('#user_wdt').val();
+                    var user_oara=$('#user_oara').val();
+                    var user_arac=$('#user_arac').val();
+                    
+                    var user_accbank=$('#user_accbank').val();
+                    $.post('?model=salary&action=cal_leavepay',{
+                        rand:rand,key:user_key
+                        ,comcode:user_comcode,leavedt:user_leavedt,baseam:user_baseam,ph:user_ph,sh:user_sh
+                        ,sra:user_sra,shb:user_shb,gjj:user_gjj,sda:user_sda,ara:user_ara
+                        ,acc:user_acc,accbank:user_accbank,comedt:user_comedt,wdt:user_wdt
+                        ,oara:user_oara,arac:user_arac
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg){
+                                $('#user_hda').html(msg['hda']);
+                                $('#user_bna').html(msg['bna']);
+                                $('#user_pc').html(msg['pc']);
+                                $('#user_ptol').html(msg['ptol']);
+                                return false;
+                            }
+                            $('#newuserSub').attr('disabled',false);
+                        }
+                    )
+                }
+                $('#newuserSub').attr('disabled', false);
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function xlsClickFun(){
+                var seadept = jQuery("#js_seadept").val();
+                var seaname = jQuery("#js_seaname").val();
+                var sealy = jQuery("#js_sealy").val();
+                var sealm = jQuery("#js_sealm").val();
+                var seacom = jQuery("#js_seacom").val();
+                var seaplf = jQuery("#js_seaplf").val();
+                var seapy = jQuery("#js_seapy").val();
+                var seapm = jQuery("#js_seapm").val();
+                location.href='?model=salary&action=xls_out&flag=dp_lin&seacom='+seacom+'&seadept='+seadept+'&seaname='+seaname
+                    +'&sealy='+sealy+'&sealm='+sealm+'&seaplf='+seaplf+'&seapy='+seapy+'&seapm='+seapm;
+            }
+            function gridNavSeaFun(ty){
+                if(ty){
+                    var seapy = jQuery("#"+ty+"seapy").val();
+                    var seapm = jQuery("#"+ty+"seapm").val();
+                    jQuery("#seadept").val(jQuery("#js_seadept").val());
+                    jQuery("#seaname").val(jQuery("#js_seaname").val());
+                    jQuery("#sealy").val(jQuery("#js_sealy").val());
+                    jQuery("#sealm").val(jQuery("#js_sealm").val());
+                    jQuery("#seacom").val(jQuery("#js_seacom").val());
+                    jQuery("#seaplf").val(jQuery("#js_seaplf").val());
+                }else{
+                    ty='';
+                    var seapy = '';
+                    var seapm = '';
+                    jQuery("#js_seadept").val(jQuery("#seadept").val());
+                    jQuery("#js_seaname").val(jQuery("#seaname").val());
+                    jQuery("#js_sealy").val(jQuery("#sealy").val());
+                    jQuery("#js_sealm").val(jQuery("#sealm").val());
+                    jQuery("#js_seacom").val(jQuery("#seacom").val());
+                    jQuery("#js_seaplf").val(jQuery("#seaplf").val());
+                }
+                var seadept = jQuery("#"+ty+"seadept").val();
+                var seaname = jQuery("#"+ty+"seaname").val();
+                var sealy = jQuery("#"+ty+"sealy").val();
+                var sealm = jQuery("#"+ty+"sealm").val();
+                var seacom = jQuery("#"+ty+"seacom").val();
+                var seaplf = jQuery("#"+ty+"seaplf").val();
+                
+                jQuery("#rowedgrid").jqGrid('setGridParam',
+                {url:"{data_list}&seadept="+seadept+"&seaname="+seaname
+                        +"&sealy="+sealy+"&sealm="+sealm
+                        +"&seapy="+seapy+"&seapm="+seapm
+                        +"&seacom="+seacom+"&seaplf="+seaplf
+                    ,page:1}
+                ).trigger("reloadGrid");
+            }
+            function showjsearch(){
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#jsearch').css('display', 'block');
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+    margin-left: 10px;
+    width: auto;
+    display: inline;
+    color: red;
+}
+#newuserForm input {
+    font-size: 12px;
+}
+.tab {
+	border-collapse: collapse;
+	border: 1px solid #000000 ;
+	text-align: center;
+	word-break: break-all;
+}
+.tab td{
+    border: 1px solid #AED0EA;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="jsearch" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        高级查询
+                    </td>
+                </tr>
+                {jsearch}
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" id="newspeSub" onclick="gridNavSeaFun('js_')" value="查询"/>
+                        <input type="button" id="newspeSub" onclick="xlsClickFun()" value="导出"/>
+                        <input type="button" id="newspeClo" onclick="paCloseFun('jsearch');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

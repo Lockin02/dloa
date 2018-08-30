@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>人力的入职名单</title>
+      {#commonInclude#}
+   <link rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+   <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var id = $("#id").val();
+		//初始化tabsURL·
+		var tabArr = [
+				"?model=hr_recruitment_entryNotice&action=hrwaitpage",//待入职
+				"?model=hr_recruitment_entryNotice&action=hrpassedpage"//已完成
+				];
+		$("#tabs1").tabs(".panes > iframe", {
+			history : true,
+			onClick : function(i, e) {
+				var actTabId = "#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src", tabArr[e]);
+			}
+		});
+
+	});
+</script>
+</head>
+<body>
+<table width="100%">
+<tr>
+<td>
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">待入职的录用通知</a></li>
+	<li><a href="#tab2">已完成的录用通知</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+	<iframe class="pane" id="iframe1"  src= "about:blank" scrolling="no" frameborder= "0" onload= "this.height=parent.document.body.clientHeight-140">
+	</iframe>
+	<iframe class="pane" id="iframe2"  src= "about:blank" scrolling="no" frameborder= "0" onload= "this.height=parent.document.body.clientHeight-140">
+	</iframe>
+	</div>
+</div>
+<input type="hidden" value="{id}" id="id" name="id"/>
+</td>
+</tr>
+</table>
+</body>
+</html>

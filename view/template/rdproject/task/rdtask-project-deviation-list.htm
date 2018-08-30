@@ -1,0 +1,82 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>项目任务偏差视图</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/contextmenu.css" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/datePicker.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/scrollTable.js"></script>
+<script type="text/javascript">
+
+            function show_page(page){
+				this.location="?model=rdproject_task_rdtask&action=toProTkDeviationPage";
+			}
+			function search(){
+				var searchfield=$('#searchfield').val();
+				var searchvalue=$('#searchvalue').val();
+				this.location="?model=rdproject_task_rdtask&action=toProTkDeviationPage&pjId={pjId}&"+searchfield+"="+searchvalue;
+			}
+</script>
+
+
+</head>
+<body>
+<div class="main_wraper">
+<table class="main_table_search" id='searchGrid'>
+	<tr>
+		<td>输入关键字： <input type="text" id="searchvalue" class="txt"
+			name="searchvalue" value="" />
+			 <input type="hidden" id="pjId" value="{pjId}" />
+			 按 <select	id="searchfield" class="select">
+			<option value="name">任务名称</option>
+			<option value="chargeName">责任人</option>
+			<!--  option value="publicName">发布人</option-->
+		</select> <input type="button" value=" 搜索 " class="txt_btn_a"
+			onclick="search()" /></td>
+	</tr>
+</table>
+<table class="main_table" id="main_table">
+	<thead>
+	<tr class="main_tr_header">
+			<th width="3%">序号</th>
+			<th width="3%">提示灯</th>
+			<th width="6%">任务名称</th>
+			<th width="5%">状态</th>
+			<th width="5%">完成率</th>
+			<th width="5%">偏差率</th>
+			<th width="5%">责任人</th>
+			<th width="6%">计划开始时间</th>
+			<th width="6%">实际开始时间</th>
+			<th width="4%">偏差</th>
+			<th width="6%">计划完成时间</th>
+			<th width="6%">实际完成时间</th>
+			<th width="4%">偏差</th>
+			<th width="4%">计划工期</th>
+			<th width="4%">实际工期</th>
+			<th width="4%">偏差</th>
+			<th width="4%">估计工作量</th>
+			<th width="4%">实际工作量</th>
+			<th width="4%">偏差</th>
+		</tr>
+	</thead>
+	<tbody>
+		{list}
+	</tbody>
+</table>
+</div>
+{pageDiv}
+</body>
+<script>
+ new ScrollableTable(document.getElementById('main_table'));
+</script>
+</html>

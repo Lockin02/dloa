@@ -1,0 +1,82 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>公告列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="10">公告列表</td>
+	</tr>
+	<tr class="tableheader">
+		<td>ID</td>
+		<td>标题</td>
+		<td>发稿人</td>
+		<td>查看权限</td>
+		<!-- <td>生效日期</td> -->
+		<td>审核状态</td>
+		<td>写稿日期</td>
+		<td>审核日期</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+function top(id)
+{
+	var rand=Math.random()*100000;
+	var temp = $('#tr_'+id).html();
+	$.post('ajax.php',{model:'info_notice',action:'update_top',id:id,rand:rand},
+	function (data)
+	{
+		if (data == 'ok')
+		{
+			$('#tr_'+id).remove();
+			var newhtml = '<tr id="tr_'+id+'">'+temp+'</tr>';
+			$('.tableheader').after(newhtml);
+		}
+	}
+	)
+}
+function stop(id)
+{
+	var rand=Math.random()*100000;
+	$.post('ajax.php',{model:'info_notice',action:'update_status',status:'2',id:id,rand:rand},
+	function (data)
+	{
+		if (data == 'ok')
+		{
+			$('#status_'+id).html('<span>已关闭</span>');
+			$('#stop_'+id).html('<span>恢复生效</span>');
+			$('#stop_'+id).attr('href','javascript:start('+id+')');
+		}else{
+			alert('设置失败，请与管理员联系！');
+		}
+	}
+	)
+}
+function start(id)
+{
+	var rand=Math.random()*100000;
+	$.post('ajax.php',{model:'info_notice',action:'update_status',status:'1',id:id,rand:rand},
+	function (data)
+	{
+		if (data == 'ok')
+		{
+			$('#status_'+id).html('已生效');
+			$('#stop_'+id).html('停止生效');
+			$('#stop_'+id).attr('href','javascript:stop('+id+')');
+		}else{
+			alert('设置失败，请与管理员联系！');
+		}
+	}
+	)
+}
+</script>
+</body>
+</html>

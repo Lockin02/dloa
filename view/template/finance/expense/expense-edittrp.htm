@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑报销单</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<script type="text/javascript" src="{#jsPath#}/expense-edittrp.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/expense-common.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "cost_summary_list"
+			});
+		});
+	</script>
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=finance_expense_expense&action=edit" onsubmit="return checkEsm();">
+<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+	<tr>
+		<td>
+			<div class="main_head2">
+				<span class="main_head_title">编辑报销明细</span>
+				<span style="float:right;margin:2px 8px 0px 0px;">{InputDate}</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset><legend class="legend">基 本 信 息 - {BillNo}
+				<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+			</legend>
+			<table class="form_in_table" id="baseTbl">
+				<tr>
+					<td class="form_text_left_three"><span class="blue">报销类型</span></td>
+					<td class="form_text_right" colspan="5">
+						<input type="radio" name="expense[DetailType]" value="4" checked="checked"/> 售前费用
+
+						&nbsp;&nbsp;
+						<img src="images/icon/view.gif"/>
+						<a href="{downloadUrl}" title="类型说明" taget='_blank' id="fileId" onclick="getFile();">报销说明</a>
+
+						<input type="hidden" id="DetailTypeHidden" value="{DetailType}" />
+						<input type="hidden" name="expense[id]" id="id" value="{id}" />
+						<input type="hidden" name="expense[AssID]" value="{AssID}"/>
+						<input type="hidden" name="expense[HeadID]" value="{HeadId}"/>
+						<input type="hidden" name="expense[InputDate]" value="{InputDate}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three"><span class="blue">费用期间</span></td>
+					<td class="form_text_right" colspan="5">
+						<input type="text" class="txtmiddle" name="expense[CostDateBegin]" id="CostDateBegin" value="{CostDateBegin}" readonly="readonly"/>
+						至
+						<input type="text" class="txtmiddle" name="expense[CostDateEnd]" id="CostDateEnd" value="{CostDateEnd}" onchange="actTimeCheck();" readonly="readonly"/>
+						共
+						<input type="text" class='rimless_textB' style="width:50px;text-align:center" name="expense[days]" id="days" value="{days}" readonly="readonly"/>
+						天
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three"><span class="blue">事 由</span></td>
+					<td class="form_text_right" colspan="5">
+						<input type="text"  class='rimless_textB' style="width:760px" id="Purpose" name="expense[Purpose]" value="{Purpose}" />
+					</td>
+				</tr>
+				<tr style="display:none;">
+					<td class="form_text_left_three"><span class="blue">报销人员</span></td>
+					<td class="form_text_right">
+						<input type="text" class='txt' name="expense[CostManName]" id="CostManName" value="{CostManName}" readonly="readonly"/>
+						<input type="hidden" name="expense[CostMan]" value="{CostMan}" />
+
+						<input type="hidden" name="expense[InputManName]" value="{InputManName}" />
+						<input type="hidden" name="expense[InputMan]" value="{InputMan}"/>
+
+						<input type="hidden" name="expense[CostDepartName]" id="CostDepartName" value="{CostDepartName}" />
+						<input type="hidden" name="expense[CostDepartID]" id="CostDepartID" value="{CostDepartID}"/>
+
+						<input type="hidden" name="expense[CostManCom]" id="CostManCom" value="{CostManCom}" />
+						<input type="hidden" name="expense[CostManComId]" id="CostManComId" value="{CostManComId}"/>
+					</td>
+					<td class="form_text_left_three">报销人部门</td>
+					<td class="form_text_right">
+						<input type="text" class='readOnlyTxtNormal' value="{CostDepartName}" readonly="readonly"/>
+					</td>
+					<td class="form_text_left_three">报销人公司</td>
+					<td class="form_text_right">
+						<input type="text" class='readOnlyTxtNormal' value="{CostManCom}" readonly="readonly"/>
+						<input type="hidden" id="modelType" value="{modelType}"/>
+					</td>
+				</tr>
+				<tr id="projectInfo">
+					<td class="form_text_left_three">项目编号</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[ProjectNo]" id="projectCode" value="{ProjectNo}" readonly="readonly"/>
+						<input type="hidden" name="expense[projectId]" id="projectId" value="{projectId}"/>
+					</td>
+					<td class="form_text_left_three">项目名称</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[projectName]" id="projectName" value="{projectName}" readonly="readonly"/>
+					</td>
+					<td class="form_text_left_three">项目经理</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[proManagerName]" id="proManagerName" readonly="readonly" value="{proManagerName}"/>
+						<input type="hidden" name="expense[proManagerId]" id="proManagerId" value="{proManagerId}"/>
+					</td>
+				</tr>
+				<tr id="saleInfo">
+					<td class="form_text_left_three">商机编号</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[chanceCode]" id="chanceCode" readonly="readonly" value="{chanceCode}"/>
+						<input type="hidden" name="expense[chanceId]" id="chanceId" value="{chanceId}"/>
+					</td>
+					<td class="form_text_left_three">商机名称</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[chanceName]" id="chanceName" readonly="readonly" value="{chanceName}"/>
+					</td>
+					<td class="form_text_left_three">客户名称</td>
+					<td class="form_text_right">
+						<input type="text" class='readOnlyTxtNormal' name="expense[customerName]" id="customerName" readonly="readonly" value="{customerName}"/>
+						<input type="hidden" name="expense[customerId]" id="customerId" value="{customerId}"/>
+					</td>
+				</tr>
+				<tr id="procityInfo">
+					<td class="form_text_left_three"><span id="provinceTitle">客户省份</span></td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[province]" id="province" value="{province}" readonly="readonly"/>
+					</td>
+					<td class="form_text_left_three"><span id="cityTitle">客户城市</span></td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[city]" id="city" value="{city}" readonly="readonly"/>
+					</td>
+					<td class="form_text_left_three"><span id="CustomerTypeTitle">客户类型</span></td>
+					<td class="form_text_right">
+						<input type="text" class='readOnlyTxtNormal' name="expense[CustomerType]" id="CustomerType" value="{CustomerType}" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr id="chanceDeptInfo">
+					<td class="form_text_left_three">客户部门</td>
+					<td class="form_text_right_three">
+						<input type="text" class='txt' name="expense[customerDept]" id="customerDept" value="{customerDept}"/>
+					</td>
+					<td class="form_text_left_three">销售负责人</td>
+					<td class="form_text_right_three">
+						<input type="text" class='readOnlyTxtNormal' name="expense[CostBelonger]" id="CostBelonger" readonly="readonly" value="{CostBelonger}"/>
+						<input type="hidden" name="expense[CostBelongerId]" id="CostBelongerId" value="{CostBelongerId}"/>
+					</td>
+					<td class="form_text_left_three">费用归属部门</td>
+					<td class="form_text_right_three" id="saleBelongDept">
+						<input type="text" class="readOnlyTxtNormal" readonly="readonly" name="expense[CostBelongDeptName]" id="CostBelongDeptNameS" value="{CostBelongDeptName}"/>
+						<input type="hidden" name="expense[CostBelongDeptId]" id="CostBelongDeptIdS" value="{CostBelongDeptId}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three">同 行 人</td>
+					<td class="form_text_right_three">
+						<input type="text" class="txt" readonly="readonly" name="expense[memberNames]" id="memberNames" value="{memberNames}"/>
+						<input type="hidden" name="expense[memberIds]" id="memberIds" value="{memberIds}"/>
+					</td>
+					<td class="form_text_left_three">同行人数</td>
+					<td class="form_text_right" colspan="3">
+						<input type="text" class="txt" name="expense[memberNumber]" id="memberNumber" value="{memberNumber}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left_three">附件</td>
+					<td class="form_text_right" colspan="5">
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress"></div>
+							<div class="upload">
+								<span id="swfupload"></span>
+								<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+								<br />
+							</div>
+							<div id="uploadfileList" class="upload">{file}</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset><legend class="legend"><b>费 用 信 息</b>
+				<img src="images/icon/info_up.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl')"/>
+			</legend>
+			<table class="form_in_table" id="feeTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="12%">费用大类</th>
+						<th width="12%">费用小类</th>
+						<th width="12%">费用金额</th>
+						<th width="9.7%">发票类型</th>
+						<th width="8.6%">发票金额</th>
+						<th width="8.6%">发票数量</th>
+						<th>操 作</th>
+						<th>特别申请</th>
+						<th>费用说明</th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					{expensedetail}
+				</tbody>
+				<tr class="tr_count">
+					<td>合计</td>
+					<td></td>
+					<td>
+						<input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="expense[Amount]" id="countMoney" value="{countMoney}" readonly="readonly"/>
+						<input type="hidden" name="expense[feeRegular]" id="feeRegular" value="{feeRegular}"/>
+						<input type="hidden" name="expense[feeSubsidy]" id="feeSubsidy" value="{feeSubsidy}"/>
+					</td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:90px" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="expense[invoiceMoney]" id="invoiceMoney" value="{invoiceMoney}" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:80px" name="expense[invoiceNumber]" id="invoiceNumber" value="{invoiceNumber}" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/></td>
+					<td align="left" colspan="2">常规费用 : <span id="feeRegularView"></span>, 补贴费用 : <span id="feeSubsidyView"></span></td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+       <td colspan="6">
+           <fieldset>
+               <legend class="legend"><b>分 摊 信 息</b>
+                   <img src="images/icon/info_up.gif" id="costshareImg" onclick="showAndHide('costshareImg','costshare')"/>
+               </legend>
+               <table class="form_in_table" id="costshare">
+                   <thead>
+                   <tr class="main_tr_header">
+                       <th width="4%"></th>
+                       <th width="12%">费用大类</th>
+                       <th width="12%">费用小类</th>
+                       <th width="12%">分摊金额</th>
+                       <th width="8.6%">所属板块</th>
+                       <th>操 作</th>
+                       <th width="51.4%">分摊说明</th>
+                   </tr>
+                   </thead>
+                   <tbody id="costsharebody">
+					{expensecostshare}
+                   </tbody>
+                   <tr class="tr_count">
+                       <td width="30px"></td>
+                       <td>合计</td>
+                       <td></td>
+                       <td><input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" id="allCostshareMoney" readonly="readonly"/>
+                       </td>
+                       <td><input type="text" class="readOnlyTxtCount" style="width:90px" readonly="readonly"/>
+                       </td>
+                       <td><input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/>
+                       </td>
+                       <td colspan="2" align="left"></td>
+                   </tr>
+               </table>
+           </fieldset>
+       </td>
+   </tr>
+	<tr>
+		<td colspan="6">
+			<input type="hidden" name="expense[isPush]" value="{isPush}"/>
+			<input type="hidden" name="expense[esmCostdetailId]" value="{esmCostdetailId}"/>
+
+			<input type="submit" class="txt_btn_a" id="btnAudit" onclick="audit('audit')" value="提交审批" style="display:none;"/>&nbsp;&nbsp;
+			<input type="submit" class="txt_btn_a" id="btnCheck" onclick="audit('check');" value="提交部门检查"/>&nbsp;&nbsp;
+			<input type="submit" value=" 保 存 " onclick="audit('save')" class="txt_btn_a"/>&nbsp;&nbsp;
+			<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="window.close();"/>
+			<input type="hidden" name="expense[thisAuditType]" id="thisAuditType" value="audit"/>
+			<input type="hidden" id="costTypeIds"/>
+			<input type="hidden" name="expense[BillNo]" value="{BillNo}"/>
+			<input type="hidden" name="expense[needExpenseCheck]" id="needExpenseCheck" value="1"/>
+			<input type="hidden" name="expense[deptIsNeedProvince]" id="deptIsNeedProvince" value="1"/>
+			<input type="hidden" id="specialApplyNos" name="expense[specialApplyNos]" value="{specialApplyNos}"/>
+			<input type="hidden" id="saleDeptId" value="{saleDeptId}"/>
+            <input type="hidden" id="unDeptFilter" value="{unDeptFilter}"/>
+			<input type="hidden" id="unSltDeptFilter" value="{unSltDeptFilter}"/>
+			<input type="hidden" id="feemansForXtsSales" value="{feemansForXtsSales}"/>
+		</td>
+	</tr>
+</table>
+<div id="costTypeInner"></div>
+<div id="specialApplyWindow"></div>
+</form>
+</body>
+</html>

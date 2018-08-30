@@ -1,0 +1,264 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script>
+	$(function() {
+            document.onkeydown = function(e){
+                var ev = document.all ? window.event : e;
+                if(ev.keyCode==13) {
+		          	  document.getElementById("searchBtn").click();
+		            //  search();
+		          }
+			 }
+			//设置内部滚动方法,这段代码要放到checkBoxTab.js之前,因为checkBoxTab.js让子表数据隐藏，获取不到宽度
+			var h=document.body.clientHeight;
+			$("#bodyDiv").attr("style","height:"+(h-130)+"px;overflow-y:scroll;");
+			$("th[id^='th']").each(function(){
+				var id=$(this).attr('id');
+				var ththObj=$("td[name^='td"+id+"']");
+				if(ththObj.length > 0){
+					var w=ththObj.eq(0).width();
+					$(this).width(w);
+				}
+			});
+
+			var purchType=$('#purchType').val();
+			$("select[id='searchPurchType'] option").each(function(){
+				if($(this).val()==purchType){
+					$(this).attr("selected","selected");
+				}
+			});
+		});
+	</script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" ><!--
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+
+		//搜索
+		function search(){
+			var searchvalue=$.trim($('#searchvalue').val());
+			var searchCol=$('#searchCondition').val();
+			location="?model=purchase_task_equipment&action=toProgressList&searchvalue="+searchvalue+"&searchCol="+searchCol;
+		}
+
+		//清空
+		function clearNum(){
+			location="?model=purchase_task_equipment&action=toProgressList";
+		}
+
+		//form提交判断
+		function purchForm(){
+			var idsArry = $(checkListIdStr).val();
+			if( idsArry==null||idsArry==""){
+				alert("请至少选择一条可下达的采购物料信息");
+			}else{
+				parent.location.href = "?model=purchase_plan_basic&action=toAddTask&idsArry="+idsArry;
+			}
+		}
+
+		function selectButton(obj){
+			//TODO:
+			alert(obj.value);
+		}
+
+		//form提交判断
+		function purchForm(){
+			var idsArry = $(checkListIdStr).val();
+			if( idsArry==null||idsArry==""){
+				alert("请至少选择一条可下达的采购物料信息");
+			}else{
+				parent.location = "index1.php?model=purchase_inquiry_inquirysheet&action=toAdd&idsArry="+idsArry;
+			}
+		}
+		//高级查询
+		function searchPage(){
+			window.open("?model=purchase_task_equipment&action=toProgressSearch"
+			,'newwindow1','height=500,width=900');
+		}
+		//导出Excel
+		function exportExcel(){
+			window.open("?model=purchase_task_equipment&action=toExprotExcel"
+			,'newwindow1','height=500,width=900');
+		}
+		//导出已关闭Excel
+		function exportClose(){
+			window.open("?model=purchase_task_equipment&action=toExprotClose"
+			,'newwindow1','height=500,width=900');
+		}
+	/*
+	* 排序列表
+	*/
+	function sortGrid(sortField){
+		var sortTypeNow=$("#sortType").val();
+		var sortType="";
+		if(sortTypeNow==""){
+			sortType="1";
+		}else if(sortTypeNow=="1"){
+			sortType="0";
+		}else{
+			sortType="1"
+		}
+		this.location="index1.php?model=purchase_task_equipment&action=toProgressList&sortField="
+						+sortField+"&sortType="+sortType;
+	}
+	function viewProduct(id){
+		showThickboxWin("?model=stock_productinfo_productinfo&action=view&id="
+						+ id
+						+ "&productId=$rs[productId]&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=500&width=850");
+	}
+	function changeClass(obj){
+		if($(obj).attr("class")!="tr_changeOnclick"){
+			$(obj).removeClass();
+			if($(obj).attr("id")=="tr_black"){
+				$(obj).find("tr").removeClass();
+			}
+			$(obj).addClass("tr_changeOnclick");
+		}else{
+			$(obj).removeClass();
+			$(obj).addClass($(obj).attr("id"));
+			if($(obj).attr("id")=="tr_black"){
+				$(obj).find("tr").addClass("tr_black");
+			}
+		}
+	}
+	$(document).ready(function(){//排序图标处理
+		$(".imageSort").each(function(){
+			$(this).attr("src","images/farrow.gif");
+		});
+		if("{sortType}"=="1"){
+			$("#imageSort_"+"{sortField}").attr("src","images/farrow_up.gif");
+		}else if("{sortType}"=="0"){
+			$("#imageSort_"+"{sortField}").attr("src","images/farrow_down.gif");
+		}else{
+			$("#imageSort_"+"{sortField}").attr("src","images/farrow.gif");
+		}
+		var searchCol=$('#searchCol').val();
+			$("select[id='searchCondition'] option").each(function(){
+				if($(this).val()==searchCol){
+					$(this).attr("selected","selected");
+				}
+			});
+
+	})
+    --></script>
+</head>
+<body scroll="no">
+<div class="main_wraper">
+<table class="main_table"  style="width:97.5%">
+<thead>
+  <tr  class="main_table_search">
+		<td colspan="15" align="left">
+			<select class="" id="searchCondition">
+			    <option value="dateReceiveSear,sendTimeSear,productNumbSear,productNameSear,planNumbSear,sendNameSear">所有</option>
+			    <option value="dateReceiveSear">接收时间</option>
+			    <option value="sendTimeSear">下达时间</option>
+			    <option value="productNumbSear">物料编号</option>
+			    <option value="productNameSear">物料名称</option>
+			    <option value="planNumbSear">申请编号</option>
+			    <option value="sendNameSear">负责人</option>
+		  	</select>
+			<input type="text" name="searchvalue" id="searchvalue" value="{searchvalue}">
+			<input type="hidden" id="searchCol" value="{searchCol}">
+			<input type="button" class="txt_btn_a" value="搜 索"  id="searchBtn" onclick="search();">
+			<input type="button" class="txt_btn_a" value="清 空"  onclick="clearNum();">
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" class="txt_btn_a" value="高级查询"  onclick="searchPage();">
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<input type="button" class="txt_btn_a" value="导出物料执行情况"  onclick="exportExcel();">
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<input type="button" class="txt_btn_a" value="导出已关闭物料"  onclick="exportClose();">
+            <input type="hidden" id="sortField" value="{sortField}" />
+			<input type="hidden" id="sortType" value="{sortType}" />
+		  	&nbsp;&nbsp;&nbsp;&nbsp;
+		</td>
+	</tr>
+    <tr class="main_tr_header">
+				<tr class="main_tr_header">
+					<th  id="th01">序号</th>
+	                <th  width="7%"  id="th02">
+	                	<a href="javascript:void(0)" onclick="sortGrid('sendTime')" >下达时间<img id="imageSort_sendTime" class="imageSort" src="images/farrow.gif" /></a>
+	                </th>
+	                <th  width="7%"  id="th03">
+	                	<a href="javascript:void(0)" onclick="sortGrid('dateReceive')" >接收时间<img id="imageSort_dateReceive" class="imageSort" src="images/farrow.gif" /></a>
+	                </th>
+					<th  width="20%"  id="th04">
+						<a href="javascript:void(0)" onclick="sortGrid('productName')" >物料编号/物料名称<img id="imageSort_productName" class="imageSort" src="images/farrow.gif" /></a></th>
+	                <th  width="11%"  id="th05">
+	                	<a href="javascript:void(0)" onclick="sortGrid('planNumb')" >申请编号<img id="imageSort_planNumb" class="imageSort" src="images/farrow.gif" /></a>
+	                </th>
+	                <th  width="5%"  id="th06">
+	                	<a href="javascript:void(0)" onclick="sortGrid('sendName')" >负责人<img id="imageSort_sendName" class="imageSort" src="images/farrow.gif" /></a>
+	                </th>
+	                <th  width="5%"  id="th07">任务数量</th>
+	                <th  width="5%"  id="th07">
+	                <a href="javascript:void(0)" onclick="sortGrid('state')" >任务状态<img id="imageSort_state" class="imageSort" src="images/farrow.gif" /></a></th>
+           	        <th width="38%" class="td_table">
+			            <table width="100%" class="main_table_nested" frame=void>
+		            	<tr>
+									<th width="16%"  id="th11">订单数量</th>
+									<th width="18%"  id="th12">审批状态</th>
+									<th width="18%"  id="th13">订单状态</th>
+									<th width="16%"  id="th14">收料数量</th>
+									<th width="16%"  id="th15">入库数量</th>
+									<th width="16%"  id="th16">付款情况</th>
+		            	</tr>
+		            </table>
+			        </th>
+				</tr>
+</thead>
+</table>
+    <div id="bodyDiv">
+    <table class="main_table" >
+    <tbody >
+    {list}
+    </tbody>
+	</table>
+	</div>
+</div>
+{pageDiv}
+<div style="visibility:hidden;">
+<form id='form2' name='form2' action="?model=purchase_task_equipment&action=toProgressList" method="post" onsubmit="">
+</form>
+</div>
+</body>
+</html>

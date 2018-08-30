@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/extui/boot.js"></script>
+<title></title>
+</head>
+<style type="text/css">
+    body{
+        margin:0px;padding:0px;border:0px;width:100%;height:100%;overflow:hidden;
+    }
+    </style>
+<body>
+<div class="mini-fit">
+<fieldset>
+<legend  class="legend" onclick="showAndHideDiv('asImg','asInfo')">历史数据<font style="color:#F00">新增</font>导入
+	<img id="asImg" src="images/icon/info_up.gif">
+</legend>
+  <form id="form" action="?model=administration_appraisal_performance_list&action=importExcel" method="post"  enctype="multipart/form-data">
+        上传附件：<input class="mini-htmlfile" name="upfile" limitType="*.xls;*.xlsx"  required="true"/><input class="mini-hidden" name="tid" value="{tid}" />
+        <a class="mini-button" iconCls="icon-upload" onclick="clickform()">导入</a> <a  class="mini-button" href="upfile/考核历史数据导入模板.xls" iconCls="icon-download">下载模板</a>
+    </form>
+ </fieldset>  
+ 
+ <fieldset>
+<legend  class="legend" onclick="showAndHideDiv('asImg','asInfo')">历史数据<font style="color:#F00">更新</font>导入
+	<img id="asImg" src="images/icon/info_up.gif">
+</legend>
+  <form id="formUp" action="?model=administration_appraisal_performance_list&action=importUpExcel" method="post"  enctype="multipart/form-data">
+        上传附件：<input class="mini-htmlfile" name="upfile" limitType="*.xls;*.xlsx"  required="true"/><input class="mini-hidden" name="tid" value="{tid}" />
+        <a class="mini-button" iconCls="icon-upload" onclick="clickUpform()">导入</a> 
+    </form>
+    
+    </br></br>
+    a.	每次导入最多500条记录。</br>
+b.	导入的数据中不能带有公式；数据中的排名比例列不需要带%，比如78.5%，导入时填写78.5。</br>
+c.	历史数据新增导入:导入即新增这些记录；按照导入模板整理数据；导入的记录自动显示状态是：完成。</br>
+d.	历史数据更新导入：导入新数据即对系统已经有的记录进行更新，但只能更新最后的4列数据：加权得分、最终得分、排名、排名比例。操作时先从系统导出需要更新的记录，整理表格需要更新的数据，勿修改导出的表格标题，导入更新即可。</br>
+    
+ </fieldset>  
+</div>
+<!--
+<div class="mini-toolbar" style="text-align:center;margin:0px; border-bottom:0px; border-left:0px; border-right:0px;" > <a class="mini-button" style="width:60px;" onclick="submitForm()">确定</a> <span style="display:inline-block;width:25px;"></span> <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a></div>
+-->
+<script type="text/javascript"> 
+var checkSubmitFlag=true;
+var checkFlag=true;
+mini.parse();
+ function CloseWindow(action) {
+   if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	else window.close();          
+	window.parent.grid.load();  
+}
+ function onCancel(e) {
+    CloseWindow("cancel");
+}
+function clickform(){
+	 var form = new mini.Form("#form");
+	  form.validate();
+     if (form.isValid() == false) return false;
+	 if(true==checkSubmitFlag)
+	  {
+		  		checkSubmitFlag = false; 
+	 			$('#form').submit();
+				 
+	  }else{
+		  alert("你已经提交了表单，请勿重复提交。");
+		  return false;
+	  }
+}	
+
+function clickUpform(){
+	 var forms = new mini.Form("#formUp");
+	  forms.validate();
+     if (forms.isValid() == false) return false;
+	 if(true==checkFlag)
+	  {
+		  		checkFlag = false; 
+	 			$('#formUp').submit();
+				 
+	  }else{
+		  alert("你已经提交了表单，请勿重复提交。");
+		  return false;
+	  }
+}		
+</script>
+</body>
+</html>

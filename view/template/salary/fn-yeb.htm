@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 120px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','员工号','姓名','部门','年度','年终奖金额','交纳税金','实发金额','身份证号','帐号','开户行','邮箱'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:100, align:'center' ,  sortable:false ,search:false},
+                        {name:'key',index:'y.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'usercard',index:'y.usercard', width:70, align:'left' },
+                        {name:'username',index:'u.user_name', width:90, align:'center' },
+                        {name:'deptname',index:'s.olddept', width:100,align:'center'},
+                        {name:'syear',index:'y.syear', width:80, align:"center"},
+                        {name:'yearam',index:'y.yearam', width:80, align:"right"},
+                        {name:'paycesse',index:'y.paycesseam', width:70,align:'right'},
+                        {name:'payam',index:'y.payam', width:80, align:"right"},
+                        {name:'idcard',index:'s.idcard', width:140, align:"center"},
+                        {name:'acc',index:'s.acc', width:140, align:"center"},
+                        {name:'accbank',index:'s.accbank', width:140, align:"center"},
+                        {name:'email',index:'s.email', width:140, align:"center"}
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-138+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: '{user_capt}',
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#FF9900';
+                        if(rowData.syear=='{yearck}'){
+                            be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key
+                            +"' type='button' value='修改' title='修改年终奖' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_amount:{
+                            required:true,
+                            number:true
+                        },
+                        user_remark:{
+                            required:true
+                        }
+                    },
+                    messages:{
+                        user_amount:{
+                            required:'请输入调薪金额',
+                            number:'请输入正确的金额类型'
+                        },
+                        user_remark:{
+                            required:'请输入备注信息'
+                        }
+                    }
+                });
+            });
+            //转正
+            function amClickFun(id){
+                var rand=Math.random()*100000;
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#td_name').html(rowData.username);
+                $('#td_dept').html(rowData.deptname);
+                $('#user_yearam').val(rowData.yearam);
+                $('#user_remark').val(rowData.remark);
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var leavedt=$('#user_leavedt').val();
+                $('#newuserSub').attr('disabled',true);
+                $.post('?model=salary&action=hr_leave_in',{
+                    id:id,leavedt:leavedt,rand:rand
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newuserSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        $('#newuserSub').attr('disabled',false);
+                        paCloseFun('hr_user_new');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function gridNavSeaFun(){
+                var seay = jQuery("#seay").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                var comflag = jQuery("#comflag").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{data_list}&seay="+seay+"&seadept="+seadept
+                        +"&seaname="+seaname+"&comflag="+comflag,page:1}).trigger("reloadGrid");
+            }
+            function excelOutFun(id){
+                location.href='{excel_out}&step='+id;
+            }
+            function expExcelOutFun(){
+                location.href='{exp_excel_out}';
+            }
+            function emailFun(){
+                var rand=Math.random()*100000;
+                $('#lui_rowedgrid').css('display', 'block');
+                if(confirm('确定并发送邮件？因需要发送邮件，请等待几分钟，谢谢！')){
+                    $.post('{email_url}',{rand:rand},
+                        function (data){
+                            if(data=='1'){
+                                alert('年终奖邮件发送成功！');
+                            }else{
+                                alert('发送邮件失败！'+data);
+                            }
+                            $('#lui_rowedgrid').css('display', 'none');
+                        }
+                    )
+                }else{
+                    $('#lui_rowedgrid').css('display', 'none');
+                }
+            }
+            function editClickFun(){
+                var rand=Math.random()*100000;
+                var key=$('#user_key').val();
+                var am= $('#user_yearam').val();
+                var rmk=$('#user_remark').val();
+                $.post('{edit_url}',{rand:rand,key:key,am:am,rmk:rmk},
+                    function (data){
+                        if(data=='1'){
+                            alert('修改成功！');
+                        }else{
+                            alert('修改失败！'+data);
+                        }
+                        $('#hr_user_new').css('display', 'none');
+                        $('#lui_rowedgrid').css('display', 'none');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                );
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 608px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            年终奖
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td id="td_name"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td id="td_dept"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 年终奖总额：</td>
+                        <td id="td_yearam"><input type="text" id="user_yearam" name="user_yearam" value="" ></input></td>
+                    </tr>
+                    <tr>
+                        <td class="tl">备注：</td>
+                        <td ><textarea id="user_remark" name="user_remark" rows="5" cols="45" ></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="button" onclick="editClickFun()"  value="修改"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

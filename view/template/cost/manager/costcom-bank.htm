@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{
+                font-size: 90%;
+            }
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+            .ui-jqgrid-sortable {
+                padding-top: 3px;
+                font-weight:normal;
+                font-size:12px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=283;
+            var ww=350;
+            parent.$('#seaiframe_{seaid}').css('height',wh);
+            parent.$('#seaiframe_{seaid}').css('width',ww);
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        'ID','银行','账号'
+                    ],
+                    colModel:[
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:20 },
+                        {name:'name',index:'u1.user_name', width:20, align:'center'},
+                        {name:'acc',index:'u1.user_name', width:50, align:'center'}
+                    ],
+                    rowNum:10,
+                    rowList:[10],
+                    pager: '#prowedgrid',
+                    sortname: 'b.name',
+                    sortorder: "asc",
+                    width:ww,
+                    height:wh-51,
+                    rownumbers: true,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    onSelectRow: function(rowid){
+                        var rowData=jQuery("#rowedgrid").getRowData(rowid);
+                        parent.$('#seaiframe_{seaid}').hide('normal');
+                        parent.$('#{seaid}').val(rowData.acc);
+                        parent.$('#{resid}').val(rowData.name);
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true,search:false});
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        user_area:"required",
+                        user_email:{
+                            required:true,
+                            email:true
+                        }
+                    },
+                    messages:{
+                        user_area:"请输入区域",
+                        user_email:{
+                            required:'请输入email地址',
+                            email:'请输入正确的email地址'
+                        }
+                    }
+                });
+            });
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            //导航搜索
+            function gridNavSeaFun(){
+                var seapy = jQuery("#seapy").val();
+                var seapm = jQuery("#seapm").val();
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{user_list}&seapy="+seapy+"&seapm="+seapm+"&seadept="+seadept+"&seaname="+seaname,page:1}).trigger("reloadGrid");
+            }
+            //新建单据
+            function newClickFun(){
+                tb_show('新建单据', '{new_url}');
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <div id="listd" style='margin-top:1px;'>
+            <input type="hidden" id="user_key" value="" ></input>
+            <table id="rowedgrid" border="0" width="100%" cellpadding="0" cellspacing="0"></table>
+            <div id="pgtoolbar"></div>
+            <div id="prowedgrid"></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,334 @@
+<html>
+<head>
+	<title>服务合同</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<script type="text/javascript" src="view/template/engineering/serviceContract/js/serviceContract-isadd-train-license.js"></script>
+<script type="text/javascript" src="view/template/engineering/serviceContract/js/serviceContract-add-formValidator.js"></script>
+<script type="text/javascript" src="view/template/engineering/serviceTrain/js/serviceTrain-train-add.js"></script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+		<script>
+
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_contract_service"//业务模块编码，一般取表名
+			});
+		});
+
+		  function License(){
+            alert("License清单")
+             }
+		</script>
+
+
+</head>
+<body>
+<div class="main_head"><span class="main_head_title">服务合同</span></div>
+<form id="form1" method="post" action="?model=engineering_serviceContract_serviceContract&action=addContract" name="form1">
+	<table class="form_main_table">
+      <tr>
+        <td class="form_text_left">是否签约</td>
+        <td class="form_text_right">
+                         是<input type="radio" name="yyy" id="" />
+                         否<input type="radio" name="yyy" id="" checked/>
+        </td>
+        <td class="form_text_left">纸质合同状态</td>
+        <td class="form_text_right" >
+                        已提交<input type="radio" name="nnn" id="" />
+                        已拿到<input type="radio" name="nnn" id="" checked/>
+        </td>
+      </tr>
+		<tr>
+			<td class="form_text_left">合同名称</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="serviceContract[orderName]" id="orderName">
+				<span class="red">[*]</span>
+				<br><div id="nameTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">鼎利合同号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="serviceContract[orderCode]" id="orderCode">
+				<span class="red">[*]</span>
+				<br><div id="contractNoTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">临时合同号</td>
+			<td class="form_text_right">
+			    <input type="text" class="txt" name="serviceContract[orderTempCode]" id="orderTempCode">
+		</tr>
+		<tr>
+			<td class="form_text_left">合同签约方</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"   name="serviceContract[cusName]" id="cusName">
+				<span class="red">[*]</span>
+				<br><div id="cusNameTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">签约方合同号</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"   name="serviceContract[cusContCode]" id="cusContCode">
+				<span class="red">[*]</span>
+				<br><div id="cusContCodeTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">合同签订日期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="serviceContract[signDate]" id="signDate" onfocus="WdatePicker()" readonly />
+				<span class="red">[*]</span>
+				<br><div id="signDateTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+
+			<td class="form_text_left">交货期</td>
+			<td class="form_text_right">
+				<input type="text" class="txt"  name="serviceContract[deliveryDate]" id="deliveryDate" onfocus="WdatePicker()" readonly />
+				<span class="red">[*]</span>
+				<br><div id="deliveryDateTip" class="tipShortTxt"></div>
+			</td>
+
+			<td class="form_text_left">签约方联系人</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="serviceContract[linkMan]" id="linkMan"  />
+				<span class="red">[*]</span>
+				<br><div id="linkManTip" class="tipShortTxt"></div>
+			</td>
+			<td class="form_text_left">联系人电话</td>
+			<td class="form_text_right" >
+				<input type="text" class="txt"  name="serviceContract[linkManPhone]" id="linkManPhone" />
+				<span class="red">[*]</span>
+				<br><div id="linkManPhoneTip" class="tipShortTxt"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">销售负责人</td>
+			<td class="form_text_right">
+				<input type="hidden" name="serviceContract[salesLeaderCode]" id="salesLeaderCode" />
+				<input type="text" class="txt" name="serviceContract[salesLeader]" id="salesLeader" readonly/>
+				<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('salesLeaderCode','salesLeader')"  />
+				<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('salesLeaderCode','salesLeader')"  />
+			</td>
+			<td class="form_text_left">部门负责人</td>
+			<td class="form_text_right" >
+				<input type="hidden" name="serviceContract[depHeadsCode]" id="depHeadsCode" />
+				<input type="text" class="txt"  name="serviceContract[depHeads]" id="depHeads" readonly>
+				<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('depHeadsCode','depHeads')"  />
+				<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('depHeadsCode','depHeads')"  />
+			</td>
+			<td class="form_text_left">技术负责人</td>
+			<td class="form_text_right" >
+				<input type="hidden" name="serviceContract[techdirectorCode]" id="techdirecotrCode" />
+				<input type="text" class="txt"  name="serviceContract[techdirector]" id="techdirector" readonly/>
+				<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('techdirecotrCode','techdirector')"  />
+				<input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('techdirecotrCode','techdirector')"  />
+			</td>
+		</tr>
+
+		<tr>
+			<td class="form_text_left">发票类型</td>
+			<td class="form_text_right">
+				<!-- input type="text" class="txt"  name="serviceContract[invoiceType]" id="invoiceType" -->
+				<select class="select" id="invoiceType" name="serviceContract[invoiceType]">
+				<!-- option value=""></option-->
+				{invoiceType}
+				</select>
+			</td>
+			<td class="form_text_left">合同期限</td>
+			<td class="form_text_right">
+				<input type="text" class="txt" name="serviceContract[period]" id="period" onfocus="WdatePicker()" readonly />
+				<span class="red">[*]</span>
+<!--				<br><div id="periodTip" class="tipShortTxt"></div>-->
+			</td>
+		</tr>
+
+<!--		<tr>-->
+<!--			<td class="form_text_left">备注</td>-->
+<!--			<td colspan="3" class="form_text_right">-->
+<!--				<textarea cols="80" rows="5" name="serviceContract[resources]" id="resources"></textarea>-->
+<!--			</td>-->
+<!--		</tr>-->
+		<tr>
+			<td class="form_text_left">
+				附  件
+				<!--
+				<br>
+				<p>(支持上传<span class="red">'.zip', '.rar', '.jpg',<br> '.gif', '.bmp', '.doc', '.chm', '.docx',<br> '.txt', '.xls', '.xlsx', '.pdf'</span>)</p>
+				 -->
+			</td>
+			<td class="form_text_right" colspan="3">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" 	onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+					</div>
+					<div id="uploadfileList" class="upload"></div>
+				</div>
+			</td>
+		</tr>
+		<table class="form_main_table" id="mytable">
+	<thead>
+		<tr align="left">
+			<td colspan="5" class="form_header">配置清单/服务内容</td>
+			<td align="center" width="4%">
+			  <input type="hidden" id="productNumber" value="1" />
+			  <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放" />
+			  <img src="images/collapsed.gif" onclick="dynamic_add('invbody','productNumber');" title="添加行" /></td>
+		</tr>
+	</thead>
+	<tbody id="invbody">
+		<tr class="main_tr_header">
+			<td style="text-align:center" width="5%">序号</td>
+            <td style="text-align:center" width="30%">内容</td>
+			<td style="text-align:center" width="10%">数量/人数</td>
+			<td style="text-align:center" width="30%">详细</td>
+			<td style="text-align:center" width="10%">加密信息</td>
+			<td style="text-align:center" width="5%">操作</td>
+		</tr>
+		<tr align="center">
+			<td>1</td>
+            <td>
+               <input type="text" size="55" name="" id="" />
+            </td>
+            <td>
+               <input type="text" class="txt" name="" id="" />
+            </td>
+            <td>
+               <input type="text" size="45" name="" id="" />
+            </td>
+            <td>
+			    <input type="button" class="txt_btn_a" value="配置" onclick="License();"/>
+			</td>
+            <td><img src="images/closeDiv.gif"
+				onclick="mydel(this,'invbody')" title="删除行" /></td>
+		</tr>
+	</tbody>
+</table>
+
+		<table class="form_main_table">
+		  <thead>
+			<tr>
+				<td colspan="7" class="form_header">
+					培训计划
+				</td>
+				<td width="5%">
+					<input type="hidden" id="TraNumber" name="TraNumber" value="1" />
+					<img src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放"/>
+					<img src="images/collapsed.gif" onclick="train_add('mytra','TraNumber')" title="添加行"/>
+				</td>
+			</tr>
+
+			<tr class="main_tr_header">
+				<th width="5%">
+					序号
+				</th>
+				<th width="8%">
+					培训开始时间
+				</th>
+				<th width="8%">
+					培训结束时间
+				</th>
+				<th width="8%">
+					参与人数
+				</th>
+				<th width="18%">
+					培训地点
+				</th>
+				<th>
+					培训内容
+				</th>
+				<th width="20%">
+					培训工程师要求
+				</th>
+				<th width="5%">
+					操作
+				</th>
+			</tr>
+			</thead>
+		   <tbody id="mytra">
+			<tr>
+				<td>
+					1
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][beginDT]" id="TraDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][endDT]" id="TraEndDT1" onfocus="WdatePicker()"/>
+				</td>
+				<td>
+					<input class="txtshort" type="text" name="sales[trainingplan][1][traNum]"/>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][adress]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][content]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<textarea name="sales[trainingplan][1][trainerDemand]" rows="3" style="width: 100%"></textarea>
+				</td>
+				<td>
+					<img src="images/closeDiv.gif" onclick="mydel(this,'mytra')" title="删除行"/>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+
+<table class="main_table">
+<tr>
+        <td class="form_text_left">归属区域</td>
+        <td class="form_text_right">
+           <input type="text" class="txt" name="order[归属区域]" id="" />
+        </td>
+        <td class="form_text_left">销售员</td>
+		<td class="form_text_right">
+		  <input type="text" class="txt" name="order[saleman]" id="saleman" value="{saleman}"/>
+        </td>
+		<td class="form_text_left">创建人</td>
+		<td class="form_text_right">
+		  <input type="text" name="order[createName]" id="createName" value="{createName}" />
+		  <input type="hidden" name="order[createId]" id="createId" value="{createId}" />
+		</td>
+		<td class="form_text_left">创建时间</td>
+		<td class="form_text_right">
+		  <input type="text" name="order[createTime]" id="createTime" value="{createTime}" />
+
+		</td>
+
+</tr>
+</table>
+	<table class="main_table">
+	<tr>
+			<td colspan="4">
+				<input type="hidden" name="serviceContract[id]" id="contractID" />
+				<input type="hidden" name="serviceContract[systemCode]" id="systemCode" value="{systemCode}"/>
+				<input type="hidden" name="serviceContract[ExaStatus]" id="ExaStatus" value="{ExaStatus}" />
+				<input type="hidden" name="serviceContract[status]" id="status" value={status} />
+				<input type="hidden" name="serviceContract[missionStatus]" id="missionStatus" value="{missionStatus}" />
+				<input type="submit" class="txt_btn_a" value="保  存" id="saveButton" />
+				<input type="submit" class="txt_btn_a" value="提交审核"  onclick="comitToApp();" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

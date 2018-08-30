@@ -1,0 +1,576 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>销售合同</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"> </script>
+
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-licenseType.js"></script>
+		<script type="text/javascript" src="view/template/contract/sales/js/sales-backedit.js"></script>
+		<script type="text/javascript" src="view/template/contract/sales/js/sales-js.js"> </script>
+		<script type="text/javascript" src="js/validate.js"> </script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js" > </script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+
+		<script>
+			var uploadfile;
+			$(function() {
+				uploadfile=createSWFUpload({
+					"serviceType":"oa_contract_sales",
+					"serviceId":"{id}",
+					"serviceNo":"{contNumber}"
+				});
+			})
+		</script>
+		<!-- 附件上传结束 -->
+	</head>
+	<body>
+	<table>
+		<tr>
+			<td><img src="images/sys_config.gif"/>
+				<b>
+					销售合同:<font color="blue">{contNumber}</font>
+				</b>
+			</td>
+		</tr>
+	</table>
+	<br />
+	<form action="?model=contract_sales_sales&action=editForBackAction" method="post" id="form1" onSubmit="return CheckForm()" onkeypress="javascript:return NoSubmit(event);">
+		<table class='form_main_table'>
+				<tr>
+					<td class="form_text_left">
+						鼎利合同号
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[contNumber]" id="contNumber" value="{contNumber}" class="txt"/>
+						<span id="_contNumber" class="red">[*]</span>
+					</td>
+					<td class="form_text_left">
+						临时合同号
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[temporaryNo]" id="temporaryNo" value="{temporaryNo}"
+						class="txt"/>
+						<span id="_temporaryNo">
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						合同名称
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input class="txt" type="text" name="sales[contName]" id="contName" value="{contName}"/>
+						<span class="red" id="_contName">
+							[*]
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						合同金额
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[money]" id="money" value="{money}" class="txt formatMoney"/>
+						<span class="red" id="_money">
+							[*]
+						</span>
+					</td>
+					<td class="form_text_left">
+						发票类型
+					</td>
+					<td class="form_text_right">
+						<select class="txt" name="sales[invoiceType]" id="invoiceType">
+							{invoiceType}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						交货日期
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[deliveryDate]" id="deliveryDate" value="{deliveryDate}"
+						class="txt" onfocus="WdatePicker()"/>
+						<span class="red" id="_deliveryDate">
+							[*]
+						</span>
+					</td>
+					<td class="form_text_left">
+						合同负责人
+					</td>
+					<td class="form_text_right">
+						<input type="hidden" name="sales[principalId]" id="principalId" value="{principalId}"/>
+						<input type="text" class="txt" name="sales[principalName]" id="principalName" readonly value="{principalName}"/>
+						<input type="button" class="txt_btn_a" value="选 择" onclick="loadOrgWindow('principalId','principalName')"/>
+						<input type="button" class="txt_btn_a" value="清 空" onclick="clearOrgInfo('principalId','principalName')"/>
+						<span class="red" id="_money">
+							[*]
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						客户名称
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[customerName]" id="customerName" class="txt"value="{customerName}" />
+						<input type="hidden" name="sales[customerId]" id="customerId" value="{customerId}"/>
+						<span id="_customerId" class="red">
+							[*]
+						</span>
+					</td>
+					<td class="form_text_left">
+						付款单位
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" id="payUnit" name="sales[payUnit]" value="{payUnit}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						客户类型
+					</td>
+					<td class="form_text_right">
+						<select class="txt" name="sales[customerType]" id="customerType">
+							{customerType}
+						</select>
+					</td>
+					<td class="form_text_left">
+						客户所属省份
+					</td>
+					<td class="form_text_right">
+						<input type="text" class="txt" name="sales[province]" id="province" value="{province}" class="text"/>
+						<input type="hidden"  name="sales[provinceId]" id="province"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						客户合同号
+					</td>
+					<td class="form_text_right">
+						<input type="text" name="sales[customerContNum]" id="customerContNum"
+						class="txt" value="{customerContNum}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">
+						收货地址
+					</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="txt_txtarea_font" name="sales[address]" id="address" style="width:100%">{address}</textarea>
+					</td>
+				</tr>
+			</table>
+			<table class="form_main_table" id="link">
+				<tr>
+					<td colspan="8" class="form_header">
+						<font>
+							客户联系人
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="linkNum" name="linkNum" value="{linkNum}" />
+						<img src="images/verpic_open.gif" onclick="dis('mylink')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="link_add('mylink','linkNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="mylink" width="100%" class="form_main_table">
+				<tr class="main_tr_header">
+					<td style="text-align:center">
+						序号
+					</td>
+					<td style="text-align:center">
+						客户联系人
+					</td>
+					<td style="text-align:center">
+						电话
+					</td>
+					<td style="text-align:center">
+						邮件
+					</td>
+					<td style="text-align:center">
+						备注
+					</td>
+					<td style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{linkman}
+			</table>
+			<table class="form_main_table" id="equ" width="100%">
+				<tr>
+					<td class="form_header" colspan="4">
+						<font>
+							产品清单
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="EquNum" name="EquNum" value="{equNum}" />
+						<img src="images/verpic_open.gif" onclick="dis('myequ')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="soft_add('myequ','EquNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="myequ" class="form_main_table">
+				<tr class="main_tr_header">
+					<td style="text-align:center" width="5%">
+						序号
+					</td>
+					<td width="9%" style="text-align:center">
+						产品线
+					</td>
+					<td style="text-align:center" width="10%">
+						产品编号
+					</td>
+					<td width="16%" style="text-align:center">
+						产品名称
+					</td>
+					<td width="9%" style="text-align:center">
+						型号/版本
+					</td>
+					<td width="8%" style="text-align:center">
+						数量
+					</td>
+					<td width="8%" style="text-align:center">
+						单价
+					</td>
+					<td width="8%" style="text-align:center">
+						金额
+					</td>
+					<td width="10%" style="text-align:center">
+						计划交货日期
+					</td>
+					<td width="8%" style="text-align:center">
+						保修期
+					</td>
+					<td style="text-align:center">
+						合同内
+					</td>
+					<td width="5%" style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{equipment}
+			</table>
+			<table class="form_main_table">
+				<tr >
+					<td class="form_header" colspan="4">
+						<font>
+							加密信息
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="licenseNum" name="licenseNum" value="{licenseNum}"/>
+						<img src="images/verpic_open.gif" onclick="dis('mylicense')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="license_add('mylicense','licenseNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="mylicense" class="form_main_table">
+				<tr class="main_tr_header">
+					<td width="5%" style="text-align:center">
+						序号
+					</td>
+					<td width="10%" style="text-align:center">
+						产品线
+					</td>
+					<td width="10%" style="text-align:center">
+						软件狗类型
+					</td>
+					<td width="10%" style="text-align:center">
+						数量
+					</td>
+					<td width="12%" style="text-align:center">
+						License
+					</td>
+					<td width="16%" style="text-align:center">
+						License树
+					</td>
+					<td width="8%" style="text-align:center">
+						有效期
+					</td>
+					<td style="text-align:center">
+						备注
+					</td>
+					<td width="4%" style="text-align:center">
+						合同内
+					</td>
+					<td width="5%" style="text-align:center">
+						删除
+					</td>
+				</tr>
+				{licenselist}
+			</table>
+			<table id="pre" class="form_main_table">
+				<tr >
+					<td class="form_header" colspan="7">
+						<font>
+							自定义清单
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="PreNum" name="PreNum" value="{cusNum}" />
+						<img src="images/verpic_open.gif" onclick="dis('mycustom')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="pre_add('mycustom','PreNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="mycustom" class="form_main_table">
+				<tr class="main_tr_header">
+					<td width="5%" style="text-align:center">
+						序号
+					</td>
+					<td width="10%" style="text-align:center">
+						产品线
+					</td>
+					<td style="text-align:center">
+						产品编号
+					</td>
+					<td style="text-align:center">
+						产品名称
+					</td>
+					<td style="text-align:center">
+						产品型号
+					</td>
+					<td width="8%" style="text-align:center">
+						数量
+					</td>
+					<td width="8%" style="text-align:center">
+						单价
+					</td>
+					<td width="8%" style="text-align:center">
+						金额
+					</td>
+					<td width="8%" style="text-align:center">
+						计划交货日期
+					</td>
+					<td width="15%" style="text-align:center">
+						备注
+					</td>
+					<td width="4%" style="text-align:center">
+						合同内
+					</td>
+					<td width="5%" style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{customizelist}
+			</table>
+			<table id="inv" class="form_main_table">
+				<tr >
+					<td class="form_header" colspan="4">
+						<font>
+							开票计划
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="InvNum" name="InvNum" value="{invNum}" />
+						<img src="images/verpic_open.gif" onclick="dis('myinv')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="inv_add('myinv','InvNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="myinv" class="form_main_table">
+				<tr class="main_tr_header">
+					<td width="5%" style="text-align:center">
+						序号
+					</td>
+					<td width="10%" style="text-align:center">
+						开票金额
+					</td>
+					<td width="10%" style="text-align:center">
+						其中软件金额
+					</td>
+					<td width="10%" style="text-align:center">
+						开票类型
+					</td>
+					<td style="text-align:center">
+						开票日期
+					</td>
+					<td style="text-align:center">
+						开票内容
+					</td>
+					<td width="5%" style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{invlist}
+			</table>
+			<table id="pay" class="form_main_table">
+				<tr >
+					<td class="form_header" colspan="3">
+						<font>
+							收款计划
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="PayNum" name="PayNum" value="{payNum}" />
+						<img src="images/verpic_open.gif" onclick="dis('mypay')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="pay_add('mypay','PayNum')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="mypay" class="form_main_table">
+				<tr class="main_tr_header">
+					<td width="5%" style="text-align:center">
+						序号
+					</td>
+					<td width="10%" style="text-align:center">
+						收款金额
+					</td>
+					<td style="text-align:center">
+						收款日期
+					</td>
+					<td style="text-align:center">
+						收款方式
+					</td>
+					<td style="text-align:center">
+						收款条件
+					</td>
+					<td width="5%" style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{receiptplan}
+			</table>
+			<table id="tra" class="form_main_table">
+				<tr >
+					<td class="form_header" colspan="7">
+			<font>
+							培训计划
+						</font>
+					</td>
+					<td align="center" width="5%">
+						<input type="hidden" id="TraNumber" name="TraNumber" value="{traNumber}"/>
+						<img src="images/verpic_open.gif" onclick="dis('mytra')" title="缩放"/>
+						<img src="images/collapsed.gif" onclick="train_add('mytra','TraNumber')" title="添加行"/>
+					</td>
+				</tr>
+			</table>
+			<table id="mytra" class="form_main_table">
+				<tr class="main_tr_header">
+					<td width="5%" style="text-align:center">
+						序号
+					</td>
+					<td width="8%" style="text-align:center">
+						培训开始时间
+					</td>
+					<td width="8%" style="text-align:center">
+						培训结束时间
+					</td>
+					<td width="8%" style="text-align:center">
+						参与人数
+					</td>
+					<td width="18%" style="text-align:center">
+						培训地点
+					</td>
+					<td style="text-align:center">
+						培训内容
+					</td>
+					<td width="20%" style="text-align:center">
+						培训工程师要求
+					</td>
+					<td width="5%" style="text-align:center">
+						操作
+					</td>
+				</tr>
+				{trainingplan}
+			</table>
+			<table class='form_main_table'>
+				<tr>
+					<td class="form_header" colspan="4">
+						<font>
+							保修条款
+						</font>
+						<img src="images/verpic_open.gif" onclick="dis('gua')" title="缩放"/>
+					</td>
+				</tr>
+				<tr id="gua">
+					<td colspan="4">
+						<textarea name="sales[warrantyClause]" id="warrantyClause" rows="5" style="width: 100%">{warrantyClause}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_header" colspan="4">
+						<font>
+							售后要求
+						</font>
+						<img src="images/verpic_open.gif" onclick="dis('aft')" title="缩放"/>
+					</td>
+				</tr>
+				<tr id="aft">
+					<td colspan="4">
+						<textarea style="width: 100%" name="sales[afterService]" id="afterService" rows="5">{afterService}</textarea>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="4">
+						合同附件 &nbsp;
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress">
+							</div>
+							<div class="upload">
+								<span id="swfupload">
+								</span>
+								<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);"
+								disabled="disabled" />
+								<br />
+							</div>
+							<div id="uploadfileList" class="upload">
+								{file}
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="main_foot_wraper" colspan="4" align="center">签约状态：
+					&nbsp;{signStatus}</td>
+				</tr>
+				<tr>
+					<td class="main_foot_wraper" colspan="4">
+						发货条件 : &nbsp;{shipCondition}
+
+					</td>
+				</tr>
+				<tr>
+					<td class="main_foot_wraper" colspan="4">
+						提交方式 : &nbsp;{startType}
+
+					</td>
+				</tr>
+				<tr >
+				 	<td class="footform" colspan="4">
+				 		<input type="hidden" name="sales[oldContId]" id="contractId" value="{id}"/>
+					 	<input class="txt_btn_a" type="submit" value=" 保  存 " onclick="saveContract();"/>
+					 	<input class="txt_btn_a" type="button" value=" 关  闭 " onclick="closeFun();"/>
+				 	</td>
+				 </tr>
+			 </table>
+		 </form>
+	</body>
+</html>

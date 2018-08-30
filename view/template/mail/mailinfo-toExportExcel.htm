@@ -1,0 +1,91 @@
+<!DOCTYPE>
+<html>
+<title>导入EXCEL数据</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+        导出邮寄信息
+    </span>
+</div>
+<script type="text/javascript">
+    var exportExcel = function(type) {
+        if(type == 'all'){
+            window.open(
+                    "?model=mail_mailinfo&action=exportExcel"+
+                    "&colId="+ $("#colId").val()+
+                    "&colName="+ $("#colName").val()+
+                    "&searchConditionKey="+ $("#searchConditionKey").val()+
+                    "&searchConditionVal="+ $("#searchConditionVal").val()+
+                    "&docType="+ $("#docType").val()+
+                    "&width=200,height=200,top=200,left=200"
+            );
+        }else{
+            var beginDate = parseInt($("#beginYear").val() + $("#beginMonth").val());
+            var endDate = parseInt($("#endYear").val()+$("#endMonth").val());
+            if(beginDate > endDate){
+                alert("开始日期不能小于结束日期。");
+            }else{
+                window.open(
+                        "?model=mail_mailinfo&action=exportExcel&beginDate=" + beginDate+
+                        "&endDate=" + endDate+
+                        "&colId="+ $("#colId").val()+
+                        "&colName="+ $("#colName").val()+
+                        "&searchConditionKey="+ $("#searchConditionKey").val()+
+                        "&searchConditionVal="+ $("#searchConditionVal").val()+
+                        "&docType="+ $("#docType").val()+
+                        "&width=200,height=200,top=200,left=200"
+                );
+            }
+        }
+    };
+</script>
+<table class="form_main_table">
+    <tr>
+        <td class="form_text_left">
+            按邮寄日期范围导出
+        </td>
+        <td class="form_text_right">
+            <select id="beginYear">
+                {year}
+            </select>
+            <select id="beginMonth">
+                {month}
+            </select>
+            至
+            <select id="endYear">
+                {year}
+            </select>
+            <select id="endMonth">
+                {month}
+            </select>
+            <input type="button" class="txt_btn_a" value="导出"
+                   onclick="exportExcel();"/>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            导出全部
+        </td>
+        <td class="form_text_right">
+            <input type="button" class="txt_btn_a" value="导出"
+                   onclick="exportExcel('all');"/>
+        </td>
+    </tr>
+    <tr id="loading" style="display:none">
+        <td colspan="2">
+            <img src="images/loading1.gif">
+        </td>
+    </tr>
+</table>
+<div>
+    <input type="hidden" id="colId" value="{colId}">
+    <input type="hidden" id="colName" value="{colName}">
+    <input type="hidden" id="searchConditionKey" value="{searchConditionKey}">
+    <input type="hidden" id="searchConditionVal" value="{searchConditionVal}">
+    <input type="hidden" id="docType" value="{docType}">
+</div>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>通讯组</title>
+<link rel="stylesheet" type="text/css" href="js/jeasyui/themes/default/easyui.css"/>
+<link rel="stylesheet" type="text/css" href="js/jeasyui/themes/icon.css"/>
+<script type="text/javascript" src="js/jeasyui/jquery.min.js"></script>
+<script type="text/javascript" src="js/jeasyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/select_user.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css"> 
+	.table {
+	text-align:center;
+	word-break:break-all;
+	}
+.table td {
+	white-space:normal; word-break:break-all;
+	table-layout:fixed;
+}
+.input_list li {list-style:none; width:70px; float:left;}
+</style>
+
+</head>
+<body>
+<br />
+<form id="form1" method="post" action="?model=system_organizer_mailgroup_index&action=edit&id={t_id}&key={t_key}" onsubmit="return check();">
+	<input name="unUserIds" id="unUserIds"  type="hidden" />
+	<input name="unDeptUserIds" id="unDeptUserIds"  type="hidden" />
+	<input name="unAreaUserIds" id="unAreaUserIds" type="hidden" />
+	<input name="unMixUserIds" id="unMixUserIds"  type="hidden" />
+	<input name="unSendNames" id="unSendNames" type="hidden" />
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA" >
+		<td align="center" colspan="3">修改通讯组</td>
+	</tr>
+	<tr>
+		<td width="100" ><span class="style1">*</span>
+组 名 称：</td>
+		<td align="left" colspan="2" >{groupname}</td>
+	</tr>
+	<tr>
+		<td><span class="style1">*</span>
+归属类型：</td>
+		<td align="left" colspan="2" >
+			<input name="type" type="radio" value="1" {checked1} />&nbsp;个人组&nbsp;&nbsp;<input name="type" type="radio" value="2" {checked2} />&nbsp;部门&nbsp;&nbsp;<input name="type" type="radio" value="3" {checked3}/>&nbsp;区域&nbsp;&nbsp;<input name="type" type="radio" value="4" {checked6}/>&nbsp;混合
+					</td>
+	</tr>
+	<tr id='tr_area' style="display:none;">
+		<td><span class="style1">*</span>
+区&nbsp;&nbsp;&nbsp; &nbsp;域：</td>
+		<td align="left" colspan="2" >
+			<select id="area_id" name="area_id">
+				<option value="A">请选区域</option>
+				{select_area}
+			</select>			
+		</td>
+	</tr>
+	<tr id='tr_area_person' style="display:none;">
+		<td>额外人员：</td>
+		<td nowrap align="left" colspan="2" >
+			<input type="hidden" name="areaUserId" id="areaUserId" value="{areaUserId}">
+            <textarea name="areaUserName" id="areaUserName" rows=4 cols="50" wrap="yes" readonly>{areaUserName}</textarea>
+           &nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('areaUserId','areaUserName')" title="选择人员" name="button">
+           &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('areaUserId','areaUserName')" title="清空人员" name="button">
+
+		</td>
+	</tr>
+	<tr id='tr_dept' style="display:none;">
+		<td><span class="style1">*</span>
+部&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
+		<td align="left" colspan="2" >
+         <select id="dept_id" name="dept_id[]" class="easyui-combotree" data-options="url:'?model=system_organizer_mailgroup_index&action=deptData&sId={sId}',method:'get'" multiple style="width:200px;"></select>
+			
+		</td>
+	</tr>
+	<tr id='tr_dept_person' style="display:none;">
+		<td>额外人员：</td>
+		<td nowrap align="left" colspan="2" >
+			<input type="hidden" name="deptUserId" id="deptUserId" value="{deptUserId}">
+            <textarea name="deptUserName" id="deptUserName" rows=4 cols="50" wrap="yes" readonly>{deptUserName}</textarea>
+           &nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('deptUserId','deptUserName')" title="选择人员" name="button">
+           &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('deptUserId','deptUserName')" title="清空人员" name="button">
+
+		</td>
+	</tr>
+	<tr id='tr_person' style="display:none;">
+		<td><span class="style1">*</span>
+个 人 组：</td>
+		<td nowrap align="left" colspan="2" >
+			<input type="hidden" name="UserId" id="UserId" value="{UserId}">
+            <textarea name="UserName" id="UserName" rows=4 cols="50" wrap="yes" readonly>{UserName}</textarea>
+           &nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('UserId','UserName')" title="选择人员" name="button">
+           &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('UserId','UserName')" title="清空人员" name="button">
+
+		</td>
+	</tr>
+	<tr id='tr_mix_area' style="display:none;">
+		<td><span class="style1">*</span>
+区&nbsp;&nbsp;&nbsp; &nbsp;域：</td>
+		<td align="left" colspan="2" >
+			<select id="mix_area_id" name="mix_area_id">
+				<option value="A">请选区域</option>
+				{select_area}
+			</select>			
+		</td>
+	</tr>
+	<tr id='tr_mix_dept' style="display:none;">
+		<td><span class="style1">*</span>
+部&nbsp;&nbsp;&nbsp;&nbsp;门：</td>
+		<td align="left" colspan="2" >
+        <select id="dept_id" name="mix_dept_id[]" class="easyui-combotree" data-options="url:'?model=system_organizer_mailgroup_index&action=deptData&sId={sId}',method:'get'" multiple style="width:200px;"></select>
+			</td>
+	</tr>
+	<tr id='tr_mix_person' style="display:none;">
+		<td>额外人员：</td>
+		<td nowrap align="left" colspan="2" >
+			<input type="hidden" name="mixUserId" id="mixUserId" value="{mixUserId}">
+            <textarea name="mixUserName" id="mixUserName" rows=4 cols="50" wrap="yes" readonly>{mixUserName}</textarea>
+           &nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('mixUserId','mixUserName')" title="选择人员" name="button">
+           &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('mixUserId','mixUserName')" title="清空人员" name="button">
+
+		</td>
+	</tr>
+	<tr id='tr_unarea_person' style="display:none;">
+		<td>
+外部地址：</td>
+		<td  nowrap align="left" style="width:170px;" >
+          <select   id="unAreaUserId" MULTIPLE style="width:180px;height:80px" ondblclick="delEmail('unAreaUserId')">{optionAreaStr}</select>
+		</td>
+		<td valign="middle" align="left">
+			&nbsp;<input  id="unAreaPersonid" />
+            &nbsp;<input type="button" value="< - 添 加" class="SmallButton" onClick="addEmaillist('unAreaPersonid','unAreaUserId')">
+		</td>
+	</tr>
+	<tr id='tr_undept_person' style="display:none;">
+		<td>
+外部地址：</td>
+		<td  nowrap align="left" style="width:170px;" >
+          <select  id="unDeptUserId" MULTIPLE style="width:180px;height:80px" ondblclick="delEmail('unDeptUserId')">{optionDeptStr}</select>
+		</td>
+		<td valign="middle" align="left">
+			&nbsp;<input  id="unDeptPersonid" />
+            &nbsp;<input type="button" value="< - 添 加" class="SmallButton" onClick="addEmaillist('unDeptPersonid','unDeptUserId')">
+		</td>
+	</tr>
+	<tr id='tr_unperson' style="display:none;">
+		<td>
+外部地址：</td>
+		<td  nowrap align="left" style="width:170px;" >
+          <select   id="unUserId" MULTIPLE style="width:180px;height:80px" ondblclick="delEmail('unUserId')">{optionUserIdStr}</select>
+		</td>
+		<td valign="middle" align="left">
+			&nbsp;<input  id="unPersonid" />
+            &nbsp;<input type="button" value="< - 添 加" class="SmallButton" onClick="addEmaillist('unPersonid','unUserId')">
+		</td>
+	</tr>
+	<tr id='tr_unmix_person' style="display:none;">
+		<td>
+外部地址：</td>
+		<td  nowrap align="left" style="width:170px;" >
+          <select   id="unMixUserId" MULTIPLE style="width:180px;height:80px" ondblclick="delEmail('unMixUserId')">{optionMixStr}</select>
+		</td>
+		<td valign="middle" align="left" >
+			&nbsp;<input   id="unMixPersonid" />
+            &nbsp;<input type="button" value="< - 添 加" class="SmallButton" onClick="addEmaillist('unMixPersonid','unMixUserId')" >
+		</td>
+	</tr>
+    
+ 	
+    
+    
+	<tr>
+		<td  style="border-top:#F00 1px solid;"><span class="style1">*</span>
+发信类型：</td>
+		<td align="left" colspan="2" >
+			<input name="send_type" type="radio" value="1" {checked4} />&nbsp;所有&nbsp;&nbsp;<input name="send_type" type="radio" value="2" {checked5} />&nbsp;指定人员
+		</td>
+	</tr>
+	
+	<tr id='tr_sender' style="display:none;">
+		<td><span class="style1">*</span>
+发 信 人：</td>
+		<td  colspan="2"  align="left">
+			  <input type="hidden" name="SendId" id="SendId" value="{SendId}">
+			<textarea name="SendName" id="SendName"  rows="4" cols="50" wrap="yes" readonly>{SendName}</textarea>
+			&nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('SendId','SendName')" title="选择人员" name="button">
+            &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('SendId','SendName')" title="清空人员" name="button">
+		</td>
+	</tr>
+	
+<tr id='tr_unsender' style="display:none;">
+		<td>
+外部地址：</td>
+		<td  nowrap align="left" style="width:170px;" >
+          <select  id="unSendName" MULTIPLE style="width:180px;height:80px" ondblclick="delEmail('unSendName')">{optionSendUserStr}</select>
+		</td>
+		<td valign="middle" align="left">
+			&nbsp;<input   id="unSendNameid" />
+            &nbsp;<input type="button" value="< - 添 加" class="SmallButton" onClick="addEmaillist('unSendNameid','unSendName')" >
+		</td>
+	</tr>
+   <tr id='tr_no_person' >
+		<td>不能收发人员：</td>
+		<td nowrap align="left" colspan="2" >
+			<input type="hidden" name="noUserId" id="noUserId" value="{noUserId}">
+            <textarea name="noUserName" id="noUserName" rows=4 cols="50" wrap="yes" readonly>{noUserName}</textarea>
+           &nbsp;<input type="button" value="选 择" class="SmallButton" onClick="setUser('noUserId','noUserName')" title="选择人员" name="button">
+           &nbsp;<input type="button" value="清 空" class="SmallButton" onClick="clearUsers('noUserId','noUserName')" title="清空人员" name="button">
+
+		</td>
+	</tr>    
+	<tr>
+		<td>组 描 述：</td>
+		<td colspan="2" align="left">
+			<textarea name="description" id="description" rows="5" cols="50">{description}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" style="height:50px;"><input type="submit" value=" 确定提交 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	var area_str;
+	var temp_user='';
+	 var AttType=$('input:radio[name="type"]:checked').val(); 
+	 att_type(AttType)
+	 $('input:radio[name="type"]').bind("click", function()
+	 {
+	 	 att_type($('input:radio[name="type"]:checked').val())
+     }); 
+	 
+	 var SendType=$('input:radio[name="send_type"]:checked').val(); 
+	  send_type(SendType)
+	 $('input:radio[name="send_type"]').bind("click", function()
+	 {
+	 	 send_type($('input:radio[name="send_type"]:checked').val())
+     }); 
+	function check()
+	{
+		
+		var atype=$('input:radio[name="type"]:checked').val();
+		var stype=$('input:radio[name="send_type"]:checked').val();
+		if ($('#groupname').val() == '') 
+		{
+			alert('组名称不能为空！');
+			return false;
+		}
+		if(atype==1)
+		{
+		  if(!$('#UserId').val())
+			{
+				alert('请选组员');
+				return false;
+			}		
+			getOutEmail('unUserId','unUserIds');
+		}else if(atype==2)
+		{
+			if($('#dept_id').val()=='D')
+			{
+				
+				alert('请选归属部门');
+				return false;
+			}
+			getOutEmail('unDeptUserId','unDeptUserIds');
+		}else if(atype==3)
+		{
+			if($('#area_id').val()=='A')
+			{
+				alert('请选归属区域');
+				return false;
+			}
+			getOutEmail('unAreaUserId','unAreaUserIds');
+		}else if (atype == 4) 
+		{
+			if ($('#mix_area_id').val() == 'A') 
+			{
+				alert('请选归属区域');
+				return false;
+			}
+			if ($('#mix_dept_id').val() =='D') 
+			{
+				alert('请选归属部门');
+				return false;
+			}
+				getOutEmail('unMixUserId','unMixUserIds');
+		}else
+		{
+			alert('请选归属类型');
+			return false;
+		}
+		if(stype==1)
+		{
+			
+		}else if(stype==2)
+		{
+			if (!$('#SendId').val()) 
+			{
+				  alert('请选择发信人！');
+					return false;
+			}
+		}else
+		{
+			 alert('请选发信类型');
+			 return false;
+		}	
+		getOutEmail('unSendName','unSendNames');
+		return true;
+	}
+	
+function getOutEmail(objid,objname)
+{
+	var str='';
+	$("#"+objid+" option").each(function(){
+		if($(this).val())
+		{
+	    	str+=$(this).val()+',';
+		} 
+	});
+	$("#"+objname).val(str);
+}				
+	 function att_type(type)
+	 {
+	 	if(type==1)
+		 {
+		 	$('#tr_person').css('display','');
+			$('#tr_unperson').css('display','');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_undept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_unarea_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+			$('#tr_unmix_person').css('display','none');
+		 }else if(type==2)
+		 {
+		    $('#tr_person').css('display','none');
+			$('#tr_unperson').css('display','none');
+			$('#tr_dept').css('display','');
+			$('#tr_dept_person').css('display','');
+			$('#tr_undept_person').css('display','');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_unarea_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+			$('#tr_unmix_person').css('display','none');
+		 }else if(type==3)
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_unperson').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_undept_person').css('display','none');
+			$('#tr_area').css('display','');
+			$('#tr_area_person').css('display','');
+			$('#tr_unarea_person').css('display','');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+			$('#tr_unmix_person').css('display','none');
+		 }else if(type==4)
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_unperson').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_undept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_unarea_person').css('display','none');
+			$('#tr_mix_area').css('display','');
+			$('#tr_mix_dept').css('display','');
+			$('#tr_mix_person').css('display','');
+			$('#tr_unmix_person').css('display','');
+		 }else
+		 {
+		 	$('#tr_person').css('display','none');
+			$('#tr_unperson').css('display','none');
+			$('#tr_dept').css('display','none');
+			$('#tr_dept_person').css('display','none');
+			$('#tr_undept_person').css('display','none');
+			$('#tr_area').css('display','none');
+			$('#tr_area_person').css('display','none');
+			$('#tr_unarea_person').css('display','none');
+			$('#tr_mix_area').css('display','none');
+			$('#tr_mix_dept').css('display','none');
+			$('#tr_mix_person').css('display','none');
+			$('#tr_unmix_person').css('display','none');
+		 }
+	 }
+	 function send_type(type)
+	 {
+	 	if(type==1)
+		 {
+		 	$('#tr_sender').css('display','none');
+			$('#tr_unsender').css('display','');
+		 }else if(type==2)
+		 {
+		     $('#tr_sender').css('display','');
+			 $('#tr_unsender').css('display','');
+		 }else
+		 {
+		 	 $('#tr_sender').css('display','');
+		 }
+	 }
+	
+function LoadWindows(objid,objname)
+{
+	URL="module/user_select?toid="+objid+"&toname="+objname;
+      loc_x=document.body.scrollLeft+event.clientX-event.offsetX-100;
+      loc_y=document.body.scrollTop+event.clientY-event.offsetY+170;
+      //window.open(URL,"read_notify","height=400,width=550,status=1,toolbar=no,menubar=no,location=no,scrollbars=yes,top=150,left=150,resizable=yes");
+      window.showModalDialog(URL,self,"edge:raised;scroll:0;status:0;help:0;resizable:1;dialogWidth:450px;dialogHeight:450px;dialogTop:"+loc_y+"px;dialogLeft:"+loc_x+"px");
+  
+}
+function clearUsers(objid,objname)
+{
+	$('#'+objid).val('');
+    $('#'+objname).val('');
+}
+
+
+function addEmaillist(objeid,objlist)
+{
+	var emmailid=$('#'+objeid).val();
+	if(emmailid&&emmailid.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1)
+	{
+		$('#'+objlist).append('<option value="'+emmailid+'">'+emmailid+'</option>');
+		$('#'+objeid).val('');
+	}else
+	{
+		alert('请输入正确的邮件地址！');
+	}
+	
+}
+function delEmail(objid)
+{
+  $('#'+objid+' option[value='+$('#'+objid).val()+']').remove();
+}
+
+function setUser(userId,userNameId)
+{
+	userIdStr=$('#'+userId).val();
+	url="?model=deptuser_user_user&action=selectuser&mode=check&showDialog=1&isOnlyCurDept=false&deptIds=&formCode=stampConfig&userVal="+userIdStr;
+	revalue=showModalDialog(url,'','dialogWidth:670px;dialogHeight:500px;');
+	if(revalue){
+		$('#'+userId).val(revalue.val);
+        $('#'+userNameId).val(revalue.text)
+	}
+  
+}
+
+</script>
+</body>
+</html>

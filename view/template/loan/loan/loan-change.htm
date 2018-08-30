@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>借款单变更</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/common/dateUtil.js"></script>
+    <!--<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>-->
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+
+    <script type="text/javascript" src="view/template/loan/loan/js/loan-change.js"></script>
+
+    <!-- 附件上传开始 -->
+    <script type="text/javascript" src="swfupload/swfupload.js"></script>
+    <script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+    <script type="text/javascript" src="swfupload/fileprogress.js"></script>
+    <script type="text/javascript" src="swfupload/handlers.js"></script>
+    <link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+    <script>
+//        var uploadfile, uploadfile2;
+//        $(function () {
+//            uploadfile = createSWFUpload({
+//                "serviceType": "Loan_list"//业务模块编码，一般取表名
+//            });
+//            $('#fileType').change(function(){
+//                if($('#fileType').val() != ''){
+//                    typeName=$('#fileType').find('option:selected').text();
+//                    typeId=$('#fileType').val();
+//                    uploadfile2.addPostParam('typeName', typeName);
+//                    uploadfile2.addPostParam('typeId', typeId);
+//                }
+//            });
+//        });
+    </script>
+    <!-- 附件上传结束 -->
+
+    <!-- 附件上传开始 -->
+    <link rel="stylesheet" type="text/css" href="js/jquery/Huploadify/Huploadify.css"/>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.js"></script>
+    <script type="text/javascript" src="js/jquery/Huploadify/Huploadify.handlers.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            createUpload($('#upload2'), {
+                'serviceType' : 'Loan_list',//业务模块编码，一般取表名
+            }, {
+                'fileListId' : 'uploadFileList2'
+            });
+        });
+    </script>
+    <!-- 附件上传结束 -->
+</head>
+
+<body  onselectstart="return false">
+<style>
+    /* 防止页面双击后全选文本 */
+    body{-moz-user-select:none;}
+    .form_text_left{width: 14% !important;}
+    .form_text_rightm,.form_text_right_con{width: 35% !important;}
+</style>
+
+<form action="?model=loan_loan_loan&action=change" id="form1" method="post" >
+
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left_three">借款类型 : </span></td>
+            <td class="form_text_right">
+                {XmFlagName}
+            </td>
+            <td class="form_text_left">借款性质 : </span></td>
+            <td class="form_text_right">
+                {loanNatureName}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_three">借款单号 : </span></td>
+            <td class="form_text_right">
+                {ID}
+            </td>
+            <td class="form_text_left">借款人 : </span></td>
+            <td class="form_text_right">
+                {debtorName}
+            </td>
+        </tr>
+        <tr>
+            <td  class="form_text_left">预计还款 : </span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="loan[PrepaymentDate]" id="PrepaymentDate" onfocus="WdatePicker()" value="{PrepaymentDate}"/>
+                <font color="red">&nbsp;&nbsp;*</font>
+            </td>
+            <td  class="form_text_left">借款金额 : </td>
+            <td class="form_view_right">
+                {Amount}
+            </td>
+        </tr>
+        <tr class="rendDepositInfo">
+            <td class="form_text_left">租房开始 : </span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt rendDepositInfo" changeTimes="0" name="loan[rendHouseStartDate]" id="rendHouseStartDate" onfocus="WdatePicker({onpicked:function(){if($('#rendHouseEndDate').val() == ''){rendHouseEndDate.focus();}},maxDate:'#F{$dp.$D(\'rendHouseEndDate\')}'})" value="{rendHouseStartDate}"/>
+                <font color="red">&nbsp;&nbsp;*</font>
+            </td>
+            <td  class="form_text_left">租房结束 : </td>
+            <td class="form_view_right">
+                <input type="text" class="txt rendDepositInfo" changeTimes="0" name="loan[rendHouseEndDate]" id="rendHouseEndDate" onfocus="WdatePicker({onpicked:function(){if($('#rendHouseStartDate').val() == ''){rendHouseStartDate.focus();}},minDate:'#F{$dp.$D(\'rendHouseStartDate\')}'})" value="{rendHouseEndDate}"/>
+                <font color="red">&nbsp;&nbsp;*</font>
+            </td>
+        </tr>
+        <tr class="proView">
+            <td class="form_text_left">项目编号 : </span></td>
+            <td class="form_text_right">
+                <input type="text" class="txt" name="loan[ProjectNo]" id="ProjectNo" value="{ProjectNo}" readonly />
+                <font color="red">&nbsp;&nbsp;*</font>
+                <input type="hidden" class="txt" name="loan[projectId]" id="ProjectId" value="{projectId}"  />
+                <input type="hidden" class="readOnlyTxtNormal" id="XmSid" value=""/>
+            </td>
+            <td class="form_text_left" id="isBeyondBudgetLabel">是否超预算 : </span></td>
+            <td class="form_text_right">
+                <span id="isBeyondBudgetView">{isBeyondBudget}</span>
+                <input type="hidden" class="txt" name="loan[isBeyondBudget]" id="isBeyondBudget" value="{isBeyondBudget}" />
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">变更理由 : </td>
+            <td class="form_text_right" colspan="3">
+                <textarea name="loan[changeReason]" id="changeReason" class="txt_txtarea_800" ></textarea>
+                <font color="red">&nbsp;&nbsp;*</font>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left_con">附件上传 : </td>
+            <td class="form_text_right_con" colspan="4">
+                <div class="upload">
+                    <!--<div class="upload" id="fsUploadProgress"></div>-->
+                    <!--<div class="upload"><span id="swfupload"></span> <input-->
+                            <!--id="btnCancel" type="button" value="中止上传"-->
+                            <!--onclick="cancelQueue(uploadfile);" disabled="disabled"/> <br/>-->
+                    <!--</div>-->
+                    <!--<div id="uploadfileList" class="upload">{file}</div>-->
+                    <div id="upload2"></div>
+                    <div id="uploadFileList2" class="upload">{file}</div>
+                    <font color="red" style="display:block;margin-top:5px;">（提示：请上传详细的租赁合同/协议跟押金条。）</font>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table class="main_table">
+                    <tr>
+                        <td class="txt_btn" colspan="4">
+                            <input type="hidden" value="{Status}"/>
+                            <input type="hidden" id="hasChangeRclId" name="loan[id]" value="{hasChangeRclId}"/>
+                            <input type="hidden" id="Amount" value="{Amount}"/>
+                            <input type="hidden" name="loan[oldId]" value="{ID}"/>
+                            <input type="hidden" id="hasFilesNum" name="loan[hasFilesNum]" value="{hasFilesNum}"/>
+                            <input type="hidden" id="xmflag"  name="loan[XmFlag]" value="{XmFlag}" />
+                            <input type="hidden" id="xmflagTag" value="{XmFlag}" />
+                            <input type="hidden" id="loanNatureCode" value="{loanNature}"/>
+                            <input type="button" class="txt_btn_a" value=" 提交 " onclick="toChange();" />
+                            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+</div>
+</body>

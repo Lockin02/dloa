@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>研发人员档案管理</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+		<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+		<style type="text/css">
+		.c-label{
+			display:inline-block;
+			width:100px;
+			font-weight:bold;
+		}
+		.action {
+			line-height:160px;
+			text-align:center;
+			
+		}
+		</style>
+
+		<script type="text/javascript">
+			var dept_select;
+			var jobs_select;
+			var field_select;
+			var dept_id;
+			var cardview = $.extend({}, $.fn.datagrid.defaults.view, {
+			renderRow: function(target, fields, frozen, rowIndex, rowData){
+				var data = $('#tt').datagrid('getData');
+				var cc = [];
+				var j=0;
+				cc.push('<td colspan=' + fields.length + ' style="padding:10px 5px;border:0;">');
+				if (!frozen){
+					cc.push('<img src="images/' + (rowData.PHOTO ? rowData.PHOTO : 'no_pic') + '.gif" style="height:185px;float:left">');
+					cc.push('<div style="float:left;margin-left:20px;width:230px;">');
+					for(var i=0; i<fields.length; i++){
+						if(j%7==0)
+						{
+							cc.push('</div><div style="float:left;margin-left:20px;width:230px;">');
+						}
+						var copts = $(target).datagrid('getColumnOption', fields[i]);
+						cc.push('<p><span class="c-label">' + copts.title + ':</span><span> ' + rowData[fields[i]] + '</span></p>');
+						j++;
+					}
+					for(var key in rowData)
+					{
+						if (!isNaN(key)) {
+							if (j % 7 == 0) {
+								cc.push('</div><div style="float:left;margin-left:20px;width:230px;">');
+							}
+							cc.push('<p><span class="c-label">' + data.field_arr[key] + ':</span><span> ' + rowData[key] + '</span></p>');
+							j++;
+						}
+					}
+					cc.push('</div><div class="action" style="float:right;margin-left:20px;width:100px;">');
+					cc.push('<input type="button" onclick="edit('+rowIndex+');" value=" 编辑 " />');
+					cc.push('</div>');
+				}
+				cc.push('</td>');
+				return cc.join('');
+			}
+		});
+			$(function(){
+				$('#tt').datagrid({
+					view: cardview
+				});
+				/*$('#tt').datagrid('getPager').pagination({
+					buttons:[{
+						iconCls:'icon-add',
+						text:'添加人员',
+						handler:function(){
+							$('#add').window('open');
+							data = $('#tt').datagrid('getData');
+							for(var a in data.field_arr)
+							{
+								alert(a);
+							}
+						}
+					}],
+					onBeforeRefresh:function(ageNumber,pageSize)
+					{
+						return true;
+					}
+				});*/
+				dept_select = $('#dept_select').combobox({
+					url:"?model=rd_hrms_files&action=dept_data",
+					valueField:'dept_id',
+					textField:'dept_name',
+					onSelect:function(data){
+						var keyword = $('#keyword').val();
+						$('#tt').datagrid({url:'?model=rd_hrms_files&action=list&dept_id='+data.dept_id+'&keyword='+keyword});
+						$('#tt').datagrid('reload');
+						dept_id = data.dept_id;
+						/*$('#jobs_select').combobox({
+							url:"?model=rd_hrms_field&action=get_jobs&dept_id="+dept_id,
+							valueField:'jobs_id',
+							textField:'jobs_name'
+							});*/
+							/*$.get("?model=rd_hrms_field&action=get_jobs&dept_id="+dept_id,{},function(data){
+								$('#jobs_select').combobox('loadData',eval('('+data+')'));
+							});*/
+							
+							jobs_select.combobox({url:"?model=rd_hrms_field&action=get_jobs&type=list&dept_id="+dept_id});
+							field_select.combobox({url:"?model=rd_hrms_field&action=get_field&dept_id="+dept_id});
+					}
+				});
+				
+				jobs_select = $('#jobs_select').combobox({
+							url:"?model=rd_hrms_field&action=get_jobs&type=list",
+							valueField:'jobs_id',
+							textField:'jobs_name',
+							editable:false,
+							onSelect: function(data){
+								$('#tt').datagrid({url:'?model=rd_hrms_files&action=list&jobs_id='+data.jobs_id+'&dept_id='+dept_id+'&keyword='+keyword});
+								$('#tt').datagrid('reload');
+								field_select.combobox({url:"?model=rd_hrms_field&action=get_field&dept_id="+dept_id+'&jobs_id='+data.jobs_id});
+							}
+							});
+				field_select = $('#field_select').combobox({
+							url:"?model=rd_hrms_field&action=get_field",
+							valueField:'field_id',
+							textField:'field_name',
+							editable:false
+							});
+			});
+			
+			function edit(index)
+			{
+				var data = $('#tt').datagrid('getData');
+				var options = $('#tt').datagrid('options');
+				var i = 0;
+				var listhtml='<input type="hidden" id="user_id" name="user_id" value="'+data.rows[index]['USER_ID']+'"><div style="float:left;margin-left:20px;">';
+				for(var e in options.columns[0])
+				{
+					if (options.columns[0][e].title) {
+					
+						field_content = data.rows[index][options.columns[0][e].field];
+						if (i % 11 == 0) {
+							listhtml += '</div><div style="float:left;margin-left:20px;">';
+						}
+						if ( options.columns[0][e].field== 'skill' || options.columns[0][e].field== 'interest')
+						{
+							listhtml += '<p><span class="c-label">' + options.columns[0][e].title + '：</span><input name="' + options.columns[0][e].field + '" value="' + field_content + '"/></p>';
+						}else{
+							listhtml += '<p><span class="c-label">' + options.columns[0][e].title + '：</span><span id="' + options.columns[0][e].field + '">' + field_content + '</span></p>';
+						}
+						
+						i++;
+					}
+				}
+				for(var key in data.rows[index])
+				{
+					if (!isNaN(key))
+					{
+						if (i % 11 == 0) {
+							listhtml += '</div><div style="float:left;margin-left:20px;">';
+						}
+						listhtml += '<p><span class="c-label">' + data.field_arr[key] + '：</span><input id="field_' + key + '" name="field['+key+']" value="' + data.rows[index][key] + '" /></p>';
+						i++;
+					}
+				}
+				listhtml +='</div>';
+				$('#edit_content').html(listhtml);
+				$('#w').window({
+					title: '编辑 '+data.rows[index].user_name+' 员工档案',
+					width: 700,
+					modal: true,
+					shadow: false,
+					closed: false,
+					height: 420
+
+				});
+				
+
+			}
+			/**
+			 * 获取表头
+			 * @param {Object} field
+			 * @param {Object} options
+			 */
+			function GetFieldTitle(field,options)
+			{
+				for(var e in options.columns[0])
+				{
+					if (options.columns[0][e].field == field)
+					{
+						return options.columns[0][e].title;
+					}
+				}
+				return false;
+			}
+			/**
+			 * 提交编辑
+			 */
+			function post(){
+				var user_id = $('#user_id').val();
+				if (user_id) {
+					
+					var tmp = '{';
+					var inputs = $('#edit_content input[type=text]').get();
+					for (var i = 0; i < inputs.length; i++) {
+						tmp+= '"'+inputs[i].name+'":"'+inputs[i].value+'",';
+					}
+					tmp = tmp.replace(/(,$)/g,'');
+					tmp +='}';
+					$.post('?model=rd_hrms_files&action=edit&user_id=' + user_id, eval('('+tmp+')'), function(data){
+						if (data == 1) {
+							$('#w').window('close');
+							$('#tt').datagrid('reload');
+								$.messager.show({
+									title: '提示',
+									msg: '操作成功！',
+									timeout: 3000,
+									showType: 'show'
+								});
+						}
+						else {
+							$.messager.alert('提示','操作失败，请于OA管理员联系！');
+						}
+					});
+				}
+			}
+			
+			function Fsearch()
+			{
+				var dept_id = dept_select.combobox('getValue');
+				var jobs_id = jobs_select.combobox('getValue');
+				var field_id = field_select.combobox('getValue');
+				var keyword = $('#keyword').val();
+				$('#tt').datagrid({url:'?model=rd_hrms_files&action=list&dept_id='+dept_id+'&jobs_id='+jobs_id+'&field_id='+field_id+'&keyword='+keyword+'&rand='+Math.random(0,999)});
+				$('#tt').datagrid('reload');
+			}
+		</script>
+	</head>
+	<body>
+		<table id="tt"
+			title="部门员工档案管理" singleSelect="true" fitColumns="true" remoteSort="false"
+			url="?model=rd_hrms_files&action=list" pagination="true" toolbar="#tb">
+		<thead>
+			<tr>
+				<th field="user_name" width="60" sortable="true">真实姓名</th>
+				<th field="sex" width="60" sortable="true">性别</th>
+				<th field="BIRTHDAY" width="60" sortable="true">出生日期</th>
+				<th field="honor" width="60" sortable="true">所获证书</th>
+				<th field="skill" width="60" sortable="true">技能描述</th>
+				<th field="interest" width="60" sortable="true">个人兴趣</th>
+				<th field="UserCard" width="60" sortable="true">员工编号</th>
+				<th field="dept_name" width="60" sortable="true">所在部门</th>
+				<th field="jobs_name" width="60" sortable="true">现任职位</th>
+				<th field="COME_DATE" width="60" sortable="true">入职时间</th>
+				<th field="JOIN_DATE" width="60" sortable="true">转正时间</th>
+				<th field="notes" width="60" sortable="true">备注说明</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="tb" style="padding:5px;height:auto">
+		<div>
+			部门: 
+			<input id="dept_select"/>
+			职位：
+			<select id="jobs_select" style="width:200px;"  name="jobs_id">
+				<option selected="selected" value="">所有职位</option>
+			</select>
+			属性：
+			<select id="field_select" style="width:200px;"  name="jobs_id">
+				<option selected="selected" value="user_name">姓名</option>
+				<option value="skill">个人技能</option>
+				<option value="honor">所获证书</option>
+				<option value="interest">个人兴趣</option>
+			</select>
+			关键字: <input class="easyui-validatebox" id="keyword" style="width:120px">
+			<a href="#" class="easyui-linkbutton" onclick="Fsearch();" iconCls="icon-search">Search</a>
+		</div>
+	</div>
+	<div id="w" class="easyui-window" title="My Window" iconCls="icon-edit" closed="true" style="width:700px;height:300px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div id="edit_content" region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" onclick="post();"  value="提交编辑" />
+				<input type="button" onclick="$('#w').window('close');" value="取消关闭" />
+				</form>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>

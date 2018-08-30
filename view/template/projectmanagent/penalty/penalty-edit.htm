@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+    <head>
+        <title>新增罚款规则</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        {#commonInclude#}
+    	<script type="text/javascript" src="{#jsPath#}/penality-common.js" ></script>
+        <script type="text/javascript" src="{#jsPath#}/penality-edit.js" ></script>
+    </head>
+    <body>
+        <div class="main_head">
+            <span class="main_head_title">
+                编辑罚款规则
+            </span>
+        </div>
+        <form id="form1" method="post" action="?model=projectmanagent_penalty_penalty&action=edit" name="form1" >
+
+            <table class="form_main_table">
+                <tr>
+                    <td class="form_text_left"><span style="color:blue">类型 :</span></td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="penalty[name]"  value="{name}"  id="name"/>
+                    </td>
+                  	<td class="form_text_left">编码 :</td>
+                    <td class="form_text_right" >
+                       {code}
+                    </td>
+                </tr>
+
+                 <tr>
+                    <td class="form_text_left"><span style="color:blue">缓冲时间 :</span></td>
+                    <td class="form_text_right" colspan="1">
+                        <input type="text" class="txt" name="penalty[cacheDate]" value="{cacheDate}"   id="cacheDate"/>
+                    </td>
+                    <td class="form_text_left"><span style="color:blue">罚款间隔时间 :</span></td>
+                    <td class="form_text_right" >
+                        <input type="text" class="txt" name="penalty[intervalDate]" value="{intervalDate}"   id="intervalDate"/>
+                    </td>
+                </tr>
+                 <tr>
+             		<td class="form_text_left"><span style="color:blue">罚款倍数 :</span></td>
+                    <td class="form_text_right" colspan="3">
+						<input type="text" class="txt" name="penalty[multiple]"   id="intervalDate" value="{multiple}"/>
+					 </td>
+             	</tr>
+                <tr>
+                    <td class="form_text_left"><span style="color:blue">罚款方式:</span></td>
+                    <td class="form_text_right" colspan="3" >
+                   	 	<select name="penalty[costType]" id="costType">
+                    		<option value="">----------请选择----------</option>
+                    		<option value="COSTTYPE-CUSTOM">自定义金额（元）</option>
+                    		<option value="COSTTYPE-COST">成本价格（倍）</option>
+                    	</select>     &nbsp;&nbsp;&nbsp;
+							<input type="text" class="txt formatMoney" name="penalty[money]" value="{money}" class='txt'  id="money"/>
+							<input type="hidden" class="txt"  value="{costType}" class='txt'  id="costTypeHidden"/>
+					</td>
+                </tr>
+
+             	<tr>
+
+             		<td class="form_text_left"><span style="color:blue">罚款上限 :</span></td>
+                    <td class="form_text_right" colspan="3" id="test">
+                    	<select name="penalty[limitType]" id="limitType">
+                    		<option value="">----------请选择----------</option>
+                    		<option value="LIMIT-CUSTOM">自定义上限（元）</option>
+                    		<option value="LIMIT-COST">成本价格（倍）</option>
+                    		<option value="LIMIT-SALE">平均销售价格（倍）</option>
+                    	</select>            &nbsp;&nbsp;&nbsp;
+						<input type="text" id="limitMoney" name="penalty[limitMoney]" value="{limitMoney}" class='txt formatMoney'/>
+						<input type="hidden" id="limitTypeHidden" value="{limitType}" />
+					</td>
+             	</tr>
+
+                <tr>
+                    <td class="txt_btn" colspan="4">
+                    	<input type="hidden" name="penalty[id]" id="id" value="{id}"/>
+                    	<input type="hidden" name="penalty[parentId]" id="parentId" value="{parentId}"/>
+                        <input  type="submit" class="txt_btn_a" value=" 保  存 "/ style="margin-right:100px;">
+                        <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+                    </td>
+                </tr>
+            </table>
+            <div style="padding:20px;">
+            	<font color="red">注：<br>
+            		<p> 缓冲时间：归还的缓冲期，借用时间+缓冲时间 为实际借用时间，不收取费用</p>
+            		<p> 罚款间隔时间：逾期罚款的时间段，如有多个间隔时间，可空格间隔</p>
+            		<p> 金额：罚款金额公式，如 成本*2，罚款为成本的两倍</p>
+            	</font>
+            </div>
+        </form>
+    </body>
+</html>

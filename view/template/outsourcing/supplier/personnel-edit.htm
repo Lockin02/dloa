@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>供应商人员信息</title>
+   {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/personnel-common.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/personnel-edit.js" ></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=outsourcing_supplier_personnel&action=edit" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	外包供应商人员信息
+             </span>
+            </div>
+            </td>
+         </tr>
+       <!--
+       <tr>
+      		<td class="form_text_left">员工编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="userNo" name="personnel[userNo]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">员工账号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="userAccount" name="personnel[userAccount]" />
+      		</td>
+       </tr>
+        -->
+       <tr>
+      		<td class="form_text_left">外包供应商</td>
+      		<td class="form_text_right" >
+      			 <input type="hidden" class="txt" id="suppId" name="personnel[suppId]" value="{suppId}"/>
+      			 <input type="text" class="readOnlyText" id="suppName" name="personnel[suppName]" value="{suppName}" readonly/>
+      			 <input type="hidden" class="txt" id="suppCode" name="personnel[suppCode]" value="{suppCode}"/>
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">姓名</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="userName" name="personnel[userName]"  value="{userName}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">年龄</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="age" name="personnel[age]" value="{age}"/>
+      		</td>
+      		<td class="form_text_left">联系电话</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="mobile" name="personnel[mobile]" value="{mobile}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">邮箱</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="email" name="personnel[email]" value="{email}"/>
+      		</td>
+      		<td class="form_text_left">学历</td>
+      		<td class="form_text_right" >
+      			 <select  class="select" id="highEducation" name="personnel[highEducation]">
+      			 {highEducation}
+      			 </select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">毕业学校</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="highSchool" name="personnel[highSchool]" value="{highSchool}"/>
+      		</td>
+      		<td class="form_text_left">专业</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="professionalName" name="personnel[professionalName]" value="{professionalName}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">身份证号</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="identityCard" name="personnel[identityCard]" onchange="checkIDCard(this);" value="{identityCard}"/>
+      		</td>
+      		<td class="form_text_left">开始工作时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="workBeginDate" name="personnel[workBeginDate]"value="{workBeginDate}" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">从事网优工作年限</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="workYears" name="personnel[workYears]" value="{workYears}"/>
+      		</td>
+      		<td class="form_text_left">厂商经验列举</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" style="width:202px;" id="tradeList" value="{tradeList}"  onclick="initTradeList()" readonly/>
+      			 <input type="hidden" name="personnel[tradeList]" id="tradeListHidden" value="{tradeList}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">所获资质</td>
+      		<td class="form_text_right"colspan="3" >
+      			 <input type="text" class="txt" style="width:402px;" id="certifyList" value="{certifyList}"  onclick="initCertifyList()" readonly/>
+      			 <input type="hidden" name="personnel[certifyList]" id="certifyListHidden" value="{certifyList}"/>
+      		</td>
+       </tr>
+      <tr>
+      		<td class="form_text_left" >工作经验介绍</td>
+      		<td class="form_text_right" colspan="3">
+                  <textarea class="txt_txtarea_font" id="remark" name="personnel[remark]">{remark}</textarea>
+      		</td>
+      </tr>
+		<tr id="bankList">
+			<td colspan="4" >
+				    <div id="bankListInfo"></div>
+			</td>
+		</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      			 <input type="hidden" class="txt" id="id" name="personnel[id]" value="{id}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

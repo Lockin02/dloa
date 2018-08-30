@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    {#commonInclude#}
+    <script type="text/javascript"
+            src="{#jsPath#}/contract-contractexelist.js"></script>
+</head>
+<body>
+<input type="hidden" id="contractId" value="{contractId}"/>
+<input type="hidden" id="cRateNum" value="{cRateNum}"/>
+<input type="hidden" id="incomeMoney" value="{incomeMoney}"/>
+<input type="hidden" id="invoiceMoney" value="{invoiceMoney}"/>
+<input type="hidden" id="deductMoney" value="{deductMoney}"/>
+<input type="hidden" id="badMoney" value="{badMoney}"/>
+<input type="hidden" id="uninvoiceMoney" value="{uninvoiceMoney}"/>
+<input type="hidden" id="contractMoneyRate" value="{contractMoneyRate}"/>
+<input type="hidden" id="contractMoney" value="{contractMoney}"/>
+<input type="hidden" id="isNoInvoiceCont" value="{isNoInvoiceCont}"/>
+<table class="form_in_table">
+    <tr class="main_head">
+        <td colspan="6">合同执行状态表</td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>实时信息</b></legend>
+                </legend>
+                <table cellpadding="2" width="100%">
+                    <tr>
+                        <td class="form_text_left_con">签约日期:</td>
+                        <td class="form_text_right_con">{ExaDTOne}</td>
+                        <td class="form_text_left_con">税点:</td>
+                        <td class="form_text_right_con">{cRate}%</td>
+                        <td class="form_text_left_con">执行状态:</td>
+                        <td class="form_text_right_con" id="conState">{state}</td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">合同签约金额:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{contractMoney}</span></td>
+                        <td class="form_text_left_con">合同签约金额(税后):</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{contractMoneyRate}</span></td>
+                        <td class="form_text_left_con">扣款金额:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{deductMoney}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">合同执行进度:</td>
+                        <td class="form_text_right_con" id="exePortionView"></td>
+                        <td class="form_text_left_con">合同营收(税后):</td>
+                        <td class="form_text_right_con" id="conIncom"></td>
+                        <td class="form_text_left_con">坏账金额:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{badMoney}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">开票情况:</td>
+                        <td class="form_text_right_con" id="invoice"></td>
+                        <td class="form_text_left_con">合同成本:</td>
+                        <td class="form_text_right_con" id="conCost"></td>
+                        <td class="form_text_left_con">合同应收款:</td>
+                        <td class="form_text_right_con" id="htys"></td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">到款情况:</td>
+                        <td class="form_text_right_con" id="income"></td>
+                        <td class="form_text_left_con">合同毛利(税后):</td>
+                        <td class="form_text_right_con" id="conGross"></td>
+                        <td class="form_text_left_con">毛利率(税后)</td>
+                        <td class="form_text_right_con" id="mllsh"></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>财务确认信息</b></legend>
+                <table cellpadding="2" width="100%">
+                    <tr>
+                        <td class="form_text_left_con">财务确认进度:</td>
+                        <td class="form_text_right_con">{financeconfirmPlan}</td>
+                        <td class="form_text_left_con">财务确认总收入:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{serviceconfirmMoneyAll}</span></td>
+                        <td class="form_text_left_con">毛利:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{gross}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">财务应收款:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{surincomeMoney}</span></td>
+                        <td class="form_text_left_con">财务确认总成本:</td>
+                        <td class="form_text_right_con"><span class="formatMoney">{financeconfirmMoneyAll}</span></td>
+                        <td class="form_text_left_con">毛利率:</td>
+                        <td class="form_text_right_con">{rateOfGross}</td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>合同自检状况</b></legend>
+                <table cellpadding="2" width="100%">
+                    <tr>
+                        <td class="form_text_left_con">产品金额检查:</td>
+                        <td class="form_text_right_con">{pmoneyCheck}</td>
+                        <td class="form_text_left_con">项目金额检查:</td>
+                        <td class="form_text_right_con" id="proCheck"></td>
+                        <td class="form_text_left_con"></td>
+                        <td class="form_text_right_con"></td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left_con">预计开票检查:</td>
+                        <td class="form_text_right_con">{invoiceCheck}</td>
+                        <td class="form_text_left_con">实际开票检查:</td>
+                        <td class="form_text_right_con">{invoiceCheck_t}</td>
+                        <td class="form_text_left_con"></td>
+                        <td class="form_text_right_con"></td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td colspan="6">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>项目情况</b></legend>
+                <table cellpadding="2" width="100%" id="proList">
+                    <tr style="background:#D5EFFC">
+                        <td>项目编号</td>
+                        <td>产品线</td>
+                        <td style="text-align:right">项目合同额(税后)</td>
+                        <td style="text-align:right">项目占比</td>
+                        <td style="text-align:right">项目状态</td>
+                        <td style="text-align:right">项目进度</td>
+                        <td style="text-align:right">收入(税后)</td>
+                        <td style="text-align:right">决算</td>
+                        <td style="text-align:right">毛利(税后)</td>
+                        <td style="text-align:right">预计毛利率(税后)</td>
+                        <td style="text-align:right">毛利率(税后)</td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>产品执行状况</b></legend>
+                <table cellpadding="2" width="100%" id="">
+
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <fieldset>
+                <legend style="text-align:left"><b>合同处理轨迹</b></legend>
+                <table cellpadding="2" width="100%" id="trackTable">
+                    <tr style="background:#D5EFFC">
+                        <td>时间</td>
+                        <td>历史合同进度</td>
+                        <td>合同开始执行</td>
+                        <td>合同执行结束</td>
+                        <td>开票金额</td>
+                        <td>全部开票</td>
+                        <td>到款金额</td>
+                        <td>全部到款</td>
+                        <td>签收纸质合同</td>
+                        <td>合同关闭</td>
+                    </tr>
+
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+</table>
+<input type="hidden" id="iGross" value="{gross}"/>
+<input type="hidden" id="isNoSurincomeMoney" value="{isNoSurincomeMoney}"/>
+<input type="hidden" id="contractCode" value="{contractCode}"/>
+<input type="hidden" id="conFee" value="{conFee}"/>
+</body>
+</html>
+

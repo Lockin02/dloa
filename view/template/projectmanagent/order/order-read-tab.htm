@@ -1,0 +1,92 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var id = $("#id").val();
+		var originalId = $("#originalId").val();
+        var orderCode = $("#orderCode").val();
+        var originKey = $("#originKey").val();
+        var skeyStr= "&skey="+originKey;
+        var skey= "&skey={skey_}";
+ 	var tabArr = [
+                  "?model=projectmanagent_order_order&action=toViewForAudit&id="+id + skey,
+                  "?model=common_changeLog&action=toOrderList&logObj=order&originalId="+id+"&objId=" + originalId + "&orderCode="+ orderCode + skeyStr,
+                  "?model=projectmanagent_order_order&action=toInvoiceTab&obj[objType]=KPRK-01&obj[objCode]="+orderCode + "&obj[objId]=" + originalId + skeyStr,
+                  "?model=projectmanagent_order_order&action=toIncomeTab&obj[objType]=KPRK-01&obj[objCode]="+orderCode + "&obj[objId]=" + originalId + skeyStr,
+	              "?model=stock_outstock_stockout&action=relDocOutPage&docId="+ originalId + "&relDocType=XSCKFHJH" + "&docType=oa_sale_order" + skeyStr,
+	              "?model=mail_mailinfo&action=listByOrderId&id=" + originalId + "&type=oa_sale_order" + skeyStr,
+	              "?model=purchase_plan_basic&action=toListByContractId&contractId=" + originalId + "&purchType=oa_sale_order"  + skeyStr,
+                  "?model=stock_outplan_outplan&action=listByOrderId&id=" + originalId + "&objType=oa_sale_order" + skeyStr,
+                  "?model=common_changeLog&action=toOrderSignin&logObj=orderSignin&originalId="+ id+"&objId=" + originalId + "&orderCode="+ orderCode + skeyStr,
+                  "?model=projectmanagent_order_order&action=toCloseInfo&id="+originalId + skeyStr
+
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{originalId}" id="originalId" />
+<input type="hidden" value="{orderCode}" id="orderCode" />
+<input type="hidden" value="{originKey}" id="originKey" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">基本信息</a></li>
+	<li><a href="#tab2">变更历史</a></li>
+	<li><a href="#tab3">开票记录</a></li>
+	<li><a href="#tab4">到款记录</a></li>
+	<li><a href="#tab5">发货记录</a></li>
+	<li><a href="#tab6">邮寄信息</a></li>
+	<li><a href="#tab7">采购申请</a></li>
+	<li><a href="#tab8">发货计划</a></li>
+	<li><a href="#tab9">签收修改历史</a></li>
+    <li><a href="#tab10">关闭信息</a></li>
+
+
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe8" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe9" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe10" src="" height="96%" frameborder="0">
+</iframe>
+
+</div>
+</div>
+</body>
+</html>
+
+

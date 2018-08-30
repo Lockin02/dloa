@@ -1,0 +1,251 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>借用列表</title>
+<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.js"></script>
+
+</head>
+<body>
+<br />
+<input type="hidden" id="project_id" name="project_id" value="{project_id}" />
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>记录筛选：
+			<select id="status" onChange="go();">
+				<option value="">全部记录</option>
+				<option {selected_1} value="1">未全部归还</a>
+				<option {selected_2} value="2">已全部归还</a>
+				<option {selected_3} value="3">已归档</option>
+			</select>
+		</td>
+		<td>
+			项目名称：<input type="text" id="project_name" name="project_name" value="{project_name}">
+		</td>
+		<td>
+			领用人：<input type="text" size="10" id="username" name="username" value="{username}" />
+		</td>
+		<td>
+		日期范围：
+		<input type="text" id="start_date" readonly name="start_date" onClick="WdatePicker()" class="Wdate" value="{start_date}" /> 至 
+		<input type="text" id="end_date" readonly name="end_date" onClick="WdatePicker()" class="Wdate" value="{end_date}" /> 
+		<input type="button" onClick="go();" value=" 查看 " />
+		</td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td align="center" style="background:#D3E5FA" colspan="13">借用列表</td>
+	</tr>
+	<tr class="header">
+		<td>ID {id_sort_img}</td>
+		<td>项目名称 {projectname_sort_img}</td>
+		<td>项目编号 {projectno_sort_img}</td>
+		<td>项目经理 {b2.user_name_sort_img}</td>
+		<td>操作人{operatorname_sort_img}</td>
+		<td>领用人 {user_name_sort_img}</td>
+		<td>领用部门 {dept_name_sort_img}</td>
+		<td>领用数量 {amount_sort_img}</td>
+		<td>领用日期 {date_sort_img}</td>
+        <td>预计归还日期</td>
+		<td>确认状态 {confirm_sort_img}</td>
+		<td>全部归还{areturn_sort_img}</td>
+		<td style="width:100px; ">备注{notes_sort_img}</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<div id="sug"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+ /*设置隔行变色*/       
+  //$("tbody tr:odd").css("background-color","#ece9dc");
+ /*设置鼠标划过时变色*/
+  /*单行变色*/
+  var trodd = $("#mytable tbody tr:odd");
+  var treven = $("#mytable tbody tr:even"); 
+  var temp_odd='';
+  var temp_even='';
+  trodd.mouseover(function(){
+  	temp_odd=$(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  	
+  })
+  trodd.mouseout(function() {$(this).css("background",(temp_odd ? temp_odd : '#FFFFFF'));});
+   
+  treven.mouseover(function(){
+  	temp_even = $(this).css("background");
+  	$(this).css("background","#FFFFC8");
+  })
+  treven.mouseout(function() {$(this).css("background",(temp_even ? temp_even : '#FFFFFF'));});
+  
+  var options = {
+				multiple: false,
+				mustMatch:true,
+				width:"auto",
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+
+			};
+		function set_url(table,field,id)
+		{
+			return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+		}
+	 	$("#project_name").autocomplete(set_url('project_info','name','project_name'),options).result(function(evnet,data,formatted)
+		{
+			if (data)
+			{
+				rand = Math.random(0,99999);
+				$.post('ajax.php',{model:'xm',action:'get_project',field:'name',content:data},
+				function(data)
+				{
+					if (data)
+					{
+						data = unescape(data);
+						arr = data.split('|');
+						if (arr[0])
+						{
+							$('#project_id').val(arr[0]);
+							go();
+						}
+					}
+				}
+				);
+			}
+		});
+		$('#username').autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+		{
+			get_userid(data);
+		});
+ });
+	function go()
+	{
+		var status = $('#status').val();
+		var userid = $('#userid').val();
+		var project_name = $('#project_name').val();
+		var project_id = project_name ? $('#project_id').val() : '';
+		var username = $("#username").val();
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		location.href = '?model=device_borrow&action=showlist&status='+status+'&userid='+userid+'&username='+username+'&start_date='+start_date+'&end_date='+end_date+'&project_id='+project_id+'&project_name='+project_name;
+	}
+	function get_userid(username)
+	{
+		var username = $('#username').val();
+		var status = $('#status').val();
+		var project_name = $('#project_name').val();
+		var project_id = project_name ? $('#project_id').val() : '';
+		var start_date = $('#start_date').val();
+		var end_date = $('#end_date').val();
+		if (username!='')
+		{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,99999)},
+			function (data)
+			{
+				if (data)
+				{
+					location.href = '?model=device_borrow&action=showlist&status='+status+'&userid='+unescape(data)+'&username='+username+'&project_id='+project_id+'&project_name='+project_name+'&start_date='+start_date+'&end_date='+end_date;
+				}else{
+					alert('您输入的领用人姓名不正确！');
+				}
+			}
+			);
+		}else{
+			$('#userid').val('');
+		}
+	}
+	function QueryString(name)
+	{
+	 	var str=location.href;
+	 	var num=str.indexOf("?")
+	 	str=str.substr(num+1);
+	 	var arrtmp=str.split("&");
+	 	for(var i=0;i < arrtmp.length;i++)
+		{
+	  		num=arrtmp[i].indexOf("=");
+	  		if(num>0)
+			{
+	   			if (arrtmp[i].substring(0,num)==name)
+				{
+					return arrtmp[i].substr(num+1);
+				}
+	  		}
+	 	}
+	}
+	set_selected('status');
+	function set_selected(id)
+	{
+		var status = QueryString(id);
+		var options = $('#'+id+' option').get();
+		for (var i=0;i<options.length;i++)
+		{
+			if (options[i].value == status)
+			{
+				options[i].selected = true;
+			}
+		}
+	}
+	
+	function edit(id)
+	{
+		var not = $('#notes_'+id+' input').get();
+		if (not.length < 1) 
+		{
+			var temp = $('#notes_' + id).html();
+			$('#notes_' + id).html('<input type="text" id="content_' + id + '" onkeypress="responseEnter(event,' + id + ',\'' + temp + '\');" onKeyDown="responseEnter(event,' + id + ',\'' + temp + '\');" onblur="save(' + id + ',\'' + temp + '\');" value="' + temp + '" />');
+			$('#content_' + id).focus();
+		}
+	}
+	function save(id,temp)
+	{
+		var content = $('#content_'+id).val();
+		$.post('ajax.php',{model:'device_borrow',action:'update_table',table:'device_borrow_order',field:'notes',where:'id='+id,content:content,rand:Math.random(0,9999)},function (data)
+		{
+			if (data==1)
+			{
+				$('#notes_'+id).html(content);
+			}else
+			{
+				$('#notes_'+id).html(temp);
+				alert('更新备注失败！');
+			}
+		});
+	}
+	function responseEnter(e,id,temp) {
+	    // 响应回车
+	    var key = window.event ? e.keyCode : e.which;
+	    if (key == 13) {
+	        save(id,temp);
+	    }
+    }
+
+
+</script>
+</body>
+</html>

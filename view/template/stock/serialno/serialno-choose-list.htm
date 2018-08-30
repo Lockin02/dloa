@@ -1,0 +1,82 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+	<title>物料序列号选择</title>
+	{#commonInclude#}
+</head>
+<script>
+	$(document).ready(function() {
+		$(".main_foot_menu").children("li").eq(9).hide();
+		$(".main_foot_menu").children("li").eq(10).hide();
+		$(".main_foot_menu").children("li").eq(11).hide();
+		$(".main_foot_menu").children("li").eq(12).hide();
+		$(".main_foot_menu").children("li").eq(13).hide();
+		$(".main_foot_menu").children("li").eq(14).hide();
+		$(".main_foot_menu").children("li").eq(15).hide();
+		$(".main_foot_menu").children("li").eq(16).hide();
+		$(".main_foot_menu").children("li").eq(17).hide();
+		$(".main_foot_menu").css("width", '280');
+	});
+	function show_page(page) {
+		this.location = "?model=stock_serialno_serialno&action=toChoose";
+	}
+	function search() {
+		var searchfield = $('#searchfield').val();
+		var searchvalue = $('#searchvalue').val();
+		this.location = "?model=stock_serialno_serialno&action=toChoose&productId={productId}&stockId={stockId}&isRed={isRed}&relDocId={relDocId}&relDocType={relDocType}&relDocCode={relDocCode}&relDocItemId={relDocItemId}&ignoreSerialnoId={ignoreSerialnoId}&"
+		+ searchfield + "=" + searchvalue;
+
+	}
+</script>
+<body>
+<div class="main_wraper">
+	<table class="main_table_search">
+		<tr>
+			<td>
+				<select id="searchfield">
+					<option value="likesequence">
+						序列号
+					</option>
+				</select>
+				<input type="text" id="searchvalue" class="txt" name="searchvalue" value="{likesequence}"/>
+				<input type="button" value=" 搜索 " onclick="search()" class="txt_btn_a"/>
+			</td>
+		</tr>
+	</table>
+	<table class="main_table">
+		<thead>
+		<tr style="background-color:00BFFF;">
+			<th bgcolor="#C6E2FF" colspan="2"><b>库存中序列号(单击白色选中,单击灰色取消)>>></b></th>
+		</tr>
+		</thead>
+		<tbody id="listbody">
+		{list}
+		</tbody>
+	</table>
+	{pageDiv}
+</div>
+</body>
+</html>
+
+<script>
+	function chooseItem(sId, sValue) {
+		var itemtableObj = parent.document.getElementById("itemtable");
+		var i = itemtableObj.rows.length;
+		var obj = parent.document.getElementById("serialnoId" + sId);
+
+		if (obj) {
+			var rowNo = obj.parentNode.parentNode.rowIndex * 1;
+			itemtableObj.deleteRow(rowNo);
+			$("#tr_" + sId).css("background-color", $("#tr_" + sId).attr("lbgColor"));
+		} else {
+			oTR = itemtableObj.insertRow([i]);
+			oTR.className = "TableData";
+			oTR.align = "center";
+			oTR.height = "27.5px";
+			var oTL1 = oTR.insertCell([0]);
+			oTL1.innerHTML = " " + (i - 1) + '. <input type="hidden"  id="serialnoId' + sId + '" value="' + sId + '" /><input type="text" readOnly class="readOnlyTxtNormal"  id="serialnoName' + sId + '" value="' + sValue + '" />';
+			$("#tr_" + sId).css("background-color", "#D6D6D6");
+		}
+	}
+</script>

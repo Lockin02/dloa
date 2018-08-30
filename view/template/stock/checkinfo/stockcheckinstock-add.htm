@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>新增盘点入库</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+
+
+		<!-- 动态增加列表js -->
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="view/template/stock/checkinfo/js/productinfo_add.js"></script>
+
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/dump.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-inventory.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stock.js"></script>
+		<script type="text/javascript" src="view/template/stock/checkinfo/js/stock-combo.js"></script>
+
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+	    <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+		<script>
+		var uploadfile;
+		$(function() {
+			uploadfile=createSWFUpload({
+				"serviceType":"oa_stock_check_instock"//业务模块编码，一般取表名
+			});
+		});
+		</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	添加盘点入库
+    </span>
+</div>
+<form id="form1" method="post" action="?model=stock_checkinfo_stockcheckinstock&action=add" name="form1" onsubmit="return checkForm();">
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">盘点类型</td>
+		<td class="form_text_right">
+			<input type="hidden" class="txt" name="stockcheckinstock[ExaStatus]" id="ExaStatus" value="待审核"/>
+			 <select class="select" name="stockcheckinstock[checkType]" >
+				{checkType}
+			 </select>
+		</td>
+<tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" name="stockcheckinstock[stockName]" id="stockName"/>
+			 <input type="hidden" class="txt" name="stockcheckinstock[stockId]" id="stockId" />
+			 <span class='red'>[*]</span>
+		</td>
+		<td class="form_text_left">仓库代码</td>
+		<td class="form_text_right">
+			 <input type="text" class="readOnlyTxt" name="stockcheckinstock[stockCode]" id="stockCode" readonly/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">经办人</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" name="stockcheckinstock[dealUserName]" id="dealUserName" readonly/>
+			 <input type="hidden" class="txt" name="stockcheckinstock[dealUserId]" id="dealUserId" />
+			 <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('dealUserId','dealUserName')"/>
+			 <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('dealUserId','dealUserName')"/>
+			 <span class='red'>[*]</span>
+		</td>
+		<td class="form_text_left">审核人</td>
+		<td class="form_text_right">
+			 <input type="text" class="txt" name="stockcheckinstock[auditUserName]" id="auditUserName" readonly/>
+			 <input type="hidden" class="txt" name="stockcheckinstock[auditUserId]" id="auditUserId" />
+			 <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('auditUserId','auditUserName')"/>
+			 <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('auditUserId','auditUserName')"/>
+			 <span class='red'>[*]</span>
+		</td>
+</tr>
+		<tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" colspan="3">
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+
+		</td>
+	</tr>
+</table>
+		<table class='form_main_table'>
+			<thead>
+			<tr>
+				<td colspan="6" class="main_tr_header">
+					盘点产品清单：
+				<input type="hidden" id="rowNum" name="productsnumber" value="1" />
+				</td>
+				<td class="main_tr_header">
+					<img src="images/verpic_open.gif" onclick="dis('productslist')" title="缩放"/>
+				<img src="images/collapsed.gif" onclick="products_add('productslist','productsnumber');" title="添加行"/>
+				</td>
+			</tr>
+			</thead>
+		<tbody id="productslist">
+		  		<tr class="main_tr_header">
+		  			<th width="5%" >序号</th>
+				    <th>类型编号</th>
+				    <th>产品类型名称</th>
+				    <th>产品编号</th>
+				    <th>产品名称</th>
+				    <th>调整数量</th>
+				    <th>操作</th>
+		  		</tr>
+		  </tbody>
+		  <!--
+		  <tbody>
+	 			<tr align="center">
+	 				<td>1</td>
+					<td><input type="text" name="stockcheckinstock[productsdetail][0][typecode]" id="typecode" size="15"/></td>
+					<td><input type="text" name="stockcheckinstock[productsdetail][0][proType]" id="proType" size="15"/></td>
+					<td><input type="text" name="stockcheckinstock[productsdetail][0][sequence]" id="sequence" size="15"/></td>
+					<td><input type="text" name="stockcheckinstock[productsdetail][0][productName]" id="productName" size="15"/></td>
+					<td><input type="text" name="stockcheckinstock[productsdetail][0][adjust]" id="adjust" size="15"/></td>
+					<td align="center"><img src='images/closeDiv.gif' onclick='mydel(this,"productslist")' title='删除行'></td>
+	           </tr>
+	</tbody>-->
+	</table>
+	<table  class="form_main_table">
+		<tr>
+				<td class="txt_btn" colspan="4">
+				   <input name="" type="submit" class="txt_btn_a" value="保  存"  />
+
+				   <input name="" type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+				</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
+<script language="javascript">
+	//表单验证
+	function checkForm(){
+		if(document.getElementById("stockId").value==""){
+			alert("请选择仓库");
+			document.getElementById("stockName").focus();
+			return false;
+		}
+		if(document.getElementById("dealUserName").value==""){
+			alert("请选择经办人");
+			document.getElementById("dealUserName").focus();
+			return false;
+		}
+		if(document.getElementById("auditUserName").value==""){
+			alert("请选择审核人");
+			document.getElementById("auditUserName").focus();
+			return false;
+		}
+		if($("#productslist tr").size()<2)
+		{
+			alert("请输入需要盘点的产品!")
+			return false;
+		}
+	}
+</script>

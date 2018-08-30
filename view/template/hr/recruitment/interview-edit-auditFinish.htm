@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑面试评估表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-jobs.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-socialplace.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-resume.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-recommend.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/yxcombogrid-interview.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/yxcombogrid-interviewparent.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-position.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-personlevel.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/apply-provin-city.js"></script>
+	<script type="text/javascript" src="view/template/hr/personnel/js/personnel-provin-city3.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/interview-common.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/interview-manager-edit.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=hr_recruitment_interview&action=managerEdit" onsubmit="return checkData();">
+		<table cellpadding="2" width="100%" class="form_main_table">
+			<tr>
+				<td>
+					<div class="main_head">
+						<span class="main_head_title">
+							编辑面试评估表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<fieldset><legend><b>基本信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three blue">姓 名</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="userName" name="interview[userName]" value="{userName}"/>
+								</td>
+								<td class="form_text_left_three blue">应聘职位</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="positionsName" name="interview[positionsName]" value="{positionsName}"/>
+									<input type="hidden" class="txt" id="positionsId" name="interview[positionsId]" value="{positionsId}"/>
+								</td>
+								<td class="form_text_left_three blue">用人部门</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="deptName" name="interview[deptName]" readonly="readonly" value="{deptName}"/>
+									<input type="hidden" id="deptId" name="interview[deptId]" value="{deptId}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">职位类型</td>
+								<td class="form_text_right_three">
+									<select class="select" id="postType" name="interview[postType]">
+										<option value="">...请选择...</option>
+										{postType}
+									</select>
+								</td>
+								<td class="form_text_left_three">研发职位</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="developPositionName" name="interview[developPositionName]" value="{developPositionName}"/>
+								</td>
+								<td class="form_text_left_three blue">级别</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="positionLevelSelect" value="{positionLevel}"/>
+									<select class="select" id="positionLevel" name="interview[positionLevel]">
+										<option value="">...请选择...</option>
+										<option value="1">初级</option>
+										<option value="2">中级</option>
+										<option value="3">高级</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">性 别</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="sexySelect" value="{sexy}"/>
+									<select id="sexy" name="interview[sexy]" class="select">
+										<option value="">..请选择..</option>
+										<option value="男">男</option>
+										<option value="女">女</option>
+									</select>
+								</td>
+								<td class="form_text_left_three blue">联系电话</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="phone" name="interview[phone]" value="{phone}"/>
+								</td>
+								<td class="form_text_left_three blue">电子邮箱</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="email" name="interview[email]" value="{email}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">简历编号</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="resumeCode" name="interview[resumeCode]" value="{resumeCode}"/>
+									<input type="hidden" class="txt" id="resumeId" name="interview[resumeId]" value="{resumeId}"/>
+								</td>
+								<td class="form_text_left_three">关联职位申请</td>
+								<td class="form_text_right_three" width="55%">
+									<input type="text" class="txt" id="applyCode" name="interview[applyCode]" value="{applyCode}"/>
+									<input type="hidden" id="applyId" name="interview[applyId]" value="{applyId}"/>
+								</td>
+								<td class="form_text_left_three">工作省市</td>
+								<td class="form_text_right_three">
+									<select class="selectauto" name="interview[workProvinceId]" id="province" val="{workProvinceId}"></select>
+									<input type="hidden" name="interview[workProvince]" id="provinceName" value="{workProvince}"/>
+									<select class="selectauto" name="interview[workCityId]" id="city" val="{workCityId}"></select>
+									<input type="hidden" name="interview[workCity]" id="cityName" value="{workCity}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">关联增员申请</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="parentCode" name="interview[parentCode]" value="{parentCode}"/>
+									<input type="hidden" id="parentId" name="interview[parentId]" value="{parentId}"/>
+								</td>
+								<td class="form_text_left_three">关联内部推荐</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="recommendCode" readonly name="interview[recommendCode]" value="{recommendCode}"/>
+									<input type="hidden" id="recommendId" name="interview[recommendId]" value="{recommendId}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<fieldset><legend><b>用人部门意见</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three blue">面试评价</td>
+								<td colspan="5">
+									<div id="itemTable"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">面试结果</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="useInterviewResultSelect" value="{useInterviewResult}"/>
+									<input type="hidden" id="changeHire" value="{changeHire}" name="changeHire"/>
+									<select id="useInterviewResult" name="interview[useInterviewResult]" class="select">
+										<option value="">...请选择...</option>
+										<option value="1">立即录用</option>
+										<option value="0">储备人才</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">项目类型</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="projectTypeResultSelect" value="{projectType}"/>
+									<select class="select" id="projectType" name="interview[projectType]">
+										<option value="">...请选择...</option>
+										<option value="YFXM">研发项目</option>
+										<option value="GCXM">工程项目</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">所在项目组</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="projectGroup" name="interview[projectGroup]" readonly onclick="checkProjectType();" value="{projectGroup}"/>
+									<input type="hidden" id="projectGroupId" name="interview[projectGroupId]" readonly value="{projectGroupId}"/>
+									<input type="hidden" id="projectCode" name="interview[projectCode]" readonly value="{projectCode}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">录用形式</td>
+								<td class="form_text_right_three">
+									<select id="useHireType" name="interview[useHireType]" class="select">
+										<option value="">...请选择...</option>
+										{useHireType}
+									</select>
+								</td>
+								<td class="form_text_left_three blue">归属公司</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="sysCompanyIdSelect" value="{sysCompanyId}"/>
+									<input type="hidden" id="sysCompanyIdSelect" value="{sysCompanyId}"/>
+									<select id="sysCompanyId" name="interview[sysCompanyId]" class="select">
+										<option value="">...请选择...</option>
+										{selectName}
+									</select>
+								</td>
+								<td class="form_text_left_three blue">归属区域或支撑中心</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="useAreaIdSelect" value="{useAreaId}"/>
+									<select id="useAreaId" name="interview[useAreaId]" class="select">
+										<option value="">...请选择...</option>
+										{area_select}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">技术等级(仅限网优相关岗位)</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" name="interview[personLevel]" id="personLevel" readonly="readonly" value="{personLevel}"/>
+									<input type="hidden" id="personLevelId" name="interview[personLevelId]" value="{personLevelId}"/>
+								</td>
+								<td class="form_text_left_three blue">试用期基本工资</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useTrialWage" name="interview[useTrialWage]" value="{useTrialWage}"/>
+								</td>
+								<td class="form_text_left_three blue">转正基本工资</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useFormalWage" name="interview[useFormalWage]" value="{useFormalWage}"/>
+								</td>
+								<td class="form_text_left_three blue" style="display:none;">实习工资</td>
+								<td class="form_text_right_three" colspan="3" style="display:none;">
+									<input type="hidden" id="internshipSalaryTypeVal" value="{internshipSalaryType}"/>
+									<select id="internshipSalaryType" name="interview[internshipSalaryType]" class="selectshort">
+										<option value="">...请选择...</option>
+										<option value="日工资">日工资</option>
+										<option value="月工资">月工资</option>
+									</select>
+									<input type="text" class="txtmiddle formatMoney" id="internshipSalary" name="interview[internshipSalary]" value="{internshipSalary}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">是否本地化（仅限服务线）</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="isLocalSelect" value="{isLocal}"/>
+									<select id="isLocal" name="interview[isLocal]" class="select">
+										<option value="">...请选择...</option>
+										<option value="是">是</option>
+										<option value="否">否</option>
+									</select>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">电话费补助</span></td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="phoneSubsidy" name="interview[phoneSubsidy]" value="{phoneSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="phoneSubsidyFormal" name="interview[phoneSubsidyFormal]" value="{phoneSubsidyFormal}"/>
+								</td>
+								<td class="form_text_left_three">技术级别补助</td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="levelSubsidy" name="interview[levelSubsidy]" value="{levelSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="levelSubsidyFormal" name="interview[levelSubsidyFormal]" value="{levelSubsidyFormal}"/>
+								</td>
+							</tr>
+							<tr style="display:none;" id="subsidyTr1">
+								<td class="form_text_left_three" style="display:none;"><span style="color:blue">出差补助上限值</span></td>
+								<td class="form_text_right_three" style="display:none;">
+									试用期：<input type="text" class="txtmiddle" id="tripSubsidy" name="interview[tripSubsidy]" value="{tripSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="tripSubsidyFormal" name="interview[tripSubsidyFormal]" value="{tripSubsidyFormal}"/>
+								</td>
+								<td class="form_text_left_three" style="display:none;"><span style="color:blue">工作奖金</span></td>
+								<td class="form_text_right_three" style="display:none;">
+									试用期：<input type="text" class="txtmiddle" id="workBonus" name="interview[workBonus]" value="{workBonus}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="workBonusFormal" name="interview[workBonusFormal]" value="{workBonusFormal}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">电脑补助</span></td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="computerSubsidy" name="interview[computerSubsidy]" value="{computerSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="computerSubsidyFormal" name="interview[computerSubsidyFormal]" value="{computerSubsidyFormal}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">其他补贴</span></td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="otherSubsidy" name="interview[otherSubsidy]" value="{otherSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="otherSubsidyFormal" name="interview[otherSubsidyFormal]" value="{otherSubsidyFormal}"/>
+								</td>
+								<td class="form_text_left_three">区域补助</td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="areaSubsidy" name="interview[areaSubsidy]" value="{areaSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="areaSubsidyFormal" name="interview[areaSubsidyFormal]" value="{areaSubsidyFormal}"/>
+								</td>
+							</tr>
+							<tr style="display:none;" id="subsidyTr2">
+								<td class="form_text_left_three"><span style="color:blue">奖金上限值</span></td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="bonusLimit" name="interview[bonusLimit]" value="{bonusLimit}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="bonusLimitFormal" name="interview[bonusLimitFormal]" value="{bonusLimitFormal}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">管理津贴</span></td>
+								<td class="form_text_right_three">
+									试用期：<input type="text" class="txtmiddle" id="manageSubsidy" name="interview[manageSubsidy]" value="{manageSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="manageSubsidyFormal" name="interview[manageSubsidyFormal]" value="{manageSubsidyFormal}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">临时住宿补助</span></td>
+								<td class="form_text_right_three" colspan="3">
+									试用期：<input type="text" class="txtmiddle" id="accommodSubsidy" name="interview[accommodSubsidy]" value="{accommodSubsidy}"/><br /><br />
+									转&nbsp;&nbsp;&nbsp;正：<input type="text" class="txtmiddle" id="accommodSubsidyFormal" name="interview[accommodSubsidyFormal]" value="{accommodSubsidyFormal}"/>
+								</td>
+							</tr>
+							<tr style="display:none;" id="subsidyTr3">
+								<td class="form_text_left_three"><span style="color:blue">试用期工资总额预计</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="allTrialWage" name="interview[allTrialWage]" readonly value="{allTrialWage}"/>
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">转正工资总额预计</span></td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="allFormalWage" name="interview[allFormalWage]" readonly value="{allFormalWage}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">配置是否按公司标准</td>
+								<td class="form_text_right_three" id='setAttr'>
+									<input type="radio" {check} id="isCompanyStandard" name="interview[isCompanyStandard]" value="0" onclick="getRadio()"/>否&nbsp;
+									<input type="radio" id="isCompanyStandard" name="interview[isCompanyStandard]" {check1} value="1" onclick="closeRadio()"/>是
+								</td>
+								<input type="hidden" id="hrRequire" value="{computerConfiguration}"/>
+								<td class="form_text_left_three blue">签订《竞业限制协议》</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="useSignSelect" value="{useSign}"/>
+									<select id="useSign" name="interview[useSign]" class="select">
+										<option value="">...请选择...</option>
+										<option value="是">是</option>
+										<option value="否">否</option>
+									</select>
+									<input class="txt" id="compensation" name="interview[compensation]" value="{compensation}"/>
+								</td>
+								<td class="form_text_left_three blue">办公电脑需求设备类型</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="useDemandEquSelect" value="{useDemandEqu}"/>
+									<select id="useDemandEqu" name="interview[useDemandEqu]" class="select">
+										<option value="">...请选择...</option>
+										<option value="手提电脑">手提电脑</option>
+										<option value="台式电脑">台式电脑</option>
+										<option value="自备电脑">自备电脑</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">确认人</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useManager" name="interview[useManager]" value="{useManager}" readonly="readonly"/>
+									<input type="hidden" id="useManagerId" name="interview[useManagerId]" value="{useManagerId}"/>
+								</td>
+								<td class="form_text_left_three">确认日期</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="useSignDate" name="interview[useSignDate]" value="{useSignDate}" onfocus="WdatePicker()" readonly/>
+								</td>
+								<td class="form_text_left_three">指定导师</td>
+								<td align="left">
+									<input type="text" class="txt" id="tutor" name="interview[tutor]" value="{tutor}" readonly/>
+									<input type="hidden" id="tutorId" name="interview[tutorId]" value="{tutorId}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<fieldset><legend><b>人力资源部门意见</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left_three blue">面试评价</td>
+								<td colspan="5">
+									<div id="humanResource"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">总体评价</td>
+								<td class="form_text_right_three" colspan="5">
+									<textarea rows="3" cols="120" id="hrInterviewResult" name="interview[hrInterviewResult]">{hrInterviewResult}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">简历来源大类</td>
+								<td class="form_text_right_three">
+									<select class="select" id="hrSourceType1" name="interview[hrSourceType1]">
+										<option value="">...请选择...</option>
+										{hrSourceType1}
+									</select>
+								</td>
+								<td class="form_text_left_three">简历来源小类</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="hrSourceType2Name" name="interview[hrSourceType2Name]" value="{hrSourceType2Name}"/>
+								</td>
+								<td class="form_text_left_three blue">录用职位</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="hrJobName" name="interview[hrJobName]" value="{hrJobName}"/>
+									<input type="hidden" id="hrJobId" name="interview[hrJobId]" value="{hrJobId}"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">劳动合同信息</td>
+								<td class="form_text_right_three">
+									<font color="blue">试用期</font>
+									<input type="text" id="probation" name="interview[probation]" class="rimless_text" value="{probation}"/>個月&nbsp;&nbsp;&nbsp;<br><br>
+									<font color="blue">合同期限</font>
+									<input type="text" id="contractYear" name="interview[contractYear]" class="rimless_text" value="{contractYear}"/>年
+								</td>
+								<td class="form_text_left_three blue">社保购买地</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="socialPlace" name="interview[socialPlace]" value="{socialPlace}"/>
+									<input type="hidden" id="socialPlaceId" readonly />
+								</td>
+								<td class="form_text_left_three">基本工资与<br />薪点及薪资是否对应</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="hrIsMatchSelect" value="{hrIsMatch}"/>
+									<select id="hrIsMatch" name="interview[hrIsMatch]" class="select">
+										<option value="">...请选择...</option>
+										<option value="对应">对应</option>
+										<option value="不对应">不对应</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">工资级别</td>
+								<td class="form_text_right_three">
+									<select id="wageLevelCode" name="interview[wageLevelCode]" class="select">
+										<option value="">...请选择...</option>
+										{wageLevelCode}
+									</select>
+									<input type="hidden" id="wageLevelName" value="{wageLevelName}"/>
+								</td>
+								<td class="form_text_left_three blue">预计入职时间</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="entryDate" name="interview[entryDate]" onfocus="WdatePicker()" value="{entryDate}" readonly />
+								</td>
+								<td class="form_text_left_three"><span style="color:blue">增员类型</span></td>
+								<td class="form_text_right_three">
+									<select class="select" id="addTypeCode" name="interview[addTypeCode]" >
+										<option value="">...请选择...</option>
+										{addTypeCode}
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three blue">HR确认人</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="manager" name="interview[manager]" value="{manager}" readonly/>
+									<input type="hidden" id="managerId" name="interview[managerId]" value="{managerId}"/>
+								</td>
+								<td class="form_text_left_three">确认日期</td>
+								<td class="form_text_right_three">
+									<input type="text" class="txt" id="SignDate" name="interview[SignDate]" value="{SignDate}" onfocus="WdatePicker()" readonly/>
+								</td>
+								<td class="form_text_left_three">无补助城市</td>
+								<td class="form_text_right_three">
+									<select class="selectauto" name="interview[eprovinceId]" id="eprovinceId" val="{eprovinceId}"></select>
+									<input type="hidden" name="interview[eprovince]" id="eprovince" value="{eprovince}"/>
+									<select class="selectauto" name="interview[ecityId]" id="ecityId" val="{ecityId}"></select>
+									<input type="hidden" name="interview[ecity]" id="ecity" value="{ecity}"/>
+									<input type="hidden" name="interview[ecountryId]" id="ecountryId" value="{ecountryId}"/>
+									<input type="hidden" name="interview[ecountry]" id="ecountry" value="{ecountry}"/>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn">
+					<input type="hidden" id="isCopy" name="isCopy" value="{isCopy}"/>
+					<input type="hidden" id="invitationId" name="interview[invitationId]" value="{invitationId}"/>
+					<input type="hidden" id="id" name="interview[id]" value="{id}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

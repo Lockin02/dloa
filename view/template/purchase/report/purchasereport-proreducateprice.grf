@@ -1,0 +1,443 @@
+﻿Object Report
+	Version='5.5.0.8'
+	Title='你的报表标题'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+	End
+	Object DetailGrid
+		BorderColor=DkGray
+		ColLineColor=DkGray
+		RowLineColor=DkGray
+		Object Recordset
+			ConnectionString='Provider=MSDASQL.1;Persist Security Info=False;Data Source=localhost;Extended Properties="DSN=localhost;"'
+			QuerySQL='select productNumb as productCode,productName,suppName,\r\n   			sum(ae.amountAll) as proNum, \r\n            	(sum(`ae`.moneyAll)/sum(ae.amountAll)) as price,\r\n                	sum(`ae`.moneyAll) as subCost\r\n       from oa_purch_apply_equ ae \r\n                left join oa_purch_apply_basic ab on(ab.id=ae.basicId) \r\n                  group by ae.productNumb,ae.productName,ab.suppName\r\n                   order by productNumb,productName,suppName'
+			Items Field
+				Item
+					Name='proNum'
+					Type=Integer
+					Format='0.00'
+				End
+				Item
+					Name='productCode'
+				End
+				Item
+					Name='productName'
+				End
+				Item
+					Name='suppName'
+				End
+				Item
+					Name='thisDate'
+				End
+				Item
+					Name='amountAll'
+				End
+				Item
+					Name='prePrice'
+					Type=Float
+					Format='#,##0.000000'
+				End
+				Item
+					Name='beforePrice'
+					Type=Float
+					Format='#,##0.000000'
+				End
+				Item
+					Name='sendName'
+				End
+				Item
+					Name='moneyAdd'
+					Type=Currency
+					Format='#,##0.00'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='物料编号'
+				Width=2.38125
+			End
+			Item
+				Name='物料名称'
+				Width=8
+			End
+			Item
+				Name='供应商名称'
+				Width=5
+			End
+			Item
+				Name='日期'
+				Width=2
+			End
+			Item
+				Name='数量'
+				Width=1.5
+			End
+			Item
+				Name='含税单价'
+			End
+			Item
+				Name='前期单价'
+			End
+			Item
+				Name='涨价原因分析'
+				Width=4
+			End
+			Item
+				Name='成本影响总金额'
+			End
+			Item
+				Name='采购员'
+				Width=2.5
+			End
+		End
+		Object ColumnContent
+			Height=0.7
+			Items ColumnContentCell
+				Item
+					Column='物料编号'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='productCode'
+				End
+				Item
+					Column='物料名称'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					CanGrow=T
+					WordWrap=T
+					DataField='productName'
+				End
+				Item
+					Column='供应商名称'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					CanGrow=T
+					WordWrap=T
+					DataField='suppName'
+				End
+				Item
+					Column='日期'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='thisDate'
+				End
+				Item
+					Column='数量'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='amountAll'
+				End
+				Item
+					Column='含税单价'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					DataField='prePrice'
+				End
+				Item
+					Column='前期单价'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					DataField='beforePrice'
+				End
+				Item
+					Column='涨价原因分析'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+				End
+				Item
+					Column='成本影响总金额'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleRight
+					DataField='moneyAdd'
+				End
+				Item
+					Column='采购员'
+					BackColor=00CCFFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					DataField='sendName'
+				End
+			End
+		End
+		Object ColumnTitle
+			BackColor=00F0F0F0
+			Height=0.7
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='物料编号'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='物料编号'
+				End
+				Item
+					GroupTitle=F
+					Column='物料名称'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='物料名称'
+				End
+				Item
+					GroupTitle=F
+					Column='供应商名称'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='供应商名称'
+				End
+				Item
+					GroupTitle=F
+					Column='日期'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='购入日期'
+				End
+				Item
+					GroupTitle=F
+					Column='数量'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='数量'
+				End
+				Item
+					GroupTitle=F
+					Column='含税单价'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='含税单价'
+				End
+				Item
+					GroupTitle=F
+					Column='前期单价'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='前期单价'
+				End
+				Item
+					GroupTitle=F
+					Column='成本影响总金额'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='成本影响总金额'
+				End
+				Item
+					GroupTitle=F
+					Column='采购员'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='采购员'
+				End
+				Item
+					GroupTitle=F
+					Column='涨价原因分析'
+					BackColor=LtGray
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Bold=T
+						Charset=134
+					End
+					Text='降价原因分析'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='Group1'
+				Object GroupHeader
+					Height=0
+				End
+				Object GroupFooter
+					BackColor=0099FFFF
+					Height=0.6
+					Items Control
+						Item
+							Type=StaticBox
+							Name='合计'
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							AlignColumn='物料编号'
+							Width=2.40771
+							Height=0.582083
+							Text='合计'
+						End
+						Item
+							Type=SummaryBox
+							Name='SummaryBox1'
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							AlignColumn='成本影响总金额'
+							Left=24.8708
+							Width=3.02
+							Height=0.6
+							TextAlign=MiddleRight
+							DataField='moneyAdd'
+							Format='#,##0.00'
+						End
+						Item
+							Type=SummaryBox
+							Name='SummaryBox2'
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							AlignColumn='数量'
+							Left=17.3831
+							Width=1.53458
+							Height=0.582083
+							DataField='amountAll'
+						End
+					End
+				End
+			End
+		End
+	End
+	Items Section
+		Item
+			Type=PageHeader
+			Height=1.2
+		End
+		Item
+			Type=PageFooter
+			Height=1.00542
+		End
+		Item
+			Type=ReportHeader
+			Name='ReportHeader1'
+			Height=1.40229
+			Items Control
+				Item
+					Type=StaticBox
+					Name='MainTitleBox'
+					Object Font
+						Name='宋体'
+						Size=157500,0
+						Bold=T
+						Charset=134
+					End
+					Center=Horizontal
+					Left=1.27
+					Top=0.211667
+					Width=13.4938
+					Height=0.978958
+					TextAlign=MiddleCenter
+					Text='降价物料汇总表'
+				End
+			End
+		End
+	End
+End
+ 

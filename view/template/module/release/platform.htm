@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        
+        </style>
+		<script type="text/javascript">
+		var open_tabs = false;
+        $(function(){
+			$('#tab_content').tabs('add',{
+					title:'平台CPU',
+					content:'<div style="padding:10px;height:96%;"><table id="cpu"></table></div>',
+					closable:false,
+					selected:false
+				});
+			$('#tab_content').tabs({onSelect:load_tabs});
+            $('#tt').datagrid({
+                title: '平台列表',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 30,
+                    align: 'center'
+                }, {
+                    field: 'platform_name',
+                    title: '平台名称',
+                    width: 250,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'remark',
+                    title: '备注说明',
+                    width: 250,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                        if (row.editing) {
+                            var s = '<a href="#" onclick="saverow(\'tt\',' + index + ')">保存</a> ';
+                            var c = '<a href="#" onclick="cancelrow(\'tt\',' + index + ')">取消</a>';
+                            return s + c;
+                        }
+                        else {
+                            var e = '<a href="#" onclick="editrow(\'tt\',' + index + ')">修改</a> ';
+                            var d = '<a href="#" onclick="deleterow(\'tt\',' + index + ')">删除</a>';
+                            return e+d;
+                        }
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions('tt');
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions('tt');
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions('tt');
+				}
+            });
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                     iconCls: 'icon-add',
+                    text: '添加平台',
+                    handler: function(){
+                        insert('tt');
+                    }
+                }]
+            });
+        });
+		function updateActions(id){
+				var rowcount = $('#'+id).datagrid('getRows').length;
+				for(var i=0; i<rowcount; i++){
+					$('#'+id).datagrid('updateRow',{
+						index:i,
+						row:{action:''}
+					});
+				}
+			}
+		function editrow(id,index){
+			$('#'+id).datagrid('beginEdit', index);
+		}
+		function deleterow(id,index){
+			var model='{t_model}';
+			var confirm_msg = '您确定要删除该平台吗?';
+			if (id == 'cpu')
+			{
+				confirm_msg = '您确定要删除该平台CPU吗？';
+				model = 'module_release_cpu';
+			}
+			$.messager.confirm('确认提示',confirm_msg,function(r){
+				if (r){
+					$('#'+id).datagrid('selectRow',index);
+					var row = $('#'+id).datagrid('getSelected');
+					if (row.id)
+					{
+						$.post('?model='+model+'&action=del',{id:row.id,rand:Math.random(0,99999)},function(data){
+							if (data == 1)
+							{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#'+id).datagrid('reload');
+							}else{
+								$.messager.show({
+			                        title: '提示',
+			                        msg: '删除失败,请与OA管理员联系！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#'+id).datagrid('reload');
+							}
+						})
+					}
+					$('#'+id).datagrid('deleteRow', index);
+					updateActions(id);
+				}
+			});
+		}
+		function saverow(id,index){
+			var model='{t_model}';
+			var types = 'platform';
+			var name='';
+			var parmt =[];
+			$('#'+id).datagrid('endEdit', index);
+			$('#'+id).datagrid('selectRow',index);
+			var row = $('#'+id).datagrid('getSelected');
+			if(id == 'cpu')
+			{
+				types = '平台cpu';
+				model = 'module_release_cpu';
+				if (row.cpu_name == '')
+				{
+					$.messager.alert('错误提示','CPU名称不能为空！');
+					$('#'+id).datagrid('beginEdit', index);
+					return false;
+				}
+				name = row.cpu_name;
+				parmt = {cpu_name:row.cpu_name,remark:row.remark,rand:Math.random(0,99999)};
+			}else{
+				if (row.platform_name=='')
+				{
+					$.messager.alert('错误提示','平台名称不能为空！');
+					$('#'+id).datagrid('beginEdit', index);
+					return false
+				}
+				types = '运行平台';
+				name = row.platform_name;
+				parmt = {platform_name:row.platform_name,remark:row.remark,rand:Math.random(0,99999)};
+			}
+			var action= 'add';
+			var msg = '添加';
+			tid = '';
+			if(row.id)
+			{
+				tid = row.id;
+				action = 'edit';
+				msg = '修改';
+			}else{
+				action = 'add';
+			}
+			$.post('?model='+model+'&action=check_name',{name:name,id:tid,rand:Math.random(0,9999)},function(data){
+				if (data == 1)
+				{
+					$.messager.alert('错误提示',types+'名称已存在！');
+					$('#'+id).datagrid('beginEdit', index);
+					return false;
+				}else{
+					$.post('?model='+model+'&action='+action+'&id='+tid,parmt,function(data){
+						if (data ==1)
+						{
+							$.messager.show({
+			                        title: '提示',
+			                        msg: msg+'成功！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#'+id).datagrid('reload');
+						}else{
+							$.messager.show({
+			                        title: '提示',
+			                        msg: msg+'失败！',
+			                        timeout: 3000,
+			                        showType: 'show'
+			                    });
+								$('#'+id).datagrid('reload');
+						}
+					})
+				}
+			});
+			
+			
+		}
+		function cancelrow(id,index){
+			$('#'+id).datagrid('cancelEdit', index);
+		}
+
+		function insert(id){
+			var row = $('#'+id).datagrid('getSelected');
+			if (row){
+				var index = $('#'+id).datagrid('getRowIndex', row);
+			} else {
+				index = 0;
+			}
+			if (index <0) index = 0;
+			$('#'+id).datagrid('insertRow', {
+				index: index,
+				row:{
+					//status:'P'
+				}
+			});
+			$('#'+id).datagrid('selectRow',index);
+			$('#'+id).datagrid('beginEdit',index);
+		}
+		
+		function load_tabs(title)
+		{
+			if (!open_tabs) {
+				open_tabs = true;
+				$('#cpu').datagrid({
+					url: '?model=module_release_cpu&action=list_data',
+					title: '平台CPU列表',
+					pagination: true,
+					pageSize:20,
+                	singleSelect: true,
+                	idField: 'id',
+					columns: [[{
+						field: 'id',
+						title: 'ID',
+						width: 40,
+						align: 'center'
+					}, {
+						field: 'cpu_name',
+						title: 'CPU名称',
+						width: 200,
+						align: 'center',
+						editor: 'text'
+					}, {
+						field: 'remark',
+						title: '备注说明',
+						width: 300,
+						align: 'center',
+						editor: 'text'
+					},  {
+						field: 'action',
+						title: '操作',
+						width: 100,
+						align: 'center',
+						formatter: function(value, row, index){
+	                        if (row.editing) {
+	                            var s = '<a href="#" onclick="saverow(\'cpu\',' + index + ')">保存</a> ';
+	                            var c = '<a href="#" onclick="cancelrow(\'cpu\',' + index + ')">取消</a>';
+	                            return s + c;
+	                        }
+	                        else {
+	                            var e = '<a href="#" onclick="editrow(\'cpu\',' + index + ')">修改</a> ';
+	                            var d = '<a href="#" onclick="deleterow(\'cpu\',' + index + ')">删除</a>';
+	                            return e+d;
+	                        }
+                    }
+					}]],
+						onBeforeEdit:function(index,row){
+							row.editing = true;
+							updateActions('cpu');
+						},
+						onAfterEdit:function(index,row){
+							row.editing = false;
+							updateActions('cpu');
+						},
+						onCancelEdit:function(index,row){
+							row.editing = false;
+							updateActions('cpu');
+						}
+				});
+				$('#cpu').datagrid('getPager').pagination({
+                buttons: [{
+                     iconCls: 'icon-add',
+                    text: '添加CPU',
+                    handler: function(){
+                        insert('cpu');
+                    }
+                }]
+            });
+			}
+
+		}
+		</script>
+    </head>
+    <body>
+    	<div id="tab_content" class="easyui-tabs" fit="true" plain="true" style="height:450px;width:100%;">
+        	<div title="平台系统" style="padding:10px;">
+				<table id="tt"></table>
+			</div>
+		</div>
+		<div id="add" class="easyui-dialog" title="添加平台" iconCls="icon-edit" modal="false" closed="true" style="width:300px;height:250px;padding:5px;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false">
+				<p><label>类型名称：</label><span><input type="text" name="typename" id="typename" value="" /></span></p>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+				<input type="button" id="save" onclick="save();"  value=" 确定添加 " />
+				<input type="button" onclick="$('#add').dialog('close');" value=" 取消关闭 " />
+				</form>
+			</div>
+		</div>
+		</div>
+    </body>
+</html>

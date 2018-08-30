@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+		<title>修改补库计划</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+        </script>
+
+        <script>
+
+			function   setinfo(){
+				var invnumber=	$("#invnumber").val(); //数组长度
+				var appendHtml="";
+				for(i=0;i<invnumber+1;i++){
+					if($("#stockNum"+i).length >0){
+					var amountAll=$("#stockNum"+i).val();
+					var id=$("#id"+i).val();
+					var isPurchFlag=$("#isPurch"+i).attr('checked');
+					var isPurch=1;
+						if(amountAll!=''){
+							if(!isPurchFlag){
+								isPurch=0;
+							}
+							appendHtml+='<input type="hidden"  name="basic[equipment]['+i+'][amountAll]" value="'+
+								amountAll
+							+'"/>'+
+							'<input type="hidden"  name="basic[equipment]['+i+'][id]" value="'+
+								id
+							+'"/>'+
+							'<input type="hidden"  name="basic[equipment]['+i+'][isPurch]" value="'+
+								isPurch
+							+'"/>';
+						}
+					}
+				}
+				if($(window.parent.document.getElementById("appendHtml")).html()!=""){   //重新选择刚先把前一次追加的内容清空
+					$(window.parent.document.getElementById("appendHtml")).html("");
+				}
+				$(window.parent.document.getElementById("appendHtml")).append(appendHtml);
+	  }
+		$(window.parent.document.getElementById("sub")).bind("click",function(){
+		  	setinfo();
+			if($(window.parent.document.getElementById("appendHtml")).html()==""){
+						alert("请填写相关信息。");
+						return false;
+		  }
+		});
+</script>
+</head>
+<body>
+  <form id="form1" method="post" action="" name="form1" onsubmit="return ">
+    <table class="form_main_table">
+	<tr>
+		<td class="form_text_left">单据编号</td>
+		<td class="form_text_right">{fillupCode}</td>
+		<td class="form_text_left">制单</td>
+		<td class="form_text_right">
+			{createName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">仓库名称</td>
+		<td class="form_text_right">{stockName}</td>
+		<td class="form_text_left">仓库代码</td>
+		<td class="form_text_right" >{stockCode}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3"><textarea
+			class="textarea_read" readonly>{remark}</textarea></td>
+	</tr>
+<tr>
+                    <td class="form_text_left">
+                        采购说明
+                    </td>
+                  <td class="form_text_right" colspan="3"><textarea
+			class="textarea_read" readonly>{purchRemark}</textarea></td>
+                </tr>
+		<tr>
+		   <td colspan="4">
+			<table class="main_table" id="itemtable">
+				<thead>
+					<tr>
+						<td colspan="14" class="form_header">
+							物料清单&nbsp;
+							<input type="hidden" id="invnumber" value="{invnumber}" />
+						</td>
+					</tr>
+	              <tr class="main_tr_header">
+                    	<th>
+                    	序号
+                    	</th>
+                        <th>
+                            物料编号
+                        </th>
+                        <th>
+                            物料名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            单位
+                        </th>
+                        <th>
+                           采购属性
+                        </th>
+						<th>库存数量</th>
+						<th>在途总数量(补库)</th>
+                        <th>
+                            申请数量
+                        </th>
+                        <th>
+                            审批数量
+                        </th>
+                        <th>
+                            期望到货时间
+                        </th>
+						<th width="5%">是否通过</th>
+                        </th>
+					</tr>
+				</thead>
+				<tbody id="itembody">
+				{list}
+				</tbody>
+			</table>
+	</td>
+
+		</tr>
+	</table>
+  </form>
+</body>
+</html>

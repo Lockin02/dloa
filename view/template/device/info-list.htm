@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta name="GENERATOR" content="Zend Studio" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+		<title>title</title>
+		<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js">
+		</script>
+		<script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js">
+		</script>
+		<script type="text/javascript" src="js/thickbox.js">
+		</script>
+		<script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js">
+		</script>
+		<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js">
+		</script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+		<link rel="stylesheet" href="images/style.css" type="text/css">
+		<style type="text/css">
+			a {
+			    text-decoration: none;
+			    color: #0000ff;
+			}
+			
+			#column div {
+			    float: left;
+			    width: 50px;
+			}
+			#add div {
+			    float: left;
+			    width: 50px;
+			}
+			
+			#prowedgrid_left {
+			    float: left;
+			}
+		</style>
+		<script type="text/javascript">
+				
+				jQuery(document).ready(function(){
+					var wh = parent.ajaxContentH;
+					//var wh = document.documentElement.clientHeight;
+					//alert(wh);
+			    	var ww=parent.ajaxContentW + 36;
+					var area = {area};
+					var area_options = '';
+					var add_input = false;
+					for (var j in area)
+					{
+						area_options +='<option value="'+j+'">'+area[j]+'</option>';
+					}
+					var mygrid=jQuery("#mytable").jqGrid({
+						url:'?model=device_stock&action=info_list&typeid={t_typeid}&id={t_id}',
+						mtype:'GET',
+						datatype: "json",
+						colNames:['设备类型ID','设备ID','序号'{field_title}'入库日期','状态','库存','库存数量','借出数量','折旧价','折旧年限','使用率','使用项目','项目编号','领用人','领用日期','操作'],
+						colModel:[
+									{name:'typeid',index:'typeid',hidden:true},
+									{name:'list_id',index:'list_id',hidden:true},
+									{name:'id',index:'a.id',width:45,key:true ,search:false}
+									{field_parameter}
+									{name:'date',index:'a.date',width:80,align:'center'},
+									{name:'status',index:'a.state',width:35,align:'center'},
+									{name:'area',index:'a.area',width:35,align:'center'},
+									{name:'amount',index:'a.amount',width:65},
+									{name:'borrow',index:'a.borrow_num',width:65},
+									{name:'depreciation',index:'a.depreciation',width:65,editable:true},
+									{name:'depreciationYear',index:'a.depreciationYear',width:65,editable:true},
+									{name:'rate',index:'a.rate',width:50,sortable:false},
+									{name:'project_id',index:'g.name'},
+									{name:'projectNo',index:'projectNo'},
+									{name:'borrow_name',index:'e.user_name',width:50},
+									{name:'borrow_date',index:'c.date',width:80,align:'center'},
+									{name:'edit',index:'edit',align:'center',sortable:false}
+						],
+						rowNum:20,
+						pager: '#prowedgrid',
+			            sortname: 'id',
+						width:ww-2,
+						height:wh-34,
+			            viewrecords: true,
+			            sortorder: "desc",
+			            rownumbers: true,
+			            shrinkToFit:false,
+						cellEdit: true,
+						cellurl:'?model=device_stock&action=edit_field',
+						editurl:'?model=device_stock&action=add_info&typeid={t_typeid}&id={t_id}',
+						afterEditCell: function (id,name,val,iRow,iCol){
+							if(name.indexOf('date')!=-1 || name.indexOf('日期')!=-1) {
+								//jQuery("#"+iRow+"_+name+").datepicker({dateFormat:"yy-mm-dd"});
+								jQuery("#"+iRow+"_"+name).click(function (){WdatePicker({dateFmt:'yyyy-MM-dd'})});
+							}
+						},
+						afterInsertRow:function (rowid, rowData)
+						{
+							var be = '<a style="color:#0000ff;" href="javascript:show_info('+rowid+','+rowData.typeid+','+rowData.list_id+');">查看操作记录</a>';
+							if (rowData.status =='可用'||(rowData.amount>rowData.borrow))
+							{
+								be += ' | <a style="color:#0000ff;" href="javascript:show_borrow('+rowid+','+rowData.typeid+','+rowData.list_id+');">借出</a>'
+							}else{
+								jQuery("#mytable").jqGrid('setCell',rowid,'status','',{color:'#ff0000'});
+							}
+							if(rowData.edit==1)
+							{
+								be += ' | <a style="color:#0000ff;" href="javascript:update('+rowid+','+rowData.typeid+','+rowData.list_id+');">修正</a>'
+							}
+							jQuery("#mytable").jqGrid('setRowData',rowData.id,{edit:be});
+							jQuery("#mytable").jqGrid('setCell',rowid,'edit','',{color:'#fff000'});
+			
+						}
+			
+					});
+					jQuery("#mytable").jqGrid('navGrid',"#prowedgrid",{search:true,edit:false,add:false,del:false,view:true},{},{},{},{
+						caption: "查找",
+						Find: "开始查找",
+						closeAfterSearch: true,
+						multipleSearch: true,
+						groupOps: [{ op: "AND", text: "全部" }]
+						
+					},{});
+			        jQuery("#mytable").jqGrid('navButtonAdd','#prowedgrid',{
+			                    caption: "选择",
+			                    title: "隐藏/显示 列表",
+								id:'column',
+			                    onClickButton : function (){
+			                        jQuery("#mytable").jqGrid('setColumns',{dataheight:wh-208});
+			                    }
+			                });
+					jQuery("#mytable").jqGrid('navButtonAdd','#prowedgrid',{
+						caption:'添加',
+						title:'添加数据',
+						buttonicon:'ui-icon-add',
+						id:'add',
+						onClickButton : function(){
+							jQuery("#mytable").jqGrid('editGridRow',"new",{
+								addCaption:'添加数据',
+								bSubmit:'添加',
+								//height:300,
+								reloadAfterSubmit:true,
+								closeAfterAdd:true,
+								beforeShowForm:function(form){
+									//alert(form.html());
+									var tr = form.find('tr').get();
+									var count = tr.length;
+									var amount_html = '<tr class="FormData" rp="'+(count-2)+'" rowpos="'+(count-2)+'">';
+									amount_html +='<td class="CaptionTD ui-widget-content">数量</td>';
+									amount_html +='<td style="WHITE-SPACE:pre" class="DataTD ui-widget-content">'
+									amount_html +='&nbsp;<input type="text" onKeyUp="this.value=value=this.value.replace(/\\D/g,\'\')" id="amount" name="amount" value="1"/></td></tr>';
+									
+									amount_html += '<tr class="FormData" rp="'+(count-1)+'" rowpos="'+(count-1)+'">';
+									amount_html +='<td class="CaptionTD ui-widget-content">库存区域</td>';
+									amount_html +='<td style="WHITE-SPACE:pre" class="DataTD ui-widget-content">'
+									amount_html +='&nbsp;<select id="area" name="area">'+area_options+'</select></td></tr>';
+									if (add_input ==false)
+									{
+										form.find('tr').eq((count-2)).after(amount_html);
+										add_input = true;
+									}
+									$('#amount').val(1);
+									//alert(form.html());
+									var inputs = form.find(':input').get();
+									for(var i=0;i<tr.length;i++)
+									{
+										//alert(tr[i].innerHTML);
+										if (tr[i].id.indexOf('date')!=-1 || tr[i].innerHTML.indexOf('日期')!=-1)
+										{
+											form.find(':input').eq((i-2)).click(function(){
+												//alert('1221');
+												WdatePicker({dateFmt:'yyyy-MM-dd'});
+											});
+											form.find(':input').eq((i-2)).attr('readonly',true);
+										}
+									}
+								},
+								beforeSubmit:function(postdata,formid){
+									postdata['amount'] = $('#amount').val();
+									postdata['area'] = $('#area').val();
+									if (postdata['amount']=='')
+									{
+										return [false,'数量不能为空！'];
+									}
+									var post = false;
+									for (ext in postdata)
+									{
+										//alert(postdata[ext]);
+										if (ext!='amount' && ext!='area' && postdata[ext]!='' && postdata[ext]!='_empty')
+										{
+											post = true;
+											break;
+										}
+									}
+									return [post,'至少要填写一项'];
+								},
+								afterSubmit: function(response, postdata){
+									if (response.responseText != 1)
+									{
+										alert('添加失败,请与管理员联系！');
+										return [false,'添加失败,请与管理员联系！'];
+									}else{
+										return [true,'添加成功！'];
+									}
+								}
+								});
+			
+								}
+							});
+						jQuery("#mytable").jqGrid('navButtonAdd','#prowedgrid',
+						{
+							caption:'导出当前数据',
+							onClickButton:function()
+							{
+								location.href='?model=device_export&action=type_list&typeid={t_typeid}&id={t_id}'
+							}
+						});
+						
+						jQuery("#mytable").jqGrid('navButtonAdd','#prowedgrid',
+						{
+							caption:'导出报表',
+							onClickButton:function()
+							{
+								//location.href='?model=device_export&action=type_list&typeid={t_typeid}&id={t_id}'
+								tb_show('导出报表','?model=device_export&action=report&typeid={t_typeid}&id={t_id}&TB_iframe=true&width=400');
+							}
+						});
+				});
+				function update(id,typeid,list_id)
+				{
+					if (id > 0) 
+						    {
+						        if (confirm('您确定要更新该设备吗？')) 
+						        {
+						            $.post('?model=device_stock&action=update_devicedata', 
+						            {
+						                id: id,
+						                rand: Math.random(0, 99999)
+						            }, function(data)
+									
+									{
+								                if (data==1)
+										{
+											 alert('更新成功！');
+						                    window.location.reload();
+						                }
+						                else 
+						                {
+						                    alert('更新失败，请于管理员联系！');
+						                }
+						            });
+						        }
+						    }
+				}
+				
+				function show_info(tid,typeid,list_id)
+				{
+					tb_show('查看操作记录', '?model=device_stock&action=operate&tid='+tid+'&typeid='+typeid+'&list_id='+list_id+'&TB_iframe=true&height=600&width=700');
+				}
+				
+				function show_borrow(id,typeid,list_id)
+				{
+					tb_show('借出设备','?model=device_stock&action=borrow_operate&typeid='+typeid+'&list_id='+list_id+'&id='+id+'&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=500')
+				}
+				
+				function check_field(value,colname)
+				{
+					var state = 0;
+					if (value)
+					{
+						$.ajax(
+						{
+							type:'POST',
+							url:'ajax.php',
+							async: false,
+							data: "model=device&action=check_field_content&content="+value+"&fname="+colname+"&typeid={t_typeid}&list_id={t_id}&rand="+Math.random(0,9999),
+							success:function(msg)
+							{
+								state = msg;
+							}
+						});
+						if (state == 1)
+						{
+							return [false,'该'+colname+'已经存在！'];
+						}else if (state == -2)
+						{
+							return [false,'在修改'+colname+'的时候出现了问题，请与管理员联系！'];
+						}else if (state == -1)
+						{
+							return [true,value];
+						}
+					}else
+					{
+						return [true,value];
+					}
+					//return [false,colname];
+					//return [true,value];
+				}
+		</script>
+	</head>
+	<body>
+		<table id="mytable">
+		</table>
+		<div id="pgtoolbar">
+		</div>
+		<div id="prowedgrid">
+		</div>
+	</body>
+</html>

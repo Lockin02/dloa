@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增扣款申请</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+   <script type="text/javascript" src="{#jsPath#}/deduct-add.js" ></script>   </head>
+
+<body>
+   <form id="form1" method="post" action="?model=contract_deduct_deduct&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	扣款申请
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+      		<td class="form_text_left">合同名称</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="deduct[contractName]" value="{contractName}"/>
+      			 <input type="hidden" class="txt" name="deduct[contractId]" value="{id}"/>
+      		</td>
+      		<td class="form_text_left">合同编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="deduct[contractCode]" value="{contractCode}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">合同金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="contractMoney" name="deduct[contractMoney]" value="{contractMoney}" readonly="readonly"/>
+      		</td>
+      		<td class="form_text_left">已处理扣款金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="disdeductMoney" value="{deductMoney}" readonly="readonly"/>
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">已申请扣款金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly  id="deductMoney_apply" value="{applyMoney}"/>
+      		</td>
+      		<td class="form_text_left">已处理坏账金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" id="badMoney" value="{badMoney}" readonly="readonly"/>
+      		</td>
+       </tr>
+       <tr>
+            <td class="form_text_left">扣款金额</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt formatMoney" name="deduct[deductMoney]" id="deductMoney" onblur="confimMoney();"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">扣款原因</td>
+      		<td class="form_text_right" colspan="3">
+      		     <textarea class="txt_txtarea_font" name="deduct[deductReason]"></textarea>
+      		</td>
+       </tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input type="hidden" class="txt" id="incomeMoney" value="{incomeMoney}"/>
+      		   <input type="hidden" class="txt" name="deduct[ExaStatus]" value="未审批"/>
+      		   <input type="hidden" class="txt" name="deduct[state]" value="0"/>
+      		   <input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toApp();" />
+<!--      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>-->
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

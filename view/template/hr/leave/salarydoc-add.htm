@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>离职工资结算清单</title>
+   {#commonInclude#}
+ <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-hrsalaryplate.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/salarydoc-add.js" ></script>
+
+      <style type="text/css">
+		.txtarea_custom{
+		    border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: medium none;
+			text-align:left;
+			line-height : 1.5em;
+		}
+		 .rimless_textA {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: medium none;
+					font-family: Courier;
+					height:18px;
+					width:120px;
+				}
+		 .rimless_textB {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:120px;
+				}
+		.tableA{
+			margin:0px;
+			padding:1px;
+			width:80%;
+			border:1px solid #CAD0E4;
+			border-collapse:collapse;
+			text-align:center;
+		}
+		.tableA td{
+		   padding:5px;
+		   border:1px solid #5B5B5B;
+		}
+		.td_left{
+			width:10%;
+			line-height:16px;
+			padding:1px 0px 0px 0px;
+			margin:5px 0px;
+		}
+
+		.td_right{
+			width:15%;
+			line-height:16px;
+			padding:1px 0px 0px 0px;
+			margin:5px 0px;
+		}
+   </style>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_leave_salarydoc&action=add" >
+      <div align="center" cellpadding="5" >
+         <table class="tableA">
+      	<tr>
+      		<td colspan="6" bgcolor="#ECECFF">
+             <span>
+               	  <h3>离职工资结算清单</h3>
+             </span>
+            </td>
+         </tr>
+       <tr>
+      		<td class="td_left">员工姓名</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="userName" name="salarydoc[userName]" value="{userName}"/>
+      			 <input type="hidden" class="txt" id="userNo" name="salarydoc[userNo]" value="{userNo}"/>
+      			 <input type="hidden" class="txt" id="userAccount" name="salarydoc[userAccount]" value="{userAccount}"/>
+      		</td>
+      		<td class="td_left">部门名称</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="deptName" name="salarydoc[deptName]" value="{deptName}"/>
+      			 <input type="hidden" class="txt" id="deptId" name="salarydoc[deptId]" value="{deptId}"/>
+      		</td>
+      		<td class="td_left">职位</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="jobName" name="salarydoc[jobName]" value="{jobName}"/>
+      			 <input type="hidden" class="txt" id="jobId" name="salarydoc[jobId]" value="{jobId}"/>
+      		</td>
+
+       </tr>
+       <tr>
+      		<td class="td_left">入职日期</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textB" id="entryDate" onfocus="WdatePicker()" readonly  name="salarydoc[entryDate]" value="{entryDate}"/>
+      		</td>
+      		<td class="td_left">离职日期</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textB" id="quitDate" onfocus="WdatePicker()" readonly  name="salarydoc[quitDate]" value="{requireDate}"/>
+      		</td>
+      		<td class="td_left">离职类型</td>
+      		<td class="td_right">
+      			 <select id="quitTypeCode" name="salarydoc[quitTypeCode]" class="rimless_textA">
+      			     {quitTypeCode}
+			     </select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="td_left">离职原因</td>
+      		<td colspan="3">
+      			 <textarea name="salarydoc[quitReson]" id="quitReson"  class="txtarea_custom" cols="100">{quitReson}</textarea>
+      		</td>
+
+   		    <td class="td_left">编制</td>
+      		<td class="td_right">
+      			 <input type="text" class="rimless_textA" readonly id="companyName" name="salarydoc[companyName]" value="{companyName}"/>
+      			 <input type="hidden" class="txt" id="companyId" name="salarydoc[companyId]" value="{companyId}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<td class="td_left">离职工资结算清单方案</td>
+       		<td class="td_right" colspan="5" align="left">
+				<input type="text" class="txt" id="schemeName"  name="salarydoc[schemeName]" />
+				<input type="hidden"  id="schemeId"  name="salarydoc[schemeId]" value="{schemeId}"/>
+			</td>
+       </tr>
+       {fromworkList}
+  </table>
+
+  <table class="tableA">
+
+          <tr>
+      		<td class="txt_btn" colspan="6">
+      		   <input type="hidden" class="txt" id="leaveId" name="salarydoc[leaveId]" value="{leaveId}"/>
+      		   <input type="hidden" class="txt" id="ExaStatus" name="salarydoc[ExaStatus]" value="WSH" />
+      		   <input  type="button" class="txt_btn_a" value=" 保存 "  onclick="saveForm('save')" />
+      		   <input  type="button" class="txt_btn_a" value=" 确认 " onclick="saveForm('audit')" />
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="window.close()" />
+      		</td>
+       </tr>
+      </table>
+      </div>
+   </form>
+</body>
+</html>

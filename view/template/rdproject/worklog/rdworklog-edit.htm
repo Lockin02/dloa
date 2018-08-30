@@ -1,0 +1,211 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>填写工作日志</title>
+
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+		<script type="text/javascript" src="view/template/rdproject/worklog/js/rdworklog-edit.js"></script>
+	</head>
+	<body>
+		<div class="main_form">
+			<form id="form1" action="?model=rdproject_worklog_rdworklog&action=edit" method="post" onkeypress="javascript:return NoSubmit(event);">
+				<table class="form_main_table">
+					<tr>
+						<td class="main_tr_header" colspan="4">
+							修改日志
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							任务名称
+						</td>
+						<td class="form_text_right" colspan="3">
+							<input type="text" class="txt" name="rdworklog[taskName]" id="taskName" value="{taskname}" readonly="readonly"/>
+							<input type="hidden" name="rdworklog[taskId]" id="taskId" value="{taskid}">
+							<input type="hidden" name="rdworklog[id]" id="id" value="{id}">
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							责任人
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="chargeName" value="{taskchargeName}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							创建人
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="createName" value="{taskcreateName}" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							最近更新时间
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="updateTime" value="{taskupdateTime}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							创建日期
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="createTime" value="{taskcreateTime}" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							任务类型
+						</td>
+						<td class="form_text_right">
+							<select id="taskType" class="txt" disabled>
+								{taskType}
+							</select>
+						</td>
+						<td class="form_text_left">
+							优先级
+						</td>
+						<td class="form_text_right">
+							<select id="priority" class="txt" disabled>
+								{priority}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							所属项目
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[taskprojectName]" id="projectName" value="{taskprojectName}" readonly="readonly"/>
+							<input type="hidden" name="rdworklog[taskprojectCode]" id="projectCode" value="{taskprojectCode}" >
+							<input type="hidden" name="rdworklog[taskprojectId]" id="projectId" value="{taskprojectId}" >
+						</td>
+						<td class="form_text_left">
+							状态
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" name="rdworklog[taskstatus]" value="{taskstatus}">
+							<select id="status" class="txt" disabled="disabled">
+								{status}
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							计划完成日期
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[taskplanEndDate]" id="planEndDate" value="{taskplanEndDate}" readonly="readonly"/>
+							<input type="hidden" name="rdworklog[taskplanStartDate]" id="planStartDate" value="{taskplanBeginDate}"/>
+						</td>
+						<td class="form_text_left">
+							估计工作量(小时)
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[taskappraiseWorkload]" id="appraiseWorkload" value="{taskappraiseWorkload}" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							任务总体完成率
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[taskeffortRate]" id="effortRate" value="{taskeffortRate}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							已投入工作量(小时)
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[taskputWorkload]" id="putWorkload" value="{taskputWorkload}" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="main_tr_header" colspan="4">
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							执行时间
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[executionDate]" id="executionDate" readonly="readonly"/>
+						</td>
+						<td class="form_text_left">
+							预计完成日期
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[planEndDate]" id="wlplanEndDate" value="{taskplanEndDate}" onfocus="WdatePicker()"><br>
+							<div id="wlplanEndDateTip" class="tipShortTxt"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							当天投入工作量(小时)
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[newWorkloadDay]" id="newWorkloadDay" value="{workloadDay}" onblur="editWorkload('workloadDay','newWorkloadDay','appraiseWorkload','putWorkload','workloadSurplus')">
+							<input type="hidden" name="rdworklog[workloadDay]" id="workloadDay" value="{workloadDay}"/>
+							<br><div id="workloadDayTip" class="tipShortTxt"></div>
+						</td>
+						<td class="form_text_left">
+							本次完成率(%)
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="rdworklog[effortRate]" id="rdeffortRate" value="{effortRate}" />
+							<br><div id="rdeffortRateTip" class="tipShortTxt"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							预计剩余工作量(小时)
+						</td>
+						<td class="form_text_right" colspan="3">
+							<input type="text" class="txt" name="rdworklog[workloadSurplus]" id="workloadSurplus" value="{workloadSurplus}">
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							描述
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="rdworklog[description]" class="txt_txtarea_font">{description}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							存在问题
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="rdworklog[problem]" class="txt_txtarea_font">{problem}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<input type="submit" class="txt_btn_a" value="确 定" />
+							<input type="button" class="txt_btn_a" onclick="self.parent.tb_remove();"
+							value="返 回" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>
+<script>
+	$().ready(function(){
+		$("#status").val('{taskstatus}');
+		$("#priority").val('{taskpriority}');
+		$("#taskType").val('{tasktaskType}');
+	})
+</script>

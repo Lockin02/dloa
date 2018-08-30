@@ -1,0 +1,124 @@
+<html>
+<title></title>
+{#commonInclude#}
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+<script type="text/javascript" src="{#jsPath#}/contract-confirmCost.js"></script>
+<script type="text/javascript" src="{#jsPath#}/contract-deploy.js"></script>
+<script>
+function toBack() {
+	document.getElementById('form1').action = "index1.php?model=contract_contract_contract&action=subConfirmCostApp&act=back";
+}
+</script>
+<body>
+<div class="main_head"><span class="main_head_title">
+确认合同成本概算 - <span style="color:blue">{costType}</span> </span></div>
+<form
+	action="?model=contract_contract_contract&action=subConfirmCostApp"
+	ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1">
+<table class="form_main_table" align="center" width="90%" border="0">
+	<tr>
+		<td class="form_text_left">合同编号</td>
+		<td class="form_text_right"><span
+			style="cursor:pointer;color:blue"
+			onclick="contractview({contractId})">{contractCode} </span></td>
+		<td class="form_text_left">合同名称</td>
+		<td class="form_text_right"><span
+			style="cursor:pointer;color:blue"
+			onclick="contractview({contractId})">{contractName} </span></td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">{productLineName}</span>
+		总成本概算</td>
+		<td class="form_text_right">
+		    <input type="text" class="txt formatMoney" name="contract[confirmMoney]" id="confirmMoney" value="{confirmMoney}"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">{productLineName}</span>
+		预计毛利</td>
+		<td class="form_text_right">{exgross} %</td>
+	</tr>
+	<tr id="deff2" style="display:none">
+		<td class="form_text_left"> 详细 </td>
+		<td class="form_text_right">
+		     服务类 ： {serMoney} <br/>
+		     销售类 ： {saleMoney}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">确认人</td>
+		<td class="form_text_right">{confirmName}</td>
+		<td class="form_text_left">确认时间</td>
+		<td class="form_text_right">{confirmDate}</td>
+	</tr>
+    <tr>
+	<td class="form_text_left">成本[概算]明细备注</td>
+	<td class="form_text_right" colspan="3">
+		{costRemark}
+	</td>
+    </tr>
+    <tr>
+    <td class="form_text_left">成本[审核]明细备注</td>
+    <td class="form_text_right" colspan="3">
+        <textarea class="txt_txtarea_font" name="contract[costAppRemark]" id="costAppRemark"></textarea>
+    </td>
+    </tr>
+	<tr id="product">
+		<td colspan="4">
+		<fieldset><legend class="legend"
+			onclick="showAndHideDiv('productImg','productInfo')">&nbsp;&nbsp;合同产品清单&nbsp;
+		<img src="images/icon/info_up.gif" id="productImg" /> </legend>
+		<div id="productInfo"></div>
+		<input type="hidden" id="isApp" value="1"></fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset><legend style="text-align:left"><b>发货清单</b></legend>
+		<table cellpadding="2" width="100%">
+			<tr style="background:#D5EFFC">
+				<td>物料编号</td>
+				<td>物料名称</td>
+				<td>合同数量</td>
+				<td>单价</td>
+				<td>金额</td>
+			</tr>
+			{equList}
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+	<!--    <tr>-->
+	<!--      <td class="form_text_right" colspan="4">-->
+	<!--         <img src="images/icon/icon095.gif" />-->
+	<!--		   <span style="color:blue">提示：<br/>-->
+	<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.点击合同编号或合同名称可查看合同信息<br/>-->
+	<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.确认后提交审批合同，成本概算可不填写</span>-->
+	<!--      </td>-->
+	<!--    </tr>-->
+</table>
+<table class="form_main_table">
+   <div  style="display:none;" id="diffInfo">
+      <img src="images/icon/icon095.gif" /> <span style="color:blue">提醒：此合同内还有其他类型成本尚未确认，请等待成本确认后一同审核</span>
+   </div>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td class="txt_btn" colspan="4">
+		    <input type="hidden" id="isdeff" value="{isdeff}" name="contract[isdeff]"/>
+		    <input type="hidden" id="productLine" value="{productLine}" name="contract[productLine]" />
+		    <input type="hidden" id="costType" name="contract[costType]" value="{costType}" />
+		    <input type="hidden" id="type" name="contract[type]" value="{type}" />
+		    <input type="hidden" id="contractId" name="contract[contractId]" value="{contractId}" />
+		    <input type="hidden" id="id" name="contract[id]" value="{id}" />
+		    <input type="submit" id="subBtn" class="txt_btn_a" value=" 确认提交 " />
+		    <input type="submit" class="txt_btn_a" value=" 打  回 " onclick="toBack();" />
+		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+	</tr>
+</table>
+</form>
+</body>
+</html>

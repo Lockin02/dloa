@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加部门</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<style type="text/css">
+	hr{ height:1px;border:none;border-top:1px dashed #D3E5FA;}
+</style>
+<script type="text/javascript">
+	var tid = 0;
+	var userArr = Array();
+	$(document).ready(function()
+	{
+		var options = {
+				multiple: false,
+				mustMatch:true,
+				max:200,
+				parse: function(data) 
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for(var i=0; i<data.length; i++)
+					{
+						rows[i] = {
+							data:data[i],
+							value:data[i],
+							result:data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n) 
+				{
+					return row
+				},
+				formatResult: function(row) {
+					return row;
+				}
+
+			};
+			function set_url(table,field,id)
+			{
+				return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field;
+			}
+			$('#username').autocomplete(set_url('user','user_name','username'),options).result(function(evnet,data,formatted)
+			{
+				if (data)
+				{
+					var username = data;
+					$.post('ajax.php',{model:'user',action:'get_userid',username:data,rand:Math.random(0,9999)},
+					function (data)
+					{
+						if (data)
+						{
+							tid++;
+							userArr[tid]=data;
+							$('#director').append('<div id="username_'+tid+'">'+username+' <a href="javascript:del('+tid+');">删除</a></div>');
+							$('#username').val('');
+						}
+					}
+					);
+				}
+				});
+	});
+	
+	function del(id)
+	{
+		$('#username_'+id).remove();
+		delete userArr[id];
+		var temp = Array();
+		for(key in userArr)
+		{
+			if (userArr[key] && userArr[key]!='undefined')
+			{
+				temp[key] = userArr[key];
+			}
+		}
+		userArr = temp;
+	}
+	
+	function check()
+	{
+		var userid='';
+		if ($('#name').val()=='')
+		{
+			alert('部门名称不能为空！');
+			return false;
+		}
+		if (userArr.length > 0)
+		{
+			for (key in userArr)
+			{
+				if (userArr[key] && userArr[key]!='undefined')
+				{
+					userid += userArr[key]+',';
+				}
+			}
+			$('#userid').val(userid);
+		}else
+		{
+			alert('请填写部门总监');
+			return false;
+		}
+		if (confirm('您确定要添加该部门吗？'))
+		
+		{
+			alert($('#userid').val());
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
+</script>
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=add" onsubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加部门</td>
+	</tr>
+	<tr>
+		<td>部门名称：</td>
+		<td align="left"><input type="text" id="name" name="name" value="" /></td>
+	</tr>
+	<tr>
+		<td>部门总监：</td>
+		<td align="left">
+				<span id="director">{username_list}</span>
+				<hr />
+				姓名：<input type="text" id="username" name="username" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="height:50px;"><input type="submit" value=" 添加 " /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

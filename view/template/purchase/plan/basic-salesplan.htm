@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+	<title>添加采购计划</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+		<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-contract.js"></script>
+	<script type="text/javascript" src="view/template/purchase/plan/js/basic-contract.js"></script>
+
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="view/template/purchase/external/js/sale-add-delete.js"> </script>
+	<script type="text/javascript" src="view/template/purchase/plan/js/basic-add-validator.js"> </script>
+	<script type="text/javascript" src="view/template/purchase/plan/js/basic-add.js"> </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	下达采购计划
+    </span>
+</div>
+<div class="main_wraper">
+<form id='form1' action="?model=purchase_plan_basic&action=add" method="post">
+<table class="form_main_table">
+	<tr >
+		<td colspan="4" class="form_header">
+			<font class="form_header">采购计划</font>
+		</td>
+	</tr>
+	<!--
+	<tr>
+		<td class="form_text_left">采购计划编号</td>
+		<td colspan="3" class="form_text_right">
+			<input type="text" class="txtlong"  name="basic[planNumb]" id="planNumb">
+			<span class="red">[*]</span>
+		</td>
+	</tr>-->
+	<tr>
+		<td class="form_text_left" width="20%">下达人名称</td>
+		<td class="form_text_right" width="30%">
+			<input type="hidden" id="sendUserId" name="basic[sendUserId]" value="{sendUserId}" />
+			<input type="text" class="txt" id="sendName" name="basic[sendName]" value="{sendName}" readonly />
+            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('sendUserId','sendName')" />
+            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('sendUserId','sendName')" />
+            <span class="red">[*]</span>
+		</td>
+		<td class="form_text_left">计划类型</td>
+		<td class="form_text_right">
+			销售采购
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">下达日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="sendTime" name="basic[sendTime]" onfocus="WdatePicker()" value="{sendTime}" readonly />
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="sendTimeTip" class="tipShortTxt"></div>
+		</td>
+		<td class="form_text_left">期望完成日期</td>
+		<td class="form_text_right">
+			<input type="text" class="txt" id="dateHope" name="basic[dateHope]" onfocus="WdatePicker()" value="{dateHope}" readonly />
+		    <span class="red">[*]</span>
+		    <br/>
+			<div id="dateHopeTip" class="tipShortTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">部门</td>
+		<td class="form_text_right" colspan="3">
+			<input type="hidden" id="depId" name="basic[departId]" />
+			<input type="text" class="txtlong readonlyCmp" id="depName" name="basic[department]" readonly/>
+			<input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindowDept('depId','depName')" />
+            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('depId','depName')" />
+			<span class="red">[*]</span>
+			<br />
+			<div id="depNameTip" class="tipLongTxt" ></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">合同名称/编号</td>
+		<td class="form_text_right" colspan="3">
+			<input type="hidden" id="contractId"/>
+			<input type="text" id="contractName" class="txtlong" style="width:500px" readonly/>
+			<span class="red">[*]</span>
+			<div id="contractNameTip" class="tipShortTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="4" class="td_table">
+		<table id="mytable" class="main_table_nested">
+			<thead>
+				<tr>
+					<td colspan="10" class="form_header">采购计划清单</td>
+				</tr>
+				<tr class="main_tr_header">
+					<th width="5%">序号</th>
+					<th width="20%">设备编号/名称</th>
+					<th width="10%">合同需求数</th>
+					<th width="10%">合同已执行数</th>
+					<th width="10%">合同已下达数</th>
+
+					<th width="10%">采购计划数量</th>
+					<th width="10%">下达日期</th>
+					<th width="10%">期望完成日期</th>
+					<th >备注</th>
+					<th width="5%">操作</th>
+				</tr>
+			</thead>
+			<tbody id="equList">
+
+			</tbody>
+			</table>
+	</tr>
+	<tr>
+		<td class="form_text_left">采购说明</td>
+		<td class="form_text_right" colspan="3">
+			<textarea rows="5" id="instruction" name="basic[instruction]" cols="90"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan="3">
+			<textarea rows="5" id="remark" name="basic[remark]" cols="90"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<input type="submit" value="提  交" class="txt_btn_a"/>
+			<input type="button" value="返  回" class="txt_btn_a" onclick="history.back();"/>
+		</td>
+	</tr>
+</table>
+</form>
+<br>
+</div>
+</body>
+</html>

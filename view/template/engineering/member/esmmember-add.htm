@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增项目成员</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js"	charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js"	charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmactivity.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmrole.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmmember-add.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmmember-common.js" ></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=engineering_member_esmmember&action=add">
+	<table class="form_main_table">
+      	<tr>
+      		<td colspan="6">
+				<div class="main_head2">
+            		<span class="main_head_title">
+               			新增项目成员
+            		</span>
+           		</div>
+			</td>
+		</tr>
+        <tr>
+      		<td class="form_text_left_three">
+      			<span class="blue">人员姓名</span>
+      		</td>
+      		<td class="form_text_right_three" >
+      			<input type="text" class="txt" name="esmmember[memberName]" id="memberName" readonly/>
+      			<input type="hidden" name="esmmember[memberId]" id="memberId"/>
+      		</td>
+      		<td class="form_text_left_three">人员级别</td>
+      		<td class="form_text_right_three" >
+      			<input type="text" class="txt" name="esmmember[personLevel]" id="personLevel" readonly/>
+      			<input type="hidden" id="personLevelId" name="esmmember[personLevelId]"/>
+      		</td>
+      		<td class="form_text_left_three">所属项目</td>
+      		<td class="form_text_right_three" >
+      			<input type="text" class="readOnlyText" name="esmmember[projectName]" value="{projectName}" readonly />
+      			<input type="hidden" name="esmmember[projectCode]" value="{projectCode}"/>
+      			<input type="hidden" name="esmmember[projectId]" id="projectId" value="{projectId}"/>
+      		</td>
+        </tr>
+        <tr>
+      		<td class="form_text_left_three">加入项目</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt Wdate" id="beginDate" name="esmmember[beginDate]" onchange="timeCheck(this);calPerson();" onfocus="WdatePicker()"/>
+      		</td>
+      		<td class="form_text_left_three">离开项目</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt Wdate" id="endDate" name="esmmember[endDate]" onchange="timeCheck(this);calPerson();"  onfocus="WdatePicker()" />
+      		</td>
+      		<td class="form_text_left_three">角色名称</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" name="esmmember[roleName]" id="roleName" readonly="readonly" />
+      			 <input type="hidden" name="esmmember[roleId]" id="roleId"/>
+      		</td>
+		</tr>
+		<tr>
+      		<td class="form_text_left_three">人工天数</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney" name="esmmember[feeDay]" id="feeDay"/>
+      		</td>
+      		<td class="form_text_left_three">人力成本</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney" name="esmmember[feePeople]" id="feePeople"/>
+      		</td>
+      		<td class="form_text_left_three">成本金额</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney" name="esmmember[feePerson]" id="feePerson"/>
+      		</td>
+		</tr>
+		<!--tr>
+      		<td class="form_text_left_three">任务名称</td>
+      		<td class="form_text_right_three" colspan="5">
+      			 <input type="text" class="txtbiglong" name="esmmember[activityName]" id="activityName"/>
+      			 <input type="hidden" name="esmmember[activityId]" id="activityId"/>
+      			 <span class="red">[*]</span>
+      		</td>
+		</tr-->
+        <tr>
+      		<td class="form_text_left_three">备注说明</td>
+			<td class="form_view_right" colspan="5">
+				<textarea class="txt_txtarea_biglong" name="esmmember[remark]" rows="4" cols="78"></textarea>
+			</td>
+        </tr>
+		<tr>
+      		<td class="txt_btn" colspan="6">
+      			<input type="hidden" name="esmmember[coefficient]" id="coefficient"/>
+      			<input type="hidden" name="esmmember[price]" id="price"/>
+      		    <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

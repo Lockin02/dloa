@@ -1,0 +1,161 @@
+<html>
+<title>导入EXCEL数据</title>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"> </script>
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script>
+     function loading(){
+        $("#loadingD").html('<img src="images/loading1.gif">');
+     }
+     function importType(obj){
+         if(obj.value == "按月导入"){
+            document.getElementById("importInfo").style.display="";
+            document.getElementById("importSub").options.remove(3);
+
+         }else{
+            document.getElementById("importInfo").style.display="none";
+            var selectObj = document.getElementById("importSub");
+            selectObj.options[selectObj.length]=new Option("扣款金额","deductMoney");
+         }
+     }
+     function DownloadTemplates(){
+       var importType = $("input[name='import[importType]']:checked").val();
+       var importSub = $("#importSub").val();
+       if(importSub == "serviceconfirmMoney"){
+           window.open('upfile/serviceconfirmMoney.xls')
+       }else if(importSub == "financeconfirmMoney"){
+           window.open('upfile/financeconfirmMoney.xls')
+       }else if(importSub == "deductMoney"){
+           window.open('upfile/deductMoney.xls')
+       }else{
+           alert("选择 '导入内容' 后才能下载相应模板")
+       }
+     }
+     function sub(){
+        var importType = $("input[name='import[importType]']:checked").val();
+        var importMonth = $("#importMonth").val();
+        var importSub = $("#importSub").val();
+        if(importType == "初始化导入"){
+             if(importSub == ''){
+                alert("请选择导入内容");
+                return false;
+             }
+	     }else{
+	         if(importMonth == ''){
+                alert("请选择导入时间");
+                return false;
+             }
+             if(importSub == ''){
+                alert("请选择导入内容");
+                return false;
+             }
+	     }
+
+	    var flag = $.ajax({
+		    type : 'POST',
+		    url : '?model=projectmanagent_order_order&action=getFimancialImport',
+		    data:{
+		        "importType" : importType,
+		        "importMonth" : importMonth,
+		        "importSub" : importSub
+		    },
+		    async: false,
+		    success : function(data){
+		          return data;
+		    }
+		}).responseText;
+
+		 if(flag == '1'){
+		     if(confirm("您当前选择月份到所导入的金额已存在，如果继续导入测会覆盖之前导入的金额，是否继续导入？")){
+		        return true;
+		     }else{
+		        return false;
+		     }
+		 }
+     }
+</script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            财务金额导入
+      </span>
+</div>
+<form action="?model=projectmanagent_order_order&action=finalceMoneyImport" ENCTYPE="multipart/form-data" method="POST" name="form1" id="form1" onsubmit="return sub();">
+<input type="hidden" name="leadExcel" value="true">
+
+<table class="form_main_table" align="center" width="90%" border="0">
+    <span class="red">点击导入后有延迟请稍作等待...</span>
+    <tr>
+        <td class="form_text_left">
+            导入标准
+        </td>
+        <td class="form_text_right">
+           <input type="radio" name="import[normType]" value="合同号"  checked >合同号
+           <input type="radio" name="import[normType]" value="业务编号" >业务编号
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            导入选项
+        </td>
+        <td class="form_text_right">
+           <input type="radio" name="import[importType]" value="按月导入" onclick="importType(this);" checked >按月导入
+           <input type="radio" name="import[importType]" value="初始化导入" onclick="importType(this);">初始化导入
+        </td>
+    </tr>
+    <tr id="importInfo">
+        <td class="form_text_left">
+			导入时间:
+		</td>
+		<td class="form_text_right">
+<!--            <input type="text" class="txt" name="import[ExaDT]" onfocus="WdatePicker()" value="{dateTime}"/>-->
+             <select name="import[Month]" class="select" id="importMonth">
+                <option value="">...请选择...</option>
+                <option value="01">一月份</option>
+                <option value="02">二月份</option>
+                <option value="03">三月份</option>
+                <option value="04">四月份</option>
+                <option value="05">五月份</option>
+                <option value="06">六月份</option>
+                <option value="07">七月份</option>
+                <option value="08">八月份</option>
+                <option value="09">九月份</option>
+                <option value="10">十月份</option>
+                <option value="11">十一月份</option>
+                <option value="12">十二月份</option>
+             </select>
+		</td>
+    </tr>
+    <tr>
+        <td class="form_text_left">
+            导入内容
+        </td>
+        <td class="form_text_right">
+           <select name="import[importInfo]" class="select" id="importSub">
+                <option value="">...请选择...</option>
+                <option value="serviceconfirmMoney">财务确认总收入</option>
+                <option value="financeconfirmMoney">财务确认总成本</option>
+<!--                <option value="deductMoney">扣款金额</option>-->
+             </select>
+        </td>
+    </tr>
+	<tr>
+		<td class="form_text_left">
+			<label for="file">上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txt" name="inputExcel" />&nbsp&nbsp
+		    <input type="button" onclick="DownloadTemplates();" class="txt_btn_a" value="下载模版">
+
+            <input type="submit" class="txt_btn_a" value=" 导 入 "  />
+		</td>
+	</tr>
+    <tr>
+        <td id="loadingD" colspan=2>
+
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

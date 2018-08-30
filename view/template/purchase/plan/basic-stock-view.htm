@@ -1,0 +1,204 @@
+<html>
+<head>
+    <title>查看采购申请</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/thickbox.js"></script>
+    <script type="text/javascript" src="view/template/purchase/plan/js/basic-execute-view.js"></script>
+    <script>
+        $().ready(function () {
+
+            if ($('#readType').val() != "") {
+                $('#actType').hide();
+            }
+
+            if ($('#sourceNumb').val() != "") {
+                $('#showContract').show();
+            }
+        });
+        function clickFun() {
+            showThickboxWin("controller/common/readview.php?itemtype=oa_stock_fillup&pid={sourceID}&formType=blue&placeValuesBefore&TB_iframe=true&modal=false&height=200&width=800");
+        }
+
+    </script>
+
+</head>
+<body scroll="auto">
+<div class="main_head">
+    <span class="main_head_title">
+      	查看采购申请
+    </span>
+    <span id='viewChangeLog'></span>
+</div>
+
+<div class="main_wraper">
+    <table class="form_main_table">
+        <tr>
+            <td class="form_text_left">采购申请编号</td>
+            <td class="form_text_right" colspan="3">{planNumb}</td>
+        </tr>
+        <tr>
+
+            <td class="form_text_left">申请类型</td>
+            <td class="form_text_right">
+                {purchTypeCName}
+                <input type="hidden" id="isTemp" value="{isChange}">
+                <input type="hidden" id="ExaStatus" value="{ExaStatus}">
+                <input type="hidden" id="readType" value="{readType}">
+            </td>
+            <td class="form_text_left">源单据号</td>
+            <td class="form_text_right">
+                <a href="?model=stock_fillup_fillup&action=init&perm=view&id={sourceID}&skey={skey}&formType=blue&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=800"
+                   class="thickbox" title="查看补库单信息">{sourceNumb}</a>
+				<span id="showContract" style="display:none">
+					<img src="images/icon/view.gif" title="查看审批情况" onclick="clickFun();"/>
+				</span>
+                <input type="hidden" id="sourceNumb" value="{sourceNumb}"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请日期</td>
+            <td class="form_text_right">
+                {sendTime}
+            </td>
+            <td class="form_text_left">期望完成日期</td>
+            <td class="form_text_right">
+                {dateHope}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">申请部门</td>
+            <td class="form_text_right">
+                {department}
+            </td>
+            <td class="form_text_left">申请人名称</td>
+            <td class="form_text_right">
+                {sendName}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">电话</td>
+            <td class="form_text_right">
+                {phone}
+            </td>
+            <td class="form_text_left">采购部门</td>
+            <td class="form_text_right" colspan="3">
+                {purchDepart}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">
+                归属公司
+            </td>
+            <td class="form_text_right">
+                {businessBelongName}
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">采购说明</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="instruction" class="textarea_read_blue" name="basic[instruction]"
+                          readonly>{instruction}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_left">备注</td>
+            <td class="form_text_right" colspan="3">
+                <textarea id="remark" class="textarea_read_blue" name="basic[remark]" readonly>{remark}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="13" class="form_header">采购申请清单
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th width="5%">序号</th>
+                        <th width="15%">物料编号/名称</th>
+                        <th width="7%">规格型号</th>
+                        <th width="7%">单位</th>
+                        <th width="7%">采购属性</th>
+                        <th width="7%">检验方式</th>
+                        <th width="7%">申请数量</th>
+                        <th width="7%">原申请数量</th>
+                        <th width="7%">已下达数量</th>
+                        <th width="7%">申请日期</th>
+                        <th width="7%">希望交货期</th>
+                        <th width="7%">实际完成时间</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    {list}
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="td_table" id="approvalView">
+                <input type="hidden" id="pid" value="{id}"/>
+                <input type="hidden" id="itemType" value="oa_purch_plan_basic"/>
+                <input type="hidden" id="isChange" value="1"/>
+            </td>
+        </tr>
+        <tr id="executeView">
+
+            <td colspan="4" class="td_table">
+                <table class="main_table_nested">
+                    <thead>
+                    <tr>
+                        <td colspan="8" class="form_header">采购执行情况
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th>序号</th>
+                        <th width="28%">物料编号/物料名称</th>
+                        <th width="8%">申请数量</th>
+                        <th width="60%" class="td_table">
+                            <table width="100%" class="main_table_nested" frame=void>
+                                <tr>
+                                    <th width="20%">任务负责人</th>
+                                    <th width="15%">任务数量</th>
+                                    <th width="15%">询价数量</th>
+                                    <th width="50%" class="td_table">
+                                        <table width="100%" class="main_table_nested" frame=void>
+                                            <tr>
+                                                <th width="15%">订单数量</th>
+                                                <th width="20%">预计到货日期</th>
+                                                <th width="15%">入库数量</th>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+                    </thead>
+                    {listEquExecute}
+                </table>
+            </td>
+        </tr>
+        <tr align="center" class="footform" height="28">
+            <td colspan="4">
+                <input type="button" id="actType" value="返  回" class="txt_btn_a" onclick="history.back();">
+            </td>
+        </tr>
+    </table>
+    <br>
+</div>
+</body>
+<script>
+    var isTemp = $("#isTemp").val();
+    if (isTemp == 1) {
+        $b = $("<input type='button' value='查看变更历史' class='txt_btn_a' />");
+        $b.click(function () {
+            window.open("?model=common_changeLog&action=toPlanList&logObj=purchaseplan&originalId=&objId={id}");
+        });
+        $("#viewChangeLog").append($b);
+    }
+</script>
+</html>

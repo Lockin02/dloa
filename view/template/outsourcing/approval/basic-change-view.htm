@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>外包立项</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsupplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-change-view.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-projectrental.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-common.js" ></script>
+</head>
+
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	外包立项变更
+    </span>
+</div>
+      <table class="form_main_table">
+<td class="innerTd" colspan="6">
+	<fieldset>
+		<legend class="legend">基 本 信 息</legend>
+		<table class="form_in_table">
+       <tr>
+      		<td class="form_text_left_three">外包申请编号</td>
+      		<td class="form_text_right_three" >
+      			 <a href="#" onclick="showModalWin('?model=outsourcing_outsourcing_apply&action=toView&id={applyId}','1')">{applyCode}</a>
+      		</td>
+      		<td class="form_text_left_three">项目编号</td>
+      		<td class="form_text_right_three" >
+      			{projectCode}
+      		</td>
+      		<td class="form_text_left_three">项目名称</td>
+      		<td class="form_text_right_three" >
+      			 {projectName}
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">项目类型</td>
+      		<td class="form_text_right_three" >
+      			 {projectTypeName}
+      		</td>
+      		<td class="form_text_left_three">项目实施地</td>
+      		<td class="form_text_right_three" >
+      			 <span id="projectAddress">{projectAddress}</span>
+      		</td>
+      		<td class="form_text_left_three">外包方式</td>
+      		<td class="form_text_right_three" >
+      			 {outsourcingName}
+      			 <input type="hidden" class="txt" id="outsourcing" name="basic[outsourcing]"  value="{outsourcing}"/>
+      		</td>
+       </tr>
+       <tr>
+       <!--
+      		<td class="form_text_left_three">外包编号</td>
+      		<td class="form_text_right_three" >
+      			 <span id="outContractCode">{outContractCode}</span>
+      		</td>
+      	 -->
+      		<td class="form_text_left_three">项目经理</td>
+      		<td class="form_text_right_three" >
+      			<span id="projectManangerName">{projectManangerName}</span>
+      		</td>
+      		<td class="form_text_left_three">销售负责人</td>
+      		<td class="form_text_right_three" >
+      			 <span id="saleManangerName">{saleManangerName}</span>
+      		</td>
+      		<td class="form_text_left_three">申请人</td>
+      		<td class="form_text_right_three" >
+      			 {createName}
+      		</td>
+       </tr>
+       <tr style="display:none" id="projectrentalTr1">
+      		<td class="form_text_left_three">外包供应商</td>
+      		<td class="form_text_right_three" >
+      			 <span id="suppName">{suppName}</span>
+      		</td>
+      		<td class="form_text_left_three">开始日期</td>
+      		<td class="form_text_right_three" >
+      			<span id="beginDate">{beginDate}</span>
+      		</td>
+      		<td class="form_text_left_three">结束日期</td>
+      		<td class="form_text_right_three" >
+      			<span id="endDate"> {endDate}</span>
+      		</td>
+       </tr>
+       <tr style="display:none" id="projectrentalTr2">
+      		<td class="form_text_left_three">合同金额</td>
+      		<td class="form_text_right_three formatMoney" >
+      			<span id="orderMoney">{orderMoney}</span>
+      		</td>
+      		<td class="form_text_left_three">外包金额</td>
+      		<td class="form_text_right_three formatMoney" >
+      			<span id="outSuppMoney">{outSuppMoney}</span>
+      		</td>
+      		<td class="form_text_left_three">项目毛利</td>
+      		<td class="form_text_right_three" >
+      			<span id="grossProfit"> {grossProfit}</span>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">付款方式</td>
+      		<td class="form_text_right_three" >
+					<span id="payTypeName">{payTypeName}</span>
+      		</td>
+      		<td class="form_text_left_three">增值税专用发票税点</td>
+      		<td class="form_text_right_three" >
+					<span id="taxPoint">{taxPoint}</span>
+      		</td>
+      		<td class="form_text_left_three">录入日期</td>
+      		<td class="form_text_right_three" >
+      			 {createTime}
+      		</td>
+       </tr>
+      <tr>
+      		<td class="form_text_left_three" >备注说明</td>
+      		<td class="form_text_right_three" colspan="5">
+                  <span id="remark">{remark}
+      		</td>
+      </tr>
+      <tr>
+      		<td class="form_text_left_three" >变更说明</td>
+      		<td class="form_text_right_three" colspan="5">
+                <font color=blue>{changeReason}</font>
+      		</td>
+      </tr>
+      </table>
+	</fieldset>
+</td>
+  </tr>
+    <tr style="display:none" id="projectrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>整 包/分 包</b>
+				</legend>
+				<div id="projectRentalTb"></div>
+			</fieldset>
+		</td>
+    </tr>
+    <tr  id="personrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>人 员 租 赁</b></legend>
+				<div id="itemTable"></div>
+			</fieldset>
+		</td>
+    </tr>
+
+          <tr  id="buttonTable">
+      		<td class="txt_btn" colspan="4">
+      			 <input type="hidden" class="txt" id="id" name=""  value="{id}"/>
+				 <input id="originalId" type="hidden" value="{originalId}"/>
+                    <input type="hidden" id="actType" value="{actType}" />
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+   </form>
+</body>
+</html>

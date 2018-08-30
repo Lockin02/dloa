@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>入库单搜索</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+  	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+   
+<script>
+
+$(document).ready(function(){
+	$("#catchStatus option").each(function (){
+		if($(this).val()==''){
+			$(this).attr("text",'全部');
+		}
+	})
+})
+
+function confirm(){ 
+	var gridId="";
+	if("{docType}"=="RKPURCHASE")
+		gridId="purhasestorageGrid";
+	if("{docType}"=="RKPRODUCT")
+		gridId="purhasestorageGrid";
+	if("{docType}"=="RKOTHER")
+		gridId="purhasestorageGrid";		
+	var listGrid= parent.$("#"+gridId)
+	.data('yxsubgrid');
+
+	var docStartDate=$("#docStartDate").val();//开始时间结
+	var docEndDate=$("#docEndDate").val();//结束时间
+	var productCode=$("#productCode").val();//物料代码
+	var productName=$("#productName").val();//物料名称
+	var pattern=$("#pattern").val();//规格型号
+	var serialnoName=$("#serialnoName").val();//序列号
+	var batchNum=$("#batchNum").val();//序列号
+	var supplierName=$("#supplierName").val();//供应商名称
+	var purOrderCode=$("#purOrderCode").val();//订单编号
+	var purchaserName=$("#purchaserName").val();//采购员名称
+	var inStockName=$("#inStockName").val();//收料仓库
+	var catchStatus=$("#catchStatus").val();//勾稽状态
+	
+	listGrid.options.extParam['beginDate'] = docStartDate;
+	listGrid.options.extParam['endDate'] = docEndDate;	
+	listGrid.options.extParam['productCode'] = productCode;
+	listGrid.options.extParam['productName'] = productName;
+	listGrid.options.extParam['pattern'] = pattern;
+	listGrid.options.extParam['serialnoName'] = serialnoName;
+	listGrid.options.extParam['batchNum'] = batchNum;	
+	listGrid.options.extParam['supplierName'] = supplierName;	
+	listGrid.options.extParam['purOrderCode'] = purOrderCode;	
+	listGrid.options.extParam['purchaserName'] = purchaserName;	
+	listGrid.options.extParam['inStockName'] = inStockName;	
+	listGrid.options.extParam['catchStatus'] = catchStatus;	
+	
+	listGrid.reload();
+	self.parent.tb_remove();
+}
+
+function refresh(){
+	var gridId="";
+	if("{docType}"=="RKPURCHASE")
+		gridId="purhasestorageGrid";
+	if("{docType}"=="RKPRODUCT")
+		gridId="purhasestorageGrid";
+	if("{docType}"=="RKOTHER")
+		gridId="purhasestorageGrid";		
+	var listGrid= parent.$("#"+gridId)
+	.data('yxsubgrid');
+	listGrid.options.extParam['beginDate']="";
+	listGrid.options.extParam['endDate'] = "";
+	listGrid.options.extParam['productCode'] = "";
+	listGrid.options.extParam['productName'] = "";
+	listGrid.options.extParam['pattern'] = "";
+	listGrid.options.extParam['serialnoName'] = "";	
+	listGrid.options.extParam['batchNum'] = "";	
+	listGrid.options.extParam['supplierName'] = "";	
+	listGrid.options.extParam['purOrderCode'] = "";	
+	listGrid.options.extParam['supplierName'] = "";	
+	listGrid.options.extParam['inStockName'] = "";	
+	listGrid.options.extParam['catchStatus'] = "";		
+	listGrid.reload();
+	self.parent.tb_remove();
+	
+}
+
+
+</script>
+
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	高级搜索
+    </span>
+</div>
+<table class="form_main_table">
+<tr>
+		<td class="form_text_left">开始日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="docStartDate" id="docStartDate" onfocus="WdatePicker()" />
+		</td>
+		<td class="form_text_left">截止日期</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="docEndDate" id="docEndDate" onfocus="WdatePicker()" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">物料代码</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productCode"  />
+		</td>
+		<td class="form_text_left">物料名称</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="productName" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">序列号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="serialnoName"  />
+		</td>
+			
+		<td class="form_text_left">物料规格型号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="pattern"  />
+		</td>
+</tr> 
+<tr>
+		<td class="form_text_left">批次号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="batchNum"  />
+		</td>
+		<td class="form_text_left">供应商</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="supplierName"  />
+		</td>
+</tr>   
+<tr>
+		<td class="form_text_left">订单编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="purOrderCode"  />
+		</td>
+		<td class="form_text_left">采购员</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="purchaserName"  />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left">收料仓库</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="inStockName"  />
+		</td>
+		<td class="form_text_left">勾稽状态</td>
+		<td class="form_text_right" >
+			<select name="catchStatus" id="catchStatus" class="select">
+				{catchStatus}
+			</select>
+		</td>
+</tr>               
+
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input  type="button" class="txt_btn_a" value="确   认" onclick="confirm();" />
+		   <input  type="button" class="txt_btn_a" value="清  空 " onclick="refresh();" />
+		</td>
+</tr>
+</table>
+</body>
+</html>

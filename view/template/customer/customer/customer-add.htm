@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>客户</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<base target="_self" />
+<link rel="stylesheet" href="css/yxstyle.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+<link rel="stylesheet" href="js/jquery/style/yxtree.css" type="text/css" />
+<link type="text/css" href="js/jquery/style/yxmenu.css" media="screen"
+	rel="stylesheet" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<!-- 主题css，可切换 -->
+<link type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/ztree/yxtree.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombotree.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+    </script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js" >
+</script>
+<script type="text/javascript" src="view/template/system/procity/js/cpcCmp.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+<script type="text/javascript" src="view/template/customer/customer/js/customer-add.js"></script>
+
+</head>
+<body>
+
+<form action="?model=customer_customer_customer&action=add" method="post" onsubmit="return check_all()" >
+<div>
+
+<table class="form_main_table">
+<tr>
+	<td colspan="4">
+	<div class="main_head"><span class="main_head_title">客户基本信息 </span></div>
+ 	</td>
+</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_view_right" colspan="3">
+			<input type="text" name="customer[Name]" id="name" class="txt" onblur = "checkName();"/><span id="icon" class="red">[*]</span>
+			<input type="hidden" id="NameOne" />
+		</td>
+	</tr>
+	<tr>
+	    <td class="form_text_left">归属区域</td>
+		<td class="form_view_right">
+			<input type="text" class="txt" name="customer[AreaName]" id="AreaName" />
+			<input type="hidden" name="customer[AreaId]" id="AreaId" />
+			<span id="icon" class="red">[*]</span>
+        </td>
+		<td class="form_text_left">区域负责人</td>
+		<td class="form_view_right">
+			<input type="text" name="customer[AreaLeader]" class="readOnlyText" id="customer_areaLeader" readonly="readonly" />
+			<input type="hidden" name="customer[AreaLeaderId]" id="customer_areaLeader_id" />
+        </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">销售工程师</td>
+		<td class="form_view_right" colspan="3">
+		<textarea id="customer_sellMan" name="customer[SellMan]" class="txt_txtarea_font" readonly></textarea>
+		<input type="hidden" name="customer[SellManId]" id="customer_sellMan_id" value="" />
+        </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">固定电话</td>
+		<td class="form_view_right">
+		<input type="text" name="customer[Tell]" class="txt" id="Tell" onchange="tell();"/></td>
+		<td class="form_text_left">手机号码</td>
+		<td class="form_view_right">
+		<input type="text" name="customer[Mobile]" class="txt" id="Mobile" onchange="mob();" /></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">网址</td>
+		<td class="form_view_right">
+		<input type="text" name="customer[Url]" class="txt" id="Url" /></td>
+		<td class="form_text_left">电子邮件</td>
+		<td class="form_view_right">
+		<input type="text" name="customer[Email]" class="txt" id="Email" onchange="email();"/></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">传真</td>
+		<td class="form_view_right"><input type="text"  id="Fax"name="customer[Fax]"
+			class="txt"  onchange="fax();"/></td>
+		<td class="form_text_left">邮编</td>
+		<td class="form_view_right">
+		<input type="text" name="customer[PostalCode]" class="txt"id="PostalCode"  onchange="Post();"/></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">国家</td>
+		<td class="form_view_right">
+		<select class="select" name="customer[CountryId]" id='country' >
+		</select>
+		<input type='hidden' name='customer[Country]' id='countryName' />
+		</td>
+		<td class="form_text_left">省份</td>
+		<td class="form_view_right">
+		<select class="select" name="customer[ProvId]" id='province'>
+		</select>
+		<input type='hidden' name='customer[Prov]' id='provinceName' />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">城市</td>
+		<td class="form_view_right">
+		<select class="select" name="customer[CityId]" id='city'>
+		</select>
+		<input type='hidden' name='customer[City]' id='cityName' /></td>
+		<td class="form_text_left">客户性质</td>
+		<td class="form_view_right"><select class="select" name="customer[TypeOne]">
+			{TypeOne}
+		</select></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">通讯地址</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="4"
+			name="customer[Address]" cols="70"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="4"
+			name="customer[Remark]" cols="70"></textarea></td>
+	</tr>
+	<tr>
+		<td align="center" class="" colspan="4">
+		    <input type="hidden" name="customer[CreateUser]" value="{createName}" />
+		    <input type="hidden" name="customer[CreateUserId]" value="{createNameId}" />
+		    <input type="hidden" name="customer[CreateDT]" value="{CreateDT}" />
+			<input class="txt_btn_a" type="submit" value="保存" />
+			<input class="txt_btn_a" type="button" value="关闭" onclick="if(self.parent.tb_remove)self.parent.tb_remove();else window.close()" />
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+</body>
+</html>

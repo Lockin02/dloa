@@ -1,0 +1,94 @@
+<html>
+<title>导入EXCEL</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/stockbalance/js/stockbalance-toaddproductprice.js"></script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            存货余额导入
+      </span>
+</div>
+<form action="?model=finance_stockbalance_stockbalance&action=addBalance" ENCTYPE="multipart/form-data" method="POST" id="form1" onsubmit="return checkform();">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">
+			导入数据的年份:
+		</td>
+		<td class="form_text_right">
+			<select class="select" id="thisYear" name="stockbalance[thisYear]">
+				{yearStr}
+			</select>
+			<input type="hidden" id="thisYearHide" value="{thisYear}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			导入数据的月份:
+		</td>
+		<td class="form_text_right">
+			<select class="select" id="thisMonth" name="stockbalance[thisMonth]">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+			</select>
+			<input type="hidden" id="thisMonthHide" value="{thisMonth}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			物料编码匹配:
+		</td>
+		<td class="form_text_right">
+			<select class="select" id="updateCode" name="stockbalance[updateCode]">
+				<option value="productCode">OA编码</option>
+				<option value="ext2">K3编码</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label for="file">上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txtMiddlelong" name="inputExcel" id="inputExcel"/>
+            <input type="submit" class="txt_btn_a" value=" 导 入 ">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label for="file">模板下载</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="button" class="txt_btn_a" value="下载" onclick="location='upfile/存货余额更新表.xls'">
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="form_text_right">
+			注：<br/>
+			1.导入之前请确保excel格式与模板格式保持一致<br/>
+			2.选择对应匹配编码类型后，系统会根据对应编码添加存货余额。<br/>
+			3.若余额数据已存在，更更新对应数据。
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

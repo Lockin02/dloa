@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑售前支持申请</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/support-edit.js" ></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+   <style type="text/css">
+   .txt_txtarea_biglong{
+	border:1px solid #C0C2CF;
+	background-image: url(../images/txt_txtarea_bg.gif);
+	font-family: 微软雅黑,Arial,宋体,helvertica,sans-serif;
+	font-size: 12px;
+	background-color:#F3F6FA;
+	text-align:left;
+	padding-left:3px;
+	width:850px;
+	height:100px;
+	line-height:2.0
+}
+</style>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css">
+
+<script>
+	var uploadfile;
+	$(function() {
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_sale_chance_support",
+			"serviceId":"{id}"
+		});
+	});
+</script>
+<!-- 附件上传结束 -->
+</head>
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_support_support&action=edit" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	编辑售前支持申请信息
+             </span>
+         </div>
+      </td>
+   </tr>
+<tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('projectImg','project')">&nbsp;&nbsp;&nbsp;项目相关信息&nbsp;&nbsp;&nbsp;
+		     <img src="images/icon/info_up.gif" id="projectImg" />
+		   </legend>
+		<table class="form_main_table" id="project">
+			<tr>
+				<td class="form_text_left">销售经理</td>
+				<td class="form_text_right">
+				   <input type="hidden" class="txt" name="support[SingleType]" value="{SingleType}"/>
+				   <input type="hidden" class="txt" name="support[SingleId]" value="{SingleId}"/>
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[prinvipalName]" value="{prinvipalName}"/>
+				   <input type="hidden" class="txt" name="support[prinvipalId]" value="{prinvipalId}"/>
+				</td>
+				<td class="form_text_left">项目编号</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[projectCode]" value="{projectCode}" id="projectCode"/>
+				</td>
+			</tr>
+			<tr>
+			    <td class="form_text_left">客户名称</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[customerName]" value="{customerName}"/>
+				   <input type="hidden" class="txt" name="support[customerId]" value="{customerId}"/>
+			    </td>
+				<td class="form_text_left">项目名称</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[projectName]" value="{projectName}" id="projectName"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">客户类型</td>
+				<td class="form_text_right">
+				   <input type="hidden" class="txt" name="support[customerType]" value="{customerType}"/>
+				   <select class="select"  id="customerTypeView" disabled>
+				      {customerTypeView}
+				   </select>
+				</td>
+				<td class="form_text_left"><span style="color:blue">支持身份</span></td>
+				<td class="form_text_right">
+				   <input type="text" class="txt" readonly id="signSubjectName" name="support[signSubjectName]" value="{signSubjectName}"/>
+				   <input type="hidden" class="txt" id="signSubject" name="support[signSubject]" value="{signSubject}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">最近交流时间</span></td>
+				<td class="form_text_right">
+				   <input type="text" class="txt" id="recentExDate" name="support[recentExDate]" onfocus="WdatePicker()" value="{recentExDate}"/></td>
+			</tr>
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('requireImg','require')">&nbsp;交流类支持要求&nbsp;&nbsp;
+		     <img src="images/icon/info_up.gif" id="requireImg" />
+		   </legend>
+   <table class="form_main_table" id="require">
+     <tr>
+		<td class="form_text_left"><span style="color:blue">交流时间</span></td>
+		<td class="form_text_right">
+		  <input type="text" id="exDate" class="txt" name="support[exDate]" onfocus="WdatePicker()" value="{exDate}"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">建议交流人员</span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[exchangeName]" id="exchangeName" value="{exchangeName}"/>
+		   <input type="hidden" class="txt" name="support[exchangeId]" id="exchangeId" value="{exchangeId}"/>
+		</td>
+	 </tr>
+     <tr>
+		<td class="form_text_left"><span style="color:blue">客户联系人</span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[linkman]" id="linkman"  value="{linkman}"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">联系方式</span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[contact]" id="contact" value="{contact}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">交流地点</span></td>
+		<td class="form_text_right" colspan="3">
+		    <input type="text" class="txtmaxlong" id="AClocation" name="support[AClocation]" value="{AClocation}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流背景</td>
+		<td class="form_text_right" colspan="3">
+		    <textarea class="txt_txtarea_biglong" name="support[customerInfo]" >{customerInfo}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户参加人员介绍</td>
+		<td class="form_text_right" colspan="3">
+		    <textarea class="txt_txtarea_biglong" name="support[customerRemark]" >{customerRemark}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">需要达成的交流目标</td>
+		<td class="form_text_right" colspan="3">
+		    <textarea class="txt_txtarea_biglong" name="support[goals]" >{goals}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流内容</td>
+		<td class="form_text_right" colspan="3">
+		     <textarea class="txt_txtarea_biglong" style="height:150px;" name="support[exContent]" >{exContent}</textarea>
+	   </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流的安排计划</td>
+		<td class="form_text_right" colspan="3">
+		     <textarea class="txt_txtarea_biglong" name="support[exPlan]" >{exPlan}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">建议准备的资料</td>
+		<td class="form_text_right" colspan="3">
+		     <textarea class="txt_txtarea_biglong" name="support[prepared]" >{prepared}</textarea>
+		</td>
+	</tr>
+	<tr>
+					<td class="form_text_left">附件</td>
+					<td class="form_view_right" colspan="3">
+						<div class="upload">
+							<div class="upload" id="fsUploadProgress"></div>
+							<div class="upload"><span id="swfupload"></span> <input
+								id="btnCancel" type="button" value="中止上传"
+								onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+							</div>
+							<div id="uploadfileList" class="upload">{file}</div>
+						</div>
+					</td>
+    </tr>
+		   </table>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('otherImg','other')">其他类型支持要求
+		     <img src="images/icon/info_up.gif" id="otherImg" />
+		   </legend>
+   <table class="form_main_table" id="other">
+    <tr>
+		<td class="form_text_left">开始时间</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[beginDate]" id="beginDate" onblur="timeCheck(this)" onfocus="WdatePicker()" value="{beginDate}"/>
+		</td>
+		<td class="form_text_left">结束时间</td>
+		<td class="form_text_right">
+		    <input type="text" class="txt" name="support[closeDate]" id="closeDate" onblur="timeCheck(this)" onfocus="WdatePicker()" value="{closeDate}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">支持内容</td>
+		<td class="form_text_right" colspan="3">
+		   <input type="text" class="txtmaxlong" name="support[supContent]" value="{supContent}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">提供素材（其他支持备注）</td>
+		<td class="form_text_right" colspan="3">
+		   <input type="text" class="txtmaxlong" name="support[otherRemark]" value="{otherRemark}"/>
+		</td>
+	</tr>
+   </table>
+        </fieldset>
+         </td>
+     </tr>
+   <tr>
+		<td class="txt_btn" colspan="4">
+         <input  type="hidden" name="support[id]" value="{id}" />
+		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+		</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

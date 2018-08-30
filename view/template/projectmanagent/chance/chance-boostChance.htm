@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>推进商机</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/chance-boostChance.js"></script>
+<style type="text/css">
+		.rimless_textA {
+					border-left: medium none;
+					border-right: medium none;
+					border-top: medium none;
+					border-bottom: 1.7px solid rgb(192, 192, 192);
+					font-family: Courier;
+					height:18px;
+					width:100px;
+				}
+</style>
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=projectmanagent_chance_chance&action=updateBoostChance" name="form1" onsubmit="return sub();">
+<table class="form_main_table">
+ <div class="main_head"><span class="main_head_title">推进商机</span>
+<tr>
+		<td class="form_text_left">商机名称</td>
+		<td class="form_text_right" colspan="3">
+			 <span style="color:blue;cursor:pointer;" onclick="chanceInfo();">{chanceName}
+		</td>
+</tr>
+<tr>
+       <td class="form_text_left"><span
+         title=" 赢率和承诺判断分为五级：
+1.标注100%，已经赢标，承诺没任何问题，同意上级进一步向上承诺；
+2.标注80%， 承诺赢标，但在时间上（可能拖后）或合同额上（可能减少）有一定风险，但会有后备标注50%的商机做冗余，因此同意上级进一步向上承诺；
+3. 标注50%，肯定是未来3月内要发生的商机，但在目前时间点上还不能判断更高的赢率，是后备冗余商机。目的是当标注赢率80%商机发生下滑时，从这里能找单子进入赢率80%商机补充，以使承诺总数不变。不同意上级进一步向上承诺；
+4. 标注25%，不能肯定一定是未来三个月发生的商机，距离判断输赢还远，期望有机会推进到50%商机列表里，肯定不同意上级进一步向上承诺；
+5标注0%，表示.输单、客户决定不再采购或鼎利决定不参与此商机竞争，关掉此商机等。请在商机描述中描写具体情况"
+       >商机赢率</span></td>
+	    <td class="form_text_right" >
+	         <input type="hidden" id="winRateDone" value="{winRateDone}" />
+	         <input type="hidden" id="winRateA" value="{winRateA}"/>
+			 <select class="select" id="winRate"  name="chance[winRate]" onchange="changeWinRate(this);">
+			     {winRate}
+			 </select>
+		</td>
+	   <td class="form_text_left"><span
+	       title="销售进程的判断分七级：
+阶段一，初期接触，感兴趣，不能判断是否有预算；
+阶段二，客户确认了预算，进一步明确了具体需求，对比那家的方案有优势；
+阶段三，商机进入招标或商务谈判阶段；
+阶段四， 赢标，并签订合同，但未交货，服务人员及设备等也为进场；
+阶段五，合同已经执行，货物或服务人员已经到位；
+阶段六，输了（在商机描述列，文字注明那个竞争对手赢了，客户不选择鼎利的原因）；
+阶段七， 项目撤销，客户或鼎利选择不做了（在商机描述列，用文字写明原因）"
+	   >商机阶段</span></td>
+	   <td class="form_text_right" >
+	         <input type="hidden" id="chanceStageDone" value="{chanceStageDone}" />
+	         <input type="hidden" id="chanceStageA" value="{chanceStageA}" />
+			 <select class="select" id="chanceStage" name="chance[chanceStage]" onchange="changeChanceStage()">
+			     {chanceStage}
+			 </select>
+	   </td>
+</tr>
+<tr>
+		<td class="form_text_left">客户名称</td>
+		<td class="form_text_right" >
+			 {customerName}
+		</td>
+		<td class="form_text_left">客户类型</td>
+		<td class="form_text_right">
+             {customerType}
+		</td>
+</tr>
+<tr id="proList" style="display:none">
+		<td class="form_text_left">产品选择</td>
+		<td class="form_text_right" colspan="3">
+			<span onclick="chooseProduct()" style="color:red;cursor:pointer;">选择产品</span>
+			<table id="productList" border=0 cellspacing=0  width=100% bordercolorlight=#333333 bordercolordark=#efefef style='font-size:14'>
+			</table>
+		</td>
+</tr>
+<tr id="closeInfo" style="display:none">
+	<td class="form_text_left"><span style="color:blue">关闭原因</span></td>
+	<td class="form_text_right" colspan="3">
+		<textarea rows="4" cols="80" name="chance[closeRegard]" id="closeRegard"></textarea>
+	</td>
+</tr>
+<table class="form_main_table">
+<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="hidden" id="chanceId" name="chance[chanceId]" value="{id}" />
+		   <input type="hidden" id="updateRecord" name="chance[updateRecord]" value="{updateRecord}" />
+		   <input type="hidden" id="oldwinRate" name="chance[oldwinRate]" value="{winRateA}" />
+		   <input type="hidden" id="oldchanceStage" name="chance[oldchanceStage]" value="{chanceStageA}" />
+		   <input type="hidden" id="updateTime" name="chance[updateTime]" value="{updateTime}" />
+		   <input type="hidden" id="status" value="{status}" />
+		   <input type="hidden" id="isProFlag" value="1" />
+		   <input type="submit" class="txt_btn_a" value=" 保  存 " />&nbsp;
+		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>&nbsp;
+		</td>
+</tr>
+</table>
+</table>
+</form>
+</body>
+</html>

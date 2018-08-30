@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jeasyui/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript">
+            $(function (){
+                $('#ff').form({
+                    onSubmit:function(){
+                        return $(this).form('validate');
+                    },
+                    success:function(data){
+                        alert(data);
+                    }
+                });
+            });
+            function sub(){
+                $('#ff').submit();
+            }
+            function show_jobs(val)
+            {
+                if (val == 'jobs')
+                {
+                    if ($('#_jobs_id_str').html()=='')
+                    {
+                        $.get('ajax.php',{model:'system_menu',action:'get_jobs',rand:Math.random(0,9999)},
+                        function (data)
+                        {
+                            if (data)
+                            {
+                                data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>';
+                                $('#_jobs_id_str').html(unescape(data));
+                                tb_show('选择职位','#TB_show_html?inlineId=_jobs_id_str&width=400',false);
+                            }
+                        }
+                    );
+                    }else{
+                        tb_show('选择职位','#TB_show_html?inlineId=_jobs_id_str&width=400',false);
+                    }
+                }
+            }
+
+            function all_checked(id,tid,checked){
+                var str = '';
+                $('#TB_ajaxContent input[type=checkbox]').attr('checked', checked);
+                if (checked) {
+                    var inputs = $('input[name='+tid+']:checked').get();
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (i >= 1)
+                            str += '、';
+                        str += inputs[i].title;
+                    }
+                }
+                $('#'+id).html(str);
+            }
+
+            function add_jobs()
+            {
+                var input = $('#TB_ajaxContent input[name=jobsid[]]:checked').get();
+                var str = '';
+                for (var i=0;i<input.length;i++)
+                {
+                    str +=input[i].title +'、';
+                }
+                $('#_jobs_id_').html(str);
+            }
+
+            function all_jobs(id,checked)
+            {
+                $('#dept_'+id+' input[type=checkbox]').attr("checked",checked);
+                add_jobs();
+            }
+			
+			function onSelectPersoner(objName,objId){
+				 url="?model=deptuser_user_user&action=selectuser&mode=check&showDialog=1&isOnlyCurDept=false&deptIds=&formCode=stampConfig&userVal="+$('#'+objId).val();
+				revalue=showModalDialog(url,'','dialogWidth:650px;dialogHeight:470px;');
+				if(revalue){
+					$('#'+objName).val(revalue.text);
+					$('#'+objId).val(revalue.val);
+				}
+				
+			}
+				
+        </script>
+        <style type="text/css">
+
+        </style>
+    </head>
+    <body >
+        <form id="ff" method="post" action="{url}">
+            <table class="ui-table" cellpadding="0" cellspacing="0" width="100%" >
+                <tr>
+                    <th width="15%">名称：</th>
+                    <td><input class="easyui-validatebox" type="text" name="name" value="{name}" required></input> </td>
+                </tr>
+                <tr>
+                    <th>排序：</th>
+                    <td><input class="easyui-validatebox" type="text" name="sort" value="{sort}" required></input> </td>
+                </tr>
+                <tr>
+                    <th>路径：</th>
+                    <td><input class="easyui-validatebox" type="text" name="url" value="{file}" style="width: 380px;"></input> </td>
+                </tr>
+                
+                <tr>
+                    <th>是否子系统：</th>
+                    <td><input  type="checkbox" name="isSystem" value=1 {isSystem} ></input> </td>
+                </tr>
+				<tr>
+                    <th>模块类型：</th>
+                    <td><select id="modelType" name="modelType" class="easyui-combobox">
+                            {modelOption}
+                         </select></td>
+                </tr>
+                
+                <tr>
+                    <th>安全级别：</th>
+                    <td> <select id="pvLeave" name="pvLeave" class="easyui-combobox">
+                           {pvLeaveOption}
+                        </select></td>
+                </tr>
+                 <tr>
+                    <th>模块管理员：</th>
+                    <td>
+                    <span class="textbox combo" style="width: 198px; height: 20px;">
+                    <span class="textbox-addon textbox-addon-right" style="right: 0px;">
+                    <a class="textbox-icon combo-arrow" href="javascript:onSelectPersoner('adminNames','adminIds');" style="width: 18px; height: 20px;"></a></span>
+                    <input type="text"  id="adminNames" name="adminNames"    readonly="readonly" placeholder="" style="margin-left: 0px; margin-right: 18px; padding-top: 2px; padding-bottom: 2px; width: 172px;border:0px;" value="{adminNames}">
+                    <input  type="hidden" id="adminIds" name="adminIds" value="{adminIds}"> 
+                    </span>
+                    
+                  </td>
+                </tr>
+                 <tr>
+                    <th>所属部门：</th>
+                    <td>
+                    <select id="deptId[]" name="deptId[]" class="easyui-combotree" data-options="url:'index1.php?model=system_menu&action=deptData&deptId={deptId}',method:'get'" multiple style="width:200px;"></select> </td>
+                </tr>
+                 <tr>
+                    <th>审批类型：</th>
+                    <td> <select id="appTypeId" name="appTypeId"  class="easyui-combobox">
+                           {appOption}
+                          </select></td>
+                </tr>
+                        
+                <tr>
+                    <th>权限：</th>
+                    <td>
+                        <select id="jobs_pv" name="jobs_pv" onchange="show_jobs(this.value);" >
+                            <option value="">选择职位</option>
+                            <option value="all_jobs">所有职位</option>
+                            <option value="jobs">指定职位</option>
+                        </select>
+                        <span id="_jobs_id_"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center" style="text-align: center;background:#fafafa;">
+                        <input type="hidden" value="{id}" name="id"/>
+                        <input type="hidden" value="{pid}" name="pid"/>
+                        <input type="hidden" value="{type}" name="type"/>
+                        <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-ok" onclick="sub()">确定</a>
+                    </td>
+                </tr>
+            </table>
+            <div id="_jobs_id_str" style="display:none"></div>
+        </form>
+    </body>
+</html>

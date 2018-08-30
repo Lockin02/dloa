@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>设置财务会计期间</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+	<script type="text/javascript" src="view/template/finance/period/js/period-createperiod.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	设置启用会计期间
+    </span>
+</div>
+<form id="form1" method="post" action="?model=finance_period_period&action=createPeriod" onsubmit="return isCanCreate();">
+<table class="form_main_table">
+   <tr>
+		<td class="form_text_left">年</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="period[thisYear]" id="thisYear" value="{year}"/>
+		</td>
+   </tr>
+   <tr>
+		<td class="form_text_left">月</td>
+		<td class="form_text_right" >
+			 <select class="select" name="period[thisMonth]" id="thisMonth">
+				<option value="1">1月</option>
+				<option value="2">2月</option>
+				<option value="3">3月</option>
+				<option value="4">4月</option>
+				<option value="5">5月</option>
+				<option value="6">6月</option>
+				<option value="7">7月</option>
+				<option value="8">8月</option>
+				<option value="9">9月</option>
+				<option value="10">10月</option>
+				<option value="11">11月</option>
+				<option value="12">12月</option>
+			</select>
+			<input type="hidden" id="sysMonth" value="{sysMonth}"/>
+		</td>
+   </tr>
+	<tr>
+		<td class="form_text_left">所属公司</td>
+		<td class="form_text_right" >
+			<select class="select" name="period[thisBusinessBelong]" id="thisBusinessBelong">
+				{businessBelongOpts}
+			</select>
+			<input type="hidden" name="period[thisBusinessBelongName]" id="thisBusinessBelongName" value="{firstBusinessBelongOpt}"/>
+		</td>
+	</tr>
+   <tr>
+		<td class="txt_btn" colspan="2">
+		   <input type="submit" class="txt_btn_a" value="保  存"/>
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+   </tr>
+	<script>
+		$(function(){
+			$("#thisBusinessBelong").change(function(){
+				var name = $("#thisBusinessBelong").find("option:selected").text();
+				$("#thisBusinessBelongName").val(name);
+			});
+		})
+	</script>
+</table>
+</form>
+</body>
+</html>

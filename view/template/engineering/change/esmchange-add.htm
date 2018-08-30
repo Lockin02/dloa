@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>工程项目变更</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-budgetdl.js" ></script>
+	<script type="text/javascript" src="{#jsPath#}/esmchange-add.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/esmchange-common.js"></script>
+</head>
+<body>
+<div class="main_head2" style="width:1200px;margin:auto;align:center" align="center">
+    <span class="main_head_title">
+      	工程项目变更
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_change_esmchange&action=add" onsubmit="return checkForm();">
+<table class="form_main_table" style="width:1200px;margin:auto;align:center" align="center">
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">
+					基 本 信 息
+					<img src="images/icon/info_up.gif" id="baseImg" onclick="showAndHide('baseImg','baseTbl')"/>
+				</legend>
+				<table class="form_in_table" id="baseTbl">
+					<tr>
+				   		<td class="form_text_left_three">归属区域</td>
+						<td class="form_text_right_three">
+							{officeName}
+						</td>
+						<td class="form_text_left_three">项目编号</td>
+						<td class="form_text_right_three">
+							{projectCode}
+						</td>
+						<td class="form_text_left_three"><span class="blue">项目名称</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmchange[projectName]" value="{projectName}" id="projectName"/>
+				         	<input type="hidden" id="projectId" name="esmchange[projectId]" value="{id}" />
+				         	<input type="hidden" id="projectCode" name="esmchange[projectCode]" value="{projectCode}" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three"><span class="blue">所属国家</span></td>
+						<td class="form_text_right_three">
+						    <select class="select" name="esmchange[countryId]" id="country"></select>
+						    <input type="hidden" name="esmchange[country]" id="countryName" value="{country}"/>
+				            <input type="hidden" value="{countryId}" id="countryId"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">所属省份</span></td>
+						<td class="form_text_right_three">
+						   <select class="select" name="esmchange[provinceId]" id="province"></select>
+						   <input type="hidden" name="esmchange[province]" id="provinceName"/>
+						   <input type="hidden" value="{provinceId}" id="provinceId"/>
+					    </td>
+						<td class="form_text_left_three"><span class="blue">所属城市</span></td>
+						<td class="form_text_right_three">
+						   <select class="select" name="esmchange[cityId]" id="city"></select>
+						   <input type="hidden" name="esmchange[city]" id="cityName"/>
+						   <input type="hidden" value="{cityId}" id="cityId"/>
+						</td>
+					</tr>
+				    <tr>
+						<td class="form_text_left_three">项目所在地</td>
+						<td class="form_text_right_three" colspan="5">
+							<input type="text" class="txt" name="esmchange[place]" value="{place}" id="place"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">详 细 信 息
+					<img src="images/icon/info_up.gif" id="detailImg" onclick="showAndHide('detailImg','detailTbl')"/>
+				</legend>
+				<table class="form_in_table" id="detailTbl">
+					<tr>
+						<td class="form_text_left_three"><span class="blue">预计开始</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="esmchange[planBeginDate]" id="planBeginDate" value="{planBeginDate}" onfocus="WdatePicker()" onblur="timeCheckProject(this)"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">预计结束</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="esmchange[planEndDate]" id="planEndDate" value="{planEndDate}" onfocus="WdatePicker()" onblur="timeCheckProject(this)"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">预计工期</span></td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmchange[expectedDuration]" id="expectedDuration" value="{expectedDuration}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left_three">实际开始</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText" name="esmchange[actBeginDate]" id="actBeginDate" value="{actBeginDate}" readonly="readonly"/>
+						</td>
+						<td class="form_text_left_three">实际结束</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt Wdate" name="esmchange[actEndDate]" id="actEndDate" value="{actEndDate}" onfocus="WdatePicker()" onblur="timeCheck(this)"/>
+						</td>
+						<td class="form_text_left_three">实际工期</td>
+						<td class="form_text_right_three">
+							<input type="text" class="txt" name="esmchange[actDuration]" id="actDuration" value="{actDuration}"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend">预 算 决 算
+					<img src="images/icon/info_up.gif" id="budgetImg" onclick="showAndHide('budgetImg','budgetTbl')"/>
+				</legend>
+				<table class="form_in_table" id="budgetTbl">
+					<tr>
+						<td class="form_text_left_three">总 预 算</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetAll]" id="newBudgetAll" value="{budgetAll}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetAll]" id="orgBudgetAll" value="{budgetAll}"/>
+						</td>
+						<td class="form_text_left_three">现场预算</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetField]" id="newBudgetField" value="{budgetField}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetField]" id="orgBudgetField" value="{budgetField}"/>
+						</td>
+						<td class="form_text_left_three">设备预算</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetEqu]" id="newBudgetEqu" value="{budgetEqu}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetEqu]" id="orgBudgetEqu" value="{budgetEqu}"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three">人力预算(元)</td>
+						<td class="form_text_right_three">
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetPerson]" id="newBudgetPerson"  value="{budgetPerson}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetPerson]" id="orgBudgetPerson" value="{budgetPerson}"/>
+						<td class="form_text_left_three">人力预算(天)</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetPeople]" id="newBudgetPeople" value="{budgetPeople}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetPeople]" id="orgBudgetPeople" value="{budgetPeople}"/>
+						</td>
+						<td class="form_text_left_three">人天预算(天)</td>
+						<td class="form_text_right_three" >
+							<input type="text" class="readOnlyText formatMoney" name="esmchange[newBudgetDay]" id="newBudgetDay" value="{budgetDay}" readonly="readonly"/>
+							<input type="hidden" name="esmchange[orgBudgetDay]" id="orgBudgetDay" value="{budgetDay}"/>
+						</td>
+				    </tr>
+				    <tr>
+						<td class="form_text_left_three"><span class="blue">外包预算</span></td>
+						<td class="form_text_right">
+							<input type="text" class="txt formatMoney" name="esmchange[newBudgetOutsourcing]" id="newBudgetOutsourcing"  value="{budgetOutsourcing}" onblur="countBudgetAll();"/>
+							<input type="hidden" name="esmchange[orgBudgetOutsourcing]" id="orgBudgetOutsourcing" value="{budgetOutsourcing}"/>
+						</td>
+						<td class="form_text_left_three"><span class="blue">其他预算</span></td>
+						<td class="form_text_right" colspan="3">
+							<input type="text" class="txt formatMoney" name="esmchange[newBudgetOther]" id="newBudgetOther"  value="{budgetOther}" onblur="countBudgetAll();"/>
+							<input type="hidden" name="esmchange[orgBudgetOther]" id="orgBudgetOther" value="{budgetOther}"/>
+						</td>
+				    </tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset class="fieldset">
+				<legend class="legend">项 目 计 划
+					<img src="images/icon/info_up.gif" id="activityImg" onclick="showAndHide('activityImg','esmactivity')"/>
+				</legend>
+				<table class="form_in_table" id="esmactivity">
+					<thead>
+						<tr class="main_tr_header">
+							<th style="width:40px">
+						 		<img src="images/add_item.png" onclick="addActivity();" title="添加行"/>
+						 	</th>
+							<th style="width:40px">序号</th>
+							<th style="width:200px">任务名称</th>
+							<th style="width:70px">工作占比(%)</th>
+							<th style="width:100px">预计开始</th>
+							<th style="width:90px">预计结束</th>
+							<th style="width:70px">预计工期</th>
+							<th style="width:70px">工作量</th>
+							<th style="width:60px">单位</th>
+							<th style="width:80px">费用预算</th>
+							<th>工作内容</th>
+						</tr>
+					</thead>
+					<tbody id="tblActivity">
+						{esmactivity}
+					</tbody>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset class="fieldset">
+				<legend class="legend">变 更 说 明
+					<img src="images/icon/info_up.gif" id="changeResonImg" onclick="showAndHide('changeResonImg','changeResonTbl')"/>
+				</legend>
+				<table class="form_in_table" id="changeResonTbl">
+					<tr>
+						<td>
+							<textarea class="txt_txtarea_biglong" style="width:1180px" name="esmchange[changeDescription]" id="changeDescription"></textarea>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td class="txt_btn" colspan="6">
+         	<input type="hidden" id="officeId" name="esmchange[officeId]" value="{officeId}" />
+         	<input type="hidden" id="officeName" name="esmchange[officeName]" value="{officeName}" />
+
+			<input type="submit" class="txt_btn_a" onclick="audit('audit')" value="提交审批" />
+			<input type="submit" value="保  存" onclick="audit()" class="txt_btn_a"/>
+		    <input type="button" class="txt_btn_a" value="关  闭" onclick="closeFun();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

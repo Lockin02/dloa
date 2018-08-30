@@ -1,0 +1,422 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>新增入职名单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/entryNotice-add.js"></script>
+	<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-formwork.js"></script>
+	<script type="text/javascript" src="js/common/formworkDeploy.js"></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_entryNotice_email",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+	<!-- 附件上传结束 -->
+	<style type="text/css">
+		.rimless_text {
+			border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: 1.7px solid rgb(192, 192, 192);
+			font-family: Courier;
+			height:18px;
+			width:350px;
+		}
+		.rimless_text_txt {
+			border-left: medium none;
+			border-right: medium none;
+			border-top: medium none;
+			border-bottom: 1.7px solid rgb(192, 192, 192);
+			font-family: Courier;
+			height:18px;
+			width:200px;
+		}
+		.form_main_table td{
+			width: 10%;
+		}
+	</style>
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=hr_recruitment_entryNotice&action=add" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="6">
+					<div class="main_head">
+						<span class="main_head_title">
+							录用通知
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<!-- 面试通知编号 -->
+				<input type="hidden" id="invitationCode" name="entryNotice[invitationCode]" value="{invitationCode}"/>
+				<input type="hidden" id="invitationId" name="entryNotice[invitationId]" value="{invitationId}"/>
+				<!-- 面试类型 -->
+				<input type="hidden" id="interviewType" name="entryNotice[interviewType]" value="{interviewType}"/>
+				<input type="hidden" id="interviewTypeName" name="entryNotice[interviewTypeName]" value="{interviewTypeName}"/>
+				<td class="form_text_left_three">简历编号</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="resumeCode" readonly name="entryNotice[resumeCode]" value="{resumeCode}"/>
+					<input type="hidden" id="resumeId" readonly name="entryNotice[resumeId]" value="{resumeId}"/>
+				</td>
+				<td class="form_text_left_three">姓  名</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="userName" name="entryNotice[userName]" value="{userName}"/>
+				</td>
+				<td class="form_text_left_three">性  别</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="sex" name="entryNotice[sex]" value="{sexy}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">联系电话</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="phone" name="entryNotice[phone]" value="{phone}"/>
+				</td>
+				<td class="form_text_left_three">电子邮箱</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="email" name="entryNotice[email]" value="{email}"/>
+				</td>
+				<td class="form_text_left_three">二级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{deptNameS}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">三级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{deptNameT}"/>
+				</td>
+				<td class="form_text_left_three">四级部门</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{deptNameF}"/>
+				</td>
+				<td class="form_text_left_three">应聘岗位</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="positionsName" name="entryNotice[positionsName]" value="{positionsName}"/>
+					<input type="hidden" id="positionsId" name="entryNotice[positionsId]" value="{positionsId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">技术级别</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{positionLevelName}"/>
+				</td>
+				<td class="form_text_left_three">研发职位</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="developPositionName" name="entryNotice[developPositionName]" value="{developPositionName}"/>
+				</td>
+				<td class="form_text_left_three">增员类型</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="addType" name="entryNotice[addType]" value="{addType}"/>
+					<input type="hidden" id="addTypeCode" name="entryNotice[addTypeCode]" value="{addTypeCode}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">入职地点</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{workProvince}-{workCity}"/>
+				</td>
+				<td class="form_text_left_three">试用期</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{probation}个月"/>
+				</td>
+				<td class="form_text_left_three">电脑配置</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" id="useDemandEqu" name="entryNotice[useDemandEqu]" value="{useDemandEqu}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">社保购买地</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="socialPlace" name="entryNotice[socialPlace]" value="{socialPlace}"/>
+				</td>
+<!-- 				<td class="form_text_left_three">社保内容</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value=""/>
+				</td> -->
+				<td class="form_text_left_three">指定导师</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="tutor" name="entryNotice[tutor]" value="{tutor}"/>
+					<input type="hidden" id="tutorId" name="entryNotice[tutorId]" value="{tutorId}"/>
+				</td>
+				<td class="form_text_left_three">电脑协助人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly value="{xqdnUser}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">简历来源大类名称</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="hrSourceType1Name" name="entryNotice[hrSourceType1Name]" value="{hrSourceType1Name}"/>
+					<input type="hidden" id="hrSourceType1" name="entryNotice[hrSourceType1]" value="{hrSourceType1}"/>
+				</td>
+				<td class="form_text_left_three">试用期基本工资</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="useTrialWage" name="entryNotice[useTrialWage]" value="{useTrialWage}"/>
+				</td>
+				<td class="form_text_left_three">转正基本工资</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="useFormalWage" name="entryNotice[useFormalWage]" value="{useFormalWage}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none">实习工资</td>
+				<td class="form_text_right_three" style="display:none">
+					<input type="text" class="readOnlyText" style="width:73px" readonly id="internshipSalaryType" name="entryNotice[internshipSalaryType]" value="{internshipSalaryType}"/>
+					<input type="text" class="readOnlyText" style="width:120px" readonly id="internshipSalary" name="entryNotice[internshipSalary]" value="{internshipSalary}"/>
+				</td>
+			</tr>
+			<tr id="internship" style="display:none">
+				<td class="form_text_left_three">餐车补</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="eatCarSubsidy" value="{eatCarSubsidy}"/>
+				</td>
+				<td class="form_text_left_three">电脑补贴</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="computerIntern" value="{computerIntern}"/>
+				</td>
+				<td class="form_text_left_three">实习期薪资总额</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="allInternship" value="{allInternship}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">电话费补助</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="phoneSubsidy" name="entryNotice[phoneSubsidy]" value="{phoneSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="phoneSubsidyFormal" name="entryNotice[phoneSubsidyFormal]" value="{phoneSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none">电脑补助</td>
+				<td class="form_text_right_three" style="display:none">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="computerSubsidy" name="entryNotice[computerSubsidy]" value="{computerSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="computerSubsidyFormal" name="entryNotice[computerSubsidyFormal]" value="{computerSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none;">出差补助上限值</td>
+				<td class="form_text_right_three" style="display:none;">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="tripSubsidy" name="entryNotice[tripSubsidy]" value="{tripSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="tripSubsidyFormal" name="entryNotice[tripSubsidyFormal]" value="{tripSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none;">工作奖金</td>
+				<td class="form_text_right_three" style="display:none;">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="workBonus" name="entryNotice[workBonus]" value="{workBonus}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="workBonusFormal" name="entryNotice[workBonusFormal]" value="{workBonusFormal}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none">餐车补</td>
+				<td class="form_text_right_three" style="display:none">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" id="mealCarSubsidy" value="{mealCarSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" id="mealCarSubsidyFormal" value="{mealCarSubsidyFormal}"/>
+				</td>
+			</tr>
+			<tr style="display:none;" id="subsidyTr">
+				<td class="form_text_left_three">技术级别补助</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="levelSubsidy" name="entryNotice[levelSubsidy]" value="{levelSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="levelSubsidyFormal" name="entryNotice[levelSubsidyFormal]" value="{levelSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three">区域补助</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="areaSubsidy" name="entryNotice[areaSubsidy]" value="{areaSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="areaSubsidyFormal" name="entryNotice[areaSubsidyFormal]" value="{areaSubsidyFormal}"/>
+				</td>
+			</tr>
+			<tr style="display:none;" id="subsidyTr2">
+				<td class="form_text_left_three">奖金上限值</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="bonusLimit" name="entryNotice[bonusLimit]" value="{bonusLimit}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="bonusLimitFormal" name="entryNotice[bonusLimitFormal]" value="{bonusLimitFormal}"/>
+				</td>
+				<td class="form_text_left_three">管理津贴</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="manageSubsidy" name="entryNotice[manageSubsidy]" value="{manageSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="manageSubsidyFormal" name="entryNotice[manageSubsidyFormal]" value="{manageSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three">临时住宿补助</td>
+				<td class="form_text_right_three">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="accommodSubsidy" name="entryNotice[accommodSubsidy]" value="{accommodSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="accommodSubsidyFormal" name="entryNotice[accommodSubsidyFormal]" value="{accommodSubsidyFormal}"/>
+				</td>
+			</tr>
+			<tr style="display:none;" id="subsidyTr3">
+				<td class="form_text_left_three" style="display:none;">其他补助</td>
+				<td class="form_text_right_three" style="display:none;">
+					试用期：<input type="text" class="readOnlyText" style="width:120px;" readonly id="otherSubsidy" name="entryNotice[otherSubsidy]" value="{otherSubsidy}"/><br /><br />
+					转&nbsp;&nbsp;&nbsp;正：<input type="text" class="readOnlyText" style="width:120px;" readonly id="otherSubsidyFormal" name="entryNotice[otherSubsidyFormal]" value="{otherSubsidyFormal}"/>
+				</td>
+				<td class="form_text_left_three">试用期工资总额预计</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="allTrialWage" name="entryNotice[allTrialWage]" value="{allTrialWage}"/>
+				</td>
+				<td class="form_text_left_three">转正工资总额预计</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="allFormalWage" name="entryNotice[allFormalWage]" value="{allFormalWage}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">简历来源小类名称</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="hrSourceType2Name" name="entryNotice[hrSourceType2Name]" value="{hrSourceType2Name}"/>
+					<input type="hidden" id="hrSourceType2" name="entryNotice[hrSourceType2]" value="{hrSourceType2}"/>
+				</td>
+				<td class="form_text_left_three">录用职位名称</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="hrJobName" name="entryNotice[hrJobName]" value="{hrJobName}"/>
+					<input type="hidden" id="hrJobId" name="entryNotice[hrJobId]" value="{hrJobId}"/>
+				</td>
+				<td class="form_text_left_three">工资级别</td>
+				<td class="form_text_right_three">
+					<input type="text" class="readOnlyText" readonly id="wageLevelName" name="entryNotice[wageLevelName]" value="{wageLevelName}"/>
+					<input type="hidden" name="entryNotice[wageLevelCode]" value="{wageLevelCode}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">入职日期</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" readonly id="entryDate" onfocus="WdatePicker()" name="entryNotice[entryDate]" value="{entryDate}"/>
+				</td>
+				<td class="form_text_left_three">入职协助人</td>
+				<td class="form_text_right_three">
+					<input type="text" class="txt" readonly id="assistManName" name="entryNotice[assistManName]" value="{assistManName}"/>
+					<input type="hidden" id="assistManId" name="entryNotice[assistManId]" value="{assistManId}"/>
+				</td>
+				<td class="form_text_left_three" style="display:none;">管理岗位</td>
+				<td class="form_text_right_three" style="display:none;">
+					<input type="text" class="readOnlyText" readonly id="controlPost" value="{controlPost}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span style="color:blue">发件人 ：</span></td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" readonly="readonly" class="rimless_text_txt" name="interMail[user]" value="{user}"/>
+					<input type="hidden" class="rimless_text_txt" name="interMail[userId]" value="{userId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span style="color:blue">收件人 ：</span></td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" class="rimless_text" name="interMail[toMail]" value="{toMail}"/>
+				</td>
+			</tr>
+			<tr id="ccmail">
+				<td class="form_text_left_three"><span style="color:blue">抄送 ：</span></td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" class="rimless_text" style="width:600px;" id="toccmail" name="interMail[toccMail]" readonly="readonly" value="{toccMail}"/>
+					<input type="hidden" id="toccmailId" name="interMail[toccMailId]" value="{toccMailId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three"><span style="color:blue">标题 ：</span></td>
+				<td class="form_text_right_three" colspan="5">
+					<input type="text" class="rimless_text" id="setdTitle" name="interMail[title]"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_three">附件</td>
+				<td class="form_text_right_three" colspan="5">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled"/>
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload">{file}</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">模板 ：</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txt" id="formwork"/>
+					<input type="hidden" id="deploy" value="MSTZ"/>
+					<input type="hidden" id="ids" value="{ids}"/>
+				</td>
+				<td colspan="2">
+					<span style="color: red">*以下内容将作为邮件内容发送</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<textarea name="interMail[content]" id="remark" class="editor">{content}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="6">
+					<input type="hidden" id="useSign" name="entryNotice[useSign]" value="{useSign}"/>
+					<input type="hidden" id="hrHireType" name="entryNotice[hrHireType]" value="{hrHireType}"/>
+					<input type="hidden" id="hrHireTypeName" name="entryNotice[hrHireTypeName]" value="{hrHireTypeName}"/>
+					<input type="hidden" id="probation" name="entryNotice[probation]" value="{probation}"/>
+					<input type="hidden" id="contractYear" name="entryNotice[contractYear]" value="{contractYear}"/>
+					<input type="hidden" id="hrRequire" name="entryNotice[hrRequire]" value="{hrRequire}"/>
+					<!--求美观-->
+					<input type="hidden" id="useHireType" name="entryNotice[useHireType]" value="{useHireType}"/>
+					<input type="hidden" id="useHireTypeName" name="entryNotice[useHireTypeName]" value="{useHireTypeName}"/>
+					<input type="hidden" id="useJobName" name="entryNotice[useJobName]" value="{useJobName}"/>
+					<input type="hidden" id="applyId" name="entryNotice[applyId]" value="{applyId}"/>
+					<input type="hidden" id="applyCode" name="entryNotice[applyCode]" value="{applyCode}"/>
+					<input type="hidden" id="useAreaName" name="entryNotice[useAreaName]" value="{useAreaName}"/>
+					<input type="hidden" id="useJobId" name="entryNotice[useJobId]" value="{useJobId}"/>
+					<!--求美观-->
+					<input type="hidden" id="useJobName" name="entryNotice[useJobName]" value="{useJobName}"/>
+					<input type="hidden" id="deptName" name="entryNotice[deptName]" value="{deptName}"/>
+					<input type="hidden" id="deptCode" name="entryNotice[deptCode]" value="{deptCode}"/>
+					<input type="hidden" id="deptId" name="entryNotice[deptId]" value="{deptId}"/>
+					<input type="hidden" id="projectGroupId" name="entryNotice[projectGroupId]" value="{projectGroupId}"/>
+					<input type="hidden" id="projectCode" name="entryNotice[projectCode]" value="{projectCode}"/>
+					<input type="hidden" id="projectGroup" name="entryNotice[projectGroup]" value="{projectGroup}"/>
+					<!--求美观-->
+					<input type="hidden" id="sourceCode" name="entryNotice[sourceCode]" value="{parentCode}"/>
+					<input type="hidden" id="sourceId" name="entryNotice[sourceId]" value="{parentId}"/>
+					<input type="hidden" id="parentId" name="entryNotice[parentId]" value="{interviewId}"/>
+					<input type="hidden" id="parentCode" name="entryNotice[parentCode]" value="{interviewCode}"/>
+					<input type="hidden" id="recommendId" name="entryNotice[recommendId]" value="{recommendId}"/>
+					<input type="hidden" id="recommendCode" name="entryNotice[recommendCode]" value="{recommendCode}"/>
+					<input type="hidden" id="sysCompanyId" name="entryNotice[sysCompanyId]" value="{sysCompanyId}"/>
+					<input type="hidden" id="sysCompanyName" name="entryNotice[sysCompanyName]" value="{sysCompanyName}"/>
+					<!--求美观-->
+					<input type="hidden" id="applyResumeId" name="entryNotice[applyResumeId]" value="{applyResumeId}"/>
+					<input type="hidden" id="hrIsMatch" name="entryNotice[hrIsMatch]" value="{hrIsMatch}"/>
+					<input type="hidden" id="userNo" name="entryNotice[userNo]" value="{userNo}"/>
+					<input type="hidden" id="userAccount" name="entryNotice[userAccount]" value="{userAccount}"/>
+					<input type="hidden" id="personLevel" name="entryNotice[personLevel]" value="{personLevel}"/>
+					<input type="hidden" id="personLevelId" name="entryNotice[personLevelId]" value="{personLevelId}"/>
+					<!--求美观-->
+					<input type="hidden" id="eprovinceId" name="entryNotice[eprovinceId]" value="{eprovinceId}"/>
+					<input type="hidden" id="eprovince" name="entryNotice[eprovince]" value="{eprovince}"/>
+					<input type="hidden" id="ecityId" name="entryNotice[ecityId]" value="{ecityId}"/>
+					<input type="hidden" id="ecity" name="entryNotice[ecity]" value="{ecity}"/>
+					<input type="hidden" id="ecountryId" name="entryNotice[ecountryId]" value="{ecountryId}"/>
+					<input type="hidden" id="ecountry" name="entryNotice[ecountry]" value="{ecountry}"/>
+					<!--求美观-->
+					<input type="hidden" id="positionLevel" name="entryNotice[positionLevel]" value="{positionLevel}"/>
+					<input type="hidden" id="postTypeName" name="entryNotice[postTypeName]" value="{postTypeName}"/>
+					<input type="hidden" id="postType" name="entryNotice[postType]" value="{postType}"/>
+					<input type="hidden" id="isLocal" name="entryNotice[isLocal]" value="{isLocal}"/>
+					<input type="hidden" id="workProvinceId" name="entryNotice[workProvinceId]" value="{workProvinceId}"/>
+					<input type="hidden" id="workProvince" name="entryNotice[workProvince]" value="{workProvince}"/>
+					<input type="hidden" id="workCityId" name="entryNotice[workCityId]" value="{workCityId}"/>
+					<input type="hidden" id="workCity" name="entryNotice[workCity]" value="{workCity}"/>
+
+					<input type="hidden" name="interMail[id]" value="{id}"/>
+					<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="save();"/>&nbsp;&nbsp;
+					<input type="submit" class="txt_btn_a" value=" 发  送 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

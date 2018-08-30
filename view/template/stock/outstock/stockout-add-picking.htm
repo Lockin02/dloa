@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增领料出库单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-ship.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockout.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockin.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/stockout-add-picking.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=stock_outstock_stockout&action=add" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							领料出库单
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left blue">单据日期</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txt" name="stockout[auditDate]" readonly id="auditDate" onfocus="WdatePicker()" value="{auditDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">领料类型</td>
+				<td class="form_text_right">
+					<select class="select" name="stockout[pickingType]">
+						{pickingType}
+					</select>
+				</td>
+				<td class="form_text_left">对方科目</td>
+				<td class="form_text_right">
+					<select class="select" name="stockout[otherSubjects]">
+						{otherSubjects}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">源单类型</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly value="{relDocTypeName}">
+					<input type="hidden" name="stockout[relDocType]" id="relDocType" readonly value="{relDocType}">
+				</td>
+				<td class="form_text_left">源单编号</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly name="stockout[relDocCode]" id="relDocCode" value="{relDocCode}"/>
+					<input type="hidden" name="stockout[relDocId]" id="relDocId" value="{relDocId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">领料人</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly name="stockout[pickName]" value="{pickName}" id="pickName"/>
+					<input type="hidden" name="stockout[pickCode]" id="pickCode"/>
+				</td>
+				<td class="form_text_left">发料人</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" readonly name="stockout[salesmanName]" id="salesmanName"/>
+					<input type="hidden" name="stockout[salesmanCode]" id="salesmanCode"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">领料部门名称</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly name="stockout[deptName]" value="{deptName}" id="deptName"/>
+					<input type="hidden" name="stockout[deptCode]" value="{deptCode}" id="deptCode"/>
+				</td>
+				<td class="form_text_left">发料仓库</td>
+				<td class="form_text_right">
+					<input type="text" class="txt" name="stockout[stockName]" id="stockName"/>
+					<input type="hidden" class="txt" name="stockout[stockId]" id="stockId"/>
+					<input type="hidden" class="txt" name="stockout[stockCode]" id="stockCode"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">合同编号</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly name="stockout[contractCode]" id="contractCode" value="{contractCode}"/>
+					<input type="hidden" name="stockout[contractId]" id="contractId" value="{contractId}"/>
+					<input type="hidden" name="stockout[contractType]" id="contractType" value="{contractType}"/>
+					<input type="button" value="查看合同审批" class="txt_btn_a" onclick="viewContracAudit()"/>
+				</td>
+				<td class="form_text_left">合同名称</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly name="stockout[contractName]" id="contractName" value="{contractName}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left blue">所属板块</td>
+			    <td class="form_text_right" colspan="3">
+			        <select class="select" name="stockout[module]" id="module">
+			        {module}
+			        </select>
+			    </td>
+			</tr>
+			<tr>
+				<td class="form_text_left">物料用途</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="txtbiglong" name="stockout[toUse]" value="{purpose}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备  注</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="txt_txtarea_long" name="stockout[remark]"></textarea>
+				</td>
+			</tr>
+		</table>
+		<div style="overflow-x:scroll;">
+			<table>
+				<tr>
+					<td>
+						<div id="itemtable"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="auditLimit" value="{auditLimit}"/>
+					<input type="hidden" name="stockout[isRed]" id="isRed" value="0"/>
+					<input type="hidden" name="stockout[docType]" id="docType" value="CKPICKING"/>
+					<input type="hidden" name="stockout[docStatus]" id="docStatus" value="WSH"/>
+					<input type="submit" value=" 保  存 " class="txt_btn_a"/>&nbsp;&nbsp;
+					<input type="button" value=" 审  核 " class="txt_btn_a" onclick="return confirmAudit();" id="auditButton"/>&nbsp;&nbsp;
+					<input type="button" value=" 关  闭 " class="txt_btn_a" onclick="closeFun()"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

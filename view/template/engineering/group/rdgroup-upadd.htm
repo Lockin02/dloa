@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="view/template/engineering/group/js/rdgroup-add-formValidator.js"></script>
+        <script type="text/javascript" src="view/template/engineering/group/js/rdgroup-parent-group.js"></script>
+        <title>
+            新建项目组合
+        </title>
+		<style type="text/css">
+		</style>
+
+        <script type="text/javascript">
+		<!--
+
+		//-->
+        </script>
+    </head>
+
+    <body>
+        <div class="form_main">
+            <form method="POST" id="form1" action="?model=engineering_group_rdgroup&action=rgAdd">
+                <table class="form_main_table">
+                    <tr class="form_header">
+                        <td colspan="2">
+                            基本信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            所属项目组合
+                        </td>
+                        <td class="form_view_right">
+                            <input type="text" class="txt" id="parentName" name="rdgroup[parentName]" value="" />
+							<input type="hidden" id="parentId" name="rdgroup[parentId]" value="" />
+							<input type="hidden" id="parentCode" name="rdgroup[parentCode]" value="{groupCode}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            项目组合名称
+                        </td>
+                        <td class="form_view_right">
+                            <input type="hidden" id="projectId">
+                            <input type="text" class="txt" id="groupName" name="rdgroup[groupName]">
+                            <span class='red'>[*]</span>
+                            <div id="groupNameTip" class="tipShortTxt"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            简称
+                        </td>
+                        <td class="form_view_right">
+                            <input type="text" class="txt" id="simpleName" name="rdgroup[simpleName]">
+                            <span class='red'>[*]</span>
+                            <div id="simpleNameTip" class="tipShortTxt"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合编号
+                        </td>
+                        <td class="form_view_right">
+                            <input type="text" class="txt" id="groupCode" name="rdgroup[groupCode]">
+                            <span class='red'>[*]</span>
+                            <div id="groupCodeTip" class="tipShortTxt" ></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合责任人
+                        </td>
+                        <td class="form_view_right">
+                            <input type="hidden" id="managerId" name="rdgroup[managerId]">
+                            <input type="text" class="txtlong readonlyCmp" id="managerName" name="rdgroup[managerName]"  readonly>
+                            <!-- 单选 -->
+                            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow('managerId','managerName')">
+                            <!-- 多选 -->
+                            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('managerId','managerName')">
+                            <span class='red'>[*]</span>
+                            <br/><div id="managerNameTip" class="tipLongTxt" ></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            所属部门
+                        </td>
+                        <td class="form_view_right">
+                            <input type="hidden" id="depId" name="rdgroup[depId]">
+                            <input type="text" class="txtlong readonlyCmp" id="depName" name="rdgroup[depName]"  readonly>
+                            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindowDept('depId','depName')">
+                            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('depId','depName')">
+                            <span class='red'>[*]</span>
+                            <br/><div id="depNameTip" class="tipLongTxt"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合助理
+                        </td>
+                        <td class="form_view_right">
+                            <input type="hidden" id="assistantId" name="rdgroup[assistantId]">
+                            <input type="text" class="txtlong readonlyCmp"  id="assistantName" name="rdgroup[assistantName]" readonly>
+                            <input type="button" value="选 择" class="txt_btn_a" onclick="loadOrgWindow2('assistantId','assistantName')">
+                            <input type="button" value="清 空" class="txt_btn_a" onclick="clearOrgInfo('assistantId','assistantName')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">
+                            组合描述
+                        </td>
+                        <td class="form_view_right">
+                            <textarea class="txt_txtarea_font" id="description" name="rdgroup[description]"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" class="txt_btn_a" value="保存" id="submitSave">
+                            <input type="button" class="txt_btn_a" value="关闭" onclick="self.parent.tb_remove();">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+	<head>
+		<title>新增教育经历</title>
+		{#commonInclude#}
+		<script type="text/javascript" src="{#jsPath#}/education-addall.js" ></script>
+
+		<!-- 附件上传开始 -->
+		<script type="text/javascript" src="swfupload/swfupload.js"></script>
+		<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+		<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+		<script type="text/javascript" src="swfupload/handlers.js"></script>
+		<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
+		<script>
+			var uploadfile;
+			$(function() {
+				uploadfile = createSWFUpload({
+					"serviceType" : "oa_hr_personnel_education"
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<form id="form1" method="post" action="?model=hr_personnel_education&action=add" >
+			<table class="form_main_table">
+				<tr>
+					<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title"> 新增教育经历 </span>
+					</div></td>
+				</tr>
+				<tr>
+					<td class="form_text_left">员工编号</td>
+					<td class="form_text_right" >
+					<input type="text" class="readOnlyText" id="userNo"  name="education[userNo]"  readonly/>
+					<input type="hidden" class="txt" id="userAccount"  name="education[userAccount]"  value="{userAccount}" />
+					</td>
+					<td class="form_text_left">姓名</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt" id="userName"  name="education[userName]"  readonly/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">学校</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt" id="organization" name="education[organization]" />
+					<span class="red">[*]</span></td>
+					<td class="form_text_left">专业</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt" id="content" name="education[content]" />
+					<span class="red">[*]</span></td>
+				</tr>
+				<tr>
+					<td class="form_text_left">学历</td>
+					<td class="form_text_right" >
+					<select class="select" id="education"  name="education[education]">
+						{education}
+					</select></td>
+					<td class="form_text_left">证书</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt" id="certificate" name="education[certificate]" />
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">开始时间</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt Wdate" id="beginDate" onfocus="WdatePicker()" readOnly  name="education[beginDate]"  onblur="timeCheck(this)"/>
+					</td>
+					<td class="form_text_left">结束时间</td>
+					<td class="form_text_right" >
+					<input type="text" class="txt Wdate" id="closeDate" onfocus="WdatePicker()" readOnly  name="education[closeDate]"  onblur="timeCheck(this)"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="form_text_left">附  件</td>
+					<td colspan="3" class="form_text_right">
+					<div class="upload">
+						<div class="upload" id="fsUploadProgress"></div>
+						<div class="upload">
+							<span id="swfupload"></span>
+							<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+							<br />
+							<br />
+						</div>
+						<div id="uploadfileList" class="upload"></div>
+					</div></td>
+				</tr>
+				<tr>
+					<td class="form_text_left" >备注</td>
+					<td class="form_text_right" colspan="3">					<textarea class="txt_txtarea_font" id="remark" name="education[remark]"></textarea></td>
+				</tr>
+				<tr>
+					<td class="txt_btn" colspan="4">
+					<input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+					<input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

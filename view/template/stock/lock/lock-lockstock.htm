@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<!-- 主题css，可切换 -->
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+
+<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/woo.js"></script>
+
+<script type="text/javascript" src="js/thickbox.js"></script>
+
+<script type="text/javascript" src="js/jquery/component.js"></script>
+<script type="text/javascript" src="js/jquery/dump.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+
+
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/order/js/order-lockstock.js"></script>
+</head>
+<body>
+<form id="lockForm" action="?model=stock_lock_lock&action=batchAdd" method="post">
+
+<input type="hidden" name="lock[objCode]" id="objCode" value="{objCode}" />
+<input type="hidden" id="id" value="{id}"/>
+<table class="form_main_table" id="equ">
+	<tr>
+		<td class="form_text_right" colspan="4">选择仓库：
+		<input type="text" id="stockName" value="{stockName}" name="lock[stockName]" class="txt" />
+		<input type="hidden" id="stockId" value="{stockId}" class="txt" name="lock[stockId]" />
+		<input type="hidden" id="objType" value="{objType}" class="txt" name="lock[objType]" />
+       <!--  <input type="hidden" id="equId" value="{equId}" /> -->
+	    <input type="hidden" id="EquNum" name="EquNum" value="{equNum}" />
+	    <input type="button" class="txt_btn_a" value=" 锁定 " onclick="lockSubmit()" id="lockstock"/>
+	    <input type="button" class="txt_btn_a" value=" 锁定记录 "
+	       onclick="location='?model=stock_lock_lock&action=lockRecords&objCode={objCode}&objType={objType}&id={id}&skey={skey_}'" />
+<!-- 		<input type="button" class="txt_btn_a" value="返回"
+			onclick="history.go(-1)" /></td> -->
+	</tr>
+</table>
+
+<table id="myequ" class="form_main_table">
+	<tr>
+		<td nowrap width="9%" style="text-align: center">物料编号/<br />
+		物料名称</td>
+
+		<td style="text-align: center">物料数量</td>
+		<td style="text-align: center">已执行<br />
+		数量</td>
+
+		<td style="text-align: center">库存数量</td>
+		<td style="text-align: center">库存可执<br />
+		行数量</td>
+		<td style="text-align: center" title="当前仓库的锁定数量">物料已锁<br />
+		定数量</td>
+		<td style="text-align: center" title="所有仓库的锁定数量总和">物料已锁<br />
+		定总数</td>
+		<td style="text-align: center">已下达生<br />
+		产数量</td>
+
+		<td style="text-align: center">已下达采<br />
+		购数量</td>
+        <td style="text-align: center">已采购数量</td>
+		<td style="text-align: center">锁定数量</td>
+	</tr>
+	{orderequ}
+</table>
+<table class="form_main_table" id="equ">
+	<input type="hidden" id="skey" value="{skey_}"/>
+	<tr>
+		<td class="form_text_right" colspan="4">&nbsp;&nbsp;
+		<font color='blue'> 温馨提示：</br>
+		&nbsp;&nbsp;1.锁定输入负数进行解锁.</br>
+		&nbsp;&nbsp;2.锁定数量不能大于库存可执行数量.</br>
+		&nbsp;&nbsp;3.解锁数量不能大于已锁定数量.</br>
+		&nbsp;&nbsp;4.锁定数量不能大于可锁定数量.</br>
+		&nbsp;&nbsp;5.产品编号/名称为红色代表该物料已变更删除，请注意解锁.</br>
+		<font /></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

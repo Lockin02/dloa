@@ -1,0 +1,90 @@
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/ext/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="js/ext/css/styles.css"/>
+        <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+        <script type="text/javascript" src="js/ext/ext-base.js"></script>
+		<script type="text/javascript" src="js/ext/ext-all.js"></script>
+
+		<script type="text/javascript" src="js/ext/ux/tree/MyTree.class.js"></script>
+		<script type="text/javascript" src="js/ext/ux/combox/ComboBoxTree.class.js"></script>
+
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="view/template/rdproject/manage/js/rd-menu-list.js"></script>
+
+<script>
+	function showItemTypeCode(){
+		var itemType=$('#itemType').val();
+		showThickboxWin('?model=rdproject_manage_rditemrole&action=toaddrole&itemType='+itemType+'&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=700')
+	}
+
+	$('#itemType').val('{itemType}');//选中值类型
+
+	function selectType(v){
+		if(v!=''){
+			this.location="?model=rdproject_manage_rditemrole&action=rolefilterlist&itemType="+v;
+		}else{
+			this.location="?model=rdproject_manage_rditemrole&action=itemrolelist";
+		}
+	}
+
+	$(document).ready(function() {
+		//Tab表头
+		topTabShow(arrayTop,"rdItemRole");
+
+		//添加鼠标经过行颜色改变
+		rowsColorChange();
+	});
+</script>
+</head>
+<body>
+
+<div class="tab_options"></div>
+<div class="main_wraper">
+
+<table class="main_table_search">
+		<tr>
+			<td>
+				<input type="button" class="txt_btn_a" value="增加" onclick="showItemTypeCode()">
+				<input type="button" class="txt_btn_a thickbox" value="权限" alt="?model=rdproject_manage_rditemrole&action=tolimitrole&placeValuesBefore&TB_iframe=true&modal=false&height=400&width=700"">
+			</td>
+
+		</tr>
+	</table>
+<table class="form_main_table">
+		<tr>
+			<td  class="form_text_left">项目类型</td>
+			<td class="form_text_right">
+				<select id="itemType" class="select" onchange="selectType(this.value)">
+					<option value=""></option>
+					{itemType}
+				</select>
+		</tr>
+
+</table>
+
+	<table  class="main_table">
+	<thead>
+		<tr class="main_tr_header">
+			<th width="5%">序号</th>
+			<th width="20%">名称</th>
+			<th width="10%">创建人</th>
+			<th width="10%">创建日期<br /></th>
+			<th>描述</th>
+		</tr>
+		{list}
+	</thead>
+	</table>
+</div>
+
+</body>
+</html>

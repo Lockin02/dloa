@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>新增合同主表</title>
+{#commonInclude#}
+<script>
+ $(function (){
+    validate({
+		"storeMon" : {
+			required : true
+		}
+
+	});
+
+ })
+
+ function sub(){
+   var storeMon = $("#storeMon").val();
+   var flag = $.ajax({
+		type: "POST",
+	    url: "?model=contract_conproject_conproject&action=ajaxIsUse",
+	    data: {'date' : storeMon},
+	    async: false
+	}).responseText;
+  if(flag == '1'){
+     if(confirm("当前存储版本已存在，再次保存将更新此版本数据，是否继续？")){
+       return true;
+     }else{
+       return false;
+     }
+  }else{
+      return true;
+  }
+
+
+ }
+
+</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=contract_conproject_conproject&action=saveVersion" name="form1" onsubmit="return sub()">
+<table class="form_main_table">
+    <tr>
+        <td colspan="4">
+           <b>请选择存档版本</b>
+        </td>
+    </tr>
+<!--     <tr>-->
+<!--        <td class="form_text_left">存档版本-年份</td>-->
+<!--        <td class="form_text_right" colspan="3">-->
+<!--            <input type="text" id="storeYear" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy年'})" />-->
+<!--        </td>-->
+<!--     </tr>-->
+     <tr>
+        <td class="form_text_left">存档版本</td>
+        <td class="form_text_right" colspan="3">
+            <input type="text" id="storeMon"  name="acc[storeMon]" onfocus="WdatePicker({ dateFmt: 'yyyy-MM', isShowToday: false, isShowClear: false })" />
+        </td>
+     </tr>
+     <tr>
+		<td class="txt_btn" colspan="4">
+        <input type="hidden" id="versionNum" name="acc[versionNum]" value="{versionNum}" />
+		<input type="submit" class="txt_btn_a" value=" 确  认 " />
+		<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

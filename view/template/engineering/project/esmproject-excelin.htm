@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<title>导入EXCEL数据</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <script type="text/javascript" src="view/template/engineering/project/js/esmproject-excelin.js"></script>
+<body>
+<div class="main_head2">
+      <span class="main_head_title">
+            导入项目
+      </span>
+</div>
+<form action="?model=engineering_project_esmproject&action=excelIn" ENCTYPE="multipart/form-data" method="POST" id="form1" onsubmit="return checkform();">
+
+<table class="form_main_table" width="90%">
+	<tr>
+		<td class="form_text_left">
+			<label>执行操作:</label>
+		</td>
+		<td class="form_text_right">
+			<input type="radio" id="r0" name="actionType" value="0" onclick="changeInfo(this.value)"/>
+			<span id="span0"><label for="r0">导入项目</label></span>
+			<input type="radio" id="r1" name="actionType" value="2" checked="checked" title="项目更新功能" onclick="changeInfo(this.value)"/>
+			<span id="span2" class="green"><label for="r1">更新项目</label></span>
+			<input type="radio" id="r4" name="actionType" value="4" title="费用预算导入功能" onclick="changeInfo(this.value)"/>
+			<span id="span4"><label for="r4">导入其他预决算</label></span>
+			<input type="radio" id="r5" name="actionType" value="5" title="费用预算导入功能" onclick="changeInfo(this.value)"/>
+			<span id="span5"><label for="r5">导入外包预决算</label></span>
+			<input type="radio" id="r6" name="actionType" value="6" title="人力预算导入功能" onclick="changeInfo(this.value)"/>
+			<span id="span6"><label for="r6">导入人力决算</label></span>
+			<input type="radio" id="r7" name="actionType" value="7" title="设备决算导入功能" onclick="changeInfo(this.value)"/>
+			<span id="span7"><label for="r7">导入设备决算</label></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>执行操作(产品项目):</label>
+		</td>
+		<td class="form_text_right">
+			<input type="radio" id="r8" name="actionType" value="8" onclick="changeInfo(this.value)"/>
+			<span id="span8"><label for="r8">导入发货成本</label></span>
+			<input type="radio" id="r9" name="actionType" value="9" onclick="changeInfo(this.value)"/>
+			<span id="span9"><label for="r9">导入其他成本</label></span>
+			<input type="radio" id="r10" name="actionType" value="10" onclick="changeInfo(this.value)"/>
+			<span id="span10"><label for="r10">合同项目导入</label></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txtlong" name="inputExcel" id="inputExcel"/>
+            <input type="submit" class="txt_btn_a" value=" 导 入"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">
+			<label>模板下载</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="button" id="button0" class="txt_btn_a" value="项目导入模板" onclick="location='upfile/工程项目导入模板.xls'"/>
+		    <input type="button" id="button2" class="txt_btn_a_green" value="项目导出模板" onclick="location='upfile/工程项目导出模板.xls'"/>
+		    <input type="button" id="button4" class="txt_btn_a" value="其他预决算模板" onclick="location='upfile/工程预算模板.xls'"/>
+		    <input type="button" id="button5" class="txt_btn_a" value="外包预决算模板" onclick="location='upfile/工程预算模板.xls'"/>
+		    <input type="button" id="button6" class="txt_btn_a" value="人力决算模板" onclick="location='upfile/工程-人力决算模板.xls'"/>
+		    <input type="button" id="button7" class="txt_btn_a" value="设备决算模板" onclick="location='upfile/工程-设备决算模板.xls'"/>
+		    <input type="button" id="button8" class="txt_btn_a" value="(产品)发货成本" onclick="location='upfile/工程-发货成本.xls'"/>
+		    <input type="button" id="button9" class="txt_btn_a" value="(产品)其他成本" onclick="location='upfile/工程-其他成本.xls'"/>
+			<input type="button" id="button10" class="txt_btn_a" value="(产品)合同项目" onclick="location='upfile/合同项目信息.xls'"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right"></td>
+		<td class="form_text_right">
+			导入功能说明：<br/>
+			<span id="remarkInfo" style="color:blue">
+				1.此导入功能对应<span class="red">《项目导出模板》</span>，用于更新项目数据，不做新增项目处理。<br/>
+				2.此功能<span class="red">不更新</span>总决算、现场决算(费用报销)、现场决算(费用维护)、<br/>
+				费用进度以及合同信息。<br/>
+				3.使用此功能更新现场预算、人力预算、设备预算可能导致项目预算信息混乱。
+			</span><br/><br/>
+			注：<br/>
+			<span class="red">1. 导入功能暂不支持单元格公式计算。</span><br/>
+			<span class="red">2. 单元格内请勿带特殊符号。</span><br/>
+			<span class="red">3. 《项目进度》字段单元格格式请设置成百分比(已默认设置)。</span>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

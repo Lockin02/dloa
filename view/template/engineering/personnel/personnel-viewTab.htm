@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>
+			人员信息
+		</title>
+		<script type="text/javascript" src="js/jquery.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/tab/tabs.js">
+		</script>
+		<script type="text/javascript" src="js/jquery/tab/toolbox.history.js">
+		</script>
+		<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+		<script type="text/javascript">
+			$(function() {
+				var id = {id};
+				var userCode = "{userCode}";
+
+				//初始化tabsURL
+				var tabArr = ["?model=engineering_personnel_personnel&action=init&perm=view&id=" + id,
+				 "?model=engineering_worklog_esmworklog&action=topersonalworklog&userCode=" + userCode,
+				  "?model=engineering_worklog_esmworklogweek&action=topersonalweeklog&userCode=" + userCode,
+				  "?model=engineering_worklog_worklog&action=projectHistory",
+				  "?model=humanResources_training_training&action=listForEngineer",
+				  "?model=finance_personalexpenses_expenses&action=listForEngineer",
+				  "?model=finance_borrowing_borrowing&action=listForEngineer",
+				  "?model=equtManagement_equipment_equipment&action=listForEngineer",
+				  "?model=humanResources_qualifications_qualifications&action=listForEngineer"];
+				//绑定事件(待抽出来)
+				$("#tabs1").tabs(".panes > iframe", {
+					history: true,
+					onClick: function(i, e) {
+						var actTabId = "#iframe" + (parseInt(e) + 1);
+						$(actTabId).attr("src", tabArr[e]);
+					}
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<div>
+			<!-- the tabs -->
+			<ul class="tabs" id="tabs1">
+				<li>
+					<a href="#tab1">
+						基本信息
+					</a>
+				</li>
+				<li>
+					<a href="#tab2">
+						考勤记录
+					</a>
+				</li>
+				<li>
+					<a href="#tab3">
+						人员周报
+					</a>
+				</li>
+				<!--
+				<li>
+					<a href="#tab4">
+						项目经历
+					</a>
+				</li>
+				<li>
+					<a href="#tab5">
+						培训经历
+					</a>
+				</li>
+				<li>
+					<a href="#tab6">
+						费用记录
+					</a>
+				</li>
+				<li>
+					<a href="#tab7">
+						借款记录
+					</a>
+				</li>
+				<li>
+					<a href="#tab8">
+						设备记录
+					</a>
+				</li>
+				<li>
+					<a href="#tab9">
+						人员资质
+					</a>
+				</li> -->
+			</ul>
+			<!-- tab "panes" -->
+			<div class="panes">
+				<iframe class="pane" id="iframe1" scrolling="auto" src="about:blank" height="650px"
+				frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe2" scrolling="auto" src="about:blank" height="650px"
+				frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe3" scrolling="auto" src="about:blank" height="650px"
+				frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe4" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe5" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe6" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe7" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe8" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+				<iframe class="pane" id="iframe9" src="about:blank" height="600px" frameborder="0">
+				</iframe>
+			</div>
+		</div>
+	</body>
+
+</html>

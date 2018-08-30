@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>编辑</title>
+	{#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-datadict.js"></script>
+    <script type="application/javascript">
+        $(function() {
+            // 验证信息
+            validate({
+                day: {
+                    required: true,
+                    custom : [ 'onlyNumber' ]
+                },
+                saveDayForPro : {
+                    required: true,
+                    custom : [ 'onlyNumber' ]
+                }
+            });
+
+            //工具类型渲染
+            $("#useRange").yxcombogrid_datadict({
+                height: 250,
+                valueCol: 'dataCode',
+                hiddenId: 'useRangeId',
+                gridOptions: {
+                    isTitle: true,
+                    param: {"parentCode": "GCXMSS", "parentCodes": ""},
+                    showcheckbox: true,
+                    event: {
+                        'row_dblclick': function (e, row, data) {
+
+                        }
+                    },
+                    // 快速搜索
+                    searchitems: [{
+                        display: '名称',
+                        name: 'dataName'
+                    }]
+                }
+            });
+
+            var saveDayForSer = $("#saveDayForSer").val();
+            if(saveDayForSer == 0 || saveDayForSer == ''){
+                $("#showSaveDayForSerCommon").show();
+                $("#showSaveDayForSerRange").hide();
+            }else{
+                $("#showSaveDayForSerRange").show();
+                $("#showSaveDayForSerCommon").hide();
+            }
+
+            var saveDayForPro = $("#saveDayForPro").val();
+            if(saveDayForPro == 0 || saveDayForPro == ''){
+                $("#showSaveDayCommon").show();
+                $("#showSaveDayRange").hide();
+            }else{
+                $("#showSaveDayRange").show();
+                $("#showSaveDayCommon").hide();
+            }
+        });
+
+        function chkSaveDayForSer() {
+            var saveDayForSer = $("#saveDayForSer").val();
+            if(saveDayForSer == 0 || saveDayForSer == ''){
+                $("#showSaveDayForSerCommon").show();
+                $("#showSaveDayForSerRange").hide();
+            }else{
+                $("#showSaveDayForSerRange").show();
+                $("#showSaveDayForSerCommon").hide();
+            }
+            $('#saveDayForSerShow').html(saveDayForSer);
+        }
+
+        function chkSaveDayForPro() {
+            var saveDayForPro = $("#saveDayForPro").val();
+            if(saveDayForPro == 0 || saveDayForPro == ''){
+                $("#showSaveDayCommon").show();
+                $("#showSaveDayRange").hide();
+            }else{
+                $("#showSaveDayRange").show();
+                $("#showSaveDayCommon").hide();
+            }
+            $('#saveDayForProShow').html(saveDayForPro);
+        }
+    </script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	编辑
+    </span>
+</div>
+<form id="form1" method="post" action="?model=engineering_baseinfo_esmdeadline&action=edit">
+<table class="form_main_table">
+    <tr>
+        <td class="form_text_left">截止月份</td>
+        <td class="form_text_right" >
+            {month}
+        </td>
+    </tr>
+    <tr>
+		<td class="form_text_left">截止日</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" name="esmdeadline[day]" value="{day}" id="day" onblur="$('#dayShow').html(this.value)"/>
+			 <span class="red">[*]</span>
+            <br/>
+             <span class="blue">注：{month} 月 <span id="dayShow">{day}</span> 日 为上个月日志填报截止日期</span>
+		</td>
+    </tr>
+    <tr>
+        <td class="form_text_left">服务保护期</td>
+        <td class="form_text_right" >
+            <input type="text" class="txt" name="esmdeadline[saveDayForSer]" value="{saveDayForSer}" id="saveDayForSer" onblur="chkSaveDayForSer()"/>
+            <span class="red">[*]</span>
+            <br/>
+            <span class="blue">注：
+                <span id="showSaveDayForSerRange">{month} 月 1 日 - <span id="saveDayForSerShow">{saveDayForSer}</span> 日 </span>
+                <span id="showSaveDayForSerCommon">此字段</span>
+                为服务项目的保护期,在此期间内部分数据不做统计处理
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">产品保护期</td>
+        <td class="form_text_right" >
+            <input type="text" class="txt" name="esmdeadline[saveDayForPro]" value="{saveDayForPro}" id="saveDayForPro" onblur="chkSaveDayForPro()"/>
+            <span class="red">[*]</span>
+            <br/>
+            <span class="blue">注：
+                <span id="showSaveDayRange">{month} 月 1 日 - <span id="saveDayForProShow">{saveDayForPro}</span> 日 </span>
+                <span id="showSaveDayCommon">此字段</span>
+                为产品项目的保护期,在此期间内部分数据不做统计处理
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="form_text_left">应用范围</td>
+        <td class="form_text_right" >
+            <input type="text" class="txtlong" name="esmdeadline[useRange]" value="{useRange}" id="useRange"/>
+            <input type="hidden" name="esmdeadline[useRangeId]" value="{useRangeId}" id="useRangeId"/>
+        </td>
+    </tr>
+    <tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right">
+			 <textarea class="txt_txtarea_font" name="esmdeadline[remark]">{remark}</textarea>
+		</td>
+    </tr>
+    <tr>
+		<td class="txt_btn" colspan="2">
+         <input type="hidden" name="esmdeadline[id]" value="{id}"/>
+		   <input type="submit" class="txt_btn_a" value="保  存"/>
+		   <input type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+		</td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

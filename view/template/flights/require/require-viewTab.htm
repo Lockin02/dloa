@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<title>
+		</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+		<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+		<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				var id = $("#id").val();
+				var skeyStr = "&skey={skey_}";
+				var tabArr = [
+					"?model=flights_require_require&action=toView&id=" + id + skeyStr + "&cardNoLimit=" + $("#cardNoLimit").val(),
+					"?model=flights_message_message&action=toViewTab&id=" + id + skeyStr
+				];
+				$("#tabs1").tabs(".panes > iframe", {
+					history: true,
+					onClick: function(i, e) {
+						var actTabId = "#iframe" + (parseInt(e) + 1);
+						if ($(actTabId).attr("src") == "") {
+							$(actTabId).attr("src", tabArr[e]);
+						}
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<input type="hidden" value="{id}" id="id" />
+		<input type="hidden" value="{cardNoLimit}" id="cardNoLimit" />
+		<div>
+			<!-- the tabs -->
+			<ul class="tabs" id="tabs1">
+				<li>
+					<a href="#tab1">
+						订票需求
+					</a>
+				</li>
+				<li>
+					<a href="#tab2">
+						订票信息
+					</a>
+				</li>
+			</ul>
+			<!-- tab "panes" -->
+			<div class="panes">
+				<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0"></iframe>
+				<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0"></iframe>
+			</div>
+		</div>
+	</body>
+</html>

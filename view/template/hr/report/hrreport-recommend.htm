@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<TITLE>内部推荐报表</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=gb2312">
+<OBJECT id="Report" classid="CLSID:50CA95AF-BDAA-4C69-A9C6-93E1136E68BC"
+	codebase="webreport/griectl.cab#Version=5,0,9,808" VIEWASTEXT></OBJECT>
+<script src="webreport/CreateControl.js" language="javascript"></script>
+<script src="js/jquery.js" language="javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+<script>
+
+	function searchBtn(){
+		location.href="?model=hr_report_hrreport&action=toRecommendReport"
+			+ "&recommendName=" + $.trim($("#recommendNameSeach").val())
+			+ "&isRecommendName=" + $.trim($("#isRecommendNameSeach").val())
+			+ "&positionName=" +$.trim($("#positionNameSeach").val())
+			+ "&recruitManName=" +$.trim($("#recruitManNameSeach").val());
+	}
+
+	function reset(){
+		location.href="?model=hr_report_hrreport&action=toRecommendReport";
+	}
+
+
+</script>
+</HEAD>
+<BODY style="margin:0" bgcolor="buttonface">
+<table border="0" width="100%" height="100%">
+	<tr>
+		<td width="100%">
+			<table width="100%">
+				<tr>
+					<td width="40%">
+						查询条件 ：
+						推荐人<input class="txtmiddle" id="recommendNameSeach" value="{recommendName}">
+						被荐人<input class="txtmiddle" id="isRecommendNameSeach" value="{isRecommendName}">
+						职位<input class="txtmiddle" id="positionNameSeach" value="{positionName}">
+						招聘人员<input class="txtmiddle" id="recruitManNameSeach" value="{recruitManName}">
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="searchBtn();" value=" 查 询 "/>
+						<input type="button" class="txt_btn_a" id="searchBtn" onclick="reset();" value=" 重 置 "/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr height="100%">
+		<td colspan="5" style="font-size: 10pt;" height="100%">
+			<input type="hidden" id="recommendName" value="{recommendName}"/>
+			<input type="hidden" id="isRecommendName" value="{isRecommendName}"/>
+			<input type="hidden" id="positionName" value="{positionName}"/>
+			<input type="hidden" id="recruitManName" value="{recruitManName}"/>
+			<script language="javascript">
+			    //用查询显示控件展现报表，从URL“../grf/1a.grf”获取报表膜板定义，从URL“../data/xmlCustomer.php”获取XML形式的报表数据，
+				CreateDisplayViewer("view/template/hr/report/hrreport-recommend.grf"
+				,"view/template/hr/report/hrreport-recommend.php"
+				+ "?recommendName=" +  $.trim($("#recommendNameSeach").val())
+				+ "&isRecommendName=" +  $.trim($("#isRecommendNameSeach").val())
+				+ "&positionName=" + $.trim($("#positionNameSeach").val())
+				+ "&recruitManName=" +  $.trim($("#recruitManNameSeach").val())
+				)
+			</script>
+		</td>
+	</tr>
+</table>
+</BODY>
+</HTML>

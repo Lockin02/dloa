@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=GB2312">
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css">
+		<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="view/template/rdproject/worklog/js/rdworklog-dashboard.js"></script>
+		<style type="text/css">
+			.form_view_right div{
+			  /*针对于ff2.0*/
+			  display:-moz-inline-stack;
+			  display:inline-block;
+			  /*针对IE*/
+			  display:inline;
+			  /*针对IE*/
+			  zoom:1;
+			  letter-spacing:0;
+			  font-size:12px;
+			}
+		</style>
+		<script type="text/javascript" event="onload" for="window" >
+			 function checkDiv(){
+
+                 var teamFlag =  $("#flag").val()
+                   if( teamFlag =="flag"){
+                         document.getElementById("mytable").style.display="";
+                   }else{
+	                     document.getElementById("mytable").style.display="none";
+                   }
+                }checkDiv();
+		</script>
+	</head>
+	<body>
+		<div class="main_head">
+			<span class="main_head_title">
+				个人仪表盘
+			</span>
+		</div>
+		<div class="form_main">
+			<form id="form1" action="?" method="get">
+				<table class="form_main_table">
+					<tr>
+						<td class="form_text_left">
+							起始日期
+							<input type="hidden" name="model" value="rdproject_worklog_rdworklog"/>
+							<input type="hidden" name="action" value="dashBoradResult"/>
+							<input type="hidden" name="flag" value="{flag}" id="flag">
+						</td>
+						<td class="form_view_right">
+							<input name="beginDate" id="beginDate" type="text" class="txt" onfocus="WdatePicker()"/>
+							<span class='red'>[*]</span>
+							<div id="beginDateTip"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							终止日期
+						</td>
+						<td class="form_view_right">
+							<input name="overDate" id="overDate" type="text" class="txt" onfocus="WdatePicker()"/>
+							<span class='red'>[*]</span>
+							<div id="overDateTip"></div>
+						</td>
+					</tr>
+				</table>
+				<table class="form_main_table" id="mytable">
+					<tr>
+					    <td class="form_text_left">选择人员</td>
+					    <td class="form_view_right">
+					       <input type="text" class="txt" id="member" value="{member}" readonly="readonly"/>
+			               <input type="hidden" name="memberId"  id="memberId" value="{memberId}"/>
+					       <input type="button" class="txt_btn_a" value="选  择" onclick="loadOrgWindow('memberId','member')" title="选择跟踪人"/>
+			               <input type="button" class="txt_btn_a" value="清  空" onclick="clearOrgInfo('memberId','member')" />
+			            </td>
+					</tr>
+				</table>
+				<table class="form_main_table">
+				    <tr>
+						<td class="txt_btn" colspan="2">
+							<input type="submit" class="txt_btn_a" value=" 搜索 "/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>

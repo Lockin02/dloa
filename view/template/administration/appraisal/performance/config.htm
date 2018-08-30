@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/datagrid-detailview.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<!-- <script type="text/javascript" src="js/thickbox.js">  -->
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+
+        <script type="text/javascript">
+        	var open_tabs = false;
+        	var year_in_db = '{year_in_db}';
+        	var season_in_db = '{season_in_db}';
+        	$(function(){
+	            $('#tt').datagrid({
+	            	view: detailview,
+					detailFormatter:function(index,row){
+						return '<div id="ddv-' + index + '" class="ddv"></div>';
+					},
+	                title: '考核设置',
+	                iconCls: 'icon-edit',
+	                pagination: true,
+					pageSize:10,
+	                singleSelect: true,
+	                idField: 'id',
+	                url: '?model={t_model}&action=list_data',
+	                columns: [[ {
+	                    field: 'id',
+	                    title: '编号',
+	                    width: 200,
+	                    align: 'left',
+	                    editor: 'text'
+	                }
+	                /*
+	                ,{
+	                    field: 'account',
+	                    title: '账号',
+	                    width: 60,
+	                    align: 'left',
+	                    editor: 'text'
+	                }
+	                */
+	                , {
+	                    field: 'username',
+	                    title: '名称',
+	                    width: 150,
+	                    align: 'left',
+	                    editor: 'text'
+	                },{
+	                    field: 'title',
+	                    title: '类型',
+	                    width: 150,
+	                    align: 'left',
+	                    editor: 'text'
+	                },{
+	                    field: 'action',
+	                    title: '操作',
+	                    width: 100,
+	                    align: 'center',
+	                    formatter: function(value, row, index){
+	                    	var str = '';
+	                    	//str += '<a href="#" onclick="show(' + index + ')">查看</a> ';
+	                    	str += '<a href="#" onclick="edit(' + index + ')">修改</a> ';
+                    		str += '<a href="#" onclick="del(' + index + ')">删除</a>';
+                    		return str;
+	                    }
+	                }]],
+					onBeforeEdit:function(index,row){
+						row.editing = true;
+						updateActions();
+					},
+					onAfterEdit:function(index,row){
+						row.editing = false;
+						updateActions();
+					},
+					onCancelEdit:function(index,row){
+						row.editing = false;
+						updateActions();
+					},onDblClickRow:function(index,row){
+						show(index);
+					}
+	            });
+	            $('#tt').datagrid('getPager').pagination({
+	                buttons: [
+	                          	
+	                			{
+				                    iconCls: '',
+				                    text: '考核年份：'+ year_in_db + '   考核季度：' + season_in_db,
+				                    
+	                			},
+	                			{
+				                    iconCls: 'icon-add',
+				                    text: '考核设置',
+				                    handler: function(){
+				                    	config_setting();
+				                    }
+	                			},
+	                			{
+				                    iconCls: 'icon-add',
+				                    text: '添加需考核项目经理',
+				                    handler: function(){
+				                        add();
+				                    }
+	                			}
+	                          ]
+	            });
+	            
+	          //绑定项目经理输入框
+	            $("#realname").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+	                multiple: false,
+	                mustMatch: true,
+	                width: 100,
+	                max: 200,
+	                //dataType: 'json',
+	                parse: function(data){
+	                    var rows = [];
+	                    var row = eval(unescape(data));
+	                    for (var i = 0; i < row.length; i++) {
+	                        rows[i] = {
+	                            data: row[i],
+	                            value: row[i].user_name,
+	                            result: row[i].user_name
+	                        }
+	                    }
+	                    //alert(rows.length);
+	                    return rows;
+	                },
+	                formatItem: function(row, i, n){
+	                    return row.user_name;
+	                }
+	                
+	            });
+	          
+	            
+	        });
+        	
+        	function edit(index){
+        		
+	        	$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		//alert(row.username);return false;
+	    		$('#realname').val(row.username);
+	    		$('#id').val(row.id);
+	        	$('#add').window('open');
+	        }
+	        
+	        function del(index){
+	        	$('#tt').datagrid('selectRow', index);
+	    		var row = $('#tt').datagrid('getSelected');
+	    		$.messager.confirm('删除确认','您确定要删除该项目吗？',function(r){
+	            	if (r)
+	            	{
+	            		$.post('?model={t_model}&action=del',{id:row.id,rand:Math.random(0,9999)},function(data){
+	            			if (data == 1)
+	            			{
+	            				$.messager.show({
+	    	                        title: '提示',
+	    	                        msg: '删除成功！',
+	    	                        timeout: 3000,
+	    	                        showType: 'show'
+	    	                    });
+	            				$('#tt').datagrid('reload');
+	            			}else{
+	            				$.messager.alert('提示','删除失败，请与OA管理员联系！');
+	            			}
+	            		});
+	            	}
+	            });
+	        }
+	        
+	        function config_setting(index){
+	        	//var value
+	        	$('#config_setting').window('open');
+	        }
+	        
+	        function add(){
+	        	$('#realname').val('');
+	    		$('#id').val('');
+	        	$('#add').window('open');
+	        }
+        	
+	        function save(){
+	        	var username = $('#realname').val();
+	    		var id = $('#id').val();
+	        	$.post('?model={t_model}&action=save',{username:username,id:id},function(data){
+	    			if(data == 1){
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '添加成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        				
+	    			}else if(data == 2){
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '该用户已存在！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+	    			}else{
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '添加失败，请联系管理员！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+	    			}
+	    			$('#add').dialog('close');
+	    			$('#tt').datagrid('reload');
+	    		});
+	        }
+	        
+	        function saveConfig(){
+	        	
+	        	var year = $('#year').val();
+	    		var season = $('#season').val();
+	    		
+	    		if(year == 'NaN'){
+	    			alert('请选择年份');
+	    			return false;
+	    		}
+	    		
+	    		if(season == 'NaN'){
+	    			alert('请选择季度');
+	    			return false;
+	    		}
+	    		
+	    		$('#tt').datagrid('getPager').pagination({
+	                buttons: [
+	                          	
+	                			{
+				                    iconCls: '',
+				                    text: '考核年份：'+ year + '   考核季度：' + season,
+				                    
+	                			},
+	                			{
+				                    iconCls: 'icon-add',
+				                    text: '考核设置',
+				                    handler: function(){
+				                    	config_setting();
+				                    }
+	                			},
+	                			{
+				                    iconCls: 'icon-add',
+				                    text: '添加需考核项目经理',
+				                    handler: function(){
+				                        add();
+				                    }
+	                			}
+	                          ]
+	            });
+	    		
+	        	$.post('?model={t_model}&action=set_config',{year:year,season:season},function(data){
+	    			if(data == 1){
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '添加成功！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+        				
+	    			}else if(data == 2){
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '该用户已存在！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+	    			}else{
+	    				$.messager.show({
+	                        title: '提示',
+	                        msg: '添加失败，请联系管理员！',
+	                        timeout: 3000,
+	                        showType: 'show'
+	                    });
+	    			}
+	    			$('#config_setting').dialog('close');
+	    			$('#tt').datagrid('reload');
+	    		});
+	        }
+	        
+        </script>
+        
+        <style type="text/css">
+			label { font-weight:bold;float:left; text-align:right; height:25px; width:80px;}
+			.ddv {
+					left:-2px;
+					border-left:1px dotted #ccc;
+					background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				}
+			.list_info {float:left; position: relative;left:-2px;}
+			.list_info li {float:left; line-height:20px; list-style:none; text-align:left; padding-left:4px; border:solid 0px red;}
+			.list_info li {
+				border-left:1px dotted #ccc;
+				font-size:12px;
+				font-weight:normal;
+				background:#fafafa url('js/jqeasyui/themes/default/images/datagrid_header_bg.gif') repeat-x left bottom;
+				border-bottom:1px dotted #ccc;
+				border-top:1px dotted #fff;
+			}
+			#info p { margin:0px; padding:0px; width:600px; float:left; line-height: 25px;}
+			#info span {width:220px; display:block; float:left; text-align: left;}
+			#info i {color:red;}
+       </style>
+</head>
+<body>
+	<table id="tt" toolbar="#tb"></table>
+	<!-- add -->
+	<div id="add" class="easyui-window" title="添加" iconCls="icon-edit" modal="false" closed="true" style="width:330px;height:230px;padding:5px;">
+		<form method="post" id="add_frm" name="add_frm" action="?model={t_model}&action=save">
+			<div style="text-align: center;">
+				<input type="hidden" name="id" id="id" value="" />
+				<table align="center" >
+					<tr align="center">
+						<td>名称:</td>
+						<td><input type="text" id="realname" name="realname" value="" /></td>
+					</tr>
+					<tr align="center">
+						<td colspan="2">
+							<input type="button" name="submit" id="submit" value="提交" onclick="save();" />
+							<input type="button" name="close_add_windows" id="close_add_windows" value="关闭" onclick="$('#add').dialog('close');" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</div>
+	
+	<div id="config_setting" class="easyui-window" title="设置" iconCls="icon-edit" modal="false" closed="true" style="width:330px;height:230px;padding:5px;">
+		<form method="post" id="add_frm" name="add_frm" action="?model={t_model}&action=set_config">
+			<table align="center" >
+					<tr align="center">
+						<td>年份:</td>
+						<td>
+							<select id="year" name="year">
+								{yearList}
+							</select>
+						</td>
+					</tr>
+					
+					<tr align="center">
+						<td>季度:</td>
+						<td>
+							<select id="season" name="season">
+								{seasonStr}
+							</select>
+						</td>
+					</tr>
+					
+					
+					<tr align="center">
+						<td colspan="2">
+							<input type="button" name="season_setting_button" id="season_setting_button" value="提交" onclick="saveConfig();" />
+							<input type="button" name="close_show_windows" id="close_show_windows" value="关闭" onclick="$('#config_setting').dialog('close');" />
+						</td>
+					</tr>
+				</table>
+		</form>
+	</div>
+</body>
+</html>

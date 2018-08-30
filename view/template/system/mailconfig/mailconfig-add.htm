@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>
+		新增通用邮件配置
+	</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/mailconfig-add.js"></script>
+	<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+<body>
+<form id="form1" method="post" action="?model=system_mailconfig_mailconfig&action=add">
+	<table class="form_main_table">
+		<tr>
+			<td colspan="4">
+				<div class="main_head2">
+							<span class="main_head_title">
+								新增通用邮件配置
+							</span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				<span class="blue">业务编码</span>
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="objCode" name="mailconfig[objCode]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				<span class="blue">业务名称</span>
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="objName" name="mailconfig[objName]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				描述信息
+			</td>
+			<td class="form_text_right">
+				<textarea class="txt_txtarea_font" id="description" name="mailconfig[description]"
+						  style="width:100%;"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				<span class="blue">邮件标题</span>
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="mailTitle" name="mailconfig[mailTitle]"/>
+				<span class="blue">
+					邮件发送时，标题会自动载入 "OA-通知：你的标题"
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				<span class="blue">邮件内容</span>
+			</td>
+			<td class="form_text_right">
+				<textarea class="editor" id="mailContent" name="mailconfig[mailContent]"
+						  style="width:100%;"></textarea><br/>
+				<span class="blue">
+					数据源 {A} ; SESSION #A# ; 传入值 [A] ; 从表 !itemTable!
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				默认发送人
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="defaultUserName" name="mailconfig[defaultUserName]"
+					   readonly="readonly"/>
+				<input type="hidden" id="defaultUserId" name="mailconfig[defaultUserId]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				默认抄送人
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="ccUserName" name="mailconfig[ccUserName]" readonly="readonly"/>
+				<input type="hidden" id="ccUserId" name="mailconfig[ccUserId]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				默认密送人
+			</td>
+			<td class="form_text_right">
+				<input type="text" class="txtlong" id="bccUserName" name="mailconfig[bccUserName]" readonly="readonly"/>
+				<input type="hidden" id="bccUserId" name="mailconfig[bccUserId]"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				是否加载主表
+			</td>
+			<td class="form_text_right">
+				<input type="radio" id="isMainN" name="mailconfig[isMain]" value="0" checked="checked"/> 否
+				<input type="radio" id="isMainY" name="mailconfig[isMain]" value="1"/> 是
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				主表数据源
+			</td>
+			<td class="form_text_right">
+				<textarea class="txt_txtarea_font" id="mainSource" name="mailconfig[mainSource]"
+						  style="width:100%;"></textarea><br/>
+						<span class="blue">
+							系统传参请用 "{}" ,如：select * from a where id = '{id}'
+						</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				是否加载从表
+			</td>
+			<td class="form_text_right">
+				<input type="radio" id="isItemN" name="mailconfig[isItem]" value="0" checked="checked"/> 否
+				<input type="radio" id="isItemY" name="mailconfig[isItem]" value="1"/> 是
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">
+				从表数据源
+			</td>
+			<td class="form_text_right">
+				<textarea class="txt_txtarea_font" id="itemSource" name="mailconfig[itemSource]"
+						  style="width:100%;"></textarea><br/>
+						<span class="blue">
+							系统传参请用 "{}" ,如：select * from a where id = '{id}'
+						</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="innerTd">
+				<div id="mainconfigitem"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="txt_btn" colspan="2">
+				<input type="submit" class="txt_btn_a" value=" 保  存 "/>
+				<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

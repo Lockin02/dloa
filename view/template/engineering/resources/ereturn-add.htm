@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增项目设备申请表</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-logistics.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/ereturn-add.js"></script>
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=engineering_resources_ereturn&action=add" onsubmit="return checkSubmit();">
+<table class="form_main_table" style="width:1050px;margin:auto;align:center">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">
+					新增设备归还申请表
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<fieldset>
+				<legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+					<img src="images/icon/info_up.gif" id="baseImg" />
+				</legend>
+				<table width="100%" id="ereturninfo" class="form_in_table">
+					<tr>
+						<td class="form_text_left">
+							<span class="blue">申 请 人</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" id="applyUser" name="ereturn[applyUser]" value="{applyUser}" readonly="readonly"/>
+							<input type="hidden" id="applyUserId" name="ereturn[applyUserId]" value="{applyUserId}"/>
+							<input type="hidden" id="deptId" name="ereturn[deptId]" value="{deptId}"/>
+							<input type="hidden" id="deptName" name="ereturn[deptName]" value="{deptName}"/>
+						</td>
+						<td class="form_text_left">
+							<span class="blue">申请日期</span>
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt Wdate" id="applyDate" name="ereturn[applyDate]" value="{applyDate}" onfocus="WdatePicker();"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+						    <span class="blue">归还区域</span>
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" id="areaName" name="ereturn[areaName]"/>
+							<select id="areaId"  name="ereturn[areaId]"  class="select" >
+							    {area_select}
+							</select>
+						</td>
+                        <td class="form_text_left">归还部门</td>
+                        <td class="form_text_right">
+                            <input type="text" class="readOnlyTxtNormal" id="deviceDeptName" name="ereturn[deviceDeptName]" value="{deviceDeptName}" readonly="readonly"/>
+                            <input type="hidden" id="deviceDeptId" name="ereturn[deviceDeptId]" value="{deviceDeptId}"/>
+                        </td>
+					</tr>
+					<tr>
+                        <td class="form_text_left">项目编号</td>
+                        <td class="form_text_right">
+                            <input type="text" class="readOnlyTxtNormal" id="projectCode" name="ereturn[projectCode]" readonly="readonly" value="{projectCode}"/>
+                            <input type="hidden" id="projectId" name="ereturn[projectId]" value="{projectId}"/>
+                        </td>
+						<td class="form_text_left">项目名称</td>
+						<td class="form_text_right">
+							<input type="text" class="readOnlyTxtNormal" id="projectName" name="ereturn[projectName]" readonly="readonly" value="{projectName}"/>
+						</td>
+					</tr>
+					<tr>
+                        <td class="form_text_left">项目经理</td>
+                        <td class="form_text_right">
+                            <input type="text" class="readOnlyTxtNormal" id="managerName" name="ereturn[managerName]" readonly="readonly" value="{managerName}"/>
+                            <input type="hidden" id="managerId" name="ereturn[managerId]" value="{managerId}"/>
+                        </td>
+						<td class="form_text_left">快递公司</td>
+						<td class="form_text_right">
+							<input type="text"  class="txt" id="expressName" name="ereturn[expressName]" readonly="readonly"/>
+							<input type="hidden" id="expressId" name="ereturn[expressId]"/>
+						</td>
+					</tr>
+					<tr>
+                        <td class="form_text_left">快递单号</td>
+                        <td class="form_text_right">
+                            <input type="text" class="txt" id="expressNo" name="ereturn[expressNo]" />
+                        </td>
+						<td class="form_text_left">邮寄日期</td>
+                        <td class="form_text_right">
+							<input type="text" class="txt Wdate" id="mailDate" name="ereturn[mailDate]" onfocus="WdatePicker();"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">申请原因</td>
+						<td class="form_text_right" colspan="3">
+							<textarea class="txt_txtarea_900" style="width:711px;" name="ereturn[reason]"></textarea>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6" >
+			<input type="hidden" id="rowsId" value="{rowsId}"/>
+			<fieldset style="width:200">
+				<legend class="legend" onclick="showAndHideDiv('importTableImg','importTable')">设备信息
+					<img src="images/icon/info_up.gif" id="importTableImg" />
+				</legend>
+			    <div id="importTable"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+			<input type="hidden" id="status" name="ereturn[status]" />
+			<input type="submit" class="txt_btn_a" value=" 提  交 " onclick="setStatus(1);"/>&nbsp;
+			<input type="submit" class="txt_btn_a" value=" 保  存 " onclick="setStatus(0);"/>&nbsp;
+			<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

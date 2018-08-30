@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 Strict//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css">
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css">
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.form.js"></script>
+        <title></title>
+        <style type="text/css">
+            #newuserForm label.error {
+                margin-left: 10px;
+                width: auto;
+                display: inline;
+                color: red;
+            }
+            .bill-tr td{
+                border-bottom: 1px #000000 solid;
+            }
+            .billTab{ cursor: hand; }
+        </style>
+    </head>
+    <body>
+        <table class="ui-widget-content ui-corner-all" align="center" style="width: 100%;" >
+            <tr><td height="78%">
+                <div id="RightPane" class="ui-layout-center ui-helper-reset ui-widget-content"><!-- Tabs pane -->
+                    <div id="tabs" class="jqgtabs">
+                        <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                            <li >
+                                {title-info}
+                            </li>
+                        </ul>
+                        <div id="tt" style="overflow:hidden;">
+                            <div title="Tab1" id="tabs-detail" style="font-size:12px; padding: 0px; margin: 0px;" >
+                                {data-detail}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+    <div id="mydiv" class="easyui-window" closed="true" title="费用信息" style="width:240px;top: 80px;left: 120px;">
+        <form action="?model=cost_bill_billcheck&action=detail_change" name="detailForm" id="detailForm" method="post">
+            <table border="0" cellpadding="2"  width="100%" class="small"  cellspacing="1"  bgcolor="#EFF7FF" align="center">
+              <tr >
+                  <td colspan="2">
+                      <table border="0" cellpadding="0" width="100%" id="detailTr" align="center" style="padding-right: 10px;"></table>
+                  </td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center" style="padding-top:1px;">
+                <iframe MARGINHEIGHT="1" MARGINWIDTH="1" width="210" height="180" id="detailIf" frameborder="0" style="word-break:break-all;" >
+                </iframe>
+                </td>
+              </tr>
+              <tr id="saveCostType" >
+                <td colspan="2" align="center" height="23" >
+                    <input type="hidden" id="costam" name="costam" value="0"/>
+                    <input type="hidden" id="costid" name="costid" value=""/>
+                    <input type="hidden" id="remark" name="remark" value=""/>
+                    <input type='button' onclick='addInfo()' value="增加"  class="BigInput"/>
+                    <input type='submit' value="保存"  class="BigInput"/>
+                </td>
+              </tr>
+            </table>
+        </form>
+    </div>
+    <div style="display: none;">
+        <table id="tmpTab">
+            <tr style="text-align: center;">
+                <td width="20"> </td>
+                <td>
+                    <select name="detail_type_add[]" id="detail_type" class="detail_type">
+                        {type-info}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="detail_am_add[]" id="detail_am" class="detail_am" value="0" style="width:80px;" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script language="JavaScript">
+    <!--
+    //get frame object
+    frameobj=frames[0];
+    bodyHtml="<head>\n<style type=\"text/css\">body {font: 10pt verdana;} p{margin:0px;padding:0px;}</style>\n</head>\n<BODY bgcolor=\"#FFFFFF\" MONOSPACE>"
+    bodyHtml += "</body>";
+    frameobj.document.open();
+    frameobj.document.write(bodyHtml);
+    frameobj.document.close();
+    frameobj.document.designMode="On";
+    frameobj.document.contentEditable = true;
+    function replaceColor(){
+        var tet=document.frames("detailIf").document.selection.createRange().text;
+        if(tet){
+            document.frames("detailIf").document.selection.createRange().pasteHTML("<font color='red'>"+tet+"</font>");
+        }
+    }
+    //-->
+    </script>
+    <script type="text/javascript">
+        function detailClick(id){
+            //定位
+            var mtop=event.y+10+document.documentElement.scrollTop;
+            var mleft=event.x+document.documentElement.scrollLeft-250;
+            $('#mydiv').window('open');
+            $('#mydiv').window('move',{left: mleft, top: mtop});
+            $('#costid').val(id);
+            document.frames("detailIf").document.body.innerHTML=$('#'+id).attr('lable');
+            $('#remark').val($('#'+id).attr('lable'));
+            var rand=Math.random()*100000;
+            $.post('?model=cost_bill_billcheck&action=detail_info',{
+                rand:rand,id:id
+                },
+                function (data)
+                {
+                    if(data){
+                        $('#detailTr').html(data);
+                    }else{
+                        $('#detailTr').html('读取数据失败！');
+                    }
+                }
+            )
+        }
+        function closeChange(){
+            $('#mydiv').window('close');
+        }
+        function addInfo(){
+            $('#detailTr').append($('#tmpTab').html());
+        }
+        function ckForm(formData, jqForm, options){
+            var ckam=0;
+            var id=$('#costid').val();
+            var cam=parseFloat($('#cost-'+id).html());
+            $('.detail_am').each(function(i){ ckam=parseFloat(ckam)+parseFloat(this.value); });
+            if(isNaN(ckam)){
+                alert('请输入正确金额！');
+                return false;
+            }
+            if(ckam!=cam){
+                alert('发票金额跟费用金额不一致，请核对！');
+                return false;
+            }
+            $('#remark').val(document.frames("detailIf").document.body.innerHTML);
+            return true;
+        }
+        function ckFormSuc(responseText, statusText, xhr, $form){
+            if(responseText=='1'){
+                alert('修改成功！');
+                //parent.$('#tt').tabs('select','报销单列表');
+                parent.$('#rowedgrid').trigger("reloadGrid");
+                parent.$('#tt').tabs('close','{key}');
+                location.reload();
+            }else{
+                alert('错误信息：'+responseText);
+            }
+        }
+        $(document).ready(function(){
+            //保存
+            var options ={
+              target:'',
+              beforeSubmit:ckForm,
+              success:ckFormSuc
+            };
+            $('#detailForm').submit(function(){
+                $(this).ajaxSubmit(options);
+                return false;
+            });
+        });
+    </script>
+</html>

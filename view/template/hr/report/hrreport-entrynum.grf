@@ -1,0 +1,330 @@
+Object Report
+	Version='5.8.0.5'
+	Title='招聘成果统计报表'
+	Object Font
+		Name='宋体'
+		Size=105000,0
+		Weight=400
+		Charset=134
+	End
+	Object Printer
+	End
+	Object DetailGrid
+		BorderColor=LtGray
+		FixCols=8
+		ColLineColor=DkGray
+		RowLineColor=DkGray
+		Object Recordset
+			ConnectionString='Provider=MSDASQL.1;Persist Security Info=False;Data Source=localhost;Extended Properties="DSN=localhost;"'
+			QuerySQL='select\r\n			c.id,c.invoiceNo,c.invoiceCode,\r\n			if(c.isRed = 0,c.invoiceMoney,-c.invoiceMoney) as invoiceMoney,\r\n			if(c.isRed = 0,c.softMoney,-c.softMoney) as softMoney,\r\n			if(c.isRed = 0,c.hardMoney,-c.hardMoney) as hardMoney,\r\n			if(c.isRed = 0,c.repairMoney,-c.repairMoney) as repairMoney,\r\n			if(c.isRed = 0,c.serviceMoney,-c.serviceMoney) as serviceMoney,\r\n			c.invoiceTime,date_format(c.invoiceTime,'%Y%m') as invoiceYearMonth,date_format(c.invoiceTime,'%Y') as invoiceYear,\r\n			c.objType,\r\n			c.salesmanId,\r\n			c.salesman,\r\n			c.invoiceUnitName,\r\n			c.invoiceUnitId,\r\n			it.dataName as invoiceType,\r\n			c.isRed,\r\n			c.salesman as prinvipalName,\r\n			c.objCode as orderCode,\r\n			c.remark,c.createTime,\r\n			c.invoiceContent as productName,\r\n			c.psType,\r\n			c.allAmount as amount,\r\n			cu.areaName,\r\n			cu.Prov as customerProvince,\r\n			cu.TypeOne as customerType,userArea.thisAreaName,\r\n			if( c.objId = 0 ,userArea.Leader_name,cu.AreaLeader) as areaPrincipal\r\n		from oa_finance_invoice c \r\n			left join (select dataCode,dataName from oa_system_datadict where parentCode = 'FPLX' ) it on it.dataCode = c.invoiceType\r\n			left join (select cu.id,cu.areaName,cu.Prov,d.dataName as TypeOne,cu.AreaLeader from customer cu left join oa_system_datadict d on cu.TypeOne = d.dataCode where d.parentCode = 'KHLX') cu on c.invoiceUnitId = cu.id\r\n			left join\r\n			(\r\n				SELECT\r\n					u.USER_ID,a.name as thisAreaName,d.USER_NAME as Leader_name\r\n				 from\r\n					user u\r\n					left join area a  on u.area = a.id\r\n					left join\r\n					(\r\n						select\r\n							d.DEPT_ID,u.USER_NAME,substring_index(if (d.MajorId is null or d.MajorId = '', d.ViceManager, d.MajorId), ',', 1)  as USER_ID\r\n						from\r\n							department d\r\n						left join user u on substring_index(if(d.MajorId is null or d.MajorId = '' ,d.ViceManager,d.MajorId),',',1) = u.USER_ID\r\n					) d on u.DEPT_ID = d.DEPT_ID\r\n			) userArea on  c.salesmanId = userArea.USER_ID\r\n		where 1=1 order by invoiceTime asc , createTime asc'
+			Items Field
+				Item
+					Name='招聘人员'
+					DBFieldName='createName'
+				End
+				Item
+					Name='总人数'
+					DBFieldName='sumNum'
+				End
+				Item
+					Name='初级人数'
+					DBFieldName='level1num'
+				End
+				Item
+					Name='中级人数'
+					DBFieldName='level2num'
+				End
+				Item
+					Name='高级人数'
+					DBFieldName='level3num'
+				End
+				Item
+					Name='试用期内离职人数'
+					DBFieldName='leaveUser'
+				End
+				Item
+					Name='其中直接通知入职人数'
+					DBFieldName='directEntry'
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='招聘人员'
+				Width=1.77271
+			End
+			Item
+				Name='总人数'
+				Tag='招聘已入职人数'
+				Width=2.01083
+			End
+			Item
+				Name='初级人数'
+				Tag='招聘已入职人数'
+				Width=2.19604
+			End
+			Item
+				Name='中级人数'
+				Tag='招聘已入职人数'
+				Width=1.98438
+			End
+			Item
+				Name='高级人数'
+				Tag='招聘已入职人数'
+				Width=2.19604
+			End
+			Item
+				Name='其中直接通知入职人数'
+				Width=3.43958
+			End
+			Item
+				Name='试用期内离职人数'
+				Width=3.36021
+			End
+		End
+		Object ColumnContent
+			Height=0.8
+			Items ColumnContentCell
+				Item
+					Column='招聘人员'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					WordWrap=T
+					TextAlign=MiddleCenter
+					DataField='招聘人员'
+				End
+				Item
+					Column='总人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='总人数'
+				End
+				Item
+					Column='初级人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					Tag='查看采购订单信息'
+					WordWrap=T
+					TextAlign=MiddleCenter
+					DataField='初级人数'
+				End
+				Item
+					Column='中级人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='中级人数'
+				End
+				Item
+					Column='高级人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='高级人数'
+				End
+				Item
+					Column='其中直接通知入职人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='试用期内离职人数'
+				End
+				Item
+					Column='试用期内离职人数'
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					DataField='其中直接通知入职人数'
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0.8
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='招聘人员'
+					BackColor=0099FFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='招聘人员'
+				End
+				Item
+					GroupTitle=T
+					Name='招聘已入职人数'
+					Items ColumnTitleCell
+						Item
+							GroupTitle=F
+							Column='总人数'
+							BackColor=0099FFFF
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='总人数'
+						End
+						Item
+							GroupTitle=F
+							Column='初级人数'
+							BackColor=0099FFFF
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='初级人数'
+						End
+						Item
+							GroupTitle=F
+							Column='中级人数'
+							BackColor=0099FFFF
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='中级人数'
+						End
+						Item
+							GroupTitle=F
+							Column='高级人数'
+							BackColor=0099FFFF
+							Object Font
+								Name='宋体'
+								Size=90000,0
+								Weight=400
+								Charset=134
+							End
+							TextAlign=MiddleCenter
+							Text='高级人数'
+						End
+					End
+					BackColor=0099FFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='招聘已入职人数'
+				End
+				Item
+					GroupTitle=F
+					Column='试用期内离职人数'
+					BackColor=0099FFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='其中直接通知入职人数'
+				End
+				Item
+					GroupTitle=F
+					Column='其中直接通知入职人数'
+					BackColor=0099FFFF
+					Object Font
+						Name='宋体'
+						Size=90000,0
+						Weight=400
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='试用期内离职人数'
+				End
+			End
+		End
+	End
+	Items Parameter
+		Item
+			Name='Parameter1'
+		End
+		Item
+			Name='Parameter2'
+		End
+		Item
+			Name='Parameter3'
+		End
+		Item
+			Name='Parameter4'
+		End
+		Item
+			Name='Parameter5'
+		End
+	End
+	Items Section
+		Item
+			Type=PageHeader
+			Height=0
+		End
+		Item
+			Type=PageFooter
+			Height=1.00542
+		End
+		Item
+			Type=ReportHeader
+			Name='入职分析报表'
+			Height=1.2
+			Items Control
+				Item
+					Type=StaticBox
+					Name='MainTitleBox'
+					Dock=Fill
+					Center=Horizontal
+					Object Font
+						Name='宋体'
+						Size=157500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='招聘成果统计报表'
+				End
+			End
+		End
+	End
+End

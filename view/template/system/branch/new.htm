@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="images/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <title></title>
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                $('#editForm').validate({
+                    submitHandler: function(){
+                        editInFun();
+                    },
+                    rules:{
+                        key:'required',
+                        namecn:"required",
+                        nameen:"required",
+                        parentid:"required"
+                    },
+                    messages:{
+                        namecn:"请输入公司名（中文）",
+                        nameen:"请输入公司名（英文）",
+                        parentid:"请选择上级公司"
+                    }
+                });
+            });
+            function editInFun(){
+                var rand=Math.random()*100000;
+                var namecn=$('#namecn').val();
+                var nameen=$('#nameen').val();
+                var namept=$('#namept').val();
+                var parentid=$('#parentid').val();
+                var host=$('#host').val();
+                var db=$('#db').val();
+                var dbname=$('#dbname').val();
+                var dbpw=$('#dbpw').val();
+                var id=$('#key').val();
+                $.post('?model=system_branch_util&action=new_in',{
+                    id:id,namecn:namecn,nameen:nameen,namept:namept,parentid:parentid
+                    ,host:host,db:db,dbname:dbname,dbpw:dbpw
+                    ,sub:'new',rand:rand
+                    },
+                    function (data)
+                    {
+                        alert(data);
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                    }
+                )
+                return false;
+            }
+        </script>
+        <style type="text/css">
+            #editForm label.error {
+                margin-left: 10px;
+                width: auto;
+                display: inline;
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="editForm" method="post" action="#">
+            <table border="0" width="580" class="table" cellpadding="0" cellspacing="0" align="center" >
+                <tr class="tableheader">
+                    <td align="center" colspan="2">新增子公司信息</td>
+                 </tr>
+                <tr>
+                <td class="tableleft" width="25%">公司名（中文）</td>
+                <td class="td_left">
+                    <input type="text" value="" name="" id="namecn" size="38"/>
+                    <input type="hidden" value="{key_val}" name="key" id="key" />
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">公司名（英文）</td>
+                <td class="td_left"><input type="text" value="" name="nameen" id="nameen" size="38"/></td>
+            </tr>
+            <tr>
+                <td class="tableleft">公司简称</td>
+                <td class="td_left"><input type="text" value="" name="namept" id="namept" size="38"/></td>
+            </tr>
+            <tr>
+                <td class="tableleft">上级公司</td>
+                <td class="td_left">
+                    <select name="parentid" id="parentid" >
+                        {branch_list}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tableleft">服务器</td>
+                <td class="td_left"><input type="text" value="" name="host" id="host" /></td>
+            </tr>
+            <tr>
+                <td class="tableleft">数据库</td>
+                <td class="td_left"><input type="text" value="" name="db" id="db" /></td>
+            </tr>
+            <tr>
+                <td class="tableleft">用户名</td>
+                <td class="td_left"><input type="text" value="" name="dbname" id="dbname" /></td>
+            </tr>
+            <tr>
+                <td class="tableleft">密码</td>
+                <td class="td_left"><input type="text" value="" name="dbpw" id="dbpw" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="提交" /></td>
+            </tr>
+            </table>
+        </form>
+    </body>
+</html>

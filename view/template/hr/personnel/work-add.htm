@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增工作经历</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/work-add.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_personnel_work"
+			});
+		});
+	</script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=hr_personnel_work&action=add" >
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增工作经历
+             </span>
+            </div>
+            </td>
+         </tr>
+		<tr>
+				<td class="form_text_left">员工编号</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" id="userNo"  name="work[userNo]"  readonly/>
+					 <input type="hidden" class="txt" id="userAccount"  name="work[userAccount]"  />
+				</td>
+				<td class="form_text_left">员工姓名</td>
+				<td class="form_text_right" >
+					 <input type="text" class="readOnlyText" id="userName"  name="work[userName]"  readonly/>
+				</td>
+		</tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">公司名称</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="company" name="work[company]" />
+      		</td>
+      		<td class="form_text_left">部门</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="dept" name="work[dept]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">职位</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="position" name="work[position]" />
+      		</td>
+      		<td class="form_text_left">待遇</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="treatment" name="work[treatment]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">开始时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="beginDate" onfocus="WdatePicker()" readOnly  name="work[beginDate]"  onblur="timeCheck(this)"/>
+      		</td>
+      		<td class="form_text_left">结束时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="closeDate" onfocus="WdatePicker()" readOnly  name="work[closeDate]"  onblur="timeCheck(this)"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">在该公司年限</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="isSeniority" name="work[isSeniority]" />
+      		</td>
+      		<td class="form_text_left">工作年限</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" id="seniority" name="work[seniority]" />
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">工作职责</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <textarea class="txt_txtarea_font" id="responsibilities" name="work[responsibilities]" ></textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">离职原因</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <textarea class="txt_txtarea_font" id="leaveReason" name="work[leaveReason]" ></textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left">证明人/职务/电话</td>
+      		<td class="form_text_right"  colspan="3">
+      			 <textarea class="txt_txtarea_font" id="prove" name="work[prove]" ></textarea>
+      		</td>
+       </tr>
+      <tr>
+      		<td class="form_text_left" >备注</td>
+      		<td class="form_text_right"  colspan="3">
+                  <textarea class="txt_txtarea_font" id="remark" name="work[remark]"></textarea>
+      		</td>
+      </tr>
+		<tr>
+			<td class="form_text_left">附  件</td>
+			<td colspan="3" class="form_text_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /><br />
+						<br />
+					</div>
+					<div id="uploadfileList" class="upload"></div>
+				</div>
+			</td>
+		</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>报销单</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+        <link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="js/common/businesspage.js"></script>
+        <script type="text/javascript" src="js/common/approval.js"></script>
+        <script type="text/javascript" src="js/Lodop/printer.js"></script>
+    </head>
+    <body topmargin="5">
+        <table border="0" cellspacing="0" cellpadding="0" class="noprint" width="100%">
+            <tr>
+                <td class="Big">
+                    <img src="images/w_fActionEdit.gif">
+                    <b><font color="#000000">打印发票清单</font></b>
+                </td>
+            </tr>
+            <tr align="left">
+                <td>
+                    <input type="button" onclick="javascript:prn_print('payablesapply','报销单');" class="txt_btn_a" value="打印" />
+                    <input type="button" onclick="javascript:prn_preview('payablesapply','报销单')" class="txt_btn_a" value="打印预览"/>
+                    <input type="button" class="txt_btn_a" value="关闭" onclick="closeFun();"/>
+                </td>
+            </tr>
+        </table>
+        <table width="640" align="center" id="payablesapply" style="width:640px;height: 700px;">
+            <tr><td height="10" >&nbsp;</td></tr>
+            <tr>
+                <td valign="top">
+                    <div style="text-align:center;margin-top:10px;vertical-align: top;margin-bottom: 5px;">
+                        <span style="font-size:30px;font-weight:bold;color:black;" class="Big">{detail_type}报销单</span>
+                    </div>
+                    <table  width="100%" align="center" >
+                      <tr >
+                        <td align="left" >
+                        <div style="text-align:left;vertical-align: top;font-size:12px;">{acc_info}</div>
+                        </td>
+                        <td align="right" >
+                        <div style="text-align:right;vertical-align: top;">{date_info}</div>
+                        </td>
+                      </tr>
+                    </table>
+                    <table width="100%" align="center" class="form_main_table" style="border: 0px solid #000000; ">
+                        {print_info}
+                    </table>
+                </td>
+            </tr>
+            <tr><td >
+                    <table border="0" bordercolor="black"  width="100%" align="left" cellspacing="0" style="font-size: 11pt;border:0px;" cellpadding="0">
+                        <tr>
+                            <td width="35%" height="30">部门负责人：{appName}</td>
+                            <td width="35%">会计主管：</td>
+                            <td>领款人：</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr><td height="80%">&nbsp;</td></tr>
+        </table>
+            <input type="hidden" id="billno" value="{billno}">
+        <input type="hidden" id="editable" value="{editable}">
+    <script type="text/javascript">
+        $(function(){
+            // 判断用户是否存在修改发票信息的权限
+            var editableLimit = $("#editable").val();
+            if(editableLimit != 1){
+                $(".changeLimitItem").attr("readonly",true);
+            }else{
+                $(".changeLimitItem").removeAttr("readonly");
+            }
+
+            // 标记带变更的字段信息
+            $(".changeLimitItem").each(function(){
+                var changeTip = $(this).attr("changetip");
+                if(changeTip == 1){
+                    $(this).css("color","red");
+                    $(this).css("text-decoration","underline");
+                }
+            });
+
+            $(".changeLimitItem").blur(function(){
+                var billno = $("#billno").val();
+                var changeField = $(this).attr("id");// mainAccount: 修改了账户, mainAcccard: 修改了账户卡号, payee: 修改了账户姓名
+                var originalVal = $(this).attr("data-orgval");
+                var lastchangeval = $(this).attr("data-lastchangeval");
+                var newVal = $(this).val();
+
+                if(newVal != lastchangeval){
+                    var responseText = $.ajax({
+                        url: 'index1.php?model=cost_bill_billcheck&action=billCheckChangeRecord',
+                        data: {"billNo":billno,"changeField":changeField,"oldVal":lastchangeval,"newVal":newVal},
+                        type: "POST",
+                        async: false
+                    }).responseText;
+                    if(responseText == 1){
+                        if(originalVal != newVal){
+                            $("#"+changeField).css("color","red");
+                            $("#"+changeField).css("text-decoration","underline");
+                            $(this).attr("data-lastchangeval",newVal);
+                        }else{
+                            $("#"+changeField).css("color","black");
+                            $("#"+changeField).css("text-decoration","none");
+                            $(this).attr("data-lastchangeval",newVal);
+                        }
+                    }
+                }
+            })
+        });
+    </script>
+    </body>
+</html>

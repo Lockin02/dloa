@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑报销单</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gbk" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
+	<link rel="stylesheet" type="text/css" href="js/thickbox.css" media="screen" />
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+
+	<!-- 日期控件 -->
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+	<!-- 核心组件 -->
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/jquery/woo.js"></script>
+	<script type="text/javascript" src="js/jquery/component.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+
+	<!-- 表格组件 -->
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+
+	<!-- 下拉组件 -->
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+	<script type="text/javascript" src="js/jquery/grid/yxeditgrid.js"></script>
+
+	<!-- 组织机构用户 -->
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-dept.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdprojectfordl.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-projectall.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-expensemodel.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<script src="js/jquery/jquery.masonry.min.js"></script>
+
+	<script type="text/javascript" src="view/template/finance/expense/js/expense-edit.js" ></script>
+	<script type="text/javascript" src="view/template/finance/expense/js/costtype-expense.js" ></script>
+	<script type="text/javascript" src="view/template/finance/expense/js/expense-common.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+</head>
+<body>
+
+<form id="form1" method="post" action="?model=finance_expense_expense&action=edit" onsubmit="return checkForm();">
+<table class="form_main_table" style="width:1100px;margin:auto;align:center" align="center">
+	<tr>
+		<td>
+			<div class="main_head2">
+				<span class="main_head_title">编辑报销明细</span>
+				<span style="float:right;margin:2px 8px 0px 0px;" title="单据录入时间">{InputDate}</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+				<legend class="legend">基 本 信 息 - {BillNo}
+					<img src="images/icon/info_up.gif" id="costBelongImg" onclick="showAndHideDiv('costBelongImg','costbelong');"/>
+				</legend>
+				<div id="costbelong"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset><legend class="legend"><b>费 用 信 息</b>
+				<img src="images/icon/info_up.gif" id="feeImg" onclick="showAndHide('feeImg','feeTbl')"/>
+			</legend>
+			<table class="form_in_table" id="feeTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="4%"></th>
+						<th width="12%">费用大类</th>
+						<th width="12%">费用小类</th>
+						<th width="12%">费用金额</th>
+						<th width="9.7%">发票类型</th>
+						<th width="8.6%">发票金额</th>
+						<th width="8.6%">发票数量</th>
+						<th>操 作</th>
+						<th width="6%">费用说明</th>
+						<th width="23%">费用说明</th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					{expensedetail}
+				</tbody>
+				<tr class="tr_count">
+					<th width="4%"></th>
+					<td>合计</td>
+					<td></td>
+					<td>
+						<input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="expense[Amount]" id="countMoney" value="{countMoney}" readonly="readonly"/>
+						<input type="hidden" name="expense[feeRegular]" id="feeRegular" value="{feeRegular}"/>
+						<input type="hidden" name="expense[feeSubsidy]" id="feeSubsidy" value="{feeSubsidy}"/>
+					</td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:90px" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="expense[invoiceMoney]" id="invoiceMoney" value="{invoiceMoney}" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:80px" name="expense[invoiceNumber]" id="invoiceNumber" value="{invoiceNumber}" readonly="readonly"/></td>
+					<td><input type="text" class="readOnlyTxtCount" style="width:48px" readonly="readonly"/></td>
+					<td colspan="2" align="left">常规费用 : <span id="feeRegularView"></span>, 补贴费用 : <span id="feeSubsidyView"></span></td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr class="tr_odd">
+		<td colspan="6" style="text-align:left;">
+			<span class="blue">
+				提示：<br/>
+				1.填写费用金额、发票金额时，可直接填写数字或者以"+"接连的加法式子，金额会自动计算。<br/>
+				2.有冲抵的情况时，费用金额和发票金额按实际金额填写，贴票票面金额须大于等于发票金额
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<input type="submit" class="txt_btn_a" id="btnCheck" onclick="audit('check')" value="提交部门检查" style="display:none;"/>
+			<input type="submit" class="txt_btn_a" id="btnAudit" onclick="audit('audit')" value="提交审批" style="display:none;"/>&nbsp;&nbsp;
+			<input type="submit" value=" 保 存 " onclick="audit('save')" class="txt_btn_a"/>&nbsp;&nbsp;
+			<input type="button" title="选择自定义费用类型-在需要的费用类型上打勾即可" onclick="selectCostType2();" class="txt_btn_a" value="新增费用类型" />&nbsp;&nbsp;
+			<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="window.close();"/>
+			<input type="hidden" name="expense[thisAuditType]" id="thisAuditType" value="audit"/>
+			<input type="hidden" id="costTypeIds"/>
+			<input type="hidden" name="expense[id]" id="id" value="{id}" />
+			<input type="hidden" name="expense[BillNo]" value="{BillNo}"/>
+			<input type="hidden" name="expense[AssID]" value="{AssID}"/>
+			<input type="hidden" name="expense[HeadID]" value="{HeadId}"/>
+			<input type="hidden" name="expense[needExpenseCheck]" id="needExpenseCheck" value="{needExpenseCheck}"/>
+			<input type="hidden" id="deptIsNeedProvince" value="{deptIsNeedProvince}"/>
+			<input type="hidden" id="specialApplyNos" name="expense[specialApplyNos]" value="{specialApplyNos}"/>
+			<input type="hidden" id="allApply" value="{allApply}"/>
+			<!-- 获取默认值需要用的内容 -->
+			<input type="hidden" id="fileUrl" value="{downloadUrl}"/>
+			<div id="fileInfo" style="display:none;">{file}</div>
+		</td>
+	</tr>
+</table>
+<div id="costTypeInner"></div>
+<div id="specialApplyWindow"></div>
+</form>
+</body>
+</html>

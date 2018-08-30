@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<title>销售换货单</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+{#commonInclude#}
+<script type="text/javascript" src="js/common/approval.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/exchange/js/exchange-view-list.js"></script>
+    <script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+</head>
+<body>
+<div class="main_head"><span class="main_head_title"> 销售换货单
+</span></div>
+<form id="form1" method="post"
+	action="?model=projectmanagent_return_return&action=add" name="form1">
+<table class="form_main_table">
+	<tr>
+		<td colspan="6">
+		<fieldset><legend class="legend"
+			onclick="showAndHide('baseImg','baseinfo')">基本信息 <img
+			src="images/icon/info_up.gif" id="baseImg" /> </legend>
+		<table cellpadding="2" width="100%" id="baseinfo"
+			style="bcontract-collapse:collapse;background-color:#F3F6FA;">
+			<tr>
+				<td class="form_text_left">换货单编号</td>
+				<td class="form_text_right" colspan="3">{exchangeCode}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">源单编号</td>
+				<td class="form_text_right" style="color:blue">
+				   <a onclick="showModalWin('?model=contract_contract_contract&action=toViewTab&id={contractId}&perm=view')">{contractCode}</a>
+				<td class="form_text_left">源单名称</td>
+				<td class="form_text_right">{contractName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">合同金额</span></td>
+				<td class="form_text_right formatMoney">
+				       {contractMoney}
+				<td class="form_text_left_con"><span style="color:blue">合同成本概算:</span></td>
+				<td class="form_text_right_con">
+				   <span class="formatMoney" />
+				     {costEstimates}
+				   </span>&nbsp;&nbsp;
+<!--				   <span>交付（<span class="formatMoney">{saleCost}</span>）|服务（<span class="formatMoney">{serCost}</span>）</span><br/>-->
+				   <span style="color:blue">预计毛利率:</span>&nbsp;&nbsp;<span id="exgrossDiv">{exgross}%</span>
+				   <input type="button" class="txt_btn_a" id="equCost" value="详细成本概算" onclick="equCoseView();"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right">{customerName}</td>
+				<td class="form_text_left">销售负责人</td>
+				<td class="form_text_right">{saleUserName}</td>
+			</tr>
+			<tr>
+				<td class="form_text_left_con">换货类型</td>
+				<td class="form_text_right_con">
+				   {exchangeTypeName}
+				</td>
+				<td class="form_text_left_con">交付条件</td>
+				<td class="form_text_right_con">
+				    {deliveryCondition}
+			</tr>
+			<tr>
+				<td class="form_text_left_con">到货日期</td>
+				<td class="form_text_right_con">
+				   {arrivalDate}
+				</td>
+				<td class="form_text_left_con">期望发货日期</td>
+				<td class="form_text_right_con">
+				   {expectedDate}
+			</tr>
+			<tr>
+				<td class="form_text_left">创建时间</td>
+				<td class="form_text_right">{createTime}</td>
+				<td class="form_text_left">创建人</td>
+				<td class="form_text_right">{createName}</td>
+			</tr>
+			<tr>
+
+				<td class="form_text_left">换货原因</td>
+				<td class="form_text_right" colspan="3">
+					 <div id="reason" class="divChangeLine">{reason}</div>
+				</td>
+			</tr>
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200"><legend class="legend"
+			onclick="showAndHideDiv('backequImg','backequinfo')">退货物料 <img
+			src="images/icon/info_up.gif" id="backequImg" /> </legend>
+		<div id="backequinfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200"><legend class="legend"
+			onclick="showAndHideDiv('equImg','equinfo')">换货物料 <img
+			src="images/icon/info_up.gif" id="equImg" /> </legend>
+		<div id="equinfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+</table>
+    <table class="form_main_table">
+    <tr>
+		<td colspan="6" >
+		<fieldset style="width:200">
+		     <legend class="legend" onclick="showAndHideDiv('appViewImg','appView')">&nbsp;&nbsp;&nbsp;审&nbsp;批&nbsp;情&nbsp;况&nbsp;&nbsp;&nbsp;
+				<img src="images/icon/info_up.gif" id="appViewImg" />
+			  </legend>
+		<div id="appView">
+		   <input type="hidden" id="exgrossVal" value="{exgrossval}" />
+		   <input type="hidden" id="actType" value="{actType}" />
+		   <input type="hidden" id="type" value="exchange" />
+		   <input type="hidden" id="pid" value="{id}" />
+		   <input type="hidden" id="itemType" value="oa_contract_exchangeapply" />
+		   <input type="hidden" id="isChange" value="all" /></td>
+		</div>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4">
+		 <input type="hidden" value="{contractId}" id="cid" />
+		<input type="hidden" value="{id}" id="exchangeId" />
+<!--		 <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun()" /></td>-->
+	</tr>
+    </table>
+</form>
+</body>
+</html>

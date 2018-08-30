@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>title</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action={t_action}&id={t_id}&key={t_key}" onsubmit="return check();">
+<table class="table td_height_30" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">审核操作</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="radio" checked name="status" onclick="show_notse();" value="1">审核通过 <input type="radio" name="status" onclick="show_notse();" value="-1">需求不合理，打回</td>
+	</tr>
+	<tr>
+		<td width="20%" id="notse_title">备注说明：</td>
+		<td align="left" width="80%"><textarea style="width:100%;" cols="50" rows="6" id="notse" name="notse"></textarea></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center"><input type="submit" value=" 确定 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	function check()
+	{
+		var inputs = $('input[type=radio]:checked').val();
+		if (inputs != 1 && $('#notse').val()=='')
+		{
+			alert('打回理由不能为空！');
+			$('#notse').focus();
+			return false;
+		}else{
+			return true;
+		}
+	}
+	function show_notse()
+	{
+		var inputs = $('input[type=radio]:checked').val();
+		if (inputs==1)
+		{
+			$('#notse_title').html('备注说明：');
+		}else{
+			$('#notse_title').html('打回理由：');
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>审核或申请用户列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>类型筛选：
+		<select id="type" name="type" onchange="location.href='?model=purview&action=audit_apply_user_list&type='+this.value;">
+			<option value="">全部类型</option>
+			<option {selected_1} value="1">审核用户</option>
+			<option {selected_0} value="0">申请用户</option>
+		</select>
+		</td>
+		<td>
+		<input type="button" alt="?model=purview&action=add_apply_audit_user&&placeValuesBefore&TB_iframe=true&modal=false&width=300&height=300" value=" 添加用户 " class="thickbox" title="添加用户" />
+		</td>
+	</tr>
+</table>
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="5">审核或申请用户列表</td>
+	</tr>
+	<tr>
+		<td width="5%">ID</td>
+		<td>姓名</td>
+		<td>部门</td>
+		<td>类型</td>
+		<td>操作</td>
+	</tr>
+	{list}
+</table>
+<script type="text/javascript">
+var temp = Array();
+var userid = Array();
+var user_name = Array();
+var dept_name = Array();
+function edit(id)
+{
+	temp[id] = $('#tr_'+id).html();
+	var username = $('#username_'+id).html();
+	var typeid = $('#type_'+id).html();
+	if (typeid=='申请权限')
+	{
+		$('#type_'+id).html('<input type="radio" checked name="type_'+id+'" value="0" />申请权限');
+		$('#type_'+id).append('<input type="radio" name="type_'+id+'" value="1" />审核权限');
+	}else{
+		$('#type_'+id).html('<input type="radio" name="type_'+id+'" value="0" />申请权限');
+		$('#type_'+id).append('<input type="radio" checked name="type_'+id+'" value="1" />审核权限');
+	}
+	$('#edit_'+id).html('<input type="button" onclick="save('+id+');" value=" 保存 " /> <input type="button" onclick="exit_edit('+id+');" value=" 取消 " />')
+	$('#username_'+id).html('<input type="text" onblur="get_userid('+id+');" id="new_username_'+id+'" name="new_username_'+id+'" value="'+username+'" /><span id="_username_'+id+'">*</span>');
+	get_userid(id);
+}
+function save(id)
+{
+	if (userid[id] && userid[id]!='')
+	{
+		var typeid = $('input[name=type_'+id+']:checked').val();
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'purview',action:'edit_user',id:id,userid:userid[id],typeid:typeid,rand:rand},
+			function (data)
+			{
+				if (data==1)
+				{
+					$('#tr_'+id).html(temp[id]);
+					$('#username_'+id).html(user_name[id]);
+					$('#dept_'+id).html(dept_name[id]);
+					if (typeid==0)
+					{
+						$('#type_'+id).html('申请权限');
+					}else{
+						$('#type_'+id).html('审核权限');
+					}
+				}else{
+					$('#tr_'+id).html(temp[id]);
+					alert('修改失败！');
+				}
+			}
+		)
+	}
+}
+function exit_edit(id)
+{
+	$('#tr_'+id).html(temp[id]);
+}
+function get_userid(id)
+{
+	var username = $('#new_username_'+id).val();
+	user_name[id] = username;
+	if (username == '')
+	{
+		$('#_username_'+id).html('用户姓名不能为空！');
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				userid[id] = unescape(data);
+				get_dept(unescape(data),id);
+				$('#_username_'+id).html('*');
+			}else{
+				$('#_username_'+id).html('姓名不正确！');
+				userid[id] = false;
+			}
+		}
+
+		)
+	}
+}
+function get_dept(userid,id)
+{
+	if (userid && id)
+	{
+		$.post('ajax.php',{model:'user',action:'get_dept',userid:userid},
+		function (data)
+		{
+			if (data)
+			{
+				data = unescape(data);
+				arr = data.split('|');
+				dept_name[id] = arr[1];
+				$('#dept_'+id).html(arr[1]);
+			}
+		}
+		)
+	}
+}
+function del(id)
+{
+	var username = $('#username_'+id).html();
+	var typename = $('#type_'+id).html();
+	var rand=Math.random()*100000;
+	if (confirm('您确认要删除 '+username+' 的 '+typename+' 吗？' ))
+	{
+		$.post('ajax.php',{model:'purview',action:'del_user',id:id,rand:rand},
+		function (data)
+		{
+			if (data==1)
+			{
+				$('#tr_'+id).remove();
+			}else{
+				alert('删除失败！');
+			}
+		}
+		)
+	}
+}
+</script>
+</body>
+</html>

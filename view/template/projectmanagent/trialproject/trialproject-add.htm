@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增试用项目</title>
+   {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-chance.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-area.js"></script>
+   <script type="text/javascript" src="js/common/dateUtil.js"></script>
+<!--   <script type="text/javascript" src="{#jsPath#}/trialproject-proCity.js"></script>-->
+   <script type="text/javascript" src="{#jsPath#}/trialproject-add.js" ></script>
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+	<script>
+	var uploadfile,uploadfile2;
+	$(function() {
+		uploadfile=createSWFUpload({
+			"serviceType":"oa_trialproject_trialproject"//业务模块编码，一般取表名
+		});
+	});
+	</script>
+	<!-- 附件上传结束 -->
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=projectmanagent_trialproject_trialproject&action=add">
+      <table class="form_main_table">
+      	<tr>
+      		<td colspan="4">
+            <div class="main_head">
+             <span class="main_head_title">
+               	新增试用项目
+             </span>
+            </div>
+            </td>
+         </tr>
+       <tr>
+            <td class="form_text_left">项目编号</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="trialproject[projectCode]" />
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">项目名称</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[projectName]" id="projectName"/>
+      		</td>
+       </tr>
+       <tr>
+			<td  class="form_text_left">源单类型</td>
+			<td class="form_view_right">
+			     <input type="hidden" id="SingleTypeT" name="trialproject[SingleType]" value="{SingleType}"/>
+				 <select class="select" id="SingleType" onchange="singleSelect();"></select>
+			</td>
+			<td  class="form_text_left"><span style="color:blue">源单编号</span></td>
+			<td class="form_view_right" id="single">
+
+			</td>
+		</tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">试用开始时间</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[beginDate]" onfocus="WdatePicker()" id="beginDate" onblur="timeInterval();"/>
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">试用结束时间</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[closeDate]" onfocus="WdatePicker()" id="closeDate" onblur="timeInterval();"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">工期(天)</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[projectDays]" id="projectDays" onblur="timeIntervals();"/>
+      		</td>
+      		<td class="form_text_left"><span style="color:blue">所属板块</span></td>
+      		<td class="form_text_right" >
+      			 <select class="select" name="trialproject[module]" id="module">
+      			 {module}
+				</select>
+      		</td>
+       </tr>
+       <tr style="display:none">
+            <td class="form_text_left"><span style="color:blue">预计试用费用金额</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt formatMoney" name="trialproject[budgetMoney]" value="{budgetMoney}" id="budgetMoney"/>
+      		</td>
+      		<td class="form_text_left">预计合同金额</td>
+      	 	<td class="form_text_right" >
+      			 <input type="text" class="txt formatMoney" name="trialproject[planContractMoney]"  id="planContractMoney" value="{budgetMoney}"/>
+      		</td>
+       </tr>
+       <tr  style="display:none">
+      		<td class="form_text_left">预计签约时间</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[planSignDate]" id="planSignDate" value="{planSignDate}" onfocus="WdatePicker()"/>
+      		</td>
+       </tr>
+       <tr  style="display:none">
+      		<td class="form_text_left"><span style="color:blue">客户名称</span></td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="txt" name="trialproject[customerName]" id="customerName" value="{customerName}"/>
+      			 <input type="hidden" class="txt" name="trialproject[customerId]" id="customerId" value="{customerId}"/>
+      		</td>
+      		<td class="form_text_left">客户类型</td>
+      		<td class="form_text_right" >
+<!--      		     <select class="select" name="trialproject[customerType]" id="customerType" >-->
+<!--				 </select>-->
+				 <input type="hidden" name="trialproject[customerType]" id="customerType" value="{customerType}"/>
+      		</td>
+       </tr>
+       <tr  style="display:none">
+      		<td class="form_text_left">所属省份:</td>
+			<td class="form_text_right">
+<!--			   <select class="select" name="trialproject[provinceId]" id="province"/>-->
+<!--			   </select>-->
+			   <input type="hidden" name="trialproject[province]" id="provinceName" value="{Province}"/>
+			   <input type="hidden" name="trialproject[provinceId]" id="provinceId" value="{ProvinceId}"/>
+		    </td>
+			<td class="form_text_left">所属城市:</td>
+			<td class="form_text_right">
+<!--			   <select class="select" name="trialproject[cityId]" id="city" >-->
+<!--			   </select>-->
+			   <input type="hidden" name="trialproject[city]" id="cityName" value="{City}"/>
+			   <input type="hidden" name="trialproject[cityId]" id="cityId" value="{CityId}"/>
+			</td>
+       </tr>
+       <tr  style="display:none">
+      		<td class="form_text_left">归属区域</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{areaName}" name="trialproject[areaName]" id="areaName"/>
+      			 <input type="hidden" class="txt" name="trialproject[areaCode]" id="areaCode" value="{areaCode}"/>
+      			 <input type="hidden" id="exeDeptCode"/>
+                 <input type="hidden" id="exeDeptName"/>
+      		</td>
+      		<td class="form_text_left">区域负责人</td>
+      		<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" value="{areaPrincipal}" name="trialproject[areaPrincipal]" id="areaPrincipal"/>
+      			 <input type="hidden" class="txt" name="trialproject[areaPrincipalId]" id="areaPrincipalId" value="{areaPrincipalId}"/>
+      		</td>
+       </tr>
+       <tr>
+		<td class="form_text_left">附件</td>
+		<td class="form_text_right" >
+		<div class="upload">
+		<div class="upload" id="fsUploadProgress"></div>
+		<div class="upload"><span id="swfupload"></span> <input
+			id="btnCancel" type="button" value="中止上传"
+			onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+		</div>
+		<div id="uploadfileList" class="upload"></div>
+		</div>
+		</td>
+		 <td class="form_text_left">申请人</td>
+      	 	<td class="form_text_right" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" name="trialproject[applyName]" value="{applyName}"/>
+      			 <input type="hidden" class="txt" name="trialproject[applyNameId]"  value="{applyNameId}"/>
+      		</td>
+	</tr>
+       <tr>
+      		<td class="form_text_left">客户联系方式</td>
+      		<td class="form_text_right" colspan="3">
+      		      <textarea class="txt_txtarea_font" name="trialproject[customerWay]" id="customerWay"></textarea>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left"><span style="color:blue">试用要求描述</span></td>
+      		<td class="form_text_right" colspan="3">
+      			 <textarea class="txt_txtarea_font" name="trialproject[projectDescribe]" id="projectDescribe"></textarea>
+      		</td>
+       </tr>
+       <tr id="product">
+		<td colspan="6">
+		<fieldset style="width:200">
+		     <legend class="legend" >&nbsp;&nbsp;产品清单&nbsp;
+				<img src="images/icon/info_up.gif" id="productImg" />
+			  </legend>
+			<div id="productInfo"></div>
+		</fieldset>
+		</td>
+	</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <!--			    商机下推借试用单据 冗余信息 --开始-->
+                <input type="hidden" value="{chanceCode}" id="chanceCodeT" />
+                <input type="hidden" value="{chanceId}" id="chanceIdT" />
+                <!--			    商机下推借试用单据 冗余信息 --结束-->
+      		   <input type="hidden" name="trialproject[ExaStatus]" value="未审批" />
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>
+      		   <input type="submit" class="txt_btn_a" value=" 提  交 " onclick="toApp();" />
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

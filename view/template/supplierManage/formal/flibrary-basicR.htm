@@ -1,0 +1,271 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<title>查看供应商基本信息</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css"
+	media="screen" />
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/topoptions.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<style>
+legend {
+	color:#06c;
+	font-weight:800;
+	background:#fff;
+	border:#b6b6b6 solid 1px;
+	padding:3px 6px;
+}
+fieldset {
+	padding:3px;
+	margin:3px;
+	color:#333;
+	border:#8F8F8F double 1px;
+}
+</style>
+	<script>
+/**
+ * 控制扩展信息展示与隐藏
+ */
+function extControl() {
+	if (document.getElementById("extinfo").style.display == "none") {
+		$("#extImg").attr("src", "images/icon/info_up.gif");
+		$("#extinfo").show();
+	} else {
+		$("#extImg").attr("src", "images/icon/info_right.gif");
+		$("#extinfo").hide();
+	}
+}
+/**
+ * 控制扩展信息展示与隐藏
+ */
+function baseControl() {
+	if (document.getElementById("baseinfo").style.display == "none") {
+		$("#baseImg").attr("src", "images/icon/info_up.gif");
+		// document.getElementById("extInfo").style.display=="block";
+		$("#baseinfo").show();
+	} else {
+		$("#baseImg").attr("src", "images/icon/info_right.gif");
+		$("#baseinfo").hide();
+	}
+}
+
+
+	</script>
+</head>
+
+<body>
+  <fieldset>
+  <legend><b>基本信息<img src="images/icon/info_up.gif" id="baseImg" onclick="baseControl()"></img></b></legend>
+	<table   id="baseinfo" class="form_main_table">
+		<tr>
+			<td class="form_text_left">供应商编号</td>
+			<td class="form_text_right">{busiCode}</td>
+			<td class="form_text_left">供应商名称</td>
+			<td class="form_text_right">
+				{suppName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商类别</td>
+			<td class="form_text_right">
+				{suppCategoryName}
+			</td>
+			<td class="form_text_left">注册资金</td>
+			<td class="form_text_right">
+				{registeredFunds}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">主要经营范围</td>
+			<td class="form_text_right" >
+				{products}
+			</td>
+			<td class="form_text_left">法人代表</td>
+			<td class="form_text_right">
+				{legalRepre}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">营业执照编号</td>
+			<td class="form_text_right">
+			{businessCode}
+			</td>
+			<td class="form_text_left">工商登记号</td>
+			<td class="form_text_right">
+				{businRegistCode}
+			</td>
+		</tr>
+        <tr>
+            <td class="form_text_left">曾用名</td>
+            <td class="form_text_right" colspan="3">
+                {usedName}
+            </td>
+        </tr>
+		<tr>
+			<td class="form_text_left">供应商等级</td>
+			<td class="form_text_right" colspan="3">
+				{suppGrade}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<font color="blue">(*A、B、C为合格供应商,D为不合格供应商,E为其他供应商)</font>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商地址</td>
+			<td class="form_text_right" colspan="3">
+				<textarea class="textarea_read"  readonly>{address}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">附件</td>
+			<td colspan="3" class="form_text_right">{file}</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">银行信息</td>
+			<td class="form_text_right" colspan="3">
+			<table width="100%" id="mypay" class="main_table">
+					<tr class="main_tr_header"><td style="text-align:center">序号</td><td style="text-align:center">开户银行</td><td style="text-align:center">开户账号</td><td style="text-align:center">备注</td></tr>
+				{list}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left_three">联系人</td>
+			<td colspan="5">
+				<table class="main_table" id="mylinkman">
+				<tr class="main_tr_header">
+					<th>序号</th>
+					<th>联系人姓名</th>
+					<th>职位</th>
+					<th>联系电话</th>
+					<th>传真</th></tr>
+				<tbody >
+					{contratlist}
+				</tbody>
+				</table>
+			</td>
+		</tr>
+</table>
+</fieldset>
+<fieldset>
+<legend><b>扩展信息<img src="images/icon/info_right.gif" id="extImg" onclick="extControl()"></img></b></legend>
+<table class="form_main_table" id="extinfo"  style="display: none;">
+		<tr>
+			<td class="form_text_left">供货生效日期</td>
+			<td class="form_text_right">
+				{effectDate}
+			</td>
+			<td class="form_text_left">供货失效日期</td>
+			<td class="form_text_right">
+				{failureDate}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">创建日期</td>
+			<td class="form_text_right" >
+				{registeredDate}
+			</td>
+			<td class="form_text_left">注册商标</td>
+			<td class="form_text_right">
+				{registMark}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">申请等级</td>
+			<td class="form_text_right">
+				{requestType}
+			</td>
+			<td class="form_text_left">简称</td>
+			<td class="form_text_right">
+				{shortName}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应商来源</td>
+			<td class="form_text_right" >
+				{suppSource}
+			</td>
+			<td class="form_text_left">纳税登记号</td>
+			<td class="form_text_right">
+				{taxRegistCode}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">供应类别</td>
+			<td class="form_text_right">
+				{suppType}
+			</td>
+			<td class="form_text_left">员工人数</td>
+			<td class="form_text_right">
+				{employeesNum}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">公司规模</td>
+			<td class="form_text_right" >
+				{companySize}
+			</td>
+			<td class="form_text_left">公司性质</td>
+			<td class="form_text_right" >
+				{companyNature}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">行业</td>
+			<td class="form_text_right" >
+				{trade}
+			</td>
+			<td class="form_text_left">国家</td>
+			<td class="form_text_right" >
+				{country}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">省份</td>
+			<td  class="form_text_right">
+				{provinces}
+			</td>
+			<td class="form_text_left">城市</td>
+			<td  class="form_text_right">
+				{city}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">厂房面积</td>
+			<td  class="form_text_right">
+				{plantArea}
+			</td>
+			<td class="form_text_left">座机</td>
+			<td class="form_text_right">
+				{plane}
+			</td>
+		</tr>
+		<tr>
+			<td class="form_text_left">邮编</td>
+			<td class="form_text_right">
+				{zipCode}
+			</td>
+			<td class="form_text_left">传真</td>
+			<td class="form_text_right">
+				{fax}
+			</td>
+		</tr>
+	<tr>
+		<td class="form_text_left">推荐意见</td>
+		<td colspan="3" class="form_text_right">
+			<textarea class="textarea_read"  readonly>{recomComments}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">公司优势</td>
+		<td colspan="3" class="form_text_right">
+			<textarea  class="textarea_read"  readonly>{advantages}</textarea>
+		</td>
+	</tr>
+</table>
+</fieldset>
+</body>
+</html>

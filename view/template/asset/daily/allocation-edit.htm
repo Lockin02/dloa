@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>编辑固定资产调拨信息</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+	{#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-asset.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-agency.js"></script>
+      <script type="text/javascript" src="view/template/asset/daily/js/allocation-edit.js"></script>
+
+
+</head>
+<body>
+<form  id="form1" action="?model=asset_daily_allocation&action=edit" method="post">
+
+<div align="center">
+<table  class='form_main_table' align="center">
+<tr><td colspan="4">
+	<div class="main_head">
+	    <span class="main_head_title">
+	      	编辑固定资产调拨信息
+	    </span>
+	</div>
+	</td>
+</tr>
+	<tr >
+		<td class="form_text_left">调拨单编号</td>
+		<td class="form_view_right" >
+			<input type="hidden" id="alloType" value="{alloType}"/>
+			<input id="billNo" type="text" name="allocation[billNo]" value="{billNo}" class="readOnlyTxtNormal" readonly/>
+			<span  class="red">[*]</span>
+		</td>
+
+		<td class="form_text_left">调拨日期</td>
+		<td class="form_view_right">
+			<input id="moveDate" type="text" name="allocation[moveDate]" class="txt" onfocus="WdatePicker()" value="{moveDate}"/><span  class="red">[*]</span>
+	    </td>
+	</tr>
+	<tr >
+	    <td class="form_text_left outDeptType">调出部门</td>
+		<td class="form_view_right outDeptType" >
+		    <input id="outDeptId" type="hidden" name="allocation[outDeptId]" value="{outDeptId}"/>
+		    <input class="readOnlyTxtNormal" type="text"
+			name="allocation[outDeptName]" size="25" id="outDeptName" value="{outDeptName}" readOnly/>
+			</td>
+		 <td class="form_text_left inDeptType">调入部门</td>
+		 <td class="form_view_right inDeptType" >
+		    <input id="inDeptId" type="hidden" name="allocation[inDeptId]" value="{inDeptId}"/>
+		    <input class="readOnlyTxtNormal" type="text"
+			name="allocation[inDeptName]" size="25" id="inDeptName" value="{inDeptName}" readOnly/>
+			</td>
+	</tr>
+	<tr>
+		<td class="form_text_left outAgencyType">调出区域</td>
+		<td class="form_view_right outAgencyType">
+			<input id="outAgencyCode" type="hidden" name="allocation[outAgencyCode]" value='{outAgencyCode}'/>
+			<input class="readOnlyTxtNormal" type="text" name="allocation[outAgencyName]" size="25" id="outAgencyName"readOnly value='{outAgencyName}' readonly />
+		</td>
+		<td class="form_text_left inAgencyType">调入区域</td>
+		<td class="form_view_right inAgencyType">
+			<input id="inAgencyCode" type="hidden" name="allocation[inAgencyCode]" value='{inAgencyCode}' />
+			<input class="readOnlyTxtNormal" type="text" name="allocation[inAgencyName]" size="25" id="inAgencyName" readOnly value='{inAgencyName}' />
+		</td>
+	</tr>
+<!--	<tr>-->
+<!--		<td class="form_text_left outProType" style="display : none">调出项目</td>-->
+<!--		<td class="form_view_right outProType" style="display : none"><input id="outProId" type="hidden"-->
+<!--			name="allocation[outProId]" value="{outProId}"/><input-->
+<!--			class="readOnlyTxtNormal" type="text" name="allocation[outProName]" size="25"-->
+<!--			id="outProName" readonly  value="{outProName}"/><span class="red">[*]</span></td>-->
+<!--		<td class="form_text_left inProType" style="display : none">调入项目</td>-->
+<!--		<td class="form_view_right inProType" style="display : none"><input id="inProId" type="hidden"-->
+<!--			name="allocation[inProId]"  value="{inProId}" /><input class="readOnlyTxtNormal" type="text"-->
+<!--			name="allocation[inProName]" size="25" id="inProName" readOnly  value="{inProName}" /><span-->
+<!--			class="red">[*]</span></td>-->
+<!--	</tr>-->
+	<tr>
+		<td class="form_text_left">调拨申请人</td>
+		<td class="form_view_right" >
+		    <input id="proposerId" type="hidden" name="allocation[proposerId]" value="{proposerId}"/>
+			<input id="proposer" type="text" name="allocation[proposer]" class="txt" value="{proposer}" readOnly/>
+			<span id="_customerName" class="red">[*]</span>
+		</td>
+		<td class="form_text_left">调入确认人</td>
+		<td class="form_view_right">
+		    <input id="recipientId" type="hidden" name="allocation[recipientId]" value="{recipientId}"/>
+		    <input class="txt" type="text" id="recipient" name="allocation[recipient]" value="{recipient}" size="20" readOnly /> <span class="red">[*]</span></td>
+	</tr>
+	<tr >
+		<td class="form_text_left">备注</td>
+		<td class="form_view_right" colspan="3"><textarea class="txt_txtarea_font" rows="5"
+			name="allocation[remark]" style="width:80%">{remark}</textarea></td>
+	</tr>
+	</table>
+	<div id="allocationTable"></div>
+<table>
+	<tr>
+		<td class="" colspan="4">
+         <input type="hidden" name="allocation[ExaStatus]" id="ExaStatus" value="{ExaStatus}"  />
+         <input type="hidden" id="allocateID"  name="allocation[id]" value="{id}"/>
+		<input class="txt_btn_a" type="submit" value="保存"/>
+		 <input type="button" class="txt_btn_a" value=" 提交审核 " onclick="confirmAudit();" />
+		<input class="txt_btn_a" type="button" value="关闭" onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+</body>
+</html>

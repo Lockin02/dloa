@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>编辑资格证书信息</title>
+   {#commonInclude#}
+   <script type="text/javascript" src="{#jsPath#}/certificate-edit.js" ></script>
+
+	<!-- 附件上传开始 -->
+	<script type="text/javascript" src="swfupload/swfupload.js"></script>
+	<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+	<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+	<script type="text/javascript" src="swfupload/handlers.js"></script>
+	<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+
+	<script>
+		var uploadfile;
+		$(function() {
+			uploadfile = createSWFUpload({
+				"serviceType": "oa_hr_personnel_certificate",
+				"serviceId": "{id}"
+			});
+		});
+	</script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=hr_personnel_certificate&action=edit" >
+<table class="form_main_table">
+   <tr>
+      <td colspan="4">
+          <div class="main_head">
+             <span class="main_head_title">
+               	编辑资格证书信息
+             </span>
+         </div>
+      </td>
+   </tr>
+<tr>
+		<td class="form_text_left">员工编号</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" id="userNo"  name="certificate[userNo]"  value="{userNo}" readonly/>
+			 <input type="hidden" class="readOnlyText" id="userAccount"  name="certificate[userAccount]"  value="{userAccount}" />
+		</td>
+		<td class="form_text_left">员工姓名</td>
+		<td class="form_text_right" >
+			 <input type="text" class="readOnlyText" id="userName"  name="certificate[userName]"  value="{userName}" readonly/>
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left"><span style="color:blue">证书名称</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="certificates"  name="certificate[certificates]"  value="{certificates}" />
+		</td>
+		<td class="form_text_left">等级</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="level"  name="certificate[level]"  value="{level}" />
+		</td>
+</tr>
+<tr>
+		<td class="form_text_left"><span style="color:blue">发证机构</span></td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="certifying"  name="certificate[certifying]"  value="{certifying}" />
+		</td>
+		<td class="form_text_left">发证时间</td>
+		<td class="form_text_right" >
+			 <input type="text" class="txt" id="certifyingDate" onfocus="WdatePicker()" readOnly  name="certificate[certifyingDate]" value="{certifyingDate}"  />
+		</td>
+</tr>
+		<tr>
+			<td class="form_text_left">附  件</td>
+			<td colspan="3" class="form_text_right">
+				<div class="upload">
+					<div class="upload" id="fsUploadProgress"></div>
+					<div class="upload">
+						<span id="swfupload"></span>
+						<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" />
+						<br />
+					</div>
+					<div id="uploadfileList" class="upload">{file}</div>
+				</div>
+			</td>
+		</tr>
+<tr>
+		<td class="form_text_left" >备注</td>
+		<td class="form_text_right" colspan="3">
+            <textarea class="txt_txtarea_font" id="remark"  name="certificate[remark]">{remark}</textarea>
+		</td>
+</tr>
+           <tr>
+   		<td class="txt_btn" colspan="4">
+            <input  type="hidden" id="id" name="certificate[id]" value="{id}" />
+   		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+   		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+   		</td>
+        </tr>
+     </table>
+  </form>
+ </body>
+</html>

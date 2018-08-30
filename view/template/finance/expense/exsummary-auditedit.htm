@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>报销清单</title>
+	{#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="css/yxstyle2.css" />
+	<script type="text/javascript" src="js/jquery/jquery.scrolltotop.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/exsummary-view.js" ></script>
+	<script type="text/javascript" src="view/template/finance/expense/js/costtype-expense.js" ></script>
+	<script type="text/javascript">
+		// 最近5笔报销
+		function toSeeLast5Apply(){
+			var applyManId = $("#applyManId").val();
+			showThickboxWin("?model=finance_expense_expense&funType=seeLastFive&userId="+applyManId
+					+ "&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800")
+		}
+
+		// 查看阿里商旅消费记录
+		function toSeeAliTripCostRecords(){
+			var applyManId = $("#applyManId").val();
+			var CostDateBegin = $("#CostDateBegin").val();
+			var CostDateEnd = $("#CostDateEnd").val();
+			showThickboxWin("?model=finance_expense_expense&action=seeAliTripCostRecords&userId=" + applyManId +
+					"&CostDateBegin=" + CostDateBegin +
+					"&CostDateEnd="+ CostDateEnd
+					+ "&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800")
+		}
+
+		// 查看项目报销
+		function toSeeRelativeProj(){
+			var projectCode = $("#projectCode").val();
+			showThickboxWin("./general/costmanage/statistics/project/index_type.php?seaPro="+projectCode+"&submitYes=1&isfromAudit=1"
+					+ "&placeValuesBefore&TB_iframe=true&modal=false&height=450&width=800")
+		}
+	</script>
+	<style type="text/css">
+		.deleteNewCostType{display:none}
+		#addNewType{
+			float: left;width: 14px;height: 14px;text-align: center;border: 1px solid #ccc;
+			margin: 0 -10px 0 10px;border-radius: 2px;background: #fefefe;cursor: pointer;
+			line-height: 14px;display: none;
+		}
+		#addNewType:active{
+			font-size: 9px;
+			line-height: 15px;
+		}
+	</style>
+</head>
+<body>
+
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+			<div class="main_head2">
+				<span class="main_head_title">
+					报销单
+				</span>
+				<span style="float:right;margin:2px 8px 0px 0px;" title="单据录入时间">{InputDate}</span>
+			</div>
+		</td>
+	</tr>
+	<tr id='budgetWarning' style="display:none;">
+		<td colspan="6">
+			<fieldset>
+			<legend class="legend"> 报销预警
+				<img src="images/icon/info_up.gif" id="invImg" onclick="showAndHide('invImg','invTbl')"/>
+			</legend>
+			<table class="form_in_table" id="invTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="15%">区域/省份</th>
+						<th width="15%">本季度预算</th>
+						<th width="15%">本年预算</th>
+						<th width="15%">本季度决算</th>
+						<th width="15%">本年度决算</th>
+					</tr>
+				</thead>
+				<tbody >
+					<tr class="tr_even" id='budgetDetail'>
+						{budgetDetail}
+					</tr>
+				</tbody>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr id='statistic'>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend"> 费用统计
+					<img src="images/icon/info_up.gif" id="statisticImg" onclick="showAndHide('statisticImg','statisticTbl')"/>
+				</legend>
+				<table class="form_in_table" id="statisticTbl">
+					<thead>
+					<tr class="main_tr_header">
+						<th width="15%">统计维度/统计值</th>
+						<th width="15%">本年销售费用累计</th>
+						<th width="15%">本年新签合同额</th>
+						<th width="15%">费用与合同同步率</th>
+					</tr>
+					</thead>
+					<tbody >
+					{statistic}
+					</tbody>
+				</table>
+			</fieldset>
+		</td>
+		<input type="hidden" id="detailType" value="{DetailType}"/>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+				<legend class="legend">基 本 信 息 - {BillNo}
+					<img src="images/icon/info_up.gif" id="costBelongImg" onclick="showAndHideDiv('costBelongImg','costbelong');"/>
+				</legend>
+				<input type="hidden" id="sourceType" value="{sourceType}"/>
+				<div id="costbelong"></div>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset><legend class="legend">费 用 信 息
+				<img src="images/icon/info_up.gif" id="expenseImg" onclick="showAndHide('expenseImg','expenseTbl')"/>
+				<input type="hidden" id="id" value="{ID}" />
+				<input type="hidden" id="BillNo" value="{BillNo}"/>
+				<input type="hidden" id="isLate" value="{isLate}"/>
+				<input type="hidden" id="isEdit" value="1" />
+				<div id="fileInfo" style="display:none;">{file}</div>
+			</legend>
+			<table class="form_in_table" id="expenseTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="15%">
+							<div id="addNewType" title="添加费用类型（注意: 重复操作容易导致费用项金额无法恢复到与原来一样的分配,请慎重操作！）">+</div>
+							费用大类
+						</th>
+						<th width="15%">费用小类</th>
+						<th width="20%">费用金额</th>
+						<th width="15%">特别事项申请</th>
+						<th>费用说明</th>
+					</tr>
+				</thead>
+				<tbody id="expensebody">
+					{expensedetail}
+				</tbody>
+				<tr class="tr_count">
+					<td class="form_text_right" rowspan="2" valign="top">合计</td>
+					<td class="form_text_right">小写:</td>
+					<td style="text-align:right"><span class="formatMoney">{Amount}</span></td>
+					<td colspan="2" align="left">
+						常规费用 : <span id="feeRegularView" class="formatMoney">{feeRegular}</span>,
+						补贴费用 : <span id="feeSubsidyView" class="formatMoney">{feeSubsidy}</span>
+					</td>
+				</tr>
+				<tr class="tr_count">
+					<td class="form_text_right">大写:</td>
+					<td style="text-align:right">
+						<span id="chinseAmount"></span>
+						<input type="hidden" id="Amount" value="{Amount}"/>
+					</td>
+					<td colspan="2"></td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+			<legend class="legend">发 票 信 息 - {BillListNo}
+				<img src="images/icon/info_up.gif" id="BillListNoImg" onclick="showAndHide('BillListNoImg','BillListNoTbl')"/>
+			</legend>
+			<table class="form_in_table" id="BillListNoTbl">
+				<thead>
+					<tr class="main_tr_header">
+						<th width="15%">发票类型</th>
+						<th width="15%">发票金额</th>
+						<th width="15%">发票数量</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="invbody">
+					{expenseinv}
+				</tbody>
+				<tr class="tr_count">
+					<td class="form_text_right">合计</td>
+					<td style="text-align:right"><span class="formatMoney">{invoiceMoney}</span></td>
+					<td style="text-align:right" id="invoiceNumber">{invoiceNumber}</td>
+					<td></td>
+				</tr>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+        <td colspan="6">
+            <fieldset>
+                <legend class="legend"><b>分 摊 信 息</b>
+                    <img src="images/icon/info_up.gif" id="costshareImg" onclick="showAndHide('costshareImg','costshare')"/>
+                </legend>
+                <table class="form_in_table" id="costshare">
+                    <thead>
+                    <tr class="main_tr_header">
+                        <th width="12%">费用大类</th>
+                        <th width="12%">费用小类</th>
+                        <th width="12%">分摊金额</th>
+                        <th width="8.6%">所属板块</th>
+                        <th width="51.4%">分摊说明</th>
+                    </tr>
+                    </thead>
+					{expensecostshare}
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+	<tr>
+		<td colspan="6">
+			<fieldset>
+				<legend class="legend"><b>审 批 参 考</b>
+					<img src="images/icon/info_up.gif" id="costshareHistoryImg" onclick="showAndHide('costshareHistoryImg','costshareHistory')"/>
+				</legend>
+				<table class="form_in_table" id="costshareHistory">
+					<tr>
+						<td width="12%">
+							<a href="javascript:void(0);" onclick="toSeeLast5Apply()">最近5笔报销</a>
+						</td>
+						<td width="12%" {aliShowStyle}>
+							<a href="javascript:void(0);" onclick="toSeeAliTripCostRecords()">阿里商旅消费记录</a>
+						</td>
+						<td width="12%" {showProjectSee}>
+							<span><a href="javascript:void(0);" onclick="toSeeRelativeProj()">查看项目报销</a></span>
+						</td>
+						<td colspan="4">
+							<input type="hidden" id="applyManId" value="{CostMan}"/>
+							<input type="hidden" id="projectCode" value="{ProjectNo}"/>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<input type="hidden" id="tempExpenseId" value="{tempExpenseId}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="innerTd" colspan="4">
+			<table class="form_in_table">
+				<tr>
+					<td colspan="4" class="td_table" id="approvalView">
+						<input type="hidden" id="pid" value="{ID}"/>
+						<input type="hidden" id="isDiffBillInfoMsg" value="{isDiffBillInfoMsg}"/>
+						<input type="hidden" id="itemType" value="cost_summary_list"/>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<div style="display:none;">
+	<div id="purposeInfo">
+		<table class="form_in_table">
+			<tr>
+				<td class="form_text_left">
+					事由：
+				</td>
+				<td class="form_text_right">
+					<textarea style="width:250px;height:100px;" id="Purpose">{Purpose}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="hidden" id="addCostLimit" value="{addCostLimit}"/>
+					<input type="submit" value=" 确 认 " onclick="savePurpose();" class="txt_btn_a"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关 闭 " onclick="$('#purposeInfo').dialog('close')"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</body>
+</html>

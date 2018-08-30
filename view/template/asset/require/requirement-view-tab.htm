@@ -1,0 +1,55 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=GBK"/>
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+    <script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+    <LINK rel="stylesheet" type="text/css" href="js/jquery/tab/css/tabs.css" />
+	<script type="text/javascript">
+	$(function() {
+		var skeyStr="&skey={skey_}";
+		var requireId = $('#requireId').val();
+		var requireCode = $('#requireCode').val();
+		//初始化tabsURL
+		var tabArr=[
+			"?model=asset_require_requirement&action=toView&id=" + requireId + '&requireCode=' + requireCode + skeyStr,
+			"?model=asset_daily_borrow&action=requirelist&requireId=" + requireId + skeyStr,
+			"?model=asset_daily_charge&action=requirelist&requireId=" +requireId + skeyStr,
+			"?model=asset_purchase_apply_apply&action=listByRequire&requireId=" + requireId + skeyStr,
+			"?model=asset_require_requirein&action=listByRequire&requireId=" + requireId + skeyStr
+		];
+
+		$("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+			 var actTabId="#iframe" + (parseInt(e) + 1);
+				$(actTabId).attr("src",tabArr[e]);
+		}});
+	});
+    </script>
+</head>
+<body scroll="auto">
+<div>
+	<input type="hidden" id="requireId" value="{requireId}"/>
+	<input type="hidden" id="requireCode" value="{requireCode}"/>
+    <ul class="tabs" id="tabs1">
+        <li><a href="#tab1" >查看</a></li>
+        <li><a href="#tab2" >资产借用单</a></li>
+        <li><a href="#tab3" >资产领用单</a></li>
+        <li><a href="#tab4" >采购申请单</a></li>
+        <li><a href="#tab5" >物料转资产申请单</a></li>
+    </ul>
+    <!-- tab "panes" -->
+    <div class="panes">
+		<iframe class="pane" id="iframe1"  src= "about:blank" height="93%" frameborder= "0" >
+		</iframe>
+		<iframe class="pane" id="iframe2"  src= "about:blank" height="93%" frameborder= "0" >
+		</iframe>
+		<iframe class="pane" id="iframe3"  src= "about:blank" height="93%" frameborder= "0">
+		</iframe>
+		<iframe class="pane" id="iframe4"  src= "about:blank" height="93%" frameborder= "0">
+		</iframe>
+		<iframe class="pane" id="iframe5"  src= "about:blank" height="93%" frameborder= "0">
+		</iframe>
+    </div>
+</div>
+</body>
+</html>

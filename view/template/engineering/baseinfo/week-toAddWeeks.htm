@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    {#commonInclude#}
+    <!-- 附件下载开始 -->
+    <script>
+
+    </script>
+</head>
+<body>
+<table class="form_main_table" style="width: 100%;">
+    <form id="form1" method="post" action="?model=engineering_baseinfo_week&action=saveWeeks">
+        <tr>
+            <td class="form_text_center_con" style="background-color: #EFF7FF;width:100px;"><span style="color:blue">年份:</span></td>
+            <td class="form_text_right_con">
+                <input type="number" class="txt" name="week[year]" id="yearInput"/>
+            </td>
+            <td class="form_text_center_con">
+                <input type="button" class="txt_btn_a" id="getRelativeWeeksBtn" value="生成周次"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_center_con" style="background-color: #EFF7FF;"><span style="color:blue">周次信息:</span></td>
+            <td class="form_text_right_con" colspan="2">
+                <textarea style="background-color:#eee;line-height:20px;padding:8px;" readonly id="allWeeksInput" name="week[allWeeks]" rows="15" cols="65"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="form_text_center_con" colspan="3">
+                <input type="button" id="saveBtn" class="txt_btn_a" value="保存"/>
+                <input type="button" class="txt_btn_a" value="关闭" onclick="self.parent.tb_remove();"/>
+            </td>
+        </tr>
+    </form>
+</table>
+</table>
+</form>
+</body>
+<script>
+    var showWeeks = function(weeksObj){
+        var str = "周次编号 | 周次长号 | 开始日期 | 结束日期\n";
+        if(weeksObj.msg == 'ok'){
+            $.each(weeksObj.data,function(i,item){
+                str += item.weekNo+" | "+item.longWeekNo+" | "+item.beginDate+" | "+item.endDate+"\n";
+            });
+
+            $("#allWeeksInput").val(str);
+            $("#allWeeksInput").removeAttr("readonly");
+            $("#allWeeksInput").css("background-color","white");
+        }else{
+            $("#allWeeksInput").val('');
+            $("#allWeeksInput").attr("readonly",'true');
+            $("#allWeeksInput").css("background-color","#eee");
+        }
+    };
+
+    var chkFormInput = function(){
+        var year = $("#yearInput").val();
+        var resultMsg = '';
+
+        // 检查是否存在相同年份数据
+        var chkExistResult = $.ajax({
+            url: 'index1.php?model=engineering_baseinfo_week&action=chkSameYearWeeks',
+            type: "POST",
+            data: "year=" + year,
+            async: false
+        }).responseText;
+        if(chkExistResult != 0){
+            if(!confirm("确定要更新已存在的"+year+" 年的周次吗?")){
+                resultMsg = 'false';
+            }
+        }
+        return resultMsg;
+    };
+
+    var getWeeksData = function(){
+        var year = $("#yearInput").val();
+        if(year == ''){
+            alert("请先输入正确的年份!");
+            $("#allWeeksInput").val('');
+            $("#allWeeksInput").attr("readonly",'true');
+            $("#allWeeksInput").css("background-color","#eee");
+            $("#yearInput").focus();
+        }else{
+            var responseText = $.ajax({
+                url: 'index1.php?model=engineering_baseinfo_week&action=getRelativeWeeksJson&limit=999',
+                type: "POST",
+                data: "year=" + year,
+                async: false
+            }).responseText;
+            if(responseText != '' && responseText != 'false'){
+                var resultObj = eval("(" + responseText + ")");
+                showWeeks(resultObj);
+            }
+        }
+    }
+    $(function(){
+        $("#yearInput").keydown(function(e){
+            if(e.keyCode == 13){
+                getWeeksData();
+            }
+        });
+        $("#yearInput").blur(function(){
+            getWeeksData();
+        });
+        $("#getRelativeWeeksBtn").click(function(){
+            getWeeksData();
+        });
+
+        $("#saveBtn").click(function(){
+            var allWeeksInputVal = $("#allWeeksInput").val();
+            if(allWeeksInputVal == ''){
+                alert("请先生成周次信息!");
+            }else{
+                var chkResult = chkFormInput();
+                if(chkResult != ''){
+                    if(chkResult === 'false'){
+                        return false;
+                    }else{
+                        alert(chkResult);
+                    }
+                }else{
+                    var form_data = $("#form1").serialize();
+                    var responseText = $.ajax({
+                        url: 'index1.php?model=engineering_baseinfo_week&action=saveWeeks',
+                        type: "POST",
+                        data: form_data,
+                        async: false
+                    }).responseText;
+
+                    if(responseText != '' && responseText != 'false'){
+                        var resultObj = eval("("+responseText+")");
+                        if(resultObj.msg == 'ok'){
+                            alert("保存成功!");
+                            self.parent.show_page();
+                            self.parent.tb_remove();
+                        }else{
+                            alert("保存失败!");
+                        }
+                    }else{
+                        alert("保存失败!");
+                    }
+                }
+            }
+        });
+    });
+</script>
+</html>

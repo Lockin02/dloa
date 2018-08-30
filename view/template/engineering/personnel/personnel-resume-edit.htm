@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+		<title>
+		</title>
+		<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+		<link rel="stylesheet" href="images/style.css" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"media="screen" />
+		<!-- 主题css，可切换 -->
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"media="screen" />
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+		<link rel="stylesheet" type="text/css" href="js/jquery/style/validator.css"/>
+		<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="js/jquery/woo.js"></script>
+		<script type="text/javascript" src="js/jquery/component.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombo.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxsgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/grid/yxgrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js"></script>
+		<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+		<script type="text/javascript" src="js/common/businesspage.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8"></script>
+		<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
+		<script>
+			var userLevel = "";
+			$(document).ready(function() {
+				// 性别单选。
+				$('[name="personnel[sex]"]:radio').each(function() {
+					if ($(this).val() == $("#sex").val()) {
+						$(this).attr("checked", "true");
+					}
+				});
+
+				// 将未填的时间设置为“无”；
+				$("#checkDate").each(function() {
+					if ($(this).val() == "0000-00-00") {
+						$(this).attr("value", "");
+					}
+				});
+
+				$(function() {
+					$("#officeName").yxcombogrid_office();
+				});
+			})
+		</script>
+		<script type="text/javascript" src="view/template/engineering/personnel/js/personnel-validator.js"></script>
+	</head>
+	<body>
+		<div class="main_wraper">
+			<form method="post" action="?model=engineering_personnel_personnel&action=edit" id="form1">
+				<input type="hidden" id="id" name="personnel[id]" value="{id}" />
+				<table class="form_main_table">
+					<tr>
+						<th colspan="4" class="form_header">
+							编辑人员信息
+						</th>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							名称
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[userName]" id="userName"
+							value="{userName}" />
+							<span class="red">
+								[*]
+							</span>
+							<div id="userNameTip" class="tipShortTxt">
+							</div>
+						</td>
+						<td class="form_text_left">
+							生日
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[birthdate]" id="birthdate"
+							onfocus="WdatePicker()" value="{birthdate}" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							 归属
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[officeName]" id="officeName" value="{officeName}" readonly/>
+							<span class="red">
+								[*]
+							</span>
+							<div id="officeNameTip" class="tipShortTxt">
+							</div>
+						</td>
+						<td class="form_text_left">
+							性别
+						</td>
+						<td class="form_text_right">
+							<input type="hidden" id="sex" value="{sex}" />
+							<input type="radio" name="personnel[sex]" value="0" />
+							男
+							<input type="radio" name="personnel[sex]" value="1" />
+							女
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							籍贯
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[originPlace]" id="originPlace"
+							value="{originPlace}" />
+						</td>
+						<td class="form_text_left">
+							技术等级
+						</td>
+						<td class="form_text_right">
+							{userLevel}
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							合同期
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[conYear]" id="conYear"
+							value="{conYear}" />
+						</td>
+						<td class="form_text_left">
+							入职日期
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[checkDate]" id="checkDate"
+							onfocus="WdatePicker()" value="{checkDate}" readonly/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							联系电话
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[phone]" value="{phone}" />
+						</td>
+						<td class="form_text_left">
+							电子邮箱
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[email]" id="email"
+							value="{email}" />
+						</td>
+					</tr>
+					<tr>
+						<th colspan="4" class="form_header">
+							教育程度及技能
+						</th>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							毕业院校
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[graSchoole]" value="{graSchoole}"/>
+						</td>
+						<td class="form_text_left">
+							毕业时间
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[graDate]" value="{graDate}" onfocus="WdatePicker()" />
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							学历
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[education]" value="{education}"/>
+						</td>
+						<td class="form_text_left">
+							专业
+						</td>
+						<td class="form_text_right">
+							<input type="text" class="txt" name="personnel[speciality]" value="{speciality}"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							外语能力
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="personnel[aptitude]" style="width:100%" rows="2">{aptitude}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							兴趣特长
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="personnel[interest]" style="width:100%" rows="3">{interest}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_text_left">
+							能力描述
+						</td>
+						<td class="form_text_right" colspan="3">
+							<textarea name="personnel[ability]" style="width:100%" rows="3">{ability}</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" align="center">
+							<input type="submit" class="txt_btn_a" value="保 存" />
+							<input type="button" class="txt_btn_a" onclick="self.parent.tb_remove();" value="返 回" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+
+</html>

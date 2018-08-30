@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>编辑产品属性配置描述</title>
+{#commonInclude#}
+<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>
+<script>
+
+	function setRemark() {
+		//window.window.opener.$("#itemTable_cmp_remark" + '{rowNum}').val($("#remark").val());
+		$.ajax({
+			url:'?model=goods_goods_properties&action=saveTempRemark',
+			type:'POST',
+			data:{remark:$("#remark").val(),rkey:$("#rkey").val()},
+			success:function(data){
+				//返回一个唯一标志位
+				window.window.opener.$("#itemTable_cmp_rkey" + '{rowNum}').val(data);
+				closeFun();
+			}
+		});
+
+	}
+	$(document).ready(function() {
+		$( 'textarea.editor' ).ckeditor();
+		
+		$.ajax({
+			url:'?model=goods_goods_properties&action=getTempRemark',
+			type:'POST',
+			data:{rkey:$("#rkey").val()},
+			success:function(data){
+				$("#remark").val(data);
+			}
+		});
+	});
+</script>
+</head>
+<body>
+<input type='hidden' id="rkey" value="{rkey}" />
+<table class="form_main_table">
+	<tr>
+		<td colspan="4"><textarea  id="remark"
+			class="editor"></textarea></td>
+	</tr>
+	<tr>
+		<td class="txt_btn" colspan="4"><input type="button"
+			class="txt_btn_a" value=" 保存 " onclick="setRemark();" /></td>
+	</tr>
+</table>
+</body>
+</html>

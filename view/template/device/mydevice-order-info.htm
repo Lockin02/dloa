@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>借出订单设备列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model={t_model}&action=save_confirm&id={t_id}" onsubmit="return check()">
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td>{list}</td>
+	</tr>
+</table>
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center" id="confrim" style="display:none"><input type="submit" value=" 确认借用 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var tab = $('#mytable table').get();
+		var button_status = false;
+		for (var k = 0;k<tab.length;k++)
+		{
+			var tr = tab[k].getElementsByTagName('tr');
+			var statustd = 0;
+			for (var i=0;i<tr.length;i++)
+			{
+				var td = tr[i].getElementsByTagName('td');
+				if (td.length > 1) {
+					inputs = td[0].getElementsByTagName('input');
+					if (statustd == 0) {
+						for (var j = 0; j < td.length; j++) {
+							if (td[j].innerHTML == '确认状态') {
+								statustd = j;
+							}
+						} 
+					}
+					if (i > 1 && td.length >= statustd) {
+						if (td[statustd].innerHTML == '已确认') {
+							inputs[0].disabled = true;	
+						}else{
+							if (inputs[0].disabled == false)
+							{
+								button_status = true;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if (button_status == true)
+		{
+			$('#confrim').css('display','');
+		}else{
+			$('#confrim').css('display','none');
+		}
+	});
+	function check()
+	{
+		var inputs = $('input[name=id[]]:checked').get();
+		if (inputs.length < 1)
+		{
+			alert('至少要选择一条记录才想执行确认操作！');
+			return false;
+		}
+		return true;
+	}
+	function set_all(checked,id)
+	{
+		$('#type_'+id+' input[type=checkbox][disabled=false]').attr('checked',checked);
+	}
+</script>
+</body>
+</html>

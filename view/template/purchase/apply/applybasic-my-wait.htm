@@ -1,0 +1,155 @@
+<html>
+<head>
+    <title>我的采购申请单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/dump.js"></script>
+	<script type="text/javascript" src="js/thickbox.js"></script>
+
+	<script type="text/javascript" src="js/common/businesspage.js"></script>
+	<script type="text/javascript" src="js/common/checkBoxTab.js"></script>
+
+    <style>
+    .tdPadding{
+        padding-left:5px;
+    }
+    </style>
+    <script language="javascript" >
+
+		var imgCollapsed = "images/collapsed.gif" //加号图片路径
+
+		var imgExpanded = "images/expanded.gif" //减号图路径
+
+		var allShrinkImage = "p.allImg IMG"; //收缩all图片jquery选择定位
+
+		var childShrinkImage = "p.childImg IMG"; //收某行缩图片jquery选择定位
+
+		var shrinkTable = ".shrinkTable"; //收缩某行table jquery定位
+
+		var readThisTable = "div.readThisTable"; //收缩某行查看div jquery定位
+
+		var tdChange = "td.tdChange"; //某td单击收缩 Jquery定位
+
+		var checkListIdStr = "#idsArry"; //隐藏checkbox选择值字符串 jquery定位
+
+		var childCheckbox = "input.checkChild"; //最小checkbox jquery定
+
+		var childAllCheckbox = "p.checkChildAll input"; //某行所有checkbox jquery定位
+
+		var allCheckbox = "p.checkAll input"; //所有checkbox jquery定位
+
+		//搜索
+		function search(){
+			var searchvalue=$('#applyNumb').val();
+			location="?model=purchase_apply_applybasic&action=myList&clickNumb={clickNumb}&applyNumb="+searchvalue;
+		}
+
+		function selectButton(obj){
+			//TODO:
+			alert(obj.value);
+		}
+
+		function selectBut(obj,id){
+			$trParent=$(obj).parent().parent();
+			var value=$(obj).val();
+			var str = "";
+			if(value=="value1"){
+				//$trParent.find("input.jCheck").each(function(){
+				//	if( $(this).attr("checked") ){
+				//		str += "," + $(this).val();
+				//	}
+				//});
+			}
+			else if(value=="read"){
+				location="?model=purchase_apply_applybasic&action=read&id="+id;
+			}
+			else if(value=="readExa"){
+				location="?model=purchase_apply_applybasic&action=read&seeExa=yes&id="+id;
+			}
+			else if(value=="subExa"){
+				location="controller/purchase/apply/ewf_index.php?actTo=ewfSelect&billId="+id+"&examCode=oa_purch_apply_basic&formName=采购申请单审批&go=1";
+			}
+			else if(value=="edit"){
+				location="?model=purchase_apply_applybasic&action=edit&id="+id;
+			}
+			else if(value=="del"){
+				if( confirm("确定删除吗？") ){
+					location="?model=purchase_apply_applybasic&action=del&id="+id;
+				 }
+			}
+		}
+    </script>
+    <script language="JavaScript" type="text/javascript" src="js/common/checkBoxTab.js"></script>
+</head>
+<body scroll="yes">
+<div class="main_wraper">
+<table class="main_table_search">
+	<tr class="tablecontrol" height="28px">
+		<td colspan="15" align="left">
+			&nbsp;采购申请单编号：<input type="text" class="txt" name="applyNumb" id="applyNumb" value="{applyNumb}">
+			<input type="button" value="搜索" class="txt_btn_a" onclick="search();">
+		</td>
+	</tr>
+</table>
+<table class="main_table">
+<thead>
+    <tr class="main_tr_header">
+        <th    width="4%">
+        	<p class="allImg">
+            	序号<br/>
+            	<img src="images/expanded.gif" />
+        	</p>
+        </th>
+        <th   >
+        	<p class="checkAll">
+            	采购申请<br/>单编号<br/>
+            </p>
+        </th>
+        <th   width="8%">
+            预计到<br/>货时间
+        </th>
+        <th   width="8%">
+            供应商名称
+        </th>
+        <th   width="6%">
+            状态
+        </th>
+        <th width="45%" class="td_table">
+            <table class="main_table_nested" frame=void>
+            	<tr>
+            		<th colspan="7">
+            			采购申请单-设备信息
+            		</th>
+            	</tr>
+            	<tr>
+            		<th >
+			            设备编号<br>名称
+			        </th>
+			        <th  width="20%">
+			            采购类型
+			        </th>
+			        <th  width="13%">
+			            申请总数
+			        </th>
+			        <th  width="13%">
+			            未到货数
+			        </th>
+			        <th  width="13%">
+			            申请单价
+			        </th>
+            	</tr>
+            </table>
+        </th>
+        <th width="120">
+			操作
+		</th>
+    </tr>
+</thead>
+    {list}
+</table>
+{pageDiv}
+</body>
+</html>

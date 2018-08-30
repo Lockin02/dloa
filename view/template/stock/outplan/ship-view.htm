@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看发货单</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+        <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+        <!-- 主题css，可切换 -->
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+        media="screen" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"
+        />
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/woo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/component.js">
+        </script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+        </script>
+        <script type="text/javascript" src="js/common/businesspage.js">
+        </script>
+        <script type="text/javascript" src="view/template/stock/outplan/js/ship-view.js">
+        </script>
+		<script type="text/javascript" src="js/util.js"></script>
+		<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看发货单
+    </span>
+</div>
+<form id="form1" method="post" action="?model=stock_outplan_ship&action=edit" name="form1">
+	<div>
+		<div>
+			<table class="form_main_table">
+			<tr>
+					<td class="form_text_left">发货方式
+				      	<input type="hidden" id="id" name="ship[id]" value="{id}"/>
+				      	<input type="hidden" id="docType" name="ship[docType]" value="{docType}"/>
+					</td>
+					<td class="form_text_right" colspan="3">
+						<input type="hidden" id="shipType" value="{shipType}"/>
+						 <input type="checkbox" name="ship[shipType]" value="order" {order} disabled/>&nbsp;发货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="borrow" {borrow} disabled/>&nbsp;借用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="lease" {lease} disabled/>&nbsp;租用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="trial" {trial} disabled/>&nbsp;试用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <input type="checkbox" name="ship[shipType]" value="change" {change} disabled/>&nbsp;更换&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">发货单号</td>
+					<td class="form_text_right" width="30%">
+						 {shipCode}
+					</td>
+					<td class="form_text_left">发货计划编号</td>
+					<td class="form_text_right">
+						 {planCode}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">鼎利合同号</td>
+					<td class="form_text_right" >
+						 {docCode}
+					</td>
+					<td class="form_text_left">客户合同号</td>
+					<td class="form_text_right" >
+						 {customerContCode}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">客户名称</td>
+					<td class="form_text_right" >
+						 <input type="hidden" id="customerId" class="txt" name="ship[customerId]" value="{customerId}" />
+						 {customerName}
+					</td>
+					<td class="form_text_left">联系人</td>
+					<td class="form_text_right" >
+						 <input type="hidden" id="linkmanId" class="txt" name="ship[linkmanId]" value="{linkmanId}" />
+						 {linkman}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">手机号</td>
+					<td class="form_text_right" >
+						 {mobil}
+					</td>
+					<td class="form_text_left">邮寄单号</td>
+					<td class="form_text_right" >
+						 {companyName}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">邮寄单号</td>
+					<td class="form_text_right" colspan="3">
+						 {mailCode}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">发货地址</td>
+					<td class="form_text_right" colspan="3">
+						 {address}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">备注</td>
+					<td class="form_text_right" colspan="3">
+						<textarea class="textarea_read" readonly>{remark}</textarea>
+					</td>
+			</tr>
+			</table>
+		</div>
+        <div>
+            <table class="form_main_table" id="mytable">
+                <thead>
+                    <tr align="left">
+                        <td colspan="7">
+                            物料清单
+                            <img src="images/verpic_open.gif" onclick="dis('invbody')" title="缩放"/>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="invbody">
+                    <tr class="main_tr_header">
+                        <th>
+                            序号
+                        </th>
+<!-- 					<th>产品线</th>-->
+                        <th>
+                            产品编号
+                        </th>
+                        <th>
+                            产品名称
+                        </th>
+                        <th>
+                            规格型号
+                        </th>
+                        <th>
+                            合同数量
+                        </th>
+                        <th>
+                            本次发货数量
+                        </th>
+<!--                        <th>-->
+<!--                      	赠送-->
+<!--                        </th>-->
+                        <th>
+                           备注
+                        </th>
+                    </tr>
+                    {products}
+                </tbody>
+            </table>
+        </div>
+        <div>
+			<table class="form_main_table">
+			<tr>
+					<td class="form_text_left">出库人</td>
+					<td class="form_text_right" width="30%">
+						 {outstockman}
+					</td>
+					<td class="form_text_left">发货人</td>
+					<td class="form_text_right" >
+						 {shipman}
+					</td>
+			</tr>
+			<tr>
+					<td class="form_text_left">发货日期</td>
+					<td class="form_text_right" >
+				         {shipDate}
+					</td>
+					<td class="form_text_left">审核人</td>
+					<td class="form_text_right" >
+						 {auditman}
+					</td>
+			</tr>
+			<tr id="signTr">
+					<td class="form_text_left">签收人</td>
+					<td class="form_text_right" >
+						{signman}
+						 <input type="hidden" id="isSign" value="{isSign}"/>
+					</td>
+					<td class="form_text_left">签收日期</td>
+					<td class="form_text_right" >
+						{signDate}
+					</td>
+			</tr>
+			<tr>
+					<td class="txt_btn" colspan="4">
+					   <input  type="button" class="txt_btn_a" value="关  闭" onclick="self.parent.tb_remove();"/>
+					</td>
+			</tr>
+			</table>
+		</div>
+</form>
+<script>
+	$(function(){
+		if( $('#isSign').val() != 1 ){
+			$('#signTr').hide();
+		}
+	});
+</script>
+</body>
+</html>

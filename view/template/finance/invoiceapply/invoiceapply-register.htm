@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="css/yxstyle.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="view/template/finance/invoiceapply/js/invoiceapply-register.js"></script>
+<title>发票登记</title>
+</head>
+<body>
+<table class="form_main_table">
+	<tr class="main_head">
+		<th colspan="4">开票申请单</th>
+	</tr>
+	<tr>
+		<td class="form_text_left">发票类型</td>
+		<td  class="form_text_right">
+			{invoiceTypeName}
+			<input type="hidden" id="invoiceType" value="{invoiceType}"/>
+		</td>
+		<td class="form_text_left">
+			归属公司
+		</td>
+		<td class="form_text_right" >
+			{businessBelongName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户名称</td>
+		<td  class="form_text_right">
+			{customerName}
+		</td>
+		<td class="form_text_left">客户类型</td>
+		<td  class="form_text_right">
+			{customerTypeName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">源单类型</td>
+		<td  class="form_text_right" width="30%">
+			{objTypeName}
+		</td>
+		<td class="form_text_left">源单编号</td>
+		<td class="form_text_right">
+			{objCode}
+			<span id="showContract" style="display:none">
+				<img src="images/icon/view.gif" title="查看单据" onclick="clickFun(2);"/>
+				<img src="images/icon/search.gif" title="查询单据开票历史" onclick="clickFun(1);"/>
+			</span>
+			<input type="hidden" id="objCode" value="{objCode}"/>
+			<input type="hidden" id="objId" value="{objId}" />
+			<input type="hidden" id="objType" value="{objType}"/>
+			<input type="hidden" id="objSkey" value="{objSkey}"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">联 系 人</td>
+		<td class="form_text_right">{linkMan}</td>
+		<td class="form_text_left">电 话</td>
+		<td class="form_text_right">{linkPhone}</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开票单位地址</td>
+		<td colspan="3" class="form_text_right">
+			{unitAddress}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left" title="发票邮寄地址，不填则默认邮寄地址为开票单位地址">
+			发票邮寄地址
+		</td>
+		<td colspan="3" class="form_text_right">
+			{linkAddress}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备 注</td>
+		<td colspan="3" class="form_text_right">
+			{remark}
+		</td>
+	</tr>
+	<tr class="phoneNo">
+		<td class="form_text_left">
+			开票单位电话
+		</td>
+		<td class="form_text_right" colspan="3">
+			{phoneNo}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">纳税人识别号</td>
+		<td colspan="3" class="form_text_right">
+			{taxpayerId}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">开户银行</td>
+		<td class="form_text_right" width="30%">
+			{bank}
+		</td>
+		<td class="form_text_left">银行账号</td>
+		<td class="form_text_right">
+			{bankCount}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">租赁开始日期</td>
+		<td class="form_text_right" width="30%">
+			{rentBeginDate}
+		</td>
+		<td class="form_text_left">租赁结束日期</td>
+		<td class="form_text_right">
+			{rentEndDate}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">租赁天数</td>
+		<td class="form_text_right" colspan="3">
+			{rentDays}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">是否需要邮寄</td>
+		<td class="form_text_right" colspan="3">
+			{isMail}
+		</td>
+		<!--td class="form_text_left"><span class="red">是否异地开票</span></td>
+		<td class="form_text_right">
+			{isOffSite}
+		</td-->
+	</tr>
+	<tr>
+		<td class="form_text_left">快递公司</td>
+		<td class="form_text_right">
+			{expressCompany}
+		</td>
+		<td class="form_text_left">邮政编码</td>
+		<td class="form_text_right">
+			{postalCode}
+		</td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<thead>
+		<tr align="left" class="form_header">
+            <td colspan="12" class="form_header" align="left">
+                开票内容
+            </td>
+        </tr>
+		<tr class="main_tr_header">
+			<th>序号</th>
+			<th>货品名称/服务项目</th>
+			<th>数量</th>
+			<th>软件金额</th>
+			<th>硬件金额</th>
+			<th>维修金额</th>
+			<th>服务金额</th>
+			<th>设备租赁金额</th>
+			<th>场地租赁金额</th>
+			<th>其他金额</th>
+			<th>代收电费金额</th>
+			<th>代收水费金额</th>
+			<th>房屋出租金额</th>
+			<th>安装服务金额</th>
+			<th>产品/服务类型</th>
+			<th width="15%">备注</th>
+		</tr>
+	</thead>
+	<tbody>
+		{detail}
+	</tbody>
+	<tr class="tr_count">
+		<td colspan="2">合计</td>
+		<td>{allAmount}</td>
+		<td class="formatMoney">{softMoney}</td>
+		<td class="formatMoney">{hardMoney}</td>
+		<td class="formatMoney">{repairMoney}</td>
+		<td class="formatMoney">{serviceMoney}</td>
+		<td class="formatMoney">{equRentalMoney}</td>
+		<td class="formatMoney">{spaceRentalMoney}</td>
+		<td class="formatMoney">{otherMoney}</td>
+		<td class="formatMoney">{dsEnergyCharge}</td>
+		<td class="formatMoney">{dsWaterRateMoney}</td>
+		<td class="formatMoney">{houseRentalFee}</td>
+		<td class="formatMoney">{installationCost}</td>
+		<td colspan="2"></td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<tr>
+        <td class="form_text_left">币 别</td>
+        <td class="form_text_right">
+            {currency}
+        </td>
+		<td class="form_text_left">申请总金额</td>
+		<td class="form_text_right formatMoney">
+			<input type="hidden" id="invoiceMoney" value="{invoiceMoney}"/>
+			{invoiceMoney}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">{objTypeName}金额</td>
+		<td class="form_text_right formatMoney">
+			{contAmount}
+		</td>
+		<td class="form_text_left">已开票金额</td>
+		<td class="form_text_right formatMoney">
+			{payedAmount}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">申 请 人</td>
+		<td class="form_text_right" width="30%">
+			{createName}
+			<input type="hidden" id="payedAmount" value="{payedAmount}">
+			<input type="hidden" id="remainMoney" value="{remainMoney}"/>
+		</td>
+		<td class="form_text_left">申请时间</td>
+		<td class="form_text_right">
+			{createTime}
+		</td>
+	</tr>
+</table>
+<table class="form_main_table">
+	<thead>
+		<tr align="left">
+			<td class="form_header" colspan="14">发票登记
+				<input alt="?model=finance_invoice_invoice&action=toAddFromApply&applyId={id}&remainMoney={remainMoney}&placeValuesBefore&TB_iframe=true&modal=false&height=600&width=1000" title="发票登记" type="button" id="addButton" class="thickbox txt_btn_a" value=" 添加 "/>
+				<input type="button" class='txt_btn_a' onclick="deleteThickbox();" value=" 删除 " />
+			</td>
+		</tr>
+		<tr class="main_tr_header">
+			<th><input type="checkbox" id="titlecb" onClick="checkAll();"></th>
+			<th width="5%">序号</th>
+			<th width="8%">发票号</th>
+			<th>软件金额</th>
+			<th>硬件金额</th>
+			<th>维修金额</th>
+			<th>服务金额</th>
+			<th>设备租赁金额</th>
+			<th>场地租赁金额</th>
+			<th>其他金额</th>
+			<th style="padding:0 5px;">代收电费金额</th>
+			<th style="padding:0 5px;">代收水费金额</th>
+			<th style="padding:0 5px;">房屋出租金额</th>
+			<th style="padding:0 5px;">安装服务金额</th>
+			<th>开票金额</th>
+			<th width="10%">开票人</th>
+			<th width="8%">开票日期</th>
+			<th width="8%">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{invoices}
+	</tbody>
+</table>
+<table class="form_main_table">
+	<tr>
+		<td>
+            <input type="hidden" id="ids" value="{id}"/>
+			<input type="hidden" name="invoiceapply[id]" id="applyId" value="{id}"/>
+			<input type="button" class="txt_btn_a" onclick="location='?model=finance_invoiceapply_invoiceapply'" value=" 返 回 " />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

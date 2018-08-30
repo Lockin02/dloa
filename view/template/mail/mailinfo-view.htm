@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>邮寄信息</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
+
+	<!-- 主题css，可切换 -->
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxmenu.theme.css"
+	media="screen" />
+	<link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css"/>
+
+	<script type="text/javascript" src="js/jquery/jquery-1.4.2.js">
+	</script>
+	<script type="text/javascript" src="js/common/businesspage.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/woo.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/component.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombo.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxsgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/grid/yxgrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/yxcombogrid.js">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidator.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8">
+	</script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js">
+	</script>
+	<script type="text/javascript" src="view/template/mail/js/mailinfo_add.js">
+	</script>
+	<script type="text/javascript" src="js/util.js">
+	</script>
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js" >
+	</script>
+</head>
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	查看邮寄记录
+    </span>
+</div>
+<form name="form1">
+	<input type="hidden" name="mailinfo[id]" value="{id}"/>
+<div align="center">
+<table class="form_main_table">
+	<tr>
+		<td class="form_text_left">邮寄单号</td>
+		<td class="form_text_right">
+			{mailNo}
+		</td>
+		<td class="form_text_left">邮寄日期</td>
+		<td class="form_text_right">
+			{mailTime}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">关联邮寄单</td>
+		<td class="form_text_right" colspan="3">
+			<textarea class="textarea_read" readonly>{mailNoStr}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄方式</td>
+		<td class="form_text_right">
+			{mailType}
+		</td>
+		<td class="form_text_left">客户名称
+		</td>
+		<td class="form_text_right">
+			{customerName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">收件人姓名</td>
+		<td class="form_text_right">
+			{receiver}
+		</td>
+		<td class="form_text_left">收件人电话</td>
+		<td class="form_text_right">
+			{tel}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄人</td>
+		<td class="form_text_right">
+			{mailMan}
+		</td>
+		<td class="form_text_left">邮寄状态</td>
+		<td class="form_text_right">
+			{mailStatus}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">物流公司</td>
+		<td class="form_text_right" colspan=3>
+			{logisticsName}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">件数
+		</td>
+		<td class="form_text_right">
+			{number}
+		</td>
+		<td class="form_text_left">重量
+		</td>
+		<td class="form_text_right">
+			{weight}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">运费
+		</td>
+		<td class="form_text_right">
+			{fare}
+		</td>
+		<td class="form_text_left">附加费用
+		</td>
+		<td class="form_text_right">
+			{anotherfare}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄费用
+		</td>
+		<td class="form_text_right">
+			{mailMoney}
+		</td>
+		<td class="form_text_left">服务方式
+		</td>
+		<td class="form_text_right">
+			{serviceType}
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">邮寄地址</td>
+		<td class="form_text_right" colspan=4>
+			<textarea  class="textarea_read" readonly>{address}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">备注</td>
+		<td class="form_text_right" colspan=4>
+			<textarea class="textarea_read" readonly>{remark}</textarea>
+		</td>
+	</tr>
+	</table>
+    <table class="form_main_table" id="mytable">
+        <thead>
+			<tr align="left">
+			    <td colspan="4">&nbsp;邮寄物品清单：
+					<input type="hidden" id="rowNum" name="productsnumber" value="{rowNum}" />
+					<img src="images/verpic_open.gif" onclick="dis('productslist')" title="缩放"/>
+				</td>
+			</tr>
+		</thead>
+		<tbody id="productslist">
+           	<tr class="main_tr_header">
+				<th>序号</th>
+				<th>邮寄物品名称</th>
+				<th>本次邮寄数量</th>
+				<th>备注</th>
+			</tr>
+			{mailproducts}
+		</tbody>
+	</table>
+	<table>
+	<tr>
+		<td colspan="4">
+			<input type="button" value=" 关 闭 " onclick="self.parent.tb_remove();" class="txt_btn_a"/>
+		</td>
+	</tr>
+
+</table>
+</div>
+</form>
+<script type="text/javascript">
+function check_all()
+{
+	if ($('#customerId').val()=='')
+	{
+		$('#_customerName').html('邮寄单位不能为空！');
+		return false;
+	}
+	if ($('#linkman').val()=='')
+	{
+		$('#_linkman').html('收件人不能为空！');
+		return false;
+	}
+	return true;
+}
+$('#mailType').val('{mailType}');
+$('#mailStatus').val('{mailStatus}');//选中值类型
+</script>
+</body>
+</html>

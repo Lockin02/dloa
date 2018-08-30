@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>查看招聘管理-面试记录</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="{#jsPath#}/interview-view.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/interview-read.js"></script>
+	<script type="text/javascript" src="js/common/approval.js"></script>
+	<script language="javascript" type="text/javascript" src="js/Lodop/printer.js"></script>
+	<style media=print>
+		.Noprint {
+			display : none;
+		}
+
+		.PageNext {
+			page-break-after : always;
+		}
+
+		.divChangeLine{
+			height : 80px;
+		}
+	　　</style>
+</head>
+<body>
+	<div id='table1'>
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							面试评估表
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<fieldset><legend><b>基本信息</b></legend>
+						<table cellpadding="2" width="100%">
+							<input type="hidden" id="id" value="{id}"/>
+							<input type="hidden" value="{investigationId}" id="investigationId"/>
+							<input type="hidden" value="{resumeId}" id="resumeId"/>
+							<input type="hidden" value="{applyId}" id="applyId"/>
+							<input type="hidden" value="{postType}" id="postType"/>
+							<input type="hidden" value="{positionLevel}" id="positionLevel"/>
+							<tr>
+								<td class="form_text_left">姓  名</td>
+								<td class="form_text_right">
+									<span id="userName">{userName}</span>
+								</td>
+								<td class="form_text_left">性  别</td>
+								<td class="form_text_right">
+									<span id="sexy">{sexy}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">应聘岗位</td>
+								<td class="form_text_right">
+									<span id="positionsName">{positionsName}</span>
+								</td>
+								<td class="form_text_left">用人部门</td>
+								<td class="form_text_right">
+									<span id="deptName">{deptName}</span>
+									<input type="hidden" value="{deptId}" id="deptId"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">简历信息</td>
+								<td class="form_text_right">
+									<a href='#' id="resumeLink"><span id="resumeCode">{resumeCode}</span></a>
+								</td>
+								<td class="form_text_left">职位申请表</td>
+								<td class="form_text_right">
+									<a href='#' id="applyLink"><span id="applyCode">{applyCode}</span></a>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">关联增员申请</td>
+								<td class="form_text_right">
+									<a target="view_window" href="?model=hr_recruitment_apply&action=toView&id={parentId}"><span id="parentCode">{parentCode}</span></a>
+								</td>
+								<td class="form_text_left">关联内部推荐</td>
+								<td class="form_text_right">
+									<a target="view_window" href="?model=hr_recruitment_recommend&action=toView&id={recommendId}"><span id="recommendCode">{recommendCode}</span></a>
+								</td>
+							</tr>
+							<tr id="linkTr">
+								<td class="form_text_left">背景调查</td>
+								<td class="form_text_right">
+									<a href='#' id="investigationLink">{investigationFormCode}</a>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<fieldset><legend><b>用人部门意见</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left">笔试评价</td>
+								<td class="form_text_right" colspan="3">
+									<textarea class="textarea_read_overflow" readonly>{useWriteEva}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">面试评价</td>
+								<td class="form_text_right" colspan="3">
+									<textarea class="textarea_read_overflow" readonly>{useInterviewEva}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">面试结果</td>
+								<td class="form_text_right">
+									<span id="useInterviewResult">{useInterviewResult}</span>
+								</td>
+								<td class="form_text_left">所在项目组</td>
+								<td class="form_text_right">
+									<span id="projectGroup">{projectGroup}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">录用形式</td>
+								<td class="form_text_right">
+									<span id="useHireTypeName">{useHireTypeName}</span>
+								</td>
+								<td class="form_text_left">归属公司</td>
+								<td class="form_text_right">
+									<span id="sysCompanyName">{sysCompanyName}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">归属区域或支撑中心</td>
+								<td class="form_text_right">
+									<span id="useAreaName">{useAreaName}</span>
+								</td>
+								<td class="form_text_left">技术等级(仅限网优相关岗位)</td>
+								<td  class="form_text_right">
+									<span id="personLevel">{personLevel}</span>
+								</td>
+							</tr>
+							<tr id="wage">
+								<td class="form_text_left">试用期基本工资</td>
+								<td class="form_text_right">
+									<span id="useTrialWage">{useTrialWage}</span>
+								</td>
+								<td class="form_text_left">转正基本工资</td>
+								<td class="form_text_right">
+									<span id="useFormalWage">{useFormalWage}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">办公电脑需求设备类型</td>
+								<td class="form_text_right">
+									<span id="useDemandEqu">{useDemandEqu}</span>
+								</td>
+								<td class="form_text_left">配置是否按公司标准</td>
+								<td class="form_text_right" id="setAttr">
+									<span id="isCompanyStandard">{isCompanyStandard}</span>&nbsp;&nbsp;&nbsp;{computerConfiguration}
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">签订《竞业限制协议》</td>
+								<td class="form_text_right">
+									<span id="useSign">{useSign}</span>&nbsp;&nbsp;&nbsp;{compensation}
+								</td>
+								<td class="form_text_left">是否本地化（仅限服务线）</td>
+								<td class="form_text_right">
+									<span id="isLocal">{isLocal}</span>
+								</td>
+								<td class="form_text_left" style="display:none">实习工资</td>
+								<td class="form_text_right" style="display:none">
+									<input type="hidden" id="useHireType" value="{useHireType}"/>
+									<span id="internshipSalaryType">{internshipSalaryType}</span>&nbsp;&nbsp;&nbsp;<span id="internshipSalary" class="formatMoney">{internshipSalary}</span>
+								</td>
+							</tr>
+							<tr id="internship" style="display:none">
+								<td class="form_text_left">餐车补</td>
+								<td class="form_text_right">
+									{eatCarSubsidy}
+								</td>
+								<td class="form_text_left">电脑补贴</td>
+								<td class="form_text_right">
+									{computerIntern}
+								</td>
+							</tr>
+							<tr id="phoneSubsidyTr">
+								<td class="form_text_left">电话费补助</td>
+								<td class="form_text_right">
+									试用期：<span id="phoneSubsidy">{phoneSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="phoneSubsidyFormal">{phoneSubsidyFormal}</span>
+								</td>
+								<td class="form_text_left" style="display:none;">实习期薪资总额</td>
+								<td class="form_text_right" style="display:none;">
+									{allInternship}
+								</td>
+								<td class="form_text_left">指定导师</td>
+								<td class="form_text_right">
+									<span id="tutor">{tutor}</span>
+								</td>
+							</tr>
+							<tr id="mealCarSubsidyTr">
+								<td class="form_text_left">餐车补</td>
+								<td class="form_text_right">
+									试用期：{mealCarSubsidy}<br />
+									转&nbsp;&nbsp;&nbsp;正：{mealCarSubsidyFormal}
+								</td>
+							</tr>
+							<tr id="subsidy" style="display:none">
+								<td class="form_text_left">技术级别补助</td>
+								<td class="form_text_right">
+									试用期：<span id="levelSubsidy">{levelSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="levelSubsidyFormal">{levelSubsidyFormal}</span>
+								</td>
+								<td class="form_text_left">区域补助</td>
+								<td class="form_text_right">
+									试用期：<span id="areaSubsidy">{areaSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="areaSubsidyFormal">{areaSubsidyFormal}</span>
+								</td>
+							</tr>
+							<tr id="subsidy2" style="display:none">
+								<td class="form_text_left">管理津贴</td>
+								<td class="form_text_right">
+									试用期：<span id="manageSubsidy">{manageSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="manageSubsidyFormal">{manageSubsidyFormal}</span>
+								</td>
+								<td class="form_text_left">临时住宿补助</td>
+								<td class="form_text_right">
+									试用期：<span id="accommodSubsidy">{accommodSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="accommodSubsidyFormal">{accommodSubsidyFormal}</span>
+								</td>
+							</tr>
+							<tr id="subsidy3" style="display:none">
+								<td class="form_text_left">出差补助上限值</td>
+								<td class="form_text_right">
+									试用期：<span id="tripSubsidy">{tripSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="tripSubsidyFormal">{tripSubsidyFormal}</span>
+								</td>
+								<td class="form_text_left">奖金上限值</td>
+								<td class="form_text_right">
+									试用期：<span id="bonusLimit">{bonusLimit}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="bonusLimitFormal">{bonusLimitFormal}</span>
+								</td>
+							</tr>
+							<tr id="subsidy4" style="display:none">
+								<td class="form_text_left">其他补贴</td>
+								<td class="form_text_right">
+									试用期：<span id="otherSubsidy">{otherSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="otherSubsidyFormal">{otherSubsidyFormal}</span>
+								</td>
+								<td class="form_text_left">电脑补助</td>
+								<td class="form_text_right">
+									试用期：<span id="computerSubsidy">{computerSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="computerSubsidyFormal">{computerSubsidyFormal}</span>
+								</td>
+							</tr>
+							<tr id="subsidy5" style="display:none">
+								<td class="form_text_left">工作奖金</td>
+								<td class="form_text_right">
+									试用期：<span id="workBonus">{workBonus}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="workBonusFormal">{workBonusFormal}</span>
+								</td>
+								<td class="form_text_left">电脑补助</td>
+								<td class="form_text_right">
+									试用期：<span id="computerSubsidy">{computerSubsidy}</span><br />
+									转&nbsp;&nbsp;&nbsp;正：<span id="computerSubsidyFormal">{computerSubsidyFormal}</span>
+								</td>
+							</tr>
+							<tr id="subsidy6" style="display:none">
+								<td class="form_text_left">试用期工资总额预计</td>
+								<td class="form_text_right">
+									<span id="allTrialWage">{allTrialWage}</span>
+								</td>
+								<td class="form_text_left">转正工资总额预计</td>
+								<td class="form_text_right">
+									<span id="allFormalWage">{allFormalWage}</span>
+								</td>
+							</tr>
+							<tr id="subsidy7" style="display:none">
+								<td class="form_text_left">管理岗位</td>
+								<td class="form_text_right">
+									{controlPost}
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">确认人</td>
+								<td class="form_text_right">
+									<span id="useManager">{useManager}</span>
+								</td>
+								<td class="form_text_left">确认日期</td>
+								<td class="form_text_right">
+									<span id="useSignDate">{useSignDate}</span>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<fieldset><legend><b>人资部门意见</b></legend>
+						<table cellpadding="2" width="100%">
+							<tr>
+								<td class="form_text_left">面试官评价</td>
+								<td class="form_text_right" colspan="3">
+									<textarea class="textarea_read_overflow" readonly>{hrInterviewList}</textarea>
+								</td>
+							</tr>
+							<tr id="hrInterviewResultTr">
+								<td class="form_text_left">总体评价</td>
+								<td class="form_text_right" colspan="3">
+									<textarea class="textarea_read_overflow" readonly>{hrInterviewResult}</textarea>
+								</td>
+							</tr>
+							<tr id="contract">
+								<td class="form_text_left">劳动合同信息</td>
+								<td class="form_text_right">
+									试用期&nbsp;&nbsp;<span id="probation">{probation}</span>&nbsp;&nbsp;個月<br/>
+									合同期限&nbsp;&nbsp;<span id="contractYear">{contractYear}</span>&nbsp;&nbsp;年
+								</td>
+								<td class="form_text_left">社保购买地</td>
+								<td class="form_text_right">
+									<span id="socialPlace">{socialPlace}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">简历来源大类</td>
+								<td class="form_text_right">
+									<span id="hrSourceType1Name">{hrSourceType1Name}</span>
+								</td>
+								<td class="form_text_left">简历来源小类</td>
+								<td class="form_text_right">
+									<span id="hrSourceType2Name">{hrSourceType2Name}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">录用职位</td>
+								<td class="form_text_right">
+									<span id="hrJobName">{hrJobName}</span>
+								</td>
+								<td class="form_text_left">工资级别</td>
+								<td class="form_text_right">
+									<span id="wageLevelName">{wageLevelName}</span>
+								</td>
+							</tr>
+							<tr id="hrIsMatchTr">
+								<td class="form_text_left">基本工资与<br/>薪点及薪资是否对应</td>
+								<td class="form_text_right">
+									<span id="hrIsMatch">{hrIsMatch}</span>
+								</td>
+								<td class="form_text_left">预计入职时间</td>
+								<td class="form_text_right">
+									<span id="entryDate">{entryDate}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">增员类型</td>
+								<td class="form_text_right">
+									<span id="addType">{addType}</span>
+								</td>
+								<td class="form_text_left">无补助城市</td>
+								<td class="form_text_right">
+									<span id="eprovince">{eprovince}</span>&nbsp;&nbsp;&nbsp;<span id="ecity">{ecity}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_text_left">HR确认人</td>
+								<td class="form_text_right">
+									<span id="manager">{manager}</span>
+								</td>
+								<td class="form_text_left">确认日期</td>
+								<td class="form_text_right">
+									<span id="SignDate">{SignDate}</span>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			{points}
+		</table>
+	</div>
+</body>
+</html>

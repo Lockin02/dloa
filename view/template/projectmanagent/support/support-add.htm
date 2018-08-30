@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+<title>新增售前支持申请</title>
+{#commonInclude#}
+<script type="text/javascript" src="{#jsPath#}/support-add.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-branch.js"></script>
+<!-- 附件上传开始 -->
+<script type="text/javascript" src="swfupload/swfupload.js"></script>
+<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
+<script type="text/javascript" src="swfupload/fileprogress.js"></script>
+<script type="text/javascript" src="swfupload/handlers.js"></script>
+<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<script>
+var uploadfile;
+$(function() {
+	uploadfile=createSWFUpload({
+		"serviceType":"oa_sale_chance_support"//业务模块编码，一般取表名
+	});
+});
+
+
+
+</script>
+<!-- 附件上传结束 -->
+</head>
+
+<body>
+<form id="form1" method="post" action="?model=projectmanagent_support_support&action=add">
+<table class="form_main_table">
+	<tr>
+		<td colspan="4">
+		<div class="main_head2"><span class="main_head_title">
+		新增售前支持申请 </span></div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('projectImg','project')">项目相关信息&nbsp;&nbsp;
+		     <img src="images/icon/info_up.gif" id="projectImg" />
+		   </legend>
+		<table class="form_main_table" id="project">
+			<tr>
+				<td class="form_text_left">销售经理</td>
+				<td class="form_text_right">
+				   <input type="hidden" class="txt" name="support[SingleType]" value="{SingleType}"/>
+				   <input type="hidden" class="txt" name="support[SingleId]" value="{SingleId}"/>
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[prinvipalName]" value="{prinvipalName}"/>
+				   <input type="hidden" class="txt" name="support[prinvipalId]" value="{prinvipalId}"/>
+				</td>
+				<td class="form_text_left">项目编号</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[projectCode]" value="{projectCode}" id="projectCode"/>
+				</td>
+			</tr>
+			<tr>
+			    <td class="form_text_left">客户名称</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[customerName]" value="{customerName}"/>
+				   <input type="hidden" class="txt" name="support[customerId]" value="{customerId}"/>
+			    </td>
+				<td class="form_text_left">项目名称</td>
+				<td class="form_text_right">
+				   <input type="text" class="readOnlyTxtNormal" readonly name="support[projectName]" value="{projectName}" id="projectName"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">客户类型</td>
+				<td class="form_text_right">
+				   <input type="hidden" class="txt" name="support[customerType]" value="{customerType}"/>
+				   <select class="select"  id="customerTypeView" disabled>
+				      {customerTypeView}
+				   </select>
+				</td>
+				<td class="form_text_left"><span style="color:blue">支持身份</span></td>
+				<td class="form_text_right">
+				   <input type="text" class="txt" readonly id="signSubjectName" name="support[signSubjectName]" />
+				   <input type="hidden" class="txt" id="signSubject" name="support[signSubject]" />
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">最近交流时间</span></td>
+				<td class="form_text_right">
+				   <input type="text" class="txt" id="recentExDate" name="support[recentExDate]" onfocus="WdatePicker()"/></td>
+			</tr>
+		</table>
+		</fieldset>
+		</td>
+	</tr>
+    <tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('requireImg','require')">交流类支持要求
+		     <img src="images/icon/info_up.gif" id="requireImg" />
+		   </legend>
+   <table class="form_main_table" id="require">
+     <tr>
+		<td class="form_text_left"><span style="color:blue">交流时间</span></td>
+		<td class="form_text_right">
+		  <input type="text" class="txt" id="exDate" name="support[exDate]" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">建议交流人员</span></td>
+		<td class="form_text_right">
+		   <input type="text" readonly class="txt" name="support[exchangeName]" id="exchangeName"/>
+		   <input type="hidden" class="txt" name="support[exchangeId]" id="exchangeId"/>
+		</td>
+	 </tr>
+     <tr>
+		<td class="form_text_left"><span style="color:blue">客户联系人</span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[linkman]" id="linkman"/>
+		</td>
+		<td class="form_text_left"><span style="color:blue">联系方式</span></td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[contact]" id="contact"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"><span style="color:blue">交流地点</span></td>
+		<td class="form_text_right" colspan="3">
+		    <input type="text" class="txtmaxlong" name="support[AClocation]" id="AClocation"/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" style="color:blue;">
+		<img src="images/icon/icon095.gif" />
+		提示：文本内灰色字体为提示内容，填写时自行修改即可，如无填写内容则不必理会。
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流背景</td>
+		<td class="form_text_right" colspan="3">
+		   <div style="position: relative;">
+		    <label class="lable_textarea" for="customerInfo" id="customerLable">
+客户情况：有/没有得到与XX产品相关的信息了解，对XX产品的市场应用非常（不）了解，对我公司的认可度，客户关系层次等；<br />
+对手情况：客户有/没有和大量厂家（如XX等）进行多次交流，市场竞争情况是否激烈，对手推进程度<br />
+项目标的：预计投资额度约为XX台设备，价值约XX万元，签约概率及依据；（10%接触，50%预算，70%配置，100%执行）<br />
+结果影响：主要需要引导/纠正客户对我们XX产品的看法和认知，是否直接影响中标结果
+		    </label>
+		    <textarea class="txt_txtarea_biglong" style="height:100px;line-height:2.0" id="customerInfo" name="support[customerInfo]" onfocus="focusin('customerInfo');" onblur="focusout('customerInfo');"></textarea>
+		   </div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">客户参加人员介绍</td>
+		<td class="form_text_right" colspan="3">
+		   <div style="position: relative;">
+		    <label class="lable_textarea" for="customerRemark" id="customerRemarkLable">
+预计人数XX人，最高级别（XXX)<br />
+网络副总XXX为初/多次接触，对产品有一些兴趣，主要想了解--产品特点<br />
+网络主任XXX有/没有听取多个对手（XXX)的汇报， 关心--产品的特色功能与实际应用案例<br />
+项目经理XXX有/没有较大话语权，关心--实用性与操作，实施部署等
+		    </label>
+		    <textarea class="txt_txtarea_biglong" style="height:100px;line-height:2.0" id="customerRemark" name="support[customerRemark]" onfocus="focusin('customerRemark');" onblur="focusout('customerRemark');"></textarea>
+		    </div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">需要达成的交流目标</td>
+		<td class="form_text_right" colspan="3">
+		  <div style="position: relative;">
+		    <label class="lable_textarea" for="goals" >
+1，介绍公司在（统一平台、A+Abis、数据分析、优化服务）方面的实力，介绍（XXX）案例；<br />
+2，展示公司在（Mosight、Capmax、）产品的特点；<br />
+		    </label>
+		    <textarea class="txt_txtarea_biglong" style="height:100px;line-height:2.0" id="goals" name="support[goals]" onfocus="focusin('goals');" onblur="focusout('goals');"></textarea>
+		    </div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流内容</td>
+		<td class="form_text_right" colspan="3">
+		   <div style="position: relative;">
+		    <label class="lable_textarea" for="exContent" >
+1，公司介绍（XXX）<br />
+2，产品背景（XXX）<br />
+3，产品特点（XXX）<br />
+4，产品功能（XXX）<br />
+5，实际案例（XXX）<br />
+6，其他
+		    </label>
+		     <textarea class="txt_txtarea_biglong" style="height:150px;line-height:2.0" id="exContent" name="support[exContent]" onfocus="focusin('exContent');" onblur="focusout('exContent');"></textarea>
+		     </div>
+	   </td>
+	</tr>
+	<tr>
+		<td class="form_text_left">交流的安排计划</td>
+		<td class="form_text_right" colspan="3">
+		   <div style="position: relative;">
+		     <label class="lable_textarea" for="exPlan" >
+1，提前拜访XXX（关系较好/重点阻力），需完成XXX，时间30分钟；<br />
+2，交流演讲（最重点1、2、3），时间40分钟；<br />
+3，沟通提问（座谈）时间30分钟。
+		     </label>
+		     <textarea class="txt_txtarea_biglong" style="height:100px;line-height:2.0" id="exPlan" name="support[exPlan]" onfocus="focusin('exPlan');" onblur="focusout('exPlan');"></textarea>
+		     </div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">建议准备的资料</td>
+		<td class="form_text_right" colspan="3">
+			<div style="position: relative;">
+		     <label class="lable_textarea" for="prepared" >
+1，交流幻灯片；<br />
+2，技术建议书/彩页/技术白皮书/配置清单/施工计划/...
+		     </label>
+		     <textarea class="txt_txtarea_biglong" style="height:100px;line-height:2.0" id="prepared" name="support[prepared]" onfocus="focusin('prepared');" onblur="focusout('prepared');"></textarea>
+		     </div>
+		</td>
+	</tr>
+	 <tr>
+				<td class="form_text_left_three">附件</td>
+				<td class="form_text_right_three" colspan="5">
+				<div class="upload">
+				<div class="upload" id="fsUploadProgress"></div>
+				<div class="upload"><span id="swfupload"></span> <input
+					id="btnCancel" type="button" value="中止上传"
+					onclick="cancelQueue(uploadfile);" disabled="disabled" /> <br />
+				</div>
+				<div id="uploadfileList" class="upload"></div>
+				</div>
+
+				</td>
+</tr>
+		   </table>
+		</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+		<fieldset style="width:200">
+		   <legend class="legend" onclick="showAndHide('otherImg','other')">其他类型支持要求
+		     <img src="images/icon/info_up.gif" id="otherImg" />
+		   </legend>
+   <table class="form_main_table" id="customer">
+    <tr>
+		<td class="form_text_left">开始时间</td>
+		<td class="form_text_right">
+		   <input type="text" class="txt" name="support[beginDate]" id="beginDate" onblur="timeCheck(this)" onfocus="WdatePicker()"/>
+		</td>
+		<td class="form_text_left">结束时间</td>
+		<td class="form_text_right">
+		    <input type="text" class="txt" name="support[closeDate]" id="closeDate" onblur="timeCheck(this)" onfocus="WdatePicker()"/>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">支持内容</td>
+		<td class="form_text_right" colspan="3">
+		   <input type="text" class="txtmaxlong" name="support[supContent]" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">提供素材（其他支持备注）</td>
+		<td class="form_text_right" colspan="3">
+		   <input type="text" class="txtmaxlong" name="support[otherRemark]" />
+		</td>
+	</tr>
+   </table>
+        </fieldset>
+         </td>
+     </tr>
+
+	<tr>
+		<td class="txt_btn" colspan="4">
+		   <input type="submit" class="txt_btn_a" value=" 提交申请 " />
+		   <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();" />
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

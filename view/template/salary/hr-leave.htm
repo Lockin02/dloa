@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+        <link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/jqgrid/css/jquery-ui-1.8.2.custom.css" />
+        <script type="text/javascript" src="js/jqgrid/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/thickbox.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery-ui-1.8.2.custom.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/i18n/grid.locale-cn.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="js/jqgrid/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.js"></script>
+        <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <title></title>
+        <style type="text/css">
+            html, body {
+                margin: 0;			/* Remove body margin/padding */
+                padding: 0;
+                overflow: hidden;	/* Remove scroll bars on browser window */
+                font-size: 9pt;
+            }
+            .ui-jqgrid-title{ font-size: 90%;}
+            .ui-jqgrid{
+                border-top: 0px;
+                border-right: 1px solid #AED0EA;
+                border-left: 1px solid #AED0EA;
+                border-bottom: 1px solid #AED0EA;
+            }
+            #t_rowedgrid{ height: 23px; }
+            .tl{
+               text-align: right;
+               padding-right: 1px;
+               width: 80px;
+               height: 20px;
+               line-height: 20px;
+            }
+        </style>
+        <script type="text/javascript">
+            var wh=parent.document.documentElement.clientHeight;
+            var ww=document.documentElement.clientWidth;
+            jQuery.validator.addMethod("isIdCardNo", function(value, element) {
+                return this.optional(element) || checkidcard(value);
+            }, "请输入正确的身份证号码");
+            jQuery(document).ready(function(){
+                var mygrid=jQuery("#rowedgrid").jqGrid({
+                    url:'{data_list}',
+                    datatype: "json",
+                    mtype:'GET',
+                    colNames:[
+                        '操作','KEY','员工号','姓名','公司','部门','员工类型','离职日期','录入日期','录入人','状态','可修改','compt'
+                    ],
+                    colModel:[
+                        {name:'act',index:'act', width:100, align:'center', sortable:false ,search:false},
+                        {name:'key',index:'s.rand_key',hidden:true ,key:true ,width:40 },
+                        {name:'usercard',index:'h.usercard', width:80, align:'center'},
+                        {name:'username',index:'u1.user_name', width:100, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'company',index:'u1.company', width:100, align:'center', searchoptions:{sopt:['cn']},editable:true },
+                        {name:'olddept',index:'d.dept_name', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'expflag',index:'h.expflag', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'leavedt',index:'s.leavedt', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'leavecreatedt',index:'s.leavecreatedt', width:140, align:"right",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'leavecreator',index:'s.leavecreator', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'usersta',index:'s.usersta', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
+                        {name:'ck',index:'s.rand_key',hidden:true },
+                        {name:'compt',index:'u.company',hidden:true }
+                    ],
+                    rowNum:30,
+                    rowList:[15,20,30,50,100],
+                    pager: '#prowedgrid',
+                    sortname: 's.id',
+                    width:ww-3,
+                    height:(wh-136+2*((wh-500)/50)),
+                    viewrecords: true,
+                    sortorder: "asc",
+                    rownumbers: true,
+                    shrinkToFit:false,
+                    editurl: "{edit_list}",
+                    cellurl: "{edit_list}",
+                    caption: "{user_capt}",
+                    afterInsertRow: function(rowid, rowData){
+                        var be='';
+                        var cl='#FF9900';
+                        switch(rowData.usersta){
+                            case '离职':
+                                if(rowData.ck=='yes'){
+                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                }else{
+                                    be ="-";
+                                }
+                                break;
+                            case '冻结':
+                                if(rowData.ck=='yes'){
+                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='冻结' title='员工冻结信息输入' onclick=\"djClickFun('"+rowData.key+"')\" />";
+                                }else{
+                                    be ="-";
+                                }
+                                break;
+                            default:
+                                cl='green';
+                                be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />"
+                                    +"<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='冻结' title='员工冻结信息输入' onclick=\"djClickFun('"+rowData.key+"')\" />";
+                                break;
+                        }
+                        jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
+                        jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navGrid',"#prowedgrid",{edit:false,add:false,del:false,view:true});
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "选择列",
+                    title: "隐藏/显示 列表",
+                    onClickButton : function (){
+                        jQuery("#rowedgrid").jqGrid('setColumns',{dataheight:wh-208});
+                    }
+                });
+                jQuery("#rowedgrid").jqGrid('navButtonAdd','#prowedgrid',{
+                    caption: "导出",
+                    title: "导出信息",
+                    onClickButton : function (){
+                        $('#lui_rowedgrid').css('display', 'block');
+                        $('#hr_xls_out').css('display', 'block');
+                    }
+                });
+                $('#newuserForm').validate({
+                    submitHandler: function(){
+                        amSubmitFun();
+                    },
+                    rules:{
+                        
+                    },
+                    messages:{
+                        
+                    }
+                });
+            });
+            //转正
+            function amClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_dept').html(rowData.olddept);
+                $('#user_leavedt').val('');
+                $('#hr_user_new_name').html('员工离职');
+                $('#hr_user_new_dt').html('离职日期');
+                $('#user_com').val(rowData.compt);
+                $('#actflag').val('lz');
+            }
+            function djClickFun(id){
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#lui_rowedgrid').css('display', 'block');
+                $('#hr_user_new').css('display', 'block');
+                $('#user_key').val(rowData.key);
+                $('#user_name').html(rowData.username);
+                $('#user_dept').html(rowData.olddept);
+                $('#user_leavedt').val('');
+                $('#hr_user_new_name').html('员工冻结');
+                $('#hr_user_new_dt').html('冻结日期');
+                $('#user_com').val(rowData.compt);
+                $('#actflag').val('dj');
+            }
+            function amSubmitFun(){
+                var rand=Math.random()*100000;
+                var id=$('#user_key').val();
+                var leavedt=$('#user_leavedt').val();
+                var actflag=$('#actflag').val();
+                var compt =$('#user_com').val();
+                if(actflag=='lz'){
+                    var altmsg='确认是否离职？';
+                }
+                if(actflag=='dj'){
+                    var altmsg='确认是否冻结？';
+                }
+                if(confirm(altmsg)){
+                    $('#newuserSub').attr('disabled',true);
+                    $.post('?model=salary&action=hr_leave_in',{
+                        id:id,leavedt:leavedt,rand:rand,actflag:actflag,compt:compt
+                        },
+                        function (data)
+                        {
+                            var msg=eval('(' + data + ')');
+                            if(msg&&msg['error']){
+                                alert('错误：'+msg['error']);
+                                $('#newuserSub').attr('disabled',false);
+                                return false;
+                            }else{
+                                alert('操作成功！');
+                            }
+                            $('#newuserSub').attr('disabled',false);
+                            paCloseFun('hr_user_new');
+                            jQuery("#rowedgrid").trigger("reloadGrid");
+                        }
+                    )
+                }
+                return false;
+            }
+            //关闭
+            function paCloseFun(id){
+                $('#'+id).css('display', 'none');
+                $('#lui_rowedgrid').css('display', 'none');
+            }
+            function outExcel(){
+                alert('outexcel');
+            }
+            function checkidcard(num){
+                var len = num.length, re;
+                if (len == 15)
+                    re = new RegExp(/^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                else if (len == 18)
+                    re = new RegExp(/^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d)$/);
+                else{
+                    return false;
+                }
+                var a = num.match(re);
+                if (a != null){
+                    if (len==15){
+                        var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }else{
+                        var D = new Date(a[3]+"/"+a[4]+"/"+a[5]);
+                        var B = D.getFullYear()==a[3]&&(D.getMonth()+1)==a[4]&&D.getDate()==a[5];
+                    }
+                    if (!B){
+                        return false;
+                    }
+                }  
+                return true;
+            }
+            function xlsClickFun(){
+                var sy=$('#xls_year').val();
+                var sm=$('#xls_mon').val();
+                location.href='?model=salary&action=hr_xls_out&flag=leave&sy='+sy+'&sm='+sm;
+            }
+            function gridNavSeaFun(){
+                var seadept = jQuery("#seadept").val();
+                var seaname = jQuery("#seaname").val();
+                jQuery("#rowedgrid").jqGrid('setGridParam',{url:"{data_list}&seadept="+seadept+"&seaname="+seaname,page:1}).trigger("reloadGrid");
+            }
+            function showNewExcel(){
+                tb_show('离职导入', '?model=salary&action=hr_leave_xls&TB_iframe=true&height=650');
+            }
+        </script>
+        <style type="text/css">
+#newuserForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+    color: red;
+}
+</style>
+    </head>
+    <body>
+        <input type="hidden" id="user_key" value="" ></input>
+        <table id="rowedgrid"></table>
+        <div id="pgtoolbar"></div>
+        <div id="prowedgrid"></div>
+        <div id="hr_user_new" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="newuserForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 408px;" >
+                    <tr>
+                        <td id="hr_user_new_name" style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            员工离职
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td id="user_name"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 部门：</td>
+                        <td id="user_dept"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl" id="hr_user_new_dt"> 离职日期：</td>
+                        <td> <input id="user_leavedt" name="user_leavedt" type="text" 
+                                    style="display: inline;" class="Wdate" onclick="WdatePicker()" value="" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="hidden" name="actflag" id="actflag" value="" ></input>
+                            <input type="submit" id="newuserSub" value="提交"/>
+                            <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                            <input type="hidden" id="user_com" value=""/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="hr_xls_out" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 380px;" >
+                <tr>
+                    <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                        导出信息
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tl" style="padding-top:5px;"> 导出年月：</td>
+                    <td >
+                        {xls_list}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" id="newspeSub" onclick="xlsClickFun()" value="导出"/>
+                        <input type="button" id="newspeClo" onclick="paCloseFun('hr_xls_out');"  value="关闭"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+	<title>{title}</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/common/reportGrid.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/gridrecord-view-product.js"></script>
+</head>
+<body>
+	<table class="form_main_table">
+		<tr>
+			<td colspan="5">
+				<div class="main_head">
+					<span class="main_head_title">
+						{title}
+					</span>
+                    <span id="unitView" style="float:left;padding:5px 0px 0px 30px;font-weight:bold;color:blue">
+					</span>
+                     <span id="section" style="float:left;padding:5px 0px 0px 30px;font-weight:bold;color:red">
+                         区间: {startMonth} 至 {endMonth}
+                     </span>
+                    <span id="version" style="float:left;padding:5px 0px 0px 30px;font-weight:bold;color:red">
+                     </span>
+					<div align="right" style="margin-right:20px;">
+                        <input type="button" class="txt_btn_a" value=" 刷  新" onclick="location.reload()"/>
+						<input type="button" class="txt_btn_a" value=" 导  出 " onclick="excelOut();"/>
+					</div>
+				</div>
+			</td>
+		</tr>
+<!-- 		<tr style="height:8px;background-color:#E6E6E6;" id="showHideBtn" title="显示菜单">
+			<td style="padding:0px;" colspan="6">
+				<img src="images/icon/icon001.gif">
+			</td>
+		</tr> -->
+	</table>
+	<div id="recordDiv" style="display:none;">
+		<table class="form_main_table">
+			<tr>
+				<td class="form_text_left">指标统计:</td>
+				<td class="form_text_right" colspan="3">
+					{indicatorsHtml}
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">时间区间:</td>
+				<td class="form_text_right">
+					<input class="txtshort" id="startMonth" onfocus="WdatePicker({dateFmt:'yyyy-MM'});" value="{startMonth}"/>
+					至
+					<input class="txtshort" id="endMonth" onfocus="WdatePicker({dateFmt:'yyyy-MM'});" value="{endMonth}"/>
+				</td>
+				<td class="form_text_left">呈现方式:</td>
+				<td class="form_text_right">
+					<select id="presentation" class="txtmiddle" val="{presentation}">
+						<option value="1">累计</option>
+						<option value="2">月份</option>
+					</select>
+				</td>
+                <td class="form_text_left">单位:</td>
+                <td class="form_text_right">
+                    <select id="unit" class="txtmiddle" val="{unit}">
+                        <option value="1">元</option>
+                        <option value="2">万元</option>
+                    </select>
+                </td>
+			</tr>
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<div id="fixedThead" style="display:none">{fixedThead}</div>
+					<div id="tableUrl" style="display:none">{tableUrl}</div>
+					<input type="hidden" id="objCode" name="objCode" value="{objCode}"/>
+					<input type="button" class="txt_btn_a" value=" 查  询 " onclick="reloadGrid();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 导  出 " onclick="excelOut();"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div align="left" style="overflow-x:scroll;">
+		<table>
+			<tr>
+				<td>
+					<div id="productGrid"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<iframe src="about:blank" name="hiddenIframe" style="display:none"></iframe>
+	<form id="form1" method="post" target="hiddenIframe" action="?model=contract_gridreport_gridrecord&action=excelOut"></form>
+</body>
+</html>

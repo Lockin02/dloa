@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>添加租车报销费用信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+    <link rel="stylesheet" type="text/css" href="css/yxstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="js/thickbox.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+
+    <script type="text/javascript" src="js/jquery/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+</head>
+<body style="height:100%">
+<style type="text/css">
+    .payinfo2Wrap{display:none}
+</style>
+<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=batchAddCZCostExpenseTmp">
+    <table width="100%" style="margin-left: 4px" class="form_main_table">
+        <div>
+            <tr class="payinfo1Wrap">
+                <td class="form_text_left_three_new" style="text-align: center"><strong>《支 付 方 式 1》</strong></td>
+            </tr>
+            <tr class="payinfo1Wrap">
+                <td class="form_text_right_three_new" colspan="2">
+                    <fieldset>
+                        <legend class="legend" onclick="showAndHideDiv('payInfo1BaseImg','payInfo1Base')"><b>支 付 信 息</b>
+                            <img src="images/icon/info_up.gif" id="payInfo1BaseImg" />
+                        </legend>
+                        <div id="payInfo1Base">
+                            <table width="100%" style="margin-left: 4px" class="form_main_table">
+                                <tr>
+                                    <td class="form_text_left_three_new">支付方式</td><td class="form_text_right_three" colspan="5"><span id="payType1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">收款银行</td><td class="form_text_right_three"><span id="bankName1"></span></td>
+                                    <td class="form_text_left_three_new">收款账号</td><td class="form_text_right_three"><span id="bankAccount1"></span></td>
+                                    <td class="form_text_left_three_new">收款人</td><td class="form_text_right_three"><span id="bankReceiver1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">包含费用项</td><td class="form_text_right_three" colspan="5"><span id="includeFeeType1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">关联车牌号</td><td class="form_text_right_three" colspan="5"><span id="includeCurNum1"></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </fieldset>
+                    <br>
+                    <fieldset>
+                        <legend class="legend">
+                            <b>费 用 信 息</b>
+                        </legend>
+                        <img id="imgLoading1" src="images/loading1.gif"/>
+                        <table class="form_in_table" id="feeTbl1" style="display:none">
+                            <thead>
+                            <tr class="main_tr_header">
+                                <th width="16%">费用大类</th>
+                                <th width="15%">费用小类</th>
+                                <th width="15%">费用金额</th>
+                                <th width="18%">发票类型</th>
+                                <th width="15%">发票金额</th>
+                                <th width="15%">发票数量</th>
+                                <th width="9%">操 作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="costTypeInner1"></tbody>
+                            <tr class="tr_count">
+                                <td width="30px"></td>
+                                <td>合计</td>
+                                <td>
+                                    <input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="expenseTmp[1][Amount]" id="countMoney1" readonly="readonly"/>
+                                    <input type="hidden" name="expenseTmp[1][feeRegular]" id="feeRegular1"/>
+                                    <input type="hidden" name="expenseTmp[1][feeSubsidy]" id="feeSubsidy1" value="0"/>
+                                    <input type="hidden" id="payInfoId1" name="expenseTmp[1][payInfoId]" value=''>
+                                    <input type="hidden" id="deductInfoId1" name="expenseTmp[1][deductInfoId]" value=''>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="expenseTmp[1][invoiceMoney]" id="invoiceMoney1" value="0" readonly="readonly"/>
+                                </td>
+                                <td align="center">
+                                    <input type="text" class="readOnlyTxtCount" style="width:80px" name="expenseTmp[1][invoiceNumber]" id="countInvoiceNum1" value="0" readonly="readonly"/>
+                                </td>
+                                <td align="center"></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+        </div>
+        <div>
+            <tr class="payinfo2Wrap">
+                <td class="form_text_left_three_new" style="text-align: center"><strong>《支 付 方 式 2》</strong></td>
+            </tr>
+            <tr class="payinfo2Wrap">
+                <td class="form_text_right_three_new" colspan="2">
+                    <fieldset>
+                        <legend class="legend" onclick="showAndHideDiv('payInfo2BaseImg','payInfo2Base')"><b>支 付 信 息</b>
+                            <img src="images/icon/info_up.gif" id="payInfo2BaseImg" />
+                        </legend>
+                        <div id="payInfo2Base">
+                            <table width="100%" style="margin-left: 4px" class="form_main_table">
+                                <tr>
+                                    <td class="form_text_left_three_new">支付方式</td><td class="form_text_right_three" colspan="5"><span id="payType2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">收款银行</td><td class="form_text_right_three"><span id="bankName2"></span></td>
+                                    <td class="form_text_left_three_new">收款账号</td><td class="form_text_right_three"><span id="bankAccount2"></span></td>
+                                    <td class="form_text_left_three_new">收款人</td><td class="form_text_right_three"><span id="bankReceiver2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">包含费用项</td><td class="form_text_right_three" colspan="5"><span id="includeFeeType2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="form_text_left_three_new">关联车牌号</td><td class="form_text_right_three" colspan="5"><span id="includeCurNum2"></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </fieldset>
+                    <br>
+                    <fieldset>
+                        <legend class="legend">
+                            <b>费 用 信 息</b>
+                        </legend>
+                        <img id="imgLoading2" src="images/loading1.gif"/>
+                        <table class="form_in_table" id="feeTbl2" style="display:none">
+                            <thead>
+                            <tr class="main_tr_header">
+                                <th width="16%">费用大类</th>
+                                <th width="15%">费用小类</th>
+                                <th width="15%">费用金额</th>
+                                <th width="18%">发票类型</th>
+                                <th width="15%">发票金额</th>
+                                <th width="15%">发票数量</th>
+                                <th width="9%">操 作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="costTypeInner2"></tbody>
+                            <tr class="tr_count">
+                                <td width="30px"></td>
+                                <td>合计</td>
+                                <td>
+                                    <input type="text" class="readOnlyTxtCount formatMoney" style="width:146px" name="expenseTmp[2][Amount]" id="countMoney2" readonly="readonly"/>
+                                    <input type="hidden" name="expenseTmp[2][feeRegular]" id="feeRegular2"/>
+                                    <input type="hidden" name="expenseTmp[2][feeSubsidy]" id="feeSubsidy2" value="0"/>
+                                    <input type="hidden" id="payInfoId2" name="expenseTmp[2][payInfoId]" value=''>
+                                    <input type="hidden" id="deductInfoId2" name="expenseTmp[2][deductInfoId]" value=''>
+                                </td>
+                                <td></td>
+                                <td>
+                                    <input type="text" class="readOnlyTxtCount formatMoney" style="width:80px" name="expenseTmp[2][invoiceMoney]" id="invoiceMoney2" value="0" readonly="readonly"/>
+                                </td>
+                                <td align="center">
+                                    <input type="text" class="readOnlyTxtCount" style="width:80px" name="expenseTmp[2][invoiceNumber]" id="countInvoiceNum2" value="0" readonly="readonly"/>
+                                </td>
+                                <td align="center"></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+        </div>
+        <tr>
+            <td class="form_text_right_three_new">
+                <input type="hidden" id="payInfoNum" value="0">
+                <input type="hidden" id="registerIds" name="expenseTmp[registerIds]" value=''>
+                <input type="hidden" id="carNum" name="expenseTmp[carNum]" value=''>
+                <input type="hidden" id="useCarDate" name="expenseTmp[useCarDate]" value=''>
+                <input type="hidden" id="allregisterId" name="expenseTmp[allregisterId]" value=''>
+                <input type="hidden" id="rentalContractId" name="expenseTmp[rentalContractId]" value=''>
+                <input type="hidden" id="rowIds" name="expenseTmp[rowIds]" value=''>
+                <input type="hidden" id="rentalPropertyCode" name="expenseTmp[rentalPropertyCode]" value='长租'>
+                <input type="button" value=" 提 交 " class="txt_btn_a" onclick="submitBatchForm()"/>&nbsp;&nbsp;
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+
+</script>
+<script type="text/javascript" src="{#jsPath#}/rentalcar-costExpense-batchcommon.js" ></script>
+<!--<script type="text/javascript" src="{#jsPath#}/rentalcar-costExpense-common.js" ></script>-->
+<!--<script type="text/javascript" src="{#jsPath#}/rentalcar-costExpense-add.js" ></script>-->
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+</body>
+</html>

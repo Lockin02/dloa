@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title></title>
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="images/head/head.css" />
+<script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+</head>
+<script type="text/javascript">
+    var wh=document.documentElement.clientHeight;
+    jQuery(document).ready(function(){
+         $('#navTree').tree({
+             url:"index1.php?model=purview&action=user_tree"
+             ,lines:true
+         });
+         $('#pvinfo').panel();
+     });
+     function seacl(){
+         var seakey=$('#seakey').val();
+         $('#navTree').tree({
+             url:"index1.php?model=purview&action=user_tree&seakey="+seakey
+         });
+         $('#navTree').tree('reload');
+     }
+     function pvopen(url){
+        $('#pviframe').attr('src','index1.php?model=purview&action=pv_info&pvkey='+url);
+        $('#pvinfo').panel('refresh');
+     }
+
+</script>
+<body class="easyui-layout" id="homeBody">
+    <div region="west" split="true" icon="icon-headreload" title="" style="width: 160px; padding: 0px; overflow: auto;">
+        <div>
+            <input id="seakey" name="seakey" type="text" size="10" style="margin-left: 2px;"/>
+            <a href="#" class="easyui-linkbutton" plain="true" icon="icon-search" onclick="seacl()"></a>
+        </div>
+        <ul fit="true" id="navTree" animate="false" class="easyui-tree"></ul>
+    </div>
+    <div region="center" border="false">
+        <div id="pvinfo" class="easyui-panel" data-options="border:false" fit="true" style='padding-bottom: 2px;'>
+            <iframe scrolling="yes" id="pviframe" frameborder="0"  src="" style="width:100%;height:100%;"></iframe>
+        </div>
+    </div>
+</body>
+</html>

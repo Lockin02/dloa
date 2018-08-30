@@ -1,0 +1,84 @@
+
+<html>
+<head>
+<title></title>
+<LINK rel="stylesheet" href="js/jquery/tab/css/tabs.css" type="text/css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery/tab/tabs.js"></script>
+<script type="text/javascript" src="js/jquery/tab/toolbox.history.js"></script>
+<script type="text/javascript">
+
+$(function() {
+        var id = $("#id").val();
+        var skeyStr="&skey={skey_}";
+        var objType = $("#objType").val();
+		if( objType == 'oa_sale_order' ){
+			var url = "?model=projectmanagent_order_order&action=init&perm=view&id=" + id + skeyStr ;
+			var changeUrl = "?model=common_changeLog&action=toOrderList&objId=" + id + skeyStr;
+		}else if( objType == 'oa_sale_service' ){
+			var url = "?model=engineering_serviceContract_serviceContract&action=init&perm=view&id=" + id + skeyStr;
+			var changeUrl = "?model=common_changeLog&action=toSerivceList&objId=" + id + skeyStr;
+		}else if( objType == 'oa_sale_lease' ){
+			var url = "?model=contract_rental_rentalcontract&action=init&perm=view&id=" + id + skeyStr;
+			var changeUrl = "?model=common_changeLog&action=toRentalList&objId=" + id + skeyStr;
+		}else if( objType == 'oa_sale_rdproject' ){
+			var url = "?model=rdproject_yxrdproject_rdproject&action=init&perm=view&id=" + id + skeyStr;
+			var changeUrl = "?model=common_changeLog&action=toRdprojectList&objId=" + id + skeyStr;
+		}
+ 	var tabArr = [
+ 					url,
+ 					"?model=stock_outplan_outplan&action=listByOrderId&id=" + id + "&objType=" + objType + skeyStr,
+ 					"?model=stock_outplan_ship&action=listByOrder&orderId=" + id + "&objType=" + objType + skeyStr,
+ 					"?model=purchase_plan_basic&action=contPurchPage&orderId=" + id + "&objType=" + objType + skeyStr,
+ 					"?model=produce_protask_protask&action=contProPage&orderId=" + id + "&objType=" + objType + skeyStr,
+	             	"?model=stock_outstock_stockout&action=relDocOutPage&docId="+ id + "&relDocType=XSCKFHJH" + "&docType="+ objType + skeyStr,
+	             	changeUrl,
+    			];
+    $("#tabs1").tabs(".panes > iframe",{ history: true,onClick:function(i,e) {
+		var actTabId="#iframe" + (parseInt(e) + 1);
+   	 if($(actTabId).attr("src") == ""){
+   		$(actTabId).attr("src",tabArr[e]);
+    	}
+    }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" value="{id}" id="id" />
+<input type="hidden" value="{objType}" id="objType" />
+<div><!-- the tabs -->
+<ul class="tabs" id="tabs1">
+	<li><a href="#tab1">合同信息</a></li>
+	<li><a href="#tab2">发货计划列表</a></li>
+	<li><a href="#tab3">发货单列表</a></li>
+	<li><a href="#tab4">采购申请列表</a></li>
+	<li><a href="#tab5">生产任务列表</a></li>
+	<li><a href="#tab6">出库单列表</a></li>
+	<li><a href="#tab7">变更历史</a></li>
+</ul>
+
+<!-- tab "panes" -->
+<div class="panes">
+<iframe class="pane" id="iframe1" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe2" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe3" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe4" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe5" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe6" src="" height="96%" frameborder="0">
+</iframe>
+<iframe class="pane" id="iframe7" src="" height="96%" frameborder="0">
+</iframe>
+</div>
+</div>
+</body>
+</html>
+
+

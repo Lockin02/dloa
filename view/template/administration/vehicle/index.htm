@@ -1,0 +1,1231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>OA</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+		<script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+        <style type="text/css">
+        	#add_form span {color:red;}
+			#show_info div,#show_edit_info div,#show_setup_info div,#export_info div{ height:25px; line-height25px;}
+        </style>
+		<script type="text/javascript">
+			var open_tabs = Array();
+			var open_tabs_num = Array();
+			var datetime = '{datetime}';
+			var audit_user = '{audit_user}';
+			var admin_user = '{admin_user}';
+			var lastIndex;
+			var types_list = [
+			    {typeid:'0',name:'商务车'},
+			    {typeid:'1',name:'小车'}
+			];
+			var status_list = [
+			    {id:'0',name:'正常'},
+				{id:'1',name:'维修中'},
+				{id:'2',name:'已报废'}
+			];
+			var audit_status_list = [
+				{id:'-2',name:'已取消'},
+				{id:'-1',name:'被打回'},
+			    {id:'0',name:'待审核'},
+			    {id:'1',name:'已审核'},
+				{id:'2',name:'使用中'},
+				{id:'3',name:'已结束'},
+				{id:'4',name:'无法安排'}
+			];
+		/**
+		 * 加载布局开始
+		 */
+		$(function(){
+			$('#tt').tabs({onSelect:load_tabs});
+			if (audit_user == '1')
+			{
+				$('#tt').tabs('add',{
+					title:'车辆申请审批',
+					content:'<div style="padding:10px;height:96%;"><table id="audit"></table></div>',
+					closable:false,
+					selected:false
+				});
+				
+			}
+			
+			if (admin_user == '1')
+			{
+				$('#tt').tabs('add',{
+					title:'受理车辆申请',
+					content:'<div style="padding:10px;height:96%;"><table id="accepted"></table></div>',
+					closable:false,
+					selected:false
+				});
+				$('#tt').tabs('add',{
+					title:'车辆信息管理',
+					content:'<div style="padding:10px;height:96%;"><table id="info"></table></div>',
+					closable:false,
+					selected:false
+				});
+				
+			}
+		});
+		/**
+		 * 车辆类型
+		 * @param {Object} value
+		 */
+		function typeFormatter(value){
+			for(var i=0; i<types_list.length; i++){
+				if (types_list[i].typeid == value) return types_list[i].name;
+			}
+			return value;
+		}
+		/**
+		 * 车辆状态
+		 * @param {Object} value
+		 */
+		function statusFormatter(value)
+		{
+			for(var i=0; i<status_list.length; i++){
+				if (status_list[i].id == value) return status_list[i].name;
+			}
+			return value;
+		}
+		/**
+		 * 申请状态
+		 * @param {Object} value
+		 */
+		function audit_status(value)
+		{
+			for(var i=0; i<audit_status_list.length; i++){
+				if (audit_status_list[i].id == value) return audit_status_list[i].name;
+			}
+			return value;
+		}
+		
+		//更新操作
+		function updateActions(){
+			var rowcount = $('#info').datagrid('getRows').length;
+			for(var i=0; i<rowcount; i++){
+				$('#info').datagrid('updateRow',{
+					index:i,
+					row:{action:''}
+				});
+			}
+		}
+		/**
+		 * 显示编辑
+		 * @param {Object} obj
+		 * @param {Object} rowIndex
+		 */
+        function editrow(rowIndex){
+           $('#info').datagrid('beginEdit', rowIndex);
+        }
+		/**
+		 * 取消编辑
+		 * @param {Object} obj
+		 * @param {Object} rowIndex
+		 */
+		function cancelrow(index)
+		{
+			$('#info').datagrid('cancelEdit', index);
+		}
+		/**
+		 * 保存编辑
+		 * @param {Object} index
+		 */
+		function saverow(index)
+		{
+			$('#info').datagrid('endEdit', index);;
+		}
+		/**
+		 * 删除
+		 * @param {Object} index
+		 */
+		function deleterow(index)
+		{
+			$.messager.confirm('confirm','您确定要删除该条记录吗？',function(r){
+				if (r)
+				{
+					$('#info').datagrid('selectRow',index);
+					var data = $('#info').datagrid('getSelected');
+                    $.post('?model=administration_vehicle_index&action=del', {
+                        V_ID: data.V_ID,
+                        rand: Math.random
+                    }, function(data){
+                    	if (data == 1)
+						{
+							$('#info').datagrid('deleteRow',index);
+							$.messager.show({
+								title: '提示',
+								msg: '删除成功！',
+								timeout: 3000,
+								showType: 'show'
+							});
+						}else{
+							$.messager.show({
+								title: '提示',
+								msg: '修改失败！',
+								timeout: 3000,
+								showType: 'show'
+							});
+						}
+                    });
+				}
+			})
+		}
+		/**
+		 * 添加车辆
+		 */
+		function add_vehicle()
+		{
+			var V_NUM = $('#V_NUM').val();
+			var V_MODEL = $('#V_MODEL').val();
+			var V_ENGINE_NUM = $('#V_ENGINE_NUM').val();
+			var V_DATE = $('#V_DATE').val();
+			var V_TYPE = $('#V_TYPE').val();
+			var V_REMARK = $('#V_REMARK').val();
+			if (V_NUM == '')
+			{
+				$.messager.alert('提示','车牌号码不能为空！');
+				$('#V_NUM').focus();
+				return false;
+			}
+			
+			if (V_MODEL == '')
+			{
+				$.messager.alert('提示','厂牌型号不能为空！');
+				$('#V_MODEL').focus();
+				return false;
+			}
+			
+			if (V_ENGINE_NUM == '')
+			{
+				$.messager.alert('提示','发动机号不能为空！');
+				$('#V_ENGINE_NUM').focus();
+				return false;
+			}
+			
+			if (V_DATE == '')
+			{
+				$.messager.alert('提示','购置日期不能为空!');
+				return false;
+			}
+			
+			//return false;
+            $.post('?model=administration_vehicle_index&action=add', {
+                V_NUM: V_NUM,
+                V_MODEL: V_MODEL,
+                V_ENGINE_NUM: V_ENGINE_NUM,
+                V_DATE: V_DATE,
+                V_TYPE: V_TYPE,
+                V_REMARK: V_REMARK,
+                rand: Math.random()
+            }, function(data){
+                if (data == 1) {
+					$('#add_vehicle').window('close');
+                    $.messager.alert('提示', '添加车辆成功！');
+					$('#info').datagrid('reload');
+                }
+                else {
+                    $.messager.alert('提示', '添加车辆失败，请与管理员联系！');
+                }
+            });	
+		}
+		/**
+		 * 添加申请
+		 */
+		function add_apply()
+		{
+			var VU_REQUEST_DATE = datetime;
+			var VU_PROPOSER = '{USER_ID}';
+			var VU_USER = $('#userid').val();
+			var V_TYPE = $('#V_TYPE').val();
+			var VU_DEPARTURE = $('#VU_DEPARTURE').val();
+			var VU_DERSTINATION = $('#VU_DERSTINATION').val();
+			var VU_START = $('#VU_START').val();
+			var VU_END = $('#VU_END').val();
+			var VU_REASON = $('#VU_REASON').val();
+			var VU_NUMBER = $('#VU_NUMBER').val();
+			if (VU_USER == '')
+			{
+				$.messager.alert('提示','使用人不能为空！','error');
+				return false;
+			}
+			if (VU_NUMBER =='')
+			{
+				$.messager.alert('提示','随车人数不能为空！','error');
+				return false;
+			}
+			if (VU_DEPARTURE == '')
+			{
+				$.messager.alert('提示','出发地点不能为空！','error');
+				return false;
+			}
+			
+			if (VU_DERSTINATION == '')
+			{
+				$.messager.alert('提示','目的地点不能为空！','error');
+				return false;
+			}
+			
+			if (VU_START == '')
+			{
+				$.messager.alert('提示','出发时间不能为空！','error');
+				return false;
+			}
+			
+			if (VU_END == '')
+			{
+				$.messager.alert('提示','结束时间不能为空！','error');
+				return false;
+			}
+			
+			if (VU_REASON == '')
+			{
+				$.messager.alert('提示','使用事由不能为空！','error');
+				return false;
+			}
+			$.post('?model=administration_vehicle_index&action=apply',{
+				VU_REQUEST_DATE:VU_REQUEST_DATE,
+				VU_PROPOSER:VU_PROPOSER,
+				VU_USER:VU_USER,
+				V_TYPE:V_TYPE,
+				VU_DEPARTURE:VU_DEPARTURE,
+				VU_DERSTINATION:VU_DERSTINATION,
+				VU_START:VU_START,
+				VU_END:VU_END,
+				VU_REASON:VU_REASON,
+				VU_NUMBER:VU_NUMBER,
+				rand:Math.random()
+			},function(data){
+				if (data==1)
+				{
+					$('#add_apply').window('close');
+                    $.messager.alert('提示', '提交申请成功！');
+					$('#myapply').datagrid('reload');
+				}else if (data == -1){
+					$.messager.alert('提示', '您申请的时间段没有车辆可使用！');
+				}else{
+					$.messager.alert('提示', '提交失败，请与管理员联系！');
+				}
+			})
+			
+			
+		}
+        function load_tabs(title){
+			if (title == '车辆申请使用记录' && !open_tabs[title])
+			{
+				open_tabs[title] = true;
+				$('#index').datagrid({
+				url: '?model=administration_vehicle_index&action=apply_list',
+				title:'车辆使用申请记录',
+				fitColumns: true,
+				fit:true,
+				pagination:true,
+				pageSize:20,
+				columns:[[
+					{field:'VU_ID',title:'ID',width:40,align:'center'},
+					{field:'V_TYPE',title:'车辆类型',formatter:typeFormatter,width:60,align:'center'},
+					{field:'apply_user',title:'申请人',width:50,align:'center'},
+					{field:'use_user',title:'用 车 人',width:50,align:'center'},
+					{field:'VU_DEPARTURE',title:'出发地点',width:100,align:'center'},
+					{field:'VU_DERSTINATION',title:'目的地点',width:100,align:'center'},
+					{field:'VU_NUMBER',title:'随车人数',width:60,align:'center'},
+					{field:'VU_START',title:'出发时间',width:110,align:'center',formatter:function(value,row)
+						{
+							return value.replace(/:00$/g,'');
+						}},
+					{field:'VU_END',title:'返回时间',width:110,align:'center',formatter:function(value,row)
+						{
+							return value.replace(/:00$/g,'');
+						}},
+					{field:'VU_REASON',title:'事由',width:150,align:'center'},
+					{field:'VU_STATUS',title:'状态',formatter:audit_status,width:60,align:'center'},
+					{field:'ACTION',title:'操作',width:60,align:'center',formatter: function(value, row, index){
+						return '<a href="#" onclick="show_info(\'index\','+index+');">查看详细</a>';
+					}}
+					]]
+				});
+			}
+            if (title == '我的申请记录' && !open_tabs[title]) 
+			{
+				open_tabs[title] = true
+                $('#myapply').datagrid({
+                    url: '?model=administration_vehicle_index&action=myapply',
+                    title: '我的申请记录',
+                    idField: 'VU_ID',
+                    pagination: true,
+                    fitColumns: true,
+                    fit: true,
+                    pageSize: 20,
+                    columns: [[{
+                        field: 'VU_ID',
+                        title: 'ID',
+                        width: 30,
+                        align: 'center'
+                    },
+					
+					{
+                        field: 'use_user',
+                        title: '用车人',
+                        width: 50,
+                        align: 'center'
+                    },
+					{
+                        field: 'V_TYPE',
+                        title: '车辆类型',
+                        formatter: typeFormatter,
+                        width: 40,
+                        align: 'center'
+                    }, {
+                        field: 'VU_DEPARTURE',
+                        title: '出发地点',
+                        width: 50,
+                        align: 'center'
+                    }, {
+                        field: 'VU_DERSTINATION',
+                        title: '目的地点',
+                        width: 50,
+                        align: 'center'
+                    },{
+						field:'VU_NUMBER',
+						title:'随车人数',
+						width:60,
+						align:'center'
+						},
+					 {
+                        field: 'VU_START',
+                        title: '开始时间',
+                        width: 80,
+                        align: 'center',
+						formatter:function(value,row)
+						{
+							var re=/:00$/g;
+							return value.replace(re,'');
+						}
+                    }, {
+                        field: 'VU_END',
+                        title: '结束时间',
+                        width: 80,
+                        align: 'center',
+						formatter:function(value,row)
+						{
+							var re=/:00$/g;
+							return value.replace(re,'');
+						}
+                    }, {
+                        field: 'VU_REASON',
+                        title: '使用事由',
+                        width: 80,
+                        align: 'center'
+                    }, {
+                        field: 'VU_STATUS',
+                        title: '状态',
+                        formatter: audit_status,
+                        width: 50,
+                        align: 'center'
+                    }, {
+                        field: 'ACTION',
+                        title: '操作',
+                        width: 60,
+                        align: 'center',
+                        formatter: function(value, row, index){
+                           if (row.VU_STATUS == 0)
+						   {
+						   		var e = '<a href="#" onclick="show_edit('+index+');">修改</a> ';
+                                var d = '<a href="#" onclick="cancel_apply(' + index + ');">取消申请</a>';
+                                return e + d;
+								
+						   } else{
+                               return '<a href="#" onclick="show_info(\'myapply\','+index+');">查看详细</a>'; 
+                            }
+                        }
+                    }]]
+                
+                });
+                $('#myapply').datagrid('getPager').pagination({
+                    buttons: [{
+                        iconCls: 'icon-add',
+                        text: '添加申请',
+                        handler: function(){
+                            $('#add_apply').window('open');
+                        }
+                    }],
+                    onBeforeRefresh: function(ageNumber, pageSize){
+                        return true;
+                    }
+                });
+                $("#username").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                    multiple: false,
+                    mustMatch: true,
+                    width: 100,
+                    max: 200,
+                    //dataType: 'json',
+                    parse: function(data){
+                        var rows = [];
+                        var row = eval(unescape(data));
+                        for (var i = 0; i < row.length; i++) {
+                            rows[i] = {
+                                data: row[i],
+                                value: row[i].user_name,
+                                result: row[i].user_name
+                            }
+                        }
+                        //alert(rows.length);
+                        return rows;
+                    },
+                    formatItem: function(row, i, n){
+                        return row.user_name;
+                    }
+                    
+                }).result(function(evnet, data, formatted){
+                    if (data) {
+                        $('#userid').val(data.user_id);
+                    }
+                });
+            }
+			
+			if (title =='车辆信息管理' && !open_tabs[title])
+			{
+				if (isNaN(open_tabs_num[title])){
+					open_tabs_num[title] = true;
+					return false;
+				}
+				open_tabs[title] = true
+				$('#info').datagrid({
+				url: '?model=administration_vehicle_index&action=info_list',
+				queryParams:{rand: function(){
+					return Math.random()
+				}},
+				title:'车辆信息管理',
+				idField:'V_ID',
+				fitColumns: true,
+				pagination:true,
+				singleSelect:true,
+				rownumbers:true,
+				pageSize:20,
+				pageList:[20,30,50],
+				fit:true,
+				columns:[[
+					{field:'V_NUM',title:'车牌号',width:100,align:'center',editor:{type:'validatebox',options:{required:true}}},
+					{field:'V_MODEL',title:'厂牌型号',width:100,align:'center',editor:{type:'validatebox',options:{required:true}}},
+					{field:'V_ENGINE_NUM',title:'发动机号码',width:100,align:'center',editor:{type:'validatebox',options:{required:true}}},
+					{field:'V_TYPE',title:'车辆类型',width:80,align:'center',formatter:typeFormatter,editor: {
+						type: 'combobox',
+						options: {
+							valueField: 'typeid',
+							textField: 'name',
+							data: types_list,
+							required: true
+						}
+					}},
+					{field:'V_DATE',title:'购置日期',width:80,align:'center',required:true,editor:'datebox'},
+					{field:'V_REMARK',title:'备注',width:100,align:'center',editor:'text'},
+					{field:'V_STATUS',title:'状态',width:50,align:'center',formatter:statusFormatter,editor: {
+						type: 'combobox',
+						options: {
+							valueField: 'id',
+							textField: 'name',
+							data: status_list,
+							required: true
+						}
+					}},
+					{field:'action',title:'操作',width:80,align:'center',
+						formatter: function(value, row, index){
+							if (row.editing){
+								var s = '<a href="#" onclick="saverow('+index+')">保存</a> ';
+								var c = '<a href="#" onclick="cancelrow('+index+')">取消</a>';
+								return s+c;
+							} else {
+								var e = '<a href="#" onclick="editrow('+index+')">修改</a> ';
+								var d = '<a href="#" onclick="deleterow('+index+')">删除</a>';
+								return e+d;
+							}
+					}}
+				]],
+				onBeforeLoad:function(){
+					$(this).datagrid('rejectChanges');
+				},
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions();
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+                    $.post('?model=administration_vehicle_index&action=edit', {
+                        V_ID: row.V_ID,
+                        V_NUM: row.V_NUM,
+                        V_MODEL: row.V_MODEL,
+                        V_ENGINE_NUM: row.V_ENGINE_NUM,
+                        V_TYPE: row.V_TYPE,
+                        V_DATE: row.V_DATE,
+                        V_REMARK: row.V_REMARK,
+						V_STATUS:row.V_STATUS,
+                        rand: Math.random()
+                    }, function(data){
+						if (data == 1)
+						{
+							$.messager.show({
+								title: '提示',
+								msg: '修改成功！',
+								timeout: 3000,
+								showType: 'show'
+							});
+						}else{
+							$.messager.show({
+								title: '提示',
+								msg: '修改失败，请于管理员联系！',
+								timeout: 3000,
+								showType: 'show'
+							});
+						}
+                    });
+					updateActions();
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions();
+				}
+			});
+			$('#info').datagrid('getPager').pagination({
+				buttons:[{
+					iconCls:'icon-add',
+					text:'添加车辆',
+					handler:function(){
+						$('#add_vehicle').window('open');
+					}
+				}],
+				onBeforeRefresh:function(ageNumber,pageSize)
+				{
+					return true;
+				}
+			});
+			}
+			
+			if (title == '车辆申请审批' && !open_tabs[title])
+			{
+				if (isNaN(open_tabs_num[title])){
+					open_tabs_num[title] = true;
+					return false;
+				}
+				open_tabs[title] = true;
+				$('#audit').datagrid({
+				url: '?model=administration_vehicle_index&action=audit_list',
+				title:'车辆使用申请记录',
+				fitColumns: true,
+				fit:true,
+				pagination:true,
+				pageSize:20,
+				columns:[[
+					{field:'VU_ID',title:'ID',width:40,align:'center'},
+					{field:'V_TYPE',title:'车辆类型',formatter:typeFormatter,width:60,align:'center'},
+					{field:'apply_user',title:'申请人',width:80,align:'center'},
+					{field:'use_user',title:'用车人',width:80,align:'center'},
+					{field:'VU_DEPARTURE',title:'出发地点',width:80,align:'center'},
+					{field:'VU_DERSTINATION',title:'目的地点',width:80,align:'center'},
+					{field:'VU_NUMBER',title:'随车人数',width:60,align:'center'},
+					{field:'VU_START',title:'出发时间',width:100,align:'center'},
+					{field:'VU_END',title:'返回时间',width:100,align:'center'},
+					{field:'VU_REASON',title:'事由',width:150,align:'center'},
+					{field:'VU_STATUS',title:'状态',formatter:audit_status,width:60,align:'center'},
+					{
+						field: 'ACTION',
+						title: '操作',
+						width: 80,
+						align: 'center',
+						formatter: function(value, row, index){
+							if (row.VU_STATUS == 0) {
+								return '<a href="#" onclick="show_apply(' + index + ')">查看或审核</a>';
+							}else{
+								return '<a href="#" onclick="show_apply(' + index + ')">查看</a>';
+							}
+						}
+					}
+					]]
+				});
+			}
+			
+			if (title == '受理车辆申请' && !open_tabs[title])
+			{
+				if (isNaN(open_tabs_num[title])){
+					open_tabs_num[title] = true;
+					return false;
+				}
+				open_tabs[title] = true;
+				$('#accepted').datagrid({
+				url: '?model=administration_vehicle_index&action=accepted_list',
+				title:'受理车辆申请',
+				fitColumns: true,
+				fit:true,
+				pagination:true,
+				pageSize:20,
+				columns:[[
+					{field:'VU_ID',title:'ID',width:40,align:'center'},
+					{field:'V_TYPE',title:'车辆类型',formatter:typeFormatter,width:60,align:'center'},
+					{field:'apply_user',title:'申请人',width:80,align:'center'},
+					{field:'VU_DEPARTURE',title:'出发地点',width:80,align:'center'},
+					{field:'VU_DERSTINATION',title:'目的地点',width:80,align:'center'},
+					{field:'VU_NUMBER',title:'随车人数',width:60,align:'center'},
+					{field:'VU_START',title:'出发时间',width:110,align:'center',formatter:function(value,row)
+						{
+							return value.replace(/:00$/g,'');
+						}},
+					{field:'VU_END',title:'返回时间',width:110,align:'center',formatter:function(value,row)
+						{
+							return value.replace(/:00$/g,'');
+						}},
+					{field:'VU_MILEAGE',title:'里程',width:30,align:'center'},
+					{field:'VU_REASON',title:'事由',width:150,align:'center'},
+					{field:'VU_STATUS',title:'状态',formatter:audit_status,width:50,align:'center'},
+					{field:'ACTION',title:'操作',width:50,align:'center',formatter: function(value, row, index){
+						return '<a href="#" onclick="setup('+index+');">设置</a>';
+					}}
+					]]
+				});
+				$('#accepted').datagrid('getPager').pagination({
+                    buttons: [{
+                        iconCls: 'icon-save',
+                        text: '导出数据',
+                        handler: function(){
+							var show_info = '<div id="show_export_info">';
+							show_info += '<div><lable>车辆类型：</lable><select id="G_V_TYPE"><option value="">全部类型</option>';
+							for(var i=0; i<types_list.length; i++)
+							{
+								show_info +='<option value="'+i+'">'+types_list[i].name+'</option>';	
+							}
+							show_info += '</select></div>';
+							show_info += '<div><lable>时间范围：</lable><input size="15" type="text" id="G_VU_START" class="Wdate" onclick="WdatePicker()" /> 至 <input size="15" type="text" id="G_VU_END" class="Wdate" onclick="WdatePicker({minDate:\'#F{$dp.$D(\\\'G_VU_START\\\')}\'})" /></div>';
+                            show_info += '<div style="margin-top:5px;"><lable>状态筛选：</lable><select id="G_VU_STATUS"><option value="">全部状态</option>';
+							for ( i in audit_status_list)
+							{
+								if (audit_status_list[i].id != undefined)
+								{
+									show_info += '<option value="'+audit_status_list[i].id+'">'+audit_status_list[i].name+'</option>';
+								} 
+							}
+							show_info += '</select></div>';
+							show_info += '<div id="show_apply_button" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">';
+							show_info += '<a id="edit_export_btn" iconCls="icon-ok" href="javascript:void(0);" onclick="export_data();">确定导出</a> ';
+							show_info += '<a id="exit_export_btn" iconCls="icon-cancel" href="javascript:void(0);" onclick="$(\'#export_info\').window(\'close\');">关闭返回</a>';
+							show_info += '</div>';
+							$('#export_form').html(show_info);
+							$('#edit_export_btn').linkbutton({plain: false});
+							$('#exit_export_btn').linkbutton({plain: false});
+							$('#export_info').window('open');
+                        }
+                    }],
+                    onBeforeRefresh: function(ageNumber, pageSize){
+                        return true;
+                    }
+                });
+			}
+        }
+		/**
+		 * 导出EXCEL数据
+		 */
+		function export_data()
+		{
+			var V_TYPE = $('#G_V_TYPE').val();
+			var VU_START = $('#G_VU_START').val();
+			var VU_END = $('#G_VU_END').val();
+			var VU_STATUS = $('#G_VU_STATUS').val();
+			window.location = '?model=administration_vehicle_index&action=export_data&V_TYPE='+V_TYPE+'&VU_START='+VU_START+'&VU_END='+VU_END+'&VU_STATUS='+VU_STATUS+'&rand='+Math.random();
+		}
+		/**
+		 * 查看申请或审批
+		 * @param {Object} index
+		 */
+		function show_apply(index){
+			$('#audit').datagrid('selectRow', index);
+			var rows = $('#audit').datagrid('getSelected');
+			var show_info = '<div id="show_info">';
+			show_info += '<div><lable>申 请 人：</lable><span>' + rows.apply_user + '</span></div>';
+			show_info += '<div><lable>用 车 人：</lable><span>' + rows.use_user + '</span></div>';
+			show_info += '<div><lable>车辆类型：</lable><span>' + typeFormatter(rows.V_TYPE) + '</span></div>';
+			show_info += '<div><lable>随车人数：</lable><span>' + rows.VU_NUMBER + '</span></div>';
+			show_info += '<div><lable>出发地点：</lable><span>' + rows.VU_DEPARTURE + '</span></div>';
+			show_info += '<div><lable>目的地点：</lable><span>' + rows.VU_DERSTINATION + '</span></div>';
+			show_info += '<div><lable>出发时间：</lable><span>' + rows.VU_START.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>返回时间：</lable><span>' + rows.VU_END.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>使用事由：</lable><span>' + rows.VU_REASON + '</span></div>';
+			show_info += '<div><lable>状&nbsp;&nbsp;&nbsp;&nbsp;态：</lable><span>' + audit_status(rows.VU_STATUS) + '</span></div>';
+			if (rows.VU_STATUS == -1)
+			{
+				show_info += '<div><lable>打回原因：</lable><span>' + rows.VU_NOTES + '</span></div>';
+			}else if (rows.VU_STATUS == 4){
+				show_info += '<div><lable>无法安排理由：</lable><span>' + rows.VU_SETUP_NOTES + '</span></div>';
+			}
+			
+			show_info += '</div>';
+			show_info += '<div id="show_apply_button" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">';
+			if (rows.VU_STATUS == 0) {
+				show_info += '<a id="audit_btn" iconCls="icon-ok" href="javascript:void(0)" onclick="audit(1,' + rows.VU_ID + ');">通过审核</a> ';
+				show_info += '<a id="exit_btn" iconCls="icon-cancel" href="javascript:void(0)" onclick="audit(-1,' + rows.VU_ID + ');">打回申请</a>';
+				show_info += '</div>';
+			}else{
+				show_info += '<a id="exit_window_btn" iconCls="icon-cancel" href="javascript:void(0)" onclick="$(\'#show_apply\').window(\'close\');">关闭返回</a>';
+			}
+			$('#show_form').html(show_info);
+			if (rows.VU_STATUS == 0) {
+				$('#audit_btn').linkbutton({
+					plain: false
+				});
+				$('#exit_btn').linkbutton({plain: false});
+			}else{
+				$('#exit_window_btn').linkbutton({plain: false})
+			}
+			$('#show_apply').window('open');
+		}
+		/**
+		 * 审批
+		 * @param {Object} s
+		 * @param {Object} VU_ID
+		 */
+		function audit(s,VU_ID)
+		{
+			if (s == 1)
+			{
+				$.post('?model=administration_vehicle_index&action=audit&VU_ID='+VU_ID,{VU_STATUS:'1',rand:Math.random()},function(data){
+							if (data == 1)
+							{
+								$.messager.alert('提示','操作成功！');
+								$('#audit').datagrid('reload');
+								$('#show_apply').window('close');
+							}else{
+								$.messager.alert('提示','操作失败,请与OA管理员联系！');
+							}
+						});
+			}else{
+				$.messager.prompt('打回理由', '请输入打回理由', function(notes){
+					if (notes){
+						$.post('?model=administration_vehicle_index&action=audit&VU_ID='+VU_ID,{VU_NOTES:notes,VU_STATUS:'-1',rand:Math.random()},function(data){
+							if (data == 1)
+							{
+								$.messager.alert('提示','操作成功！');
+								$('#audit').datagrid('reload');
+								$('#show_apply').window('close');
+							}else{
+								$.messager.alert('提示','操作失败,请与OA管理员联系！');
+							}
+						});
+					}else{
+						alert('打回理由不能为空！');
+					}
+				});
+			}
+		}
+		/**
+		 * 修改申请
+		 * @param {Object} index
+		 */
+		function show_edit(index)
+		{
+			$('#myapply').datagrid('selectRow', index);
+			var rows = $('#myapply').datagrid('getSelected');
+			var show_info = '<div id="show_edit_info">';
+			show_info += '<input type="hidden" id="T_VU_USER" value="'+rows.VU_USER+'" />';
+			show_info += '<div><lable>用 车 人：</lable><input type="text" id="T_use_user" value="' + rows.use_user + '" /></div>';
+			show_info += '<div><lable>车辆类型：</lable><select id="T_V_TYPE">';
+			for(var i=0; i<types_list.length; i++)
+			{
+				if (i == rows.V_TYPE)
+				{
+					show_info +='<option selected value="'+i+'">'+types_list[i].name+'</option>';
+				}else{
+					show_info +='<option value="'+i+'">'+types_list[i].name+'</option>';
+				}
+				
+			}
+			show_info +=' </select></div>';
+			show_info += '<div><lable>随车人数：</lable><input size="5" type="text" id="T_VU_NUMBER" value="'+rows.VU_NUMBER+'" /></div>';
+			show_info += '<div><lable>出发地点：</lable><input size="16" type="text" id="T_VU_DEPARTURE" value="' + rows.VU_DEPARTURE + '" /> 至 <input size="16" type="text" id="T_VU_DERSTINATION" value="'+rows.VU_DERSTINATION+'" /></div>';
+			show_info += '<div><lable>开始时间：</lable><input size="17" type="text" id="T_VU_START" class="Wdate" onclick="WdatePicker({el:$dp.$(\'T_VU_START\'),dateFmt:\'yyyy-MM-dd HH:mm\',disabledDates:[\'....-..-.. ..\:[0-9]5\']});" value="' + rows.VU_START.replace(/:00$/g,'') + '" />';
+			show_info += ' 至  <input size="17" type="text" id="T_VU_END" class="Wdate" onclick="WdatePicker({el:$dp.$(\'T_VU_END\'),dateFmt:\'yyyy-MM-dd HH:mm\',minDate:\'#F{$dp.$D(\\\'T_VU_START\\\')}\',disabledDates:[\'....-..-.. ..\:[0-9]5\']});" value="' + rows.VU_START.replace(/:00$/g,'') + '" /></div>';
+			show_info += '<label for="V_REASON">使用事由：</label><textarea class="easyui-validatebox" required="true" id="T_VU_REASON" style="width:280px; height:100px;">'+rows.VU_REASON+'</textarea>';
+			show_info += '</div>';
+			show_info += '<div id="show_apply_button" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">';
+			show_info += '<a id="edit_btn" iconCls="icon-ok" href="javascript:void(0)" onclick="save_edit_apply(' + rows.VU_ID + ');">确定修改</a> ';
+			show_info += '<a id="exit_edit_btn" iconCls="icon-cancel" href="javascript:void(0)" onclick="$(\'#edit_apply\').window(\'close\');">关闭返回</a>';
+			show_info += '</div>';
+			$('#edit_form').html(show_info);
+			$('#edit_btn').linkbutton({plain: false});
+			$('#exit_edit_btn').linkbutton({plain: false});
+			$("#T_use_user").autocomplete('ajax.php?model=autocomplete&action=GetTable&table=user&field=user_name&return_field=user_id,user_name', {
+                    multiple: false,
+                    mustMatch: true,
+                    width: 100,
+                    max: 200,
+                    //dataType: 'json',
+                    parse: function(data){
+                        var rows = [];
+                        var row = eval(unescape(data));
+                        for (var i = 0; i < row.length; i++) {
+                            rows[i] = {
+                                data: row[i],
+                                value: row[i].user_name,
+                                result: row[i].user_name
+                            }
+                        }
+                        //alert(rows.length);
+                        return rows;
+                    },
+                    formatItem: function(row, i, n){
+                        return row.user_name;
+                    }
+                    
+                }).result(function(evnet, data, formatted){
+                    if (data) {
+                        $('#T_VU_USER').val(data.user_id);
+                    }else{
+						$('#T_VU_USER').val('');
+					}
+                });
+			$('#edit_apply').window('open');
+		}
+		/**
+		 * 保存修改申请
+		 */
+		function save_edit_apply(id)
+		{
+			var T_VU_USER = $('#T_VU_USER').val();
+			var T_V_TYPE = $('#T_V_TYPE').val();
+			var T_VU_DEPARTURE = $('#T_VU_DEPARTURE').val();
+			var T_VU_DERSTINATION = $('#T_VU_DERSTINATION').val();
+			var T_VU_NUMBER = $('#T_VU_NUMBER').val();
+			var T_VU_START = $('#T_VU_START').val();
+			var T_VU_END = $('#T_VU_END').val();
+			var T_VU_REASON = $('#T_VU_REASON').val();
+			if(T_VU_USER =='')
+			{
+				$.messager.alert('提示','用车人不能为空！');
+				$('#T_use_user').focus('');
+				return false;
+			}
+			if (T_VU_DEPARTURE == '')
+			{
+				$.messager.alert('提示','出发地点不能为空！');
+				$('#T_VU_DEPARTURE').focus();
+				return false;
+			}
+			if (T_VU_DERSTINATION == '')
+			{
+				$.messager.alert('提示','目的地点不能为空！');
+				$('#T_VU_DERSTINATION').focus();
+				return false;
+			}
+			if (T_VU_START == '')
+			{
+				$.messager.alert('提示','开始时间不能为空！');
+				$('#T_VU_START').focus();
+				return false;
+			}
+			if (T_VU_END == '')
+			{
+				$.messager.alert('提示','结束时间不能为空！');
+				$('#T_VU_END').focus();
+				return false;
+			}
+			if (T_VU_REASON == '')
+			{
+				$.messager.alert('提示','使用理由不能为空！');
+				$('#T_VU_REASON').focus();
+				return false;
+			}
+			$.post('?model=administration_vehicle_index&action=edit_apply&id='+id,{
+				VU_USER:T_VU_USER,
+				V_TYPE:T_V_TYPE,
+				VU_DEPARTURE:T_VU_DEPARTURE,
+				VU_DERSTINATION:T_VU_DERSTINATION,
+				VU_START:T_VU_START,
+				VU_END:T_VU_END,
+				VU_REASON:T_VU_REASON,
+				VU_NUMBER:T_VU_NUMBER,
+				rand:Math.random()
+			},function(data){
+				if (data == 1){
+					$.messager.alert('提示','修改成功！');
+					$('#myapply').datagrid('reload');
+					$('#edit_apply').window('close');
+				}else if (data == 2){
+					$.messager.alert('提示','修改失败，你的申请已经被审批！');
+					$('#myapply').datagrid('reload');
+					$('#edit_apply').window('close');
+				}else{
+					$.messager.alert('提示','修改失败，请与OA管理员联系！');
+				}
+			});
+		}
+		/**
+		 * 取消申请
+		 * @param {Object} index
+		 */
+		function cancel_apply(index)
+		{
+			$.messager.confirm('confirm','您确定要取消该条申请吗？',function(r){
+				if (r)
+				{
+					$('#myapply').datagrid('selectRow', index);
+					var rows = $('#myapply').datagrid('getSelected');
+					$.post('?model=administration_vehicle_index&action=edit_apply&id='+rows.VU_ID,{VU_STATUS:'-2',rand:Math.random()},function(data){
+						if (data == 1)
+						{
+							$.messager.alert('提示','已成功取消该条申请！');
+							$('#myapply').datagrid('reload');
+						}else{
+							$.messager.alert('提示','操作失败，请与OA管理员联系！');
+						}
+					});
+				}
+			});
+			
+		}
+		
+		/**
+		 * 显示详细
+		 * @param {Object} id
+		 * @param {Object} index
+		 */
+		function show_info(id,index)
+		{
+			$('#'+id).datagrid('selectRow', index);
+			var rows = $('#'+id).datagrid('getSelected');
+			var show_info = '<div id="show_info">';
+			show_info += '<div><lable>申 请 人：</lable><span>' + rows.apply_user + '</span></div>';
+			show_info += '<div><lable>用 车 人：</lable><span>' + rows.use_user + '</span></div>';
+			show_info += '<div><lable>车辆类型：</lable><span>' + typeFormatter(rows.V_TYPE) + '</span></div>';
+			show_info += '<div><lable>随车人数：</lable><span>' + rows.VU_NUMBER + '</span></div>';
+			show_info += '<div><lable>出发地点：</lable><span>' + rows.VU_DEPARTURE + '</span></div>';
+			show_info += '<div><lable>目的地点：</lable><span>' + rows.VU_DERSTINATION + '</span></div>';
+			show_info += '<div><lable>出发时间：</lable><span>' + rows.VU_START.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>返回时间：</lable><span>' + rows.VU_END.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>使用事由：</lable><span>' + rows.VU_REASON + '</span></div>';
+			show_info += '<div><lable>状&nbsp;&nbsp;&nbsp;&nbsp;态：</lable><span>' + audit_status(rows.VU_STATUS) + '</span></div>';
+			if (rows.VU_STATUS == -1)
+			{
+				show_info += '<div><lable>打回原因：</lable><span>' + rows.VU_NOTES + '</span></div>';
+			}else if (rows.VU_STATUS == 4){
+				show_info += '<div><lable>无法安排理由：</lable><span>' + rows.VU_SETUP_NOTES + '</span></div>';
+			}
+			show_info += '</div>';
+			show_info += '<div id="show_apply_button" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">';
+			show_info += '<a id="exit_info_btn" iconCls="icon-cancel" href="javascript:void(0)" onclick="$(\'#apply_info\').window(\'close\');">关闭返回</a>';
+			show_info += '</div>';
+			$('#info_form').html(show_info);
+			$('#exit_info_btn').linkbutton({plain: false});
+			$('#apply_info').window('open');
+		}
+		/**
+		 * 设置
+		 * @param {Object} index
+		 */
+		function setup(index)
+		{
+			$('#accepted').datagrid('selectRow', index);
+			var rows = $('#accepted').datagrid('getSelected');
+			var show_info = '<div id="show_setup_info">';
+			show_info += '<div><lable>申 请 人：</lable><span>' + rows.apply_user + '</span></div>';
+			show_info += '<div><lable>用 车 人：</lable><span>' + rows.use_user + '</span></div>';
+			show_info += '<div><lable>车辆类型：</lable><span>' + typeFormatter(rows.V_TYPE) + '</span></div>';
+			show_info += '<div><lable>随车人数：</lable><input size="5" type="text" onKeyUp="this.value=this.value.replace(/[^\\d]/g,\'\');" id="I_VU_NUMBER" value="' + rows.VU_NUMBER + '" /></div>';
+			show_info += '<div><lable>出发地点：</lable><span>' + rows.VU_DEPARTURE + '</span></div>';
+			show_info += '<div><lable>目的地点：</lable><span>' + rows.VU_DERSTINATION + '</span></div>';
+			show_info += '<div><lable>出发时间：</lable><span>' + rows.VU_START.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>返回时间：</lable><span>' + rows.VU_END.replace(/:00$/g,'') + '</span></div>';
+			show_info += '<div><lable>使用事由：</lable><span>' + rows.VU_REASON + '</span></div>';
+			show_info += '<div><lable>状&nbsp;&nbsp;&nbsp;&nbsp;态：</lable><select id="I_VU_STATUS" onchange="show_input(this.value);">';
+			for(i in audit_status_list)
+			{
+				if (audit_status_list[i].id != undefined && audit_status_list[i].id >=1) {
+					if (audit_status_list[i].id == rows.VU_STATUS) {
+						show_info += '<option selected value="' + audit_status_list[i].id + '">' + audit_status_list[i].name + '</option>';
+					}
+					else {
+						show_info += '<option value="' + audit_status_list[i].id + '">' + audit_status_list[i].name + '</option>';
+					}
+				}
+			}
+			show_info += '</select><span id="show_input">';
+			if (rows.VU_STATUS == 4)
+			{
+				show_info += '请输入理由：<input type="text" id="I_VU_SETUP_NOTES" value="'+rows.VU_SETUP_NOTES+'" />';
+			}
+			show_info += '</span></div>';
+			show_info += '<div><lable>里&nbsp;&nbsp;&nbsp;&nbsp;程：</lable><input size="5" type="text" id="I_VU_MILEAGE" value="' + rows.VU_MILEAGE + '" onKeyUp="this.value=this.value.replace(/[^\\.\\d]/g,\'\');" /> 公里</div>';
+			show_info += '</div>';
+			show_info += '<div id="show_apply_button" region="south" border="false" style="text-align:center;height:30px;line-height:30px;">';
+			show_info += '<a id="edit_setup_btn" iconCls="icon-ok" href="javascript:void(0)" onclick="save_edit_setup(' + rows.VU_ID + ');">确定修改</a> ';
+			show_info += '<a id="exit_setup_btn" iconCls="icon-cancel" href="javascript:void(0)" onclick="$(\'#setup_info\').window(\'close\');">关闭返回</a>';
+			show_info += '</div>';
+			$('#setup_form').html(show_info);
+			$('#edit_setup_btn').linkbutton({plain: false});
+			$('#exit_setup_btn').linkbutton({plain: false});
+			$('#setup_info').window('open');
+		}
+		/**
+		 * 保存设置
+		 */
+		function save_edit_setup(id)
+		{
+			var VU_STATUS = $('#I_VU_STATUS').val();
+			var VU_MILEAGE = $('#I_VU_MILEAGE').val();
+			var VU_NUMBER = $('#I_VU_NUMBER').val();
+			var VU_SETUP_NOTES = $('#I_VU_SETUP_NOTES').val();
+			$.post('?model=administration_vehicle_index&action=edit_apply&id='+id,{VU_STATUS:VU_STATUS,VU_MILEAGE:VU_MILEAGE,VU_NUMBER:VU_NUMBER,VU_SETUP_NOTES:VU_SETUP_NOTES,rand:Math.random()},function(data){
+						if (data == 1)
+						{
+							$.messager.alert('提示','设置成功！');
+							$('#accepted').datagrid('reload');
+							$('#setup_info').window('close');
+						}else{
+							$.messager.alert('提示','操作失败，请与OA管理员联系！');
+						}
+					});
+		}
+		/**
+		 * 显示无法安排理由输入框
+		 * @param {Object} val
+		 */
+		function show_input(val)
+		{
+			if (val == 4)
+			{
+				$('#show_input').html(' 请输入理由：<input type="text" id="I_VU_SETUP_NOTES" value="" />');
+			}else{
+				$('#show_input').html('');
+			}
+		}
+		</script>
+    </head>
+    <body>
+    	<div id="export_info" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="导出数据选项" style="width:400px;height:300px;" style="diaply:none">
+			<div id="export_form" region="center" border="false" style="padding:10px;">
+				
+			</div>
+		</div>
+    	<div id="setup_info" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="设置车辆使用申请状态" style="width:400px;height:400px;" style="diaply:none">
+			<div id="setup_form" region="center" border="false" style="padding:10px;">
+				
+				</div>
+		</div>
+    	<div id="apply_info" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="查看车辆使用申请详细" style="width:400px;height:400px;" style="diaply:none">
+			<div id="info_form" region="center" border="false" style="padding:10px;">
+				
+				</div>
+		</div>
+    	<div id="edit_apply" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="修改申请" style="width:400px;height:350px;" style="diaply:none">
+			<div id="edit_form" region="center" border="false" style="padding:10px;">
+				
+				</div>
+		</div>
+    	<div id="show_apply" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="申请使用车辆" style="width:400px;height:380px;">
+				<div id="show_form" region="center" border="false" style="padding:10px;">
+				
+				</div>
+		</div>
+    	<div style="width:98%;margin:0 auto; padding-top:5px;">
+	        <div id="tt" class="easyui-tabs" fit="true" plain="true" style="height:560px;width:100%;">
+					<div title="车辆申请使用记录" style="padding:10px;">
+						<table id="index"></table>
+					</div>
+					<div title="我的申请记录" style="padding:10px;">
+						<table id="myapply"></table>
+						<div id="add_apply" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="申请使用车辆" style="width:450px;height:350px;">
+							<div class="easyui-layout" fit="true">
+								<div id="add_form" region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+									<input type="hidden" id="userid" name="userid" value="" />
+									<div>
+										<label for="username">用 车 人：</label>
+										<input type="text" class="easyui-validatebox" required="true" name="username" id="username" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_TYPE">车辆类型：</label>
+										<select id="V_TYPE" name="V_TYPE">
+											<option value="0">商务车</option>
+											<option value="1">小车</option>
+										</select>
+										<span> *</span>
+										<span>可乘坐人数为小车5人， 商务车7人（含司机）</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="">随车人数：</label>
+										<input size="5" type="text" id="VU_NUMBER" name="VU_NUMBER" onKeyUp="this.value=this.value.replace(/[^\d]/g,'');" value="1" />
+										<span>*</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="VU_DEPARTURE">出发地点：</label>
+										<input type="text" size="16" class="easyui-validatebox" required="true" name="VU_DEPARTURE" id="VU_DEPARTURE" value="珠海公司" />
+											至 
+										<input type="text" size="16" class="easyui-validatebox" required="true" name="VU_DERSTINATION" id="VU_DERSTINATION" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="VU_START">开始时间：</label>
+										<input type="text" size="17" class="easyui-validatebox Wdate" required="true"  onclick="WdatePicker({el:$dp.$('VU_START'),dateFmt:'yyyy-MM-dd HH:mm',minDate:'timeview()',disabledDates:['....-..-.. ..\:[0-9]5']});" name="VU_START" id="VU_START" value="" />
+										至 
+										<input type="text" size="17"  class="easyui-validatebox Wdate" required="true" onclick="WdatePicker({el:$dp.$('VU_END'),dateFmt:'yyyy-MM-dd HH:mm',minDate:'#F{$dp.$D(\'VU_START\')}',disabledDates:['....-..-.. ..\:[0-9]5']});" name="VU_END" id="VU_END" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_REASON">使用事由：</label>
+										<textarea class="easyui-validatebox" required="true" id="VU_REASON" name="VU_REASON" style="width:280px; height:100px;"></textarea>
+									</div>
+								</div>
+								<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+									<a class="easyui-linkbutton" iconCls="icon-ok" href="javascript:void(0)" onclick="add_apply()">确定</a>
+									<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:void(0)" onclick="$('#add_apply').window('close');">取消</a>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		
+		<div id="add_vehicle" class="easyui-window" collapsible="false" minimizable="false" maximizable="false" closed="true" modal="false" title="添加车辆" style="width:400px;height:350px;">
+							<div class="easyui-layout" fit="true">
+								<div id="add_form" region="center" border="false" style="padding:10px;background:#fff;border:1px solid #ccc;">
+									<div>
+										<label for="V_NUM">车牌号码：</label>
+										<input type="text" class="easyui-validatebox" required="true" name="V_NUM" id="V_NUM" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_MODEL">厂牌型号：</label>
+										<input type="text" class="easyui-validatebox" required="true" name="V_MODEL" id="V_MODEL" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_ENGINE_NUM">发动机号：</label>
+										<input type="text" class="easyui-validatebox" required="true" name="V_ENGINE_NUM" id="V_ENGINE_NUM" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_TYPE">车辆类型：</label>
+										<select id="V_TYPE" name="V_TYPE">
+											<option value="0">商务车</option>
+											<option value="1">小车</option>
+										</select>
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_DATE">购置日期：</label>
+										<input type="text" class="easyui-datebox" required="true"  missingMessage="请选择购置日期！" name="V_DATE" id="V_DATE" value="" />
+										<span> *</span>
+									</div>
+									<div style="margin-top:5px;">
+										<label for="V_REMARK">车辆备注：</label>
+										<textarea id="V_REMARK" name="V_REMARK" style="width:250px; height:100px;"></textarea>
+									</div>
+								</div>
+								<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+									<a class="easyui-linkbutton" iconCls="icon-ok" href="javascript:void(0)" onclick="add_vehicle()">确定</a>
+									<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:void(0)" onclick="$('#add_vehicle').window('close');">取消</a>
+								</div>
+							</div>
+						</div>
+    </body>
+</html>

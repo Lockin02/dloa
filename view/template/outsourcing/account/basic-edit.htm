@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>外包結算</title>
+   {#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-common.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-edit.js" ></script>
+</head>
+
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	外包結算
+    </span>
+</div>
+   <form id="form1" method="post" action="?model=outsourcing_account_basic&action=edit"  >
+      <table class="form_main_table">
+<td class="innerTd" colspan="6">
+	<fieldset>
+		<legend class="legend">基 本 信 息</legend>
+		<table class="form_in_table">
+       <tr>
+      		<td class="form_text_left_three">工作量确认单编号</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="suppVerifyCode" name="basic[suppVerifyCode]" value="{suppVerifyCode}"/>
+      			 <input type="hidden" class="txt" id="approvalId" name="basic[suppVerifyId]"  value="{suppVerifyId}"/>
+      		</td>
+      		<td class="form_text_left_three">项目编号</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectCode" name="basic[projectCode]"  value="{projectCode}"/>
+      			 <input type="hidden" class="txt" id="projectId" name="basic[projectId]"  value="{projectId}"/>
+      		</td>
+      		<td class="form_text_left_three">项目名称</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectName" name="basic[projectName]"  value="{projectName}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">项目类型</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectTypeName" name="basic[projectTypeName]" value="{projectTypeName}" />
+      			 <input type="hidden" class="txt" id="projectType" name="basic[projectType]"  value="{projectType}"/>
+      		</td>
+      		<td class="form_text_left_three">项目实施地</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectAddress" name="basic[projectAddress]"  value="{projectAddress}"/>
+      		</td>
+      		<td class="form_text_left_three">外包方式</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="outsourcingName" name="basic[outsourcingName]"  value="{outsourcingName}"/>
+      			 <input type="hidden" class="txt" id="outsourcing" name="basic[outsourcing]"  value="{outsourcing}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">外包编号</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="outContractCode" name="basic[outContractCode]"  value="{outContractCode}"/>
+      		</td>
+      		<td class="form_text_left_three">项目经理</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectManangerName" name="basic[projectManangerName]"  value="{projectManangerName}"/>
+      			 <input type="hidden" class="txt" id="projectManangerId" name="basic[projectManangerId]"  value="{projectManangerId}"/>
+      		</td>
+      		<td class="form_text_left_three">销售负责人</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"class="readOnlyTxtNormal" readonly="readonly"  id="saleManangerName" name="basic[saleManangerName]"  value="{saleManangerName}"/>
+      			 <input type="hidden" class="txt" id="saleManangerId" name="basic[saleManangerId]"  value="{saleManangerId}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">外包供应商</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="suppName" name="basic[suppName]" value="{suppName}"/>
+      			 <input type="hidden" class="txt" id="suppCode" name="basic[suppCode]"  value="{suppCode}"/>
+      			 <input type="hidden" class="txt" id="suppId" name="basic[suppId]"  value="{suppId}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>结算开始日期</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="beginDate" onfocus="WdatePicker()" readonly  name="basic[beginDate]"  value="{beginDate}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>结算结束日期</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="endDate" onfocus="WdatePicker()" readonly  name="basic[endDate]"  value="{endDate}"/>
+      		</td>
+       </tr>
+       <tr style="display:none" id="projectrentalTr2">
+      		<td class="form_text_left_three">外包金额</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal formatMoney" readonly="readonly" id="outSuppMoney" name="basic[outSuppMoney]" value="{outSuppMoney}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>已付金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney"  id="payMoney" name="basic[payMoney]" value="{payMoney}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>未付金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney"  id="unPayMoney" name="basic[unPayMoney]" value="{unPayMoney}"/>
+      		</td>
+       </tr>
+       <tr >
+      		<td class="form_text_left_three"><font color=blue>结算金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney" id="orderMoney" name="basic[orderMoney]" value="{orderMoney}" />
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>扣款金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt formatMoney" id="deductMoney" name="basic[deductMoney]" value="{deductMoney}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>付款方式</font></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="basic[payType]">
+					{payType}
+				</select>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three"><font color=blue>增值税专用发票税点</font></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="basic[taxPointCode]" id="taxPointCode">
+					{taxPointCode}
+				</select>
+      		</td>
+      		<td class="form_text_left_three">申请人</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"  class="readOnlyTxtNormal" readonly="readonly" id="createName" name=""  value="{createName}"/>
+      		</td>
+      		<td class="form_text_left_three">录入日期</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"  class="readOnlyTxtNormal" readonly="readonly" id="createTime" name=""  value="{createTime}"/>
+      		</td>
+       </tr>
+      <tr>
+      		<td class="form_text_left_three" >备注说明</td>
+      		<td class="form_text_right_three" colspan="5">
+                  <textarea class="txt_txtarea_biglong" id="remark" name="basic[remark]"></textarea>
+      		</td>
+      </tr>
+      </table>
+	</fieldset>
+</td>
+  </tr>
+    <tr  id="personrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>人员租赁结算</b></legend>
+				<div id="itemTable"></div>
+			</fieldset>
+		</td>
+    </tr>
+
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      			 <input type="hidden" class="txt" id="id" name="basic[id]"  value="{id}"/>
+      		   <input  type="submit" class="txt_btn_a"  value=" 保  存 "/>&nbsp;&nbsp;
+ 		  		<input id="subAudit"  type="submit" class="txt_btn_a" value=" 提交确认 " onclick="toSubmit();"/>&nbsp;&nbsp;
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+   </form>
+</body>
+</html>

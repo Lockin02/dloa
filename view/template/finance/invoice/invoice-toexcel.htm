@@ -1,0 +1,50 @@
+<html>
+<title>导入EXCEL数据</title>
+	<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="js/common/businesspage.js"></script>
+
+    <script type="text/javascript" src="view/template/finance/invoice/js/invoice-excel.js"></script>
+<body>
+<div class="main_head">
+      <span class="main_head_title">
+            导入发票
+      </span>
+</div>
+<form action="?model=finance_invoice_invoice&action=upExcel" ENCTYPE="multipart/form-data" method="POST" id="form1" onsubmit="return checkform();">
+<input type="hidden" name="leadExcel" value="true">
+<input type="hidden" name="isCheck" id="isCheck" value="1">
+
+<table class="form_main_table" align="center" width="90%" border="0">
+	<tr>
+		<td class="form_text_left">
+			<label for="file">上传文件:</label>
+		</td>
+		<td class="form_text_right">
+		    <input type="file" class="txt" name="inputExcel" id="inputExcel"/>
+		    <input type="button" class="txt_btn_a" value="下载模版" onclick="location='upfile/开票记录导入表.xls'">
+            <input type="submit" class="txt_btn_a" onclick="changeIsCheck(1)" value=" 导 入[1]">
+            <input type="submit" class="txt_btn_a" onclick="changeIsCheck(2)" value=" 导 入[2]">
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_right">
+		</td>
+		<td class="form_text_right">
+			注：<br/>
+			<span class="red">导入类型[1]：此类型导入需要关联合同编号，若编号不存在于合同系统中则导入失败。</span><br/>
+			<span class="red">导入类型[2]：此类型导入不需要关联任何业务编号，可直接导入开票记录。</span><br/>
+			导入之前请确保excel格式与模板格式保持一致。<br/>
+			开票记录关联合同以鼎利合同号为准。<br/>
+			<span class="red">导入功能暂不支持单元格公式计算。</span>
+		</td>
+	</tr>
+	<tr id="loading" style="display:none">
+		<td colspan="2">
+			<img src="images/loading1.gif">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

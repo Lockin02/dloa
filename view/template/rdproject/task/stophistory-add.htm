@@ -1,0 +1,117 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+<link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
+<link rel="stylesheet" type="text/css" href="js/thickbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="js/jquery/style/Validator.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<script type="text/javascript" src="js/jquery/formValidator.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formValidatorRegex.js"
+	charset="UTF-8"></script>
+<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="js/common/businesspage.js"></script>
+
+<title>暂停任务</title>
+</head>
+<body>
+
+<div class="form_main">
+<form action="?model=rdproject_task_stophistory&action=stop"
+	method="POST" name="form1" id="form1" onsubmit="">
+<table class="form_main_table">
+	<tr>
+		<div class="main_head">
+		    <span class="main_head_title">
+		      	<font color="blue">暂停任务</font>
+		    </span>
+		</div>
+	</tr>
+	<tr>
+		<td class="form_text_left">预计恢复日期</td>
+		<td class="form_view_right">
+		<input type="hidden" id="beginTime" value="{beginTime}"/>
+		<input class="txt" type="text"name="stophistory[rebackTime]" onfocus="WdatePicker()"id="rebackTime">
+		<span class='red'>[*]</span>
+		<br/>
+		<div id="rebackTimeTip" class="dbcolumnTipTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left">暂停原因</td>
+		<td class="form_view_right"><input type="hidden"
+			name="stophistory[isAct]" value="0"> <input id="taskId"
+			type="hidden" name="stophistory[taskId]" value="{taskId}"> <input
+			id="lastStatus" type="hidden" name="stophistory[lastStatus]"
+			value="{lastStatus}"> <textarea class="txt_txtarea_font"
+			name="stophistory[stopReason]" id="stopReason"></textarea> <span
+			class='red'>[*]</span> <br />
+		<div id="stopReasonTip" class="dbcolumnTipTxt"></div>
+		</td>
+	</tr>
+	<tr>
+		<td class="form_text_left"></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value="保存" class="txt_btn_a">
+		<input type="button" value="返回" class="txt_btn_a"
+			onclick="self.parent.tb_remove();"></td>
+	</tr>
+</table>
+</form>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$.formValidator.initConfig({
+		formid:"form1",
+		onerror:function(msg){
+		},
+		onsuccess:function(){
+			if(confirm("你输入成功,确定提交吗?")){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	});
+	 $("#rebackTime").formValidator({
+        onshow: "请选择预计恢复日期,预计恢复日期不能早于任务计划开始时间(" + $('#beginTime').val() + ")",
+        onfocus: "请选择日期",
+        oncorrect: "你输入的日期合法"
+    }).inputValidator({
+        min: "1900-01-01",
+        max: "2100-01-01",
+        type: "date",
+        onerror: "请输入合法的日期,并预计恢复日期不能为空"
+	}).compareValidator({
+		desid : "beginTime",
+		operateor : ">=",
+		onerror : "预计恢复日期不能早于任务计划开始时间(" + $('#beginTime').val() + ")"
+    });
+    $("#stopReason").formValidator({
+        onshow: "请输入暂停原因",
+        onfocus: "请输入",
+        oncorrect: "你输入的内容合法"
+    }).inputValidator({
+        min: "2",
+        max: "100000",
+		empty : {
+			leftempty : false,
+			rightempty : false,
+			emptyerror : "名称两边不能为空"
+		},
+        onerror: "暂停原因不能为空"
+    });
+
+
+})
+
+	</script>
+</body>
+</html>

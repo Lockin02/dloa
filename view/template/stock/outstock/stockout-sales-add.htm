@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新增销售出库单</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockinfo.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outplan.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-ship.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-stockout.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-inventory.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-return.js"></script>
+    <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-exchange.js"></script>
+
+    <script type="text/javascript" src="{#jsPath#}/stockout-stockinfo-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-customer-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-productinfo-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-contract-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-reldoc-combogrid.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-common.js?v=201711"></script>
+    <script type="text/javascript" src="{#jsPath#}/stockout-sales-add.js"></script>
+
+    <script type="text/javascript">
+        function reloadRelDocType() {
+            $("#relDocCode").yxcombogrid_outplan("remove");
+            $("#relDocCode").yxcombogrid_ship("remove");
+            $("#relDocCode").yxcombogrid_stockout("remove");
+            $("#relDocCode").yxcombogrid_return("remove");
+            $("#relDocCode").yxcombogrid_exchange("remove");
+            $("#relDocCode").yxcombogrid_allcontract("remove");
+            $("#contractCode").attr("readOnly", false);
+            $("#contractCode").yxcombogrid_allcontract("remove");
+            reloadContractCombo();
+
+            $("#relDocCode").val("");
+            $("#relDocId").val("");
+            reloadItems();
+
+            if ($("#relDocType").val() == "XSCKFHD") {//发货单
+                $("#contractCode").attr("readOnly", true);
+                $("#contractCode").yxcombogrid_allcontract("remove");
+                reloadShipCombo();
+            }
+            if ($("#relDocType").val() == "XSCKFHJH") {//发货计划
+                $("#contractCode").attr("readOnly", true);
+                $("#contractCode").yxcombogrid_allcontract("remove");
+                reloadOutplanCombo();
+            }
+            if ($("#relDocType").val() == "XSCKXSCK") {//销售出库
+                reloadBlueStockoutCombo();
+            }
+            if ($("#relDocType").val() == "XSCKTHTZ") {//退料单
+                $("#contractCode").attr("readOnly", true);
+                $("#contractCode").yxcombogrid_allcontract("remove");
+                reloadOrderbackCombo();
+            }
+            if ($("#relDocType").val() == "XSCKHHSQ") {//换货单
+                $("#contractCode").attr("readOnly", true);
+                $("#contractCode").yxcombogrid_allcontract("remove");
+                reloadExchangeCombo();
+            }
+            if ($("#relDocType").val() == "XSCKDLHT") {//鼎利合同
+                $("#contractCode").attr("readOnly", true);
+                $("#contractCode").yxcombogrid_allcontract("remove");
+                reloadAllOrderCombo();
+            }
+        }
+
+        $(document).ready(function () {
+            checkRelDocType();
+            $("#relDocType").bind("change", function () {
+                reloadRelDocType();
+            });
+            $("#deptName").yxselect_dept({
+                hiddenId: 'deptCode'
+            });
+            $("#salesmanName").yxselect_user({
+                hiddenId: 'salesmanCode'
+            });
+            $("#chargeName").yxselect_user({
+                hiddenId: 'chargeCode',
+                isGetDept: [true, "deptCode", "deptName"]
+            });
+            //判断是否有审核权限
+            if ("{auditLimit}" != "1") {
+                $("#auditButton").hide();
+            }
+            $("#tableDiv").width(document.documentElement.clientWidth - 30);
+        });
+    </script>
+</head>
+<body>
+<form id="form1" method="post" action="?model=stock_outstock_stockout&action=add" onsubmit="return checkForm(false);">
+<table class="form_main_table">
+<tr>
+    <td colspan="4">
+        <div class="main_head">
+            <span class="main_head_title">
+                销售出库单
+            </span>
+            <span style="float:right;padding-right:10px;">
+                    <font color="blue">蓝色</font><input type="radio" name="bluered" value="0" onclick="redBlueClick(this);" checked/>
+                    <font color="red">红色</font><input type="radio" name="bluered" value="1" onclick="redBlueClick(this);"/>
+            </span>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">单据日期</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[auditDate]" id="auditDate" onfocus="WdatePicker()" value="{auditDate}"/>
+    </td>
+    <td class="form_text_left">出库用途</td>
+    <td class="form_text_right">
+        <select class="select" name="stockout[toUse]">
+            {toUse}
+        </select>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">源单类型</td>
+    <td class="form_text_right">
+        <select class="select" name="stockout[relDocType]" id="relDocType">
+            {relDocType}
+        </select>
+    </td>
+    <td class="form_text_left">源单编号</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[relDocCode]" id="relDocCode"/>
+        <input type="hidden" class="txt" name="stockout[relDocId]" id="relDocId"/>
+        <input type="hidden" class="txt" name="stockout[relDocName]" id="relDocName"/>
+        <input type="hidden" class="txt" name="stockout[rObjCode]" id="rObjCode"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">合同/订单编号</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[contractCode]" id="contractCode"/>
+        <input type="hidden" name="stockout[contractId]" id="contractId"/>
+        <input type="hidden" name="stockout[contractType]" id="contractType"/>
+        <input type="hidden" name="stockout[contractObjCode]" id="contractObjCode"/>
+        <input type="button" value="审批信息" class="txt_btn_a" onclick="viewContracAudit()"/>
+    </td>
+    <td class="form_text_left">合同/订单名称</td>
+    <td class="form_text_right">
+        <input type="text" class="readOnlyTxtNormal" readonly name="stockout[contractName]" id="contractName"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">客户(单位)名称</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[customerName]" id="customerName"/>
+        <input type="hidden" class="txt" name="stockout[customerId]" id="customerId"/>
+    </td>
+    <td class="form_text_left">发料仓库</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[stockName]" id="stockName"/>
+        <input type="hidden" class="txt" name="stockout[stockId]" id="stockId"/>
+        <input type="hidden" class="txt" name="stockout[stockCode]" id="stockCode"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">发货联系人</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[linkmanName]" id="linkmanName"/>
+        <input type="hidden" class="txt" name="stockout[linkmanId]" id="linkmanId"/>
+    </td>
+    <td class="form_text_left">发货联系人电话</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[linkmanTel]"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">发货地址</td>
+    <td class="form_text_right" colspan="3">
+        <input type="text" class="txt" name="stockout[saleAddress]" style="width:80%;"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">发货员</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[salesmanName]" id="salesmanName"/>
+        <input type="hidden" name="stockout[salesmanCode]" id="salesmanCode"/>
+    </td>
+    <td class="form_text_left">所在部门</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[deptName]" id="deptName"/>
+        <input type="hidden" name="stockout[deptCode]" id="deptCode"/>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">经办人</td>
+    <td class="form_text_right">
+        <input type="text" class="txt" name="stockout[chargeName]" id="chargeName"/>
+        <input type="hidden" name="stockout[chargeCode]" id="chargeCode"/>
+    </td>
+    <td class="form_text_left">所属板块</td>
+    <td class="form_text_right">
+        <select class="select" name="stockout[module]" id="module">
+        {module}
+        </select>
+    </td>
+</tr>
+<tr>
+    <td class="form_text_left">备注</td>
+    <td colspan=3 class="form_text_right">
+        <textarea style="width:80%" name="stockout[remark]"></textarea>
+    </td>
+</tr>
+<tr>
+    <td colspan="4">
+        <div id="tableDiv" style="width: 1000px; height: 300px; overflow-y: auto; overflow-x: auto">
+            <table class="main_table" id="itemtable">
+                <thead>
+                    <tr>
+                        <td colspan="16" class="form_header">
+                            物料清单&nbsp;&nbsp; <span id="proTipInfo" style="color:#6CA6CD;text-align:center"></span>
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th>
+                            <img src="images/add_item.png" align="absmiddle" onclick="addItems();" title="新增物料" alt="新增物料"/>
+                            <input type="hidden" id="itemscount" value="0"/>
+                        </th>
+                        <th>序号</th>
+                        <th>物料编码</th>
+                        <th>物料分类</th>
+                        <th>k3编码</th>
+                        <th>物料名称</th>
+                        <th>规格型号</th>
+                        <th>单位</th>
+                        <th>应发数量</th>
+                        <th>实发数量</th>
+                        <th>发货仓库</th>
+                        <th>序列号</th>
+                        <th>单位成本</th>
+                        <th>成本</th>
+                        <th>销售单价</th>
+                        <th>销售金额</th>
+                    </tr>
+                </thead>
+                <tbody id="itembody">
+                </tbody>
+            </table>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td colspan="4">
+        <div style="height: 200px; overflow-y: auto; overflow-x: auto">
+            <table class="main_table" id="packtable">
+                <thead>
+                    <tr>
+                        <td colspan="6" class="form_header">
+                            包装物信息&nbsp;
+                        </td>
+                    </tr>
+                    <tr class="main_tr_header">
+                        <th>
+                            <img src="images/add_item.png" align="absmiddle" onclick="addPackItems();" title="新增包装物"
+                                 alt="新增包装物"/>
+                            <input type="hidden" id="packcount" value="0"/>
+                        </th>
+                        <th>序号</th>
+                        <th>包装物编号</th>
+                        <th>包装物名称</th>
+                        <th>数量</th>
+                        <th>成本</th>
+                    </tr>
+                </thead>
+                <tbody id="packbody"></tbody>
+            </table>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td colspan="4">
+        <input type="hidden" name="stockout[isRed]" id="isRed" value="0"/>
+        <input type="hidden" name="stockout[docType]" id="docType" value="CKSALES"/>
+        <input type="hidden" name="stockout[docStatus]" id="docStatus" value="WSH"/>
+        <input type="submit" value=" 保 存 " class="txt_btn_a"/>
+        <input type="button" id="auditButton" value=" 审 核 " class="txt_btn_a" onclick="return confirmAudit();"/>
+        <input type="button" value=" 返 回 " class="txt_btn_a" onclick="closeFun()"/>
+    </td>
+</tr>
+</table>
+<br>
+<div align="center"><font color="blue">提示:双击物料实发数量可以选择序列号!</font></div>
+</form>
+</body>
+</html>

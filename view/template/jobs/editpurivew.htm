@@ -1,0 +1,59 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<title>设置职位权限</title>
+<style type="text/css">
+*{padding: 0; margin: 0;}
+#list { padding-left: 10px; width:1000px;font-size: 10pt;}
+#list .title {width:1000px;color: red;font-weight:700; line-height: 25px; height: 25px;}
+$list ul {width:1000px;}
+#list ul li {padding-left: 10px; float: left; width:145px;}
+#list .submit {width: 100%; text-align: center;}
+#list .msg {color: red; width: 95%; line-height: 50px; text-align: center;}
+.menulist { width:1000px;float: left; border-bottom:1px solid #D3E5FA;}
+</style>
+<script type="text/javascript">
+var jobsid = '{id}';
+function check(id)
+{
+	var checked = $('#title_'+id+' input[type=checkbox]').eq(0).attr("checked");
+	if($('#title_'+id+' input[type=checkbox]').attr("disabled")==false)
+	{
+		$('#title_'+id+' input[type=checkbox]').attr("checked",checked);
+	}
+}
+function show_control(id)
+{
+	if ($('#control_'+id).html()==null)
+	{
+		var rand=Math.random()*100000;
+		$.get('ajax.php',{model:'jobs',action:'show_user_control_func',tid:id,jobsid:jobsid,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				data +='<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>'
+				$('#list').append('<div id="control_'+id+'" style="display:none">'+unescape(data)+'</div>');
+				tb_show('设置权限','#TB_inline_html?inlineId=control_'+id+'&width=400',false);
+			}
+		}
+		)
+	}else{
+		tb_show('设置权限','#TB_inline_html?inlineId=control_'+id+'&width=400',false);
+	}
+}
+</script>
+</head>
+<body>
+<form method="POST" action="?model=jobs&action=save_func&jobs_id={id}">
+<div id="list">
+	{list}
+</div>
+</form>
+</body>
+</html>

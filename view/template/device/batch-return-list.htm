@@ -1,0 +1,266 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>批量归还</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+<script type="text/javascript" src="js/jquery-autocomplete/jquery.autocomplete.min.js"></script>
+ <script language="javascript" type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+<link rel="stylesheet" href="js/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+</head>
+<body>
+<br />
+<form method="POST" action="?model=device_borrow&action=show_return_list" onSubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="" />
+<input type="hidden" id="operatorid" name="operatorid" value="{operatorid}" />
+<input type="hidden" id="dept_id" name="dept_id" value="" />
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="mytable">
+	<tr>
+		<td>归还人：<input type="text" onBlur="get_userid();" id="username"  name="username" value="" />
+		<span id="_username">*</span>
+		</td>
+		<td>所属部门：<input type="text" readonly id="dept_name" name="dept_name" value="" /></td>
+	</tr>
+	<tr>
+		<td>办理人：<input type="text" readonly id="operator" name="operator" value="{operator}" /></td>
+		<td>归还库存：{area}</td>
+	</tr>
+    <tr>
+         <td>
+            归还日期：<input type="text" id="createDate" name="createDate" readonly onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" value="{createDate}" /><span id="_createDate">*</span> 
+                </td>
+                <td >
+                   
+                </td>
+             
+            </tr>
+	<tr>
+		<td>邮件接收人：<input type="text" id="tousername" name="tousername" value="" /><span id="_tousername">（真实姓名）</span></td>
+		<td>邮件列表：<textarea cols="50" id="email" name="email" rows="5"></textarea>
+			<span id="_email">每行一个邮件地址</span>
+		</td>
+	</tr>
+</table>
+<br />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" id="list">
+	<tr>
+    	<td align="center"><input type="submit" value=" 下一步 " /> <input type="button" onClick="history.back();" value=" 返回 " /></td>
+    </tr>
+</table>
+</form>
+<div id="sug"></div>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		
+	    $('input[type=checkbox][disabled=false]').attr('checked', true);
+		
+	    var s = $('#list input[type=checkbox][name=box[]]').get();
+	    for (var i = 0; i < s.length; i++) {
+	        if (s[i].disabled == true) {
+	            s[i].checked = false;
+	        }
+	    }
+		function options(width)
+		{
+			return {
+				multiple: false,
+				mustMatch: true,
+				width: (width ? width : 150),
+				max: 200,
+				parse: function(data)
+				{
+					data = unescape(data).split(',');
+					var rows = [];
+					for (var i = 0; i < data.length; i++) 
+					{
+						rows[i] = {
+							data: data[i],
+							value: data[i],
+							result: data[i]
+						};
+					}
+					return rows;
+				},
+				formatItem: function(row, i, n)
+				{
+					return row
+				},
+				formatResult: function(row)
+				{
+					return row;
+				}
+				
+			};
+		}
+	function set_url(table,field,return_field)
+	{
+		return "ajax.php?model=autocomplete&action=GetField&table="+table+"&field="+field+"&return_field="+return_field;
+	}
+	$("#username").autocomplete(set_url('user','user_name','username'),options()).result(function(evnet,data,formatted)
+	{
+		if (data)
+		{
+			var username = unescape(data);
+			rand = Math.random(0,99999);
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+			function(data)
+			{
+				if (data)
+				{
+					$('#userid').val(unescape(data));
+					get_dept(unescape(data));
+					get_email(username);
+				}
+			}
+			);
+		}
+	});
+	$("#tousername").autocomplete(set_url('user','user_name','username'),options()).result(function(evnet,data,formatted)
+	{
+		if (data)
+		{
+			var username = unescape(data);
+			get_email(username);
+		}
+	});
+	
+	});
+function check()
+{
+	if ($('#userid').val()=='')
+	{
+		$('#_username').html('您填写的用户名不正确！');
+		$('#username').focus();
+		return false;
+	}else{
+		$('#_username').html('*');
+	}
+	if ($('#createDate').val() == '') {
+                $('#_createDate').html('请选择归还日期！');
+                return false;
+	}
+	else {
+		$('#_createDate').html('*');
+	}	
+	var s = $('input[type=checkbox][name=id[]]').get();
+	var selected = false;
+	for (var i=0;i<s.length;i++)
+	{
+		if (s[i].checked == true)
+		{
+			selected = true;
+			break;
+		}
+	}
+	if (selected == false)
+	{
+		alert('最少需要选择一条数据！');
+		return false;
+	}
+	return true;
+
+}
+function get_userid()
+{
+	var username = $('#username').val();
+	if (username == '')
+	{
+		$('#_username').html('领用人姓名不能为空！');
+	}else{
+		var rand=Math.random()*100000;
+		$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#userid').val(unescape(data));
+				$('#_username').html('*');
+				get_dept(unescape(data));
+			}else{
+				$('#_username').html('姓名不正确！');
+				$('#userid').val('');
+				$('#dept_id').val('');
+				$('#dept_name').val('');
+			}
+		}
+
+		)
+	}
+}
+function get_dept(userid)
+{
+	if (userid)
+	{
+		$.post('ajax.php',{model:'user',action:'get_dept',userid:userid},
+		function (data)
+		{
+			if (data)
+			{
+				data = unescape(data);
+				arr = data.split('|');
+				$('#dept_id').val(arr[0]);
+				$('#dept_name').val(arr[1]);
+			}
+		}
+		)
+	}
+}
+function box()
+{
+	var che = $('#box input[type=checkbox]').attr('checked');
+	var v = $('#list input[type=checkbox][name=id[]]').get();
+	for(var i=0;i<v.length;i++)
+	{
+		if (v[i].disabled == true)
+		{
+			v[i].checked = false;
+		}else{
+			v[i].checked = che;
+		}
+	}
+}
+ function get_email(username){
+            if (username != '') {
+                var rand = Math.random() * 100000;
+                $.post('ajax.php', {
+                    model: 'user',
+                    action: 'get_email',
+                    username: username,
+                    rand: rand
+                }, function(data){
+                    if (data) {
+                        var emaillist = $('#email').val();
+						var re = "\/"+unescape(data)+"\\n\/";
+						emaillist = emaillist.replace(eval(re),'');
+						$('#email').val(emaillist+unescape(data) + "\r\n");
+                        $('#tousername').val('');
+                        $('#_tousername').html('（真实姓名）');
+                    }
+                    else {
+                        $('#_tousername').html('该用户姓名不存在！');
+                    }
+                });
+            }
+        }
+function quite(id)
+{
+	var amount = Number($('#amount_'+id).html());
+	var rt_num = Number($('#rt_num_'+id).html());
+	var return_num = Number($('#return_num_'+id).val());
+	if (return_num >(amount - rt_num))
+	{
+		alert('您输入的归还数量大于借出数量！');
+		$('#return_num_'+id).val('').focus();
+	}
+}
+	function set_all(checked,id)
+	{
+		$('#type_'+id+' input[type=checkbox]:[disabled=false]').attr('checked',checked);
+	}
+</script>
+</body>
+</html>

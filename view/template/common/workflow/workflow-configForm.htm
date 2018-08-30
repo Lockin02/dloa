@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+<head>
+    <title>工作流配置页</title>
+    {#commonInclude#}
+    <script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="js/jeasyui_newest/themes/default/easyui.css"/>
+    <script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+    <style>
+        #main {position: fixed;left: 0;right: 0;bottom: 0;top: 0;overflow-x: auto;z-index: -1;}
+        #left {width: 200px;padding: 5px;border-right: #eee solid 1px;position: fixed;left: 0;left: 0;bottom: 0;top: 0;overflow: auto;}
+        #right {padding: 5px;position: fixed;left: 210px;bottom: 0;top: 0;right: 0;overflow: auto;z-index: 990;}
+        .hidden {display: none;}
+        .long_input {width:90%;}
+        fieldset{margin-bottom: 15px;}
+    </style>
+
+    <!-- 自定义JS脚本 -->
+    <script type="text/javascript" src="view/template/common/workflow/js/workflow-configFormList.js" ></script>
+
+</head>
+<body>
+
+<div id='main'>
+
+    <!-- 左侧 -->
+    <div id='left' >
+        <h2 style="height:35px;width:200px;background:white;position:fixed;top:0;left:0;padding-top:10px;text-align:center;">
+            表单类型
+        </h2>
+        <ul id="formData_list" style="margin-top: 40px"></ul>
+    </div>
+    <!-- 右侧 -->
+    <div id='right' >
+        <!-- 审批流程列表 -->
+        <input type="hidden" id="openFormName"/>
+        <input type="hidden" id="openFormId"/>
+        <div id='flow-list'></div>
+
+        <!-- 查看 & 编辑 表单弹框 (开始) -->
+        <div id='viewForm_Box' style="display:none;">
+            <fieldset>
+                <legend class="legend">基 本 配 置</legend>
+                <table class="form_main_table" style="width:100%;">
+                    <tbody>
+                    <tr>
+                        <td class="form_text_left">类型名称</td>
+                        <td class="form_text_right">
+                            <span id="view_formName"></span>
+                        </td>
+                        <td class="form_text_left">是否是变更流程</td>
+                        <td class="form_text_right">
+                            <span id="view_isChangeFlow"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">加密编码</td>
+                        <td class="form_text_right">
+                            <span id="view_encryptKey"></span>
+                        </td>
+                        <td class="form_text_left">对应变更编码</td>
+                        <td class="form_text_right">
+                            <span id="view_changeCode"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">实际使用的工作流名称</td>
+                        <td class="form_text_right">
+                            <span id="view_changeTrueFlow"></span>
+                        </td>
+                        <td class="form_text_left">变更审批流使用过滤编码</td>
+                        <td class="form_text_right">
+                            <span id="view_changeFilterCode"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">办理页面地址</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="view_viewUrl"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </fieldset>
+
+            <fieldset>
+                <legend class="legend">获 取 摘 要 配 置</legend>
+                <table class="form_main_table" style="width:100%;">
+                    <tr>
+                        <td class="form_text_left">业务呈现信息</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="view_infomation"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">业务数据查询脚本</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="view_infomationSql"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">业务数据查询类</td>
+                        <td class="form_text_right">
+                            <span id="view_infomationClass"></span>
+                        </td>
+                        <td class="form_text_left">业务数据查询函数</td>
+                        <td class="form_text_right">
+                            <span id="view_infomationFun"></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <legend class="legend">审 批 配 置</legend>
+                <table class="form_main_table" style="width:100%;">
+                    <tr>
+                        <td class="form_text_left">流程办理调用邮件配置</td>
+                        <td class="form_text_right">
+                            <span id="view_mailCode"></span>
+                        </td>
+                        <td class="form_text_left" style="width:22%;">是否每次办理完都执行回调</td>
+                        <td class="form_text_right" style="width:25%;">
+                            <span id="view_callbackEachStep"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">流程通过后执行脚本</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="view_passSql"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">流程办理通过回调类</td>
+                        <td class="form_text_right">
+                            <span id="view_passCallbackClass"></span>
+                        </td>
+                        <td class="form_text_left">流程办理通过回调函数</td>
+                        <td class="form_text_right">
+                            <span id="view_passCallbackFun"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">流程打回后执行脚本</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="view_disPassSql"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">流程办理打回回调类</td>
+                        <td class="form_text_right">
+                            <span id="view_dispassCallbackClass"></span>
+                        </td>
+                        <td class="form_text_left">流程办理打回回调函数</td>
+                        <td class="form_text_right">
+                            <span id="view_dispassCallbackFun"></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+
+        <div id='editForm_Box' style="display:none;">
+            <form id="editForm" method="post" action="?model=common_workflow_workflow&action=editForm">
+                <fieldset>
+                    <legend class="legend">基 本 配 置</legend>
+                    <table class="form_main_table" style="width:100%;">
+                        <tbody>
+                        <tr>
+                            <td class="form_text_left">类型名称</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="formName" name="workflow[FORM_NAME]"/>
+                                <input type="hidden" class="txt" id="formId" name="workflow[FORM_ID]"/>
+                            </td>
+                            <td class="form_text_left">是否是变更流程</td>
+                            <td class="form_text_right">
+                                <input type="radio" name="workflow[isChangeFlow]" value="1"> 是 &nbsp
+                                <input type="radio" name="workflow[isChangeFlow]" value="0"> 否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">加密编码</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="encryptKey" name="workflow[encryptKey]"/>
+                            </td>
+                            <td class="form_text_left">对应变更编码</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="changeCode" name="workflow[changeCode]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">实际使用的工作流名称</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="changeTrueFlow" name="workflow[changeTrueFlow]"/>
+                            </td>
+                            <td class="form_text_left">变更审批流使用过滤编码</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="changeFilterCode" name="workflow[changeFilterCode]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">办理页面地址</td>
+                            <td class="form_text_right" colspan="3">
+                                <input type="text" id="viewUrl" class="txt long_input" name="workflow[viewUrl]"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend class="legend">获 取 摘 要 配 置</legend>
+                    <table class="form_main_table" style="width:100%;">
+                        <tr>
+                            <td class="form_text_left">业务呈现信息</td>
+                            <td class="form_text_right" colspan="3">
+                                <textarea class="txt_txtarea_font600" id="infomation" name="workflow[infomation]" style="resize: none"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">业务数据查询脚本</td>
+                            <td class="form_text_right" colspan="3">
+                                <textarea class="txt_txtarea_font600" id="infomationSql" name="workflow[infomationSql]" style="resize: none"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">业务数据查询类</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="infomationClass" name="workflow[infomationClass]"/>
+                            </td>
+                            <td class="form_text_left">业务数据查询函数</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="infomationFun" name="workflow[infomationFun]"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend class="legend">审 批 配 置</legend>
+                    <table class="form_main_table" style="width:100%;">
+                        <tr>
+                            <td class="form_text_left">流程办理调用邮件配置</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="mailCode" name="workflow[mailCode]"/>
+                            </td>
+                            <td class="form_text_left">是否每次办理完都执行回调</td>
+                            <td class="form_text_right">
+                                <input type="radio" name="workflow[callbackEachStep]" value="1"> 是 &nbsp
+                                <input type="radio" name="workflow[callbackEachStep]" value="0"> 否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">流程通过后执行脚本</td>
+                            <td class="form_text_right" colspan="3">
+                                <textarea class="txt_txtarea_font600" id="passSql" name="workflow[PASS_SQL]" style="resize: none"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">流程办理通过回调类</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="passCallbackClass" name="workflow[passCallbackClass]"/>
+                            </td>
+                            <td class="form_text_left">流程办理通过回调函数</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="passCallbackFun" name="workflow[passCallbackFun]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">流程打回后执行脚本</td>
+                            <td class="form_text_right" colspan="3">
+                                <textarea class="txt_txtarea_font600" id="disPassSql" name="workflow[DISPASS_SQL]" style="resize: none"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_text_left">流程办理打回回调类</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="dispassCallbackClass" name="workflow[dispassCallbackClass]"/>
+                            </td>
+                            <td class="form_text_left">流程办理打回回调函数</td>
+                            <td class="form_text_right">
+                                <input type="text" class="txt" id="dispassCallbackFun" name="workflow[dispassCallbackFun]"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <table class="form_main_table" style="width:100%;">
+                    <tr>
+                        <td class="txt_btn" colspan="4">
+                            <!--<input type="submit" class="txt_btn_a" value=" 提  交 "/>-->
+                            <input type="submit" class="txt_btn_a" value=" 保  存 "/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <!-- 查看 & 编辑 表单弹框 (结束) -->
+
+        <!-- 查看 & 编辑/添加 流程弹框 (开始) -->
+        <div id='viewFlow_Box' style="display:none;">
+            <fieldset>
+                <legend class="legend">基 本 配 置</legend>
+                <table class="form_main_table" style="width:100%;">
+                    <tbody>
+                    <tr>
+                        <td class="form_text_left">流程名称</td>
+                        <td class="form_text_right">
+                            <span id="flowView_FLOW_NAME"></span>
+                        </td>
+                        <td class="form_text_left">创建时间</td>
+                        <td class="form_text_right">
+                            <span id="flowView_Idate"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">公文类别</td>
+                        <td class="form_text_right">
+                            <span id="flowView_className"></span>
+                        </td>
+                        <td class="form_text_left">流程类别</td>
+                        <td class="form_text_right">
+                            <span id="flowView_flowType"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">归档人</td>
+                        <td class="form_text_right">
+                            <span id="flowView_EnterUserName"></span>
+                        </td>
+                        <td class="form_text_left">创建人</td>
+                        <td class="form_text_right">
+                            <span id="flowView_CreatorName"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">金额下限</td>
+                        <td class="form_text_right">
+                            <span id="flowView_MinMoney"></span>
+                        </td>
+                        <td class="form_text_left">金额上限</td>
+                        <td class="form_text_right">
+                            <span id="flowView_MaxMoney"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </fieldset>
+
+            <fieldset>
+                <legend class="legend">信 息 筛 选 配 置</legend>
+                <table class="form_main_table" style="width:100%;">
+                    <tr>
+                        <td class="form_text_left">审批流筛选脚本</td>
+                        <td class="form_text_right" colspan="3">
+                            <span id="flowView_filtingSql"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form_text_left">审批流筛选类</td>
+                        <td class="form_text_right">
+                            <span id="flowView_filtingClass"></span>
+                        </td>
+                        <td class="form_text_left">审批流筛选方法</td>
+                        <td class="form_text_right">
+                            <span id="flowView_filtingFun"></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <legend class="legend" onclick="showAndHide('baseImg','flowSteps')">&nbsp;&nbsp;&nbsp;流 程 步 骤
+                    <img src="images/icon/info_up.gif" id="baseImg"/>
+                </legend>
+                <table class="form_main_table" id="flowSteps" style="width:100%;"></table>
+            </fieldset>
+        </div>
+
+        <div id='modifyFlow_Box' style="display:none;">
+            <iframe id="headIframe" name="headIframe" scrolling="auto" frameborder="0" src="" style="width:100%;height:100%;"></iframe>
+        </div>
+        <!-- 查看 & 编辑/添加 流程弹框 (结束) -->
+    </div>
+
+</div>
+</body>
+</html>

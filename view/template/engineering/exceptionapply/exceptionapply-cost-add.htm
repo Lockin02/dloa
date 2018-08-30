@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>新增工程超权限申请</title>
+ 	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
+    <script type="text/javascript" src="{#jsPath#}/exceptionapply-common.js" ></script>
+</head>
+
+<body>
+	<form id="form1" method="post" action="?model=engineering_exceptionapply_exceptionapply&action=add" onsubmit="return checkForm();">
+		<table class="form_main_table">
+      		<tr>
+      			<td colspan="4">
+            		<div class="main_head2">
+             			<span class="main_head_title">
+               				新增工程超权限申请
+             			</span>
+            		</div>
+            	</td>
+			</tr>
+       		<tr>
+	      		<td class="form_text_left">申请类型</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="readOnlyTxtNormal" value="{applyTypeCN}" readonly="readonly"/>
+					 <input type="hidden" name="exceptionapply[applyType]" id="applyType" value="{applyType}"/>
+	      		</td>
+	      		<td class="form_text_left">
+	      			申请金额
+	      		</td>
+	      		<td class="form_text_right" >
+	      			 <input type="text" class="txt formatMoney" id="applyMoney" name="exceptionapply[applyMoney]" />
+	      		</td>
+	        </tr>
+       		<tr>
+	      		<td class="form_text_left">
+	      			<span class="blue">申请日期</span>
+      			</td>
+	      		<td class="form_text_right" >
+	      			<input type="text" class="txt" id="applyDate" name="exceptionapply[applyDate]" value="{applyDate}" onfocus="WdatePicker()"/>
+	      		</td>
+	      		<td class="form_text_left">
+	      			<span class="blue">申 请 人</span>
+	      		</td>
+	      		<td class="form_text_right" >
+					 <input type="hidden" name="exceptionapply[deptId]" id="deptId" value="{deptId}"/>
+					 <input type="hidden" name="exceptionapply[deptName]" id="deptName" value="{deptName}"/>
+					 <input type="hidden" name="exceptionapply[applyUserId]" id="applyUserId" value="{applyUserId}"/>
+					 <input type="text" class="txt" name="exceptionapply[applyUserName]" id="applyUserName" value="{applyUserName}" readonly="readonly"/>
+	      		</td>
+	        </tr>
+	        <tr>
+	      		<td class="form_text_left">归属项目</td>
+	      		<td class="form_text_right">
+	      			<input type="text" class="txt" id="projectName" name="exceptionapply[projectName]" />
+	      			<input type="hidden" id="projectCode" name="exceptionapply[projectCode]" />
+					<input type="hidden" id="projectId" name="exceptionapply[projectId]" />
+	      		</td>
+	      		<td class="form_text_left">
+	      			审 核 人
+	      		</td>
+	      		<td class="form_text_right">
+					 <input type="hidden" name="exceptionapply[ExaUserId]" id="ExaUserId"/>
+					 <input type="text" class="txt" name="exceptionapply[ExaUserName]" id="ExaUserName" readonly="readonly"/>
+	      		</td>
+	       	</tr>
+	        <tr>
+	      		<td class="form_text_left">适用范围</td>
+	      		<td class="form_text_right" colspan="3">
+	      			<select class="select" id="range" name="exceptionapply[useRange]">
+	      				{useRange}
+	      			</select>
+	      		</td>
+        	</tr>
+       		<tr>
+	      		<td class="form_text_left">
+	      			<span class="blue">申请原因</span>
+      			</td>
+	      		<td class="form_text_right" colspan="3">
+	      			 <textarea class="txt_txtarea_800" rows="4" name="exceptionapply[applyReson]" id="applyReson"></textarea>
+	      		</td>
+            </tr>
+	        <tr>
+	      		<td class="form_text_left">备注信息</td>
+	      		<td class="form_text_right" colspan="3">
+	      			 <textarea class="txt_txtarea_800" rows="4" name="exceptionapply[remark]" id="remark"></textarea>
+	      		</td>
+	        </tr>
+			<tr>
+	      		<td class="txt_btn" colspan="4">
+	            	<input type="hidden" id="ExaStatus" name="exceptionapply[ExaStatus]" value="待提交" />
+	   		    	<input type="submit" class="txt_btn_a" onclick="setExaStatus('审核中');" value="提交审核"/>
+	   		    	<input type="submit" class="txt_btn_a" onclick="setExaStatus('待提交');" value=" 保  存 "/>
+	      		    <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="self.parent.tb_remove();"/>
+	      		</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

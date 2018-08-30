@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<title>添加人员</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<form method="post" action="?model=sell_staff&action=add" onsubmit="return check();">
+	<input type="hidden" id="userid" name="userid" value="" />
+<table class="table" width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" colspan="2">添加人员</td>
+	</tr>
+	<tr>
+		<td align="right" width="100">真实姓名：</td>
+		<td align="left">
+			<input type="text" id="username" onblur="get_userid(this.value)" name="username" value="" />
+			<span id="_username">*</span>
+			</td>
+	<tr>
+		<td align="right">上级领导：</td>
+		<td align="left">
+			<select id="tid" name="tid" onchange="show_area(this.value)">
+				<option value="0">朱王庚</option>
+				{higher_select}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td align="right">联系手机：</td>
+		<td align="left">
+			<input type="text" id="mobile" onblur="check_mobile(this.value);" name="mobile" value="" />
+			<span id="_mobile"></span>
+		</td>
+	</tr>
+	<tr id="tr_area" style="display:none">
+		<td align="right">负责区域：</td>
+		<td align="left">
+			<select multiple="true" id="area" name="area[]" style="width:150px;height:150px;" >
+				{area_select}
+			</select>
+			<span id="_area">*按CTRL多选</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value=" 提交 " /></td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	function check()
+	{
+		if ($('#username').val()=='')
+		{
+			$('#_username').html('真实姓名不能为空！');
+			return false;
+		}else if ($('#userid').val()==''){
+			$('#_username').html('真实姓名不正确！');
+			return false;
+		}else if ($('#mobile').val()==''){
+			$('#_mobile').html('手机号码不能为空！');
+			return false;
+		}else if ($('#tid').val()!='0'){
+			var area = $('#area option:selected').get();
+			if (area.length < 1)
+			{
+				$('#_area').html('请选择区域！');
+				return false;
+			}else{
+				$('#_area').html('*按CTRL多选');
+			}
+		}
+		return true;
+	}
+	
+	function show_area(id)
+	{
+		if (id > 0)
+		{
+			$('#tr_area').css('display','');
+		}else{
+			$('#tr_area').css('display','none');
+		}
+	}
+	function get_userid(username)
+	{
+		$('#userid').val('');
+		if (username=='')
+		{
+			$('#_username').html('真实姓名不能为空！');
+			return false;
+		}else{
+			$.post('ajax.php',{model:'user',action:'get_userid',username:username,rand:Math.random(0,9999)},
+			function (data)
+			{
+				if (data)
+				{
+					$('#userid').val(unescape(data));
+					$('#_username').html('*');
+				}else{
+					$('#_username').html('真实姓名不正确！');
+				}
+			}
+			);
+		}
+	}
+	function check_mobile(str)
+	{
+		if (str=='')
+		{
+			$('#_mobile').html('手机号码不能为空！');
+			return false;
+		}else{
+			$('#_mobile').html('*');
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<html>
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<meta name=vs_targetSchema content="http://schemas.microsoft.com/intellisense/ie5">
+<title>设备借出列表</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="images/style.css" type="text/css">
+</head>
+<body>
+<br />
+<!--startprint-->
+<table width="98%" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" class="YesPrint">
+	<tr>
+		<td style="font-weight:900;font-size:16px;border:0px;text-align:center;">设备借用记录表</td>
+	</tr>
+</table>
+<form method="POST" action="?model=device_borrow&action=batch_borrow_save" onsubmit="return check();">
+<input type="hidden" id="userid" name="userid" value="{userid}" />
+<input type="hidden" id="operatorid" name="operatorid" value="{operatorid}" />
+<input type="hidden" id="dept_id" name="dept_id" value="{dept_id}" />
+<input type="hidden" id="createDate" name="createDate" value="{date}" />
+<input type="hidden" id="project_id" name="project_id" value="{project_id}" />
+<input type="hidden" id="manager" name="manager" value="{manager}" />
+<input type="hidden" id="managerid" name="managerid" value="{managerid}" />
+<input type="hidden" id="area" name="area" value="{area}" />
+<input type="hidden" id="targettime" name="targettime" value="{targettime}" />
+<input type="hidden" id="email" name="email" value="{email}" />
+<input type="hidden" id="_xm_no" name="_xm_no" value="{xm_no}" />
+{top}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td width="85" style="text-align:right;">领 用 人：</td>
+		<td style="text-align:left;">{username}</td>
+		<td style="text-align:right;">部 　门：</td>
+		<td style="text-align:left;">{dept_name}</td>
+	</tr>
+	<tr>
+		<td style="text-align:right;">使用项目：</td>
+		<td style="text-align:left;">{xm_name}{xm_no}</td>
+		<td style="text-align:right;">项目经理：</td>
+		<td style="text-align:left;">{manager}</td>
+	</tr>
+	<tr>
+		<td style="text-align:right;">领用日期：</td>
+		<td style="text-align:left;">{date}</td>
+		<td style="text-align:right;">预计归还日期：</td>
+		<td style="text-align:left;">{targettime}</td>
+	</tr>
+	<tr>
+		<td style="text-align:right;">办 理 人：</td>
+		<td style="text-align:left;">{operator}</td>
+		<td style="text-align:right;">库 　存：</td>
+		<td style="text-align:left;">{areaname}</td>
+	</tr>
+</table>
+<br />
+{list}
+<table width="98%" border="0" cellpadding="0" cellspacing="0" style="border:0px;" align="center" class="YesPrint">
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;" >领用人签名：</td>
+		<td style="border:0px;">代办人签字：</td>
+	</tr>
+	<tr>
+		<td style="border:0px;height:50px;text-align:left;">日期：</td>
+		<td style="border:0px;">日期：</td>
+	</tr>
+</table>
+<!--endprint-->
+<OBJECT id=WebBrowser classid=CLSID:8856F961-340A-11D0-A96B-00C04FD705A2 height=0 width=0> </OBJECT>
+<table width="98%" border="0" cellpadding="0" cellspacing="0" align="center" style="border:0px;" class="noprint">
+<tr>
+		<td colspan="10" style="border:0px;text-align:center;">
+		<input type="submit" id="save" value=" 提交保存记录 " />
+		<input type='button' class="BigInput" value='直接打印' onClick="printClick(1)">   
+		<input type='button' class="BigInput" value='打印预览' onClick="printClick()">
+		</td>
+	</tr>
+</table>
+<script type="text/javascript">
+var myprint = false;
+function check()
+{
+	if (myprint==false)
+	{
+		if (confirm('您还没有打印该借用记录，确定要提交吗？'))
+		{
+			$('#save').attr('disabled',true);
+			return true;
+		}else{
+			return false;
+		}
+	}
+	$('#save').attr('disabled',true);
+}
+function printClick(type)
+{
+	/*var css = '<style type="text/css">'+$('style').html()+'</style>';
+	var bdhtml=document.body.innerHTML;
+	var sprnstr="<!--startprint-->";
+	var eprnstr="<!--endprint-->";
+	prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));*/
+	var wh = $('.YesPrint').width();
+	if (type==1)
+	{
+		myprint = true;
+		window.open("?model=print", "newwin", "width="+wh+",toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}else{
+		myprint = false;
+		window.open("?model=print", "newwin", "width="+wh+",toolbar=no ,scrollbars="+scroll+",menubar=no");
+	}
+}
+</script>
+</body>
+</html>

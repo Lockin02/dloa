@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>外包立项</title>
+   {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+	<script src="js/jquery/jquery.masonry.min.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-outsupplier.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-person.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-projectrental.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-common.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basic-edit.js" ></script>
+</head>
+
+<body>
+<div class="main_head">
+    <span class="main_head_title">
+      	外包立项
+    </span>
+</div>
+   <form id="form1" method="post" action="?model=outsourcing_approval_basic&action=edit" >
+      <table class="form_main_table">
+<td class="innerTd" colspan="6">
+	<fieldset>
+		<legend class="legend">基 本 信 息</legend>
+		<table class="form_in_table">
+       <tr>
+      		<td class="form_text_left_three">外包申请编号</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="applyCode" name="basic[applyCode]" value="{applyCode}"/>
+      			 <input type="hidden" class="txt" id="applyId" name="basic[applyId]"  value="{applyId}"/>
+      		</td>
+      		<td class="form_text_left_three">项目编号</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectCode" name="basic[projectCode]"  value="{projectCode}"/>
+      			 <input type="hidden" class="txt" id="projectId" name="basic[projectId]"  value="{projectId}"/>
+      		</td>
+      		<td class="form_text_left_three">项目名称</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectName" name="basic[projectName]"  value="{projectName}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three">项目类型</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectTypeName" name="basic[projectTypeName]" value="{projectTypeName}" />
+      			 <input type="hidden" class="txt" id="projectType" name="basic[projectType]"  value="{projectType}"/>
+      		</td>
+      		<td class="form_text_left_three">项目实施地</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectAddress" name="basic[projectAddress]"  value="{projectAddress}"/>
+      		</td>
+      		<td class="form_text_left_three">外包方式</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="outsourcingName" name="basic[outsourcingName]"  value="{outsourcingName}"/>
+      			 <input type="hidden" class="txt" id="outsourcing" name="basic[outsourcing]"  value="{outsourcing}"/>
+      		</td>
+       </tr>
+       <tr>
+       		<!--
+      		<td class="form_text_left_three"><font color=blue>外包编号</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="outContractCode" name="basic[outContractCode]" value="{outContractCode}"/>
+      		</td>
+      		 -->
+      		<td class="form_text_left_three">项目经理</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly="readonly" id="projectManangerName" name="basic[projectManangerName]"  value="{projectManangerName}"/>
+      			 <input type="hidden" class="txt" id="projectManangerId" name="basic[projectManangerId]"  value="{projectManangerId}"/>
+      		</td>
+      		<td class="form_text_left_three">销售负责人</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"class="readOnlyTxtNormal" readonly="readonly"  id="saleManangerName" name="basic[saleManangerName]"  value="{saleManangerName}"/>
+      			 <input type="hidden" class="txt" id="saleManangerId" name="basic[saleManangerId]"  value="{saleManangerId}"/>
+      		</td>
+      		<td class="form_text_left_three">申请人</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"  class="readOnlyTxtNormal" readonly="readonly" id="createName" name=""  value="{createName}"/>
+      		</td>
+       </tr>
+       <tr style="display:none" id="projectrentalTr1">
+      		<td class="form_text_left_three"><font color=blue>外包供应商</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="suppName" name="basic[suppName]" value="{suppName}"/>
+      			 <input type="hidden" class="txt" id="suppCode" name="basic[suppCode]"  value="{suppCode}"/>
+      			 <input type="hidden" class="txt" id="suppId" name="basic[suppId]"  value="{suppId}"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>开始日期</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="beginDate" onfocus="WdatePicker()" readonly value="{beginDate}"  name="basic[beginDate]" />
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>结束日期</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt" id="endDate" onfocus="WdatePicker()" readonly value="{endDate}"  name="basic[endDate]" />
+      		</td>
+       </tr>
+       <tr style="display:none" id="projectrentalTr2">
+      		<td class="form_text_left_three"><font color=blue>合同金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="txt  formatMoney" id="orderMoney" name="basic[orderMoney]"  value="{orderMoney}" onblur="countProjectCost(1);countProjectCost(2);countProjectCost(3);countProjectCost(4);countDLTax(1);countDLTax(2);countDLTax(3);countDLTax(4);"/>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>外包金额</font></td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal formatMoney" id="outSuppMoney" readonly name="basic[outSuppMoney]"  value="{outSuppMoney}"/>
+      		</td>
+      		<td class="form_text_left_three">项目毛利</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text" class="readOnlyTxtNormal" readonly id="grossProfit" name="basic[grossProfit]"  value="{grossProfit}"/>
+      		</td>
+       </tr>
+       <tr>
+      		<td class="form_text_left_three"><font color=blue>付款方式</font></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="basic[payType]">
+					{payType}
+				</select>
+      		</td>
+      		<td class="form_text_left_three"><font color=blue>增值税专用发票税点</font></td>
+      		<td class="form_text_right_three" >
+      			 <select class="select" name="basic[taxPointCode]" id="taxPointCode">
+					{taxPointCode}
+				</select>
+      		</td>
+      		<td class="form_text_left_three">录入日期</td>
+      		<td class="form_text_right_three" >
+      			 <input type="text"  class="readOnlyTxtNormal" readonly="readonly" id="createTime" name=""  value="{createTime}"/>
+      		</td>
+       </tr>
+      <tr>
+      		<td class="form_text_left_three" >备注说明</td>
+      		<td class="form_text_right_three" colspan="5">
+                  <textarea class="txt_txtarea_biglong" id="remark" name="basic[remark]">{remark}</textarea>
+      		</td>
+      </tr>
+      </table>
+	</fieldset>
+</td>
+  </tr>
+    <tr style="display:none" id="projectrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>整 包/分 包</b>
+				</legend>
+				<div id="projectRentalTb"></div>
+			</fieldset>
+		</td>
+    </tr>
+	<tr style="display:none">
+		<td colspan="6">
+			<div id="costTypeInner"></div>
+		</td>
+	</tr>
+    <tr  id="personrental">
+		<td class="innerTd" colspan="6">
+			<fieldset>
+				<legend class="legend"><b>人 员 租 赁</b></legend>
+				<div id="itemTable"></div>
+			</fieldset>
+		</td>
+    </tr>
+
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      			 <input type="hidden" class="txt" id="id" name="basic[id]"  value="{id}"/>
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
+ 		  		<input id="subAudit"  type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+   </form>
+</body>
+</html>

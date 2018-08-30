@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>生产任务单</title>
+	{#commonInclude#}
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-product.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-process.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-classify.js"></script>
+	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-produceConf.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+	<script type="text/javascript" src="js/jeasyui_newest/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="view/template/manufacture/basic/js/yxcombogrid-processequ.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/yxcombogrid-product2.js"></script>
+	<script type="text/javascript" src="{#jsPath#}/producetask-add.js"></script>
+</head>
+<body>
+	<form id="form1" method="post" action="?model=produce_task_producetask&action=add" onsubmit="return checkForm();">
+		<table class="form_main_table">
+			<tr>
+				<td colspan="4">
+					<div class="main_head">
+						<span class="main_head_title">
+							生产任务单
+						</span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+ 				<!-- <td class="form_text_left">物料类型</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly id="proType" name="producetask[proType]" value="{proType}"/>
+					<input type="hidden" id="proTypeId" name="producetask[proTypeId]" value="{proTypeId}"/>
+					<input type="hidden" id="productName" name="producetask[productName]"/>
+					<input type="hidden" id="productId" name="producetask[productId]"/>
+					<input type="hidden" id="pattern" name="producetask[pattern]"/>
+					<input type="hidden" id="unitName" name="producetask[unitName]"/>
+				</td>-->
+				<td class="form_text_left">任务类型</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="readOnlyTxtNormal" readonly id="taskTypeName" name="producetask[taskTypeName]" value="{taskTypeName}"/>
+					<input type="hidden" id="taskTypeCode" name="producetask[taskTypeCode]" value="{taskTypeCode}"/>
+				</td>
+				<!-- <td class="form_text_left">物料编码</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly id="productCode" name="producetask[productCode]"/>
+				</td> -->
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">用  途</span></td>
+				<td class="form_text_right">
+					<select class="txt" id="purposeCode" name="producetask[purposeCode]">
+						<option value="">...请选择...</option>
+						{purposeCode}
+					</select>
+				</td>
+				<td class="form_text_left"><span style="color:blue">工  艺</span></td>
+				<td class="form_text_right">
+					<select class="txt" id="technologyCode" name="producetask[technologyCode]">
+						<option value="">...请选择...</option>
+						{technologyCode}
+					</select>
+				</td>
+			</tr>
+			<!-- <tr>
+				<td class="form_text_left">文件编号</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly id="fileNo" name="producetask[fileNo]"/>
+				</td>
+				<td class="form_text_left">生产批次</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" readonly id="productionBatch" name="producetask[productionBatch]"/>
+				</td>
+			</tr> -->
+			<tr>
+				<td class="form_text_left">{showRelDoc}编号</td>
+				<td class="form_text_right">
+					{contractCode}
+					<input type="hidden" class="readOnlyTxtNormal" id="relDocCode" readonly name="producetask[relDocCode]" value="{relDocCode}"/>
+					<input type="hidden" id="relDocId" name="producetask[relDocId]" value="{relDocId}"/>
+					<input type="hidden" id="relDocName" name="producetask[relDocName]" value="{relDocName}"/>
+					<input type="hidden" id="projectName" name="producetask[projectName]" value="{projectName}"/>
+					<input type="hidden" id="relDocType" name="producetask[relDocType]" value="{relDocType}"/>
+					<input type="hidden" id="relDocTypeCode" name="producetask[relDocTypeCode]" value="{relDocTypeCode}"/>
+				</td>
+				<td class="form_text_left">申请单编号</td>
+				<td class="form_text_right">
+					{applyDocCode}
+					<input type="hidden" id="applyDocId" name="producetask[applyDocId]" value="{id}"/>
+					<input type="hidden" id="applyDocItemId" value="{applyDocItemId}"/>
+					<input type="hidden" id="applyDocCode" name="producetask[applyDocCode]" value="{docCode}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">需求日期</td>
+				<td class="form_text_right" colspan="3">
+					<input type="text" class="readOnlyTxtNormal" id="needDate" readonly  name="producetask[needDate]" value="{applyDate}"/>
+				</td>
+			</tr>
+			<tr id="department0">
+				<td class="form_text_left">客户名称</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="customerName" readonly name="producetask[customerName]" value="{customerName}"/>
+					<input type="hidden" id="customerId" name="producetask[customerId]" value="{customerId}"/>
+				</td>
+				<td class="form_text_left">销售负责人</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="saleUserName" readonly name="producetask[saleUserName]" value="{saleUserName}"/>
+					<input type="hidden" id="saleUserId" name="producetask[saleUserId]" value="{saleUserId}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">下单人</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="docUserName" readonly name="producetask[docUserName]" value="{docUserName}"/>
+					<input type="hidden" id="docUserId" name="producetask[docUserId]" value="{docUserId}"/>
+				</td>
+				<td class="form_text_left">下单日期</td>
+				<td class="form_text_right">
+					<input type="text" class="readOnlyTxtNormal" id="docDate" readonly name="producetask[docDate]" value="{docDate}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left"><span style="color:blue">指定接收人</span></td>
+				<td class="form_text_right" >
+					 <input type="text" class="txt" readonly name="producetask[recipient]" id="recipient" />
+					 <input type="hidden" class="txt" name="producetask[recipientId]" id="recipientId" />
+		        </td>
+				<td class="form_text_left">是否首件确认</td>
+				<td class="form_text_right">
+					<input type="checkbox" id="isFirstInspection" name="producetask[isFirstInspection]" value="1" />
+				</td>
+			</tr>
+			<tr id="department1">
+				<td class="form_text_left">销售说明</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="textarea_read" id="salesExplain" readonly name="producetask[salesExplain]">{salesExplain}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_text_left">备  注</td>
+				<td class="form_text_right" colspan="3">
+					<textarea class="txt_txtarea_long" id="remark" name="producetask[remark]"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<!-- <td class="form_text_left">配  置</td>
+				<td class="form_text_right"  colspan="3">
+					<div id="configProduct"></div>
+				</td>
+				<td class="form_text_left"><span style="color:blue">任务数量</span></td>
+				<td class="form_text_right">
+					<input type="text" class="txt" id="taskNum" name="producetask[taskNum]"/>productConfigInfo
+				</td> -->
+			</tr>
+		</table>
+
+		<fieldset>
+			<legend class="legend" >物料栏</legend>
+			<div id="configProduct"></div>
+		</fieldset>
+		
+		<fieldset id='fiel_process' style='display:none;'>
+			<legend class="legend" >工序配置模板</legend>
+			<div id="productInfo"></div>
+		</fieldset>
+
+		<fieldset id='fiel_classify' style='display:none;'>
+			<legend class="legend" >物料清单</legend>
+			<div id="templateData"></div>
+		</fieldset>
+
+		<table class="form_main_table">
+			<tr>
+				<td class="txt_btn" colspan="4">
+					<input type="hidden" id="objCode" name="producetask[objCode]" value="{objCode}"/>
+					<input type="submit" class="txt_btn_a" value=" 下  达 "/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

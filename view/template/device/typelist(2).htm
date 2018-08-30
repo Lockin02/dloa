@@ -1,0 +1,212 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="zh_cn" />
+<meta name="GENERATOR" content="Zend Studio" />
+<meta http-equiv="Content-Type" content="text/html; charset=GB2312" />
+<link rel="stylesheet" href="js/thickbox.css" type="text/css" media="screen" />
+<title>类别管理</title>
+<script type="text/javascript" src="js/ajax_check.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/thickbox.js"></script>
+<style type="text/css">
+<!--
+<!--
+td {
+	text-align:center;
+	font-size:12px;
+	padding-left:10px;
+	height:30px;
+	line-height:30px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: solid;
+	border-left-style: none;
+	border-top-color: #D3E5FA;
+	border-right-color: #D3E5FA;
+	border-bottom-color: #D3E5FA;
+	border-left-color: #D3E5FA;
+}
+table {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-top-color: #D3E5FA;
+	border-right-color: #D3E5FA;
+	border-bottom-color: #D3E5FA;
+	border-left-color: #D3E5FA;
+}
+.header td {background-color: #E8E8E8;font-weight: bold;}
+.red,span{color:red}
+.blue{color:blue}
+-->
+</style>
+<script type="text/javascript">
+var temp = Array();
+/*var admin = {admin};
+var call_area = {call_area};*/
+function checkForm()
+{
+	if ($('#typename').val()=='')
+	{
+		alert('类别名称不能为空！');
+		return false;
+	}else if ($('#unit').val().length > 1){
+		alert('单位只能用一个汉字！');
+		return false;
+	}
+	if($('#deptid').html()!='')
+	{
+		if ($('#deptid').val()=='')
+		{
+			alert('请选择部门！');
+			return false;
+		}else{
+			return true;
+		}
+	}
+	return false;
+}
+function edit(id)
+{
+	var rand=Math.random()*100000;
+	temp[id] = $('#tr_'+id).html();
+	var name = $('#name_'+id).html();
+	/*var dept_id = $('#dept_id_'+id).val();
+	var area_id = $('#area_id_'+id).val();*/
+	$('#name_'+id).html('<input type="text" id="typename_'+id+'" name="typename_'+id+'" value="'+name+'"/>');
+	/*if (admin)
+	{
+		$.post('ajax.php',{model:'depart',action:'dept_select',dept_id:dept_id,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#dept_'+id).html('<select id="new_dept_id_'+id+'" name="new_dept_id_'+id+'">'+unescape(data)+'</select>');
+			}
+		}
+		)
+		$.post('ajax.php',{model:'area',action:'select_area',area_id:area_id,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#area_'+id).html('<select id="new_area_id_'+id+'" name="new_area_id_'+id+'">'+unescape(data)+'</select>');
+			}
+		}
+		)
+	}else if (call_area){
+		$.post('ajax.php',{model:'area',action:'select_area',area_id:area_id,rand:rand},
+		function (data)
+		{
+			if (data)
+			{
+				$('#area_'+id).html('<select id="new_area_id_'+id+'" name="new_area_id_'+id+'">'+unescape(data)+'</select>');
+			}
+		}
+		)
+	}*/
+	var buttonhtml = '<input type="button" onclick="update('+id+')" value=" 保存 " /> ';
+	buttonhtml +=' <input type="button" onclick="exit_edit('+id+')" value=" 取消 " />';
+	$('#edit_'+id).html(buttonhtml);
+}
+function exit_edit(id)
+{
+	$('#tr_'+id).html(temp[id]);
+	tb_init('#edit_'+id+' a.thickbox');
+}
+function update(id)
+{
+	var rand=Math.random()*100000;
+	var name = $('#typename_'+id).val();
+	/*var dept_id = $('#new_dept_id_'+id).val() ? $('#new_dept_id_'+id).val() : $('#dept_id_'+id).val();
+	var area_id = $('#new_area_id_'+id).val() ? $('#new_area_id_'+id).val() : $('#area_id_'+id).val();
+	var area = $('#new_area_id_'+id+' option:selected').text() ? $('#new_area_id_'+id+' option:selected').text() : $('#area_'+id).html();
+	var dept = $('#new_dept_id_'+id+' option:selected').text() ? $('#new_dept_id_'+id+' option:selected').text() : $('#dept_'+id).html();
+	var dept = dept.replace(/[|]─||[　]/g,'');*/
+	if (name=='')
+	{
+		alert('类别名称不能为空！');
+	}else{
+		$.post('ajax.php',{model:'device',action:'update_type',typename:name,dept_id:dept_id,area:area_id,id:id,rand:rand},
+		function (data)
+		{
+			if (ajax_check(data))
+			{
+				if (data==1)
+				{
+					$('#tr_'+id).html(temp[id]);
+					$('#name_'+id).html(name);
+					/*$('#area_'+id).html(area);
+					$('#dept_'+id).html(dept);*/
+				}else{
+					alert('修改失败！');
+				}
+			}
+		}
+		)
+	}
+}
+function del(id)
+{
+	var rand=Math.random()*100000;
+	if (confirm('你确定要删除该条数据吗？'))
+	{
+		if (confirm('再次确认，真的要删除该条数据吗？'))
+		{
+			$.post('ajax.php',{model:'device',action:'del_type',id:id,rand:rand},
+			function (data)
+			{
+				if (ajax_check(data))
+				{
+					if (data==1)
+					{
+						$('#tr_'+id).remove();
+					}else{
+						alert('删除失败！');
+					}
+				}
+			}
+			)
+		}
+	}else{
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<br />
+<table width="80%" align="center" border="0" cellpadding="0" cellspacing="0">
+<form method="POST" action="?model=device&action=add_type"  onsubmit="return checkForm();">
+	<tr bgcolor="#D3E5FA">
+		<td width="70">设备类型：</td>
+		<td width="180"><input type="typename" id="typename" name="typename" value="" /></td>
+		<td>{select_dept}</td>
+		<td>{area}</td>
+		<td><input type="submit" value=" 添　加　"　/></td>
+	</tr>
+</form>
+</table>
+<br />
+<table width="80%" border="1" cellpadding="0" cellspacing="0" align="center">
+	<tr bgcolor="#D3E5FA">
+		<td align="center" width="10%"><b>ID</b></td>
+		<td align="center" width="20%"><b>设备类型</b></td>
+		<td align="center"><b>所属部门<b></td>
+		<td align="center"><b>所属区域<b></td>
+		<td align="center" width="40%"><b>操作</b></td>
+	</tr>
+	{list}
+</table>
+
+</body>
+</html>

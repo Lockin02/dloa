@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>标记确认反馈</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312"/>
+{#commonInclude#}
+<script type="text/javascript" src="js/jquery/formvalidator/formValidator-4.1.1.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/formvalidator/formValidatorRegex.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-province.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-customer.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-linkman.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productNo.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-productName.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxselect-user.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-rdproject.js"></script>
+<script type="text/javascript" src="view/template/projectmanagent/borrow/js/borrow-common.js"></script>
+<script type="text/javascript" src="view/template/contract/contract/js/contract-deploy.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-goods.js"></script>
+<script type="text/javascript" src="js/common/dateUtil.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-chance.js"></script>
+<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-allcontract.js"></script>
+<script>
+function sub(){
+    if($('input:radio[name="producetask[isFirstInspection]"]:checked').val() == null){
+    	 alert("请选择是否满足生产！");
+         return false;
+    }
+}
+</script>
+</head>
+
+<body>
+
+<form action="?model=produce_task_producetask&action=mark" id="form1" method="POST" onsubmit="return sub();">
+
+	 <table class="form_main_table">
+           <div class="main_head">
+	           <span class="main_head_title">标记确认反馈</span>
+           </div>
+        <tr>
+			<td  class="form_text_left">请选择</td>
+			<td class="form_view_right">
+			    <input type="radio" name="producetask[isFirstInspection]" value="1" />&nbsp;满足生产
+				<input type="radio" name="producetask[isFirstInspection]" value="2" />&nbsp;不满足生产
+			</td>
+		</tr>
+		<tr>
+			<td  class="form_text_left">备注</td>
+			<td class="form_view_right" colspan="3">
+				<textarea class="txt_txtarea_font" id="reason" name="producetask[remark]"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<table class="main_table">
+					<tr>
+						<td class="txt_btn" colspan="4">
+                            <input type="hidden" id="taskIds" name="producetask[taskIds]" value="{taskIds}" />
+                            <input type="hidden" id="productCodes" name="producetask[productCodes]" value="{productCodes}" />
+                            <input type="submit" class="txt_btn_a" value=" 提  交 " />
+                            <input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+</div>
+</body>

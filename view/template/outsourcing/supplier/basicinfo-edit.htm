@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns=" http://www.w3.org/1999/xhtml">
+<head>
+	<title>外包供应商</title>
+   {#commonInclude#}
+	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-office.js"></script>
+   <script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-skillarea.js"></script>
+   <script type="text/javascript" src="{#jsPath#}/basicinfo-provin-city.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basicinfo-common.js" ></script>
+   <script type="text/javascript" src="{#jsPath#}/basicinfo-edit.js" ></script>
+</head>
+
+<body>
+   <form id="form1" method="post" action="?model=outsourcing_supplier_basicinfo&action=edit" >
+      <table class="form_main_table">
+       <tr>
+		<td colspan="6">
+		<fieldset>
+		  <legend class="legend" onclick="showAndHide('baseImg','contractinfo')">基本信息
+			<img src="images/icon/info_up.gif" id="baseImg" />
+		  </legend>
+			<table width="100%" id="contractinfo"   style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;" >
+
+			       <tr>
+			      		<td class="form_text_left_three">供应商编号</td>
+			      		<td class="form_text_right_three" colspan="5">
+			      			 {suppCode}
+			      			 <input type="hidden" class="txt" id="suppCode" name="basicinfo[suppCode]"  value="{suppCode}"/>
+			      		</td>
+			       </tr>
+
+			       <tr>
+			      		<td class="form_text_left_three"><span style="color:blue">区域</span></td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="officeName" name="basicinfo[officeName]" value="{officeName}"/>
+			      			 <input type="hidden" class="txt" id="officeId" name="basicinfo[officeId]"  value="{officeId}"/>
+			      		</td>
+			      		<td class="form_text_left_three"><span style="color:blue">省份</span></td>
+			      		<td class="form_text_right_three" >
+			      		<select class="select" name="basicinfo[provinceId]" id="province" val="{province}"></select>
+			   					<input type="hidden" name="basicinfo[province]" id="provinceName" />
+			      		</td>
+			      		<td class="form_text_left_three"><span style="color:blue">供应商类型</span></td>
+			      		<td class="form_text_right_three" >
+     							<select class="select" id="suppTypeCode" name="basicinfo[suppTypeCode]" >
+     								{suppTypeCode}
+     							</select>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three"><span style="color:blue">供应商名称</span></td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="suppName" name="basicinfo[suppName]"  value="{suppName}"/>
+			      		</td>
+			      		<td class="form_text_left_three">成立时间</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="registeredDate" onfocus="WdatePicker()" readonly  name="basicinfo[registeredDate]"  value="{registeredDate}"/>
+			      		</td>
+			      		<td class="form_text_left_three">注册资金(万元)</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="registeredFunds" name="basicinfo[registeredFunds]"  value="{registeredFunds}"/>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three">法人代表</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="legalRepre" name="basicinfo[legalRepre]"  value="{legalRepre}"/>
+			      		</td>
+			      		<td class="form_text_left_three">股权结构</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="equityStructure" name="basicinfo[equityStructure]"  value="{equityStructure}"/>
+			      		</td>
+			      		<td class="form_text_left_three">主营业务</td>
+			      		<td class="form_text_right_three" >
+				      		<input type="text" class='txt' id="mainBusiness" style="width:202px;" onclick="initMainBusiness()" value="{mainBusiness}" readonly/>
+							<input type="hidden" name="basicinfo[mainBusiness]" id="mainBusinessHidden"  value="{mainBusiness}"/>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three">擅长网络类型</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" style="width:202px;" id="adeptNetType" name=""  onclick="initAdeptNetType()"value="{adeptNetType}" readonly/>
+			      			<input type="hidden" name="basicinfo[adeptNetType]" id="adeptNetTypeHidden"  value="{adeptNetType}"/>
+			      		</td>
+			      		<td class="form_text_left_three">擅长厂家设备</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" style="width:202px;" id="adeptDevice" name=""  onclick="initAdeptDeviceType()" value="{adeptDevice}" readonly/>
+			      			 <input type="hidden" name="basicinfo[adeptDevice]" id="adeptDeviceHidden"  value="{adeptDevice}"/>
+			      		</td>
+			      		<td class="form_text_left_three">业务分布</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" style="width:202px;" id="businessDistribute" name="" onclick="initBusinessDistribute()"  value="{businessDistribute}"  readonly/>
+      						 <input type="hidden" class="txt" id="businessDistributeHidden" name="basicinfo[businessDistribute]"  value="{businessDistribute}" />
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three">增值税发票税点</td>
+			      		<td class="form_text_right_three" >
+			      			 <select type="text" id="taxPoint" class="select"  name="basicinfo[taxPoint]">{taxPoint}</select>
+			      		</td>
+			      		<td class="form_text_left_three">认证人数</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="certifyNumber" name="basicinfo[certifyNumber]"  value="{certifyNumber}"/>
+			      		</td>
+			      		<td class="form_text_left_three"><span style="color:blue">认证等级</span></td>
+			      		<td class="form_text_right_three" >
+							<input type="hidden" id="suppGradeSelect" value="{suppGrade}"/>
+			      			 <select class="select" id="suppGrade" name="basicinfo[suppGrade]">
+			      			 	<option value="">请选择认证等级</option>
+			      			 	<option value="1">金</option>
+			      			 	<option value="2">银</option>
+			      			 	<option value="3">铜</option>
+			      			 	<option value="4">黑名单</option>
+			      			 	<option value="0">未认证</option>
+			      			 </select>
+			      		</td>
+			       </tr>
+			       <tr>
+			      		<td class="form_text_left_three">邮编</td>
+			      		<td class="form_text_right_three" >
+			      			 <input type="text" class="txt" id="zipCode" name="basicinfo[zipCode]"  value="{zipCode}"/>
+			      		</td>
+			      		<td class="form_text_left_three">地址</td>
+			      		<td class="form_text_right_three" colspan="3">
+			      			 <input type="text" class="txtbiglong" id="address" name="basicinfo[address]"  value="{address}"/>
+			      		</td>
+			       </tr>
+			      <tr>
+			      		<td class="form_text_left_three" >供应商简介</td>
+			      		<td class="form_text_right_three" colspan="5">
+			                  <textarea class="txt_txtarea_biglong" id="suppIntro" name="basicinfo[suppIntro]"> {suppIntro}</textarea>
+			 					<input type="hidden" class="txt" id="employeesNum"  name="basicinfo[employeesNum]"  value="{employeesNum}" />
+			 					<input type="hidden" class="txt" id="companySize"  name="basicinfo[companySize]"  value="{companySize}" />
+			 					<input type="hidden" class="txt" id="id"  name="basicinfo[id]"  value="{id}" />
+			 					<input type="hidden" class="txt" id="ExaStatus"  name=""  value="{ExaStatus}" />
+			      		</td>
+
+			      </tr>
+			</table>
+			</fieldset>
+			</td>
+		</tr>
+		<tr id="linkmanList">
+			<td colspan="6" >
+				<fieldset style="width:200">
+				  <legend class="legend" onclick="showAndHideDiv('linkmanImg','linkmanListInfo')">联系人信息
+					<img src="images/icon/info_up.gif" id="linkmanListImg" />
+				  </legend>
+				    <div id="linkmanListInfo"></div>
+				</fieldset>
+			</td>
+		</tr>
+		<tr id="bankList">
+			<td colspan="6" >
+				<fieldset style="width:200">
+				  <legend class="legend" onclick="showAndHideDiv('bankImg','bankListInfo')">银行账号信息
+					<img src="images/icon/info_up.gif" id="bankListImg" />
+				  </legend>
+				    <div id="bankListInfo"></div>
+				</fieldset>
+			</td>
+		</tr>
+		<tr id="hrList">
+			<td colspan="6" >
+				<fieldset style="width:200">
+				  <legend class="legend" onclick="showAndHideDiv('hrImg','hrListInfo')">人力资源信息
+					<img src="images/icon/info_up.gif" id="hrListImg" />
+				  </legend>
+				    <div id="hrListInfo"></div>
+				</fieldset>
+			</td>
+		</tr>
+		<tr id="workList">
+			<td colspan="6" >
+				<fieldset style="width:200">
+				  <legend class="legend" onclick="showAndHideDiv('workImg','workListInfo')">人员工作经验信息
+					<img src="images/icon/info_up.gif" id="workListImg" />
+				  </legend>
+				    <div id="workListInfo"></div>
+				</fieldset>
+			</td>
+		</tr>
+          <tr>
+      		<td class="txt_btn" colspan="4">
+      		   <input  type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;&nbsp;&nbsp;
+      		   <input  type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
+      		</td>
+       </tr>
+      </table>
+   </form>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk"/>
+        <title>用户组</title>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/icon.css"/>
+        <script type="text/javascript" src="js/jqeasyui/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="js/jqeasyui/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="js/thickbox.js"></script>
+		<link rel="stylesheet" href="js/thickbox.css" type="text/css" />
+        <script type="text/javascript">
+        </script>
+        <style type="text/css">
+        	label { font-weight:bold;float:left; text-align:right; width:80px;}
+			#show_input { padding:10px;}
+			#show_input p { height:30px;line-height:30px;}
+			#show_input div div{padding:10px 0px 10px 0px; line-height:20px;}
+			#show_input div div span{color:#0000ff;}
+        </style>
+		<script type="text/javascript">
+			$(function(){
+            $('#tt').datagrid({
+                title: '用户组列表',
+                iconCls: 'icon-edit',
+                pagination: true,
+				pageSize:20,
+                singleSelect: true,
+                idField: 'id',
+                url: '?model={t_model}&action=list_data',
+                columns: [[{
+                    field: 'id',
+                    title: 'ID',
+                    width: 50,
+                    align: 'center'
+                }, {
+                    field: 'group_name',
+                    title: '组名称',
+                    width: 200,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'identification',
+                    title: '唯一标识',
+                    width: 180,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'dept_name',
+                    title: '归属部门',
+                    width: 120,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'user_name',
+                    title: '添加人',
+                    width: 60,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'range',
+                    title: '部门/区域/职位/成员',
+                    width: 220,
+                    align: 'center',
+                    editor: 'text'
+                }, {
+                    field: 'date',
+                    title: '最后更新时间',
+                    width: 120,
+                    align: 'center',
+                    editor: 'text'
+                },{
+                    field: 'action',
+                    title: '操作',
+                    width: 120,
+                    align: 'center',
+                    formatter: function(value, row, index){
+                            var e = '<a href="#" onclick="editrow(' + index + ')">修改或查看</a> ';
+                            var d = '<a href="#" onclick="deleterow(' + row.id + ')">删除</a>';
+                            return e+d;
+                    }
+                }]],
+				onBeforeEdit:function(index,row){
+					row.editing = true;
+					updateActions('tt');
+				},
+				onAfterEdit:function(index,row){
+					row.editing = false;
+					updateActions('tt');
+				},
+				onCancelEdit:function(index,row){
+					row.editing = false;
+					updateActions('tt');
+				}
+            });
+            $('#tt').datagrid('getPager').pagination({
+                buttons: [{
+                     iconCls: 'icon-add',
+                    text: '添加用户组',
+                    handler: function(){
+                        insert('tt');
+                    }
+                }]
+            });
+        });
+		/**
+		 * 显示添加
+		 */
+		function insert()
+		{
+			$('#id').val('');
+			$('#group_name').val('');
+			$('#identification').val('');
+			$('#dept_id').attr('value','');
+			
+			$('#dept_id_str').val('');
+			$('#area_id_str').val('');
+			$('#jobs_id_str').val('');
+			$('#user_id_str').val('');
+			
+			$('#dept_name_str').html('所有部门');
+			$('#area_name_str').html('所有区域');
+			$('#jobs_name_str').html('所有职位');
+			$('#user_name_str').html('所有用户');
+			
+			$('#add_window').window({title:'添加用户组'});
+			$('#add_window').window('open');
+			$('#add_window').window('expand');
+		}
+		/**
+		 * 保存数据
+		 */
+		function save()
+		{
+			var group_name = $('#group_name').val();
+			var identification = $('#identification').val();
+			var dept_id = $('#dept_id').val();
+			
+			if (group_name == '')
+			{
+				$.messager.alert('错误提示','用户组名称不能为空！');
+				return false;
+			}
+			
+			if (identification == '')
+			{
+				$.messager.alert('错误提示','唯一标识不能为空！');
+				return false;
+			}
+			
+			if (dept_id == '')
+			{
+				$.messager.alert('错误提示','请选择归属部门！');
+				return false;
+			}
+			var dept_id_str = $('#dept_id_str').val();
+			var area_id_str = $('#area_id_str').val();
+			var jobs_id_str = $('#jobs_id_str').val();
+			var user_id_str = $('#user_id_str').val();
+			
+			var id = $('#id').val();
+			var action='add';
+			var msg='添加';
+			if (id)
+			{
+				action='edit&id='+id;
+				msg='修改';
+			}
+			$.post('?model={t_model}&action='+action,{group_name:group_name,identification:identification,dept_id:dept_id,dept_id_str:dept_id_str,area_id_str:area_id_str,jobs_id_str:jobs_id_str,user_id_str:user_id_str,rand:Math.random(0,9999)},function(data){
+				if (data == 1)
+				{
+					$('#add_window').window('close');
+					$.messager.show({
+                        title: '提示',
+                        msg: msg+'成功！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+					$('#tt').datagrid('reload');
+				}else{
+					$.messager.show({
+                        title: '提示',
+                        msg: msg+'失败！',
+                        timeout: 3000,
+                        showType: 'show'
+                    });
+				}
+			});
+		}
+		/**
+		 * 选择组成员
+		 */
+		function set_select()
+		{
+			$('#add_window').window('collapse');
+			tb_show('选择员工', '?model=user&action=select_user&TB_iframe=true&width=500', false);
+		}
+		/**
+		 * 确定组成员后
+		 */
+		function return_func(){
+            $('#add_window').window('expand');
+        }
+		/**
+		 * 检查唯一标识
+		 * @param {Object} val
+		 */
+		function check_ide(val)
+		{
+			var id = $('#id').val();
+			if (val)
+			{
+				$.post('?model={t_model}&action=check_ide',{identification:val,id:id,rand:Math.random(0,9999)},function(data){
+					if (data == 1)
+					{
+						$('#identification_error').html('您输入的唯一标识已被占用,请重新输入！');
+					}else{
+						$('#identification_error').html('');
+					}
+				});
+			}
+		}
+		/**
+		 * 修改
+		 * @param {Object} index
+		 */
+		function editrow(index)
+		{
+			 $('#tt').datagrid('selectRow', index);
+			 var row = $('#tt').datagrid('getSelected');
+			 
+			 $('#id').val(row.id);
+			 
+			$('#group_name').val(row.group_name);
+			$('#identification').val(row.identification);
+			$('#dept_id').attr('value',row.dept_id);
+			
+			$('#dept_id_str').val(row.dept_id_str);
+			$('#area_id_str').val(row.area_id_str);
+			$('#jobs_id_str').val(row.jobs_id_str);
+			$('#user_id_str').val(row.user_id_str);
+			//部门
+			if (dept_id_str) {
+				$.post('?model={t_model}&action=get_deptname_list', {
+					dept_id_str: row.dept_id_str,
+					rand: Math.random(0, 9999)
+				}, function(data){
+					if (data) {
+						$('#dept_name_str').html(data);
+					}
+				});
+			}
+			//区域
+			if (area_id_str) {
+				$.post('?model={t_model}&action=get_areaname_list', {
+					area_id_str: row.area_id_str,
+					rand: Math.random(0, 9999)
+				}, function(data){
+					if (data) {
+						$('#area_name_str').html(data);
+					}
+				});
+			}
+			//职位
+			if (row.jobs_id_str) {
+				$.post('?model={t_model}&action=get_jobsname_list', {
+					jobs_id_str: row.jobs_id_str,
+					rand: Math.random(0, 9999)
+				}, function(data){
+					if (data) {
+						$('#jobs_name_str').html(data);
+					}
+				});
+			}
+			//用户
+			if (user_id_str) {
+				$.post('?model={t_model}&action=get_username_list', {
+					user_id_str: row.user_id_str,
+					rand: Math.random(0, 9999)
+				}, function(data){
+					if (data) {
+						$('#user_name_str').html(data);
+					}
+				});
+			}			
+			$('#add_window').window({title:'修改 '+row.group_name+' 用户组'});
+			$('#add_window').window('open');
+		}
+		/**
+		 * 删除
+		 * @param {Object} id
+		 */
+		function deleterow(id)
+		{
+			$.messager.confirm('删除提示','该操作可能影响其他应用，您确定要删除该用户组吗？',function(r){
+				if (r)
+				{
+					$.post('?model={t_model}&action=del&id='+id,{rand:Math.random(0,9999)},function(data){
+						if (data == 1)
+						{
+							$.messager.show({
+		                        title: '提示',
+		                        msg:'删除成功！',
+		                        timeout: 3000,
+		                        showType: 'show'
+		                    });
+							$('#tt').datagrid('reload');
+						}else{
+							$.messager.show({
+		                        title: '提示',
+		                        msg:'删除失败！',
+		                        timeout: 3000,
+		                        showType: 'show'
+		                    });
+						}
+					})
+				}
+			})
+		}
+		</script>
+    </head>
+    <body>
+        <table id="tt"></table>
+    </body>
+	<div id="add_window" class="easyui-window" title="添加用户组" iconCls="icon-edit" modal="false" zIndex="10" closed="true" style="width:650px;height:500px;padding:5px;">	
+		<div class="easyui-layout" fit="true">
+			<div id="show_input" region="center" border="true" style="padding-left:5px;">
+				<input type="hidden" id="owner" name="owner" value=""/>
+				<p><label>用户组名称：</label><span><input type="text" id="group_name" name="group_name" value="" /></span></p>
+				<p><label>唯一标识：</label><span><input type="text" id="identification" name="identification" onblur="check_ide(this.value);" value=""/></span><span id="identification_error" style="color:red;"></span></p>
+				<p><label>部门归属：</label><span><select id="dept_id" name="dept_id"><option value="">选择部门</option>{dept_option}</select></span></p>
+				<p><label>组成员设置：</label><span><input type="button" onclick="set_select();" value=" 选择 " /></span></p>
+				<div style=" padding-left:80px;">
+					<input type="hidden" id="id" name="id" value="" />
+					<input type="hidden" id="dept_id_str" name="dept_id_str" value=""/>
+					<input type="hidden" id="area_id_str" name="area_id_str" value=""/>
+					<input type="hidden" id="jobs_id_str" name="jobs_id_str" value=""/>
+					<input type="hidden" id="user_id_str" name="user_id_str" value=""/>
+					<hr />
+					<div><b>部门：</b><span id="dept_name_str">所有部门</span></div>
+					<hr />
+					<div><b>区域：</b><span id="area_name_str">所有区域</span></div>
+					<hr />
+					<div><b>职位：</b><span id="jobs_name_str">所有职位</span></div>
+					<hr />
+					<div><b>用户：</b><span id="user_name_str">所有用户</span></div>
+				</div>
+			</div>
+			<div region="south" border="false" style="text-align:center;height:30px;line-height:30px;">
+			<a class="easyui-linkbutton" iconCls="icon-ok" href="javascript:void(0)" onclick="save()">确定</a>
+			<a class="easyui-linkbutton" iconCls="icon-cancel" href="javascript:void(0)" onclick="$('#add_window').window('close');">取消</a>
+		</div>
+		</div>
+	</div>
+</html>
