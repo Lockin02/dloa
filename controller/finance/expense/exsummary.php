@@ -117,6 +117,9 @@ class controller_finance_expense_exsummary extends controller_base_action
         $editLimit = isset($limitArr['审批页面编辑权限'])? $limitArr['审批页面编辑权限'] : '';
         $addCostLimit = isset($limitArr['新增费用类权限'])? $limitArr['新增费用类权限'] : '';
         $this->assign("addCostLimit",$addCostLimit);
+
+        $aliShowStyle = (isset($limitArr['阿里商旅记录查看']) && $limitArr['阿里商旅记录查看'] == 1)? '' : 'style="display:none"';
+        $this->assign("aliShowStyle",$aliShowStyle);
         if($editLimit == 1){// 判断是否含有修改发票的权限,有的话显示可编辑审批页面
             $this->c_toAuditEdit();
         }else{
@@ -192,6 +195,9 @@ class controller_finance_expense_exsummary extends controller_base_action
         $editLimit = isset($limitArr['审批页面编辑权限'])? $limitArr['审批页面编辑权限'] : '';
         $addCostLimit = isset($limitArr['新增费用类权限'])? $limitArr['新增费用类权限'] : '';
         $this->assign("addCostLimit",$addCostLimit);
+
+        $aliShowStyle = (isset($limitArr['阿里商旅记录查看']) && $limitArr['阿里商旅记录查看'] == 1)? '' : 'style="display:none"';
+        $this->assign("aliShowStyle",$aliShowStyle);
         if($editLimit != 1){// 判断是否含有修改发票的权限,有的话显示可编辑审批页面
             $this->c_toAudit();
         }else{
@@ -226,6 +232,11 @@ class controller_finance_expense_exsummary extends controller_base_action
 // 			$this->showBudget($areaId);  //显示区域的预警
                 foreach ($obj as $key => $val) {
                     $this->assign($key, $val);
+                }
+
+                if ($obj['DetailType'] == '4' || $obj['DetailType'] == '5') {
+                    $this->showStatistic(array('userId' => $obj['feeManId'], 'userName' => $obj['feeMan'],
+                        'areaId' => $obj['salesAreaId'], 'areaName' => $obj['salesArea'], 'costBelongerId' => $obj['CostBelongerId']));
                 }
 
                 // 查看是否存在关联租车登记费用填报记录的
@@ -323,9 +334,20 @@ class controller_finance_expense_exsummary extends controller_base_action
     function showStatistic($obj)
     {
         //获取统计值
-        $rs = $this->service->getStatistic($obj['userId'], $obj['areaId']);
-        $userFeeArr = $rs['userFee'];//个人费用
-        $areaFeeArr = $rs['areaFee'];//区域费用
+//        $rs = $this->service->getStatistic($obj['userId'], $obj['areaId']);
+//        $userFeeArr = $rs['userFee'];
+
+        $year = date("Y");
+        $userFeeObj = $this->service->getStatisticSpl("byMan", " and t.SalesAreaId = '{$obj['areaId']}' and t.feeManId = '{$obj['userId']}'", $year);
+        $areaFeeObj = $this->service->getStatisticSpl("byGroup", " and t.SalesAreaId = '{$obj['areaId']}'", $year);
+//        $userFeeArr = ($userFeeObj && isset($userFeeObj[0]['totalFee']) && isset($userFeeObj[0]['totalContract']))? array("{$obj['areaId']}" => array("fee" => $userFeeObj[0]['totalFee'],"contract" => $userFeeObj[0]['totalContract'])) : $rs['userFee'];//个人费用
+//        $areaFeeArr = ($areaFeeObj && isset($areaFeeObj[0]['totalFee']) && isset($areaFeeObj[0]['totalContract']))? array("{$obj['areaId']}" => array("fee" => $areaFeeObj[0]['totalFee'],"contract" => $areaFeeObj[0]['totalContract'])) : $rs['areaFee'];//区域费用
+
+        $userFeeArr = $areaFeeArr = array("{$obj['areaId']}" => array("fee" => 0,"contract" => 0));
+        $userFeeArr[$obj['areaId']]['fee'] = (isset($userFeeObj[0]['totalFee']) && $userFeeObj[0]['totalFee'] > 0)? $userFeeObj[0]['totalFee'] : 0;
+        $userFeeArr[$obj['areaId']]['contract'] = (isset($userFeeObj[0]['totalContract']) && $userFeeObj[0]['totalContract'] > 0)? $userFeeObj[0]['totalContract'] : 0;
+        $areaFeeArr[$obj['areaId']]['fee'] = (isset($areaFeeObj[0]['totalFee']) && $areaFeeObj[0]['totalFee'] > 0)? $areaFeeObj[0]['totalFee'] : 0;
+        $areaFeeArr[$obj['areaId']]['contract'] = (isset($areaFeeObj[0]['totalContract']) && $areaFeeObj[0]['totalContract'] > 0)? $areaFeeObj[0]['totalContract'] : 0;
         //如果费用承担人分管不同区域，则要分开区域进行统计（审批的时候，销售负责人只能查看负责区域的费用统计）
 // 		if($obj['costBelongerId'] == $_SESSION['USER_ID']){
 // 			//获取销售负责人管辖的区域
@@ -360,8 +382,8 @@ class controller_finance_expense_exsummary extends controller_base_action
                 $budgetHtml .= <<<EOT
 					<tr>
 						<td width="15%">$obj[userName]</td>
-						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('$obj[userId]','$k','fee')" class="formatMoney">$userFee</a></td>
-						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('$obj[userId]','$k','contract')" class="formatMoney">$userConMoney</a></td>
+						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('$obj[userId]','$k','fee','$year')" class="formatMoney">$userFee</a></td>
+						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('$obj[userId]','$k','contract','$year')" class="formatMoney">$userConMoney</a></td>
 						<td width="15%" style="color:$userColor;">$userRate%</td>
 					</tr>
 EOT;
@@ -378,8 +400,8 @@ EOT;
                 $budgetHtml .= <<<EOT
 					<tr>
 						<td width="15%">$obj[areaName]</td>
-						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('','$k','fee')" class="formatMoney">$areaFee</a></td>
-						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('','$k','contract')" class="formatMoney">$areaConMoney</a></td>
+						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('','$k','fee','$year')" class="formatMoney">$areaFee</a></td>
+						<td width="15%"><a href="javascript:void(0);" onclick="showStatisticDetail('','$k','contract','$year')" class="formatMoney">$areaConMoney</a></td>
 						<td width="15%" style="color:$areaColor;">$areaRate%</td>
 					</tr>
 EOT;
@@ -412,6 +434,7 @@ EOT;
     function c_getStatisticDetailForContract(){
         $storeYear = (isset($_REQUEST['ExaYear']) && $_REQUEST['ExaYear'] != '')? " and m.storeYear = '{$_REQUEST['ExaYear']}'" : "";
         $areaCode = (isset($_REQUEST['areaCode']) && $_REQUEST['areaCode'] != '')? " and m.areaCode = '{$_REQUEST['areaCode']}'" : "";
+        $userId = (isset($_REQUEST['userId']) && $_REQUEST['userId'] != '')? " AND m.prinvipalId = '{$_REQUEST['userId']}'" : "";
         $sql = <<<EOT
         select 
             m.id,
@@ -422,7 +445,7 @@ EOT;
             end as contState,
             if(c.id is null,m.contractAllMoney,sum(m.contractMoney)) as contractAllMoney,c.contractMoney,c.contractName,m.contractCode from oa_bi_conproduct_month m
         left join oa_contract_contract c on c.id = m.contractId
-        where 1=1 $areaCode $storeYear
+        where 1=1 $areaCode $storeYear $userId
         group by m.contractId order by m.id desc
 EOT;
         $rst = $this->service->_db->getArray($sql);

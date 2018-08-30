@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="zh_cn" />
+        <meta name="GENERATOR" content="Zend Studio" />
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <script type="text/javascript" src="../../js/jquery.js"></script>
+        <script type="text/javascript" src="../../js/thickbox.js"></script>
+        <link rel="stylesheet" href="../../js/thickbox.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="../../images/style.css" type="text/css" media="screen" />
+        <title>合同列表</title>
+        <script>
+            function selectV(sub){
+                var rand=Math.random()*100000;
+                var codes=$('#codes').val();
+                var narea=$('#narea').val();
+                var remark=$('#remark').val();
+                var show_type=$('#show_type').val();
+                var codeType=$('#codeType').val();
+                //alert(pstr);
+                $.post('list.php?show_type='+show_type+'&sub='+sub,{
+                    rand:rand,codes:codes,narea:narea,remark:remark,codeType:codeType
+                    },
+                    function (data)
+                    {       
+//                        alert(data);
+                        if(data){
+                            $('#v_list').html(data);
+                        }else{
+                            $('#v_list').html('');
+                        }
+
+                    }
+                )
+            }
+        </script>
+    </head>
+    <body>
+        <table border="0" class="table" cellpadding="0" cellspacing="0" width="100%" style="margin-buttom:2px;font-size: 9px;text-align: left;">
+            <tr>
+                <td ><select id="codeType" name="codeType">
+                        <option value="contractcode" selected>合同号</option>
+                        <option value="objCode">业务号</option>
+                    </select></td>
+                <td style="width: 500px;"><textarea id="codes" name="codes" rows="20" style="width: 100%"></textarea></td>
+                <td>新区域：<select id="narea" name="narea">
+                        {areaStr}
+                    </select>
+                </td>
+                <td>备注：<textarea id="remark" name="remark" rows="5" cols="40">{remark}</textarea></td>
+                <td>
+                    <input type="button" value="检查" onclick="selectV('list')"></input>
+                    <input type="button" value="更新" onclick="selectV('sub')"></input>
+                    <input type="hidden" value="{show_type}" id="show_type" name="show_type"></input>
+                </td>
+            </tr>
+        </table>
+        <div id="v_list" style="width:100% ;font-size:10px;"></div>
+    </body>
+</html>

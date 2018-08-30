@@ -1,0 +1,39 @@
+<?php
+/*
+ * Created on 2012-11-15
+ *
+ * To change the template for this generated file go to
+ * Window - Preferences - PHPeclipse - PHP - Code Templates
+ */
+ $contractFieldArr=array(
+            'staffName'=>'员工姓名',
+            'userNo'=>'员工编号',
+            'sex'=>'性别',
+            'identityCard'=>'身份证号',
+            'highEducationName'=>'最高学历',
+            'highSchool'=>'毕业学校',
+            'professionalName'=>'专业',
+            'companyType'=>'公司类型',
+            'companyName'=>'公司',
+            'deptName'=>'直属部门',
+            'deptNameS'=>'二级部门',
+            'deptNameT'=>'三级部门',
+            'deptNameF'=>'四级部门',
+            'personnelTypeName'=>'员工类型',
+            'wageLevelName'=>'工资级别',
+            'jobLevel'=>'职级',
+            'conNo'=>'合同编号',
+            'conName'=>'合同名称',
+            'conTypeName'=>'合同类型',
+            'conStateName'=>'合同状态',
+            'beginDate'=>'合同开始时间',
+            'closeDate'=>'合同结束时间',
+            'trialBeginDate'=>'试用开始时间',
+            'trialEndDate'=>'试用结束时间',
+            'jobName'=>'职位',
+            'conNumName'=>'合同次数',
+            'recorderName'=>'记录人',
+            'recordDate'=>'记录日期',
+            'conContent'=>'合同内容'
+ );
+?>

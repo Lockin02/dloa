@@ -228,6 +228,32 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
         //获取对应业务信息
         $rs = $this->service->getObjInfo_d($_GET, $initObj);
 
+        // 采购付款申请获取【预计付款日期】
+        $planPayDate = $equShipStatus = '';
+        if($_GET['objType'] == "YFRK-01" && isset($_GET['objId'])){// 采购订单申请付款
+            $purchasecontractDao= new model_purchase_contract_purchasecontract();
+            $planPayDate = $purchasecontractDao->getPlanPayDateForPush($_GET['objId'],$rs);
+
+            // 获取入库状态
+            $equShipStatusArr = $purchasecontractDao->chkEquShipStatus($_GET['objId']);
+            if(isset($equShipStatusArr['Status'])){
+                switch ($equShipStatusArr['Status']){
+                    case 'WRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    case 'BFRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    default:
+                        $equShipStatus = '<span>'.$equShipStatusArr['StatuName'].'</span>';
+                }
+            }
+        }
+        $prePayDate = (empty($planPayDate))? day_date : $planPayDate;
+        $this->assign("prePayDate",$prePayDate);
+        $this->assign("planPayDate",$planPayDate);
+        $this->assign("equShipStatus",$equShipStatus);
+
         // 采购订单币种处理
         if(in_array($_GET['objType'], array("YFRK-01", "YFRK-02"))){
         	$currency = "";
@@ -268,6 +294,7 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
         $rs['coutNumb'] = $initRs[1];
 
         //渲染主表单
+        $rs['payDaysAfterArrival'] = ($rs['paymentCondition'] != "YFK")? '' : $rs['payDaysAfterArrival'];
         $this->assignFunc($rs);
 
         //查询该源单的最近银行 - 帐号 - 汇入地点-是否开据发票信息
@@ -619,7 +646,9 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
         $id = $_GET['id'];
 
         $object = $this->service->get_d($id, 'clear');
+
         // 如果是采购订单则计算出它的最后已审核的入库日期
+        $equShipStatus = '';
         if ($object['sourceType'] == 'YFRK-01') {
             // 获取入库日期
             $purOrderIds = array();
@@ -632,7 +661,25 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
             $entryDate = $stockInDao->getEntryDateForPurOrderId_d(implode(',', $purOrderIds));
             $object['entryDate'] = $entryDate;
             // $this->assign('entryDate', $this->service->getEntryDate_d($id));
+
+            $purchasecontractDao= new model_purchase_contract_purchasecontract();
+
+            // 获取入库状态
+            $equShipStatusArr = $purchasecontractDao->chkEquShipStatus('',$object['sourceCode']);
+            if(isset($equShipStatusArr['Status'])){
+                switch ($equShipStatusArr['Status']){
+                    case 'WRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    case 'BFRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    default:
+                        $equShipStatus = '<span>'.$equShipStatusArr['StatuName'].'</span>';
+                }
+            }
         }
+        $this->assign("equShipStatus",$equShipStatus);
 
         //付款类型定义
         $payForTypes = array_keys($this->service->payForArr);
@@ -696,6 +743,7 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
         $this->assignFunc($initRs);
 
         // 如果是采购订单则计算出它的最后已审核的入库日期
+        $equShipStatus = '';
         if ($object['sourceType'] == 'YFRK-01') {
             $purOrderIds = array();
             if(!empty($object['detail'])){
@@ -708,7 +756,26 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
             $entryDate = $stockInDao->getEntryDateForPurOrderId_d(implode(',', $purOrderIds));
             $this->assign('entryDate', $entryDate);
             // $this->assign('entryDate', $this->service->getEntryDate_d($id));
+
+            // 采购付款申请获取【预计付款日期】
+            $purchasecontractDao= new model_purchase_contract_purchasecontract();
+
+            // 获取入库状态
+            $equShipStatusArr = $purchasecontractDao->chkEquShipStatus($objArr['objId']);
+            if(isset($equShipStatusArr['Status'])){
+                switch ($equShipStatusArr['Status']){
+                    case 'WRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    case 'BFRK':
+                        $equShipStatus = '<span style="color:red">'.$equShipStatusArr['StatuName'].'</span>';
+                        break;
+                    default:
+                        $equShipStatus = '<span>'.$equShipStatusArr['StatuName'].'</span>';
+                }
+            }
         }
+        $this->assign("equShipStatus",$equShipStatus);
 
         $this->assign('supplierSkey', $this->md5Row($initRs['supplierId'], 'supplierManage_formal_flibrary', null));
         $this->assign('payTypeCN', $this->getDataNameByCode($initRs['payType']));
@@ -1476,7 +1543,7 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
             }
         }
         $periodStr .= "</select>";
-        $periodStr .= "<input type='hidden' id='period' name='invother[period]' value='" . $default . "'>";
+        $periodStr .= "<input type='hidden' id='period' name='payablesapply[period]' value='" . $default . "'>";
         $periodStr .=<<<E
             <script type='text/javascript'>
                 $(function() {

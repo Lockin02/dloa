@@ -381,6 +381,12 @@ class controller_purchase_contract_purchasecontract extends controller_base_acti
         $stampArr = $stampConfigDao->getStampType_d();
         $this->showSelectOption('stampType', null, true, $stampArr);//盖章类型
 
+        // 从入库单获取
+        $stockInDao = new model_stock_instock_stockin();
+        $entryDate = $stockInDao->getEntryDateForPurOrderId_d($_GET ['id']);
+        $entryDate = ($entryDate == "暂未有入库时间")? day_date : $entryDate;
+        $this->assign('entryDate', $entryDate);
+
         $this->display('pushorder-add');
     }
 
@@ -437,7 +443,12 @@ class controller_purchase_contract_purchasecontract extends controller_base_acti
             $rows['remark'] = $infoRow['remark'] . "\n" . $rows['remark'];
         }
         foreach ($rows as $key => $val) {
-            $this->assign($key, $val);
+            if ($rows ['paymentCondition'] != "YFK" && $key == "payDaysAfterArrival") {  //判断付款条件是否为预付款
+                $this->assign("payRatio","");
+                $this->assign("payDaysAfterArrival","");
+            }else{
+                $this->assign($key, $val);
+            }
         }
         $newEqus = array();
         foreach ($equs as $key => $val) {
@@ -584,6 +595,22 @@ class controller_purchase_contract_purchasecontract extends controller_base_acti
                 $this->assign('isStamp', "否");
             }
 
+            $equShipStatusArr = $this->service->chkEquShipStatus($_GET['id']);
+            if(isset($equShipStatusArr['Status']) && !empty($equShipStatusArr['Status'])){
+                switch($equShipStatusArr['Status']){
+                    case 'WRK':
+                        $equShipStatus = (isset($equShipStatusArr['StatuName']) && !empty($equShipStatusArr['StatuName']))? "<span style='color:red'>{$equShipStatusArr['StatuName']}</span>" : "";
+                        break;
+                    case 'BFRK':
+                        $equShipStatus = (isset($equShipStatusArr['StatuName']) && !empty($equShipStatusArr['StatuName']))? "<span style='color:red'>{$equShipStatusArr['StatuName']}</span>" : "";
+                        break;
+                    default:
+                        $equShipStatus = (isset($equShipStatusArr['StatuName']) && !empty($equShipStatusArr['StatuName']))? "<span>{$equShipStatusArr['StatuName']}</span>" : "";
+                        break;
+                }
+            }
+            $this->assign("equShipStatus",$equShipStatus);
+
             //判断是否隐藏关闭按钮
             if (isset($_GET['hideBtn'])) {
                 $this->assign('hideBtn', 1);
@@ -610,6 +637,12 @@ class controller_purchase_contract_purchasecontract extends controller_base_acti
 //			}
             $this->assign('allMoney', bcadd(0, $rows ['allMoney'], 2));
             $this->assign('allMoneyView', number_format(bcadd(0, $rows ['allMoney'], 2), 2));
+
+            // 从入库单获取
+            $stockInDao = new model_stock_instock_stockin();
+            $entryDate = $stockInDao->getEntryDateForPurOrderId_d($_GET ['id']);
+            $entryDate = ($entryDate == "暂未有入库时间")? day_date : $entryDate;
+            $this->assign('entryDate', $entryDate);
 
             $this->display('order-edit');
         }
@@ -1075,6 +1108,7 @@ class controller_purchase_contract_purchasecontract extends controller_base_acti
 
         if ($rows ['paymentCondition'] != "YFK") {  //判断付款条件是否为预付款
             $rows ['payRatio'] = "";
+            $rows ['payDaysAfterArrival'] = "";
         }
 
         //处理数据字典字段

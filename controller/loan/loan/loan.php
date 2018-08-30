@@ -261,7 +261,7 @@ class controller_loan_loan_loan extends controller_base_action {
                 succ_show("general/costmanage/loan/ewf_change_loan.php?actTo=ewfSelect&billId=" . $id . "&proSid=" . $obj['projectId'] . "&billArea=" . $appArea . "&flowMoney=".$Amount."&flowType=1&loanAttr=".$object['loanNature']);
             }else{
                 //工程借款
-                $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute = 'GCXMSS-02' and id = '{$object['projectId']}';");
+                $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute in ('GCXMSS-02','GCXMSS-01','GCXMSS-05') and id = '{$object['projectId']}';");
                 if($chkSevProjectRst && count($chkSevProjectRst) > 0){// 服务项目
                     succ_show("general/costmanage/loan/ewf_change_loan_sev.php?actTo=ewfSelect&billId=" . $id . "&proSid=" . $obj['projectId'] . "&billArea=" . $appArea . "&flowMoney=".$Amount."&flowType=2&loanAttr=".$object['loanNature']);
                 }else{// 其他类工程项目
@@ -705,7 +705,7 @@ class controller_loan_loan_loan extends controller_base_action {
                      succ_show("general/costmanage/loan/ewf_index_loan.php?actTo=ewfSelect&billId=" . $id . "&proSid=" . $object['projectId'] . "&billArea=" . $appArea . "&flowMoney=".$object['Amount']."&flowType=1&loanAttr=".$object['loanNature']);
             	 }else{
                      //工程借款
-            	     $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute = 'GCXMSS-02' and id = '{$row['projectId']}';");
+            	     $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute in ('GCXMSS-02','GCXMSS-01','GCXMSS-05') and id = '{$row['projectId']}';");
                      if($chkSevProjectRst && count($chkSevProjectRst) > 0){// 服务项目
                          succ_show("general/costmanage/loan/ewf_index_loan_sev.php?actTo=ewfSelect&billId=" . $id . "&proSid=" . $object['projectId'] . "&billArea=" . $appArea . "&flowMoney=".$object['Amount']."&flowType=2&loanAttr=".$object['loanNature']);
                      }else{// 其他类工程项目
@@ -738,7 +738,7 @@ class controller_loan_loan_loan extends controller_base_action {
                     succ_show("general/costmanage/loan/ewf_index_loan.php?actTo=ewfSelect&billId=" . $object['id'] . "&proSid=" . $object['projectId'] . "&billArea=" . $appArea . "&billDept=".$billDept."&flowMoney=".$object['Amount']."&flowType=1&loanAttr=".$object['loanNature']);
             	 }else{
                     //工程借款
-                    $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute = 'GCXMSS-02' and id = '{$object['projectId']}';");
+                    $chkSevProjectRst = $this->service->_db->getArray("select * from oa_esm_project where attribute in ('GCXMSS-02','GCXMSS-01','GCXMSS-05') and id = '{$object['projectId']}';");
                     if($chkSevProjectRst && count($chkSevProjectRst) > 0){// 服务项目
                         succ_show("general/costmanage/loan/ewf_index_loan_sev.php?actTo=ewfSelect&billId=" . $object['id'] . "&proSid=" . $object['projectId'] . "&billArea=" . $appArea . "&billDept=".$billDept."&flowMoney=".$object['Amount']."&flowType=2&loanAttr=".$object['loanNature']);
                     }else{// 其他类工程项目

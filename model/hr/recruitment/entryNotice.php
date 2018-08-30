@@ -1,0 +1,509 @@
+<?php
+/**
+ * @author Administrator
+ * @Date 2012年7月27日 星期五 13:22:05
+ * @version 1.0
+ * @description:入职通知 Model层
+ */
+ class model_hr_recruitment_entryNotice  extends model_base {
+
+	function __construct() {
+		include (WEB_TOR."model/common/mailConfig.php");
+		$this->tbl_name = "oa_hr_recruitment_entrynotice";
+		$this->sql_map = "hr/recruitment/entryNoticeSql.php";
+		$this->mailArr = $mailUser[$this->tbl_name];
+		$this->statusDao = new model_common_status ();
+		$this->statusDao->status = array (
+			0 => array (
+				'statusEName' => 'save',
+				'statusCName' => '保存',
+				'key' => '0'
+			),
+			1 => array (
+				'statusEName' => 'waitting',
+				'statusCName' => '待入职',
+				'key' => '1'
+			),
+			2 => array (
+				'statusEName' => 'onwork',
+				'statusCName' => '已入职',
+				'key' => '2'
+			),
+			3 => array (
+				'statusEName' => 'giveup',
+				'statusCName' => '放弃入职',
+				'key' => '3'
+			)
+		);
+		parent::__construct ();
+	}
+
+	/**
+	 * 添加对象
+	 */
+	function add_d($object ,$isAddInfo = false) {
+		try{
+			$this->start_d();
+			$datadictDao = new model_system_datadict_datadict();
+			if($_GET['isSave'] != 1) { //非保存
+				$interviewDao = new model_hr_recruitment_interview();
+				$interviewDao->updateById(array("id" => $object['parentId'] ,"state" => $interviewDao->statusDao->statusEtoK("hassend")));
+				$interviewDao->mailToXZ_d($object['parentId'] ,$object); //邮件反馈行政部
+
+				$object['state'] = $this->statusDao->statusEtoK ( 'waitting' ); //需要发送邮件则设置为待入职
+				if($object['interviewType'] == 1) {
+					if($object['applyResumeId']) {//简历库发起入职申请没有applyResumeId add chenrf
+						$applyResumeDao = new model_hr_recruitment_applyResume();
+						$applyResumeDao->updateField("id=".$object['applyResumeId'],'state','4');
+					}
+				} else if ($object['interviewType'] == 2) {
+					$recomResumeDao = new model_hr_recruitment_recomResume();
+					$recomResumeDao->updateField("id=".$object['applyResumeId'],'state','4');
+				}
+				//更新面试通知状态
+				if($object['invitationId'] > 0) {
+					$invitationDao = new model_hr_recruitment_invitation();
+					$invitationDao->updateField("id=".$object['invitationId'],'state','4');
+				}
+				//同时更新增员申请里的待入职人数和招聘人数
+				if ($object['sourceId'] != '') {
+					$apply = new model_hr_recruitment_apply();
+					$apply->updateBeEntryNum($object['sourceId'],1);
+				}
+				//更新内部推荐单据状态
+				if ($object['recommendId'] > 0) {
+					$recommendDao = new model_hr_recruitment_recommend();
+					$recommendDao->updateById(array('id' => $object['recommendId'] ,'state' => 8));
+				}
+			}
+			$object['formCode'] = 'TZ'.date("YmdHis");
+			$object['ExaStatus'] = "未审核";
+			$object['staffFileState'] = 0;
+			$object['contractState'] = 0;
+			$object['accountState'] = 0;
+			$object['formDate'] = date("Y-m-d");
+			$object['hrSourceType1Name'] = $datadictDao->getDataNameByCode($object['hrSourceType1']);
+			$object['useHireTypeName'] = $datadictDao->getDataNameByCode($object['useHireType']);
+			$object['postTypeName'] = $datadictDao->getDataNameByCode($object['postType']);
+			$object['wageLevelName'] = $datadictDao->getDataNameByCode($object['wageLevelCode']);
+
+			$id = parent::add_d($object ,true);
+
+			$this->commit_d();
+			return $id;
+		} catch(exception $e){
+			$this->rollBack();
+			return null;
+		}
+	}
+
+	/**
+	 * 编辑对象
+	 */
+	function edit_d($object ,$isAddInfo = false) {
+		try{
+			$this->start_d();
+
+			if($_GET['isSave'] != 1) { //非保存
+				$object['state'] = $this->statusDao->statusEtoK ( 'waitting' ); //需要发送邮件则设置为待入职
+
+				$interviewDao = new model_hr_recruitment_interview();
+				$interviewDao->updateById(array("id" => $object['parentId'] ,"state" => $interviewDao->statusDao->statusEtoK("hassend")));
+				$interviewDao->mailToXZ_d($object['parentId'] ,$object); //邮件反馈行政部
+
+				if($object['interviewType'] == 1) {
+					if($object['applyResumeId']) { //简历库发起入职申请没有applyResumeId add chenrf
+						$applyResumeDao = new model_hr_recruitment_applyResume();
+						$applyResumeDao->updateField("id=".$object['applyResumeId'],'state','4');
+					}
+				} else if($object['interviewType'] == 2) {
+					$recomResumeDao = new model_hr_recruitment_recomResume();
+					$recomResumeDao->updateField("id=".$object['applyResumeId'],'state','4');
+				}
+
+				//更新面试通知状态
+				if($object['invitationId'] > 0) {
+					$invitationDao = new model_hr_recruitment_invitation();
+					$invitationDao->updateField("id=".$object['invitationId'],'state','4');
+				}
+
+				//同时更新增员申请里的待入职人数和招聘人数
+				if ($object['sourceId'] != '') {
+					$apply = new model_hr_recruitment_apply();
+					$apply->updateBeEntryNum($object['sourceId'] ,1);
+				}
+
+				//更新内部推荐单据状态
+				if ($object['recommendId'] > 0) {
+					$recommendDao = new model_hr_recruitment_recommend();
+					$recommendDao->updateById(array('id' => $object['recommendId'] ,'state' => 8));
+				}
+			}
+
+			parent::edit_d($object ,true);
+
+			$this->commit_d();
+			return $object['id'];
+		} catch(exception $e){
+			$this->rollBack();
+			return false;
+		}
+	}
+
+	/*
+	 * 发送通知入职邮件
+	 * 发送给   —— 默认发送对象 ，应聘者
+	 */
+	function postEmail_d($object ,$info) {
+		$notice = $object;
+		$mailRow = $this->mailArr;
+		$emailArr = array();
+		$emailArr['issend'] = 'y';
+		$emailArr['TO_ID'] = $mailRow['sendUserId'];
+		$emailArr['TO_NAME'] = $mailRow['sendName'];
+		if ($info['toMail']) {
+			$addmsg = $info['content'];
+			$somemsg = "";
+			$userName = $notice['userName'];
+			$positionName = $notice ['hrJobName'];
+			$deptName = $notice ['deptName'];
+			$entryDate = $notice['entryDate'];
+			$useAreaName = $notice ['useAreaName'];
+			$somemsg .= <<<EOT
+			<table border=1 cellspacing=0 width=100% bordercolorlight=#333333 bordercolordark=#efefef align=center >
+				<thead>
+					<tr align="center">
+						<td><b>姓名</b></td>
+						<td><b>职位</b></td>
+						<td><b>用人部门</b></td>
+						<td><b>入职时间</b></td>
+						<td><b>归属区域</b></td>
+					</tr>
+				</thead>
+				<tbody>
+				<tr align="center" >
+						<td>$userName</td>
+						<td>$positionName</td>
+						<td>$deptName</td>
+						<td>$entryDate</td>
+						<td>$useAreaName</td>
+					</tr>
+				</tbody>
+			</table>
+EOT;
+			$addmsg = $addmsg.$somemsg;
+
+			$emailDao = new model_common_mail();
+			$emailDao->offerEmail($_SESSION['USERNAME'] ,$_SESSION['EMAIL'] ,$info['title'] ,$info['toMail'] ,$info['content'] ,$info['toccMailId'] ,'' ,$info['isSender'] ,$info['attachment']);
+		}
+	}
+
+
+	/*
+	 * 发送通知入职邮件
+	 * 发送给   —— 默认发送对象 ，应聘者
+	 */
+	function postDateEmail_d($object) {
+		$notice = $this->get_d($object['id']);
+		$notice['entryDate'] = $object['entryDate'];
+		$notice['email'] = $object['email'];
+		$mailRow = $this->mailArr;
+		$emailArr = array();
+		$emailArr['issend'] = 'y';
+		$emailArr['TO_ID'] = $mailRow['sendUserId'];
+		$emailArr['TO_NAME'] = $mailRow['sendName'];
+		if ($emailArr['TO_ID']) {
+			$somemsg = "以下人员已口头接受offer，详情如下，其预入职前5个工作日内会再提醒相关人员准备协助相关入职事宜，请知悉。<br>入职日期修改如下：<br>";
+			$userName = $notice['userName'];
+			$positionName = $notice ['hrJobName'];
+			$deptName = $notice ['deptName'];
+			$entryDate = $notice['entryDate'];
+			$useAreaName = $notice ['useAreaName'];
+			$phone = $notice ['phone'];
+			$useDemandEqu = $notice ['useDemandEqu'];
+			$somemsg .=  <<<EOT
+			<table border=1 cellspacing=0  width=100% bordercolorlight=#333333 bordercolordark=#efefef align=center >
+				<thead>
+					<tr align="center">
+						<td><b>姓名</b></td>
+						<td><b>职位</b></td>
+						<td><b>电脑类型</b></td>
+						<td><b>用人部门</b></td>
+						<td><b>入职时间</b></td>
+						<td><b>归属区域</b></td>
+						<td><b>联系方式</b></td>
+					</tr>
+				</thead>
+				<tbody>
+				<tr align="center" >
+						<td>$userName</td>
+						<td>$positionName</td>
+						<td>$useDemandEqu</td>
+						<td>$deptName</td>
+						<td><font color=blue>$entryDate</font></td>
+						<td>$useAreaName</td>
+						<td>$phone</td>
+					</tr>
+				</tbody>
+				</table>
+EOT;
+
+			$emailDao = new model_common_mail();
+			$emailDao->emailInquiry($emailArr['issend'], $_SESSION['USERNAME'], $_SESSION['EMAIL'], 'hr_recruitment_entryNotice_Date', '该邮件为入职时间修改消息', '', $notice['email']['TO_ID'], $somemsg, 1);
+		}
+	}
+
+	/**
+	 * 完成入职
+	 */
+	function doneEntry_d($id){
+		try{
+			$this->start_d();
+			$obj = $this->get_d($id);
+			$applyresume = new model_hr_recruitment_applyResume();
+			$apply = new model_hr_recruitment_apply();
+			$recomresume = new model_hr_recruitment_recomResume();
+			$recommend = new model_hr_recruitment_recommend();
+			$resume = new model_hr_recruitment_resume();
+			if($obj['interviewType'] == 1) {
+				$sourceresume = $applyresume->update(array("id"=>$obj['applyResumeId']),array("state"=>5));
+			} else {
+				$sourceresume = $recomresume->update(array("id"=>$obj['applyResumeId']),array("state"=>5));
+			}
+			if ($obj['invitationId'] > 0) {
+				$invitationDao = new model_hr_recruitment_invitation();
+				$invitationDao->updateField("id=".$obj['invitationId'],'state','5');
+			}
+			$resume->update(array("id"=>$obj['resumeId']),array("resumeType"=>1));     // add chenrf 20150523
+			$obj['state'] = 2;
+			$this-> updateById ( $obj );
+			$this->commit_d();
+			return 1;
+		} catch (exception $e) {
+			$this->rollBack();
+			return 0;
+		}
+	}
+
+	/**
+	 * 放弃入职
+	 */
+	function cancelEntry_d($object){
+		try {
+			$this->start_d();
+
+			$emailArr['issend'] = 'y';
+			$emailArr['TO_ID'] = $mailRow['sendUserId'];
+			$emailArr['TO_NAME'] = $mailRow['sendName'];
+			$applyresume = new model_hr_recruitment_applyResume();
+			$apply = new model_hr_recruitment_apply();
+			$recomresume = new model_hr_recruitment_recomResume();
+			$recommend = new model_hr_recruitment_recommend();
+			$resume = new model_hr_recruitment_resume();
+
+			$obj = $this->get_d($object['id']);
+
+			if($obj['sourceId'] > 0) {
+				$sourceresume = $applyresume->update(array("id" => $obj['applyResumeId']) ,array("state" => 6));
+				if ($obj['state'] != 3) { //预防重复放弃操作导致增员申请待入职人数错误
+					$apply->updateBeEntryNum($obj['sourceId'] ,-1);
+				}
+			} else {
+				$sourceresume = $recomresume->update(array("id" => $obj['applyResumeId']) ,array("state" => 6));
+			}
+
+			//更新面试通知状态
+			if($obj['invitationId'] > 0) {
+				$invitationDao = new model_hr_recruitment_invitation();
+				$invitationDao->updateField("id=".$obj['invitationId'] ,'state' ,'2');
+			}
+
+			//更新内部推荐单据状态
+			if ($obj['recommendId'] > 0) {
+				$recommendDao = new model_hr_recruitment_recommend();
+				$recommendDao->updateById(array('id' => $obj['recommendId'] ,'state' => 9));
+			}
+
+			$somemsg = '入职通知编号：<font color=blue>'.$obj['formCode'].'</font><br>';
+			$somemsg .= '员工编号:<font color=blue>'.$obj['userNo'].'</font><br>';
+			$somemsg .= '员工姓名:<font color=blue>'.$obj['userName'].'</font><br>';
+			$somemsg .= '入职情况：<font color=blue>提出放弃入职</font><br>';
+			$somemsg .= '放弃入职原因：<font color=blue>'.$object['cancelReason'].'</font>';
+			$emailDao = new model_common_mail();
+			$emailDao->emailInquiry($emailArr['issend'], $_SESSION['USERNAME'], $_SESSION['EMAIL'], 'hr_recruitment_entryNotice', '该邮件为员工放弃入职通知', '', $emailArr['TO_ID'], $somemsg, 1);
+
+			parent::edit_d($object ,true);
+
+			$this->commit_d();
+			return true;
+		} catch (exception $e) {
+			$this->rollBack();
+			return false;
+		}
+	}
+
+	/**
+	 * 编辑放弃入职原因
+	 */
+	function editCancel_d($obj) {
+		try {
+			$this->start_d();
+
+			parent::edit_d($obj ,true);
+
+			if ($obj['mailInfo'] == 'yes') { //从招聘修改放弃入职原因需要发邮件通知人事组
+				$this->editCancelMail_d($obj['id']);
+			}
+
+			$this->commit_d();
+			return true;
+		} catch (Exception $e) {
+			$this->rollBack();
+			return false;
+		}
+	}
+
+	/**
+	 * 编辑放弃入职原因邮件通知
+	 */
+	function editCancelMail_d($id) {
+		try {
+			$obj = $this->get_d($id);
+			$content = <<<EOT
+				<br>
+				姓    名：<font color="blue">$obj[userName]</font><br>
+				部    门：$obj[deptName]<br>
+				职位类型：$obj[postTypeName]<br>
+				职位名称：$obj[hrJobName]<br>
+				放弃入职原因：$obj[cancelReason]<br><br>
+EOT;
+
+			$this->mailDeal_d('entrynotice_giveUp' ,null ,array('userName' => $obj['userName'] ,'content' => $content));
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 填写离职原因
+	 */
+	function addDepart_d($obj) {
+		try {
+			$this->start_d();
+
+			parent::edit_d($obj ,true);
+
+			if ($obj['mailInfo'] == 'yes') { //从招聘填写离职原因需要发邮件通知人事组
+				$this->addDepartMail_d($obj['id']);
+			}
+
+			$this->commit_d();
+			return true;
+		} catch (Exception $e) {
+			$this->rollBack();
+			return false;
+		}
+	}
+
+	/**
+	 * 填写离职原因邮件通知
+	 */
+	function addDepartMail_d($id) {
+		try {
+			$obj = $this->get_d($id);
+			$content = <<<EOT
+				<br>
+				姓    名：<font color="blue">$obj[userName]</font><br>
+				部    门：$obj[deptName]<br>
+				职位类型：$obj[postTypeName]<br>
+				职位名称：$obj[hrJobName]<br>
+				入职时间：$obj[entryDate]<br>
+				离职原因：$obj[departReason]<br><br>
+EOT;
+
+			$this->mailDeal_d('entrynotice_depart' ,null ,array('userName' => $obj['userName'] ,'content' => $content));
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 根据用户编号获取信息
+	 */
+	function getInfoByUserNo_d($userNo){
+		$this->searchArr = array ('userNo' => $userNo );
+		$personnelRow= $this->listBySqlId ( "select_default" );
+		return $personnelRow['0'];
+	}
+
+	/**
+	 * 根据用户编号获取信息
+	 */
+	function getInfoByUserID_d($userId){
+		$this->searchArr = array ('userAccount' => $userId );
+		$personnelRow= $this->listBySqlId ( "select_default" );
+		return $personnelRow['0'];
+	}
+
+	/**
+	 * 根据用户编号获取信息(包括面试评估表信息)
+	 */
+	function getAllInfoByUserID_d($userId){
+		$this->searchArr = array ('userAccount' => $userId );
+		$personnelRow= $this->listBySqlId ( "select_list" );
+		return $personnelRow['0'];
+	}
+
+	/**
+	 * 发送通知邮件
+	 */
+	function mailForCompany($object){
+		$flag = true;
+		if($object['email']['TO_ID']){
+			$emailDao = new model_common_mail();
+			$flag=$emailDao->mailGeneral($object['title'], $object['email']['TO_ID'], $object['content'], null);
+		}
+		return $flag;
+	}
+
+	/**
+	 * 完成入职后调用（开通帐号视为完成入职）
+	 * 1、根据入职ID更新待入职人数
+	 * 2、更新内部推荐状态
+	 */
+	function updateBeEntryNumById_d( $id ) {
+		try{
+			$this->start_d();
+			$obj = $this->get_d( $id );
+
+			if($obj['sourceId'] > 0) {
+				$applyDao = new model_hr_recruitment_apply();
+				$rs = $applyDao->updateEntryNum($obj['sourceId'] ,1); //更新增员申请的入职人数+1
+				if ($rs) {
+					$applyObj = $applyDao->get_d($obj['sourceId']);
+					//待入职人数和在招聘人数为0，增员申请状态改为完成
+					if ($applyObj['beEntryNum'] == 0
+							&& ($applyObj['needNum'] - $applyObj['entryNum'] - $applyObj['beEntryNum'] - $applyObj['stopCancelNum'] == 0)) {
+						$applyDao->updateById(array('id' => $obj['sourceId'] ,'state' => 4));
+					}
+				}
+			}
+
+			//更新内部推荐单据状态
+			if ($obj['recommendId'] > 0) {
+				$recommendDao = new model_hr_recruitment_recommend();
+				$recommendDao->updateById(array('id' => $obj['recommendId'] ,'state' => 5));
+			}
+
+			$this->commit_d();
+			return true;
+		} catch(exception $e) {
+			$this->rollBack();
+			return false;
+		}
+	}
+
+ }
+?>

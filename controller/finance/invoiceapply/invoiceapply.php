@@ -25,6 +25,11 @@ class controller_finance_invoiceapply_invoiceapply extends controller_base_actio
      * 我的开票申请
      */
     function c_myInvoiceApply() {
+        $otherDataDao = new model_common_otherdatas();
+        $sysLimit = $otherDataDao->getUserPriv('finance_invoiceapply_invoiceapply', $_SESSION['USER_ID'], $_SESSION['DEPT_ID'], $_SESSION['USER_JOBSID']);
+        $addLimit = (isset($sysLimit['单独新增权限']) && !empty($sysLimit['单独新增权限']))? "y" : "n";
+        $this->assign("addLimit",$addLimit);
+
         $this->display('my');
     }
 

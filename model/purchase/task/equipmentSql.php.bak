@@ -1,0 +1,110 @@
+<?php
+$sql_arr = array (
+	"equipment_list" => "select " .
+				"p.id,p.basicNumb,p.planEquId,p.basicId,p.productName,p.productId,p.productNumb,p.amountAll," .
+				"p.amountIssued,p.contractAmount,p.dateIssued,p.dateHope,p.dateEnd,p.remark,p.status  " .
+			"from oa_purch_task_equ p  where 1=1",
+	"equipment_list_shot" => "select " .
+				"p.id,p.basicNumb,p.planEquId,p.basicId,p.productName,p.productId,p.productNumb,p.amountAll," .
+				"p.amountIssued,p.contractAmount,p.dateIssued,p.dateHope,p.dateEnd,p.remark,p.status  " .
+			"from " .
+				"oa_purch_task_equ p  where 1=1",
+	"equipment_list_long" => "select " .
+				"p.id,p.basicNumb,p.planEquId,p.basicId,p.productName,p.productId,p.productNumb,p.amountAll," .
+				"p.amountIssued,p.contractAmount,p.dateIssued,p.dateHope,p.dateEnd,p.remark,p.status  " .
+			"from " .
+				"oa_purch_task_equ p  where 1=1",
+	"equs_planTotask" => "select p.id,p.objCode,p.planId,p.planEquId,p.basicNumb,p.basicId,p.productName," .
+<<<<<<< .mine
+			"p.productId,p.productNumb,p.amountAll,p.amountIssued,p.contractAmount,p.dateIssued,p.dateHope,p.dateEnd,p.remark,p.status " .
+			"from oa_purch_task_equ p where 1=1"
+=======
+			"p.productId,p.productNumb,p.amountAll,p.amountIssued,p.dateIssued,p.dateHope,p.dateEnd,p.remark,p.status," .
+			"b.state as bState,b.id as bId " .
+			"from oa_purch_task_equ p left join oa_purch_task_basic b on( p.basicId=b.id ) where 1=1"
+>>>>>>> .r9624
+);
+
+$condition_arr = array (
+
+	//主业务对象Ids
+	array(
+		"name" => "basicIds",
+		"sql" => " and p.basicId in(arr) "
+	),
+	array(
+		"name" => "planId",
+		"sql" => " and p.planId =# "
+	),
+
+	//设备对象编号
+	array(
+		"name" => "deviceNumb",
+		"sql" => "and p.deviceNumb=#"
+	),
+	//是否在使用
+//	array(
+//		"name" => "deviceIsUse",
+//		"sql" => " and p.deviceIsUse=# "
+//	),
+	//采购任务Id
+	array(
+		"name" => "basicId",
+		"sql" => " and p.basicId=#"
+	),
+	//主业务对象编号
+	array(
+		"name" => "basicNumb",
+		"sql" => " and p.basicNumb=# "
+	),
+	//状态
+	array(
+		"name" => "status",
+		"sql" => " and p.status=# "
+	),
+	//通过采购计划编号查询
+	array(
+		"name" => "plantNumb",
+		"sql" => " and p.plantNumb=# "
+	),
+	//通过采购计划Id查询
+	array(
+		"name" => "planId",
+		"sql" => " and p.planId=# "
+	),
+	//id集合
+	array(
+		"name" => "arrayIds",
+		"sql" => " and p.id in(arr) "
+	),
+	//设备Id
+//	array(
+//		"name" => "productId",
+//		"sql" => " and p.productId=# "
+//	),
+	array(
+		"name" => "productId",
+		"sql" => " and p.productId in(arr) "
+	),
+	//设备编号
+	array(
+		"name" => "productNumb",
+		"sql" => " and p.productNumb=# "
+	)
+//	),array(
+//		"name" => "productNumb",
+//		"sql" => " and p.proListId like CONCAT('%',#,'%')"
+//	)
+//	,array(
+//		"name" => "productName",
+//		"sql" => " and p.productName like CONCAT('%',#,'%')"
+//	)
+
+	,array(
+		"name" => "planEquId",
+		"sql" => " and p.planEquId in(arr) "
+	)
+
+
+);
+?>

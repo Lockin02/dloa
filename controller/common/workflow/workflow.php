@@ -692,7 +692,10 @@ class controller_common_workflow_workflow extends controller_base_action
             $newArr[$i]['value'] = $val;
             $i++;
         }
-        echo util_jsonUtil:: encode($newArr);
+        $backArr = array(
+            "data" => $newArr
+        );
+        echo util_jsonUtil:: encode($backArr);
     }
 
     /******************** 单据审批数据获取 *****************/

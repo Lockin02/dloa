@@ -27,7 +27,9 @@ class controller_contract_contract_contract extends controller_base_action
         $otherdatasDao = new model_common_otherdatas();
         $limit = $otherdatasDao->getUserPriv("contract_contract_contract", $_SESSION ['USER_ID']);
         $archivedInfoModifyLimit = isset($limit['归档信息修改权限'])? $limit['归档信息修改权限'] :'';
+        $restartContractLimit = isset($limit['打开合同权限'])? $limit['打开合同权限'] : '';
         $this->assign('archivedInfoModifyLimit', $archivedInfoModifyLimit);
+        $this->assign('restartContractLimit', $restartContractLimit);
 
         $this->c_page ();
     }
@@ -330,14 +332,15 @@ EOT;
             foreach ($val as $v) {
                 $dataCodeArr[] = $v['dataCode'];
                 $disabledStr = (in_array($v['dataCode'],$limitInvoiceType))? "disabled" : "";
+                $disabledExtStr = (in_array($v['dataCode'],$limitInvoiceType))? "data-isDisable='1'" : "data-isDisable=''";
                 if ($v['dataCode'] == 'HTBKP') {
                     $invoiceType .= <<<EOT
-                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $disabledStr>
-                        <label for="$v[dataCode]">$v[dataName]</label>
+                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                        <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                 } else {
                     $invoiceType .= <<<EOT
-                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledStr>
+                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledExtStr $disabledStr>
                         <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
                         <span id="$v[dataCode]Hide" style="display:none"> : <input type="text" id="$v[dataCode]Money" name="contract[invoiceValue][]" value="" class="rimless_text formatMoney" onBlur="checkConMoney();conversion();" /></span>
 EOT;
@@ -1673,7 +1676,7 @@ EOT;
                 if ($v['dataCode'] == 'HTBKP' && in_array($v['dataCode'], $invoiceCodeArr)) {
                     $invoiceType .= <<<EOT
                             <input type="hidden" id="$v[dataCode]V" value="1"/>
-                            &nbsp <span id="$v[dataCode]" >&nbsp$v[dataName]</span>
+                            &nbsp <span id="$v[dataCode]" >&nbsp$v[dataName]($v[expand1]%)</span>
                             <span id="$v[dataCode]Hide" style="display:none"></span>
 EOT;
                 }
@@ -1681,7 +1684,7 @@ EOT;
                 else if (isset($invoiceTypeInfoArr[$v['dataCode']])){
                     $invoiceType .= <<<EOT
                             <input type="hidden" id="$v[dataCode]V" value="1"/>
-                            &nbsp <span id="$v[dataCode]" >&nbsp$v[dataName]</span>
+                            &nbsp <span id="$v[dataCode]" >&nbsp$v[dataName]($v[expand1]%)</span>
                             <span id="$v[dataCode]Hide" style="display:none"> : <input type="text" id="serviceInvMoney" readonly="readonly" value="{$invoiceTypeInfoArr[$v['dataCode']]}" class="rimless_text formatMoney" /></span>
 EOT;
                 } else {
@@ -1727,19 +1730,20 @@ EOT;
                 foreach ($val as $v) {
                     $dataCodeArr[] = $v['dataCode'];
                     $disabledStr = (in_array($v['dataCode'],$limitInvoiceType))? "disabled" : "";
+                    $disabledExtStr = (in_array($v['dataCode'],$limitInvoiceType))? "data-isDisable='1'" : "data-isDisable=''";
                     if ($v['dataCode'] == 'HTBKP') {
                         //if (in_array($v['dataCode'], $invoiceCodeArr)) {
                         if (isset($invoiceTypeInfoArr[$v['dataCode']])){
                             // 如果是禁用的开票类型且之前有填过金额的,则将对应的发票金额去掉
                             $checkedStr = ($disabledStr == "disabled")? "" : 'checked="checked"';
                             $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $checkedStr $disabledStr>
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $checkedStr  onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         } else {
                             $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $disabledStr>
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         }
                     } else {
@@ -1750,13 +1754,13 @@ EOT;
                             $value = ($disabledStr == "disabled")? "" : $invoiceTypeInfoArr[$v['dataCode']];
                             $displayStr = ($disabledStr == "disabled")? 'style="display:none"' : "";
                             $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $checkedStr onclick="isCheckType('$v[dataCode]');" $disabledStr>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $checkedStr onclick="isCheckType('$v[dataCode]');" $disabledExtStr $disabledStr>
                                 <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
                                 <span id="$v[dataCode]Hide" $displayStr> : <input type="text" id="$v[dataCode]Money" name="contract[invoiceValue][]" value="$value" class="rimless_text formatMoney" onBlur="checkConMoney();conversion();"/></span>
 EOT;
                         } else {
                             $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledStr>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledExtStr $disabledStr>
                                 <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
                                 <span id="$v[dataCode]Hide" style="display:none"> : <input type="text" id="$v[dataCode]Money" name="contract[invoiceValue][]" class="rimless_text formatMoney" onBlur="checkConMoney();conversion();"/></span>
 EOT;
@@ -1834,6 +1838,7 @@ EOT;
             $this->assign('exeDeptCode', isset($exeDeptCode) ? $exeDeptCode : '');
             $this->assign('exeDeptName', isset($exeDeptName) ? $exeDeptName : '');
             if (isset ($_GET['perm']) && $_GET['perm'] == 'hwedit') { //海外编辑
+                $this->assign('isHwEdit', 1);
                 $this->view('hwedit');
             } else {
                 $this->view('edit', true);
@@ -1867,24 +1872,25 @@ EOT;
             foreach ($val as $v) {
                 $dataCodeArr[] = $v['dataCode'];
                 $disabledStr = (in_array($v['dataCode'],$limitInvoiceType))? "disabled" : "";
+                $disabledExtStr = (in_array($v['dataCode'],$limitInvoiceType))? "data-isDisable='1'" : "data-isDisable=''";
                 if ($v['dataCode'] == 'HTBKP') {
                     if (in_array($v['dataCode'], $invoiceCodeArr)) {
                         if($disabledStr == "disabled"){// 如果变更时原来存在禁用项的值了,保持其勾选状态不变且禁止勾选操作
                             $invoiceType .= <<<EOT
                                 <input type="checkbox"  checked="checked" disabled>
-                                <input type="checkbox" style="display:none" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked">
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" style="display:none" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]"  onclick="isBKPCheck('$v[dataCode]');" checked="checked">
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         }else {
                             $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked" $disabledStr>
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked"  onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         }
                     } else {
                         $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $disabledStr>
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]"  onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                     }
                 } else {
@@ -1905,7 +1911,7 @@ EOT;
                         }
                     } else {
                         $invoiceType .= <<<EOT
-                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledStr>
+                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledExtStr $disabledStr>
                         <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
                         <span id="$v[dataCode]Hide" style="display:none"> : <input type="text" id="$v[dataCode]Money" name="contract[invoiceValue][]" class="rimless_text formatMoney" onBlur="checkConMoney();conversion();"/></span>
 EOT;
@@ -2274,25 +2280,26 @@ EOT;
             foreach ($val as $v) {
                 $dataCodeArr[] = $v['dataCode'];
                 $disabledStr = (in_array($v['dataCode'],$limitInvoiceType))? "disabled" : "";
+                $disabledExtStr = (in_array($v['dataCode'],$limitInvoiceType))? "data-isDisable='1'" : "data-isDisable=''";
                 if ($v['dataCode'] == 'HTBKP') {
                     //if (in_array($v['dataCode'], $invoiceCodeArr)) {
                     if(isset($invoiceTypeInfoArr[$v['dataCode']])){
                         if($disabledStr == "disabled"){// 如果变更时原来存在禁用项的值了,保持其勾选状态不变且禁止勾选操作
                             $invoiceType .= <<<EOT
                                 <input type="checkbox"  checked="checked" disabled>
-                                <input type="checkbox" style="display:none" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked">
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" style="display:none" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isBKPCheck('$v[dataCode]');" checked="checked">
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         }else{
                            $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked">
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isBKPCheck('$v[dataCode]');" checked="checked">
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                         }
                     } else {
                         $invoiceType .= <<<EOT
-                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" $disabledStr>
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isBKPCheck('$v[dataCode]');" $disabledExtStr $disabledStr>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                     }
                 } else {
@@ -2314,7 +2321,7 @@ EOT;
                         }
                     } else {
                         $invoiceType .= <<<EOT
-                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledStr>$v[dataName]($v[expand1]%)
+                        <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" onclick="isCheckType('$v[dataCode]');" $disabledExtStr $disabledStr>$v[dataName]($v[expand1]%)
                         <span id="$v[dataCode]Hide" style="display:none"> : <input type="text" id="$v[dataCode]Money" name="contract[invoiceValue][]" value="" class="rimless_text formatMoney" onBlur="checkConMoney();conversion();"/></span>
 EOT;
                     }
@@ -2713,12 +2720,12 @@ EOT;
                     if (in_array($v['dataCode'], $invoiceCodeArr)) {
                         $invoiceType .= <<<EOT
                                 <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]" checked="checked">
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                     } else {
                         $invoiceType .= <<<EOT
                                 <input type="checkbox" id="$v[dataCode]" name="contract[invoiceCode][]" value="$v[dataCode]">
-                                <label for="$v[dataCode]">$v[dataName]</label>
+                                <label for="$v[dataCode]">$v[dataName]($v[expand1]%)</label>
 EOT;
                     }
                 } else {
@@ -3079,6 +3086,8 @@ EOT;
                     $rows[$key]['icomeMoney'] = $val['proj_icomeMoney'];
                     $rows[$key]['incomeProgress'] = $val['proj_incomeProgress'];
                     $rows[$key]['invoiceProgress'] = $val['proj_invoiceProgress'];
+
+                    $rows[$key]['surplusInvoiceMoney'] = empty($isNoInvoiceCont)? (isset($rows[$key]['surplusInvoiceMoney'])? $rows[$key]['surplusInvoiceMoney'] : 0) : 0;
                 }
 
                 //合同附件下载权限
@@ -3963,12 +3972,14 @@ EOT;
         $stype = isset($_REQUEST['sType'])? $_REQUEST['sType'] : 'exportContract';
 
         $records = $this->service->_db->getArray("select * from oa_system_session_records where userId = '{$_SESSION['USER_ID']}' and stype = '{$stype}';");
-        if($records){// 如果存在则删除并重新写入
-            $this->service->_db->query("DELETE FROM oa_system_session_records where userId = '{$_SESSION['USER_ID']}' and stype = '{$stype}';");
+        if($records){// 如果存在则更新相关记录
+            // $this->service->_db->query("DELETE FROM oa_system_session_records where userId = '{$_SESSION['USER_ID']}' and stype = '{$stype}';");
+            $this->service->_db->query("UPDATE oa_system_session_records SET svalue = '{$ColId}' where userId = '{$_SESSION['USER_ID']}' and skey = 'ColId' and stype = '{$stype}';");
+            $this->service->_db->query("UPDATE oa_system_session_records SET svalue = '{$ColName}' where userId = '{$_SESSION['USER_ID']}' and skey = 'ColName' and stype = '{$stype}';");
+        }else{
+            $this->service->_db->query("INSERT INTO oa_system_session_records SET userId = '{$_SESSION['USER_ID']}', stype = '{$stype}', skey = 'ColId', svalue = '{$ColId}';");
+            $this->service->_db->query("INSERT INTO oa_system_session_records SET userId = '{$_SESSION['USER_ID']}', stype = '{$stype}', skey = 'ColName', svalue = '{$ColName}';");
         }
-
-        $this->service->_db->query("INSERT INTO oa_system_session_records SET userId = '{$_SESSION['USER_ID']}', stype = '{$stype}', skey = 'ColId', svalue = '{$ColId}';");
-        $this->service->_db->query("INSERT INTO oa_system_session_records SET userId = '{$_SESSION['USER_ID']}', stype = '{$stype}', skey = 'ColName', svalue = '{$ColName}';");
         echo 1;
     }
 
@@ -4007,7 +4018,7 @@ EOT;
                         $colNameStr = $record['svalue'];
                     }
                 }
-                $this->service->_db->query("DELETE FROM oa_system_session_records where userId = '{$_SESSION['USER_ID']}' and stype = 'exportContract';");
+                // $this->service->_db->query("DELETE FROM oa_system_session_records where userId = '{$_SESSION['USER_ID']}' and stype = 'exportContract';");
             }else{
                 $colIdStr = '';
                 $colNameStr = '';
@@ -4132,21 +4143,26 @@ EOT;
             $colIdArr['linkmanName'] = '';
             $colIdArr['linkmanTel'] = '';
             $colIdArr['esmManagerName'] = '';
-            // 处理客户信息
-            $rs = $linkmanDao->findAll(array('contractId' => $row['id']), null, 'linkmanName,telephone');
-            if (!empty($rs)) {
-                foreach ($rs as $k => $v) {
-                    if ($k == 0) {
-                        $colIdArr['linkmanName'] = $v['linkmanName'];
-                        $colIdArr['linkmanTel'] = $v['telephone'];
-                    } else {
-                        $colIdArr['linkmanName'] .= PHP_EOL . $v['linkmanName'];
-                        $colIdArr['linkmanTel'] .= PHP_EOL . $v['telephone'];
+
+            if(isset($colArr['linkmanName']) || isset($colArr['linkmanTel'])){
+                // 处理客户信息
+                $rs = $linkmanDao->findAll(array('contractId' => $row['id']), null, 'linkmanName,telephone');
+                if (!empty($rs)) {
+                    foreach ($rs as $k => $v) {
+                        if ($k == 0) {
+                            $colIdArr['linkmanName'] = $v['linkmanName'];
+                            $colIdArr['linkmanTel'] = $v['telephone'];
+                        } else {
+                            $colIdArr['linkmanName'] .= PHP_EOL . $v['linkmanName'];
+                            $colIdArr['linkmanTel'] .= PHP_EOL . $v['telephone'];
+                        }
                     }
                 }
             }
+
             // 服务合同执行的项目经理
 //            if ($row['contractType'] == 'HTLX-FWHT') {
+            if(isset($colArr['esmManagerName'])){
                 $rs = $esmprojectDao->findAll(array('contractId' => $row['id'], 'contractType' => 'GCXMYD-01'),
                     null, 'managerName');
                 if (!empty($rs)) {
@@ -4160,16 +4176,32 @@ EOT;
                 }
 //            }
 
-            $colIdArr['esmManagerName'] = ($colIdArr['esmManagerName'] == '')? "-" : $colIdArr['esmManagerName'];
+                $colIdArr['esmManagerName'] = ($colIdArr['esmManagerName'] == '')? "-" : $colIdArr['esmManagerName'];
+
+            }
+
+            if (isset($colIdArr['surplusInvoiceMoney']) && !empty($row['surplusInvoiceMoney'])) {
+                // 判断关联合同是否存在不开票的开票类型,
+                $invoiceCodeArr = explode(",",$row['invoiceCode']);
+                $isNoInvoiceCont = '';
+                foreach ($invoiceCodeArr as $Arrk => $Arrv){
+                    if($Arrv == "HTBKP"){
+                        $isNoInvoiceCont = '1';
+                    }
+                }
+                $colIdArr['surplusInvoiceMoney'] = empty($isNoInvoiceCont)? (isset($rows[$key]['surplusInvoiceMoney'])? $rows[$key]['surplusInvoiceMoney'] : 0) : 0;
+            }
 
             //开票类型税点
-            if (isset($invoiceArr) && !empty($row['invoiceCode'])) {
-                $invoiceCodeArr = explode(',', $row['invoiceCode']);
-                $KPLXSD = array();
-                foreach ($invoiceCodeArr as $v) {
-                    array_push($KPLXSD, $invoiceArr[$v]);
+            if(isset($colArr['KPLXSD'])){
+                if (isset($invoiceArr) && !empty($row['invoiceCode'])) {
+                    $invoiceCodeArr = explode(',', $row['invoiceCode']);
+                    $KPLXSD = array();
+                    foreach ($invoiceCodeArr as $v) {
+                        array_push($KPLXSD, $invoiceArr[$v]);
+                    }
+                    $colIdArr['KPLXSD'] = implode('&', array_unique($KPLXSD));
                 }
-                $colIdArr['KPLXSD'] = implode('&', array_unique($KPLXSD));
             }
             array_push($dataArr, $colIdArr);
         }
@@ -5389,6 +5421,19 @@ EOT;
         //$service->asc = false;
         if($limit){
             $rows = $service->page_d();
+
+            foreach ($rows as $key => $val){
+                // 判断关联合同是否存在不开票的开票类型,
+                $invoiceCodeArr = explode(",",$val['invoiceCode']);
+                $isNoInvoiceCont = '';
+                foreach ($invoiceCodeArr as $Arrk => $Arrv){
+                    if($Arrv == "HTBKP"){
+                        $isNoInvoiceCont = '1';
+                    }
+                }
+                $rows[$key]['isNoInvoiceCont'] = $isNoInvoiceCont;
+                $rows[$key]['surplusInvoiceMoney'] = empty($isNoInvoiceCont)? (isset($rows[$key]['surplusInvoiceMoney'])? $rows[$key]['surplusInvoiceMoney'] : 0) : 0;
+            }
         }
 
         //数据加入安全码
@@ -6742,11 +6787,11 @@ EOT;
             $allProjMoneyWithSchl = 0;// 合同关联项目合同额*项目进度
             foreach($proTmp as $p){
                 // 解决因为金额过长出现科学计数法,导致计算出错的问题
-                $projectMoneyWithTax = sprintf("%.0f", $p['projectMoneyWithTax']);
+                $projectMoneyWithTax = sprintf("%.3f", $p['projectMoneyWithTax']);
                 $projectMoneyWithTax = bcmul($projectMoneyWithTax,1,10);
                 $allProjMoneyWithSchl += bcmul($projectMoneyWithTax,bcdiv($p['projectProcess'],100,6),6);
             }
-            $allProjMoneyWithSchl = sprintf("%.0f", $allProjMoneyWithSchl);
+            $allProjMoneyWithSchl = sprintf("%.3f", $allProjMoneyWithSchl);
             $conProgress = bcmul(bcdiv($allProjMoneyWithSchl,$contractMoney,9),100,3);
             $conProgress = round($conProgress,2);
             echo $conProgress;
@@ -6818,6 +6863,7 @@ EOT;
         $updateArr['id'] = $id;
         $updateArr['contractName'] = isset($postData['contractName'])? $postData['contractName'] : '';
         $updateArr['partAContractCode'] = isset($postData['partAContractCode'])? $postData['partAContractCode'] : '';
+        $updateArr['partAContractName'] = isset($postData['partAContractName'])? $postData['partAContractName'] : '';
         $updateArr['paperSignTime'] = isset($postData['paperSignTime'])? $postData['paperSignTime'] : '';
         $updateArr = $this->service->addUpdateInfo($updateArr);
 
@@ -6830,6 +6876,38 @@ EOT;
             }else{
                 msg('保存失败!');
             }
+        }
+    }
+
+    /**
+     * 打开合同 PMS 731
+     */
+    function c_restartContract(){
+        $id = isset($_GET['id'])? $_GET['id'] : '';
+        if(!empty($id)){
+            $result = $this->service->updateById(array("id"=>$id,"state"=>4));
+
+            if($result){
+                // 添加执行轨迹记录
+                $tracksDao = new model_contract_contract_tracks();
+                $proDao = new model_contract_conproject_conproject();
+                $contract = $this->service->get_d($id);
+                $tracksObject = array(
+                    'contractId' => $contract['id'],//合同ID
+                    'contractCode'=> $contract['contractCode'],//合同编号
+                    'exePortion' => $proDao->getConduleBycid($contract['id']),//合同执行进度
+                    'schedule' => "",
+                    'modelName'=>'contractRestart',
+                    'operationName'=>'重新打开合同',
+                    'result'=>'1',
+                    'recordTime'=>date("Y-m-d H:i:s"),
+                    'expand2'=>'model_contract_contract_contract:c_restartContract'
+                );
+                $result = $tracksDao->addRecord($tracksObject);
+            }
+            echo ($result)? "ok" : "fail";
+        }else{
+            echo "fail";
         }
     }
 }

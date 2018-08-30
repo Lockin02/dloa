@@ -1622,6 +1622,8 @@ class controller_engineering_project_esmproject extends controller_base_action
                 $conDao = new model_contract_contract_contract();
                 $conprojectDao = new model_contract_conproject_conproject();
                 $productDao = new model_contract_contract_product();
+                $rentalcarDao = new model_outsourcing_vehicle_rentalcar();
+                $catchArr = array();
                 foreach ($rows as $k => $v) {
                     // 设置项目类型，如果该值没有传入，则默认工程项目
                     $pType = isset($v['pType']) ? $v['pType'] : 'esm';
@@ -1629,6 +1631,10 @@ class controller_engineering_project_esmproject extends controller_base_action
                     // 只有合同项目才加入这些处理
                     if ($pType == 'esm') {
                         $rows[$k] = $this->service->contractDeal($v);
+                        // 加上租车登记的预提金额 PMS 3007
+                        $rentalcarCostArr = $rentalcarDao->getProjectAuditingCarFee($v['id']);
+                        $auditingCarFee = ($rentalcarCostArr)? $rentalcarCostArr['totalCost'] : 0;
+                        $rows[$k]['feeCar'] = round(bcadd($v['feeCar'],$auditingCarFee,3),2);
                     } else if ($v['pType'] == "pro") {
                         //执行区域
                         $rs = $productDao->find(array('contractId' => $v['contractId'], 'newProLineCode' => $v['newProLine'],
@@ -1731,6 +1737,7 @@ class controller_engineering_project_esmproject extends controller_base_action
                 //试用预算，试用决算
                 $rows = $this->service->PKFeeDeal_d($rows,1);
 
+                $rentalcarDao = new model_outsourcing_vehicle_rentalcar();
                 // 其余信息处理
                 foreach ($rows as $k => $v) {
                     // 设置项目类型，如果该值没有传入，则默认工程项目
@@ -1739,6 +1746,12 @@ class controller_engineering_project_esmproject extends controller_base_action
                     // 只有合同项目才加入这些处理
                     if ($pType == 'esm') {
                         $rows[$k] = $this->service->contractDeal($v);
+                        // 加上租车登记的预提金额 PMS 3007
+                        if(isset($v['feeCar'])){
+                            $rentalcarCostArr = $rentalcarDao->getProjectAuditingCarFee($v['id']);
+                            $auditingCarFee = ($rentalcarCostArr)? $rentalcarCostArr['totalCost'] : 0;
+                            $rows[$k]['feeCar'] = round(bcadd($v['feeCar'],$auditingCarFee,3),2);
+                        }
                     } else if ($v['pType'] == "pro") {
                         //收入值处理
                         $rows[$k]['curIncome'] = $this->service->getCurIncomeByPro($v);
