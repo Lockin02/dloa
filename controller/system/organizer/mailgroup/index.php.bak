@@ -1,0 +1,124 @@
+<?php
+class controller_system_organizer_mailgroup_index extends model_system_organizer_mailgroup_index
+{
+	public $show;
+	function __construct()
+	{
+		parent::__construct();
+		$this->show = new show();
+		$this->show->path = 'system/organizer/mailgroup/';
+	}
+	
+	function c_index()
+	{
+		echo 123;
+		$this->c_list();
+	}
+	
+	function c_list()
+	{
+		$this->show->assign('list',$this->model_list());
+		$this->show->display('list');
+	}
+	
+	
+	function c_add()
+	{
+		if ($_POST)
+		{
+			if ($this->model_add($_POST))
+			{
+				showmsg('操作成功！','self.parent.location.reload();','button');
+			}else{
+				showmsg('操作失败，请与管理员联系！');
+			}
+		}else{
+			$gl = new includes_class_global();
+			$select_dept='';
+			global $func_limit;
+			if ($func_limit['管理员'])
+			{
+				$data = $gl->GetDept();
+				if ($data)
+				{
+					foreach ($data as $row)
+					{
+						$select_dept .='<option value="'.$row['DEPT_ID'].'">'.$row['DEPT_NAME'].'</option>';
+					}
+				}
+			}else{
+				$data = $gl->GetDept($_SESSION['DEPT_ID']);
+				$select_dept = '<option value="'.$_SESSION['DEPT_ID'].'">'.$data[0]['DEPT_NAME'].'</option>';
+			}
+			$this->show->assign('select_dept',$select_dept);
+			$this->show->display('add');
+		}
+	}
+	
+	function c_edit()
+	{
+		if ($_POST)
+		{
+			if($this->model_edit($_GET['id'],$_GET['key'],$_POST))
+			{
+				showmsg('操作成功！','self.parent.location.reload();','button');
+			}else{
+				showmsg('操作失败，请与管理员联系！');
+			}
+		}else{
+			if ($_GET['id'] && $_GET['key'])
+			{
+				$rs = $this->model_get_groupinfo($_GET['id'] , $_GET['key']);
+				if ($rs)
+				{
+					$gl = new includes_class_global();
+					$data = $gl->GetDept();
+					if ($data)
+					{
+						foreach ($data as $row)
+						{
+							if ($row['DEPT_ID']==$rs['dept_id'])
+							{
+								$select_dept .='<option selected value="'.$row['DEPT_ID'].'">'.$row['DEPT_NAME'].'</option>';
+							}else{
+								$select_dept .='<option value="'.$row['DEPT_ID'].'">'.$row['DEPT_NAME'].'</option>';
+							}
+						}
+					}
+					$memberlist = $gl->GetUserName(explode(',',$rs['memberlist']));
+					$senderlist = $rs['senderlist'] ? $gl->GetUserName(explode(',',$rs['senderlist'])) : '';
+					unset($gl);
+					$info = new model_info_notice();
+					$member_input = $info->get_user_list(null,null,null,$rs['memberlist']);
+					$this->show->assign('user_input',$member_input.'<div style="text-align: center;"><input type="button" onclick="tb_remove();" value=" 确定 "/></div>');
+					$this->show->assign('member_name_list',($memberlist ? implode('、',$memberlist) : ''));
+					$this->show->assign('sender_name_list',($senderlist ? implode('、',$senderlist) : ''));
+					$this->show->assign('none',($senderlist ? '' : 'none'));
+					$this->show->assign("sender_list",$rs['senderlist']);
+					$this->show->assign('select_sender_1',($rs['senderlist'] ? 'selected' : ''));
+					$this->show->assign('description',$rs['description']);
+					$this->show->assign('groupname',$rs['groupname']);
+					$this->show->assign('select_dept',$select_dept);
+					$this->show->display('edit');
+				}else{
+					showmsg('数据不在！');
+				}
+			}
+		}
+	}
+	
+	function c_del()
+	{
+		if ($_GET['id'] && $_GET['key'])
+		{
+			if ($this->model_del($_GET['id'] , $_GET['key']))
+			{
+				showmsg('操作成功！','self.parent.location.reload();','button');
+			}else{
+				showmsg('操作失败，请与管理员联系！');
+			}
+		}
+	}
+}
+
+?>
