@@ -1,0 +1,10 @@
+<?php
+@session_start( );
+include( $Htmledit_Path."/../includes/db.inc.php" );
+include( $Htmledit_Path."/../includes/config.php" );
+if ( $Htmledit_Tag != "Htmledit" )
+{
+    exit( );
+}
+echo "<HTML><HEAD><TITLE>插入图片</TITLE>\r\n<META http-equiv=Content-Type content=\"text/html; charset=gb2312\">\r\n<Link rel=\"stylesheet\" type=\"text/css\" href=\"../css/pop.css\"></HEAD>\r\n<BODY leftMargin=0 topMargin=0 marginwidth=\"0\" marginheight=\"0\" bgcolor=\"menu\">\r\n<SCRIPT language=javascript>\r\n onload = function(){\r\n  resizeTo(330, 225);\r\n }\r\n function sChange(){\r\n  if(document.forms[0].nlSel[0].checked)\r\n   document.forms[0].sAction.value = \"上传\";\r\n  else if(document.forms[0].nlSel[1].checked)\r\n   document.forms[0].sAction.value = \"选择\";\r\n  else\r\n   document.forms[0].sAction.value = \"填写\";\r\n }\r\n function sNewLogoProceed(){\r\n  if(document.forms[0].nlSel[0].checked)\r\n   location.href = \"uploadimg.php?langtype=cn\";\r\n  else if(document.forms[0].nlSel[1].checked)\r\n   parent.sCallLib();\r\n  else\r\n   location.href = \"webimg.php?langtype=cn\";\r\n }\r\n</SCRIPT>\r\n<TABLE width=\"330\" align=\"center\" cellPadding=8 cellSpacing=0>\r\n  <FORM>\r\n  <TR>\r\n      <TD height=\"110\"><FIELDSET><LEGEND>选择插入的图片</LEGEND><br>\r\n        &nbsp;&nbsp;&nbsp;<INPUT id=sUoi onclick=sChange(); type=radio CHECKED value=1 name=nlSel>\r\n        <LABEL for=sUoi>&nbsp;上传图片</LABEL> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\r\n        <INPUT id=sSfl onclick=sChange(); type=radio value=2 name=nlSel>\r\n        <LABEL for=sSfl>&nbsp;从图片库中选择一张图片</LABEL><br><br>\r\n        &nbsp;&nbsp;&nbsp;<INPUT id=sWeb onclick=sChange(); type=radio value=3 name=nlSel>\r\n\t\t<LABEL for=sWeb>&nbsp;网上图片</LABEL><br>\r\n\t\t<br>\r\n      </FIELDSET></TD>\r\n    </TR>\r\n  <TR>\r\n    <TD height=\"30\" align=right><INPUT onclick=sNewLogoProceed(); type=button value=上传 name=sAction> \r\n<INPUT onclick=\"javascript: window.close();\" type=button value=取消></TD></TR></FORM></TABLE>\r\n</BODY></HTML>\r\n";
+?>

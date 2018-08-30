@@ -1,0 +1,10 @@
+<?php
+@session_start( );
+include( $Htmledit_Path."/../includes/db.inc.php" );
+include( $Htmledit_Path."/../includes/config.php" );
+if ( $Htmledit_Tag != "Htmledit" )
+{
+    exit( );
+}
+echo "<HTML><HEAD><TITLE>选择Flash</TITLE>\r\n<META http-equiv=Content-Type content=\"text/html; charset=gb2312\">\r\n<LINK href=\"../css/pop.css\" type=text/css rel=stylesheet></HEAD>\r\n<BODY bgcolor=\"menu\">\r\n<TABLE cellSpacing=0 cellPadding=5 width=\"100%\">\r\n<TR> \r\n<TD><FIELDSET>\r\n<LEGEND>Flash库</LEGEND>\r\n<br>\r\n<table width=\"717\" border=\"1\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\" bordercolorlight=\"#999999\" bordercolordark=\"#FFFFFF\">\r\n<tr> \r\n<td width=\"149\" height=\"30\" align=\"center\" background=\"images/btbg.gif\"><a href=\"sliblookf.php\" target=\"look\"><font color=\"#000000\">我的Flash</font></a></td>\r\n<td valign=\"top\" rowspan=\"5\" bgcolor=\"#666666\"><iframe src='sliblookf.php' name='look' height='100%' width='100%' scrolling='yes' marginheight='0' frameborder='0'></iframe></td>\r\n</tr>\r\n<tr> \r\n<td width=\"149\" height=\"30\" align=\"center\" background=\"images/btbg.gif\"><a href=\"sliblook_effect.php\" target=\"look\"><font color=\"#000000\">特效Flash</font></a></td>\r\n</tr>\r\n<tr> \r\n<td width=\"149\" height=\"30\" align=\"center\" background=\"images/btbg.gif\"><a href=\"sliblook_feast.php\" target=\"look\"><font color=\"#000000\">节日Flash</font></a></td>\r\n</tr>\r\n<tr> \r\n<td width=\"149\" height=\"187\" valign=\"top\" background=\"images/btbg.gif\">&nbsp;</td>\r\n</tr>\r\n</table>\r\n</FIELDSET></TD>\r\n</TR>\r\n<TR>\r\n<TD align=right> \r\n<table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"0\">\r\n<tr>\r\n<!--td width=\"86%\">\r\n<div align=\"center\">您的媒体目录空间是30720k &nbsp;&nbsp;现已使用0k &nbsp;&nbsp;可用空间30720k</div>\r\n</td-->\r\n<td width=\"14%\" align=\"right\"> \r\n<input onClick=\"javascript: window.close();\" type=button value=取消 name=\"button\">\r\n</td>\r\n</tr>\r\n</table>\r\n</TD>\r\n</TR></TABLE>\r\n</BODY></HTML>\r\n";
+?>
