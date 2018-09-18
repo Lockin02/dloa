@@ -83,7 +83,17 @@
                     afterInsertRow: function(rowid, rowData){
                         var be='';
                         var cl='#FF9900';
-                        be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='查看' title='申请单查看' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                        switch (rowData.sta) {
+                            case '待审':
+                                be ="<input style='height:22px;' class='btn-class' id='edt_"
+                                    +rowData.key+"' type='button' value='修改' title='未审批前，打回修改' onclick=\"editClickFun('"+rowData.key+"','edit')\" />"
+                                    +"<input style='height:22px;' class='btn-class' id='del_"+rowData.key+"' type='button' value='删除' title='删除' onclick=\"delClickFun('"+rowData.key+"')\" />";;
+                                $('#jqg_'+rowData.key).css('display','none');
+                                break;
+                            default:
+                                be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='查看' title='申请单查看' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                        }
+
                         jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
                         jQuery("#rowedgrid").jqGrid('setCell',rowid,'username','',{color:cl});
                         jQuery("#rowedgrid").jqGrid('setCell',rowid,'usersta','',{color:cl});
@@ -120,8 +130,28 @@
                         }
                     }
                 });
+                //修改提交
+                $('#xmeditForm').validate({
+                    submitHandler: function(form){
+                        if(confirm('确定提交？')){
+                            editSubmitFun();
+                        }
+                    },
+                    rules:{
+                        xm_amount:{
+                            required:true,
+                            number:true
+                        }
+                    },
+                    messages:{
+                        xm_amount:{
+                            required:'请输入金额',
+                            number:'请输入正确金额'
+                        }
+                    }
+                });
             });
-            //转正
+            //查看
             function amClickFun(id){
                 var rand=Math.random()*100000;
                 var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
@@ -165,14 +195,78 @@
                 )
                 return false;
             }
+            //修改
+            function editClickFun(id) {
+                var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
+                $('#hr_xm_edit').css('display', 'block');
+                $('#edit_key').val(rowData.key);
+                $('#xm_name').html(rowData.username);
+                $('#xm_amount').val(rowData.changeam);
+                $('#xm_remark').val(rowData.remark);
+                $('#xm_prono').val(rowData.prono);
+                $('#xm_proname').val(rowData.proname);
+            }
+            //修改提交审批
+            function editSubmitFun() {
+                var rand=Math.random()*100000;
+                var rand_id=$('#edit_key').val();
+                var xm_amount = $("#xm_amount").val();
+                var xm_remark = $("#xm_remark").val();
+                var xm_prono = $("#xm_prono").val();
+                var xm_proname = $("#xm_proname").val();
+                $('#newxmSub').attr('disabled',true);
+                $.post('?model=salary&action=dp_pro_in',{
+                        rand_key:rand_id,amount:xm_amount,remark:xm_remark,prono:xm_prono,proname:xm_proname,rand:rand,sub:'edit',
+                    },
+                    function (data)
+                    {
+                        var msg=eval('(' + data + ')');
+                        if(msg&&msg['error']){
+                            alert('错误：'+msg['error']);
+                            $('#newxmSub').attr('disabled',false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+                        $('#newxmSub').attr('disabled',false);
+                        paCloseFun('hr_xm_edit');
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    }
+                )
+                return false;
+            }
+            // 删除
+            function delClickFun(id) {
+                var button_id = "del_"+id;
+                $('#' + button_id).attr('disabled',true);
+
+                var rand=Math.random()*100000;
+                if(confirm('确定删除？')){
+                    var rand=Math.random()*100000;
+                    $.post('?model=salary&action=dp_pro_in', {
+                            rand_key:id,sub:'del',rand:rand
+                        },
+                        function (data) {
+                            var msg=eval('(' + data + ')');
+                            if (msg['id']){
+                                alert('操作成功');
+                                jQuery("#rowedgrid").trigger("reloadGrid");
+                            } else{
+                                alert('操作失败');
+                                $('#' + button_id).attr('disabled',false);
+                            }
+                        }
+
+                    )
+                }
+            }
+
             //关闭
             function paCloseFun(id){
                 $('#'+id).css('display', 'none');
                 $('#lui_rowedgrid').css('display', 'none');
             }
-            function outExcel(){
-                alert('outexcel');
-            }
+
             function checkidcard(num){
                 var len = num.length, re;
                 if (len == 15)
@@ -199,13 +293,13 @@
             }
         </script>
         <style type="text/css">
-#newuserForm label.error {
-	margin-left: 10px;
-	width: auto;
-	display: inline;
-    color: red;
-}
-</style>
+        #newuserForm label.error {
+            margin-left: 10px;
+            width: auto;
+            display: inline;
+            color: red;
+        }
+        </style>
     </head>
     <body>
         <input type="hidden" id="user_key" value="" ></input>
@@ -251,6 +345,54 @@
                     <tr>
                         <td colspan="2" align="center">
                             <input type="button" onclick="paCloseFun('hr_user_new');"  value="关闭"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <input type="hidden" id="edit_key" value="" ></input>
+        <div id="hr_xm_edit" class="ui-searchFilter" tabindex="-1" role="dialog" style="display: none; left: 0px; top: 0px;" >
+            <form id="xmeditForm" method="post" action="#">
+                <table class="ui-widget-content ui-corner-all" align="center" style="text-align: left;width: 608px;" >
+                    <tr>
+                        <td style="line-height: 20px;text-align: center;" class="ui-widget-header ui-corner-all" colspan="2">
+                            项目修改信息
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl" style="padding-top:5px;"> 姓名：</td>
+                        <td id="xm_name"></td>
+                    </tr>
+                    <tr>
+                        <td class="tl"> 项目奖金：</td>
+                        <td>
+                            <input id="xm_amount" name="xm_amount" type="text"  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">项目编号：</td>
+                        <td>
+                            <input id="xm_prono" name="xm_prono" type="text"  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">项目名称：</td>
+                        <td>
+                            <input id="xm_proname" name="user_proname" type="text"  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tl">备注：</td>
+                        <td>
+                            <textarea id="xm_remark" name="xm_remark" cols="35" rows="3" ></textarea>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" id="newxmSub" value="提交审批"/>
+                            <input type="button" onclick="paCloseFun('hr_xm_edit');"  value="关闭"/>
                         </td>
                     </tr>
                 </table>

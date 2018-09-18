@@ -675,11 +675,19 @@ EOT;
                         "' and Wf_task_ID='" . $workflowInfo['Wf_task_ID'] .
                         "' and find_in_set('" . $_SESSION['USER_ID'] . "',User)>0 ORDER BY SmallID";
                     $nextFlowArr = $this->_db->getArray($sql);
-                    foreach ($nextFlowArr as $val) {
-                        if (trim($val["User"], ",") == $_SESSION['USER_ID']) {
-                            $this->_db->query("delete from flow_step where ID='" . $val["ID"] . "'");
-                        } else {
-                            $this->_db->query("update flow_step set User='" . str_replace($_SESSION['USER_ID'] . ",", "", $val["User"]) . "' where ID='" . $val["ID"] . "' ");
+                    if(!empty($nextFlowArr)){
+                        foreach ($nextFlowArr as $val) {
+                            //后续审批含有自己审批步骤,删除
+                            if (strstr($val['User'], $_SESSION['USER_ID']) !== false && !empty($val['ID'])){
+                                $this->_db->query("delete from flow_step where ID='" . $val["ID"] . "'");
+                            }
+                            /*
+                            if (trim($val["User"], ",") == $_SESSION['USER_ID']) {
+                                $this->_db->query("delete from flow_step where ID='" . $val["ID"] . "'");
+                            } else {
+                                $this->_db->query("update flow_step set User='" . str_replace($_SESSION['USER_ID'] . ",", "", $val["User"]) . "' where ID='" . $val["ID"] . "' ");
+                            }
+                            */
                         }
                     }
 
@@ -729,15 +737,22 @@ EOT;
                                 }
                             }
                         } else {
-                            $sql = "update wf_task set examines='ok' , finish=now() , Status='0' where task='" . $workflowInfo['Wf_task_ID'] . "' and Status='ok' ";
+                            $sql = "update wf_task set examines='".$result."' , finish=now() , Status='0' where task='" . $workflowInfo['Wf_task_ID'] . "' and Status='ok' ";
                             $this->_db->query($sql);
 
-                            $sql = "select PassSqlCode , name from wf_task where task='" . $workflowInfo['Wf_task_ID'] . "'";
+                            $sql = "select PassSqlCode ,DisPassSqlCode, name from wf_task where task='" . $workflowInfo['Wf_task_ID'] . "'";
                             $taskArrs = $this->_db->getArray($sql);
                             $taskInfo = $taskArrs[0];
-                            if ($taskInfo['PassSqlCode'] != "") {
-                                $this->_db->query(stripslashes($taskInfo['PassSqlCode']));
+                            if($result == 'ok'){
+                                if ($taskInfo['PassSqlCode'] != "") {
+                                    $this->_db->query(stripslashes($taskInfo['PassSqlCode']));
+                                }
+                            }else if($result == 'no'){
+                                if ($taskInfo['DisPassSqlCode'] != "") {
+                                    $this->_db->query(stripslashes($taskInfo['DisPassSqlCode']));
+                                }
                             }
+
                             //设置审批流已完成
                             $isOver = true;
                         }

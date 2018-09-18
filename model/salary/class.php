@@ -1315,7 +1315,7 @@ class model_salary_class extends model_base {
             
             if ($row ['freezeflag'] == '1') {
                 $dt = $row ['freezedt'];
-                $us = $row ['freezeuser'];
+                $us = $row ['user_name'];
                 $cdt = $row ['freezecdt'];
                 $st = '冻结';
             } else {
@@ -1368,7 +1368,7 @@ class model_salary_class extends model_base {
 		try {
 			$this->db->query ( "START TRANSACTION" );
 			$sql = "select
-                    p.id , h.expflag , p.userid , p.baseam , s.comedt , s.usersta , s.amount
+                    p.id , h.expflag , p.userid , p.baseam , s.comedt , s.usersta , s.amount , h.payCom
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
                     left join hrms h on (s.userid=h.user_id)
@@ -1474,76 +1474,175 @@ class model_salary_class extends model_base {
                         where p.useraccount='" . $res ['userid'] . "'";
 					$this->db->query_exc ( $sql );
 				}
-			} elseif ($actflag == 'dj') { // 冻结
-				if (empty ( $leavedt )) { // 冻结日期为空，代表解冻
-					$this->model_salary_update ( $id, array (
-							'sta' => 0,
-							'usersta' => 2,
-							'freezedt' => $leavedt,
-							'freezeuser' => $_SESSION ['USER_ID'],
-							'freezecdt' => 'now()',
-							'freezeflag' => '0',
-							'freezesta' => $res ['usersta']
-					), array (
-							0,
-							1,
-							2,
-							3,
-							4,
-							5,
-							6
-					) );
-					$amount = $this->salaryClass->decryptDeal ( $res ['amount'] );
-					$pid = $res ['id'];
-					$this->model_pay_update ( $pid, array (
-							'basenowam' => '0',
-							'nowamflag' => '0',
-							'leaveflag' => 0,
-							'baseam' => $amount
-					), array (
-							1,
-							2
-					) );
-					$this->model_pay_stat ( $pid );
-				} else {
-					$this->model_salary_update ( $id, array (
-							'sta' => 1,
-							'usersta' => 3,
-							'freezedt' => $leavedt,
-							'freezeuser' => $_SESSION ['USER_ID'],
-							'freezecdt' => 'now()',
-							'freezeflag' => '1',
-							'freezesta' => $res ['usersta']
-					), array (
-							0,
-							1,
-							2,
-							3,
-							4,
-							5,
-							6
-					) );
-					$amount = $this->salaryClass->decryptDeal ( $res ['amount'] );
-					$pid = $res ['id'];
-					$baseNow = $this->salaryClass->getSalaryByDateToWorkDays ( $amount, $leavedt, false );
-					if ($baseNow == 0) { // 特别
-						$amount = $baseNow;
-					}
-					$this->model_pay_update ( $pid, array (
-							'basenowam' => $baseNow,
-							'nowamflag' => '4',
-							'leaveflag' => 0,
-							'baseam' => $amount
-					), array (
-							1,
-							2
-					) );
-					$this->model_pay_stat ( $pid );
-				}
+			}
+			elseif ($actflag == 'dj') { // 冻结
+
+                //如果冻结日期在关账月份之前 或在本月之后不允许操作
+                if(!empty($leavedt)){
+                    $sql = "select * from salary_config where com='". $res['payCom']."'";
+                    $salary_config = $this->db->get_one($sql);
+                    $leavedt_year = date('Y', strtotime($leavedt));
+                    $leavedt_mon = date('m', strtotime($leavedt));
+
+                    if(intval($this->nowm)== intval($salary_config['pmon'])){ //如果可操作月份等于本月,需冻结月份等于可操作月份
+                        if(intval($leavedt_mon) != $salary_config['pmon']){
+                            $response['error_code'] = '2';
+                            return $response;
+                        }
+                    }elseif ( (intval($this->nowm)-intval($salary_config['pmon'])) ==1){ //如果本月大于可操作月份,需冻结月份为可操作月或本月(排除1月)
+                        if(intval($leavedt_mon) != intval($this->nowm) && intval($leavedt_mon) != intval($salary_config['pmon'])){
+                            $response['error_code'] = '2';
+                            return $response;
+                        }
+                    }elseif ( (intval($this->nowm)==1)&&(intval($salary_config['pmon']==12))&&(intval($this->nowy)-intval($salary_config['pyear']) ==1) ){ //跨年操作
+                        if( !in_array(intval($leavedt_mon),array(1,12)) ){
+                            $response['error_code'] = '2';
+                            return $response;
+                        }elseif (intval($leavedt_mon)==1 && intval($leavedt_year)!=$this->nowy ){
+                            $response['error_code'] = '2';
+                            return $response;
+                        }elseif (intval($leavedt_mon)==12 && intval($leavedt_year)!=$salary_config['pyear']){
+                            $response['error_code'] = '2';
+                            return $response;
+                        }
+                    }else {
+                        //关账日期错误
+                        $response['error_code'] = '3';
+                        return $response;
+                    }
+                }
+
+
+                //根据冻结日期和关账月份,获取需操作冻结的月份和需解除冻结的月份
+                $out_freeze_status = 0; //初始化冻结状态为0,即未冻结; 1为冻结
+                $out_freeze_year_mon = array(); //初始化解除冻结年月,即未冻结
+                $freeze_year_mon = array(); //初始化冻结年月
+                $amount = $this->salaryClass->decryptDeal ( $res ['amount'] );
+
+                $sql = "select freezeflag,freezedt from salary where UserId='". $res['userid'] ."'";
+                $freezeflag_info = $this->db->get_one($sql);
+                if($freezeflag_info['freezeflag'] == 1){
+                    $out_freeze_status = 1;
+                    $out_freeze_year_mon[0] = date('Y', strtotime($freezeflag_info['freezedt']));
+                    $out_freeze_year_mon[1] = date('m', strtotime($freezeflag_info['freezedt']));
+                }
+                if(!empty($leavedt)){
+                    $freeze_year_mon[0] = date('Y', strtotime($leavedt));
+                    $freeze_year_mon[1] = date('m', strtotime($leavedt));
+                }
+
+                //根据冻结与否,更新薪资基础表 model_salary_update
+                if(!empty($freeze_year_mon)){
+                    $this->model_salary_update ( $id, array (
+                        'sta' => 1,
+                        'usersta' => 3,
+                        'freezedt' => $leavedt,
+                        'freezeuser' => $_SESSION ['USER_ID'],
+                        'freezecdt' => 'now()',
+                        'freezeflag' => '1',
+                        'freezesta' => $res ['usersta']
+                    ), array (
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ) );
+                }else{
+                    $this->model_salary_update ( $id, array (
+                        'sta' => 0,
+                        'usersta' => 2,
+                        'freezedt' => '',
+                        'freezeuser' => $_SESSION ['USER_ID'],
+                        'freezecdt' => 'now()',
+                        'freezeflag' => '0',
+                        'freezesta' => $res ['usersta']
+                    ), array (
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ) );
+                }
+
+                //如果解冻月份和冻结月份是同一个月份 只需更新冻结月份数据即可
+                if ($out_freeze_year_mon == $freeze_year_mon){
+
+                    //如果含有冻结月份,根据离职日期获取冻结月份发薪实际 model_pay_update
+                    if(!empty($freeze_year_mon)){
+                        $sql = "select id from salary_pay 
+                                where UserId='".$res['userid']."' and pyear='".$freeze_year_mon[0]."' and pmon='".$freeze_year_mon[1]."'";
+                        $salary_pay_info = $this->db->get_one($sql);
+
+                        $baseNow = $this->salaryClass->getSalaryByDateToWorkDays ( $amount, $leavedt, false );
+                        if ($baseNow == 0) { // 特别
+                            $amount = $baseNow;
+                        }
+
+                        $this->model_pay_update ( $salary_pay_info['id'], array (
+                            'basenowam' => $baseNow,
+                            'nowamflag' => '4',
+                            'leaveflag' => 0,
+                            'baseam' => $amount
+                        ), array (
+                            1,
+                            2
+                        ) );
+
+                        $this->model_pay_stat ( $salary_pay_info['id'] );
+                    }
+
+                }else{ //如果冻结月份和解冻月份不是同一个月份,进行解冻和冻结两步操作
+
+                    //如果含有需解冻的月份,更新薪资支付信息model_pay_update(更新基础薪资和状态)
+                    if($out_freeze_status==1 && !empty($out_freeze_year_mon)){
+                        $sql = "select id from salary_pay 
+                                where UserId='".$res['userid']."' and pyear='".$out_freeze_year_mon[0]."' and pmon='".$out_freeze_year_mon[1]."'";
+                        $out_salary_pay_info = $this->db->get_one($sql);
+
+                        $this->model_pay_update ( $out_salary_pay_info['id'], array (
+                            'basenowam' => '0',
+                            'nowamflag' => '0',
+                            'leaveflag' => 0,
+                            'baseam' => $amount
+                        ), array (
+                            1,
+                            2
+                        ) );
+
+                        $this->model_pay_stat ( $out_salary_pay_info['id'] );
+                    }
+
+                    //如果含有冻结月份,根据离职日期获取冻结月份发薪实际 model_pay_update
+                    if(!empty($freeze_year_mon)){
+                        $sql = "select id from salary_pay 
+                                where UserId='".$res['userid']."' and pyear='".$freeze_year_mon[0]."' and pmon='".$freeze_year_mon[1]."'";
+                        $salary_pay_info = $this->db->get_one($sql);
+                        $baseNow = $this->salaryClass->getSalaryByDateToWorkDays ( $amount, $leavedt, false );
+                        if ($baseNow == 0) { // 特别
+                            $amount = $baseNow;
+                        }
+
+                        $this->model_pay_update ( $salary_pay_info['id'], array (
+                            'basenowam' => $baseNow,
+                            'nowamflag' => '4',
+                            'leaveflag' => 0,
+                            'baseam' => $amount
+                        ), array (
+                            1,
+                            2
+                        ) );
+                        $this->model_pay_stat ( $salary_pay_info['id'] );
+                    }
+                }
 			}
 			$this->db->query ( "COMMIT" );
-			$responce->id = $id;
-			$this->globalUtil->insertOperateLog ( '工资管理', $id, '员工离职', '成功' );
+//			$this->globalUtil->insertOperateLog ( '工资管理', $id, '员工离职', '成功' );
 		} catch ( Exception $e ) {
 			$this->db->query ( "ROLLBACK" );
 			$responce->error = $e->getMessage ();
@@ -1755,7 +1854,7 @@ class model_salary_class extends model_base {
 					'lpd' => $row ['lpd'],
 					'usercard' => $row ['usercard'],
 					'pdeptname' => $row ['pdeptname'],
-					'idcard' => $row ['idcard'] 
+					'idcard' => $row ['idcard']
 			);
 		}
 		if (! empty ( $res )) {
@@ -1874,22 +1973,29 @@ class model_salary_class extends model_base {
 						$sp = $sp1 + $sp2;
 					}
 				}
-				
-				 /*
-				 * '操作','KEY','姓名','公司','部门','员工类型','入职日期','离职日期'
-				 * ,'基本工资','事假','病假','事病假扣除','实际工资小计','各项补贴'
-				 * ,'社保费','公积金','税前扣除','税后扣除','个人所得税','离职福利','实发离职工资'
-				 * ,'账号','开户行','税前扣除备注','税后扣除备注'
-				 *
-				 */
-				if ($outflag == 'list') {
-					$BaseAm = $this->salaryClass->decryptDeal($sp ['BaseAm']);
-                    if (intval($BaseAm) != 0) {
-                        $bna2 = round(($this->salaryClass->decryptDeal($sp ['BaseNowAm']) / $this->salaryClass->decryptDeal($sp ['BaseAm']) * ($this->salaryClass->decryptDeal($sp ['GwAm']) + $this->salaryClass->decryptDeal($sp ['JxAm']))), 2);
+				//用户工资小计的计算要素
+                $baseam = $this->salaryClass->decryptDeal($sp ['BaseAm']);
+				$leavedt = $val['ldt'];
+                $gwam = $this->salaryClass->decryptDeal($sp['GwAm']);
+                $jxam = $this->salaryClass->decryptDeal($sp['JxAm']);
+                $sh = $sp['SickHolsDays'];
+                $ph = $sp['PerHolsDays'];
+                $wdt = $sp['wdt'];
+                $swd = round ( $wdt + $sh + $ph, 2 );
+                $bna = $this->salaryClass->getSalaryByWorkDays ( $baseam, $swd, $leavedt );
+                $gna = $this->salaryClass->getSalaryByWorkDays ( $gwam, $swd, $leavedt );
+                $jna = $this->salaryClass->getSalaryByWorkDays ( $jxam, $swd, $leavedt );
+                $hda = round ( $this->salaryClass->holsDeal ( $ph, $sh, $baseam, $leavedt ), 2 );
+                $spedel = $this->salaryClass->decryptDeal($sp['SpeDelAm']);
 
-                    } else {
-                        $bna2 = round($this->salaryClass->decryptDeal($sp ['GwAm']) + $this->salaryClass->decryptDeal($sp ['JxAm']), 2);
-                    }
+                /*
+                * '操作','KEY','姓名','公司','部门','员工类型','入职日期','离职日期'
+                * ,'基本工资','事假','病假','事病假扣除','实际工资小计','各项补贴'
+                * ,'社保费','公积金','税前扣除','税后扣除','个人所得税','离职福利','实发离职工资'
+                * ,'账号','开户行','税前扣除备注','税后扣除备注'
+                *
+                */
+				if ($outflag == 'list') {
 					$responce->rows [$i] ['id'] = $row ['userid'];
 					$responce->rows [$i] ['cell'] = un_iconv ( array (
 							"",
@@ -1910,16 +2016,14 @@ class model_salary_class extends model_base {
 							$sp ['SickHolsDays'],
 							($sp ['wdt'] == '-1' ? ($this->salaryClass->getLeaveWorkDays ( $val ['cdt'], $val ['ldt'] )) : $sp ['wdt']),
 							$this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ),
-							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
-							round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
+//							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
+							round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
+                            round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
 							$this->salaryClass->decryptDeal ( $sp ['ShbAm'] ),
 							$this->salaryClass->decryptDeal ( $sp ['GjjAm'] ),
-							
-							//20180806修改 
+
 							round($this->salaryClass->decryptDeal($sp['SpeDelAm']), 2),
 							$this->salaryClass->decryptDeal($sp ['PayCesse']),
-							//其他扣除 变成税前扣除和税后扣除两项
-							//round ( $this->salaryClass->decryptDeal ( $sp ['SpeDelAm'] ) + $this->salaryClass->decryptDeal ( $sp ['AccDelAm'] ), 2 ),
 							round($this->salaryClass->decryptDeal($sp['AccDelAm']), 2),
 							
 							$this->salaryClass->decryptDeal ( $sp ['AccRewAm'] ),
@@ -1949,13 +2053,6 @@ class model_salary_class extends model_base {
 					) );
 					$i ++;
 				} elseif ($outflag == 'xls') {
-					$BaseAm = $this->salaryClass->decryptDeal($sp ['BaseAm']);
-					if (intval($BaseAm) != 0) {
-                        $bna2 = round(($this->salaryClass->decryptDeal($sp ['BaseNowAm']) / $this->salaryClass->decryptDeal($sp ['BaseAm']) * ($this->salaryClass->decryptDeal($sp ['GwAm']) + $this->salaryClass->decryptDeal($sp ['JxAm']))), 2);
-
-                    } else {
-                        $bna2 = round($this->salaryClass->decryptDeal($sp ['GwAm']) + $this->salaryClass->decryptDeal($sp ['JxAm']), 2);
-                    }
 					$responce [] = un_iconv ( array (
 							$val ['usercard'],
 							$val ['username'],
@@ -1975,15 +2072,14 @@ class model_salary_class extends model_base {
 							$sp ['SickHolsDays'],
 							($sp ['wdt'] == '-1' ? ($this->salaryClass->getLeaveWorkDays ( $val ['cdt'], $val ['ldt'] )) : $sp ['wdt']),
 							$this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ),
-							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] )+ $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
-							round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
+							//round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] )+ $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
+                            round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
+                            round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
 							$this->salaryClass->decryptDeal ( $sp ['ShbAm'] ),
 							$this->salaryClass->decryptDeal ( $sp ['GjjAm'] ),
 							$this->salaryClass->decryptDeal ( $sp ['PayCesse'] ),
-							//20180806修改
-							//$this->salaryClass->decryptDeal($sp ['AccDelAm']), //其他扣除 变成税前扣除和税后扣除两项
-							$this->salaryClass->decryptDeal($sp ['SpeDelAm']),
-							$this->salaryClass->decryptDeal($sp ['AccDelAm']),
+							$this->salaryClass->decryptDeal ($sp ['SpeDelAm']),
+							$this->salaryClass->decryptDeal ($sp ['AccDelAm']),
 							$this->salaryClass->decryptDeal ( $sp ['AccRewAm'] ),
 							$this->salaryClass->decryptDeal ( $sp ['AccRewAmCes'] ),
 							$this->salaryClass->decryptDeal ( $sp ['OtherAccRewAm'] ),
@@ -1998,8 +2094,7 @@ class model_salary_class extends model_base {
 							$key
 					) );
 				} else if ($outflag == 'print') {
-				    $bna2 = round ( ($this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] )/$this->salaryClass->decryptDeal ( $sp ['BaseAm'] ) * ($this->salaryClass->decryptDeal ( $sp ['GwAm'] )+$this->salaryClass->decryptDeal ( $sp ['JxAm'] ))),2);				    
-					array_push($responce, array (
+				    array_push($responce, array (
 							"usercard"=>$val ['usercard'],
 							"username"=>$val ['username'],
 							"com"=>$val ['com'],
@@ -2016,14 +2111,13 @@ class model_salary_class extends model_base {
 							"sh"=>$sp ['SickHolsDays'],
 							"wdt"=>($sp ['wdt'] == '-1' ? ($this->salaryClass->getLeaveWorkDays ( $val ['cdt'], $val ['ldt'] )) : $sp ['wdt']),
 							"hda"=>$this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ),
-							"bna"=>round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
-							"sra"=>round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
+                            //"bna"=>round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
+                            "bna"=>round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
+                            "sra"=>round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
 							"shb"=>$this->salaryClass->decryptDeal ( $sp ['ShbAm'] ),
 							"gjj"=>$this->salaryClass->decryptDeal ( $sp ['GjjAm'] ),
 							
 							"pc"=>$this->salaryClass->decryptDeal ( $sp ['PayCesse'] ),
-							//20180806修改
-							//"sda"=>round ( $this->salaryClass->decryptDeal ( $sp ['SpeDelAm'] ) + $this->salaryClass->decryptDeal ( $sp ['AccDelAm'] ), 2 ),
 							"spedelam" => round($this->salaryClass->decryptDeal($sp ['SpeDelAm']), 2),  //其他扣除改为 税前扣除和税后扣除
 							"accdelam" => round($this->salaryClass->decryptDeal($sp ['AccDelAm']), 2),  //其他扣除改为 税前扣除和税后扣除
 							"ara"=>$this->salaryClass->decryptDeal ( $sp ['AccRewAm'] ),
@@ -2195,14 +2289,11 @@ class model_salary_class extends model_base {
             $gna = $this->salaryClass->getSalaryByWorkDays ( $gwam, $swd, $leavedt );
 			$jna = $this->salaryClass->getSalaryByWorkDays ( $jxam, $swd, $leavedt );
 			$hda = round ( $this->salaryClass->holsDeal ( $ph, $sh, $baseam, $leavedt ), 2 );
+
             // 计算个税
-			//20180806修改
-            //$cesse = round ( $bna + $gna + $jna - $hda + $sra - $shb - $gjj, 2 );
 			$cesse = round($bna + $gna + $jna - $hda + $sra - $shb - $gjj - $spedel, 2);
 			$pc = $this->salaryClass->cesseDeal ( $cesse );
             // 总=税前-个税+福利-扣除-福利税-其他需发
-			//20180806修改
-            //$ptol = round ( $cesse - $pc + $ara - $sda - $arac + $oara, 2 );
 			$ptol = round($cesse - $pc + $ara - $accdel - $arac + $oara, 2);
             $this->model_pay_update ( $pid, array (
                     'Remark' => $remark,
@@ -2341,7 +2432,11 @@ class model_salary_class extends model_base {
             $fsta = $row ['fitem'];
             if ($row ['fid'] && $row ['fsta'] != '' && $row ['fsta'] != 3) {
                 $ck = 'yes';
-                $fsta .= '-未审';
+                if($row['fsta'] == 0){
+                    $fsta .= '-未审';
+                }elseif ($row['fsta'] == 2){
+                    $fsta .= '审批通过';
+                }
             } else {
                 $ck = 'no';
             }
@@ -14415,7 +14510,7 @@ where
                (f.createuser='" . $_SESSION ['USER_ID'] . "' or '" . $_SESSION ['USER_ID'] . "'='admin' or '" . $_SESSION ['USER_ID'] . "'='admin') and
                 $sqlCk
                 $sqlSch
-            order by $sidx $sord
+            order by createDT DESC
             limit $start , $limit ";
         $query = $this->db->query ( $sql );
         while ( $row = $this->db->fetch_array ( $query ) ) {
@@ -17311,22 +17406,90 @@ where
                     }
                 }
             }
-            $this->db->query ( "COMMIT" );
-            if (is_array ( $sm )) {
-                if (count ( $sm )) {
-                    foreach ( $sm as $val ) {
-                        $body = '您好！<br>
-                            工资审批-项目奖，需要您的审批。<br>
-                            谢谢！';
-                        $this->model_send_email ( '审批--项目奖', $body, $val, false );
+            elseif ($sub == 'edit'){
+                $post_data = $_POST;
+                if(isset($post_data['rand_key']) && !empty($post_data['rand_key'])){
+                    //查询修改权限
+                    $sql = "select f.ID, f.FlowName, f.UserId, f.CreateUser from salary_flow f
+                    where f.rand_key='". $post_data['rand_key'] ."' and f.Sta=0";
+                    $resck = $this->db->get_one($sql);
+
+                    //判断是否数据生成人操作
+                    if($resck['CreateUser'] == $_SESSION['USER_ID'] && !empty($resck['ID'])){
+
+                        //删除过去审批流
+                        $sql = "delete from salary_flow_step
+                              where salaryfid =".$resck['ID'] ;
+                        $this->db->query_exc($sql);
+                        $sql = "delete from salary_flow where id=".$resck['ID'];
+                        $this->db->query_exc($sql);
+
+                        //数据处理
+                        $changeAm = $this->salaryClass->encryptDeal(intval($post_data['amount']));
+                        $remark = !empty($post_data['remark'])?$post_data['remark']:'';
+                        $proname = !empty($post_data['proname'])?$post_data['proname']:'';
+                        $prono = !empty($post_data['prono'])?$post_data['prono']:'';
+                        //调用生成审批流步骤
+                        $info = array(
+                            'flowname'  =>  $resck['FlowName'],
+                            'userid'    =>  $resck['UserId'],
+                            'salarykey' =>  '',
+                            'changeam'  =>  $changeAm,
+                            'remark'    =>  $remark,
+                            'prono'     =>  $prono,
+                            'proname'   =>  $proname
+                        );
+                        $sm = $this->model_flow_new($info, true, false);
+                        $id = $post_data['rand_key'];
+
+                    }else{
+                        throw new Exception ( 'Can not modify the data has been approved' );
                     }
+
+                }else{
+                    $sm = false;
                 }
-            } elseif ($sm) {
-                $body = '您好！<br>
-                    工资审批-项目奖，需要您的审批。<br>
-                    谢谢！';
-                $this->model_send_email ( '审批--项目奖', $body, $sm, false );
+
+            }elseif ($sub == 'del'){
+                $post_data = $_POST;
+                if(isset($post_data['rand_key']) && !empty($post_data['rand_key'])){
+                    //查询删除权限
+                    $sql = "select f.ID, f.FlowName, f.UserId, f.CreateUser from salary_flow f
+                    where f.rand_key='". $post_data['rand_key'] ."' and f.Sta=0";
+                    $resck = $this->db->get_one($sql);
+
+                    //判断是否数据生成人操作
+                    if($resck['CreateUser'] == $_SESSION['USER_ID'] && !empty($resck['ID'])){
+                        //删除审批流
+                        $sql = "delete from salary_flow_step
+                              where salaryfid =".$resck['ID'] ;
+                        $this->db->query_exc($sql);
+                        $sql = "delete from salary_flow where id=".$resck['ID'];
+                        $this->db->query_exc($sql);
+                        $id = $post_data['rand_key'];
+                    }else{
+                        throw new Exception ( 'Can not delete the data' );
+                    }
+
+                }
             }
+            $this->db->query ( "COMMIT" );
+
+//            if (is_array ( $sm )) {
+//                if (count ( $sm )) {
+//                    foreach ( $sm as $val ) {
+//                        $body = '您好！<br>
+//                            工资审批-项目奖，需要您的审批。<br>
+//                            谢谢！';
+//                        $this->model_send_email ( '审批--项目奖', $body, $val, false );
+//                    }
+//                }
+//            } elseif ($sm) {
+//                $body = '您好！<br>
+//                    工资审批-项目奖，需要您的审批。<br>
+//                    谢谢！';
+//                $this->model_send_email ( '审批--项目奖', $body, $sm, false );
+//            }
             $responce->id = $id;
             $this->globalUtil->insertOperateLog ( '工资管理', $id, '项目奖', '成功' );
         } catch ( Exception $e ) {
@@ -20041,7 +20204,7 @@ where d.dept_id in ('" . implode ( "','", array_keys ( $deptCh ) ) . "')  group 
 						continue;
 					  }
 					 */
-					
+
 // 					if (empty ( $val ["邮箱"] ) || $val ["实发工资"] == 0 || $val ["实发工资"] == "0") { // 过滤空邮箱-额外人员 过滤实发工资为 0 人员
 // 						continue;
 // 					}
@@ -21662,7 +21825,7 @@ EOD;
                                             where
                                                 u.user_id='" . $info ['userid'] . "' ";
                                         $resi = $this->db->get_one ( $sql );
-                                        if ($resi ['majorid'] && trim ( $resi ['majorid'], ',' ) != $_SESSION ['USER_ID']) {
+                                        if ($resi ['majorid'] && trim ( $resi ['majorid'], ',' ) != $info ['userid'] && trim ( $resi ['majorid'], ',' ) != $_SESSION ['USER_ID']) {
                                             $tmpUser = trim ( $tmpUser . $resi ['majorid'], ',' );
                                         } else {
                                             if ($resi ['vicemanager']) {
@@ -21989,7 +22152,9 @@ EOD;
             set sta='2' , pyear = '" . $fpyear . "' , pmon='" . $fpmon . "'
             where id='" . $flowkey . "' ";
         $this->db->query_exc ( $sql );
-        if ($resf ['flowname'] == $this->flowName ['fla']) { // 季度奖
+
+        // 季度奖
+        if ($resf ['flowname'] == $this->flowName ['fla']) {
             $sql = "select p.sdyam , p.otheram , p.remark , p.id as pid , s.rand_key , p.userid as puserid
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22005,7 +22170,9 @@ EOD;
             $salinfo ['floatam'] = $this->salaryClass->cfv ( $flaamtmp );
             $payinfo ['floatam'] = $this->salaryClass->cfv ( $flaamtmp * $this->flaotMon [$fpmon] );
             $payinfo ['remark'] = $flowremark;
-        } elseif ($resf ['flowname'] == $this->flowName ['sdyhr'] || $resf ['flowname'] == $this->flowName ['sdyhr_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_12']) { // 人事补贴
+        }
+        // 人事补贴
+        elseif ($resf ['flowname'] == $this->flowName ['sdyhr'] || $resf ['flowname'] == $this->flowName ['sdyhr_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_12']) {
             $sql = "select sdymeal , sdyother , userid   from salary_sdy
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $ressdy = $this->db->get_one ( $sql );
@@ -22032,7 +22199,9 @@ EOD;
             $payinfo ['otheram'] = $this->salaryClass->cfv ( $oldOthAm + $newOthAm );
             $payinfo ['remark'] = $flowremark;
             // 人事补贴
-        } elseif ($resf ['flowname'] == $this->flowName ['spe'] || $resf ['flowname'] == $this->flowName ['spe_3'] || $resf ['flowname'] == $this->flowName ['spe_5'] || $resf ['flowname'] == $this->flowName ['spe_1'] || $resf ['flowname'] == $this->flowName ['spe_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_3'] || $resf ['flowname'] == $this->flowName ['spe_xs_5'] || $resf ['flowname'] == $this->flowName ['spe_xs_1'] || $resf ['flowname'] == $this->flowName ['spe_xs_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_12']) { // 特殊奖励/扣除
+        }
+        // 特殊奖励/扣除
+        elseif ($resf ['flowname'] == $this->flowName ['spe'] || $resf ['flowname'] == $this->flowName ['spe_3'] || $resf ['flowname'] == $this->flowName ['spe_5'] || $resf ['flowname'] == $this->flowName ['spe_1'] || $resf ['flowname'] == $this->flowName ['spe_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_3'] || $resf ['flowname'] == $this->flowName ['spe_xs_5'] || $resf ['flowname'] == $this->flowName ['spe_xs_1'] || $resf ['flowname'] == $this->flowName ['spe_xs_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_12']) {
             $sql = "select payyear , paymon , amount , paytype , payuserid , acctype from salary_spe
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $resspe = $this->db->get_one ( $sql );
@@ -22078,12 +22247,13 @@ EOD;
             }
             $sql = "update salary_spe set spesta='3' , payyear='" . $fpyear . "' , paymon='" . $fpmon . "'  where rand_key='" . $resf ['salarykey'] . "' ";
             $this->db->query_exc ( $sql );
-            // 特殊奖励/扣除
-        } elseif ($resf ['flowname'] == $this->flowName ['nym_0'] || $resf ['flowname'] == $this->flowName ['nym_1'] || $resf ['flowname'] == $this->flowName ['nym_2'] 
+        }
+        // 调薪
+        elseif ($resf ['flowname'] == $this->flowName ['nym_0'] || $resf ['flowname'] == $this->flowName ['nym_1'] || $resf ['flowname'] == $this->flowName ['nym_2']
 				|| $resf ['flowname'] == $this->flowName ['nym_3'] || $resf ['flowname'] == $this->flowName ['nym_4'] || $resf ['flowname'] == $this->flowName ['nym_xs_0'] 
 				|| $resf ['flowname'] == $this->flowName ['nym_xs_1'] || $resf ['flowname'] == $this->flowName ['nym_xs_2'] || $resf ['flowname'] == $this->flowName ['nym_xs_3'] 
 				|| $resf ['flowname'] == $this->flowName ['nym_xs_4'] || $resf ['flowname'] == $this->flowName ['ymd'] || $resf ['flowname'] == $this->flowName ['nym_wy1'] 
-		    || $resf ['flowname'] == $this->flowName ['nym_wy2'] || $resf ['flowname'] == $this->flowName ['nym_yqyb3']) { // 调薪
+		    || $resf ['flowname'] == $this->flowName ['nym_wy2'] || $resf ['flowname'] == $this->flowName ['nym_yqyb3']) {
 					
 			//2016-12-27 作出调薪规则修改 获取提交审批年月，算出生效年月
 			$createY = date("Y",strtotime($resf["createdt"])); //提交年份
@@ -22207,7 +22377,9 @@ EOD;
 				}
 				
 			}	
-		} elseif ($resf ['flowname'] == $this->flowName ['pro'] || $resf ['flowname'] == $this->flowName ['pro_3'] || $resf ['flowname'] == $this->flowName ['pro_5'] || $resf ['flowname'] == $this->flowName ['pro_1'] || $resf ['flowname'] == $this->flowName ['pro_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_3'] || $resf ['flowname'] == $this->flowName ['pro_xs_5'] || $resf ['flowname'] == $this->flowName ['pro_xs_1'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_12']) { // 项目奖
+		}
+        // 项目奖
+		elseif ($resf ['flowname'] == $this->flowName ['pro'] || $resf ['flowname'] == $this->flowName ['pro_3'] || $resf ['flowname'] == $this->flowName ['pro_5'] || $resf ['flowname'] == $this->flowName ['pro_1'] || $resf ['flowname'] == $this->flowName ['pro_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_3'] || $resf ['flowname'] == $this->flowName ['pro_xs_5'] || $resf ['flowname'] == $this->flowName ['pro_xs_1'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_12']) {
             $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , p.proam
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22221,7 +22393,9 @@ EOD;
             $oldrmk = $respay ['remark'];
             $payinfo ['proam'] = $this->salaryClass->cfv ( $oldam + $newam );
             $payinfo ['remark'] = $flowremark;
-        } elseif ($resf ['flowname'] == $this->flowName ['prod']) { // 项目奖明细
+        }
+        // 项目奖明细
+        elseif ($resf ['flowname'] == $this->flowName ['prod']) {
             $sql = "select ccxs , khxs ,  jjam , gljtam ,  qtjtam  ,  jxzcam,lszsam  , userid   from salary_prod
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $resprod = $this->db->get_one ( $sql );
@@ -22257,7 +22431,9 @@ EOD;
                     1,
                     2 
             );
-        } elseif ($resf ['flowname'] == $this->flowName ['bos'] || $resf ['flowname'] == $this->flowName ['bos_3'] || $resf ['flowname'] == $this->flowName ['bos_5'] || $resf ['flowname'] == $this->flowName ['bos_1'] || $resf ['flowname'] == $this->flowName ['bos_0']) { // 奖金
+        }
+        // 奖金
+        elseif ($resf ['flowname'] == $this->flowName ['bos'] || $resf ['flowname'] == $this->flowName ['bos_3'] || $resf ['flowname'] == $this->flowName ['bos_5'] || $resf ['flowname'] == $this->flowName ['bos_1'] || $resf ['flowname'] == $this->flowName ['bos_0']) {
             $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , p.bonusam
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22270,7 +22446,9 @@ EOD;
             $newam = $this->salaryClass->decryptDeal ( $resf ['changeam'] );
             $payinfo ['bonusam'] = $this->salaryClass->cfv ( $oldam + $newam );
             $payinfo ['remark'] = $flowremark;
-        } elseif ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
+        }
+        // 绩效审批
+        elseif ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
 			
 			$sql = "select userid,pyear,pmon from salary_pro where rand_key = '" . $resf ['salarykey'] . "'";
 			$rs = $this->db->get_one ( $sql );
@@ -22433,7 +22611,7 @@ EOD;
         }
     }
 	
-		function model_flow_pass_temp($flowkey) {
+    function model_flow_pass_temp($flowkey) {
 		
 		$salinfo = array ();
 		$payinfo = array ();
@@ -23599,7 +23777,7 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
          * }
          * echo "成功执行".$rows."条数据";
          */
-        $salaryPayId = "169887";
+        $salaryPayId = "169935";
         $salaryPayIds = explode ( ',', $salaryPayId );
         for($index = 0; $index < count ( $salaryPayIds ); $index ++) {
             $this->model_pay_stat ( $salaryPayIds [$index] );
@@ -23623,7 +23801,7 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
         die ();
     }
     function model_decryptDeal() {
-        echo $this->salaryClass->decryptDeal('TYfllFgvSK7pSOe89KGUnQ==');
+        echo $this->salaryClass->decryptDeal('POvhVNhU7CM7tmEfZ79h2A==');
         die ();
     }
 	function getK() {

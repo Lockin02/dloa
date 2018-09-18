@@ -40,14 +40,8 @@ class controller_module_report extends model_module_report {
     
     function c_list(){
         $rep=$_REQUEST['rep'];
-        $data = array();
         $head=$this->model_get_head();
-        if( $_REQUEST['reportkey'] == 'dc1cfc1213274f9e7bfdc7409fed0e24') {
-			$scopeFlag = $this->globalUtil->getSalaryScope(false,true,'','rep2.dept_id');
-        	$data=$this->model_get_data($head,"html",true,$scopeFlag);
-        } else {
-        	$data=$this->model_get_data($head);
-        }
+        $data=$this->model_get_data($head);
         if(empty($rep['scols'])){
             $rep['scols']=$head['cols']+1;
         }
@@ -78,16 +72,10 @@ class controller_module_report extends model_module_report {
     
     function c_outExcel(){
         $head=$this->model_get_head();
-        if( $_REQUEST['reportkey'] == 'dc1cfc1213274f9e7bfdc7409fed0e24') {
-        	$scopeFlag = $this->globalUtil->getSalaryScope(false,true,'','rep2.dept_id');
-        	$data=$this->model_get_data($head,"xls",true,$scopeFlag);
-        } else {
-        	$data=$this->model_get_data($head,'xls');
-        }
+        $data=$this->model_get_data($head,'xls');
     }
     
     function c_upExcel(){
-        $repkey= $_REQUEST['repkey'];
         $res=$this->model_upExcel();
         
         $this->show->assign('up_url', 'index1.php?model=module_report&action=upExcelAjax&repkey='.$res['repkey']);
@@ -103,13 +91,6 @@ class controller_module_report extends model_module_report {
         
         $this->show->assign('repname', $res['repname']);
         
-        $this->show->assign('isGroup', "-webkit-inline-box");
-        if(in_array($repkey, array("gzhf","gzfuxcb","gzxmjt"))) {
-	        $isGroup = $this->globalUtil->func_limit2 ['集团人力'];
-	        if($isGroup != "1") {
-	        	$this->show->assign('isGroup', "none");
-	    	}
-        }
         $this->show->display('module_report_upexcel');
     }
     
@@ -133,10 +114,7 @@ class controller_module_report extends model_module_report {
     function c_getRep(){
         $repkey=$_POST['repkey'];
         $dim=$_REQUEST['dim'];
-        $res = array();
-        if(in_array($repkey, array("gzhf","gzfuxcb","gzxmjt"))) {
-       		$res=$this->getRepData($repkey,$dim,'table_edit',true);
-        }
+        $res=$this->getRepData($repkey,$dim,'table_edit');
         echo un_iconv($res['rep_table']);
     }
     

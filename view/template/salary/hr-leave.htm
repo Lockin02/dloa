@@ -184,13 +184,22 @@
                         function (data)
                         {
                             var msg=eval('(' + data + ')');
-                            if(msg&&msg['error']){
+                            if(msg && msg['error_code']){
+                                if(msg['error_code'] == '1'){ //查无数据
+                                    alert('错误:数据出错');
+                                }else if(msg['error_code'] == '2'){ //关账后操作
+                                    alert('错误:操作日期不允许为已关账时期内,或本月之后')
+                                }else if(msg['error_code']== '3'){
+                                    alert('错误:关账日期有误,请联系管理员');
+                                }
+                            }else if(msg && msg['error']){
                                 alert('错误：'+msg['error']);
                                 $('#newuserSub').attr('disabled',false);
                                 return false;
                             }else{
                                 alert('操作成功！');
                             }
+
                             $('#newuserSub').attr('disabled',false);
                             paCloseFun('hr_user_new');
                             jQuery("#rowedgrid").trigger("reloadGrid");

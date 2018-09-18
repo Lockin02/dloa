@@ -160,7 +160,7 @@ while ( $msql->next_record( ) )
     	foreach($objkeyarr as $key=>$val){
 	       $obj_sql=str_replace('$'.$key, $val, $obj_sql);
 	    }
-	    //echo $obj_sql;
+
     	$obj_info=$fsql->get_one($obj_sql);
     	//print_r($obj_info);
     }
@@ -175,10 +175,9 @@ while ( $msql->next_record( ) )
     			foreach($obj_data_sql_arr as $val){
     				if(!empty($val)){
 	    				$obj_info_tmp=$fsql->get_one($val);
-						$obj_info_tmp=array_filter($obj_info_tmp);
+						//$obj_info_tmp=array_filter($obj_info_tmp);
 	    				if(is_array($obj_info_tmp)&&!empty($obj_info_tmp)){
 	    					$obj_exa_info=array_merge_recursive($obj_exa_info,$obj_info_tmp);
-                                                //$obj_exa_info=$obj_info_tmp;
 	    				}
 	    			}
     			}
@@ -503,7 +502,7 @@ while ( $msql->next_record( ) )
                         }
                     }
 				
-				if($PRCS_SPEC_ARR[$i]=='@gcfz')
+            if($PRCS_SPEC_ARR[$i]=='@gcfz')
                     {
 //工程服务负责人
                         if($billArea){
@@ -527,10 +526,8 @@ while ( $msql->next_record( ) )
                           continue;
                         }
                     }
-				
-				
-					
-			 if($PRCS_SPEC_ARR[$i]=='@gcqu')
+
+            if($PRCS_SPEC_ARR[$i]=='@gcqu')
                     {
 //副zongjian
                         if($billArea){
@@ -560,12 +557,10 @@ while ( $msql->next_record( ) )
                           continue;
                         }
                     }  		
-					
-					
-					      
+
             if($PRCS_SPEC_ARR[$i]=='@htsp')
             {
-//副zongjian                
+            //副zongjian
                 if($sellCon){
                   $fsql->query2(" SELECT expand1 FROM oa_system_datadict where datacode='".$cktype."' ");
                   while($fsql->next_record()){
@@ -2703,7 +2698,8 @@ while ( $msql->next_record( ) )
                                 $ckname=array();
                             }
                             
-                        }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
+                        }
+                        elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                             if($billProType=='esm'){//工程
                                 
                                 if($tmpdetailtype == 2 && $isSaleDept==1) {
@@ -3469,7 +3465,7 @@ while ( $msql->next_record( ) )
 			
 			
 			
-//配置特殊流程
+            //配置特殊流程
             if($PRCS_SPEC_ARR[$i]=='@spe'){
             	if($prcs_form=='离职申请审批'){
             		//print_r($obj_info);
@@ -3557,25 +3553,16 @@ while ( $msql->next_record( ) )
             }
             
         }
-		/*
-        if(trim($specids,',')==towhere($_SESSION['USER_ID'])&&$stepNum<($stepTotals + count($ckarray) )&&count($ckarray)&&$stepTotals!=1){
-             array_shift($ckarray);
-             $specids =towhere($ckarray[0]);
-             $PRCS_NAME=$ckname[$ckarray[0]];
-             $ckMoney=$flowMoneyArr[$ckname[$ckarray[0]]];
-        }elseif(trim($specids,',')==towhere($_SESSION['USER_ID'])&&$stepTotals!=1){
-            $x--;
-            continue;
-        }*/
+
         if($specids!="")
             $wherestr .= "or ( USER_ID in ($specids) or USER_NAME in ($specids) ) ";
     }
-    
-//总经理，可以延伸到授权
-		$posstr = strpos($wherestr,'danian.zhu');
-		if( $posstr!==false ){
-			$wherestr.="or ( USER_ID='danian.zhu' ) ";
-		}
+
+    //总经理，可以延伸到授权
+    $posstr = strpos($wherestr,'danian.zhu');
+    if( $posstr!==false ){
+        $wherestr.="or ( USER_ID='danian.zhu' ) ";
+    }
     
     if($wherestr=="")
         $wherestr=" and USER_ID =''";
