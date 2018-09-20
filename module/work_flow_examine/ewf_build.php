@@ -1323,6 +1323,19 @@ try{
 						                	}
 						                	
 						                }
+
+
+                                        //高星特殊配置
+                                        if($_SESSION['USER_ID'] == 'xing.gao'){
+                                            $ckarray = array_flip($ckarray);
+                                            foreach ($ckarray as $key=>$value){
+                                                if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                                    unset($ckarray[$key]);
+                                                }
+                                            }
+                                            $ckarray = array_flip($ckarray);
+                                        }
+
 						                if($subLength){
 						                	$ckarray = array_slice($ckarray,$subLength);
 						                }
@@ -1813,6 +1826,18 @@ try{
                                         $ckarray=array();
                                         $ckname=array();
                                     }
+
+                                    //高星特殊配置
+                                    if($CostMan == 'xing.gao' && $billDept== '272'){
+                                        $ckarray = array_flip($ckarray);
+                                        foreach ($ckarray as $key=>$value){
+                                            if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                                unset($ckarray[$key]);
+                                            }
+                                        }
+                                        $ckarray = array_flip($ckarray);
+                                    }
+
                                 }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                                     if($billProType=='esm'&&$billArea){//工程
                                         /*
@@ -2816,6 +2841,18 @@ try{
                                         $ckarray=array();
                                         $ckname=array();
                                   }
+
+                                  //高星特殊配置
+                                  if($CostMan == 'xing.gao' && $billDept == '272'){
+                                    $ckarray = array_flip($ckarray);
+                                    foreach ($ckarray as $key=>$value){
+                                        if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                            unset($ckarray[$key]);
+                                        }
+                                    }
+                                    $ckarray = array_flip($ckarray);
+                                  }
+
                                 }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                                   if($billProType=='esm'){//工程
 

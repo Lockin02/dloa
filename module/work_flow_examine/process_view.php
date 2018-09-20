@@ -899,21 +899,22 @@ while ( $msql->next_record( ) )
 						            	if(!$billDept){
 											$billDept=$DEPT_ID?$DEPT_ID:$_SESSION['DEPT_ID'];
 										}
+
 						                $ckarray=array();
 						                $ckname=array();
 						                $flowMoneyArr=array();
 						                $ckMoney=explode(',', $ckMoney);
 										$ckMoneyI=explode(',', $ckMoneys);
 										
-										$flowMoneyArr['项目经理']=0;//必审批
-										  $flowMoneyArr['省份负责人']=0;
-										  $flowMoneyArr['区域负责人']=0;
-										  $flowMoneyArr['部门负责人']=0;
-										  $flowMoneyArr['部门经理']=$ckMoneyI[1];
-										  $flowMoneyArr['部门总监']=$ckMoneyI[3]; 
-										  $flowMoneyArr['副总经理']=$ckMoneyI[5];
-										  $flowMoneyArr['总经理']=$ckMoneyI[7];
-										  $flowMoneyArr['总裁']=$ckMoneyI[8];
+										  $flowMoneyArr['项目经理']=0;//必审批
+                                          $flowMoneyArr['省份负责人']=0;
+                                          $flowMoneyArr['区域负责人']=0;
+                                          $flowMoneyArr['部门负责人']=0;
+                                          $flowMoneyArr['部门经理']=$ckMoneyI[1];
+                                          $flowMoneyArr['部门总监']=$ckMoneyI[3];
+                                          $flowMoneyArr['副总经理']=$ckMoneyI[5];
+                                          $flowMoneyArr['总经理']=$ckMoneyI[7];
+                                          $flowMoneyArr['总裁']=$ckMoneyI[8];
 										  
 										  if($_SESSION['USER_COM'] == 'dl') {
 											$flowMoneyArr['项目经理']=0;//必审批
@@ -1002,16 +1003,17 @@ while ( $msql->next_record( ) )
 											    $flowMoneyArr['总经理']=$ckMoneyI[7];
 											    $flowMoneyArr['总裁']=$ckMoneyI[8];
 											}
-											
+
 										if(empty($billDept)){
 						                    $billDept=$_SESSION['DEPT_ID'];
 						                }
-										
+
 										if(!empty($billCom)){
 											$sqlDept="SELECT a.manager,a.userid,b.DEPT_NAME FROM dept_com a LEFT JOIN department b ON a.dept=b.DEPT_ID WHERE a.dept='$billDept' and a.compt='$billCom'";				                
 										}else{
 											$sqlDept="SELECT a.manager,a.userid,b.DEPT_NAME FROM dept_com a,department b,user u WHERE u.company=a.compt AND a.dept=b.DEPT_ID  and a.dept='$billDept' and u.USER_ID='$USER_ID'";
 										}
+
 									     $deptComI = $fsql->getrow($sqlDept);
 								
 										
@@ -1037,7 +1039,8 @@ while ( $msql->next_record( ) )
 							                                }
 							                                
 							                            }
-						                	   }else{
+						                	   }
+						                	   else{
 						                	   	  if(in_array($billDepts,array())&&$workArea){
 							                	   	 $fsql->query2("SELECT  group_concat( personid )  as '省级经理',group_concat( areanameid ) as '区域经理'  , group_concat(d.MajorId)   as '部门总监'  , group_concat( d.ViceManager )  as '部门副总'  FROM oa_system_saleperson s  LEFT JOIN department d on ( s.deptId = d.DEPT_ID ) where s.id ='".$workArea."' ");
 					                                if($fsql->next_record( ))
@@ -1073,15 +1076,14 @@ while ( $msql->next_record( ) )
 														$ckarray[]=trim($deptComI['manager'],',');
 														$ckname[trim($deptComI['manager'],',')]='部门负责人';
 													 }
-													 
+
 													 if(trim($deptComI['userid'],',')!=$_SESSION['USER_ID']&&$deptComI['userid']
 													 &&trim($deptI['MajorId'],',')!=$_SESSION['USER_ID']
 													 &&trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID']){
 														$ckarray[]=trim($deptComI['userid'],',');
 														$ckname[trim($deptComI['userid'],',')]='部门经理';
 													 }
-													
-													 
+
 													}
 
 													$fsql->query2("select headid from oa_esm_office_baseinfo where feedeptid ='$billDept';");
@@ -1091,14 +1093,13 @@ while ( $msql->next_record( ) )
 															$ckname[trim($fsql->f('headid'),',')]='区域负责人';
 														}
 													}
-													
+
 													 if(trim($deptI['MajorId'],',')!=$_SESSION['USER_ID']&&$deptI['MajorId']&&trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID'] && !in_array($billDept,$SaleDeptI)){
 														$ckarray[]=trim($deptI['MajorId'],',');
 														$ckname[trim($deptI['MajorId'],',')]='部门总监';
 													 }
-													 
-													 
-													 if((in_array($billDept,$NetDeptI)||in_array($billDept,$NetODeptI))&&trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID']){
+
+                                                      if((in_array($billDept,$NetDeptI)||in_array($billDept,$NetODeptI))&&trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID']){
 														 $flowMoneyArr['部门经理']=0;
 														 //$flowMoneyArr['部门总监']=$ckMoney[1];
 														 if($_SESSION['USER_ID']!="zhongliang.hu"){
@@ -1106,8 +1107,8 @@ while ( $msql->next_record( ) )
 														 	$ckname[trim('zhongliang.hu',',')]='副总经理';
 														 }
 													 }
-													 
-													 if(in_array($billDept,$SaleDeptI)){
+
+                                                      if(in_array($billDept,$SaleDeptI)){
 													 	$fsql->query2("select r.areaPrincipalId,r.areaPrincipal,m.productLineName from oa_system_region r inner join oa_esm_office_managerinfo m on r.areaName = m.province  inner join department d on d.pdeptname = m.productLineName where r.isstart = 0 and d.DEPT_ID = '$billDept' ");
 													 	if($fsql->next_record( ))
 													 	{
@@ -1121,8 +1122,8 @@ while ( $msql->next_record( ) )
 							                			$ckarray[]=trim($deptI['ViceManager'],',');
 							                    		$ckname[trim($deptI['ViceManager'],',')]='副总经理';
 								                     }
-													 
-													 if(in_array($billDept,$YyDept)){
+
+                                                      if(in_array($billDept,$YyDept)){
 													     $ckarray[]='chen.chen';
 													     $ckname['chen.chen']='中心负责人';
 													 }else if(in_array($billDept,$ZcDept)){
@@ -1183,6 +1184,19 @@ while ( $msql->next_record( ) )
 						                	}
 						                	
 						                }
+
+                                        //高星特殊配置
+                                        if($_SESSION['USER_ID'] == 'xing.gao'){
+                                            $ckarray = array_flip($ckarray);
+                                            foreach ($ckarray as $key=>$value){
+                                                if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                                    unset($ckarray[$key]);
+                                                }
+                                            }
+                                            $ckarray = array_flip($ckarray);
+                                        }
+
+
 						                if($subLength){
 						                	$ckarray = array_slice($ckarray,$subLength);
 						                }
@@ -1193,9 +1207,9 @@ while ( $msql->next_record( ) )
 						                $specids .= $specids=="" ? towhere($ckarray[0]) : ",".towhere($ckarray[0]);
 						                $PRCS_NAME=$ckname[$ckarray[0]];
 						                $ckMoney=$flowMoneyArr[$ckname[$ckarray[0]]];
-// 						                print_r($ckarray);
-// 						                print_r($ckname);
-// 										print_r($flowMoneyArr);
+
+
+
 						            }
 //            其他部门领导
             if($PRCS_SPEC_ARR[$i]=='@qtbmld')
@@ -1334,6 +1348,7 @@ while ( $msql->next_record( ) )
                                     , a.billno , a.costman,a.isSpecial,b.DEPT_ID,a.salesAreaId
                                     from cost_summary_list  a LEFT JOIN `user` b ON a.CostMan=b.USER_ID
                     where id='".$billId."' ");
+
                     if($fsql->next_record( ))
                     {
                         $CostMan=$fsql->f('CostMan');
@@ -1584,7 +1599,7 @@ while ( $msql->next_record( ) )
                                         
                                     }
                                 }
-                                // if(!in_array($billDept,$SaleDeptI)||in_array($billDept,$SaleDeptOtherI)){
+
                                 $fsql->query2("select d.MajorId , d.ViceManager ,d.leader_id ,d.generalManager from department d where d.DEPT_ID='$billDept' ");
                                 if($fsql->next_record( ))
                                 {
@@ -1660,7 +1675,6 @@ while ( $msql->next_record( ) )
                                     }
                                     
                                 }
-                                // }
                             }
                             
                             
@@ -1679,7 +1693,18 @@ while ( $msql->next_record( ) )
                                 $ckarray=array();
                                 $ckname=array();
                             }
-                            
+
+                            //高星特殊配置
+                            if($CostMan == 'xing.gao' && $billDept== '272'){
+                                $ckarray = array_flip($ckarray);
+                                foreach ($ckarray as $key=>$value){
+                                    if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                        unset($ckarray[$key]);
+                                    }
+                                }
+                                $ckarray = array_flip($ckarray);
+                            }
+
                         }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                             if($billProType=='esm'&&$billArea){//工程
                                 
@@ -2697,7 +2722,18 @@ while ( $msql->next_record( ) )
                                 $ckarray=array();
                                 $ckname=array();
                             }
-                            
+
+                            //高星特殊配置
+                            if($CostMan == 'xing.gao' && $billDept == '272'){
+                                $ckarray = array_flip($ckarray);
+                                foreach ($ckarray as $key=>$value){
+                                    if(!($key=='feng.guo' ||  $key=='danian.zhu')){
+                                        unset($ckarray[$key]);
+                                    }
+                                }
+                                $ckarray = array_flip($ckarray);
+                            }
+
                         }
                         elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                             if($billProType=='esm'){//工程
@@ -3551,7 +3587,7 @@ while ( $msql->next_record( ) )
               $ckMoney=$flowMoneyArr[$ckname[$ckarray[0]]];
             
             }
-            
+
         }
 
         if($specids!="")
@@ -3575,7 +3611,7 @@ while ( $msql->next_record( ) )
 		$company=$_SESSION['USER_COM'];
 	}
     $sql="select USER_NAME,USER_ID from user where HAS_LEFT='0' AND IF('$isCompany'='2',IF(handcom<>'',find_in_set('$company',handcom),Company='$company'),'1=1') ".$wherestr;
-    $fsql->query2($sql);
+	$fsql->query2($sql);
     while($fsql->next_record( ))
     {
         $PRCS_USER_NAME .= $fsql->f( "USER_NAME" )."/";
@@ -3628,14 +3664,23 @@ while ( $msql->next_record( ) )
             ,'notSkip'=>$notSkip
         );
     }
-	//print_r($flow_step_arr);
+
     if($ckarray&&!empty($ckarray)&&count($ckarray)>1){
         $cki=$x;
-        
+
+        if($PRCS_SPEC == '@bmauto,'){
+            $flowMoneyArr['区域负责人'] = '20000';
+            var_dump($flowMoneyArr,$ckname,$ckarray);
+        }
         foreach($ckarray as $key=>$val){
         		$PRCS_USER_NAME='';
 				$PRCS_USER_ID='';
-            if(($cki!=$x)&&( empty($flowMoney)|| ($flowMoney==$ckMoney&&0==$ckMoney)  || $flowMoney>$ckMoney ||$formName=='请休假'||$formName=='请休假A' || $flowMoneyTmp==1 ) ){
+            if(($cki!=$x)&&( empty($flowMoney)||
+                                ($flowMoney==$ckMoney&&0==$ckMoney)  ||
+                                $flowMoney>$ckMoney ||
+                                $formName=='请休假'||
+                                $formName=='请休假A' ||
+                    $flowMoneyTmp==1 ) ){
 				$ckMoney=$flowMoneyArr[$ckname[$val]];
 //总经理，可以延伸到授权
 								$posstr = strpos($val,'danian.zhu');
@@ -3662,14 +3707,14 @@ while ( $msql->next_record( ) )
                 );
                 
             }
-              $cki++; 
+            $cki++;
         }
         
-         $x=$cki-1; 
+        $x=$cki-1;
         unset($ckarray);
     }
 }
-//print_r($flow_step_arr);
+
 if(!empty($flow_step_arr)){
     $sumstep=count($flow_step_arr);
     //获取自己的审批流
