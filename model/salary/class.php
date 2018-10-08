@@ -679,9 +679,9 @@ class model_salary_class extends model_base {
      * 入职处理 增加岗位工资，绩效工资
      */
     function model_hr_join_in($flag = true) {
-        $id = $_POST ['id'];
-        $val = round ( $_POST ['prob'], 2 );
-        $cdt = $_POST ['cdt'];
+        $id = $_POST ['id']; //user_key
+        $val = round ( $_POST ['prob'], 2 ); //基础工资
+        $cdt = $_POST ['cdt']; //入职日期
         $compt = $_POST ['compt'];
         $gwam = round ( $_POST ['gwam'], 2 );
         $jxam = round ( $_POST ['jxam'], 2 );
@@ -694,7 +694,7 @@ class model_salary_class extends model_base {
                     ,s.prepaream , s.handicapam , s.manageam , s.cessebase
                     ,s.olddept
                     ,s.freezeflag , s.freezesta , p.id as pid
-                    ,s.recovercdt
+                    ,s.recovercdt, s.usercom
                 from salary s
                     left join hrms h on (s.userid=h.user_id)
                     left join user u on (s.userid=u.user_id)
@@ -751,7 +751,10 @@ class model_salary_class extends model_base {
                 if (empty ( $resck ['pid'] )) {
                     $totalAm = $this->salaryClass->cfv ( $baseAm );
                     $cesseAm = $this->salaryClass->cfv ( $totalAm );
-                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $resck ['cessebase'] );
+                    //根据时间和公司 更新个税
+                    $cdt_year = date('Y', strtotime($cdt));
+                    $cdt_mon = date('m', strtotime($cdt));
+                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $resck ['cessebase'], $cdt_year, $cdt_mon, $resck['usercom']);
                     $payTotal = $this->salaryClass->cfv ( $cesseAm - $payCesse );
                     $sql = "insert into
                         salary_pay
@@ -2016,13 +2019,13 @@ class model_salary_class extends model_base {
 							$sp ['SickHolsDays'],
 							($sp ['wdt'] == '-1' ? ($this->salaryClass->getLeaveWorkDays ( $val ['cdt'], $val ['ldt'] )) : $sp ['wdt']),
 							$this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ),
-//							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 ),
-							round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
+                            round($this->salaryClass->decryptDeal($sp['SpeDelAm']), 2),
+//							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 );
+                            round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
                             round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
 							$this->salaryClass->decryptDeal ( $sp ['ShbAm'] ),
 							$this->salaryClass->decryptDeal ( $sp ['GjjAm'] ),
 
-							round($this->salaryClass->decryptDeal($sp['SpeDelAm']), 2),
 							$this->salaryClass->decryptDeal($sp ['PayCesse']),
 							round($this->salaryClass->decryptDeal($sp['AccDelAm']), 2),
 							
@@ -2174,6 +2177,10 @@ class model_salary_class extends model_base {
         $oara = $_POST ['oara']; // 其他税后扣除
         $arac = $_POST ['arac']; // 福利税金
         $comedt = date ( 'Y-m-d', strtotime ( $comedt ) );
+        $comcode = $_POST['comcode'];
+        $leave_year = date('Y', strtotime ( $leavedt ));
+        $leave_mon = date('m', strtotime ( $leavedt ));
+
         // 离职工资
         $swd = round ( $wdt + $sh + $ph, 2 );
         $bna = $this->salaryClass->getSalaryByWorkDays ( $baseam, $swd, $leavedt );
@@ -2185,10 +2192,9 @@ class model_salary_class extends model_base {
 		$bna = round($bna + $gna + $jna - $hda - $spedel, 2); // 离职小计
                                  // 计算个税
         $cesse = round ( $bna + $sra - $shb - $gjj, 2 );
-        $pc = $this->salaryClass->cesseDeal ( $cesse );
-		//20180806修改
+        //获取离职月份,判断是否使用新个税方案
+        $pc = $this->salaryClass->cesseDeal ( $cesse, '', $leave_year, $leave_mon, $comcode);
         // 总=税前-个税+福利-税后扣除-福利税-其他需发
-        //$ptol = round ( $cesse - $pc + $ara - $sda - $arac + $oara, 2 );
 		$ptol = round($cesse - $pc + $ara - $accdel - $arac + $oara, 2);
         
         $responce->hda = $hda;
@@ -2292,7 +2298,11 @@ class model_salary_class extends model_base {
 
             // 计算个税
 			$cesse = round($bna + $gna + $jna - $hda + $sra - $shb - $gjj - $spedel, 2);
-			$pc = $this->salaryClass->cesseDeal ( $cesse );
+            //获取离职月份,判断是否使用新个税方案
+            $leave_year = date('Y', strtotime ( $leavedt ));
+            $leave_mon = date('m', strtotime ( $leavedt ));
+			$pc = $this->salaryClass->cesseDeal ( $cesse, '', $leave_year, $leave_mon, $_POST['comcode']);
+
             // 总=税前-个税+福利-扣除-福利税-其他需发
 			$ptol = round($cesse - $pc + $ara - $accdel - $arac + $oara, 2);
             $this->model_pay_update ( $pid, array (
@@ -4911,7 +4921,7 @@ department d on u.DEPT_ID = d.DEPT_ID where 1 = 1 $sqlSch order by s.deptid ,s.u
 			$scopeFlag = $this->getSalaryScope(false,true,'','d.dept_id');
 			$dataarr = array ();
 			$dataarr = $this->model_hr_leave_manager_list ( 'xls', '', true, $scopeFlag );
-			
+
 			$ym = array();
 			$userYm = array();
 			foreach ($dataarr as $row) {
@@ -4929,7 +4939,7 @@ department d on u.DEPT_ID = d.DEPT_ID where 1 = 1 $sqlSch order by s.deptid ,s.u
 				}
 			}
 		}
-		
+
 		//	$logDao = new model_engineering_worklog_esmworklog ();
         include_once WEB_TOR . "module/phpExcel/classes/PHPExcel.php";
         include_once WEB_TOR . "module/phpExcel/Classes/PHPExcel/Reader/Excel2007.php";
@@ -5921,7 +5931,7 @@ WHERE	d.DelFlag = 0 AND FIND_IN_SET('" . $sy . "', d.setyear) ORDER BY d.PARENT_
 						array_push($dataarr2,$rowCopy);
 						
 					}
-// 					$rsam = round(floatval($r16+$r17+$r18+$r19+$r20+$r21+$r22+$r23+$r24+$r25+$r26+$r27+$r28+$r29),2); 
+// 					$rsam = round(floatval($r16+$r17+$r18+$r19+$r20+$r21+$r22+$r23+$r24+$r25+$r26+$r27+$r28+$r29),2);
 					$rsam = round(floatval($r18+$r19+$r20+$r21+$r22+$r23+$r24+$r25+$r26+$r27+$r28+$r29+$r30+$r31),2); 
 // 					$excelAm = round((floatval($rowCopy[16])+floatval($rowCopy[17])+floatval($rowCopy[18])+floatval($rowCopy[19])+floatval($rowCopy[20])+floatval($rowCopy[21])+floatval($rowCopy[22])+floatval($rowCopy[23])+floatval($rowCopy[24])+floatval($rowCopy[25])+floatval($rowCopy[26])+floatval($rowCopy[27])+floatval($rowCopy[28])+floatval($rowCopy[29])),2);
 					$excelAm = round((floatval($rowCopy[18])+floatval($rowCopy[19])+floatval($rowCopy[20])+floatval($rowCopy[21])+floatval($rowCopy[22])+floatval($rowCopy[23])+floatval($rowCopy[24])+floatval($rowCopy[25])+floatval($rowCopy[26])+floatval($rowCopy[27])+floatval($rowCopy[28])+floatval($rowCopy[29])+floatval($rowCopy[30])+floatval($rowCopy[31])),2);
@@ -16777,7 +16787,8 @@ where
                 ) );
             }
             $sqlstr .= " and h.expflag='0' and y.com in( '" . str_replace ( ',', "','", $func_limit ['子公司'] ) . "' ) ";
-        } elseif ($flag == 'exp') {
+        }
+        elseif ($flag == 'exp') {
             $data = array (
                     1 => array (
                             '编号',
@@ -16799,7 +16810,8 @@ where
                     6 
             ) );
             $sqlstr .= " and h.expflag='1' ";
-        } elseif ($flag == 'hr') {
+        }
+        elseif ($flag == 'hr') {
             $data = array (
                     1 => array (
                             '编号',
@@ -16825,7 +16837,8 @@ where
                     8 
             ) );
             $sqlstr .= " and h.userlevel='4' ";
-        } elseif ($flag == 'dao') {
+        }
+        elseif ($flag == 'dao') {
             $data = array (
                     1 => array (
                             '编号',
@@ -19595,7 +19608,7 @@ where
                             if ($tmpyks < 0) {
                                 $tmpyks = 0;
                             }
-                            $tmpsl = $this->salaryClass->getCesseDeal ( $tmpt - $tmpshb - $tmpgjj );
+                            $tmpsl = $this->salaryClass->getCesseDeal($tmpt-$tmpshb-$tmpgjj, '', $row['pyear'], $row['pmon'], $row['company']);
                             $data [] = array (
                                     $row ["id"],
                                     $row ["comedt"],
@@ -20964,13 +20977,9 @@ EOD;
         }
     }
     function c_testpay() {
-        // $sql="select id from salary_pay where pmon='8' and pyear='2014' and SalaryDept='信令业务方案'";
-        // $query = $this->db->query($sql);
-        // while (($row = $this->db->fetch_array($query)) != false) {
-        //
-        // $this->model_pay_stat($row['id']);
-        // }
-        $this->model_pay_stat ( '100668' );
+        //$this->model_pay_stat ( '170301' ); //八月
+        //$this->model_pay_stat ( '172234' ); //九月
+        $this->model_pay_stat ( '173485' ); //九月
         echo 'success';
     }
     
@@ -20996,7 +21005,7 @@ EOD;
 			,cessebase
 			,perholsdays ,sickholsdays
 			,accrewam ,accdelam , gwam ,  jxam
-			, pyear , pmon
+			, pyear , pmon, usercom
 			, txjt
 			from  salary_pay
 			where id='$k'";
@@ -21018,13 +21027,13 @@ EOD;
 			$totalAm = round ( $totalAm + $res ['txjt'], 2 );
 			
 			$cesse = round ( $totalAm - $res ['gjjam'] - $res ['shbam'], 2 );
-			$payCesse = $this->salaryClass->cesseDeal ( $cesse, $query ['cessebase'] ); //扣税额度
+			$payCesse = $this->salaryClass->cesseDeal ( $cesse, $query ['cessebase'], $query['pyear'], $query['pmon'], $query['usercom'] ); //扣税额度
 			$payTotal = $this->salaryClass->getFinanceValue ( $cesse - $payCesse + $res ['accrewam'] - $res ['accdelam'] );  //扣除公积金和社保后再 - 扣税金额 + 离职福利税后增发 - 税后扣除
 			$res = array (
 					'holsdelam' => $holsdelAm,
-					'totalam' => $totalAm,
-					'paycesse' => $payCesse,
-					'paytotal' => $payTotal
+					'totalam'   => $totalAm,
+					'paycesse'  => $payCesse,
+					'paytotal'  => $payTotal
 			);
 			$this->model_pay_update ( $k, $res, '', $sqltab );
 		}
@@ -21045,7 +21054,7 @@ EOD;
                 ,cessebase
                 ,perholsdays ,sickholsdays
                 ,accrewam ,accdelam , gwam ,  jxam
-                , pyear , pmon
+                , pyear , pmon, usercom
                 , txjt
             from  salary_pay
             where id='$k'";
@@ -21068,7 +21077,7 @@ EOD;
 		$totalAm = round ( $totalAm + $res ['txjt'], 2 );
 		
 		$cesse = round ( $totalAm - $res ['gjjam'] - $res ['shbam'], 2 );
-		$payCesse = $this->salaryClass->cesseDeal ( $cesse, $query ['cessebase'] );
+		$payCesse = $this->salaryClass->cesseDeal ( $cesse, $query ['cessebase'], $query['pyear'], $query['pmon'], $query['usercom'] );
 		$payTotal = $this->salaryClass->getFinanceValue ( $cesse - $payCesse + $res ['accrewam'] - $res ['accdelam'] );
 		$res = array (
 				'holsdelam' => $holsdelAm,
@@ -21265,14 +21274,7 @@ EOD;
             echo '本月新员工数据初始失败，请联系管理员。';
             exit ();
         }
-        // 季度项目奖 取消 5-29 xgq
-        // if($this->nowm==1||$this->nowm==4||$this->nowm==7||$this->nowm==10){
-        // $sql="update salary set floatam='".$this->zero."' , floatflag='1' where floatflag='0' ";
-        // $this->db->query_exc($sql);
-        // }else{
-        // $sql="update salary set floatflag='0' where floatflag='1' ";
-        // $this->db->query_exc($sql);
-        // }
+
         // 更新部门公司信息-统一 更新当月信息
         $sql = "update
                 salary s
@@ -21317,8 +21319,7 @@ EOD;
                     from salary_pay
                     where pyear='" . $this->nowy . "'
                         and pmon='" . $this->nowm . "') ";
-        
-        // 控制了贝讯 需调整
+
         $sql = "select
                 s.userid ,u.dept_id , s.oldarea as area
                 ,s.amount , s.floatam
@@ -21368,7 +21369,7 @@ EOD;
 					$zxAm = $this->salaryClass->decryptDeal ( $row ['zxam'] );
                     $totalAm = $this->salaryClass->cfv ( $baseAm + $floatAm + $jxAm + $gwAm + $zxAm);
                     $cesseAm = $this->salaryClass->cfv ( $totalAm - $gjjAm - $shbAm );
-                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'] );
+                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'], $this->nowy, $this->nowm, $row['company']);
                     $payTotal = $this->salaryClass->cfv ( $cesseAm - $payCesse );
                     $sql = "insert into
                             salary_pay
@@ -21424,7 +21425,7 @@ EOD;
                 ,s.amount , s.floatam
                 ,s.gjjam , s.shbam , s.newflag , s.cogjjam , s.coshbam
                 ,s.prepaream , s.handicapam , s.manageam , s.cessebase
-                ,s.olddept , s.usersta
+                ,s.olddept , s.usersta, s.usercom
             FROM salary s where comflag='0' and s.usersta=2 " . $sqlcom;
         $query = $this->db->query ( $sql );
         try {
@@ -21442,7 +21443,7 @@ EOD;
                     $floatAm = $this->salaryClass->decryptDeal ( $row ['floatam'] );
                     $totalAm = $this->salaryClass->cfv ( $baseAm + $floatAm );
                     $cesseAm = $this->salaryClass->cfv ( $totalAm - $gjjAm - $shbAm );
-                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'] );
+                    $payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'], $this->nowy, $this->nowm, $row['usercom']);
                     $payTotal = $this->salaryClass->cfv ( $cesseAm - $payCesse );
                     $sql = "insert into
                             salary_pay
@@ -21488,8 +21489,7 @@ EOD;
                     from salary_history
                     where pyear='" . $this->nowy . "'
                         and pmon='" . $this->nowm . "') ";
-		
-		// 控制了贝讯 需调整
+
 		$sql = "select
                 s.userid ,u.dept_id , s.oldarea as area
                 ,s.amount , s.floatam
@@ -21538,9 +21538,8 @@ EOD;
 					$jxAm = $this->salaryClass->decryptDeal ( $row ['jxam'] );
 					$totalAm = $this->salaryClass->cfv ( $baseAm + $floatAm + $jxAm + $gwAm );
 					$cesseAm = $this->salaryClass->cfv ( $totalAm - $gjjAm - $shbAm );
-					$payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'] );
+					$payCesse = $this->salaryClass->cesseDeal ( $cesseAm, $row ['cessebase'], $this->nowy, $this->nowm, $row['company']);
 					$payTotal = $this->salaryClass->cfv ( $cesseAm - $payCesse );
-					//s.jjam , s.gljtam , s.lszsam , s.txjt , s.qtjtam , s.expenCeiling , h.usercard
 					$sql = "insert into
                             salary_history
                         set
@@ -21563,6 +21562,7 @@ EOD;
                             , shbam='" . $row ['shbam'] . "'
                             , cogjjam='" . $row ['cogjjam'] . "'
                             , coshbam='" . $row ['coshbam'] . "'
+                            , cessebase='" . $this->salaryClass->cesseProvideBase . "'
                             , prepaream='" . $row ['prepaream'] . "'";
 					$this->db->query_exc ( $sql );
 				}
@@ -23766,23 +23766,18 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
 	}
 	
 	function updateSalaryPay() {
-        /*
-         * $proArr=array();
-         * $sql="select p.id as 'pid' from salary_pay p where PMon = 11 and PYear=2015 and EXISTS (select 1 from salary_temp_20151202 t where p.UserId = t.userid);";
-         * $query=$this->db->query($sql);
-         * $rows = 0;
-         * while($row=$this->db->fetch_array($query)){
-         * $this->model_pay_stat($row['pid']);
-         * $rows++;
-         * }
-         * echo "成功执行".$rows."条数据";
-         */
-        $salaryPayId = "169935";
-        $salaryPayIds = explode ( ',', $salaryPayId );
-        for($index = 0; $index < count ( $salaryPayIds ); $index ++) {
-            $this->model_pay_stat ( $salaryPayIds [$index] );
+        ini_set('max_execution_time',0);
+        $sql = " select p.id from salary_pay p left join salary s on p.userid=s.userid 
+                where p.pyear=2018 and p.pmon=09 and p.usercom !='jk' and p.usercom != 'xs' and s.payleaveflag =0 ";
+        $query = $this->db->query($sql);
+        $i = 0;
+        while($row=$this->db->fetch_array($query)){
+            $this->model_pay_stat($row['id']);
+            $row++;
+            $i++;
         }
-        // $this->model_pay_stat(116118);
+        //var_dump($i);
+        die('ok');
     }
 	
 	function feeCancel() {
@@ -23797,15 +23792,15 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
 	}
 	
     function model_encryptDeal() {
-        echo $this->salaryClass->encryptDeal ('327.27' );
+        echo $this->salaryClass->encryptDeal ('325956425033' );
         die ();
     }
     function model_decryptDeal() {
-        echo $this->salaryClass->decryptDeal('POvhVNhU7CM7tmEfZ79h2A==');
+        echo $this->salaryClass->decryptDeal('yearIqrfLjgO/6MnUn6hyw==');
         die ();
     }
 	function getK() {
-		$prikey = crypt_util ( '336099825133', 'encode', 'system_warning_warning' );
+		$prikey = crypt_util ( '336099825133', 'encode', 'engineering_person_esmperson' );
 		print_r ( $prikey );
 	}
     

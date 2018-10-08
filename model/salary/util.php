@@ -25,7 +25,7 @@ class model_salary_util extends model_base {
     function __construct() {
         parent::__construct();
         $this->monthDaysProvide = 21.75;
-        $this->cesseProvideBase = 3500;
+        $this->cesseProvideBase = 5000;
         $this->gjjBase = 2500;
         $this->shbBase = 0;
         $this->coGjjBase = 0;
@@ -242,27 +242,15 @@ class model_salary_util extends model_base {
      * 个人所得税缴纳
      * @param double $cesseAm
      */
-    function cesseDeal($cesseAm, $cpb='0') {
+    function cesseDeal($cesseAm, $cpb='0', $year='2018', $mon='09', $com='dl') {
         if ($cpb == '0' || $cpb == ''|| !is_numeric($cpb) ) {
-            $cpb = $this->cesseProvideBase;
+            $cpb = 3500;
         }
-        /*
-        $cesseProvide = array(
-            "1" => array("cess" => "5", "del" => "0", "min" => "1", "max" => "500"),
-            "2" => array("cess" => "10", "del" => "25", "min" => "501", "max" => "2000"),
-            "3" => array("cess" => "15", "del" => "125", "min" => "2001", "max" => "5000"),
-            "4" => array("cess" => "20", "del" => "375", "min" => "5001", "max" => "20000"),
-            "5" => array("cess" => "25", "del" => "1375", "min" => "20001", "max" => "40000"),
-            "6" => array("cess" => "30", "del" => "3375", "min" => "40001", "max" => "60000"),
-            "7" => array("cess" => "35", "del" => "6375", "min" => "60001", "max" => "80000"),
-            "8" => array("cess" => "40", "del" => "10375", "min" => "80001", "max" => "100000"),
-            "9" => array("cess" => "45", "del" => "15375", "min" => "100001", "max" => "0")
-        );
-         * 
-         */
+
         if($cpb==2000){
             $cpb=3500;
         }
+
         $cesseProvide = array(
             "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "1500"),
             "2" => array("cess" => "10", "del" => "105", "min" => "1501", "max" => "4500"),
@@ -272,6 +260,23 @@ class model_salary_util extends model_base {
             "6" => array("cess" => "35", "del" => "5505", "min" => "55001", "max" => "80000"),
             "7" => array("cess" => "45", "del" => "13505", "min" => "80001", "max" => "0")
         );
+
+        //新个税(5000基准) 级别处理
+        if($this->compare_year_mon_income($year, $mon, $com)){
+            $cpb = 5000;
+
+            $cesseProvide = array(
+                "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "3000"),
+                "2" => array("cess" => "10", "del" => "210", "min" => "3001", "max" => "12000"),
+                "3" => array("cess" => "20", "del" => "1410", "min" => "12001", "max" => "25000"),
+                "4" => array("cess" => "25", "del" => "2660", "min" => "25001", "max" => "35000"),
+                "5" => array("cess" => "30", "del" => "4410", "min" => "35001", "max" => "55000"),
+                "6" => array("cess" => "35", "del" => "7160", "min" => "55001", "max" => "80000"),
+                "7" => array("cess" => "45", "del" => "15160", "min" => "80001", "max" => "0")
+            );
+        }
+
+
         $ret = 0;
         $leaveCesse = round($cesseAm - $cpb, 2);
         $cesseck = ceil($leaveCesse);
@@ -282,6 +287,7 @@ class model_salary_util extends model_base {
                 break;
             }
         }
+
         return $ret >= 0 ? $ret : 0;
     }
     
@@ -289,9 +295,9 @@ class model_salary_util extends model_base {
      * 个人所得税缴纳
      * @param double $cesseAm
      */
-    function getCesseDeal($cesseAm, $cpb='0') {
+    function getCesseDeal($cesseAm, $cpb='0', $year='2018', $mon='09', $com='dl') {
         if ($cpb == '0' || $cpb == ''|| !is_numeric($cpb) ) {
-            $cpb = $this->cesseProvideBase;
+            $cpb = 3500;
         }
         if($cpb==2000){
             $cpb=3500;
@@ -305,6 +311,23 @@ class model_salary_util extends model_base {
             "6" => array("cess" => "35", "del" => "5505", "min" => "55001", "max" => "80000"),
             "7" => array("cess" => "45", "del" => "13505", "min" => "80001", "max" => "0")
         );
+
+        //新个税(5000基准) 级别处理
+        if($this->compare_year_mon_income($year, $mon, $com)){
+            $cpb = 5000;
+
+            $cesseProvide = array(
+                "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "3000"),
+                "2" => array("cess" => "10", "del" => "210", "min" => "3001", "max" => "12000"),
+                "3" => array("cess" => "20", "del" => "1410", "min" => "12001", "max" => "25000"),
+                "4" => array("cess" => "25", "del" => "2660", "min" => "25001", "max" => "35000"),
+                "5" => array("cess" => "30", "del" => "4410", "min" => "35001", "max" => "55000"),
+                "6" => array("cess" => "35", "del" => "7160", "min" => "55001", "max" => "80000"),
+                "7" => array("cess" => "45", "del" => "15160", "min" => "80001", "max" => "0")
+            );
+        }
+
+
         $ret = 0;
         $leaveCesse = round($cesseAm - $cpb, 2);
         $cesseck = ceil($leaveCesse);
@@ -323,7 +346,7 @@ class model_salary_util extends model_base {
      */
     function cesseDealNew($cesseAm, $cpb='0') {
         if ($cpb == '0' || $cpb == ''|| !is_numeric($cpb) ) {
-            $cpb = $this->cesseProvideBase;
+            $cpb = 3500;
         }
         if($cpb==2000){
             $cpb=3000;
@@ -356,38 +379,35 @@ class model_salary_util extends model_base {
      */
     function cesseDealYeb($yearAm ,$laseMonAm ,$cpb,$flag=false) {
         if ($cpb == '0' || $cpb == ''|| !is_numeric($cpb) ) {
-            $cpb = $this->cesseProvideBase;
+            $cpb = 3500;
         }
-        $cesseProvide = array(
-            "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "1500"),
-            "2" => array("cess" => "10", "del" => "105", "min" => "1501", "max" => "4500"),
-            "3" => array("cess" => "20", "del" => "555", "min" => "4501", "max" => "9000"),
-            "4" => array("cess" => "25", "del" => "1005", "min" => "9001", "max" => "35000"),
-            "5" => array("cess" => "30", "del" => "2755", "min" => "35001", "max" => "55000"),
-            "6" => array("cess" => "35", "del" => "5505", "min" => "55001", "max" => "80000"),
-            "7" => array("cess" => "45", "del" => "13505", "min" => "80001", "max" => "0")
-            /*
-            "1" => array("cess" => "5", "del" => "0", "min" => "1", "max" => "500"),
-            "2" => array("cess" => "10", "del" => "25", "min" => "501", "max" => "2000"),
-            "3" => array("cess" => "15", "del" => "125", "min" => "2001", "max" => "5000"),
-            "4" => array("cess" => "20", "del" => "375", "min" => "5001", "max" => "20000"),
-            "5" => array("cess" => "25", "del" => "1375", "min" => "20001", "max" => "40000"),
-            "6" => array("cess" => "30", "del" => "3375", "min" => "40001", "max" => "60000"),
-            "7" => array("cess" => "35", "del" => "6375", "min" => "60001", "max" => "80000"),
-            "8" => array("cess" => "40", "del" => "10375", "min" => "80001", "max" => "100000"),
-            "9" => array("cess" => "45", "del" => "15375", "min" => "100001", "max" => "0")
-             * 
-             */
-        );
         if($cpb==2000){
             $cpb=3500;
         }
+
+//        $cesseProvide = array(
+//            "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "1500"),
+//            "2" => array("cess" => "10", "del" => "105", "min" => "1501", "max" => "4500"),
+//            "3" => array("cess" => "20", "del" => "555", "min" => "4501", "max" => "9000"),
+//            "4" => array("cess" => "25", "del" => "1005", "min" => "9001", "max" => "35000"),
+//            "5" => array("cess" => "30", "del" => "2755", "min" => "35001", "max" => "55000"),
+//            "6" => array("cess" => "35", "del" => "5505", "min" => "55001", "max" => "80000"),
+//            "7" => array("cess" => "45", "del" => "13505", "min" => "80001", "max" => "0")
+//        );
+
+        $cpb = 5000;
+        $cesseProvide = array(
+            "1" => array("cess" => "3", "del" => "0", "min" => "1", "max" => "3000"),
+            "2" => array("cess" => "10", "del" => "210", "min" => "3001", "max" => "12000"),
+            "3" => array("cess" => "20", "del" => "1410", "min" => "12001", "max" => "25000"),
+            "4" => array("cess" => "25", "del" => "2660", "min" => "25001", "max" => "35000"),
+            "5" => array("cess" => "30", "del" => "4410", "min" => "35001", "max" => "55000"),
+            "6" => array("cess" => "35", "del" => "7160", "min" => "55001", "max" => "80000"),
+            "7" => array("cess" => "45", "del" => "15160", "min" => "80001", "max" => "0")
+        );
+
         $ret = 0;
-        /*
-        $leaveCesse = round( $yearAm/12 , 2);
-        $tmpAm = round($yearAm,2);
-         * 
-         */
+
         if($laseMonAm < $cpb){//工资-公积金-社保费 < 扣税基数
             $leaveCesse = round( ($yearAm-($cpb-$laseMonAm))/12 , 2);
             $tmpAm = round( $yearAm-($cpb-$laseMonAm) , 2 );
@@ -588,10 +608,10 @@ class model_salary_util extends model_base {
      */
     function loadingDiv() {
         echo "
-<div id='divback'>
-    <div style='position:absolute;left:0px; top:0px; width:100%; height:100%;background-color:#000;filter:alpha(Opacity=5);display:black' ></div>
-    <div align='center'style='position:absolute;left:0px; top:0px;' id='divloading'></div>
-</div>";
+            <div id='divback'>
+                <div style='position:absolute;left:0px; top:0px; width:100%; height:100%;background-color:#000;filter:alpha(Opacity=5);display:black' ></div>
+                <div align='center'style='position:absolute;left:0px; top:0px;' id='divloading'></div>
+            </div>";
         ob_flush();
         flush();
     }
@@ -731,6 +751,42 @@ class model_salary_util extends model_base {
             }
         }
         return $res;
+    }
+
+
+    /**
+     * 个税比较,运用新个税时间返回true,运用旧个税时间返回false
+     * @param $year
+     * @param $mon
+     * @return bool
+     */
+    function compare_year_mon_income($year, $mon, $com)
+    {
+        $year = intval($year);
+        if($mon != '10'){
+            $mon = intval(str_replace('0', '', $mon));
+        }
+
+        if($year >2018){
+            return true;
+        }elseif($year == 2018){
+            if ($com!='xs' && $com!='jk'){
+                if($mon >= 9){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                if($mon >= 10){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
+        }else{
+            return false;
+        }
     }
 
 }
