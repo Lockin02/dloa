@@ -28,6 +28,7 @@ if($actTo=="ewfSelect"){
     $proSid=isset($proSid)?$proSid:"";//项目任务书ID  --项目经理
     $proId=isset($proId)?$proId:"";//项目ID   --项目经理 （ 查找最新任务书的项目经理）
     $billDept=isset($billDept)?$billDept:$DEPT_ID;//审批表单数据所属部门 -- 区域经理
+    $billCompany=isset($billCompany)?$billCompany:"";//传入公司参数
     //
     $ewf->setBillId($billId);
     $ewf->setExamCode($examCode);
@@ -36,6 +37,7 @@ if($actTo=="ewfSelect"){
     $ewf->setProId($proId);
     $ewf->setProSid($proSid);
     $ewf->setBillDept($billDept);
+    $ewf->setBillCompany($billCompany);
     //变量定义
     $formName=isset($formName)?$formName:"其他合同审批";//工作流表单名称
     $flowType=isset($flowType)?$flowType:"";//工作流类型
@@ -47,7 +49,7 @@ if($actTo=="ewfSelect"){
 if($actTo=="ewfBuild"){
     //$sendToURL=$baseDir."?actTo=swfList";
      $msql->query(" update oa_sale_other SET ExaStatus='部门审批',status = '1' where id='$billId' ");
-    $sendToURL="../../../index1.php?model=contract_other_other&action=toAddDept";//生成工作流后跳转的页面
+    $sendToURL="../../../index1.php?model=contract_other_other&action=myOther";//生成工作流后跳转的页面
     $ewf->buildWorkFlow($sendToURL);
 }
 //审批工作流
@@ -69,4 +71,14 @@ if($actTo=="ewfView"){
     $taskId=isset($taskId)?$taskId:"";
     $ewf->examWorkFlowView($taskId);
 }
-?>
+//删除审批流
+if($actTo=="delWork"){
+    $billId=isset($billId)?$billId:"";//审批表单数据ID
+	//$msql->query(" update oa_sale_other c SET c.status='0' where c.id='$billId' ");
+	$sql=" update oa_sale_other c SET c.status='0' where c.id='$billId' ";
+    $examCode=isset($examCode)?$examCode:"oa_sale_other";//审批数据表
+    $formName=isset($formName)?$formName:"其他合同审批";//工作流表单名称
+    $returnSta=isset($returnSta)?$returnSta:"待提交";//回滚单据审批状态
+    $flag=isset($flag)?$flag:"json";//回滚单据审批状态
+    $ewf->delWorkFlow($billId,$examCode,$formName,$returnSta,$flag,$sql);
+}

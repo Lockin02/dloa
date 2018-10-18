@@ -26,7 +26,9 @@ class controller_contract_deduct_deduct extends controller_base_action {
 	function c_toAdd() {
 		$conId = $_GET['contractId'];
 		$conDao = new model_contract_contract_contract();
+		$applyMoney = $this->service->getApplyMoney($conId);
 		$conInfo = $conDao->get_d($conId);
+		$conInfo['applyMoney'] = $applyMoney;
 		//数据渲染
 		$this->assignFunc($conInfo);
        $this->view ( 'add' );
@@ -99,9 +101,9 @@ class controller_contract_deduct_deduct extends controller_base_action {
 			$this->assign ( $key, $val );
 		}
 		if (isset ( $_GET ['perm'] ) && $_GET ['perm'] == 'view') {
-			$this->display ( 'view' );
+			$this->view ( 'view' );
 		} else {
-			$this->display ( 'edit' );
+			$this->view ( 'edit' );
 		}
 	}
 	/**
@@ -118,11 +120,8 @@ class controller_contract_deduct_deduct extends controller_base_action {
 	  * 审批完成后跳转方法
      */
     function c_confirmDeduct(){
-        $otherdatas = new model_common_otherdatas ();
-		$folowInfo = $otherdatas->getWorkflowInfo ( $_GET ['spid'] );
-		$objId = $folowInfo ['objId'];
-		$userId = $folowInfo['Enter_user'];
-       	$this->service->dealAfterAudit_d($objId,$userId);
+       	//审批流回调方法
+        $this->service->workflowCallBack($_GET['spid']);
 		succ_show('?model=common_workflow_workflow&action=auditingList');
     }
 
@@ -134,6 +133,12 @@ class controller_contract_deduct_deduct extends controller_base_action {
 		foreach ( $obj as $key => $val ) {
 			$this->assign ( $key, $val );
 		}
+		if ($obj['dispose'] == "deductMoney") {
+				$this->assign('disa', 'checked');
+			} else {
+				$this->assign('disb', 'checked');
+			}
+		$this->assign('thisDate',day_date);
 //		echo "<pre>";
 //		print_R($_SESSION);
 		$this->view ( 'deductdispose' );
@@ -143,8 +148,15 @@ class controller_contract_deduct_deduct extends controller_base_action {
      */
     function c_dedispose(){
     	$object = $_POST [$this->objName];
-        $this->service->dedispose_d($object);
-			msg ( '处理完成！' );
+
+		try {
+			$tag = $this->service->dedispose_d($object);
+			if($tag){
+				msg ( '处理完成！' );
+			}
+		} catch (Exception $e) {
+			echo $e->getMessage();
+		}
     }
  }
 ?>

@@ -588,7 +588,7 @@ $(function() {
 			name : 'Amount'
 		}, {
 			display : "报销人",
-			name : 'InputManNameSearch'
+			name : 'costManNameSearch'
 		}, {
 			display : "事由",
 			name : 'PurposeSearch'

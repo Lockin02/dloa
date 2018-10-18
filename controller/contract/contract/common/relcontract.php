@@ -87,6 +87,18 @@ class controller_contract_common_relcontract extends controller_base_action {
 		$contObj = $service->contDao->getContractInfo($contId);
 		//		echo "<pre>";
 		//		print_R($contObj);
+		$equArr = $contObj['equ'];
+		$equ = array();
+		$borrowequ = array();
+		foreach( $equArr as $key=>$val ){
+			if( $val['isBorrowToorder']==0 ){
+				$equ[]=$val;
+			}else{
+				$borrowequ[]=$val;
+			}
+		}
+		$contObj['equ']=$equ;
+		$contObj['borrowequ']=$borrowequ;
 		if ($contObj['sign'] == 1) {
 			$contObj['sign'] = '是';
 		} else {
@@ -103,10 +115,52 @@ class controller_contract_common_relcontract extends controller_base_action {
 				$contObj['shipCondition'] = "通知发货";
 				break;
 		}
-		//		echo "<pre>";
-		//		print_R($contObj);
+		//是否
+		$contObj['isStamp'] =  $this->service->rtYesOrNo_d($contObj['isStamp']);
+		$contObj['isNeedStamp'] =  $this->service->rtYesOrNo_d($contObj['isNeedStamp']);
+
+		//开票类型
+		$type = '';
+		if( $contObj['added'] ){
+			$type.= '增值税发票 : '. $contObj['addedMoney'] . '   ';
+		}
+		if( $contObj['added'] ){
+			$type.= '出口发票 : '. $contObj['exportInvMoney'] . '   ';
+		}
+		if( $contObj['added'] ){
+			$type.= '服务税发票 : '. $contObj['serviceInvMoney'] . '   ';
+		}
+		$contObj['invoiceTypeName']=$type;
+
+
+		//付款条件
+		$condition = '';
+		if( $contObj['advance'] ){
+			$condition.= '预付款 : '. $contObj['advance'].'%' . ' | ';
+		}
+		if( $contObj['delivery'] ){
+			$condition.= '货到付款 : '. $contObj['delivery'].'%'  . ' | ';
+		}
+		if( $contObj['progresspayment'] ){
+			$condition.= '按进度付款 : '. $contObj['progresspayment'].'%'  . ' | ';
+		}
+		if( $contObj['initialpayment'] ){
+			$condition.= '初验通过付款 : '. $contObj['initialpayment'].'%'  . ' | ';
+		}
+		if( $contObj['finalpayment'] ){
+			$condition.= '终验通过付款 : '. $contObj['finalpayment'].'%'  . ' | ';
+		}
+		if( $contObj['otherpayment'] ){
+			$condition.= '其他付款条件 : '. $contObj['otherpayment'].'%'  . ' | ';
+		}
+		$contObj['conditions']=$condition;
+
+// 		echo "<pre>";
+// 		print_R($contObj);
+// 		die();
 		return model_contract_common_contractExcelUtil :: exporTemplate($contObj, '', '');
 	}
+
 
 
 	//判断导入合同格式是否正确
@@ -570,7 +624,69 @@ class controller_contract_common_relcontract extends controller_base_action {
 
 	}
 
+	 /**
+	  * 服务成本确认 打回操作
+	  */
+	 function c_ajaxBack(){
+		try {
+//          echo $_POST ['id'];
+			$this->service->ajaxBack_d ( $_POST ['id'] );
+			echo 1;
+		} catch ( Exception $e ) {
+			echo 0;
+		}
+	}
 
+	/**
+	  * 服务成本确认 打回操作
+	  */
+	 function c_rollBack2(){
+		try {
+            $object = $_POST [$this->objName];
+            $remark = isset($object ['remark'])? $object ['remark'] : '';
+            $emailDao = new model_common_mail();
+            $emailInfo = $emailDao->toRelContractBack(2, $_SESSION['USERNAME'], $_SESSION['EMAIL'], "backRelContractInfo2", $object['contractCode'], "打回", $object['prinvipalId'], $object['remark']);
+			if($this->service->ajaxBack_d ( $object['id'] , $remark)){
+                msg('打回成功！');
+            }else{
+                msg('打回失败！');
+            }
+		} catch ( Exception $e ) {
+            msg('打回失败！');
+		}
+	}
 
+	/**
+	 * 跳转到物料确认打回
+	 */
+	function c_toRollBack() {
+		$daoName = $this->docContArr [$_GET ['docType']];
+		$service = new $daoName ();
+        $actType = isset($_GET['actType'])? $_GET['actType'] : '';
+		$rows = $service->get_d($_GET['id']);
+		$this->assign('id', $_GET['id']);
+		$this->assign('contractCode', $rows['contractCode']);
+		$this->assign('prinvipalName', $rows['prinvipalName']);
+		$this->assign('prinvipalId', $rows['prinvipalId']);
+
+        if($actType == 2){// 合同立项列表打回
+            $this->display('rollback2');
+        }else{// 销售物料确认列表打回
+            $this->display('rollback');
+        }
+	}
+	
+	/**
+	 * 物料确认打回
+	 */
+	function c_rollBack() {
+		$object = $_POST [$this->objName];
+		$emailDao = new model_common_mail();
+		$emailInfo = $emailDao->toRelContractBack(1, $_SESSION['USERNAME'], $_SESSION['EMAIL'], "backRelContractInfo", $object['contractCode'], "通过", $object['prinvipalId'], $object['remark']);
+		if($this->service->ajaxBack_d($object['id'], $object['remark'])){
+			msg('处理完成！');
+		}else{
+			msg('处理失败！');
+		}
+	}
 }
-?>

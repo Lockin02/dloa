@@ -28,6 +28,7 @@ if($actTo=="ewfSelect"){
     $proSid=isset($proSid)?$proSid:"";//项目任务书ID  --项目经理
     $proId=isset($proId)?$proId:"";//项目ID   --项目经理 （ 查找最新任务书的项目经理）
     $billDept=isset($billDept)?$billDept:$DEPT_ID;//审批表单数据所属部门 -- 区域经理
+    $billCompany=isset($billCompany)?$billCompany:"";//传入公司参数
     //
     $ewf->setBillId($billId);
     $ewf->setExamCode($examCode);
@@ -36,6 +37,7 @@ if($actTo=="ewfSelect"){
     $ewf->setProId($proId);
     $ewf->setProSid($proSid);
     $ewf->setBillDept($billDept);
+    $ewf->setBillCompany($billCompany);
     //变量定义
     $formName=isset($formName)?$formName:"外包合同审批";//工作流表单名称
     $flowType=isset($flowType)?$flowType:"";//工作流类型

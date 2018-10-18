@@ -1,6 +1,6 @@
 <?php
 /**
-    *Ê¹ÓÃ·½·¨
+    *Ê¹ï¿½Ã·ï¿½ï¿½ï¿½
 */
 include("../../../includes/db.inc.php");
 include("../../../includes/config.php");
@@ -11,24 +11,25 @@ include("../../../includes/util.php" );
 include("../../../includes/getUSER_DEPT_ID.php" );
 include("../../../module/work_flow_examine/examine.class.php");
 /**
-* ÉóÅú¶ÔÏó±íµ¥×Ö¶ÎÖÐ±ØÐëº¬ÓÐ ÉóÅú×´Ì¬£ºExaStatus --varchar(15) ×´Ì¬Îª£º ±à¼­£¨ÐÂ½¨Ê±£© ²¿ÃÅÉóÅú  Íê³É ; ÉóÅúÈÕÆÚ £ºExaDT --datetime
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½Ð±ï¿½ï¿½ëº¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ExaStatus --varchar(15) ×´Ì¬Îªï¿½ï¿½ ï¿½à¼­ï¿½ï¿½ï¿½Â½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ ; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ExaDT --datetime
 */
 extract($_GET);
 $actTo=isset($actTo)?$actTo:"";
-$baseDir="../../../module/work_flow_examine/";//Ïà¶ÔÉóÅúÄ£¿éµÄµØÖ·
-//ÉóÅúÀà
+$baseDir="../../../module/work_flow_examine/";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Äµï¿½Ö·
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 $ewf=new WorkFlow();
 $ewf->setBaseDir($baseDir);
-//Ñ¡Ôñ¹¤×÷Á÷
+//Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="ewfSelect"){
-    $billId=isset($billId)?$billId:"";//ÉóÅú±íµ¥Êý¾ÝID
-    $examCode=isset($examCode)?$examCode:"oa_sale_other";//ÉóÅúÊý¾Ý±í
-    $passSqlCode=isset($passSqlCode)?$passSqlCode:"update oa_sale_other set ExaStatus = 'Íê³É',ExaDT = now(),status = '2' where id='$billId' ";//ÉóÅúÍê³Éºó¸üÐÂÓï¾ä
-    $disPassSqlCode=isset($disPassSqlCode)?$disPassSqlCode:"update oa_sale_other set ExaStatus = '´ò»Ø',status = 0,ExaDT = now() where id='$billId'";//ÉóÅú´ò»Ø¸üÐÂÓï¾ä
-    //ÌØÊâÉóÅú½ÇÉ«£º ÏîÄ¿¾­Àí -- ÇøÓò¾­Àí
-    $proSid=isset($proSid)?$proSid:"";//ÏîÄ¿ÈÎÎñÊéID  --ÏîÄ¿¾­Àí
-    $proId=isset($proId)?$proId:"";//ÏîÄ¿ID   --ÏîÄ¿¾­Àí £¨ ²éÕÒ×îÐÂÈÎÎñÊéµÄÏîÄ¿¾­Àí£©
-    $billDept=isset($billDept)?$billDept:$DEPT_ID;//ÉóÅú±íµ¥Êý¾ÝËùÊô²¿ÃÅ -- ÇøÓò¾­Àí
+    $billId=isset($billId)?$billId:"";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
+    $examCode=isset($examCode)?$examCode:"oa_sale_other";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½
+    $passSqlCode=isset($passSqlCode)?$passSqlCode:"update oa_sale_other set ExaStatus = 'ï¿½ï¿½ï¿½',ExaDT = now(),status = '2' where id='$billId' ";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $disPassSqlCode=isset($disPassSqlCode)?$disPassSqlCode:"update oa_sale_other set ExaStatus = 'ï¿½ï¿½ï¿½',status = 0,ExaDT = now() where id='$billId'";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $proSid=isset($proSid)?$proSid:"";//ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID  --ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½
+    $proId=isset($proId)?$proId:"";//ï¿½ï¿½Ä¿ID   --ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½
+    $billDept=isset($billDept)?$billDept:$DEPT_ID;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $billCompany=isset($billCompany)?$billCompany:"";//ï¿½ï¿½ï¿½ë¹«Ë¾ï¿½ï¿½ï¿½ï¿½
     //
     $ewf->setBillId($billId);
     $ewf->setExamCode($examCode);
@@ -37,48 +38,49 @@ if($actTo=="ewfSelect"){
     $ewf->setProId($proId);
     $ewf->setProSid($proSid);
     $ewf->setBillDept($billDept);
-    //±äÁ¿¶¨Òå
-    $formName=isset($formName)?$formName:"ÆäËûºÏÍ¬Á¢Ïî¸¶¿îÉêÇë";//¹¤×÷Á÷±íµ¥Ãû³Æ
-    $flowType=isset($flowType)?$flowType:"";//¹¤×÷Á÷ÀàÐÍ
-    $flowMoney=isset($flowMoney)?$flowMoney:"0";//¹¤×÷Á÷½ð¶îÏÞÖÆ
-    $flowDept=isset($flowDept)?$flowDept:"0";//¹¤×÷Á÷²¿ÃÅ
+    $ewf->setBillCompany($billCompany);
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $formName=isset($formName)?$formName:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½î¸¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $flowType=isset($flowType)?$flowType:"";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $flowMoney=isset($flowMoney)?$flowMoney:"0";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $flowDept=isset($flowDept)?$flowDept:"0";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     $ewf->selectWorkFlow($formName,$flowType,$flowMoney);
 }
-//Éú³É¹¤×÷Á÷
+//ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="ewfBuild"){
     //$sendToURL=$baseDir."?actTo=swfList";
-     $msql->query(" update oa_sale_other SET ExaStatus='²¿ÃÅÉóÅú',status = '1' where id='$billId' ");
-    $sendToURL="../../../view/reloadParent.php";//Éú³É¹¤×÷Á÷ºóÌø×ªµÄÒ³Ãæ
+     $msql->query(" update oa_sale_other SET ExaStatus='ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',status = '1' where id='$billId' ");
+    $sendToURL="../../../view/reloadParent.php";//ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Ò³ï¿½ï¿½
     $ewf->buildWorkFlow($sendToURL);
 }
-//ÉóÅú¹¤×÷Á÷
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="ewfExam"){
 	$skey = isset($_GET['skey'])? $_GET['skey'] : null ;
     $taskId=isset($taskId)?$taskId:"";
     $spid=isset($spid)?$spid:"";
-    $billId=isset($billId)?$billId:"";//ÉóÅú±íµ¥Êý¾ÝID
-    $detailUrl=isset($detailUrl)?$detailUrl:"../../index1.php?model=contract_other_other&action=init&id=$billId&skey=$skey";//ÉóÅú²é¿´ÄÚÈÝ
+    $billId=isset($billId)?$billId:"";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
+    $detailUrl=isset($detailUrl)?$detailUrl:"../../index1.php?model=contract_other_other&action=init&id=$billId&skey=$skey";//ï¿½ï¿½ï¿½ï¿½ï¿½é¿´ï¿½ï¿½ï¿½ï¿½
     $ewf->examWorkFlow($taskId,$spid,$detailUrl);
 }
-//Ìá½»ÉóÅú¹¤×÷Á÷
+//ï¿½á½»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="ewfExamSub"){
-    $sendToURL="../../../index1.php?model=contract_other_other";//´¦ÀíÉóÅúºóÌø×ªµÄÒ³Ãæ£¬Ìø×ªµ½´ýÉóÅúÒ³Ãæ
+    $sendToURL="../../../index1.php?model=contract_other_other";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Ò³ï¿½æ£¬ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
     $ewf->examWorkFlowSub($sendToURL);
 }
-//ÉóÅúÏêÇé
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="ewfView"){
     $taskId=isset($taskId)?$taskId:"";
     $ewf->examWorkFlowView($taskId);
 }
-//É¾³ýÉóÅúÁ÷
+//É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if($actTo=="delWork"){
-    $billId=isset($billId)?$billId:"";//ÉóÅú±íµ¥Êý¾ÝID
+    $billId=isset($billId)?$billId:"";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
 //	$msql->query(" update oa_sale_other c SET c.status='0' where c.id='$billId' ");
 	$sql=" update oa_sale_other c SET c.status='0' where c.id='$billId' ";
-    $examCode=isset($examCode)?$examCode:"oa_sale_other";//ÉóÅúÊý¾Ý±í
-    $formName=isset($formName)?$formName:"ÆäËûºÏÍ¬Á¢Ïî¸¶¿îÉêÇë";//¹¤×÷Á÷±íµ¥Ãû³Æ
-    $returnSta=isset($returnSta)?$returnSta:"´ýÌá½»";//»Ø¹öµ¥¾ÝÉóÅú×´Ì¬
-    $flag=isset($flag)?$flag:"json";//»Ø¹öµ¥¾ÝÉóÅú×´Ì¬
+    $examCode=isset($examCode)?$examCode:"oa_sale_other";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½
+    $formName=isset($formName)?$formName:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½î¸¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    $returnSta=isset($returnSta)?$returnSta:"ï¿½ï¿½ï¿½á½»";//ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
+    $flag=isset($flag)?$flag:"json";//ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
     $ewf->delWorkFlow($billId,$examCode,$formName,$returnSta,$flag,$sql);
 }
 ?>

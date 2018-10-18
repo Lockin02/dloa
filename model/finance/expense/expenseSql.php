@@ -46,7 +46,22 @@ $sql_arr = array (
 		where 1 #p ",
 	"count_all" => "select sum(c.Amount) as Amount,sum(c.invoiceMoney) as invoiceMoney,sum(c.invoiceNumber) as invoiceNumber,
 			sum(c.invoiceNumber) as invoiceNumber,sum(c.feeRegular) as feeRegular,sum(c.feeSubsidy) as feeSubsidy
-		from cost_summary_list c where 1 "
+		from cost_summary_list c where 1 ",
+    "select_default_forStatistict" => "select
+			c.id ,c.ID ,c.BillNo ,c.salesArea,c.salesAreaId,c.InputManName ,c.InputMan ,c.InputDate ,c.CostManName ,c.CostMan ,c.CostDepartName ,c.CostDepartID ,
+			c.CostManCom ,c.CostManComId ,c.Area ,c.ProjectNo ,c.CostDates ,c.CostMasterID ,c.CostBelongtoDeptIds ,c.CostClientType ,
+			c.CostClientArea ,c.CostClientName ,c.ServiceQuantity ,c.Status ,c.UpdateDT ,c.isProject ,c.xm_sid ,c.RecInvoiceDT ,
+			c.isNotReced ,sum(d.CostMoney * d.days) as Amount,c.Updator ,c.PayDT ,c.IsFinRec ,c.FinRecDT ,c.SubDept ,c.ExamType ,c.CheckAmount ,c.isHandUp ,
+			c.HandUpDT ,c.Payee ,c.rand_key ,c.Acc ,c.AccBank ,c.isNew ,c.ExaStatus ,c.ExaDT ,c.DetailType ,c.CostBelongTo ,c.CostBelongCom,
+			c.CostBelongComId ,c.chanceId ,c.chanceCode ,c.chanceName ,c.contractId ,c.contractCode ,c.contractName ,c.customerName ,c.CustomerType,
+			c.customerId ,c.projectName ,c.projectId ,c.ProjectNO,c.proManagerName ,c.proManagerId ,c.proProvince,c.proProvinceId,c.isPush ,c.province ,c.city ,c.customerDept ,
+			c.invoiceMoney ,c.invoiceNumber ,c.esmCostdetailId,c.feeRegular,c.feeSubsidy,c.CostBelongDeptId,c.IsFinRec as recView,
+			if(c.CostBelongDeptName is null,c.CostBelongtoDeptIds,c.CostBelongDeptName) as CostBelongDeptName,c.isLate,c.needExpenseCheck,
+			if(c.Purpose is null,c.CostClientType,c.Purpose) as Purpose,c.subCheckDT,c.isFinAudit,c.projectType,c.module,c.moduleName
+		from cost_summary_list c left join cost_detail d on c.billNo = d.BillNo where 1",
+    "count_all_forStatistict" => "select round(sum(d.CostMoney * d.days),2) as Amount,sum(c.invoiceMoney) as invoiceMoney,sum(c.invoiceNumber) as invoiceNumber,
+			sum(c.invoiceNumber) as invoiceNumber,sum(c.feeRegular) as feeRegular,sum(c.feeSubsidy) as feeSubsidy
+		from cost_summary_list c left join cost_detail d on c.billNo = d.BillNo where 1 "
 );
 
 $condition_arr = array (
@@ -199,6 +214,10 @@ $condition_arr = array (
 		"sql" => " and c.InputManName like concat('%',#,'%') "
 	),
 	array (
+		"name" => "CostManNameSearch",
+		"sql" => " and c.CostManName like concat('%',#,'%') "
+	),
+	array (
 		"name" => "CostManName",
 		"sql" => " and c.CostManName=# "
 	),
@@ -257,6 +276,10 @@ $condition_arr = array (
 	array (
 		"name" => "proProvinceSearch",
 		"sql" => " and c.proProvinceId = #"
+	),
+	array (
+		"name" => "filterTypeStr",
+		"sql" => " and d.CostTypeId in (SELECT CostTypeID FROM cost_type WHERE CostTypeName not in(arr))"
 	)
 )
 ?>

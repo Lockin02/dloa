@@ -466,6 +466,20 @@ class controller_contract_rental_rentalcontract extends controller_base_action{
 					$isDel="1";
 				}
 			}
+			//如果删除的物料有下达采购的，发邮件给采购部
+            if(!empty($purchaseArr[0])){
+               //获取默认发送人
+		       include (WEB_TOR."model/common/mailConfig.php");
+		       $toMailId = $mailUser['contractChangepurchase']['sendUserId'];
+		       $emailDao = new model_common_mail();
+		       if(empty($infoArr['orderCode'])){
+		       	  $orderCode = $infoArr['orderTempCode'];
+		       }else{
+		       	  $orderCode = $infoArr['orderCode'];
+		       }
+		       //发送人，发送人邮箱，title,收件人,附加信息
+			   $emailInfo = $emailDao->contractChangepurchaseMail($_SESSION['USERNAME'],$_SESSION['EMAIL'],"销售变更物料提醒",$toMailId,$purchaseArr,$orderCode);
+            }
 			foreach($infoArr['rentalcontractequTemp'] as $key =>$val){
 				if (empty($val['productName'])){
 					unset($infoArr['rentalcontractequTemp'][$key]);

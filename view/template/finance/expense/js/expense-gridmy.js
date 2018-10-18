@@ -703,7 +703,7 @@ $(function () {
             data: provinceOpts
         },{
             text: '报销类型',
-            key: 'DetailType',	
+            key: 'DetailType',
             data: [{
                 text: '部门费用',
                 value: '1'
@@ -778,7 +778,7 @@ $(function () {
             name: 'Amount'
         }, {
             display: "报销人",
-            name: 'InputManNameSearch'
+            name: 'CostManNameSearch'
         }, {
             display: "事由",
             name: 'PurposeSearch'

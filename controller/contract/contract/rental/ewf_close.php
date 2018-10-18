@@ -36,6 +36,12 @@ if($actTo=="ewfSelect"){
     $ewf->setProId($proId);
     $ewf->setProSid($proSid);
     $ewf->setBillDept($billDept);
+    //客户信息
+    $sql="select customertype from oa_sale_lease  where id='$billId' ";
+    $msql->query($sql);
+    $msql->next_record();
+    $cktype=$msql->f('customertype');
+    $ewf->setCkType($cktype);
     //变量定义
     $formName=isset($formName)?$formName:"租赁合同异常关闭审批";//工作流表单名称
     $flowType=isset($flowType)?$flowType:"";//工作流类型

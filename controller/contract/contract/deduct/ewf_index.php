@@ -36,16 +36,16 @@ if($actTo=="ewfSelect"){
     $ewf->setProId($proId);
     $ewf->setProSid($proSid);
     $ewf->setBillDept($billDept);
-    
     //客户信息
-    $sql="SELECT c.customertype  FROM oa_contract_deduct d 
-left join oa_contract_contract c on (d.contractid=c.id)
+    $sql="SELECT  customertype , areaprincipalid   FROM 
+oa_contract_contract c 
+left join oa_contract_deduct d on (c.id=d.contractid)
 where d.id='$billId' ";
     $msql->query($sql);
     $msql->next_record();
     $cktype=$msql->f('customertype');
     $ewf->setCkType($cktype);
-    
+    $ewf->setBillUser($msql->f('areaprincipalid'));//区域审批人
     //变量定义
     $formName=isset($formName)?$formName:"扣款申请审批";//工作流表单名称
     $flowType=isset($flowType)?$flowType:"";//工作流类型

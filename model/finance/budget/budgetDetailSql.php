@@ -22,6 +22,34 @@ $condition_arr = array (
     ),array(
         "name" => "areaIds",
         "sql" => " and c.areaId in (#) "
-    )
+    ),array(
+        "name" => "year",
+        "sql" => " and c.year = # "
+    ),array(
+        "name" => "areaId",
+        "sql" => " and c.areaId = # "
+    ),array(
+        "name" => "expenseTypeCode",
+        "sql" => " and c.expenseTypeCode = # "
+    )/*
+	array(
+        "name" => "mainIds",
+        "sql" => " and c.mainId in (#) "
+    ),array(
+        "name" => "totalBudget", // 有预算或者决算的区域才在查看页面显示
+        "sql" => " and (c.totalBudget >0 or c.final>0)"
+    ),array(
+        "name" => "areaIds",
+        "sql" => " and c.areaId in (#) "
+    ),array(
+        "name" => "areaId",
+        "sql" => " and c.areaId = # "
+    ),array(
+        "name" => "year",
+        "sql" => " and c.year = # "
+    ),array(
+        "name" => "expenseTypeCode",
+        "sql" => " and c.expenseTypeCode = # "
+    )*/
 )
  ?>

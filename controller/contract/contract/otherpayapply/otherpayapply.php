@@ -55,10 +55,8 @@ class controller_contract_otherpayapply_otherpayapply extends controller_base_ac
 	 * 根据类型和id返回申请对应归属部门id
 	 */
 	function c_getFeeDeptId(){
-		$contractId = $_POST['contractId'];
-		$contractType = $_POST['contractType'];
-		$obj = $this->service->find(array('contractId' => $contractId ,'contractType' => $contractType),null,'feeDeptId');
-//		print_r($obj);
+		$obj = $this->service->find(array('contractId' => $_POST['contractId'] ,
+				'contractType' => $_POST['contractType']),null,'feeDeptId');
 		if(is_array($obj)){
 			echo $obj['feeDeptId'];
 		}else{
@@ -66,4 +64,3 @@ class controller_contract_otherpayapply_otherpayapply extends controller_base_ac
 		}
 	}
 }
-?>

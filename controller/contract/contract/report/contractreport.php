@@ -413,13 +413,12 @@ class controller_contract_report_contractreport extends controller_base_action {
 	 * 其他合同报表
 	 */
 	function c_otherPay(){
-		if(isset($_GET['thisYear'])){
+		if(isset($_GET['beginDate'])){
 			$initArr = $_GET;
 		}else{
 			$initArr = array(
-				'thisYear' => date('Y'),
-				'beginMonth' => date('m'),
-				'endMonth' => date('m'),
+				'beginDate' => date('Y-m-01',strtotime('-1 month')),
+				'endDate' => date('Y-m-t',strtotime('-1 month')),
                 'createName' => '',
                 'payedMoney' => '',
                 'signCompanyName' => '',

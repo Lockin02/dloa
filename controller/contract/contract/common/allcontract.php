@@ -339,5 +339,14 @@ EOT;
 	}
 
 
+	/**
+	 * 合同错误数据更新
+	 */
+	 function c_updateEquInfo(){
+  	   set_time_limit(0);
+	 	$docType=$_GET['docType'];
+        $dao = new $this->docContArr[$docType];
+        echo $dao->updateEquByType();
+	 }
 }
 ?>
