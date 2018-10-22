@@ -314,7 +314,6 @@ class controller_finance_invoice_invoice extends controller_base_action
      */
     function c_toInvoiceExcOut() {
         set_time_limit(0);
-		ini_set('memory_limit', '1024M'); //设置内存
         $service = $this->service;
         $object = $_GET[$this->objName];
         //区域权限载入 -- 系统部分
@@ -379,7 +378,6 @@ class controller_finance_invoice_invoice extends controller_base_action
      */
     function c_toInvoiceExcOutNotMerge() {
         set_time_limit(0);
-		ini_set('memory_limit', '1024M'); //设置内存
         $service = $this->service;
         $object = $_GET[$this->objName];
         //区域权限载入 -- 系统部分

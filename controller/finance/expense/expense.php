@@ -304,10 +304,8 @@ class controller_finance_expense_expense extends controller_base_action
         switch ($type){
             case 'byBillNo':
                 $billNo = isset($_REQUEST['billNo'])? $_REQUEST['billNo'] : '';
-
                 $record = ($billNo != "")? $this->service->_db->get_one("select T.*,l.CostMan,l.CostDateBegin,l.CostDateEnd from cost_summary_list l left join (
-select billno,GROUP_CONCAT(t.CostTypeID) as CostTypeIDs from (select * from cost_detail group by billno,CostTypeID)t group by t.billno
-)T on T.Billno = l.billNo where l.billNo = '{$billNo}';") : array();
+select billno,GROUP_CONCAT(CostTypeID) as CostTypeIDs from cost_detail where billNo = '{$billNo}')T on T.Billno = l.billNo where l.billNo = '{$billNo}';") : array();
                 $userId = isset($record['CostMan'])? $record['CostMan'] : '';
                 $startDate = isset($record['CostDateBegin'])? $record['CostDateBegin'] : '';
                 $endDate = isset($record['CostDateEnd'])? $record['CostDateEnd'] : '';

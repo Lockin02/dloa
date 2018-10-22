@@ -98,6 +98,9 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
                 $newRow[] = $rsArr;
                 $rows = $newRow;
             }
+			foreach ($rows as $k => $v){
+				$rows[$k]['printId'] = $rows[$k]['id'];
+			}
         }
         foreach ($rows as $k => $v){
             $rows[$k]['printId'] = $rows[$k]['id'];
@@ -215,6 +218,7 @@ class controller_finance_payablesapply_payablesapply extends controller_base_act
      * 付款申请 重写
      */
     function c_toAddforObjType() {
+        set_time_limit(0);
         //付款类型定义
         $payForTypes = array_keys($this->service->payForArr);
         $payFor = isset($_GET['payFor']) ? $_GET['payFor'] : $payForTypes[0];

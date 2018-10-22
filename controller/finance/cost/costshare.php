@@ -119,17 +119,6 @@ class controller_finance_cost_costshare extends controller_base_action
     function c_statistictPageJson()
     {
         $service = $this->service;
-
-        // 获取配置项的销售部门信息
-        $configuratorDao = new model_system_configurator_configurator();
-        $matchConfigItem = $configuratorDao->getConfigItems('SALEDEPT');
-        if($matchConfigItem && is_array($matchConfigItem)){
-            $CostBelongDeptIds = isset($matchConfigItem[0]['belongDeptIds'])? $matchConfigItem[0]['belongDeptIds'] : '';
-            if($CostBelongDeptIds != ''){
-                $_REQUEST['belongDeptIds'] = $CostBelongDeptIds;
-            }
-        }
-
         $service->getParam($_REQUEST);
         $sql = $this->service->getPageSql_d($_REQUEST, false);
         $this->service->sort = "c.objId DESC,c.id";
@@ -611,6 +600,8 @@ class controller_finance_cost_costshare extends controller_base_action
     function c_exportExcel()
     {
         set_time_limit(0);
+		
+		ini_set('memory_limit', '1024M');	//设置内存
         $this->service->getParam($_REQUEST);
         $sql = $this->service->getPageSql_d($_REQUEST);
         $this->service->sort = "c.objId DESC,c.id";

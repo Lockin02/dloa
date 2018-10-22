@@ -469,4 +469,14 @@ class controller_finance_invother_invother extends controller_base_action
 E;
         return $periodStr;
     }
+
+
+    //根据发票类型获取字段四
+    function c_getAdded4(){
+        $type = $_POST['invType'];
+        $sql = 'select expand4 from oa_system_datadict where dataCode = "'.$type.'"';
+        $res = $this->service->_db->getArray($sql);
+        //转成utf8 前端判断
+        echo util_jsonUtil::iconvGB2UTF($res[0]['expand4']);
+    }
 }
