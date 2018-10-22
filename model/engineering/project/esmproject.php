@@ -4467,7 +4467,8 @@ class model_engineering_project_esmproject extends model_base
         $backArr['curIncome'] = 0;//项目营收
         $backArr['feeAll'] = 0;//总 决 算(实时)
         $this->searchArr = "";
-        $this->searchArr['contractId'] = $cid;
+//        $this->searchArr['contractId'] = $cid;
+        $this->searchArr['contractCode'] = $conArr['contractCode']; //修改合同查询条件 pms3030
         $rows = $this->pageBySqlId('select_defaultAndFeeForUpload');
 
         if($rows){
