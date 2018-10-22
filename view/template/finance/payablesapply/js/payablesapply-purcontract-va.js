@@ -1,5 +1,8 @@
 //表单验证方法
 function checkform(){
+
+	changeAuditDate();
+	
 	var payFor = $("#payFor").val();
 
 	if($("#supplierName").val() == ""){

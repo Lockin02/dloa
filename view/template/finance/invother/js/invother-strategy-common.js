@@ -58,6 +58,19 @@ $(function(){
 			mode : 'check'
 		});
 	}
+
+
+	var invType=$("#invType").val();
+
+    //查询额外字段4
+    $.post('?model=finance_invother_invother&action=getAdded4',{'invType':invType},function(data){
+        if(data == '专票'){
+            isZP = true;
+        }else{
+            //否则为普票处理(未定义expand4的也当作普票处理)
+            isZP = false;
+        }
+    });
 });
 
 // 红蓝字切换时的标题渲染
@@ -354,7 +367,18 @@ var invoiceTypeChange = function () {
 function countFinalAmount(){
     if($("#finalAmount").length>0){
         var invType=$("#invType").val();
-        if(invType=="ZZSFP17"||invType=="ZZSZYFP5"||invType=="ZZSZYFP6"||invType=="ZZSFP11"||invType=="ZZSFP13"||invType=="ZZSZYFP17"){//为增值税专用发票取的成本金额为总金额
+
+        //查询额外字段4
+        $.post('?model=finance_invother_invother&action=getAdded4',{'invType':invType},function(data){
+        	if(data == '专票'){
+        		isZP = true;
+        	}else{
+        		//否则为普票处理(未定义expand4的也当作普票处理)
+        		isZP = false;
+        	}
+        });
+
+        if(isZP){//为增值税专用发票取的成本金额为总金额
             $("#finalAmount_v").val( $("#allAmount_v").val());
             $("#finalAmount").val( $("#allAmount").val());
         }else{//非专用发票取的是价税合计

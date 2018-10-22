@@ -1775,7 +1775,6 @@ function showSpecialApply(costType){
 		alert('请先选择一种费用类型！');
 		return false;
 	}
-
 	var CostMan = $("#CostMan").val();//报销人
 	var winObj = $("#specialApplyWindow");
     if(CostMan != ""){
@@ -1789,7 +1788,8 @@ function showSpecialApply(costType){
 		//特别事项申请的对象
 		var costSpeWin = $("#costTypeSpeTb" + costType);
 		//特别事项申请绑定
-    	if(costSpeWin.length == 0){
+    	// if(costSpeWin.length == 0){
+    		winObj.html('');
     		winObj.append("<div id='costTypeSpeTb"+ costType +"' class='costTypeSpeCls'></div>");
     		costSpeWin = $("#costTypeSpeTb" + costType);
     		costSpeWin.yxeditgrid({
@@ -1871,12 +1871,12 @@ function showSpecialApply(costType){
 					}
 				}
     		});
-    	}else{
-    		//显示选择框
-    		costSpeWin.show();
-    		//重载选项
-    		reloadCheckbox(costType);
-    	}
+    	// }else{
+    	// 	//显示选择框
+    	// 	costSpeWin.show();
+    	// 	//重载选项
+    	// 	reloadCheckbox(costType);
+    	// }
     }else{
 		alert('请选择报销人员');
     }
@@ -1888,6 +1888,7 @@ function showSpecialApply(costType){
  * 2.如果有传值，则用传的值
  */
 function setModule(){
+	$('.txtshort').attr('value','');
     // 部门费用的时候再进行处理
     if ($("input[name='expense[DetailType]']").val() == "1") {
         // 费用归属部门

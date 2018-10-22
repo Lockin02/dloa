@@ -308,6 +308,12 @@
         $("#projectName").yxcombogrid_esmproject('remove');
         $("#projectCode").yxcombogrid_esmproject('remove');
         $("#costBelongCom").yxcombogrid_branch('remove');
+
+        // alert($("#proManagerName").parent().prev().text());
+        if($("#proManagerName").parent().prev().text() == '项目经理'){
+            $("#proManagerName").parent().parent().remove();
+        }
+        
         $(".feeTypeContent").remove();
         //清除区域数据
         $("#salesArea").val('');
