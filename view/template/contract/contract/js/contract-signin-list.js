@@ -313,8 +313,8 @@ function linkmanList(customerId, flag) {
 			name: 'telephone',
 			tclass: 'txt'
 		}, {
-			display: 'QQ',
-			name: 'QQ',
+			display: '÷∞Œª',
+			name: 'position',
 			tclass: 'txt'
 		}, {
 			display: '” œ‰',

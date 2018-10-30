@@ -1,10 +1,10 @@
 $(function() {
 
-    if( $("#paperContract").val()=='无'){
-        $("#paperContractView").html("*此合同无纸质合同");
-    }else{
-        $("#paperContractView").hide("");
-    }
+    // if( $("#paperContract").val()=='无'){
+    //     $("#paperContractView").html("*此合同无纸质合同");
+    // }else{
+    //     $("#paperContractView").hide("");
+    // }
 	//新开票类型控制
 	var dataCode = $("#dataCode").val();
 	var itemArr = dataCode.split(',');

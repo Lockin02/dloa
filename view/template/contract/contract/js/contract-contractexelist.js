@@ -182,10 +182,18 @@ $(function () {
     }
     $("#mllsh").html(mllshTmp.toFixed(2) + "%");
     if ($("#conState").html() == '执行中' || $("#conState").html() == '已完成' || $("#conState").html() == '已关闭') {
-        if ($("#contractMoney").val() == projectMoneyAll) {
+        var diffNum = Number($("#contractMoney").val()) - Number(projectMoneyAll);
+        console.log(Number(projectMoneyAll) + " => " + diffNum);
+        var createDate = $("#ExaDTOne").val();
+        var createDateArr = createDate.split("-");
+        if(Number(createDateArr[0]) < 2015){// PMS 730 合同建立日期为2015-01-01前的合同，直接过滤，视为正确。
             $("#proCheck").html("<img src='images/icon/dui.png'/>");
-        } else {
-            $("#proCheck").html("<img src='images/icon/cuo.png'/>");
+        }else{
+            if (diffNum > 0.1 || diffNum < -0.1) {
+                $("#proCheck").html("<img src='images/icon/cuo.png'/>");
+            } else {
+                $("#proCheck").html("<img src='images/icon/dui.png'/>");
+            }
         }
     } else {
         $("#proCheck").html("<img src='images/icon/heng.png'/>");

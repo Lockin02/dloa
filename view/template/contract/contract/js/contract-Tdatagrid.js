@@ -908,6 +908,666 @@ $(function() {
 			process : function(v, row) {
 				return moneyFormat2(v);
 			}
+		}, {
+			name : 'incomeDate_16',
+			display : '回款16期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_16',
+			display : '回款16期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_16',
+			display : '回款16期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_16',
+			display : '回款16期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_17',
+			display : '回款17期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_17',
+			display : '回款17期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_17',
+			display : '回款17期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_17',
+			display : '回款17期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_18',
+			display : '回款18期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_18',
+			display : '回款18期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_18',
+			display : '回款18期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_18',
+			display : '回款18期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_19',
+			display : '回款19期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_19',
+			display : '回款19期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_19',
+			display : '回款19期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_19',
+			display : '回款19期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_20',
+			display : '回款20期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_20',
+			display : '回款20期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_20',
+			display : '回款20期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_20',
+			display : '回款20期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_21',
+			display : '回款21期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_21',
+			display : '回款21期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_21',
+			display : '回款21期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_21',
+			display : '回款21期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_22',
+			display : '回款22期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_22',
+			display : '回款22期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_22',
+			display : '回款22期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_22',
+			display : '回款22期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_23',
+			display : '回款23期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_23',
+			display : '回款23期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_23',
+			display : '回款23期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_23',
+			display : '回款23期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_24',
+			display : '回款24期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_24',
+			display : '回款24期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_24',
+			display : '回款24期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_24',
+			display : '回款24期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_25',
+			display : '回款25期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_25',
+			display : '回款25期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_25',
+			display : '回款25期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_25',
+			display : '回款25期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_26',
+			display : '回款26期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_26',
+			display : '回款26期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_26',
+			display : '回款26期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_26',
+			display : '回款26期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_27',
+			display : '回款27期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_27',
+			display : '回款27期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_27',
+			display : '回款27期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_27',
+			display : '回款27期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_28',
+			display : '回款28期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_28',
+			display : '回款28期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_28',
+			display : '回款28期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_28',
+			display : '回款28期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_29',
+			display : '回款29期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_29',
+			display : '回款29期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_29',
+			display : '回款29期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_29',
+			display : '回款29期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'incomeDate_30',
+			display : '回款30期T日',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v;
+				}
+			}
+		}, {
+			name : 'incomePtn_30',
+			display : '回款30期比例',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return v + "%";
+				}
+			}
+		}, {
+			name : 'incomeMoney_30',
+			display : '回款30期金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
+		}, {
+			name : 'invoiceMoney_30',
+			display : '回款30期开票金额',
+			width : 60,
+			process : function(v, row) {
+				if (v == '') {
+					return "-";
+				} else {
+					return moneyFormat2(v);
+				}
+			}
 		}],
 		//		comboEx : [{
 		//			text : '类型',

@@ -25,8 +25,8 @@ $(function(){
 				cmps.each(function(i,n) {
 					num++;
 				});
-				if(num > 14){
-					alert("回款条款不得大于15条");
+				if(num > 29){
+					alert("回款条款不得大于30条");
 					g.removeRow(rowNum);
 				}
 			},
@@ -279,8 +279,8 @@ function subApp (){
 			paymentNum = accAdd($(this).val() , paymentNum);
 		}
 	});
-	if(num > 15){
-		alert("回款条款不得大于15条");
+	if(num > 30){
+		alert("回款条款不得大于30条");
 		return false;
 	}
 	if(paymentNum != '100'){

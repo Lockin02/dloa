@@ -39,6 +39,13 @@ $(function () {
         $('#warrantyClause').addClass("validate[required]");
         $("#warrantyClauseSpan").attr('style', "color:blue");
     }
+
+    var isTrue = $('#HTBKP').attr('checked');
+    if(isTrue){
+        //其他选项禁止被操作
+        $('#HTBKP').siblings('input').attr('disabled',true);
+    }
+
 })
 /**
  * 开票类型控制
@@ -216,15 +223,15 @@ function changeNature(obj) {
         $('#Maintenance').addClass("validate[required]");
         $("#maintenanceSpan").attr('style', "color:blue");
         // 纸质合同相关
-        $("#paperContractSpan").attr('style', "color:blue");
-        $('#paperContract').addClass("validate[required]");
+        // $("#paperContractSpan").attr('style', "color:blue");
+        // $('#paperContract').addClass("validate[required]");
 
-        if($('#paperContract').val() == '无'){
-            $("#paperContractRemark").addClass("validate[required]");
-            $("#paperContractRemarkSpan").attr('style', "color:blue");
-        }else{
-            $("#paperContractRemark").removeClass("validate[required]");
-        }
+        // if($('#paperContract').val() == '无'){
+        //     $("#paperContractRemark").addClass("validate[required]");
+        //     $("#paperContractRemarkSpan").attr('style', "color:blue");
+        // }else{
+        //     $("#paperContractRemark").removeClass("validate[required]");
+        // }
 
         // 验收文件
         $("#checkFileSpan").attr('style', "color:blue");
@@ -239,10 +246,10 @@ function changeNature(obj) {
         $("#beginSpan").attr('style', "color:black");
         $("#endSpan").attr('style', "color:black");
         // 纸质合同相关
-        $("#paperContractSpan").attr('style', "color:black");
-        $('#paperContract').removeClass("validate[required]").val('无');
-        $("#paperContractRemark").removeClass("validate[required]");
-        $("#paperContractRemarkSpan").attr('style', "color:black");
+        // $("#paperContractSpan").attr('style', "color:black");
+        // $('#paperContract').removeClass("validate[required]").val('无');
+        // $("#paperContractRemark").removeClass("validate[required]");
+        // $("#paperContractRemarkSpan").attr('style', "color:black");
         $("#paperReason").show();
         // 验收文件
         $("#checkFileSpan").attr('style', "color:black");
@@ -258,14 +265,14 @@ function changeNature(obj) {
         $('#Maintenance').removeClass("validate[required]");
         $("#maintenanceSpan").attr('style', "color:black");
         // 纸质合同相关
-        $("#paperContractSpan").attr('style', "color:blue");
-        $('#paperContract').addClass("validate[required]");
-        if($('#paperContract').val() == '无'){
-            $("#paperContractRemark").addClass("validate[required]");
-            $("#paperContractRemarkSpan").attr('style', "color:blue");
-        }else{
-            $("#paperContractRemark").removeClass("validate[required]");
-        }
+        // $("#paperContractSpan").attr('style', "color:blue");
+        // $('#paperContract').addClass("validate[required]");
+        // if($('#paperContract').val() == '无'){
+        //     $("#paperContractRemark").addClass("validate[required]");
+        //     $("#paperContractRemarkSpan").attr('style', "color:blue");
+        // }else{
+        //     $("#paperContractRemark").removeClass("validate[required]");
+        // }
 
         // 验收文件
         $("#checkFileSpan").attr('style', "color:blue");
@@ -308,10 +315,10 @@ $(function () {
         $("#beginSpan").attr('style', "color:black");
         $("#endSpan").attr('style', "color:black");
         // 纸质合同相关
-        $("#paperContractSpan").attr('style', "color:black");
-        $('#paperContract').removeClass("validate[required]");
-        $("#paperContractRemark").removeClass("validate[required]");
-        $("#paperContractRemarkSpan").attr('style', "color:black");
+        // $("#paperContractSpan").attr('style', "color:black");
+        // $('#paperContract').removeClass("validate[required]");
+        // $("#paperContractRemark").removeClass("validate[required]");
+        // $("#paperContractRemarkSpan").attr('style', "color:black");
         // 验收文件
         $("#checkFileSpan").attr('style', "color:black");
         $('#checkFile').removeClass("validate[required]");
@@ -417,11 +424,11 @@ $(function () {
 //					$("#areaName").val(data.AreaName);// 合同所属区域
 //					$("#areaCode").val(data.AreaId);// 合同所属区域
                     $("#address").val(data.Address);// 客户地址
-                    var linkmanCmp = $("#linkmanListInfo").yxeditgrid(
-                        "getCmpByCol", "linkmanName");
-                    linkmanCmp.yxcombogrid_linkman("remove");
-                    $("#linkmanListInfo").yxeditgrid('remove');
-                    linkmanList(data.id, 1);
+                    // var linkmanCmp = $("#linkmanListInfo").yxeditgrid(
+                        // "getCmpByCol", "linkmanName");
+                    // linkmanCmp.yxcombogrid_linkman("remove");
+                    // $("#linkmanListInfo").yxeditgrid('remove');
+                    // linkmanList(data.id, 1);
 
 
                     $("#parentCode").yxcombogrid_allcontract("remove");
@@ -627,33 +634,33 @@ $(function () {
     }
 
     // 纸质合同
-    var paperContract = $("#paperContractV").val();
-    if (typeof(paperContract) != 'undefined') {
-        $("#paperReason").hide();
-        if (paperContract == '有') {
-            document.getElementById("paperContract").options.add(new Option("有",
-                "有"));
-            document.getElementById("paperContract").options.add(new Option("无",
-                "无"));
-        } else if (paperContract == '无') {
-            $("#paperReason").show();
-            document.getElementById("paperContract").options.add(new Option("无",
-                "无"));
-            document.getElementById("paperContract").options.add(new Option("有",
-                "有"));
-        }
-    }
+    // var paperContract = $("#paperContractV").val();
+    // if (typeof(paperContract) != 'undefined') {
+    //     $("#paperReason").hide();
+    //     if (paperContract == '有') {
+    //         document.getElementById("paperContract").options.add(new Option("有",
+    //             "有"));
+    //         document.getElementById("paperContract").options.add(new Option("无",
+    //             "无"));
+    //     } else if (paperContract == '无') {
+    //         $("#paperReason").show();
+    //         document.getElementById("paperContract").options.add(new Option("无",
+    //             "无"));
+    //         document.getElementById("paperContract").options.add(new Option("有",
+    //             "有"));
+    //     }
+    // }
 
     // 配件订单不需要填写无合同原因
-    if ($("#paperContract").val() == '无') {
-        $("#paperReason").show();
-        if ($("#contractType").val() != "HTLX-PJGH") {
-            $("#paperContractRemark").addClass("validate[required]");
-        }
-    } else {
-        $("#paperReason").hide();
-        $("#paperContractRemark").val('').removeClass("validate[required]");	//隐藏前清空输入框
-    }
+    // if ($("#paperContract").val() == '无') {
+    //     $("#paperReason").show();
+    //     if ($("#contractType").val() != "HTLX-PJGH") {
+    //         $("#paperContractRemark").addClass("validate[required]");
+    //     }
+    // } else {
+    //     $("#paperReason").hide();
+    //     $("#paperContractRemark").val('').removeClass("validate[required]");	//隐藏前清空输入框
+    // }
 
     var checkFile = $("#checkFileViewV").val();
     if (checkFile == '有') {
@@ -1001,15 +1008,17 @@ function sub() {
         }
 
         var linkmanListInfoObj = $("#linkmanListInfo");
+        var linkmanListInfoObj = $("#linkmanListInfo");
         var linkmanListRowNum = linkmanListInfoObj.yxeditgrid('getCurShowRowNum');
-        if (linkmanListRowNum == '0') {
+		var isHwEdit = ($("#isHwEdit").val() != undefined && ("#isHwEdit").val() == 1)? true : false;
+        if (linkmanListRowNum == '0' && !isHwEdit) {
             alert("客户联系人信息不能为空");
             return false;
-        } else {
+        } else if(!isHwEdit){
             var pass = true;
             linkmanListInfoObj.yxeditgrid("getCmpByCol", "linkmanName").each(function() {
                 if ($(this).val() == "") {
-                    alert("请选择客户联系人！");
+                    alert("客户联系人不得为空！");
                     pass = false;
                     return false;
                 }
@@ -1020,6 +1029,16 @@ function sub() {
             linkmanListInfoObj.yxeditgrid("getCmpByCol", "telephone").each(function() {
                 if ($(this).val() == "") {
                     alert("客户联系人电话不得为空！");
+                    pass = false;
+                    return false;
+                }
+            });
+            if (pass == false) {
+                return false;
+            }
+            linkmanListInfoObj.yxeditgrid("getCmpByCol", "position").each(function() {
+                if ($(this).val() == "") {
+                    alert("客户联系人职位不得为空！");
                     pass = false;
                     return false;
                 }
@@ -1101,7 +1120,7 @@ function sub() {
             return false;
         }
         if ($("#contractType").val() != "HTLX-PJGH" && ($("#uploadfileList2").html() == "" || $("#uploadfileList2").html() == "暂无任何附件")) {
-            alert("请上传加密区文件！");
+            alert("请上传合同文本区文件！");
             return false;
         }
         // 加入变更判断
@@ -1134,6 +1153,32 @@ function isCheckType(obj) {
         $("#" + obj + "Hide").hide();
         $("#" + obj + "Money").val("");
         $("#" + obj + "Money_v").val("");
+    }
+}
+
+/**
+ * 不开票类型选择控制
+ * @param {} obj
+ */
+function isBKPCheck(obj) {
+    var invoiceCodeChkBoxs = $("input[name^='contract[invoiceCode][]']");
+    var isChecked = $("#" + obj).is(':checked');
+    if (isChecked) {
+        $.each(invoiceCodeChkBoxs,function(i,obj){
+            if($(obj).val() != 'HTBKP'){
+                $(obj).attr("checked",false);
+                isCheckType($(obj).val());
+                $(obj).attr("disabled",true);
+            }
+        });
+    } else {
+        $.each(invoiceCodeChkBoxs,function(i,obj){
+            if($(obj).val() != 'HTBKP'){
+                if($(obj).attr('data-isdisable') != 1){
+                    $(obj).removeAttr("disabled");
+                }
+            }
+        });
     }
 }
 
@@ -1283,7 +1328,7 @@ function setAreaInfo(defaultAreaName) {
     // 只处理归属区域不为大数据部的
     if ($("#originalAreaName").val() != "大数据部") {
         var customerType = $("#customerType").val();
-        var province = $("#province_Id").val();
+        var province = ($("#province_Id").val() == undefined)? $("#province").val() : $("#province_Id").val();
         if (province == "") {
             province = $("#contractProvinceId").val();// 用于初始化
         }

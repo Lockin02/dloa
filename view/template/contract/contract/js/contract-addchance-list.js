@@ -51,46 +51,50 @@ function linkmanList(customerId) {
         isAddOneRow: false,
         tableClass: 'form_in_table',
         colModel: [{
+        //     display: '客户联系人',
+        //     name: 'linkmanName',
+        //     tclass: 'txt',
+        //     process: function ($input, rowData) {
+        //         var rowNum = $input.data("rowNum");
+        //         var g = $input.data("grid");
+        //         $input.yxcombogrid_linkman({
+        //             hiddenId: 'linkmanListInfo_cmp_linkmanId' + rowNum,
+        //             isFocusoutCheck: false,
+        //             gridOptions: {
+        //                 showcheckbox: false,
+        //                 param: {
+        //                     'customerId': customerId
+        //                 },
+        //                 event: {
+        //                     "row_dblclick": (function (rowNum) {
+        //                         return function (e, row, rowData) {
+        //                             var $telephone = g.getCmpByRowAndCol(rowNum, 'telephone');
+        //                             $telephone.val(rowData.mobile);
+        //                             var $QQ = g.getCmpByRowAndCol(rowNum, 'QQ');
+        //                             $QQ.val(rowData.QQ);
+        //                             var $email = g.getCmpByRowAndCol(rowNum, 'Email');
+        //                             $email.val(rowData.email);
+        //                         }
+        //                     })(rowNum)
+        //                 }
+        //             }
+        //         });
+        //     }
+        // }, {
+        //     display: '联系人ID',
+        //     name: 'linkmanId',
+        //     type: 'hidden'
+        // }, {
             display: '客户联系人',
             name: 'linkmanName',
-            tclass: 'txt',
-            process: function ($input, rowData) {
-                var rowNum = $input.data("rowNum");
-                var g = $input.data("grid");
-                $input.yxcombogrid_linkman({
-                    hiddenId: 'linkmanListInfo_cmp_linkmanId' + rowNum,
-                    isFocusoutCheck: false,
-                    gridOptions: {
-                        showcheckbox: false,
-                        param: {
-                            'customerId': customerId
-                        },
-                        event: {
-                            "row_dblclick": (function (rowNum) {
-                                return function (e, row, rowData) {
-                                    var $telephone = g.getCmpByRowAndCol(rowNum, 'telephone');
-                                    $telephone.val(rowData.mobile);
-                                    var $QQ = g.getCmpByRowAndCol(rowNum, 'QQ');
-                                    $QQ.val(rowData.QQ);
-                                    var $email = g.getCmpByRowAndCol(rowNum, 'Email');
-                                    $email.val(rowData.email);
-                                }
-                            })(rowNum)
-                        }
-                    }
-                });
-            }
-        }, {
-            display: '联系人ID',
-            name: 'linkmanId',
-            type: 'hidden'
-        }, {
+            tclass: 'txt'
+        },{
             display: '电话',
             name: 'telephone',
             tclass: 'txt'
         }, {
-            display: 'QQ',
-            name: 'QQ',
+            display: '职位',
+            name: 'position',
             tclass: 'txt'
         }, {
             display: '邮箱',
@@ -113,6 +117,14 @@ function linkmanList(customerId) {
 
     });
 
+	setTimeout(
+		function(){
+			var length = $("#linkmanListInfo").yxeditgrid("getCmpByCol", "telephone").length;
+			if(length <= 0){
+				$("#linkmanListInfo").yxeditgrid('addRow',1);
+			}
+		}, 300
+	);
 }
 
 

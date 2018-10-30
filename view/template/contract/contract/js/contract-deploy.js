@@ -180,14 +180,14 @@ function changeIsSame() {
  * 纸质合同判断
  */
 function changepaperContract(obj) {
-	var sltedVal = $(obj).find("option:selected").val();
-    if (sltedVal =='无') {
-        $("#paperReason").show();
-        $("#paperContractRemark").addClass("validate[required]");
-    } else if(sltedVal =='有'){
-        $("#paperReason").hide();
-        $("#paperContractRemark").val('').removeClass("validate[required]");	//隐藏前清空输入框
-    }
+    // var sltedVal = $(obj).find("option:selected").val();
+    // if (sltedVal =='无') {
+    //     $("#paperReason").show();
+    //     $("#paperContractRemark").addClass("validate[required]");
+    // } else if(sltedVal =='有'){
+    //     $("#paperReason").hide();
+    //     $("#paperContractRemark").val('').removeClass("validate[required]");	//隐藏前清空输入框
+    // }
 }
 /**
  * 验收文件判断
@@ -284,4 +284,10 @@ function browserChk(){
 	}else{
 		return true;
 	}
+}
+
+// 勾选license后设置返回值
+function setLicenseId2(licenseId, buttonId) {
+	$("#"+buttonId).attr("licenseId", licenseId);
+	$("#"+buttonId).siblings("input").attr("licenseId", licenseId);
 }

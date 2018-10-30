@@ -492,7 +492,7 @@ $(function () {
                 }
             },{
                 text : '归档信息修改',
-                icon : 'add',
+                icon : 'edit',
                 showMenuFn : function(row) {
                     if($("#archivedInfoModifyLimit").val() == '1'){
                         return true;
@@ -504,6 +504,30 @@ $(function () {
                     showThickboxWin("?model=contract_contract_contract&action=toUpdateArchivedInfo&id="
                         + row.id
                         + "&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=380&width=650");
+                }
+            },{
+                text: '打开合同',
+                icon: 'edit',
+                showMenuFn: function (row) {
+                    if (row && (row.state == '3' || row.state == '7') && $("#restartContractLimit").val() == '1') {
+                        return true;
+                    }
+                    return false;
+                },
+                action: function (row) {
+                    if(confirm("此操作会直接将合同更新回已完成状态,是否要继续?")){
+                        var result = $.ajax({
+                            url: '?model=contract_contract_contract&action=restartContract&id='+row.id,
+                            type: 'get',
+                            async: false
+                        }).responseText;
+                        if(result == "ok"){
+                            alert("操作成功!");
+                            show_page();
+                        }else{
+                            alert("操作失败,请重试!");
+                        }
+                    }
                 }
             }
         ],
@@ -1188,13 +1212,13 @@ $(function () {
                     }
                 }
             },
-            {
-                name: 'paperContract',
-                display: '纸质合同',
-                width: 80,
-                sortable: true,
-                hide: true
-            },
+            // {
+            //     name: 'paperContract',
+            //     display: '纸质合同',
+            //     width: 80,
+            //     sortable: true,
+            //     hide: true
+            // },
             {
                 name: 'isNeedStamp',
                 display: '是否需要盖章',
@@ -1279,6 +1303,13 @@ $(function () {
             {
                 name: 'partAContractCode',
                 display: '甲方合同编号',
+                width: 80,
+                sortable: true,
+                hide: true
+            },
+            {
+                name: 'partAContractName',
+                display: '甲方合同名称',
                 width: 80,
                 sortable: true,
                 hide: true

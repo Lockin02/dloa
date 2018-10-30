@@ -3,6 +3,32 @@
 <head>
 <title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+
+	<!--新附件上传开始-->
+	<script type="text/javascript" src="webuploader/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="webuploader/css/webuploader.css"/>
+	<script type="text/javascript" src="webuploader/dist/webuploader.js"></script>
+	<script type="text/javascript" src="webuploader/script.js"></script>
+
+	<script>
+        (function($) {
+            $(function() {
+                create_uploader(1, '{serviceType3}', false);
+            });
+
+        })(jQuery);
+	</script>
+	<script type="text/javascript">
+        //新上传的参数设置
+        var successNum = 0; //成功上传附件
+        var uploadConfig = {};
+        uploadConfig.isSyn2Server = true;
+        uploadConfig.setting = {};
+        uploadConfig.setting.delete_url = "index1.php?model=file_uploadfile_management&action=ajaxdelete"; //删除url链接
+        uploadConfig.setting.fileNamePre = false; //自定义字段名
+	</script>
+
 <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
 <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
@@ -30,22 +56,23 @@
 <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
 
 <!-- 附件上传开始 -->
-<script type="text/javascript" src="swfupload/swfupload.js"></script>
-<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
-<script type="text/javascript" src="swfupload/fileprogress.js"></script>
-<script type="text/javascript" src="swfupload/handlers.js"></script>
-<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<!--<script type="text/javascript" src="swfupload/swfupload.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/fileprogress.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/handlers.js"></script>-->
+<!--<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>-->
 <script>
-var uploadfile3;
-$(function() {
-	uploadfile3=createSWFUpload({
-		"serviceType":$("#serviceType3").val()
-	},{
-		button_placeholder_id:'swfupload3',
-		fileListId:'uploadfileList3',
-		progressTarget:'fsUploadProgress3'
-	});
-});
+// var uploadfile3;
+// $(function() {
+// 	uploadfile3=createSWFUpload({
+// 		"serviceType":$("#serviceType3").val()
+// 	},{
+// 		button_placeholder_id:'swfupload3',
+// 		fileListId:'uploadfileList3',
+// 		progressTarget:'fsUploadProgress3'
+// 	});
+// });
+
 function toApp() {
    var handle = $("#handle").val();
    if(handle=="1"){
@@ -64,18 +91,27 @@ function toApp() {
 <form id="form1" method="post" action="?model=contract_contract_contract&action=uploadfile"  >
 <table class="form_main_table">
 	 <tr>
-				<td class="form_text_left" >验收文件</td>
-				<td class="form_text_right" colspan="2">
-				<div class="upload" >
-				<div class="upload" id="fsUploadProgress3" ></div>
-				<div class="upload"><span id="swfupload3" ></span> <input
-					id="btnCancel3" type="button" value="中止上传"
-					onclick="cancelQueue(uploadfile3);" disabled="disabled" /> <br />
-				</div>
-				<div id="uploadfileList3" class="upload"></div>
-				</div>
+				<!--<td class="form_text_left" >验收文件</td>-->
+				<!--<td class="form_text_right" colspan="2">-->
+				<!--<div class="upload" >-->
+				<!--<div class="upload" id="fsUploadProgress3" ></div>-->
+				<!--<div class="upload"><span id="swfupload3" ></span> <input-->
+					<!--id="btnCancel3" type="button" value="中止上传"-->
+					<!--onclick="cancelQueue(uploadfile3);" disabled="disabled" /> <br />-->
+				<!--</div>-->
+				<!--<div id="uploadfileList3" class="upload"></div>-->
+				<!--</div>-->
 
-				</td>
+				<!--</td>-->
+
+				 <td class="form_text_left_con">验收文件: </td>
+				 <td class="form_text_right_con">
+					 <div id="thelist1" class="uploader-list upload_fun"></div>
+					 <div class="btns">
+						 <div id="picker1">选择文件</div>
+					 </div>
+					 <div id="uploadfileList1" class="upload"></div>
+				 </td>
 	</tr>
 <table class="form_main_table">
 	<tr>

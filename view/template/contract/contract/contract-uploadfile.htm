@@ -3,6 +3,32 @@
 <head>
 <title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+	<!--新附件上传开始-->
+	<script type="text/javascript" src="webuploader/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="webuploader/css/webuploader.css"/>
+	<script type="text/javascript" src="webuploader/dist/webuploader.js"></script>
+	<script type="text/javascript" src="webuploader/script.js"></script>
+
+	<script>
+        (function($) {
+            $(function() {
+                create_uploader(1, '{serviceType}', false);
+                create_uploader(2, '{serviceType2}', true);
+            });
+
+        })(jQuery);
+	</script>
+	<script type="text/javascript">
+        //新上传的参数设置
+        var successNum = 0; //成功上传附件
+        var uploadConfig = {};
+        uploadConfig.isSyn2Server = true;
+        uploadConfig.setting = {};
+        uploadConfig.setting.delete_url = "index1.php?model=file_uploadfile_management&action=ajaxdelete"; //删除url链接
+        uploadConfig.setting.fileNamePre = false; //自定义字段名
+	</script>
+
 <link rel="stylesheet" type="text/css" href="css/yxstyle.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery/style/Validator.css"/>
 <link rel="stylesheet" type="text/css" href="js/jquery/style/yxgrid.css" />
@@ -30,36 +56,36 @@
 <script type="text/javascript" src="js/jquery/formValidatorRegex.js" charset="UTF-8"></script>
 
 <!-- 附件上传开始 -->
-<script type="text/javascript" src="swfupload/swfupload.js"></script>
-<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>
-<script type="text/javascript" src="swfupload/fileprogress.js"></script>
-<script type="text/javascript" src="swfupload/handlers.js"></script>
-<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>
+<!--<script type="text/javascript" src="swfupload/swfupload.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/swfupload.queue.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/fileprogress.js"></script>-->
+<!--<script type="text/javascript" src="swfupload/handlers.js"></script>-->
+<!--<link rel="stylesheet" type="text/css" href="swfupload/upload.css"/>-->
 <script>
-var uploadfile;
-$(function() {
-    // 附件类型
-    fileTypeArr = getData('FJLX');
-    addDataToSelect(fileTypeArr, 'fileType');
-	uploadfile=createSWFUpload({
-	   "serviceType":$("#serviceType").val()
-	});
-	uploadfile2=createSWFUpload({
-	    "serviceType":$("#serviceType2").val()
-	},{
-		button_placeholder_id:'swfupload2',
-		fileListId:'uploadfileList2',
-		progressTarget:'fsUploadProgress2'
-	});
-    $('#fileType').change(function(){
-        if($('#fileType').val() != ''){
-            typeName=$('#fileType').find('option:selected').text();
-            typeId=$('#fileType').val();
-            uploadfile2.addPostParam('typeName', typeName);
-            uploadfile2.addPostParam('typeId', typeId);
-        }
-    });
-});
+// var uploadfile;
+// $(function() {
+//     // 附件类型
+//     fileTypeArr = getData('FJLX');
+//     addDataToSelect(fileTypeArr, 'fileType');
+// 	uploadfile=createSWFUpload({
+// 	   "serviceType":$("#serviceType").val()
+// 	});
+// 	uploadfile2=createSWFUpload({
+// 	    "serviceType":$("#serviceType2").val()
+// 	},{
+// 		button_placeholder_id:'swfupload2',
+// 		fileListId:'uploadfileList2',
+// 		progressTarget:'fsUploadProgress2'
+// 	});
+//     $('#fileType').change(function(){
+//         if($('#fileType').val() != ''){
+//             typeName=$('#fileType').find('option:selected').text();
+//             typeId=$('#fileType').val();
+//             uploadfile2.addPostParam('typeName', typeName);
+//             uploadfile2.addPostParam('typeId', typeId);
+//         }
+//     });
+// });
 function toApp() {
    var handle = $("#handle").val();
    if(handle=="1"){
@@ -79,29 +105,46 @@ function toApp() {
 <table class="form_main_table">
 	 <tr>
 
-				<td class="form_text_left">非加密区文件</td>
-				<td class="form_text_right" colspan="3">
-				<div class="upload">
-				<div class="upload" id="fsUploadProgress"></div>
-				<div class="upload"><span id="swfupload"></span>
-				   <input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>
-				</div>
-				<div id="uploadfileList" class="upload"></div>
-				</div>
-				</td>
-				<td class="form_text_left" ><span class="red" title="合同文本只能由相关人员查看">加密区文件</span></td>
-				<td class="form_text_right" colspan="2">
-                    <b>附件类型</b> ： <select  id="fileType"><option value="">..请选择...</option></select>
-				<div class="upload" >
-				<div class="upload" id="fsUploadProgress2" ></div>
-				<div class="upload"><span id="swfupload2" ></span> <input
-					id="btnCancel2" type="button" value="中止上传"
-					onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />
-				</div>
-				<div id="uploadfileList2" class="upload"></div>
-				</div>
+				<!--<td class="form_text_left">一般文件区</td>-->
+				<!--<td class="form_text_right" colspan="3">-->
+				<!--<div class="upload">-->
+				<!--<div class="upload" id="fsUploadProgress"></div>-->
+				<!--<div class="upload"><span id="swfupload"></span>-->
+				   <!--<input id="btnCancel" type="button" value="中止上传" onclick="cancelQueue(uploadfile);" disabled="disabled" /> </br>-->
+				<!--</div>-->
+				<!--<div id="uploadfileList" class="upload"></div>-->
+				<!--</div>-->
+				<!--</td>-->
+				<!--<td class="form_text_left" ><span class="red" title="合同文本只能由相关人员查看">合同文本区<br>(只存放合同文本)</span></td>-->
+				<!--<td class="form_text_right" colspan="2">-->
+                    <!--<b>附件类型</b> ： <select  id="fileType"><option value="">..请选择...</option></select>-->
+				<!--<div class="upload" >-->
+				<!--<div class="upload" id="fsUploadProgress2" ></div>-->
+				<!--<div class="upload"><span id="swfupload2" ></span> <input-->
+					<!--id="btnCancel2" type="button" value="中止上传"-->
+					<!--onclick="cancelQueue(uploadfile2);" disabled="disabled" /> <br />-->
+				<!--</div>-->
+				<!--<div id="uploadfileList2" class="upload"></div>-->
+				<!--</div>-->
 
-				</td>
+				<!--</td>-->
+
+				 <td class="form_text_left_con">一般文件区：</td>
+				 <td class="form_text_right_con">
+					 <div id="thelist1" class="uploader-list upload_fun"></div>
+					 <div class="btns">
+						 <div id="picker1">选择文件</div>
+					 </div>
+					 <div id="uploadfileList1" class="upload"></div>
+				 </td>
+				 <td class="form_text_left_con">合同文本区：<br>(只用于存放合同文本)</td>
+				 <td class="form_text_right_con">
+					 <div id="thelist2" class="uploader-list upload_fun"></div>
+					 <div class="btns">
+						 <div id="picker2">选择文件</div>
+					 </div>
+					 <div id="uploadfileList2" class="upload"></div>
+				 </td>
 	</tr>
 <table >
 	<tr>

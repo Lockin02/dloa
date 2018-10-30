@@ -78,50 +78,54 @@ function linkmanList(customerId, flag) {
             name: 'id',
             type: 'hidden'
         }, {
+        //     display: '客户联系人',
+        //     name: 'linkmanName',
+        //     tclass: 'txt',
+        //     process: function ($input, rowData) {
+        //         var rowNum = $input.data("rowNum");
+        //         var g = $input.data("grid");
+        //         $input.yxcombogrid_linkman({
+        //             hiddenId: 'linkmanListInfo_cmp_linkmanId' + rowNum,
+        //             isFocusoutCheck: false,
+        //             gridOptions: {
+        //                 showcheckbox: false,
+        //                 param: {
+        //                     'customerId': customerId
+        //                 },
+        //                 event: {
+        //                     "row_dblclick": (function (rowNum) {
+        //                         return function (e, row, rowData) {
+        //                             var $telephone = g.getCmpByRowAndCol(
+        //                                 rowNum, 'telephone');
+        //                             $telephone.val(rowData.mobile);
+        //                             var $QQ = g.getCmpByRowAndCol(rowNum, 'QQ');
+        //                             $QQ.val(rowData.QQ);
+        //                             var $email = g.getCmpByRowAndCol(rowNum,
+        //                                 'Email');
+        //                             $email.val(rowData.email);
+        //                         }
+        //                     })(rowNum)
+        //                 }
+        //             }
+        //         });
+        //     }
+        // }, {
+        //     display: '联系人ID',
+        //     name: 'linkmanId',
+        //     type: 'hidden'
+        // }, {
             display: '客户联系人',
             name: 'linkmanName',
-            tclass: 'txt',
-            process: function ($input, rowData) {
-                var rowNum = $input.data("rowNum");
-                var g = $input.data("grid");
-                $input.yxcombogrid_linkman({
-                    hiddenId: 'linkmanListInfo_cmp_linkmanId' + rowNum,
-                    isFocusoutCheck: false,
-                    gridOptions: {
-                        showcheckbox: false,
-                        param: {
-                            'customerId': customerId
-                        },
-                        event: {
-                            "row_dblclick": (function (rowNum) {
-                                return function (e, row, rowData) {
-                                    var $telephone = g.getCmpByRowAndCol(
-                                        rowNum, 'telephone');
-                                    $telephone.val(rowData.mobile);
-                                    var $QQ = g.getCmpByRowAndCol(rowNum, 'QQ');
-                                    $QQ.val(rowData.QQ);
-                                    var $email = g.getCmpByRowAndCol(rowNum,
-                                        'Email');
-                                    $email.val(rowData.email);
-                                }
-                            })(rowNum)
-                        }
-                    }
-                });
-            }
-        }, {
-            display: '联系人ID',
-            name: 'linkmanId',
-            type: 'hidden'
-        }, {
+            tclass: 'txt'
+        },{
             display: '电话',
             name: 'telephone',
             tclass: 'txt'
         }, {
-            display: 'QQ',
-            name: 'QQ',
+            display: '职位',
+            name: 'position',
             tclass: 'txt'
-        }, {
+        },{
             display: '邮箱',
             name: 'Email',
             tclass: 'txt'
@@ -141,6 +145,15 @@ function linkmanList(customerId, flag) {
     }
     // 客户联系人
     $("#linkmanListInfo").yxeditgrid(listObj);
+
+    setTimeout(
+        function(){
+            var length = $("#linkmanListInfo").yxeditgrid("getCmpByCol", "telephone").length;
+            if(length <= 0){
+                $("#linkmanListInfo").yxeditgrid('addRow',1);
+            }
+        }, 300
+    )
 }
 
 // 根据借试用物料ID查询相应的执行数量
@@ -975,6 +988,9 @@ $(function () {
 						equObj.yxeditgrid("setRowColValue", tbRowNum, "productModel", equArr[i].productModel);
 						equObj.yxeditgrid("setRowColValue", tbRowNum, "number", equArr[i].number);
 						equObj.yxeditgrid("setRowColValue", tbRowNum, "onlyProductId", equArr[i].onlyProductId);
+                        equObj.yxeditgrid("setRowColValue", tbRowNum, "price", equArr[i].price);
+                        equObj.yxeditgrid("setRowColValue", tbRowNum, "money", equArr[i].money);
+                        equObj.yxeditgrid("setRowColValue", tbRowNum, "license", equArr[i].license);
 					}
 				}
 				createProArr();

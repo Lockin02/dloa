@@ -1,17 +1,17 @@
 //2012-12-27备份
 $(function () {
 
-    if( $("#paperContract").val()=='无'){
-        $("#paperContractView").html("*此合同无纸质合同");
-    }else{
-        $("#paperContractView").hide("");
-    }
-
-    if( $("#checkFile").val()=='有'){
-        $("#checkFileView").show();
-    }else{
-        $("#checkFileView").hide();
-    }
+    // if( $("#paperContract").val()=='无'){
+    //     $("#paperContractView").html("*此合同无纸质合同");
+    // }else{
+    //     $("#paperContractView").hide("");
+    // }
+    //
+    // if( $("#checkFile").val()=='有'){
+    //     $("#checkFileView").show();
+    // }else{
+    //     $("#checkFileView").hide();
+    // }
 
     //详细物料成本权限控制
     var equCoseLimit = $("#equCoseLimit").val();
@@ -214,8 +214,8 @@ $(function () {
                 tclass: 'txt'
             },
             {
-                display: 'QQ',
-                name: 'QQ',
+                display: '职位',
+                name: 'position',
                 tclass: 'txt'
             },
             {

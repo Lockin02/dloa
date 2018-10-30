@@ -91,7 +91,6 @@ $(function() {
 								+ handleType
 								+ '&placeValuesBeforeTB_=savedValues&TB_iframe=true&modal=false&height=400&width=800');
 					}else if (handleType == "YSWJ") {
-						console.log(rowData);
 						switch(rowData.type){
 							case "oa_contract_contract":
 								showThickboxWin('?model=contract_contract_contract&action=handleDispose&id=' + rowData.id

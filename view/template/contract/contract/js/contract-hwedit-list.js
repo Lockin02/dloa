@@ -73,8 +73,8 @@ $(function () {
                 tclass: 'txt'
             },
             {
-                display: 'QQ',
-                name: 'QQ',
+                display: 'ְλ',
+                name: 'position',
                 tclass: 'txt'
             },
             {
