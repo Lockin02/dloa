@@ -56,10 +56,12 @@ function checkform(){
 	}
 
 	// 是否开据发票
-	var isInvoice = $("input[name='payablesapply[isInvoice]']:checked").val();
-	if(isInvoice == undefined || (isInvoice != 1 && isInvoice != 0)){
-		alert('请确定是否开据发票');
-		return false;
+	if (typeof ($("input[name='payablesapply[isInvoice]']").val()) != 'undefined'){
+        var isInvoice = $("input[name='payablesapply[isInvoice]']:checked").val();
+        if(isInvoice == undefined || (isInvoice != 1 && isInvoice != 0)){
+            alert('请确定是否开据发票');
+            return false;
+        }
 	}
 
 	if(strTrim($("#formDate").val()) == ""){
