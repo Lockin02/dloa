@@ -280,6 +280,9 @@
 					type = "statictext";
 					config.tclass = "";
 				}
+				if (type == 'web_file') {
+					tclass = '';
+				}
 				switch (type) {
 					case 'select' :// 下拉选择
 						$input = $("<select>");
@@ -420,6 +423,25 @@
 							+ '" class="upload"></div>' + '</div>');
 						}
 						break;
+					case 'web_file' : //webuploader附件类型
+						$input = '';
+						if (p.type == 'view') {
+
+						} else {
+							$input = $('<div>'
+							+ '<div class="upload" id="thelist'
+							+ rowNum
+							+ '" class="ader-list upload_fun"></div>'
+							+ '<div class="btns"><div id="picker'
+							+ rowNum
+							+ '">附件上传</div></div>'
+							+ '<div id="uploadfileList'
+							+ rowNum
+							+ '" class="upload"></div>'
+							+ '</div>'
+							);
+						}
+						break;
 					default :
 						$input = $("<input type='text'>");
 						break;
@@ -518,7 +540,15 @@
 							}
 						})
 					}
-				}
+				} else if (type == 'web_file') {
+                    if (p.type != "view"){
+                        var web_upload_id = rowData && rowData.id ? rowData.id : $input.attr("id");
+                        uploadConfig.setting.fileNamePre = cmpName;
+                        create_uploader(rowNum, config.serviceType, false, web_upload_id, false, true);
+                    } else {
+
+                    }
+                }
 				// 事件处理
 				if (config.event) {
 					for (var e in config.event) {

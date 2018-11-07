@@ -14,12 +14,25 @@
             $(function() {
                 create_uploader(1, 'oa_contract_contract', false, {id});
                 create_uploader(2, 'oa_contract_contract2', true, {id});
-                create_uploader(3, 'oa_contract_contract3', false, {id});
+                create_uploader(3, 'oa_contract_contract3', false, {id}, true);
             });
 
         })(jQuery);
     </script>
     <script type="text/javascript">
+
+        // 针对webuploader控件自定义验收文件
+        function web_changeCheckFile(obj) {
+            if (obj.value=='有') {
+                create_uploader(3, 'oa_contract_contract3', false, false, true);
+                $("#checkFileView1").show();
+                $("#checkFileView2").show();
+            } else{
+                $("#checkFileView1").hide();
+                $("#checkFileView2").hide();
+            }
+        }
+
         //新上传的参数设置
         var successNum = 0; //成功上传附件
         var uploadConfig = {};
@@ -373,15 +386,15 @@
     <tr>
         <td class="form_text_left_con"><span style="color:blue">验收文件:</span></td>
         <td class="form_text_right_con">
-            <select class="select" id="checkFile" name="contract[checkFile]"  onchange="changeCheckFile(this);">
-                <option value="有" selected>有</option>
-                <option value="无" >无</option>
+            <select class="select" id="checkFile" name="contract[checkFile]"  onchange="web_changeCheckFile(this);">
+                <option value="有" >有</option>
+                <option value="无" selected>无</option>
             </select>
         </td>
 
         <!--新上传-->
-        <td class="form_text_left_con" id="checkFileView1" >验收文件：</td>
-        <td class="form_text_right_con" id="checkFileView2">
+        <td class="form_text_left_con" id="checkFileView1" style="display:none;">验收文件：</td>
+        <td class="form_text_right_con" id="checkFileView2" style="display:none;">
             <div id="thelist3" class="uploader-list upload_fun"></div>
             <div class="btns">
                 <div id="picker3">选择文件</div>
