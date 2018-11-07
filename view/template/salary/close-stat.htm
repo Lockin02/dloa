@@ -14,18 +14,46 @@
             	if( confirm( '确定结算公司：'+c+'，周期：'+y+'年'+m+'月'+'，结算后，审批信息将生效于下月' ) ){
             		var rand=Math.random()*100000;
             		$.post('?model=salary&action=close_stat_in'
-							,{rand:rand,key:i,y:y,m:m},
+							,{rand:rand,key:i,y:y,m:m,act:'close'},
                         function (data){
-							//alert(data);
                             if(data=='1'){
                                 alert('结算成功！');
+                                location.reload();
+                            }else if(data == '2'){
+                                alert('权限不足');
                             }else{
-                                alert('结算失败！'+data);
+                                alert('结算失败！请联系OA管理员');
                             }
-                            location.reload();
                         }
                     )
             	}
+            }
+            
+            function cancel_click(i,c,y,m) {
+                if (m==1){
+                    var nowy = y-1;
+                    var nowm = 12;
+                } else{
+                    var nowy = y;
+                    var nowm = m-1
+                }
+                if( confirm( '确定取消结算? 公司：'+c+'，已结周期：'+nowy+'年'+nowm+'月' ) ){
+                    var rand = Math.random() * 100000;
+                    $.post('?model=salary&action=close_stat_in'
+                        ,{rand:rand,key:i,y:y,m:m,act:'open'},
+                        function (data){
+                            if(data=='1'){
+                                alert('撤销结账成功！');
+                                location.reload();
+                            }else if(data == '2'){
+                                alert('权限不足');
+                            }else{
+                                alert('撤销结账失败,请联系OA管理员');
+                            }
+                        }
+                    )
+
+                }
             }
            
         </script>
@@ -42,11 +70,16 @@
               </td>
           </tr>
         </table>
-    <table border="1" width="380" class="table" cellpadding="0" cellspacing="0" align="left" >
+    <table class="table" cellpadding="0" cellspacing="0"  >
         <tr class="tableheader">
-            <td align="center"   >公司</td>
-            <td align="center"   >当前结算周期</td>
-            <td align="center"   >操作</td>
+            <td align="center"   > 公司 </td>
+            <td align="center"  width="20%" > 当前待结算周期 </td>
+            <td align="center"  width="15%" > 操作 </td>
+            <td align="center"  width="15%" > 撤销 </td>
+            <td align="center"   >上一结算操作时间</td>
+            <td align="center"   >上一结算操作人员</td>
+            <td align="center"   >上一撤销操作时间</td>
+            <td align="center"   >上一撤销操作人员</td>
         </tr>
         {data_list}
     </table>

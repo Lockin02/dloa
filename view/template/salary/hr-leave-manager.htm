@@ -52,8 +52,8 @@
                     mtype:'GET',
                     colNames:[
                         '操作','KEY','员工号','姓名','公司','部门','职务','员工类型','入职日期','离职日期','结算日期'
-                        ,'基本工资','岗位工资','绩效工资','事假','病假','离职当月出勤天数','事病假扣除','实际工资小计','各项补贴'
-                        ,'社保费','公积金','税前扣除','个人所得税','税后扣除','离职福利','离职福利税金','其余税后需发','实发离职工资'
+                        ,'基本工资','岗位工资','绩效工资','事假','病假','离职当月出勤天数','事病假扣除','税前扣除','离职工资小计','各项补贴'
+                        ,'社保费','公积金','个人所得税','税后扣除','离职福利','离职福利税金','其余税后需发','实发离职工资'
                         ,'账号','开户行',' 备注','comcode','ck','pid','事假备注','小计备注'
                         ,'各项补贴备注','社保费备注','公积金备注','税后扣除备注','税前扣除备注','个人所得税备注','离职福利备注','结算状态'
                         ,'离职月份'
@@ -71,6 +71,7 @@
                         {name:'comedt',index:'s.comedt', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'leavedt',index:'s.leavedt', width:100,align:'center',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'lpd',index:'p.pyear',width:60 },
+
                         {name:'baseam',index:'p.baseam', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'gwam',index:'p.gwam', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'jxam',index:'p.jxam', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
@@ -78,18 +79,19 @@
                         {name:'sh',index:'p.SickHolsDays', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'wdt',index:'p.wdt',width:100,align:'right' },
                         {name:'hda',index:'p.HolsDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+                        {name:'spedel',index:'p.SpeDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'bna',index:'p.BaseNowAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'sra',index:'p.SpeRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+
                         {name:'shb',index:'p.ShbAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'gjj',index:'p.GjjAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
-                        {name:'spedel',index:'p.SpeDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'pc',index:'p.PayCesse', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'accdel',index:'p.AccDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
-                        // {name:'sda',index:'p.AccDelAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'ara',index:'p.AccRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'arac',index:'p.AccRewAmCes', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'oara',index:'p.OtherAccRewAm', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
                         {name:'ptol',index:'p.PayTotal', width:100,align:'right',editable:true , searchoptions:{sopt:['cn']}},
+
                         {name:'acc',index:'s.acc', width:140, align:"center",editable:true , searchoptions:{sopt:['eq']}},
                         {name:'accbank',index:'s.accnsnk', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
                         {name:'remark',index:'p.remark', width:100, align:"center",editable:true , searchoptions:{sopt:['eq']}},
@@ -638,6 +640,11 @@
                         <td ><input id="user_hda_remark" name="user_hda_remark" value="" size="45" onchange="onChange('acc')"/></td>
                     </tr>
                     <tr>
+                        <td class="tl"> 税前扣除（-）：</td>
+                        <td ><input id="user_spedel" name="user_spedel" value="" type="text" onchange="onChange()"/></td>
+                        <td ><input id="user_bsda_remark" name="user_bsda_remark" value="" size="45" onchange="onChange('acc')"/></td>
+                    </tr>
+                    <tr>
                         <td class="tl"> 离职工资小计：</td>
                         <td id="user_bna"></td>
                         <td ><input id="user_bna_remark" name="user_bna_remark" value="" size="45" onchange="onChange('acc')"/></td>
@@ -656,11 +663,6 @@
                         <td class="tl"> 住房公积金（-）：</td>
                         <td ><input id="user_gjj" name="user_gjj" value="" type="text" onchange="onChange()"/><span id="ldt_gjj"></span></td>
                         <td ><input id="user_gjj_remark" name="user_gjj_remark" value="" size="45" onchange="onChange('acc')"/></td>
-                    </tr>
-                    <tr>
-                        <td class="tl"> 税前扣除（-）：</td>
-                        <td ><input id="user_spedel" name="user_spedel" value="" type="text" onchange="onChange()"/></td>
-                        <td ><input id="user_bsda_remark" name="user_bsda_remark" value="" size="45" onchange="onChange('acc')"/></td>
                     </tr>
                     <tr>
                         <td class="tl"> 个人所得税（-）：</td>

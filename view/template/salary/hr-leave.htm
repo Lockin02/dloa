@@ -50,7 +50,7 @@
                     datatype: "json",
                     mtype:'GET',
                     colNames:[
-                        '操作','KEY','员工号','姓名','公司','部门','员工类型','离职日期','录入日期','录入人','状态','可修改','compt'
+                        '操作','KEY','员工号','姓名','公司','部门','员工类型','离职日期','操作日期','操作人','状态','可修改','compt'
                     ],
                     colModel:[
                         {name:'act',index:'act', width:100, align:'center', sortable:false ,search:false},
@@ -86,22 +86,23 @@
                         switch(rowData.usersta){
                             case '离职':
                                 if(rowData.ck=='yes'){
-                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
+                                    be ="<button style='height:22px;' class='btn-class' id='am_"+rowData.key+"'  title='撤销员工离职状态' onclick=\"amRevokeClickFun('"+rowData.key+"')\" >撤销离职</button>";
                                 }else{
                                     be ="-";
                                 }
                                 break;
                             case '冻结':
                                 if(rowData.ck=='yes'){
-                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='冻结' title='员工冻结信息输入' onclick=\"djClickFun('"+rowData.key+"')\" />";
+                                    be ="<input style='height:22px;' class='btn-class' id='dj_"+rowData.key+"' type='button' value='撤销冻结' title='撤销员工冻结状态' onclick=\"djRevokeClickFun('"+rowData.key+"')\" />"
+                                    +"<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
                                 }else{
-                                    be ="-";
+                                    be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />";
                                 }
                                 break;
                             default:
                                 cl='green';
                                 be ="<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='离职' title='员工离职信息输入' onclick=\"amClickFun('"+rowData.key+"')\" />"
-                                    +"<input style='height:22px;' class='btn-class' id='am_"+rowData.key+"' type='button' value='冻结' title='员工冻结信息输入' onclick=\"djClickFun('"+rowData.key+"')\" />";
+                                    +"<input style='height:22px;' class='btn-class' id='dj_"+rowData.key+"' type='button' value='冻结' title='员工冻结信息输入' onclick=\"djClickFun('"+rowData.key+"')\" />";
                                 break;
                         }
                         jQuery("#rowedgrid").jqGrid('setRowData',rowData.key,{act:be});
@@ -137,7 +138,7 @@
                     }
                 });
             });
-            //转正
+            //离职
             function amClickFun(id){
                 var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
                 $('#lui_rowedgrid').css('display', 'block');
@@ -151,6 +152,7 @@
                 $('#user_com').val(rowData.compt);
                 $('#actflag').val('lz');
             }
+            //冻结
             function djClickFun(id){
                 var rowData = jQuery("#rowedgrid").jqGrid('getRowData',id);
                 $('#lui_rowedgrid').css('display', 'block');
@@ -164,12 +166,87 @@
                 $('#user_com').val(rowData.compt);
                 $('#actflag').val('dj');
             }
+            // 撤销离职
+            function amRevokeClickFun(id) {
+                var rand=Math.random()*100000;
+                $("#am_"+id).attr('disabled', true);
+                if (confirm("确认撤销离职?")){
+                        $.post('?model=salary&action=hr_leave_in',{
+                        id:id,leavedt:'',rand:rand,actflag:'lz',compt:''
+                    },function (data) {
+                        var msg=eval('(' + data + ')');
+                        if(msg && msg['error_code']){
+                            if(msg['error_code'] == '1'){ //查无数据
+                                alert('错误:数据出错');
+                            }else if(msg['error_code'] == '2'){ //关账后操作
+                                alert('错误：该员工已超出离职恢复期限，无法操作恢复在职状态，如需继续操作，请联系OA系统管理员')
+                            }else if(msg['error_code']== '3'){
+                                alert('错误:关账日期有误,请联系管理员');
+                            }else if(msg['error_code'] == '4'){
+                                alert('警告:操作权限不足');
+                            }
+                        }else if(msg && msg['error']){
+                            alert('错误：'+msg['error']);
+                            $("#am_"+id).attr('disabled', false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+
+                        $("#am_"+id).attr('disabled', false);
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    });
+                }else{
+                    $("#am_"+id).attr('disabled', false);
+                }
+            }
+            // 撤销冻结
+            function djRevokeClickFun(id) {
+                var rand=Math.random()*100000;
+                if (confirm("确认撤销冻结?")){
+                    $("#dj_"+id).attr('disabled', true);
+                    console.log('in');
+                    $.post('?model=salary&action=hr_leave_in',{
+                        id:id,leavedt:'',rand:rand,actflag:'dj',compt:''
+                    },function (data) {
+                        var msg=eval('(' + data + ')');
+                        if(msg && msg['error_code']){
+                            if(msg['error_code'] == '1'){ //查无数据
+                                alert('错误:数据出错');
+                            }else if(msg['error_code'] == '2'){ //关账后操作
+                                alert('错误:操作日期不允许为已关账时期内,或本月之后')
+                            }else if(msg['error_code']== '3'){
+                                alert('错误:关账日期有误,请联系管理员');
+                            }
+                            $("#dj_"+id).attr('disabled', false);
+                        }else if(msg && msg['error']){
+                            alert('错误：'+msg['error']);
+                            $("#dj_"+id).attr('disabled', false);
+                            return false;
+                        }else{
+                            alert('操作成功！');
+                        }
+
+                        jQuery("#rowedgrid").trigger("reloadGrid");
+                    });
+                }else{
+                    $("#dj_"+id).attr('disabled', false);
+                }
+            }
+
             function amSubmitFun(){
                 var rand=Math.random()*100000;
                 var id=$('#user_key').val();
                 var leavedt=$('#user_leavedt').val();
                 var actflag=$('#actflag').val();
                 var compt =$('#user_com').val();
+                if(!leavedt){
+                    alert('请填写具体日期');
+                    return;
+                }
+                if(leavedt){
+
+                }
                 if(actflag=='lz'){
                     var altmsg='确认是否离职？';
                 }

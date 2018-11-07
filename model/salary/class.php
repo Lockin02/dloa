@@ -31,6 +31,9 @@ class model_salary_class extends model_base {
     public $lastpm; // 上月的月份
 	public $serviceDept; //服务部门
 	public $yqybDept; //仪器仪表及子部门
+
+    public $revoke_leave_name_list; //允许操作撤销离职的人员名单
+    public $close_stat_name_list; //允许结账操作人员名单
                     
     // *******************************构造函数***********************************
     function __construct() {
@@ -322,6 +325,8 @@ class model_salary_class extends model_base {
     		    "393",
     		    "395"	
 		);
+		$this->revoke_leave_name_list = array('shuyin.lin','yu.long');
+		$this->close_stat_name_list = array('shuyin.lin','yu.long');
         // $this->get_decrypt_deal();
         // $this->model_flow_auto_do();//自动审批
         // $this->update_salary_yeb();//年终奖计算
@@ -403,39 +408,82 @@ class model_salary_class extends model_base {
     function model_close_stat() {
         $str = '';
         $sql = " SELECT
-                s.id,
-                s.pyear,
-                s.pmon,
-                s.com ,
+                s.*,
                 i.NameCN
                 FROM `salary_config` s
                 LEFT JOIN branch_info i on (s.com = i.NamePT )";
         $query = $this->db->query ( $sql );
         while ( $row = $this->db->fetch_array ( $query ) ) {
-            $str .= '<tr>
+            if(($row['pmon']<=$this->nowm) || ($row['pmon']==12 && $this->nowm==1) ){
+
+                $str .= '<tr>
                         <td>' . $row ['NameCN'] . '</td>
                         <td>' . $row ['pyear'] . '年' . $row ['pmon'] . '月' . '</td>
-                        <td><a href="#" onclick = "ck(\'' . $row ['id'] . '\',\'' . $row ['NameCN'] . '\',\'' . $row ['pyear'] . '\',\'' . $row ['pmon'] . '\')">结算</a></td>
-                    </tr>';
+                        <td><a href="#" onclick = "ck(\'' . $row ['id'] . '\',\'' . $row ['NameCN'] . '\',\'' . $row ['pyear'] . '\',\'' . $row ['pmon'] . '\')"> 结算 </a></td>';
+
+            }else{
+                $str .= '<tr>
+                        <td>' . $row ['NameCN'] . '</td>
+                        <td>' . $row ['pyear'] . '年' . $row ['pmon'] . '月' . '</td>
+                        <td>/</td>';
+
+            }
+
+            //可操作本月,或操作时间在1-5日 可操作上个月
+            $now_date = intval(date('d'));
+            if(($row['pmon']==$this->nowm && 0<$now_date && $now_date<6) ||  ($row['pmon']-$this->nowm==1 || (intval($this->nowm)==12 and intval($row['pmon'])==1)) ){
+                $str .= '<td><a href="#" onclick="cancel_click(\'' . $row ['id'] . '\',\'' . $row ['NameCN'] . '\',\'' . $row['pyear'] . '\',\'' . $row['pmon'] . '\')"> 取消结算 </a></td>';
+            }else{
+                $str .= '<td>/</td>';
+            }
+
+            $str .= '<td>'.$row['last_close_time'].'</td><td>'.$row['last_close_user'].'</td><td>'.$row['last_open_time'].'</td><td>'.$row['last_open_user'].'</td>';
+            $str .= '</tr>';
         }
         return $str;
     }
     function model_close_stat_in() {
-        $y = $_POST ['y'];
-        $m = $_POST ['m'];
-        $key = $_POST ['key'];
-        
-        $nt = mktime ( 0, 0, 0, $m + 1, 1, $y );
-        $ny = date ( 'Y', $nt );
-        $nm = date ( 'n', $nt );
-        
-        $sql = " update salary_config set
-                pyear = '$ny' , pmon = '$nm'
+        $user_id = $_SESSION['USER_ID'];
+        if(!in_array($user_id,$this->close_stat_name_list)){
+            return 2;
+        }
+
+        $sql = "select user_name from user where user_id='".$user_id."'";
+        $userinfo = $this->db->get_one($sql);
+        $userName = $userinfo['user_name'];
+
+        $act = $_POST['act'];
+        if ($act == 'close'){  //结算
+            $y = $_POST ['y'];
+            $m = $_POST ['m'];
+            $key = $_POST ['key'];
+            $nt = mktime ( 0, 0, 0, $m + 1, 1, $y );
+            $ny = date ( 'Y', $nt );
+            $nm = date ( 'n', $nt );
+
+            $sql = " update salary_config set
+                pyear = '$ny' , pmon = '$nm', last_close_time = '". date("Y-m-d H:i:s") ."', last_close_user = '$userName' 
                 where id = '$key' ";
-        $query = $this->db->query ( $sql );
-        
-        return $query;
+
+        }elseif($act == 'open'){  //撤销结算
+            $y = $_POST ['y'];
+            $m = $_POST ['m'];
+            $key = $_POST ['key'];
+            $nt = mktime ( 0, 0, 0, $m - 1, 1, $y );
+            $ny = date ( 'Y', $nt );
+            $nm = date ( 'n', $nt );
+
+            $sql = " update salary_config set
+                pyear = '$ny' , pmon = '$nm', last_open_time = '". date("Y-m-d H:i:s") ."', last_close_user = '$userName' 
+                where id = '$key' ";
+        }else{
+            return 0 ;
+        }
+
+        return $this->db->query ( $sql );
+
     }
+
     /**
      *
      * @param <type> $flag
@@ -1284,6 +1332,16 @@ class model_salary_class extends model_base {
                 1
                 $sqlSch ";
         $rs = $this->db->get_one ( $sql );
+
+        //获取公司结算月份
+        $config_sql = "select * from salary_config";
+        $query = $this->db->query($config_sql);
+        $close_result_data = array(); //结账公司作为key 结账年月作为value
+        while ($row = $this->db->fetch_array($query)){
+            $close_result_data[$row['com']]['pyear'] = $row['pyear'];
+            $close_result_data[$row['com']]['pmon'] = $row['pmon'];
+        }
+
         $count = $rs ['count(*)'];
         if ($count > 0) {
             $total_pages = ceil ( $count / $limit );
@@ -1300,10 +1358,11 @@ class model_salary_class extends model_base {
         $sql = "select
                 s.rand_key , u1.user_name as username , d.dept_name as olddept , s.leavedt
                 , s.leavecreatedt , u.user_name , s.usersta
-                , h.expflag , s.freezedt , u1.user_name as freezeuser , s.freezecdt , s.freezeflag
-                , u1.company , u1.salarycom ,b.NameCN , h.usercard
+                , h.expflag , s.freezedt , ull.user_name as freezeuser , s.freezecdt , s.freezeflag
+                , u1.company , u1.salarycom ,b.NameCN , h.usercard, s.jfcom
             from salary s
                 left join user u on (s.leavecreator=u.user_id)
+                left join user ull on (s.freezeuser=ull.user_id)
                 left join user u1 on (u1.user_id=s.userid)
                 left join department d on (u1.dept_id=d.dept_id)
                 left join hrms h on (s.userid=h.user_id)
@@ -1316,22 +1375,56 @@ class model_salary_class extends model_base {
         $query = $this->db->query ( $sql );
         while ( $row = $this->db->fetch_array ( $query ) ) {
             
-            if ($row ['freezeflag'] == '1') {
+            if($row['usersta'] == '3' && !empty($row['leavedt']) ) {
+                $dt = $row ['leavedt'];
+                $us = $row ['user_name'];
+                $cdt = $row ['leavecreatedt'];
+                $st = '离职';
+            }elseif($row ['freezeflag'] == '1'){
                 $dt = $row ['freezedt'];
                 $us = $row ['user_name'];
                 $cdt = $row ['freezecdt'];
                 $st = '冻结';
-            } else {
-                $dt = $row ['leavedt'];
-                $us = $row ['user_name'];
-                $cdt = $row ['leavecreatedt'];
-                $st = $this->userSta [$row ['usersta']];
+            }else{
+                $dt = '';
+                if(!empty($row['leavecreatedt']) && !empty($row['freezecdt'])){
+                    if(intval(strtotime($row['leavecreatedt'])) > intval(strtotime($row['freezecdt'])) ){
+                        $us = $row['user_name'];
+                        $cdt = $row['leavecreatedt'];
+                        $st = '离职恢复在职';
+                    }else{
+                        $us = $row['freezeuser'];
+                        $cdt = $row['freezecdt'];
+                        $st = '冻结恢复在职';
+                    }
+                }elseif(!empty($row['leavecreatedt'])){
+                    $us = $row['user_name'];
+                    $cdt = $row['leavecreatedt'];
+                    $st = '离职恢复在职';
+                }elseif (!empty($row['freezecdt'])){
+                    $us = $row['freezeuser'];
+                    $cdt = $row['freezecdt'];
+                    $st = '冻结恢复在职';
+                }else{
+                    $us = '';
+                    $cdt = '';
+                    $st = '在职';
+                }
             }
-            if ((date ( 'Y', strtotime ( $dt ) ) == $this->nowy && date ( 'n', strtotime ( $dt ) ) == $this->nowm) || (date ( 'Y', strtotime ( $cdt ) ) == $this->nowy && date ( 'n', strtotime ( $cdt ) ) == $this->nowm)) {
-                $ck = 'yes';
-            } else {
-                $ck = 'no';
+
+            //判断是否离职/冻结  根据离职/冻结的时间年月判断是否可操作解除离职/冻结
+            if($st=='离职' or $st=='冻结'){  //可进行离职/冻结
+                $dt_mon = date("m", strtotime($dt));
+                $dt_year = date("Y", strtotime($dt));
+                $close_year_mon = $close_result_data[$row['jfcom']];  //获取人员对应的公司最新关账年月
+
+                if (($dt_year==$close_year_mon['pyear'] && $dt_mon>$close_year_mon['pmon']-1) || ($dt_mon==1 && $dt_year>$close_year_mon['pyear'])){
+                    $ck = 'yes';
+                }else {
+                    $ck = 'no';
+                }
             }
+
             $responce->rows [$i] ['id'] = $row ['userid'];
             $responce->rows [$i] ['cell'] = un_iconv ( array (
                     "",
@@ -1367,118 +1460,164 @@ class model_salary_class extends model_base {
 	 * 离职处理
 	 */
 	function model_hr_leave_in_ext($id,$leavedt,$actflag,$compt) {
-		$sm = false;
+
 		try {
 			$this->db->query ( "START TRANSACTION" );
-			$sql = "select
-                    p.id , h.expflag , p.userid , p.baseam , s.comedt , s.usersta , s.amount , h.payCom
+
+			if ($actflag == 'lz') { // 离职
+                
+                $sql = "select s.userid, s.jfcom, s.leavedt, s.usersta from salary s where rand_key = '" . $id . "'";
+                $salary_res = $this->db->get_one($sql);
+
+                //判断是否能离职或者撤销离职
+                $sql = "select * from salary_config where com='" . $salary_res['jfcom'] . "'";
+                $config_res = $this->db->get_one($sql);
+
+                if (empty($leavedt)) { //撤销离职
+
+                    if(!in_array($_SESSION['USER_ID'], $this->revoke_leave_name_list)){
+                        $response['error_code'] = '4';
+                        return $response;
+                    }
+
+                    $leavedt_year = date("Y", strtotime($salary_res['leavedt']));
+                    $leavedt_mon = date("m", strtotime($salary_res['leavedt']));
+
+                    //不可撤销条件 关账月份大于等于本月 或 关账年份已大于本年
+                    if (($config_res['pyear']==$leavedt_year && $leavedt_mon<=$config_res['pmon']-1) || ($leavedt_year<$config_res['pyear']) ){
+                        $response['error_code'] = '2';
+                        return $response;
+                    }
+
+                    //恢复工资主表个人状态
+                    $this->model_salary_update($id, array(
+                        'sta' => 0,
+                        'usersta' => 2,
+                        'leavedt' => null,
+                        'leavecreatedt' => 'now()',
+                        'leavecreator' => $_SESSION ['USER_ID']
+                    ), array(
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                    ));
+                    // 查询离职年月并通过此恢复当月工资表
+                    if (!empty($salary_res['leavedt'])) {
+                        $revoke_year = date("Y", strtotime($salary_res['leavedt']));
+                        $revoke_mon = date("m", strtotime($salary_res['leavedt']));
+                        $salary_pay_sql = "select p.id from salary_pay p where pyear ='" . $revoke_year . "' and pmon='" . $revoke_mon . "' and userid='" . $salary_res['userid'] . "'";
+                        $salary_pay_res = $this->db->get_one($salary_pay_sql);
+                        if(isset($salary_pay_res['id'])){
+                            $this->model_pay_update($salary_pay_res['id'], array(
+                                'nowamflag' => '0',
+                                'leaveflag' => '0'
+                            ), array(
+                                0,
+                                1
+                            ));
+                            $this->model_pay_stat($salary_pay_res['id']);
+                        }
+
+                        //判断离职年月是否为本年月,如果不为,更新本年月
+                        if($revoke_mon != $his->nowm){
+                            $salary_pay_sql_now = "select p.id from salary_pay p where pyear ='" . $this->nowy . "' and pmon='" . $this->nowm . "' and userid='" . $salary_res['userid'] . "'";
+                            $salary_pay_res_now = $this->db->get_one($salary_pay_sql_now);
+                            if(isset($salary_pay_res_now['id'])){
+                                $this->model_pay_update($salary_pay_res_now['id'], array(
+                                    'nowamflag' => '0',
+                                    'leaveflag' => '0'
+                                ), array(
+                                    0,
+                                    1
+                                ));
+                                $this->model_pay_stat($salary_pay_res_now['id']);
+                            }
+                        }
+
+                        $sql = "update hrms set userstatmp='1' , LEFT_DATE=null where user_id='" . $salary_res['userid'] . "'";
+                        $this->db->query_exc($sql);
+                        // 更新新OA表数据
+                        $sql = "update  oa_hr_personnel  p set p.quitDate=null
+                        where p.useraccount='" . $salary_res ['userid'] . "'";
+                        $this->db->query_exc($sql);
+                    }
+
+                } else { //离职
+
+                    $leavedt_year = date("Y", strtotime($leavedt));
+                    $leavedt_mon = date("m", strtotime($leavedt));
+
+                    //判断是否可以操作离职日期 离职日期为关账月份或之前
+                    if (($config_res['pyear']==$leavedt_year && $leavedt_mon<=$config_res['pmon']-1) || ($leavedt_year<$config_res['pyear'])){
+                        $response['error_code'] = '2';
+                        return $response;
+                    }
+
+                    //更新薪资主表
+                    $this->model_salary_update($id, array(
+                        'sta' => 1,
+                        'usersta' => 3,
+                        'leavedt' => $leavedt,
+                        'leavecreatedt' => 'now()',
+                        'leavecreator' => $_SESSION ['USER_ID']
+                    ), array(
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                    ));
+
+                    $salary_pay_sql = "select p.id from salary_pay p where pyear ='" . $leavedt_year . "' and pmon='" . $leavedt_mon . "' and userid='" . $salary_res['userid'] . "'";
+                    $salary_pay_res = $this->db->get_one($salary_pay_sql);
+                    //判断离职年月是否在本月之前
+                    if (strtotime($leavedt) < strtotime(date('Y-m'))) {
+                        $salary_pay_now_sql = "select id from salary_pay where pyear ='" . $this->nowy . "' and pmon='" . $this->nowm . "' and userid='" . $salary_res['userid'] . "'";
+                        $salary_pay_now_res = $this->db->get_one($salary_pay_now_sql);
+                    }
+
+                    //更新当月薪资表salary_pay
+                    if ($salary_pay_res) {
+                        $this->model_pay_update($salary_pay_res['id'], array(
+                            'nowamflag' => '3',
+                            'leaveflag' => '0'
+                        ), array(
+                            0,
+                            1
+                        ));
+                    }
+                    if ($salary_pay_now_res) {
+                        $this->model_pay_update($salary_pay_now_res['id'], array(
+                            'nowamflag' => '3',
+                            'leaveflag' => '0'
+                        ), array(
+                            0,
+                            1
+                        ));
+                    }
+
+                    $sql = "update hrms set userstatmp='1' , LEFT_DATE='" . $leavedt . "' where user_id='" . $salary_res['userid'] . "'";
+                    $this->db->query_exc($sql);
+                    // 新系统
+                    $sql = "update  oa_hr_personnel  p set p.quitDate='" . $leavedt . "'
+                        where p.useraccount='" . $salary_res['userid'] . "'";
+                    $this->db->query_exc($sql);
+
+                }
+            }
+			elseif ($actflag == 'dj') { // 冻结
+
+                $sql = "select
+                    p.id , h.expflag , p.userid , p.baseam , s.comedt , s.usersta , s.amount , h.payCom ,s.jfcom
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
                     left join hrms h on (s.userid=h.user_id)
                 where
                     p.pyear='" . $this->nowy . "' and p.pmon='" . $this->nowm . "' and p.userid=s.userid
 	                    and  s.rand_key='$id'  ";
-			$res = $this->db->get_one ( $sql );
-			if (! $res ['id']) {
-				throw new Exception ( 'No data query ' );
-			}
-			if ($actflag == 'lz') { // 离职
-				if (empty ( $leavedt )) { // 不离职
-					$this->model_salary_update ( $id, array (
-							'sta' => 1,
-							'usersta' => 2,
-							'leavedt' => null,
-							'leavecreatedt' => 'now()',
-							'leavecreator' => $_SESSION ['USER_ID']
-					), array (
-							0,
-							1,
-							2,
-							3,
-							4
-					) );
-					// 统一
-					$pid = $res ['id'];
-					// 离职处理离职日期在上一个月的离职人员时，为了不影响上个月工资数据，统一只能勾选当月一号；结算时，手动调整出勤日期为0。
-					// 本月数据恢复
-					$this->model_pay_update ( $pid, array (
-							'nowamflag' => '0',
-							'leaveflag' => '0'
-					), array (
-							0,
-							1
-					) );
-					$this->model_pay_stat ( $pid );
-					$sql = "update hrms set userstatmp='1' , LEFT_DATE=null where user_id='" . $res ['userid'] . "'";
-					$this->db->query_exc ( $sql );
-					// 新系统
-					$sql = "update  oa_hr_personnel  p set p.quitDate=null
-                        where p.useraccount='" . $res ['userid'] . "'";
-					$this->db->query_exc ( $sql );
-				} else {
-					$this->model_salary_update ( $id, array (
-							'sta' => 1,
-							'usersta' => 3,
-							'leavedt' => $leavedt,
-							'leavecreatedt' => 'now()',
-							'leavecreator' => $_SESSION ['USER_ID']
-					), array (
-							0,
-							1,
-							2,
-							3,
-							4
-					) );
-					// 统一
-					$pid = $res ['id'];
-					$leaveDateTime = strtotime ( $leavedt );
-					// 离职处理离职日期在上一个月的离职人员时，为了不影响上个月工资数据，统一只能勾选当月一号；结算时，手动调整出勤日期为0。
-					if ($leaveDateTime > strtotime ( date ( 'Y-m-t' ) )) { // 本月后离职
-						// 本月数据恢复
-						$this->model_pay_update ( $pid, array (
-								'nowamflag' => '0',
-								'leaveflag' => '0'
-						), array (
-								0,
-								1
-						) );
-						$this->model_pay_stat ( $pid );
-					} else {
-						// 上个月离职的情况，比如 6月1号操作的离职，但是离职日期是在5月这种情况
-						if ((date ( 'Y', $leaveDateTime ) == date ( 'Y' ) && (date ( 'm' ) - date ( "m", $leaveDateTime ) == 1)) || ((date ( 'Y' ) - date ( 'Y', $leaveDateTime ) == 1) && date ( 'm' ) == 1 && date ( "m", $leaveDateTime ) == 12)) {
-							// 月初操作上个月离职的人员时，需要先更新离职人员上个月的工资信息
-							$year = date ( 'Y' );
-							if (date ( 'm' ) == '01') { // 当月是一月的话，上个月年份需要减一
-								$year -= 1;
-							}
-							$salaryPay = $this->getSalaryPay ( $year, date ( "m", $leaveDateTime ), $res ['userid'] );
-	
-							$this->model_pay_update ( $salaryPay ['ID'], array (
-									'nowamflag' => '3',
-									'leaveflag' => '0'
-							), array (
-									0,
-									1
-							) );
-						}
-						// 离职日期是在本月或者上月，都需要更新本月工资数据
-						$this->model_pay_update ( $pid, array (
-								'nowamflag' => '3',
-								'leaveflag' => '0'
-						), array (
-								0,
-								1
-						) );
-					}
-					$sql = "update hrms set userstatmp='1' , LEFT_DATE='" . $leavedt . "' where user_id='" . $res ['userid'] . "'";
-					$this->db->query_exc ( $sql );
-					// 新系统
-					$sql = "update  oa_hr_personnel  p set p.quitDate='" . $leavedt . "'
-                        where p.useraccount='" . $res ['userid'] . "'";
-					$this->db->query_exc ( $sql );
-				}
-			}
-			elseif ($actflag == 'dj') { // 冻结
+                $res = $this->db->get_one ( $sql );
 
                 //如果冻结日期在关账月份之前 或在本月之后不允许操作
                 if(!empty($leavedt)){
@@ -1487,7 +1626,7 @@ class model_salary_class extends model_base {
                     $leavedt_year = date('Y', strtotime($leavedt));
                     $leavedt_mon = date('m', strtotime($leavedt));
 
-                    if(intval($this->nowm)== intval($salary_config['pmon'])){ //如果可操作月份等于本月,需冻结月份等于可操作月份
+                    if(intval($this->nowm)== intval($salary_config['pmon'])){ //如果关账月份等于本月,需冻结月份等于可操作月份
                         if(intval($leavedt_mon) != $salary_config['pmon']){
                             $response['error_code'] = '2';
                             return $response;
@@ -1645,7 +1784,7 @@ class model_salary_class extends model_base {
                 }
 			}
 			$this->db->query ( "COMMIT" );
-//			$this->globalUtil->insertOperateLog ( '工资管理', $id, '员工离职', '成功' );
+			$this->globalUtil->insertOperateLog ( '工资管理', $id, '员工离职', '成功' );
 		} catch ( Exception $e ) {
 			$this->db->query ( "ROLLBACK" );
 			$responce->error = $e->getMessage ();
@@ -11206,6 +11345,7 @@ where
 					$othdelam = $othdelam ? '<font color="red">' . $othdelam . '</font>' : $othdelam;
 					$tmp = array (
 							$row ['rand_key'],
+							$row ['usercard'], //pms849
 							$row ['username'],
 							$comtab,
 							$row ['deptname'],
@@ -13141,9 +13281,13 @@ where
                 </tr>
                 <tr>
                     <td><div class="divlist">';
-            $str .= '<div class="nbtn">
+            // pms827
+            if (in_array($_SESSION['USER_ID'], $this->close_stat_name_list) || $_SESSION['USER_ID'] == 'admin'){
+                $str .= '<div class="nbtn">
                     <input type="button" value="结账周期" class="btn" onclick="newParentTab(\'?model=salary&action=close_stat\', \'结账周期\',\'505\')" />
                 </div>';
+            }
+
             $str .= '<div class="nbtn">
                     <input type="button" value="财务对账" class="btn" onclick="newParentTab(\'?model=salary&action=fn_stat\', \'财务对账\',\'5\')" />
                 </div>';
@@ -14735,7 +14879,7 @@ where
 		$sqlflag = '';
 		$dppow = $this->model_dp_pow ();
 		$sqlflag = "";
-		if( $_SESSION ['USER_ID'] != 'yu.long' && $_SESSION ['USER_ID'] != 'lishun.zhang' && $_SESSION ['USER_ID'] != 'admin') {
+		if( $_SESSION ['USER_ID'] != 'yu.long' && $_SESSION ['USER_ID'] != 'shuyin.lin' && $_SESSION ['USER_ID'] != 'admin') {
 			$sqlflag=$this->getSqlParam($func_limit['浏览部门'],$dppow);
 		}
 		$flag = $_REQUEST ['flag'];
@@ -15402,7 +15546,8 @@ where
 					$this->globalUtil->insertOperateLog ( '入职导入', '入职导入', '入职导入', '失败', $e->getMessage () );
 				}
 			}
-		} elseif ($flag == 'hr_pass') { // 转正
+
+        } elseif ($flag == 'hr_pass') { // 转正
 		                            // print_r($data);
 			if (count ( $data )) {
 				try {
@@ -21872,6 +22017,7 @@ EOD;
                             }
                         }
                     }
+
                     if (trim ( $tmpUser )) { // 第一步
                                           // 读取授权人数据
                         $sql = "SELECT group_concat( to_id)  as to_ids  , from_id   FROM power_set
@@ -21884,6 +22030,11 @@ EOD;
                         if ($pos !== false) { // 过滤提交人审批
                             $pass_step = true;
                             continue;
+                        }
+                        //去除天林总审批
+                        if ( trim($tmpUser) == 'tianlin.zhang'){
+                        $pass_step = true;
+                        continue;
                         }
                         if ($flow_step_id == 1) {
                             $resdb = $tmpUser;
@@ -22152,9 +22303,7 @@ EOD;
             set sta='2' , pyear = '" . $fpyear . "' , pmon='" . $fpmon . "'
             where id='" . $flowkey . "' ";
         $this->db->query_exc ( $sql );
-
-        // 季度奖
-        if ($resf ['flowname'] == $this->flowName ['fla']) {
+        if ($resf ['flowname'] == $this->flowName ['fla']) { // 季度奖
             $sql = "select p.sdyam , p.otheram , p.remark , p.id as pid , s.rand_key , p.userid as puserid
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22170,9 +22319,7 @@ EOD;
             $salinfo ['floatam'] = $this->salaryClass->cfv ( $flaamtmp );
             $payinfo ['floatam'] = $this->salaryClass->cfv ( $flaamtmp * $this->flaotMon [$fpmon] );
             $payinfo ['remark'] = $flowremark;
-        }
-        // 人事补贴
-        elseif ($resf ['flowname'] == $this->flowName ['sdyhr'] || $resf ['flowname'] == $this->flowName ['sdyhr_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_12']) {
+        } elseif ($resf ['flowname'] == $this->flowName ['sdyhr'] || $resf ['flowname'] == $this->flowName ['sdyhr_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_3'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_5'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_1'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_0'] || $resf ['flowname'] == $this->flowName ['sdyhr_xs_12']) { // 人事补贴
             $sql = "select sdymeal , sdyother , userid   from salary_sdy
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $ressdy = $this->db->get_one ( $sql );
@@ -22199,9 +22346,7 @@ EOD;
             $payinfo ['otheram'] = $this->salaryClass->cfv ( $oldOthAm + $newOthAm );
             $payinfo ['remark'] = $flowremark;
             // 人事补贴
-        }
-        // 特殊奖励/扣除
-        elseif ($resf ['flowname'] == $this->flowName ['spe'] || $resf ['flowname'] == $this->flowName ['spe_3'] || $resf ['flowname'] == $this->flowName ['spe_5'] || $resf ['flowname'] == $this->flowName ['spe_1'] || $resf ['flowname'] == $this->flowName ['spe_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_3'] || $resf ['flowname'] == $this->flowName ['spe_xs_5'] || $resf ['flowname'] == $this->flowName ['spe_xs_1'] || $resf ['flowname'] == $this->flowName ['spe_xs_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_12']) {
+        } elseif ($resf ['flowname'] == $this->flowName ['spe'] || $resf ['flowname'] == $this->flowName ['spe_3'] || $resf ['flowname'] == $this->flowName ['spe_5'] || $resf ['flowname'] == $this->flowName ['spe_1'] || $resf ['flowname'] == $this->flowName ['spe_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_3'] || $resf ['flowname'] == $this->flowName ['spe_xs_5'] || $resf ['flowname'] == $this->flowName ['spe_xs_1'] || $resf ['flowname'] == $this->flowName ['spe_xs_0'] || $resf ['flowname'] == $this->flowName ['spe_xs_12']) { // 特殊奖励/扣除
             $sql = "select payyear , paymon , amount , paytype , payuserid , acctype from salary_spe
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $resspe = $this->db->get_one ( $sql );
@@ -22247,139 +22392,136 @@ EOD;
             }
             $sql = "update salary_spe set spesta='3' , payyear='" . $fpyear . "' , paymon='" . $fpmon . "'  where rand_key='" . $resf ['salarykey'] . "' ";
             $this->db->query_exc ( $sql );
-        }
-        // 调薪
-        elseif ($resf ['flowname'] == $this->flowName ['nym_0'] || $resf ['flowname'] == $this->flowName ['nym_1'] || $resf ['flowname'] == $this->flowName ['nym_2']
-				|| $resf ['flowname'] == $this->flowName ['nym_3'] || $resf ['flowname'] == $this->flowName ['nym_4'] || $resf ['flowname'] == $this->flowName ['nym_xs_0'] 
-				|| $resf ['flowname'] == $this->flowName ['nym_xs_1'] || $resf ['flowname'] == $this->flowName ['nym_xs_2'] || $resf ['flowname'] == $this->flowName ['nym_xs_3'] 
-				|| $resf ['flowname'] == $this->flowName ['nym_xs_4'] || $resf ['flowname'] == $this->flowName ['ymd'] || $resf ['flowname'] == $this->flowName ['nym_wy1'] 
-		    || $resf ['flowname'] == $this->flowName ['nym_wy2'] || $resf ['flowname'] == $this->flowName ['nym_yqyb3']) {
-					
-			//2016-12-27 作出调薪规则修改 获取提交审批年月，算出生效年月
-			$createY = date("Y",strtotime($resf["createdt"])); //提交年份
-			$createM = date("n",strtotime($resf["createdt"])); //提交月份
-			$createJ = date("j",strtotime($resf["createdt"])); //几号提交
-			$effectY = $createY; //生效年份
-			$effectM = $createM; //生效月份
-			//2016-12-27作出调薪规则修改
-			//修改前：调薪生效月份，根据 结账周期 表的月份生效
-			//修改后：根据审批发起时间生效，上月21日 - 本月20日发起审批，本月生效，否则，次月生效
-				
-			//大于25号，则次月生效
-			if($createJ > 25) {
-				if($effectM == 12) {
-					$effectY++;
-					$effectM = 1;
-				}else {
-					$effectM++;
-				}
-			}
-					
-			//2017-12-12作出调薪规则修改
-			//修改前：1、调薪申请日期在n月，审批日期在n+1月，n月会生效，n+1月没生效
-			//修改后：1、调薪日期在n月，审批日期在n+1月，n月和n+1月都要生效	
-			// 		2、如果审批的时候发现调薪日期所在账期已关闭，则不执行调薪更新，并提醒审批人打回
-			//		3、打回的时候要通知发起人
-			if($fpyear > $effectY || ($fpyear == $effectY && $fpmon > $effectM)) {
-				throw new Exception(un_iconv("因对应申请周期的工资系统数据已关帐，本次申请已失效，请操作打回。"));
-			}else {
-					
-				$sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , s.amount
+            // 特殊奖励/扣除
+        } elseif ($resf ['flowname'] == $this->flowName ['nym_0'] || $resf ['flowname'] == $this->flowName ['nym_1'] || $resf ['flowname'] == $this->flowName ['nym_2']
+            || $resf ['flowname'] == $this->flowName ['nym_3'] || $resf ['flowname'] == $this->flowName ['nym_4'] || $resf ['flowname'] == $this->flowName ['nym_xs_0']
+            || $resf ['flowname'] == $this->flowName ['nym_xs_1'] || $resf ['flowname'] == $this->flowName ['nym_xs_2'] || $resf ['flowname'] == $this->flowName ['nym_xs_3']
+            || $resf ['flowname'] == $this->flowName ['nym_xs_4'] || $resf ['flowname'] == $this->flowName ['ymd'] || $resf ['flowname'] == $this->flowName ['nym_wy1']
+            || $resf ['flowname'] == $this->flowName ['nym_wy2'] || $resf ['flowname'] == $this->flowName ['nym_yqyb3']) { // 调薪
+
+            //2016-12-27 作出调薪规则修改 获取提交审批年月，算出生效年月
+            $createY = date("Y",strtotime($resf["createdt"])); //提交年份
+            $createM = date("n",strtotime($resf["createdt"])); //提交月份
+            $createJ = date("j",strtotime($resf["createdt"])); //几号提交
+            $effectY = $createY; //生效年份
+            $effectM = $createM; //生效月份
+            //2016-12-27作出调薪规则修改
+            //修改前：调薪生效月份，根据 结账周期 表的月份生效
+            //修改后：根据审批发起时间生效，上月21日 - 本月20日发起审批，本月生效，否则，次月生效
+
+            //大于20号，则次月生效
+            if($createJ > 25) {
+                if($effectM == 12) {
+                    $effectY++;
+                    $effectM = 1;
+                }else {
+                    $effectM++;
+                }
+            }
+
+            //2017-12-12作出调薪规则修改
+            //修改前：1、调薪申请日期在n月，审批日期在n+1月，n月会生效，n+1月没生效
+            //修改后：1、调薪日期在n月，审批日期在n+1月，n月和n+1月都要生效
+            // 		2、如果审批的时候发现调薪日期所在账期已关闭，则不执行调薪更新，并提醒审批人打回
+            //		3、打回的时候要通知发起人
+            if($fpyear > $effectY || ($fpyear == $effectY && $fpmon > $effectM)) {
+                throw new Exception(un_iconv("因对应申请周期的工资系统数据已关帐，本次申请已失效，请操作打回。"));
+            }else {
+
+                $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , s.amount
             		,p.gwam , p.jxam
                 from salary s
                     left join salary_pay p on (p.userid=s.userid and p.pyear='" . $effectY . "' and p.pmon='" . $effectM . "' )
                 where s.userid='" . $resf ['userid'] . "'";
-				$respay = $this->db->get_one ( $sql );
-				$salkey = $respay ['rand_key'];
-				$payid = $respay ['pid'];
-				$oldam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['amount'] ) );
-				$changeam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['changeam'] ) );
-				$salinfo ['amount'] = $changeam;
-				$payinfo ['baseam'] = $changeam;
-				$oldgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['gwam'] ) );
-				$chgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gwam'] ) );
-				$oldjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['jxam'] ) );
-				$chjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jxam'] ) );
-				$salinfo ['gwam'] = $chgwam;
-				$payinfo ['gwam'] = $chgwam;
-				$salinfo ['jxam'] = $chjxam;
-				$payinfo ['jxam'] = $chjxam;
-				$payinfo ['remark'] = $flowremark;
-					
-				// 如果是非年度调薪，薪资结构调整薪资要增加 项目绩效上限等。。
-				if ($resf ['flowname'] != $this->flowName ['ymd']) {
-					$salinfo ['jjam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jjam'] ) );
-					$salinfo ['gljtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gljtam'] ) );
-					$salinfo ['lszsam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['lszsam'] ) );
-					$salinfo ['txjt'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['txjt'] ) );
-					$salinfo ['qtjtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['qtjtam'] ) );
-					$salinfo ['expenCeiling'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['expenCeiling'] ) );
-				
-					// 插入调薪记录
-					$this->model_salaryAdjustHistory ( $salinfo, $resf ['userid'], $effectY, $effectM );
-				}
-					
-				// 调薪日期
-				if (! empty ( $resf ['changedt'] ) && $resf ['changedt'] != '0000-00-00' && ! empty ( $oldam )) {
-					$oldamt = $oldam + $oldgwam + $oldjxam;
-					$changeamt = $changeam + $chgwam + $chjxam;
-					$passNowAm = $this->salaryClass->salaryPass ( $oldamt, $changeamt, $resf ['changedt'] );
-					$payinfo ['basenowam'] = $passNowAm;
-				}
-				
-				//!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				//如果生效月为n月，但审批月是n+1月，则n+1月的月薪资结构和月薪资也要生效
-				$currentY = date("Y"); //当前年份
-				$currentM = date("n"); //当前月份
-				if($currentY > $effectY || ($currentY == $effectY && $currentM > $effectM)) {
-					$sqlCurrent = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , s.amount
+                $respay = $this->db->get_one ( $sql );
+                $salkey = $respay ['rand_key'];
+                $payid = $respay ['pid'];
+                $oldam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['amount'] ) );
+                $changeam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['changeam'] ) );
+                $salinfo ['amount'] = $changeam;
+                $payinfo ['baseam'] = $changeam;
+                $oldgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['gwam'] ) );
+                $chgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gwam'] ) );
+                $oldjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $respay ['jxam'] ) );
+                $chjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jxam'] ) );
+                $salinfo ['gwam'] = $chgwam;
+                $payinfo ['gwam'] = $chgwam;
+                $salinfo ['jxam'] = $chjxam;
+                $payinfo ['jxam'] = $chjxam;
+                $payinfo ['remark'] = $flowremark;
+
+                // 如果是非年度调薪，薪资结构调整薪资要增加 项目绩效上限等。。
+                if ($resf ['flowname'] != $this->flowName ['ymd']) {
+                    $salinfo ['jjam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jjam'] ) );
+                    $salinfo ['gljtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gljtam'] ) );
+                    $salinfo ['lszsam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['lszsam'] ) );
+                    $salinfo ['txjt'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['txjt'] ) );
+                    $salinfo ['qtjtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['qtjtam'] ) );
+                    $salinfo ['expenCeiling'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['expenCeiling'] ) );
+
+                    // 插入调薪记录
+                    $this->model_salaryAdjustHistory ( $salinfo, $resf ['userid'], $effectY, $effectM );
+                }
+
+                // 调薪日期
+                if (! empty ( $resf ['changedt'] ) && $resf ['changedt'] != '0000-00-00' && ! empty ( $oldam )) {
+                    $oldamt = $oldam + $oldgwam + $oldjxam;
+                    $changeamt = $changeam + $chgwam + $chjxam;
+                    $passNowAm = $this->salaryClass->salaryPass ( $oldamt, $changeamt, $resf ['changedt'] );
+                    $payinfo ['basenowam'] = $passNowAm;
+                }
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //如果生效月为n月，但审批月是n+1月，则n+1月的月薪资结构和月薪资也要生效
+                $currentY = date("Y"); //当前年份
+                $currentM = date("n"); //当前月份
+                if($currentY > $effectY || ($currentY == $effectY && $currentM > $effectM)) {
+                    $sqlCurrent = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , s.amount
 		            		,p.gwam , p.jxam
 		               		 from salary s
 		                    left join salary_pay p on (p.userid=s.userid and p.pyear='" . $currentY . "' and p.pmon='" . $currentM . "' )
 		                	where s.userid='" . $resf ['userid'] . "'";
-					$respayCurrent = $this->db->get_one ( $sqlCurrent );
-					$salkeyCurrent = $respayCurrent ['rand_key'];
-					$payidCurrent = $respayCurrent ['pid'];
-					$changeam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['changeam'] ) );
-					$salinfoCurrent ['amount'] = $changeam;
-					$payinfoCurrent ['baseam'] = $changeam;
-					$chgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gwam'] ) );
-					$chjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jxam'] ) );
-					$salinfoCurrent ['gwam'] = $chgwam;
-					$payinfoCurrent ['gwam'] = $chgwam;
-					$salinfoCurrent ['jxam'] = $chjxam;
-					$payinfoCurrent ['jxam'] = $chjxam;
-					$payinfoCurrent ['remark'] = $flowremark;
-						
-					// 如果是非年度调薪，薪资结构调整薪资要增加 项目绩效上限等。。
-					if ($resf ['flowname'] != $this->flowName ['ymd']) {
-						$salinfoCurrent ['jjam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jjam'] ) );
-						$salinfoCurrent ['gljtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gljtam'] ) );
-						$salinfoCurrent ['lszsam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['lszsam'] ) );
-						$salinfoCurrent ['txjt'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['txjt'] ) );
-						$salinfoCurrent ['qtjtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['qtjtam'] ) );
-						$salinfoCurrent ['expenCeiling'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['expenCeiling'] ) );
-					
-						// 修改对应的月薪资结构
-						$this->model_salary_history_update ($salinfoCurrent,array(), $currentY, $currentM , $resf ['userid']);
-					}
-					$sqlCurrent = "select s.lpj,s.payleaveflag
+                    $respayCurrent = $this->db->get_one ( $sqlCurrent );
+                    $salkeyCurrent = $respayCurrent ['rand_key'];
+                    $payidCurrent = $respayCurrent ['pid'];
+                    $changeam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['changeam'] ) );
+                    $salinfoCurrent ['amount'] = $changeam;
+                    $payinfoCurrent ['baseam'] = $changeam;
+                    $chgwam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gwam'] ) );
+                    $chjxam = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jxam'] ) );
+                    $salinfoCurrent ['gwam'] = $chgwam;
+                    $payinfoCurrent ['gwam'] = $chgwam;
+                    $salinfoCurrent ['jxam'] = $chjxam;
+                    $payinfoCurrent ['jxam'] = $chjxam;
+                    $payinfoCurrent ['remark'] = $flowremark;
+
+                    // 如果是非年度调薪，薪资结构调整薪资要增加 项目绩效上限等。。
+                    if ($resf ['flowname'] != $this->flowName ['ymd']) {
+                        $salinfoCurrent ['jjam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['jjam'] ) );
+                        $salinfoCurrent ['gljtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['gljtam'] ) );
+                        $salinfoCurrent ['lszsam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['lszsam'] ) );
+                        $salinfoCurrent ['txjt'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['txjt'] ) );
+                        $salinfoCurrent ['qtjtam'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['qtjtam'] ) );
+                        $salinfoCurrent ['expenCeiling'] = $this->salaryClass->cfv ( $this->salaryClass->decryptDeal ( $resf ['expenCeiling'] ) );
+
+                        // 修改对应的月薪资结构
+                        $this->model_salary_history_update ($salinfoCurrent,array(), $currentY, $currentM , $resf ['userid']);
+                    }
+                    $sqlCurrent = "select s.lpj,s.payleaveflag
                 			from  salary s
                			 where s.userid='" . $resf ['userid'] . "' ";
-					$payCurrent = $this->db->get_one ( $sqlCurrent );
-					
-					if ($payCurrent ['payleaveflag'] == 0) { // 没有离职结算，才需要更新工资信息 update by chengl 2014-08-12
-						if (! empty ( $payinfoCurrent ) && $payidCurrent) {
-							$this->model_pay_update ( $payidCurrent, $payinfoCurrent, $payinfoE );
-							$this->model_pay_stat ( $payidCurrent );
-						}
-					}
-				}
-				
-			}	
-		}
-        // 项目奖
-		elseif ($resf ['flowname'] == $this->flowName ['pro'] || $resf ['flowname'] == $this->flowName ['pro_3'] || $resf ['flowname'] == $this->flowName ['pro_5'] || $resf ['flowname'] == $this->flowName ['pro_1'] || $resf ['flowname'] == $this->flowName ['pro_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_3'] || $resf ['flowname'] == $this->flowName ['pro_xs_5'] || $resf ['flowname'] == $this->flowName ['pro_xs_1'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_12']) {
+                    $payCurrent = $this->db->get_one ( $sqlCurrent );
+
+                    if ($payCurrent ['payleaveflag'] == 0) { // 没有离职结算，才需要更新工资信息 update by chengl 2014-08-12
+                        if (! empty ( $payinfoCurrent ) && $payidCurrent) {
+                            $this->model_pay_update ( $payidCurrent, $payinfoCurrent, $payinfoE );
+                            $this->model_pay_stat ( $payidCurrent );
+                        }
+                    }
+                }
+
+            }
+        } elseif ($resf ['flowname'] == $this->flowName ['pro'] || $resf ['flowname'] == $this->flowName ['pro_3'] || $resf ['flowname'] == $this->flowName ['pro_5'] || $resf ['flowname'] == $this->flowName ['pro_1'] || $resf ['flowname'] == $this->flowName ['pro_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_3'] || $resf ['flowname'] == $this->flowName ['pro_xs_5'] || $resf ['flowname'] == $this->flowName ['pro_xs_1'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_0'] || $resf ['flowname'] == $this->flowName ['pro_xs_12']) { // 项目奖
             $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , p.proam
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22393,16 +22535,14 @@ EOD;
             $oldrmk = $respay ['remark'];
             $payinfo ['proam'] = $this->salaryClass->cfv ( $oldam + $newam );
             $payinfo ['remark'] = $flowremark;
-        }
-        // 项目奖明细
-        elseif ($resf ['flowname'] == $this->flowName ['prod']) {
+        } elseif ($resf ['flowname'] == $this->flowName ['prod']) { // 项目奖明细
             $sql = "select ccxs , khxs ,  jjam , gljtam ,  qtjtam  ,  jxzcam,lszsam  , userid   from salary_prod
                 where rand_key='" . $resf ['salarykey'] . "' ";
             $resprod = $this->db->get_one ( $sql );
             if (empty ( $resprod )) {
                 throw new Exception ( 'Salary flow data query failed' );
             }
-            
+
             $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , p.proam
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22415,25 +22555,23 @@ EOD;
             $newam = round ( $resprod ['jjam'] + $resprod ['gljtam'] + $resprod ['qtjtam'] + $resprod ['jxzcam'] + $resprod ['lszsam'], 2 );
             $oldrmk = $respay ['remark'];
             $payinfo = array (
-                    'ccxs' => $resprod ['ccxs'],
-                    'khxs' => $resprod ['khxs'],
-                    'remark' => $flowremark,
-                    
-                    'jjam' => $resprod ['jjam'],
-                    'gljtam' => $resprod ['gljtam'],
-                    'qtjtam' => $resprod ['qtjtam'],
-                    'jxzcam' => $resprod ['jxzcam'],
-                    'lszsam' => $resprod ['lszsam'],
-                    'proam' => $this->salaryClass->cfv ( $oldam + $newam ) 
+                'ccxs' => $resprod ['ccxs'],
+                'khxs' => $resprod ['khxs'],
+                'remark' => $flowremark,
+
+                'jjam' => $resprod ['jjam'],
+                'gljtam' => $resprod ['gljtam'],
+                'qtjtam' => $resprod ['qtjtam'],
+                'jxzcam' => $resprod ['jxzcam'],
+                'lszsam' => $resprod ['lszsam'],
+                'proam' => $this->salaryClass->cfv ( $oldam + $newam )
             );
             $payinfoE = array (
-                    0,
-                    1,
-                    2 
+                0,
+                1,
+                2
             );
-        }
-        // 奖金
-        elseif ($resf ['flowname'] == $this->flowName ['bos'] || $resf ['flowname'] == $this->flowName ['bos_3'] || $resf ['flowname'] == $this->flowName ['bos_5'] || $resf ['flowname'] == $this->flowName ['bos_1'] || $resf ['flowname'] == $this->flowName ['bos_0']) {
+        } elseif ($resf ['flowname'] == $this->flowName ['bos'] || $resf ['flowname'] == $this->flowName ['bos_3'] || $resf ['flowname'] == $this->flowName ['bos_5'] || $resf ['flowname'] == $this->flowName ['bos_1'] || $resf ['flowname'] == $this->flowName ['bos_0']) { // 奖金
             $sql = "select p.sperewam , p.spedelam , p.remark , p.id as pid , s.rand_key , p.bonusam
                 from salary_pay p
                     left join salary s on (p.userid=s.userid)
@@ -22446,131 +22584,130 @@ EOD;
             $newam = $this->salaryClass->decryptDeal ( $resf ['changeam'] );
             $payinfo ['bonusam'] = $this->salaryClass->cfv ( $oldam + $newam );
             $payinfo ['remark'] = $flowremark;
-        }
-        // 绩效审批
-        elseif ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
-			
-			$sql = "select userid,pyear,pmon from salary_pro where rand_key = '" . $resf ['salarykey'] . "'";
-			$rs = $this->db->get_one ( $sql );
-			
-			$seapy = $rs ['pyear'];
-			$seapm = $rs ['pmon'];
-			$userid = $rs ['userid'];
-			
-			$sql = "select pay.id as pid,sub.jjam,sub.gljtam,sub.lszsam,sub.qtjtam,sub.txjt,sub.expenCeiling,pay.jxzcam,pay.proam,pro.userid,pro.pyear,pro.pmon,pro.inWorkRateAvg,pro.monthScoreAvg from salary_pro pro 
+        } elseif ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
+
+            $sql = "select userid,pyear,pmon from salary_pro where rand_key = '" . $resf ['salarykey'] . "'";
+            $rs = $this->db->get_one ( $sql );
+
+            $seapy = $rs ['pyear'];
+            $seapm = $rs ['pmon'];
+            $userid = $rs ['userid'];
+
+            $sql = "select pay.id as pid,sub.jjam,sub.gljtam,sub.lszsam,sub.qtjtam,sub.txjt,sub.expenCeiling,pay.jxzcam,pay.proam,pro.userid,pro.pyear,pro.pmon,pro.inWorkRateAvg,pro.monthScoreAvg from salary_pro pro 
 					inner join salary_pro_sub sub on pro.id = sub.pid 
     				INNER join salary_pay pay on (pro.rand_key = '" . $resf ['salarykey'] . "' and pro.userId = pay.UserId and pay.PYear = '" . $seapy . "' and pay.PMon = '" . $seapm . "');";
-			
-			$query = $this->db->query_exc ( $sql );
-			
-			$respay = array (
-					'jjam' => 0.00,
-					'gljtam' => 0.00,
-					'lszsam' => 0.00,
-					'txjt' => 0.00,
-					'qtjtam' => 0.00,
-					'jxzcam' => 0.00,
-					'proam' => 0.00,
-					'expenCeiling' => 0.00 ,
-					'inWorkRateAvg' => 0.000,
-					'monthScoreAvg' => 0.000
-			);
-			
-			while ( $row = $this->db->fetch_array ( $query ) ) {
-				$payid = $row ['pid'];
-				
-				// 累加变动工资
-				$respay ['inWorkRateAvg'] = $row ['inWorkRateAvg'];
-				$respay ['monthScoreAvg'] = $row ['monthScoreAvg'];
-				$respay ['jjam'] = $this->salaryClass->decryptDeal ( $row ['jjam'] ) + $respay ['jjam'];
-				$respay ['gljtam'] = $this->salaryClass->decryptDeal ( $row ['gljtam'] ) + $respay ['gljtam'];
-				$respay ['lszsam'] = $this->salaryClass->decryptDeal ( $row ['lszsam'] ) + $respay ['lszsam'];
-				$respay ['qtjtam'] = $this->salaryClass->decryptDeal ( $row ['qtjtam'] ) + $respay ['qtjtam'];
-				$respay ['txjt'] = $this->salaryClass->decryptDeal ( $row ['txjt'] ) + $respay ['txjt'];
-				$respay ['expenCeiling'] = $this->salaryClass->decryptDeal ( $row ['expenCeiling'] ) + $respay ['expenCeiling'];
-				
-				$respay['proam'] = $this->salaryClass->decryptDeal($row['proam']);
-				$respay ['jxzcam'] = $this->salaryClass->decryptDeal ( $row ['jxzcam'] );
-			}
-			
-			$payinfo = array (
-					'ccxs' => $respay ['inWorkRateAvg'],
-					'khxs' => $respay ['monthScoreAvg'],
-					'jjam' => $respay ['jjam'],
-					'gljtam' => $respay ['gljtam'],
-					'lszsam' => $respay ['lszsam'],
-					'qtjtam' => $respay ['qtjtam'],
-					'txjt' => $respay ['txjt'],
-					'expenCeiling' => $respay ['expenCeiling'],
-					'proam' => 0.00
-			);
 
-			$payinfoE = array (
-					0,
-					1
-			);
-			
-			$oldProAm = $respay['proam'];
-			
-			// 计算项目奖 项目奖 ＝ 奖金+管理津贴+其他津贴+绩效奖惩+临时住宿补贴
-			$proAm = round($respay['jjam']+$respay['gljtam']+$respay['qtjtam']+$respay['jxzcam']+$respay['lszsam'] ,2);
-			
-			$payinfo['proam'] = $proAm+$oldProAm;
-			
-			// 变动工资
-			//$bdam = round ( $respay ['jjam'] + $respay ['gljtam'] + $respay ['lszsam'] + $respay ['qtjtam'] + $respay ['txjt'] );
-			
-			// 反写审批状态
-			$sql = "update salary_pro set flaflag='2' where rand_key='" . $resf ['salarykey'] . "' ";
-			$this->db->query_exc ( $sql );
-			
-			// 查询当月网优薪酬是否全部审批完，审批完之后撤销上月预提
-			$sql = "select s2.projectcode from salary_pro p2 inner join salary_pro_sub s2 on p2.id = s2.pid where p2.rand_key = '".$resf ['salarykey']."'";
-			$query = $this->db->query_exc ( $sql );
-			while ( $row = $this->db->fetch_array ( $query ) ) {
-				$sql = "select count(1) as 'sum' from salary_pro p inner join salary_pro_sub s on p.id = s.pid where s.projectCode = '".$row['projectcode']."' and p.pyear = $seapy and p.pmon = $seapm and IFNULL(p.flaflag,0) != 2;";
-				$sum = $this->db->get_one ( $sql );
-				if($sum ['sum'] == '0') {
-					$pyearp = $seapy;
-					$pmonp = $seapm;
-					if($pmonp == 1) {
-						$pmonp = 12;
-						$pyearp--;
-					} else {
-						$pmonp--;
-					}
-					$esmfieldrecordModel = new model_engineering_records_esmfieldrecord();
-					$esmfieldrecordModel->businessFeeCancel_d("subsidyProvision",$pyearp,$pmonp,array(
-							'projectCode' => $row['projectcode']
-					));
-				}
-			}
-		}
+            $query = $this->db->query_exc ( $sql );
+
+            $respay = array (
+                'jjam' => 0.00,
+                'gljtam' => 0.00,
+                'lszsam' => 0.00,
+                'txjt' => 0.00,
+                'qtjtam' => 0.00,
+                'jxzcam' => 0.00,
+                'proam' => 0.00,
+                'expenCeiling' => 0.00 ,
+                'inWorkRateAvg' => 0.000,
+                'monthScoreAvg' => 0.000
+            );
+
+            while ( $row = $this->db->fetch_array ( $query ) ) {
+                $payid = $row ['pid'];
+
+                // 累加变动工资
+                $respay ['inWorkRateAvg'] = $row ['inWorkRateAvg'];
+                $respay ['monthScoreAvg'] = $row ['monthScoreAvg'];
+                $respay ['jjam'] = $this->salaryClass->decryptDeal ( $row ['jjam'] ) + $respay ['jjam'];
+                $respay ['gljtam'] = $this->salaryClass->decryptDeal ( $row ['gljtam'] ) + $respay ['gljtam'];
+                $respay ['lszsam'] = $this->salaryClass->decryptDeal ( $row ['lszsam'] ) + $respay ['lszsam'];
+                $respay ['qtjtam'] = $this->salaryClass->decryptDeal ( $row ['qtjtam'] ) + $respay ['qtjtam'];
+                $respay ['txjt'] = $this->salaryClass->decryptDeal ( $row ['txjt'] ) + $respay ['txjt'];
+                $respay ['expenCeiling'] = $this->salaryClass->decryptDeal ( $row ['expenCeiling'] ) + $respay ['expenCeiling'];
+
+                $respay['proam'] = $this->salaryClass->decryptDeal($row['proam']);
+                $respay ['jxzcam'] = $this->salaryClass->decryptDeal ( $row ['jxzcam'] );
+            }
+
+            $payinfo = array (
+                'ccxs' => $respay ['inWorkRateAvg'],
+                'khxs' => $respay ['monthScoreAvg'],
+                'jjam' => $respay ['jjam'],
+                'gljtam' => $respay ['gljtam'],
+                'lszsam' => $respay ['lszsam'],
+                'qtjtam' => $respay ['qtjtam'],
+                'txjt' => $respay ['txjt'],
+                'expenCeiling' => $respay ['expenCeiling'],
+                'proam' => 0.00
+            );
+
+            $payinfoE = array (
+                0,
+                1
+            );
+
+            $oldProAm = $respay['proam'];
+
+            // 计算项目奖 项目奖 ＝ 奖金+管理津贴+其他津贴+绩效奖惩+临时住宿补贴
+            $proAm = round($respay['jjam']+$respay['gljtam']+$respay['qtjtam']+$respay['jxzcam']+$respay['lszsam'] ,2);
+
+            $payinfo['proam'] = $proAm+$oldProAm;
+
+            // 变动工资
+            //$bdam = round ( $respay ['jjam'] + $respay ['gljtam'] + $respay ['lszsam'] + $respay ['qtjtam'] + $respay ['txjt'] );
+
+            // 反写审批状态
+            $sql = "update salary_pro set flaflag='2' where rand_key='" . $resf ['salarykey'] . "' ";
+            $this->db->query_exc ( $sql );
+
+            // 查询当月网优薪酬是否全部审批完，审批完之后撤销上月预提
+            $sql = "select s2.projectcode from salary_pro p2 inner join salary_pro_sub s2 on p2.id = s2.pid where p2.rand_key = '".$resf ['salarykey']."'";
+            $query = $this->db->query_exc ( $sql );
+            while ( $row = $this->db->fetch_array ( $query ) ) {
+                $sql = "select count(1) as 'sum' from salary_pro p inner join salary_pro_sub s on p.id = s.pid where s.projectCode = '".$row['projectcode']."' and p.pyear = $seapy and p.pmon = $seapm and IFNULL(p.flaflag,0) != 2;";
+                $sum = $this->db->get_one ( $sql );
+                if($sum ['sum'] == '0') {
+                    $pyearp = $seapy;
+                    $pmonp = $seapm;
+                    if($pmonp == 1) {
+                        $pmonp = 12;
+                        $pyearp--;
+                    } else {
+                        $pmonp--;
+                    }
+                    $esmfieldrecordModel = new model_engineering_records_esmfieldrecord();
+                    $esmfieldrecordModel->businessFeeCancel_d("subsidyProvision",$pyearp,$pmonp,array(
+                        'projectCode' => $row['projectcode']
+                    ));
+                }
+            }
+
+        }
         $sql = "select s.lpj,s.payleaveflag 
                 from  salary s
                 where s.userid='" . $resf ['userid'] . "' ";
         $pay = $this->db->get_one ( $sql );
         $salinfo ['lpj'] = $pay ['lpj'];
-        
+
         if (! empty ( $salinfo ) && $salkey) {
             $this->model_salary_update ( $salkey, $salinfo );
         }
-		// 绩效总表审批 流程结束后需要 走报销系统
-		if ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
-			$sql = "select s.item,s.dealuser,f.createdt,s.dealdt,s.remark from salary_flow_step s inner join salary_flow f on f.id = s.SalaryFid where f.id = '$flowkey' order by s.id asc limit 0,1;";
-			$rowDate = $this->db->get_one ( $sql );
-			$flowData = array();
-			if($rowDate) {
-				$flowData[] = array(
-						'appName'=>$rowDate['item'],
-						'appUser'=>$rowDate['dealuser'],
-						'createTime'=>$rowDate['createdt'],
-						'appTime'=>$rowDate['dealdt'],
-						'content'=>$rowDate['remark']
-				);
-			}
-			$this->model_proToClaimExpenses ( $userid, $seapy, $seapm, $flowData );
-		}
+        // 绩效总表审批 流程结束后需要 走报销系统
+        if ($resf ['flowname'] == $this->flowName ['salarypro'] || $resf ['flowname'] == $this->flowName ['salarypro_1'] || $resf ['flowname'] == $this->flowName ['salarypro_2'] || $resf ['flowname'] == $this->flowName ['salarypro_3'] || $resf ['flowname'] == $this->flowName ['salarypro_4'] || $resf ['flowname'] == $this->flowName ['salarypro_5'] || $resf ['flowname'] == $this->flowName ['salarypro_6'] || $resf ['flowname'] == $this->flowName ['salarypro_7'] || $resf ['flowname'] == $this->flowName ['salarypro_8']) {
+            $sql = "select s.item,s.dealuser,f.createdt,s.dealdt,s.remark from salary_flow_step s inner join salary_flow f on f.id = s.SalaryFid where f.id = '$flowkey' order by s.id asc limit 0,1;";
+            $rowDate = $this->db->get_one ( $sql );
+            $flowData = array();
+            if($rowDate) {
+                $flowData[] = array(
+                    'appName'=>$rowDate['item'],
+                    'appUser'=>$rowDate['dealuser'],
+                    'createTime'=>$rowDate['createdt'],
+                    'appTime'=>$rowDate['dealdt'],
+                    'content'=>$rowDate['remark']
+                );
+            }
+            $this->model_proToClaimExpenses ( $userid, $seapy, $seapm, $flowData );
+        }
         if ($pay ['payleaveflag'] == 0) { // 没有离职结算，才需要更新工资信息 update by chengl 2014-08-12
             if (! empty ( $payinfo ) && $payid) {
                 $this->model_pay_update ( $payid, $payinfo, $payinfoE );
@@ -22610,7 +22747,8 @@ EOD;
             }
         }
     }
-	
+
+
     function model_flow_pass_temp($flowkey) {
 		
 		$salinfo = array ();
@@ -23766,17 +23904,17 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
 	}
 	
 	function updateSalaryPay() {
-        ini_set('max_execution_time',0);
-        $sql = " select p.id from salary_pay p left join salary s on p.userid=s.userid 
-                where p.pyear=2018 and p.pmon=09 and p.usercom !='jk' and p.usercom != 'xs' and s.payleaveflag =0 ";
-        $query = $this->db->query($sql);
-        $i = 0;
-        while($row=$this->db->fetch_array($query)){
-            $this->model_pay_stat($row['id']);
-            $row++;
-            $i++;
-        }
-        //var_dump($i);
+//        ini_set('max_execution_time',0);
+//        $sql = " select p.id from salary_pay p left join salary s on p.userid=s.userid
+//                where p.pyear=2018 and p.pmon=09 and p.usercom !='jk' and p.usercom != 'xs' and s.payleaveflag =0 ";
+//        $query = $this->db->query($sql);
+//        $i = 0;
+//        while($row=$this->db->fetch_array($query)){
+//            $this->model_pay_stat($row['id']);
+//            $row++;
+//            $i++;
+//        }
+        $this->model_pay_stat(175456);
         die('ok');
     }
 	
@@ -23792,11 +23930,11 @@ INNER JOIN salary_pro_sub sub on pro.id =  sub.pid inner join salary s on s.user
 	}
 	
     function model_encryptDeal() {
-        echo $this->salaryClass->encryptDeal ('325956425033' );
+        echo $this->salaryClass->encryptDeal ('1200' );
         die ();
     }
     function model_decryptDeal() {
-        echo $this->salaryClass->decryptDeal('yearIqrfLjgO/6MnUn6hyw==');
+        echo $this->salaryClass->decryptDeal('3N+U8vP4e8leGte2BmhFfg==');
         die ();
     }
 	function getK() {
