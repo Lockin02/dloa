@@ -340,7 +340,8 @@ class model_loan_loan_loan extends model_base {
         if($type == "Debtor"){
             $typeAs = "debtorName";
             $typeCode = "debtorName";
-        }else if($type == "deptName"){
+        }
+        else if($type == "deptName"){
             $typeAs = "debtorDeptName";
             $typeCode = "debtorDeptName";
             $type = "deptCode";
@@ -412,7 +413,8 @@ class model_loan_loan_loan extends model_base {
                 }
             }
 
-        }else{
+        }
+        else{
             $typeAs = ($type == "divisionName")? "if(divisionName is null,'',divisionName) " : $type;
             $typeCode = "divisionName";
         }
@@ -449,7 +451,8 @@ class model_loan_loan_loan extends model_base {
             }
             $condition .= " and c.belongcom ='".$param['company']."'";
             $extParam .= "|companyName:{$param['company']}";
-        }else if(isset($param['companyId']) && !empty($param['companyId'])){
+        }
+        else if(isset($param['companyId']) && !empty($param['companyId'])){
             $condition .= " and c.belongcomcode ='".$param['companyId']."'";
             $extParam .= "|companyId:{$param['companyId']}";
         }
@@ -471,7 +474,7 @@ class model_loan_loan_loan extends model_base {
         //数据查询sql
         $type = ($type == "divisionName")? 'c.type' : $type;
         $type = ($type == "Debtor")? 'c.debtorName' : $type;
-          $sql = "SELECT type,'{$typeCode}' as typeCode,'{$extParam}' as extParam,group_concat(c.ID) as ids,count(c.ID) as idsNum,c.userNo,c.deptCode,".
+        $sql = "SELECT type,'{$typeCode}' as typeCode,'{$extParam}' as extParam,group_concat(c.ID) as ids,count(c.ID) as idsNum,c.userNo,c.deptCode,".
             "sum(IF((`Status`='已支付' or `Status`='还款中' or `Status`='已还款'), Amount, 0)) AS amount,".
             "sum(IF((`Status`='已支付' or `Status`='还款中' or `Status`='已还款'), Amount, 0))-sum(IF(`Status`='已还款', Amount, 0)) as unamount,".
             "sum(IF((`Status`='已支付' or `Status`='还款中') and date_format(PrepaymentDate, '%Y%m%d') < date_format(NOW(), '%Y%m%d'), Amount, 0)) AS beamount,".

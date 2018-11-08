@@ -86,7 +86,7 @@ FROM
 LEFT JOIN oa_hr_personnel p on l.Debtor=p.userAccount  
 WHERE 1=1 $condition
 ORDER BY l.debtorName DESC)c
-ORDER BY c.debtorDeptName DESC $extOrderStr
+ORDER BY c.debtorDeptName DESC $extOrderStr limit 100
 
 QuerySQL;
 
