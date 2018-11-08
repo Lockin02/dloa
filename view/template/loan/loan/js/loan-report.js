@@ -89,7 +89,7 @@ $(function() {
             }
 		}, {
             name : 'unamount',
-            display : '剩余借款金额',
+            display : '借款余额',
             sortable : true,
             process: function (v, row) {
                 if (v == '') {
@@ -100,7 +100,7 @@ $(function() {
             }
         }, {
             name : 'beamount',
-            display : '逾期未归还金额',
+            display : '逾期借款余额',
             sortable : true,
             process: function (v, row) {
                 if (v == '') {
@@ -111,7 +111,7 @@ $(function() {
             }
         }, {
             name : 'deptamount',
-            display : '部门借款金额',
+            display : '部门借款余额',
             sortable : true,
             process: function (v, row) {
                 if (v == '') {
@@ -122,7 +122,7 @@ $(function() {
             }
         }, {
             name : 'proamount',
-            display : '项目借款金额',
+            display : '项目借款余额',
             sortable : true,
             process: function (v, row) {
                 if (v == '') {

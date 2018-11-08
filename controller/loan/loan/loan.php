@@ -838,7 +838,7 @@ class controller_loan_loan_loan extends controller_base_action {
     //借款报表-json
     function c_reportPageJson() {
         $service = $this->service;
-        $rows = $service->getReportRow($_REQUEST);
+        $rows = $service->getReportRow_1($_REQUEST); //PMS866
 
         //统计金额
         $rows = $service->getRowsallMoney_d($rows);

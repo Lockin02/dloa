@@ -483,7 +483,6 @@ class model_loan_loan_loan extends model_base {
             " FROM".
             " (".$rowSql.")c".
             " GROUP BY ". $type . " order by type " ;
-
         $rowCount = $this->_db->getArray($sql);
         $this->count = (count($rowCount[0]) > 0)? count($rowCount) : 0;
         $row = $this->_db->getArray($sql.$limit);
@@ -499,6 +498,171 @@ class model_loan_loan_loan extends model_base {
         $_SESSION['loanReportArr'] = $row;
         return $row;
     }
+
+    public function getReportRow_1($param,$tip=0){
+        $type = isset($param['searchType'])?$param['searchType']:"Debtor";
+        if($type == "Debtor"){
+            $typeAs = "debtorName";
+            $typeCode = "debtorName";
+        }
+        else if($type == "deptName"){
+            $typeAs = "debtorDeptName";
+            $typeCode = "debtorDeptName";
+            $type = "deptCode";
+            if($param['searchVal'] != ''){
+                //根据部门名称获取id及子部门id串
+                $searchVal = util_jsonUtil::iconvUTF2GB($param['searchVal']);
+                $chkSql = "select DEPT_NAME,DEPT_ID,pid from department where DEPT_NAME LIKE CONCAT('%','{$searchVal}','%');";
+                $isMain = $this->_db->getArray($chkSql);
+                $leaveIdsArr = $parentIdsArr = array();
+                if($isMain){
+                    foreach ($isMain as $mainDeptK=>$mainDeptV){
+                        $deptId = $mainDeptV['DEPT_ID'];
+                        $allChilSql = "select DEPT_ID as deptId from department where pdeptid = {$deptId};";
+                        $allChil = $this->_db->getArray($allChilSql);
+                        $allChilIds = '';
+
+                        $parentIdsArr[] = $deptId;
+
+                        if($allChil && !empty($allChil)){
+                            foreach ($allChil as $k => $child){
+                                $relativeIds = $this->lonaRept_deptIdStr($child['deptId']);
+                                $allChilIds .= ($k == 0)? $relativeIds : ",".$relativeIds;
+                            }
+
+                            $parentIdsArr[] = $allChilIds;
+                        }
+                    }
+
+                    $parentIdsArr = implode(",",$parentIdsArr);
+                    $leaveIdsArr = implode(",",$leaveIdsArr);
+                    $deptIdStr = $parentIdsArr;
+                    $deptIdStr .= ($parentIdsArr!= '' && $leaveIdsArr != '')? ",".$leaveIdsArr : $leaveIdsArr;
+                }else{
+                    $deptIdStr = 'null';
+                }
+
+                //$deptId = util_jsonUtil::iconvUTF2GB($param['searchVal']);
+                //$chkSql = "select * from department where pdeptid = {$deptId} and DEPT_ID = {$deptId};";
+//                if(count($isMain[0]) > 0){
+//                    $allChilSql = "select DEPT_ID as deptId from department where pdeptid = {$deptId};";
+//                    $allChil = $this->_db->getArray($allChilSql);
+//                    $deptIdStr = "";
+//                    foreach ($allChil as $k => $child){
+//                        $relativeIds = $this->lonaRept_deptIdStr($child['deptId']);
+//                        $deptIdStr .= ($k == 0)? $relativeIds : ",".$relativeIds;
+//                    }
+//                }
+//                else{
+//                    $deptIdStr = $this->lonaRept_deptIdStr($deptId);
+//                }
+            }else{// 所有一级部门
+                $deptDao = new model_deptuser_dept_dept();
+                $deptRow = $deptDao->getCompanyList_d();
+                if(count($deptRow) > 0){
+                    $comCode = $deptName = '';
+                    foreach ($deptRow as $k => $dept){
+                        if($dept['comCode'] != ''){
+                            $comCode .= ($k == 0)? "'{$dept['comCode']}'" : ",'{$dept['comCode']}'";
+                            $deptName .= ($k == 0)? "'{$dept['DEPT_NAME']}'" : ",'{$dept['DEPT_NAME']}'";
+                        }
+                    }
+                }
+                $sql = "select GROUP_CONCAT(DEPT_ID) AS ids from department where comCode IN ({$comCode}) AND DEPT_NAME IN ({$deptName}) AND Dflag = 0 AND DelFlag = '0';";
+                $deptArr = $this->_db->getArray($sql);
+                if(isset($deptArr[0]) && isset($deptArr[0]['ids'])){
+                    $deptIdStr = $deptArr[0]['ids'];
+                }else{
+                    $deptIdStr = "";
+                }
+            }
+
+        }
+        else{
+            $typeAs = ($type == "divisionName")? "if(divisionName is null,'',divisionName) " : $type;
+            $typeCode = "divisionName";
+        }
+
+        if(isset($param['searchVal']) && !empty($param['searchVal'])){
+            unset($param['company']);
+        }
+
+        $extParam = '';
+        //拼接查询条件
+        $begin = isset($param['payBegin'])?$param['payBegin']:'';
+        $end = isset($param['payEnd']) && !empty($param['payEnd'])?$param['payEnd']:date('Y-m-d');
+        $end = date('Y-m-d',strtotime('+1 day',strtotime($end)));
+        $extParam .= "payBegin:{$begin}|payEnd:{$end}";
+        if(empty($param['payEnd'])){
+            $condition = " and 1=1 ";
+        }else{
+            $condition = " and (PayDT between '".$begin."' and '".$end."') ";
+        }
+        if(isset($param['searchVal']) && !empty($param['searchVal'])){
+            if($tip==0){
+                $param['searchVal'] = util_jsonUtil::iconvUTF2GB($param['searchVal']);
+            }
+            if($param['searchType'] == "deptName"){
+                $condition .= " and debtorDeptCode in (".$deptIdStr.")";
+            }else{
+                // $condition .= " and ".$typeAs."='".$param['searchVal']."'";
+                $condition .= " and ".$typeAs." like concat('%','".$param['searchVal']."','%')";
+            }
+        }
+        if(isset($param['company']) && !empty($param['company'])){
+            if($tip==0){
+                $param['company'] = util_jsonUtil::iconvUTF2GB($param['company']);
+            }
+            $condition .= " and c.belongcom ='".$param['company']."'";
+            $extParam .= "|companyName:{$param['company']}";
+        }
+        else if(isset($param['companyId']) && !empty($param['companyId'])){
+            $condition .= " and c.belongcomcode ='".$param['companyId']."'";
+            $extParam .= "|companyId:{$param['companyId']}";
+        }
+
+        $this->start = ($param['page'] == 1) ? 0 : ($param['page'] - 1) * $param['pageSize']; //分页开始数
+        $this->page  = $param['page'];
+        $this->pageSize = $param['pageSize'];
+
+        if($tip==0){
+            $limit = " limit " . $this->start . "," . $this->pageSize;
+        }else{
+            $limit = " ";
+        }
+        //数据源sql
+        $rowSql = "select ".$typeAs." as type,t.* from ".
+            "(select c.ID,c.Debtor,if((c.debtorName is null or c.debtorName = ''), p.userName,c.debtorName) as debtorName,c.Status,c.Amount,c.XmFlag,c.PrepaymentDate,c.debtorDeptName,c.debtorDeptName as deptName,c.debtorDeptCode as deptCode,p.userNo,p.companyName,p.companyId,p.divisionName,p.divisionCode from loan_list c left join oa_hr_personnel p on c.Debtor=p.userAccount ".
+            " where c.Debtor <> '' AND c.isTemp = 0 AND (Status='已支付' or Status='还款中' or Status='已还款')  ".$condition ."  order by debtorDeptCode)t";
+
+        //数据查询sql
+        $type = ($type == "divisionName")? 'c.type' : $type;
+        $type = ($type == "Debtor")? 'c.debtorName' : $type;
+        $sql = "SELECT type,'{$typeCode}' as typeCode,'{$extParam}' as extParam,group_concat(c.ID) as ids,count(c.ID) as idsNum,c.userNo,c.deptCode,".
+            "sum(IF((`Status`='已支付' or `Status`='还款中' or `Status`='已还款'), Amount, 0)) AS amount,".
+            "sum(IF((XmFlag = 0 or XmFlag = 1) and `Status`!='已还款', Amount, 0)) unamount,".
+            "sum(IF((`Status`='已支付' or `Status`='还款中') and date_format(PrepaymentDate, '%Y%m%d') < date_format(NOW(), '%Y%m%d'), Amount, 0)) AS beamount,".
+            "sum(IF(XmFlag = 0 and `Status`!='已还款', Amount, 0)) AS deptamount,".
+            "sum(IF(XmFlag = 1 and `Status`!='已还款', Amount, 0)) AS proamount".
+            " FROM".
+            " (".$rowSql.")c".
+            " GROUP BY ". $type . " order by type " ;
+        $rowCount = $this->_db->getArray($sql);
+        $this->count = (count($rowCount[0]) > 0)? count($rowCount) : 0;
+        $row = $this->_db->getArray($sql.$limit);
+        foreach ($row as $k => $v){
+            if($v['type'] == ''){
+                $row[$k]['userNo']  = '';
+            }
+            $row[$k]['ids'] = base64_encode($v['ids']);
+            $row[$k]['idsNum'] = $v['idsNum'];
+            $row[$k]['sltIdsSql'] = "SELECT * from (SELECT type,'{$typeCode}' as typeCode,'{$extParam}' as extParam,group_concat(c.ID) as ids FROM (".$rowSql.")c"." GROUP BY ". $type . " order by type)t where t.type = '{$v['type']}' ";
+            $row[$k]['sltIdsSqlForDept'] = "select group_concat(c.ID) as ids from ({$rowSql})c where c.deptCode = {$v['deptCode']}" ;
+        }
+        $_SESSION['loanReportArr'] = $row;
+        return $row;
+    }
+
 
     //根据部门名称获取部门id ，重复的以逗号隔开
     public function lonaRept_deptIdStr($deptId)

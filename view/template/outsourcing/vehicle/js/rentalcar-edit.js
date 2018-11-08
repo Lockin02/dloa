@@ -201,7 +201,7 @@ $(document).ready(function() {
 		}, {
             display : '附件上传',
             name : 'file',
-            type : 'file',
+            type : 'web_file',
             serviceType:'rentalcar_supp'
         }, {
             display : 'id',
@@ -218,6 +218,11 @@ $(document).ready(function() {
 });
 
 //直接提交
-function toSubmit(){
-	document.getElementById('form1').action = "?model=outsourcing_vehicle_rentalcar&action=edit&actType=audit";
+function toSubmit(act) {
+	if(checkData(act)){
+		if(act == 'audit'){
+			$("#form1").attr("action","?model=outsourcing_vehicle_rentalcar&action=edit&actType=audit");
+		}
+		$("#form1").submit();
+	}
 }

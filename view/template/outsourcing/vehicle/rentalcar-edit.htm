@@ -9,6 +9,7 @@
     <script type="text/javascript" src="swfupload/fileprogress.js"> </script>
     <script type="text/javascript" src="swfupload/handlers.js"> </script>
     <link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+
 	<link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
 	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="js/jquery/combo/business/yxcombogrid-esmproject.js"></script>
@@ -17,9 +18,33 @@
     <script type="text/javascript" src="js/common/dateUtil.js"></script>
 	<script type="text/javascript" src="{#jsPath#}/rentalcar-common.js"></script>
 	<script type="text/javascript" src="{#jsPath#}/rentalcar-edit.js"></script>
+
+	<!--新附件上传开始-->
+	<script type="text/javascript" src="webuploader/jquery.js"></script>
+	<script type="text/javascript">
+        $j = jQuery.noConflict();
+	</script>
+	<link rel="stylesheet" type="text/css" href="webuploader/css/webuploader.css"/>
+	<script type="text/javascript" src="webuploader/dist/webuploader.js"></script>
+	<script type="text/javascript" src="webuploader/script.js"></script>
+	<script type="text/javascript">
+        //新上传的参数设置
+        var successNum = 0; //成功上传附件
+        var uploadConfig = {};
+        uploadConfig.isSyn2Server = true;
+        uploadConfig.setting = {};
+        uploadConfig.setting.delete_url = "index1.php?model=file_uploadfile_management&action=ajaxdelete"; //删除url链接
+        uploadConfig.setting.fileNamePre = '111'; //自定义字段名
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+			calBudgetVal();
+		});
+	</script>
 </head>
 <body>
-	<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=edit" onsubmit="return checkData();">
+	<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=edit">
 		<table class="form_main_table">
 			<tr>
 				<td colspan="6">
@@ -70,7 +95,19 @@
 						</legend>
 						<table width="100%" id="projectinfo" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;">
 							<tr>
-								<td class="form_text_left_three"><span style="color:blue;">项目编号</span></td>
+								<td class="form_text_left_three">租车总预算</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="rentalcarAllbudgetShow" readonly/>
+									<input type="hidden" id="rentalcarAllbudget" name="rentalcar[rentalcarAllbudget]" value="{rentalcarAllbudget}"/>
+								</td>
+								<td class="form_text_left_three">剩余可用预算</td>
+								<td class="form_text_right_three" colspan="3">
+									<input type="text" class="readOnlyTxtNormal" id="rentalcarRestbudgetShow" readonly/>
+									<input type="hidden" id="rentalcarRestbudget" name="rentalcar[rentalcarRestbudget]" value="{rentalcarRestbudget}"/>
+								</td>
+							</tr>
+							<tr class="testtib" {projectInfoTrStyle}>
+								<td class="form_text_left_three"><span {projectCodeStyle}>项目编号</span></td>
 								<td class="form_text_right_three">
 									<input type="text" class="readOnlyTxtNormal" id="projectCode" readonly name="rentalcar[projectCode]" value="{projectCode}"/>
 									<input type="hidden" class="txt" id="projectId" name="rentalcar[projectId]" value="{projectId}"/>
@@ -182,26 +219,27 @@
 									</select>
 									<input type="hidden" class="txt" id="isPayDriver" name="rentalcar[isPayDriver]" value="{isPayDriver}"/>
 								</td>
-								<tr>
-									<td class="form_text_left_three">是否申请油卡</td>
-									<td class="form_text_right_three">
-										<input type="hidden" id="isApplyOilCardVal" value="{isApplyOilCard}"/>
-										<select class="select" id="isApplyOilCard" name="rentalcar[isApplyOilCard]">
-											<option value="1" title="是">是</option>
-											<option value="0" title="否">否</option>
-										</select>
-									</td>
-                                <td class="form_text_left_three">预计每月用车天数</td>
-                                <td class="form_text_right_three">
-                                    <select class="select" id="expectUseDayCode" name="rentalcar[expectUseDayCode]">
-                                        {expectUseDayCode}
-                                    </select>
-                                    <input type="hidden" id="expectUseDay" name="rentalcar[expectUseDay]" value="{expectUseDay}"/>
-                                </td>
-                            <td class="form_text_left_three">用车数量</td>
-                            <td class="form_text_right_three">
-                                <input type="text" class="readOnlyTxtNormal" readonly id="useCarAmount" name="rentalcar[useCarAmount]" value="{useCarAmount}"/>
-                            </td>
+							</tr>
+							<tr>
+								<td class="form_text_left_three">是否申请油卡</td>
+								<td class="form_text_right_three">
+									<input type="hidden" id="isApplyOilCardVal" value="{isApplyOilCard}"/>
+									<select class="select" id="isApplyOilCard" name="rentalcar[isApplyOilCard]">
+										<option value="1" title="是">是</option>
+										<option value="0" title="否">否</option>
+									</select>
+								</td>
+								<td class="form_text_left_three">预计每月用车天数</td>
+								<td class="form_text_right_three">
+									<select class="select" id="expectUseDayCode" name="rentalcar[expectUseDayCode]">
+										{expectUseDayCode}
+									</select>
+									<input type="hidden" id="expectUseDay" name="rentalcar[expectUseDay]" value="{expectUseDay}"/>
+								</td>
+								<td class="form_text_left_three">用车数量</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" readonly id="useCarAmount" name="rentalcar[useCarAmount]" value="{useCarAmount}"/>
+								</td>
                             <!--
 									<td class="form_text_left_three">总费用</td>
 									<td class="form_text_right_three">
@@ -218,11 +256,10 @@
 										<input type="text" class="readOnlyTxtNormal formatMoney" readonly id="projectBudget" value="{projectBudget}"/>
 									</td>
 									-->
-									<td class="form_text_left_three blue" style="display:none;">用车地点</td>
-									<td class="form_text_right_three" style="display:none;">
-										<input type="text" class="txt" id="usePlace" name="rentalcar[usePlace]" value="{usePlace}"/>
-									</td>
-								</tr>
+								<td class="form_text_left_three blue" style="display:none;">用车地点</td>
+								<td class="form_text_right_three" style="display:none;">
+									<input type="text" class="txt" id="usePlace" name="rentalcar[usePlace]" value="{usePlace}"/>
+								</td>
 							</tr>
 						</table>
 					</fieldset>
@@ -249,8 +286,8 @@
 					<input type="hidden" id="id" name="rentalcar[id]" value="{id}"/>
 					<input type="hidden" id="deptId" value="{deptId}"/>
 					<input type="hidden" id="deptName" value="{deptName}"/>
-					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
-					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 保  存 " onclick="toSubmit('save');"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit('audit');"/>&nbsp;&nbsp;
 					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
 				</td>
 			</tr>

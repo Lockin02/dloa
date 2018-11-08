@@ -840,10 +840,7 @@ class model_db
         //print($sql);
         //构建获取记录数
         $sql .= " limit " . $this->start . "," . $this->pageSize;
-        //if ($_SESSION['USER_ID'] == 'hongyan.xu') {
-        //    echo $sql;
-        //}
-        //echo $sql;
+
         return $this->_db->getArray($sql);
     }
 

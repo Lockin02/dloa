@@ -4,11 +4,11 @@
 	<title>新增租车申请信息</title>
 	{#commonInclude#}
     <!-- 附件上传开始 -->
-    <script type="text/javascript" src="swfupload/swfupload.js"> </script>
-    <script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>
-    <script type="text/javascript" src="swfupload/fileprogress.js"> </script>
-    <script type="text/javascript" src="swfupload/handlers.js"> </script>
-    <link rel="stylesheet" type="text/css" href="swfupload/upload.css" />
+    <!--<script type="text/javascript" src="swfupload/swfupload.js"> </script>-->
+    <!--<script type="text/javascript" src="swfupload/swfupload.queue.js"> </script>-->
+    <!--<script type="text/javascript" src="swfupload/fileprogress.js"> </script>-->
+    <!--<script type="text/javascript" src="swfupload/handlers.js"> </script>-->
+    <!--<link rel="stylesheet" type="text/css" href="swfupload/upload.css" />-->
 
     <link rel="stylesheet" type="text/css" href="js/jqeasyui/themes/default/easyui.css"/>
 	<script type="text/javascript" src="js/jqeasyui/jquery.easyui.min.js"></script>
@@ -18,9 +18,41 @@
     <script type="text/javascript" src="js/common/dateUtil.js"></script>
 	<script type="text/javascript" src="{#jsPath#}/rentalcar-common.js"></script>
 	<script type="text/javascript" src="{#jsPath#}/rentalcar-add.js"></script>
+
+	<!--新附件上传开始-->
+	<script type="text/javascript" src="webuploader/jquery.js"></script>
+	<script type="text/javascript">
+        $j = jQuery.noConflict();
+	</script>
+	<link rel="stylesheet" type="text/css" href="webuploader/css/webuploader.css"/>
+	<script type="text/javascript" src="webuploader/dist/webuploader.js"></script>
+	<script type="text/javascript" src="webuploader/script.js"></script>
+	<script type="text/javascript">
+        //新上传的参数设置
+        var successNum = 0; //成功上传附件
+        var uploadConfig = {};
+        uploadConfig.isSyn2Server = true;
+        uploadConfig.setting = {};
+        uploadConfig.setting.delete_url = "index1.php?model=file_uploadfile_management&action=ajaxdelete"; //删除url链接
+        uploadConfig.setting.fileNamePre = false; //自定义字段名
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+			calBudgetVal();
+
+			if($("#provinceId").val() != ''){
+				$("#province").val($("#provinceId").val()).trigger('change');
+			}
+
+			if($("#cityId").val() != ''){
+				$("#city").val($("#cityId").val()).trigger('change');
+			}
+		});
+	</script>
 </head>
 <body>
-	<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=add" onsubmit="return checkData();">
+	<form id="form1" method="post" action="?model=outsourcing_vehicle_rentalcar&action=add">
 		<table class="form_main_table">
 			<tr>
 				<td colspan="6">
@@ -71,34 +103,48 @@
 						</legend>
 						<table width="100%" id="projectinfo" style="border-collapse:collapse;bcontract-collapse:collapse;background-color:#F3F6FA;">
 							<tr>
+								<td class="form_text_left_three">租车总预算</td>
+								<td class="form_text_right_three">
+									<input type="text" class="readOnlyTxtNormal" id="rentalcarAllbudgetShow" readonly/>
+									<input type="hidden" id="rentalcarAllbudget" name="rentalcar[rentalcarAllbudget]" value=""/>
+								</td>
+								<td class="form_text_left_three">剩余可用预算</td>
+								<td class="form_text_right_three" colspan="3">
+									<input type="text" class="readOnlyTxtNormal" id="rentalcarRestbudgetShow" readonly/>
+									<input type="hidden" id="rentalcarRestbudget" name="rentalcar[rentalcarRestbudget]" value=""/>
+								</td>
+							</tr>
+							<tr {projectInfoTrStyle}>
 								<td class="form_text_left_three"><span style="color:blue;">项目编号</span></td>
 								<td class="form_text_right_three">
-									<input type="text" class="readOnlyTxtNormal" id="projectCode" readonly name="rentalcar[projectCode]"/>
-									<input type="hidden" class="txt" id="projectId" name="rentalcar[projectId]"/>
+									<input type="text" class="readOnlyTxtNormal" id="projectCode" readonly name="rentalcar[projectCode]" value="{projectCode}"/>
+									<input type="hidden" class="txt" id="projectId" name="rentalcar[projectId]" value="{projectId}"/>
 								</td>
 								<td class="form_text_left_three"><span style="color:blue;">项目名称</span></td>
 								<td class="form_text_right_three">
-									<input type="text" class="txt" id="projectName" name="rentalcar[projectName]"/>
+									<input type="text" class="txt" id="projectName" name="rentalcar[projectName]" value="{projectName}"/>
 								</td>
 								<td class="form_text_left_three">项目类型</td>
 								<td class="form_text_right_three">
-									<input type="text" class="readOnlyTxtNormal" id="projectType" readonly name="rentalcar[projectType]"/>
-									<input type="hidden" class="txt" id="projectTypeCode" name="rentalcar[projectTypeCode]"/>
+									<input type="text" class="readOnlyTxtNormal" id="projectType" readonly name="rentalcar[projectType]" value="{projectType}"/>
+									<input type="hidden" class="txt" id="projectTypeCode" name="rentalcar[projectTypeCode]" value="{projectTypeCode}"/>
 								</td>
 							</tr>
 							<tr>
 								<td class="form_text_left_three">项目经理</td>
 								<td class="form_text_right_three">
-									<input type="text" class="readOnlyTxtNormal" id="projectManager" readonly name="rentalcar[projectManager]"/>
+									<input type="text" class="readOnlyTxtNormal" id="projectManager" readonly name="rentalcar[projectManager]" value="{projectManager}"/>
 								</td>
 								<td class="form_text_left_three"><span style="color:blue;">用车地点（省）</span></td>
 								<td class="form_text_right_three">
 									<input type="hidden" class="txt" id="provinceName" name="rentalcar[province]"/>
+									<input type="hidden" class="txt" id="provinceId" value="{province}"/>
 									<select class="select" id="province" name="rentalcar[provinceId]"></select>
 								</td>
 								<td class="form_text_left_three"><span style="color:blue;">用车地点（市）</span></td>
 								<td class="form_text_right_three">
 									<input type="hidden" class="txt" id="cityName" name="rentalcar[city]"/>
+									<input type="hidden" class="txt" id="cityId" value="{city}"/>
 									<select class="select" id="city" name="rentalcar[cityId]"></select>
 								</td>
 							</tr>
@@ -247,8 +293,8 @@
 				<td class="txt_btn" colspan="6">
 					<input type="hidden" id="deptId" value="{deptId}"/>
 					<input type="hidden" id="deptName" value="{deptName}"/>
-					<input type="submit" class="txt_btn_a" value=" 保  存 "/>&nbsp;&nbsp;
-					<input type="submit" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit();"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 保  存 " onclick="toSubmit('save');"/>&nbsp;&nbsp;
+					<input type="button" class="txt_btn_a" value=" 提交审批 " onclick="toSubmit('audit');"/>&nbsp;&nbsp;
 					<input type="button" class="txt_btn_a" value=" 关  闭 " onclick="closeFun();"/>
 				</td>
 			</tr>

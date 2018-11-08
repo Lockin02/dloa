@@ -41,6 +41,7 @@ $(document).ready(function() {
 
 					$("#province").val(data.provinceId).trigger('change');
 					$("#city").val(data.cityId).trigger('change');
+					calBudgetVal();
 				}
 			}
 		},
@@ -55,6 +56,7 @@ $(document).ready(function() {
 				$("#allFee_v").val('').unbind('blur.checkVal').trigger('blur');
 				$("#province").val("").trigger('change');
 				$("#city").val("").trigger('change');
+				calBudgetVal();
 			}
 		}
 	});
@@ -215,7 +217,7 @@ function checkExpectDate(obj){
 }
 
 //提交检验
-function checkData() {
+function checkData(act) {
 	if ($("#province").val() == 43) {
 		if ($("#usePlace").val() == 'CDMA团队请手工输入省份、城市') {
 			alert('CDMA团队请手工输入省份、城市');
@@ -224,6 +226,18 @@ function checkData() {
 	} else {
 		$("#usePlace").val('');
 	}
+
+	// 检查预算 PMS 766
+	if(act == "audit" && Number($("#estimateAmonut").val()) > Number($("#rentalcarRestbudget").val())){
+		alert("本次申请已超出项目预算，不允许提交审批！请调低本次申请预算，或者执行项目预算变更，增加租车总预算。");
+		return false;
+	}
+
+	// if(act == 'audit' && Number($("#estimateAmonut").val()) <= 0){
+	// 	alert("预估租车合同总额必须大于0。");
+	// 	return false;
+	// }
+
     var $file = $("#suppInfo").yxeditgrid("getCmpByCol" ,"file");
     for(i=0;i<$file.size();i++){
        if($("#suppInfo_file_ufl_"+ i).html()==""||$("#suppInfo_file_ufl_"+ i).html()=="暂无任何附件"){
@@ -238,4 +252,31 @@ function checkData() {
 //	}
 
 	return true;
+}
+
+
+var calBudgetVal = function(){
+	var projectId = ($("#projectId").val() != undefined)? $("#projectId").val() : '';
+	if(projectId != ''){
+		var responseText = $.ajax({
+			url : 'index1.php?model=outsourcing_vehicle_rentalcar&action=calBudgetVal',
+			data : {projectId:projectId},
+			type : "POST",
+			async : false
+		}).responseText;
+		var dataArr = eval("(" + responseText + ")");
+		// console.log(dataArr);
+		var rentalcarAllbudgetShow = moneyFormat2(dataArr.rentalcarAllbudget);
+		$("#rentalcarAllbudgetShow").val(rentalcarAllbudgetShow);
+		$("#rentalcarAllbudget").val(dataArr.rentalcarAllbudget);
+
+		var rentalcarRestbudgetShow = moneyFormat2(dataArr.rentalcarRestbudget);
+		$("#rentalcarRestbudgetShow").val(rentalcarRestbudgetShow);
+		$("#rentalcarRestbudget").val(dataArr.rentalcarRestbudget);
+	}else{
+		$("#rentalcarAllbudgetShow").val(moneyFormat2(0));
+		$("#rentalcarAllbudget").val(0);
+		$("#rentalcarRestbudgetShow").val(moneyFormat2(0));
+		$("#rentalcarRestbudget").val(0);
+	}
 }
