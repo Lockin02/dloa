@@ -632,21 +632,22 @@ class model_loan_loan_loan extends model_base {
         }
         //数据源sql
         $rowSql = "select ".$typeAs." as type,t.* from ".
-            "(select c.ID,c.Debtor,if((c.debtorName is null or c.debtorName = ''), p.userName,c.debtorName) as debtorName,c.Status,c.Amount,c.XmFlag,c.PrepaymentDate,c.debtorDeptName,c.debtorDeptName as deptName,c.debtorDeptCode as deptCode,p.userNo,p.companyName,p.companyId,p.divisionName,p.divisionCode from loan_list c left join oa_hr_personnel p on c.Debtor=p.userAccount ".
-            " where c.Debtor <> '' AND c.isTemp = 0 AND (Status='已支付' or Status='还款中' or Status='已还款')  ".$condition ."  order by debtorDeptCode)t";
+            "(select c.ID,c.Debtor,if((c.debtorName is null or c.debtorName = ''), p.userName,c.debtorName) as debtorName,c.Status,c.Amount,c.XmFlag,c.PrepaymentDate,c.debtorDeptName,c.debtorDeptName as deptName,c.debtorDeptCode as deptCode,p.userNo,p.companyName,p.companyId,p.divisionName,p.divisionCode, SUM(r.Money) as rmoney".
+            " from loan_list c left join oa_hr_personnel p on c.Debtor=p.userAccount ".
+            " LEFT JOIN loan_repayment r on r.loan_ID = c.ID".
+            " where c.Debtor <> '' AND c.isTemp = 0 AND (Status='已支付' or Status='还款中' or Status='已还款')  ".$condition ." GROUP BY c.id order by debtorDeptCode)t";
 
         //数据查询sql
         $type = ($type == "divisionName")? 'c.type' : $type;
         $type = ($type == "Debtor")? 'c.debtorName' : $type;
         $sql = "SELECT type,'{$typeCode}' as typeCode,'{$extParam}' as extParam,group_concat(c.ID) as ids,count(c.ID) as idsNum,c.userNo,c.deptCode,".
             "sum(IF((`Status`='已支付' or `Status`='还款中' or `Status`='已还款'), Amount, 0)) AS amount,".
-            "sum(IF((XmFlag = 0 or XmFlag = 1) and `Status`!='已还款', Amount, 0)) unamount,".
-            "sum(IF((`Status`='已支付' or `Status`='还款中') and date_format(PrepaymentDate, '%Y%m%d') < date_format(NOW(), '%Y%m%d'), Amount, 0)) AS beamount,".
-            "sum(IF(XmFlag = 0 and `Status`!='已还款', Amount, 0)) AS deptamount,".
-            "sum(IF(XmFlag = 1 and `Status`!='已还款', Amount, 0)) AS proamount".
+            "sum(IF((XmFlag = 0 or XmFlag = 1) and (`Status`='已支付' or `Status`='还款中'), c.Amount-IFNULL(c.rmoney,0), 0)) unamount,".
+            "sum(IF((`Status`='已支付' or `Status`='还款中') and date_format(PrepaymentDate, '%Y%m%d') < date_format(NOW(), '%Y%m%d'), c.Amount-IFNULL(c.rmoney,0), 0)) AS beamount,".
+            "sum(IF(XmFlag = 0 and (`Status`='已支付' or `Status`='还款中'), c.Amount-IFNULL(c.rmoney,0), 0)) AS deptamount,".
+            "sum(IF(XmFlag = 1 and (`Status`='已支付' or `Status`='还款中'), c.Amount-IFNULL(c.rmoney,0), 0)) AS proamount ".
             " FROM".
-            " (".$rowSql.")c".
-            " GROUP BY ". $type . " order by type " ;
+            " (".$rowSql.")c group by c.".$type ;
         $rowCount = $this->_db->getArray($sql);
         $this->count = (count($rowCount[0]) > 0)? count($rowCount) : 0;
         $row = $this->_db->getArray($sql.$limit);
