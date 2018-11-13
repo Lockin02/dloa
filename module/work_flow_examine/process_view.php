@@ -16,6 +16,7 @@ $XSDeptI=array(364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379);
 $DxDeptI=array(271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,296,297,300,301,302,303,304,305,306,331,358,361,362,381,385,386,387);
 $YyDept=array(400,406,407,408);
 $ZcDept=array(399,403,404,405,409,410,411,412,413,414,415,416,417);
+$XzzhDept = array(404,405,413,415);
 
 $userGM=array("ljh","hua.yin","wei.ma","yanqing.wu","feng.guo");
 $directorI=array('patrick.tsao','garret.chen','richard.ye','eric.ye','dafa.yu','danian.zhu');
@@ -105,7 +106,6 @@ where p. FLOW_ID='".$flowid."' order by p. PRCS_ID ";
 //
 if(!empty($_GET['fold_flow'])){
     $fold_flow= explode(',',trim( $_GET['fold_flow'] ,',') );
-//    print_r($_GET['fold_flow']);
     $sql = " (".$sql.") ";
     $fold_i = 0;
     foreach($fold_flow as $val){
@@ -150,7 +150,7 @@ while ( $msql->next_record( ) )
     $notSkip = $msql->f("notSkip");
     $company='';
     $obj_sql = $msql->f("objsql");//增加读取审批流业务数据语句
-    
+
     $prcs_id = $msql->f( "id" );
     $flod_type = $msql->f( "fold_type" );
     
@@ -236,16 +236,16 @@ while ( $msql->next_record( ) )
 					foreach($obj_exa_info as $key => $val){
 						if($val){
 							$flowMoneyTmp=1;
-							$ckarray[]=trim($val,',');
-							$ckname[trim($val,',')]=$key;
+							$ckarray[]=@trim($val,',');
+							$ckname[@trim($val,',')]=$key;
 						$vm++;
 						}
 					}
-                        $ckarray = array_diff($ckarray, array(null,''));
-                    	$ckarray = array_unique($ckarray);
-                    	$ckarray = array_values($ckarray);
-                    	$PRCS_NAME=$ckname[$ckarray[0]];
-                    	$specids .= $specids=="" ? towhere($ckarray[0]) : ",".towhere($ckarray[0]);
+                        $ckarray = @array_diff($ckarray, array(null,''));
+                        $ckarray = @array_unique($ckarray);
+                        $ckarray = @array_values($ckarray);
+                        $PRCS_NAME=$ckname[$ckarray[0]];
+                        $specids .= $specids=="" ? towhere($ckarray[0]) : ",".towhere($ckarray[0]);
                 }else{
                     continue;
                 }
@@ -803,16 +803,16 @@ while ( $msql->next_record( ) )
 						$ckname[trim($fsql->f('leader_id'),',')]='部门经理';
 					  }
                 	*/
-				 
+
 					if(trim($fsql->f('MajorId'),',')!=$_SESSION['USER_ID']&&trim($fsql->f('MajorId'),',')){
 							$ckarray[]=trim($fsql->f('MajorId'),',');
 							$ckname[trim($fsql->f('MajorId'),',')]='部门总监';
 					}
-					if(trim($fsql->f('MajorId'),',')==$_SESSION['USER_ID']){
+                    if(trim($fsql->f('MajorId'),',')==$_SESSION['USER_ID']){
 						$ckarray=array();
 						$ckname=array();
 					}
-					
+
 					if(in_array($billDept,$earr[$prcs_form])){
 					        $flowMoneyArr['部门总监']=$ckMoney[1];
 							$flowMoneyArr['副总经理']=$ckMoney[1];
@@ -829,7 +829,7 @@ while ( $msql->next_record( ) )
 							$ckname['zhongliang.hu']='副总经理';
 							//$flowMoneyArr['部门管理人员']=50000;
 					}
-					
+
                     $om=$fsql->f('otherman');
                     if(!empty($om)){
                     	$flowMoneyArr['部门总监']=0;
@@ -865,8 +865,22 @@ while ( $msql->next_record( ) )
 						$flowMoneyArr['总经理']=$ckMoney[2];
 						$flowMoneyArr['总裁']=$ckMoney[2];
 						$flowMoneyArr['董事长']=$ckMoney[2];
-					}  
+					}
+
                 }
+
+                //张天林负责的归0
+                foreach ($ckarray as $key=>$value){
+                    if ($value == 'tianlin.zhang'){
+                        $flowMoneyArr[$ckname[$value]] = 0;
+                    }
+                }
+
+                //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                if(in_array($billDept,$XzzhDept)){
+                    $flowMoneyArr['部门总监'] = 100000;
+                }
+
 				if($gmanager&&$gmanager!=$_SESSION['USER_ID']){
 					$ckarray[]=$gmanager;
 					$ckname[$gmanager]='总经理';	
@@ -881,8 +895,8 @@ while ( $msql->next_record( ) )
 						$ckname[$ceo]='总裁';
 					}
                 }
-                
-				
+
+
                 $ckarray = array_diff($ckarray, array(null,''));
                 $ckarray = array_unique($ckarray);
                 $ckarray = array_values($ckarray);
@@ -1117,11 +1131,11 @@ while ( $msql->next_record( ) )
 													 	}
 														 
 													 }
-													 
-													 if(trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID']&&$deptI['ViceManager']){
-							                			$ckarray[]=trim($deptI['ViceManager'],',');
-							                    		$ckname[trim($deptI['ViceManager'],',')]='副总经理';
-								                     }
+
+                                                      //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                                      if(in_array($billDept,$XzzhDept)){
+                                                          $flowMoneyArr['部门总监'] = 100000;
+                                                      }
 
                                                       if(in_array($billDept,$YyDept)){
 													     $ckarray[]='chen.chen';
@@ -1130,7 +1144,13 @@ while ( $msql->next_record( ) )
 													     $ckarray[]='tianlin.zhang';
 													     $ckname['tianlin.zhang']='中心负责人';
 													 }
-													 
+
+                                                      if(trim($deptI['ViceManager'],',')!=$_SESSION['USER_ID']&&$deptI['ViceManager']){
+                                                          $ckarray[]=trim($deptI['ViceManager'],',');
+                                                          $ckname[trim($deptI['ViceManager'],',')]='副总经理';
+                                                      }
+
+
 													 if(trim($deptI['ViceManager'],',')==$_SESSION['USER_ID']){
 							                    		$flowMoneyArr['总裁']=0;
 								                     }
@@ -1157,14 +1177,14 @@ while ( $msql->next_record( ) )
 																unset($ckarray[0]);
 																unset($ckname[$manager]);
 															}
-													}											   
-												   
-												   
-												    if(!empty($flowMoney)&&$flowMoney!=''){
-															$ckarray[]='danian.zhu';
-															$ckname['danian.zhu']='总裁';	
 													}
-												  
+
+
+                                                      if(!empty($flowMoney)&&$flowMoney!=''){
+															$ckarray[]='danian.zhu';
+															$ckname['danian.zhu']='总裁';
+                                                      }
+
 													
 							                     }
 												 
@@ -1196,6 +1216,12 @@ while ( $msql->next_record( ) )
                                             $ckarray = array_flip($ckarray);
                                         }
 
+                                        //张天林负责的归0
+                                        foreach ($ckarray as $key=>$value){
+                                            if ($value == 'tianlin.zhang'){
+                                                $flowMoneyArr[$ckname[$value]] = 0;
+                                            }
+                                        }
 
 						                if($subLength){
 						                	$ckarray = array_slice($ckarray,$subLength);
@@ -1207,8 +1233,6 @@ while ( $msql->next_record( ) )
 						                $specids .= $specids=="" ? towhere($ckarray[0]) : ",".towhere($ckarray[0]);
 						                $PRCS_NAME=$ckname[$ckarray[0]];
 						                $ckMoney=$flowMoneyArr[$ckname[$ckarray[0]]];
-
-
 
 						            }
 //            其他部门领导
@@ -1493,7 +1517,7 @@ while ( $msql->next_record( ) )
                             $flowMoneyArr['总经理']=$ckMoneyI[7];
                             $flowMoneyArr['总裁']=$ckMoneyI[8];
                         }
-                        
+
                         if($tmpdetailtype=='1'){//部门
                             
                             if(empty($billDept)){
@@ -1635,7 +1659,12 @@ while ( $msql->next_record( ) )
                                             $ckname[trim('zhongliang.hu',',')]='副总经理';
                                         }
                                     }
-                                    
+
+                                    //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                    if(in_array($billDept,$XzzhDept)){
+                                        $flowMoneyArr['部门总监'] = 100000;
+                                    }
+
                                     if($billDept=='357'&&$costManDeptId!='357'){
                                         $ckarray[]='zequan.xu';
                                         $ckname['zequan.xu']='副总经理';
@@ -1656,12 +1685,10 @@ while ( $msql->next_record( ) )
                                             }
                                         }
                                     }
-                                    
+
                                     if(trim($fsql->f('ViceManager'),',')==$CostMan){
                                         $flowMoneyArr['总裁']=0;
                                     }
-                                    
-                                    
                                     
                                     if(trim($fsql->f('generalManager'),',')!=$_SESSION['USER_ID']&&trim($fsql->f('generalManager'),',')){
                                         $ckarray[]=trim($fsql->f('generalManager'),',');
@@ -1676,8 +1703,8 @@ while ( $msql->next_record( ) )
                                     
                                 }
                             }
-                            
-                            
+
+
                             if(!empty($flowMoney)&&$flowMoney!=' '){
                                 $ckarray[]=$ceo;
                                 $ckname[$ceo]='总裁';
@@ -1703,6 +1730,12 @@ while ( $msql->next_record( ) )
                                     }
                                 }
                                 $ckarray = array_flip($ckarray);
+                            }
+                            //张天林负责的归0
+                            foreach ($ckarray as $key=>$value){
+                                if ($value == 'tianlin.zhang'){
+                                    $flowMoneyArr[$ckname[$value]] = 0;
+                                }
                             }
 
                         }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
@@ -1833,7 +1866,6 @@ while ( $msql->next_record( ) )
                                     $ckarray=array();
                                     $ckname=array();
                                 }
-                                //print_r($ckarray);
                                 
                             }elseif($billProType=='rd'||$tmpdetailtype=='3'){//研发
                                 
@@ -2448,8 +2480,7 @@ while ( $msql->next_record( ) )
                     continue;
                 }
             }//新报销
-			
-			
+
 			 //特别事项
             if($PRCS_SPEC_ARR[$i]=='@tbsx')
             {
@@ -2591,7 +2622,7 @@ while ( $msql->next_record( ) )
                             $ceo = $fsql->f('ceo');
                             $chairman = $fsql->f('chairman');
                         }
-                        
+
                         if($tmpdetailtype=='1'){//部门
                             /*$flowMoneyArr['部门负责人']=0;
                              $flowMoneyArr['部门经理']=$ckMoney[0];
@@ -2669,6 +2700,10 @@ while ( $msql->next_record( ) )
                                         $ckname[trim('zhongliang.hu',',')]='副总经理';
                                     }
                                 }
+                                //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                if(in_array($billDept,$XzzhDept)){
+                                    $flowMoneyArr['部门总监'] = 100000;
+                                }
                                 if(in_array($billDept,$YyDept)){
                                     $ckarray[]='chen.chen';
                                     $ckname['chen.chen']='中心负责人';
@@ -2732,6 +2767,12 @@ while ( $msql->next_record( ) )
                                     }
                                 }
                                 $ckarray = array_flip($ckarray);
+                            }
+                            //张天林负责的归0
+                            foreach ($ckarray as $key=>$value){
+                                if ($value == 'tianlin.zhang'){
+                                    $flowMoneyArr[$ckname[$value]] = 0;
+                                }
                             }
 
                         }
@@ -3499,8 +3540,7 @@ while ( $msql->next_record( ) )
                 }
             }//特别事项
 			
-			
-			
+
             //配置特殊流程
             if($PRCS_SPEC_ARR[$i]=='@spe'){
             	if($prcs_form=='离职申请审批'){
@@ -3612,11 +3652,15 @@ while ( $msql->next_record( ) )
 	}
     $sql="select USER_NAME,USER_ID from user where HAS_LEFT='0' AND IF('$isCompany'='2',IF(handcom<>'',find_in_set('$company',handcom),Company='$company'),'1=1') ".$wherestr;
 	$fsql->query2($sql);
+//	print_r($sql);die();
     while($fsql->next_record( ))
     {
         $PRCS_USER_NAME .= $fsql->f( "USER_NAME" )."/";
 		$PRCS_USER_ID.= $fsql->f( "USER_ID" ).",";
     };
+//    var_dump($PRCS_USER_NAME);
+//    var_dump($PRCS_USER_ID);
+//    die();
     $PRCS_USER_NAME = rtrim($PRCS_USER_NAME,"/");
 	$PRCS_USER_ID = rtrim($PRCS_USER_ID,",");
 /*    
@@ -3670,7 +3714,6 @@ while ( $msql->next_record( ) )
 
         if($PRCS_SPEC == '@bmauto,'){
             $flowMoneyArr['区域负责人'] = '20000';
-            var_dump($flowMoneyArr,$ckname,$ckarray);
         }
         foreach($ckarray as $key=>$val){
         		$PRCS_USER_NAME='';
@@ -3811,7 +3854,17 @@ if(!empty($flow_step_arr)){
         }
     }
     //清理自己审批流前面的步骤==end
-	//print_r($flow_step_arr);
+
+    //针对张天林的流程的修改
+    if (!empty($flow_step_arr)){
+        foreach ($flow_step_arr as $key => $value){
+            if ($value['user_id'] == 'tianlin.zhang'){
+                unset($flow_step_arr[$key]);
+            }
+        }
+    }
+    // 针对张天林的流程修改
+
     //针对张焕宁修改的流程=========begin
     if($_SESSION['USER_ID'] == 'huanning.zhang') {
         $hi = 0;
@@ -3829,6 +3882,9 @@ if(!empty($flow_step_arr)){
         }
     }
     //针对张焕宁修改的流程=========end
+
+
+
     $i=1;
     foreach($flow_step_arr as $key=>$val){
         if(empty($val['user_name'])){

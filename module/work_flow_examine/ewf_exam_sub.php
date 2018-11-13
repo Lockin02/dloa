@@ -1,6 +1,6 @@
 <?php
 require_once($this->compDir."phpmailer/class.phpmailer.php");  
-require_once($this->compDir."includes/config_mail.php");  
+require_once($this->compDir."includes/config_mail.php");
 include($this->compDir."model/common/workflow/workflowInfoConfig.php");//引入配置方法文件 - 外包修改 
 $requireType = $_REQUEST['requireType'];
 $isMbFlag=1;
@@ -23,8 +23,6 @@ $wffinishHols=false;
 $wfCreator="";
 $wfCreatorDept="";
 $sysMsgI=array();
-//print_r($_POST);
-//die();
 $msql->query("START TRANSACTION");
 try{   
 //判断数据通行                       
@@ -65,20 +63,20 @@ try{
 	
     //如果存在配置，替换查询语句
     if(!empty($workflowInfoConfig[$examCode])){
-        $thisCode = $workflowInfoConfig[$examCode]['thisCode'];
-        $sqltmp = "select $thisCode from $examCode c where c.id='$examPid' ";
-        $informationArr=$msql->getrow($sqltmp);
-        $information = $workflowInfoConfig[$examCode]['thisInfo'];
-        $objArr = isset($workflowInfoConfig[$examCode]['objArr']) ? $workflowInfoConfig[$examCode]['objArr'] : null;
-        $robjArr = isset($workflowInfoConfig[$examCode]['objArr']) ? array_flip($workflowInfoConfig[$examCode]['objArr']) : null;
-        foreach($informationArr as $key=>$val){
-            $information=str_replace('$'.$key, $val, $information);
-            //如果存在配置且字段在配置中
-            if(!empty($objArr) && in_array($key,$objArr)){
-                $tempkey = $robjArr[$key];
-                $$tempkey = $val;
-            }
-        }
+    	$thisCode = $workflowInfoConfig[$examCode]['thisCode'];
+    	$sqltmp = "select $thisCode from $examCode c where c.id='$examPid' ";
+    	$informationArr=$msql->getrow($sqltmp);
+    	$information = $workflowInfoConfig[$examCode]['thisInfo'];
+    	$objArr = isset($workflowInfoConfig[$examCode]['objArr']) ? $workflowInfoConfig[$examCode]['objArr'] : null;
+    	$robjArr = isset($workflowInfoConfig[$examCode]['objArr']) ? array_flip($workflowInfoConfig[$examCode]['objArr']) : null;
+      foreach($informationArr as $key=>$val){
+         $information=str_replace('$'.$key, $val, $information);
+         //如果存在配置且字段在配置中
+         if(!empty($objArr) && in_array($key,$objArr)){
+						$tempkey = $robjArr[$key];
+						$$tempkey = $val;
+      	 }	
+      }
     }
     $sql="select user_name , dept_id  from user where user_id='$wfCreator'";
     $msql->query2($sql);
@@ -98,7 +96,7 @@ try{
 	if($result=="ok")
     {
         insertOperateLog("审批工作流",$wfTaskId,"审批通过","成功");
-        //删除以后需要审批的步骤
+//删除以后需要审批的步骤
         $sql="select ID , User from flow_step where SmallID>'$nowSmallId' and Wf_task_ID='$wfTaskId' and find_in_set('$USER_ID',User)>0 order by SmallID";
         $fsql->query2($sql);
         while($fsql->next_record()){
@@ -113,8 +111,7 @@ try{
             if($msql->num_rows()==0){
                 $nextFlow=true;
             }
-        }
-        else{
+        }else{
             $sql="delete from flow_step_partent where Wf_task_ID='$wfTaskId' and SmallID='$nowSmallId' and ID!='$spid' ";
             $msql->query2($sql);
             $nextFlow=true;
@@ -149,16 +146,22 @@ try{
                 }
                 insertOperateLog("审批工作流",$wfTaskId,"审批进入下一步审批 flow_step：".$stepid,"成功");
             }else{
-                
-                $sql="update wf_task set examines='ok' , finish=now() , Status='0' where task='$wfTaskId' and Status='ok' ";
+                  $sql="update wf_task set examines='{$result}' , finish=now() , Status='0' where task='$wfTaskId' and Status='ok' ";
                 $msql->query2($sql);
-                $sql="select PassSqlCode , name from wf_task where task='$wfTaskId'";
+                $sql="select PassSqlCode, DisPassSqlCode, name from wf_task where task='$wfTaskId'";
                 $msql->query2($sql);
                 $msql->next_record();
                 $passSqlCode=$msql->f('PassSqlCode');
+                $disPassSqlCode=$msql->f('DisPassSqlCode');
                 $wfTaskName=$msql->f("name");
-                if($passSqlCode!=""){
-                    $msql->query2(stripslashes($passSqlCode));
+                if($result == 'ok'){
+                    if($passSqlCode!=""){
+                        $msql->query2(stripslashes($passSqlCode));
+                    }
+                }else{
+                    if($disPassSqlCode!=""){
+                        $msql->query2(stripslashes($disPassSqlCode));
+                    }
                 }
                 if($wfTaskName=="档案户口调动")
                     $wffinish=true;
@@ -183,6 +186,18 @@ try{
         if($disPassSqlCode!=""){
             $msql->query2(stripslashes($disPassSqlCode));
         }
+
+
+        //借试用打回的时候  oa_borrow_equ_link 这个表的ExaStatus字段要清空否则无法再次确认物料
+        if($wfTaskName == "借试用申请"){
+            ini_set('display_errors',1);
+            $s_ = strpos($disPassSqlCode,'id=');
+            $i_ = substr(substr($disPassSqlCode,$s_),5,-2);
+            $msql->query2('update oa_borrow_equ_link set ExaStatus = "打回" where borrowId = '.$i_);
+
+        }
+
+        
         if($wfTaskName=="请休假"&&$wfCreatorDept=="35")
             $wffinishHols=true;
         insertOperateLog("审批工作流",$wfTaskId,"审批不通过","成功");
@@ -197,7 +212,7 @@ try{
             }
         }
     }
-    //发送邮件提醒
+//发送邮件提醒
     if($flowName=='请休假'){//请休假获取信息
         $sql="select
                 u.user_name , h.type , h.begindt
@@ -307,22 +322,22 @@ try{
         require($this->compDir . "util/jsonUtil.php");
 		
 		// 微信通知办理人
-        $msg = "您好！" . $_SESSION['USERNAME'] . "已经对审批单号为：" . $wfTaskId .
-            "（" . $flowName . "），申请人：" . $wfCreator . " 的申请单进行审批！审批结果：";
-        $msg .= $result == "no" ? "不通过" : "通过";
+        $resultCN = $result == "no" ? "不通过" : "通过";
+        $msg = "您好！[" . $_SESSION['USERNAME'] . "]已审批[" . $flowName . "]（单号：[" . $wfTaskId . "]）。审批结果：[" . $resultCN . "]";
         if (!empty($content)) {
-            $msg .= '。审批意见：' . $content;
+        $msg .= '，审批意见：[' . $content . "]。";
+        } else {
+        $msg .= '。';
         }
-        $userArr = explode(',', $TO_ID);
+        $userArr = array_unique(explode(',', $TO_ID));
         foreach ($userArr as $v) {
-            if ($v) {
-                // 发送微信通知
-                util_curlUtil::getDataFromAWS('mobliemiro', 'WechatSendMsgAslp', array(
-                    "userid" => $v, 'msg' => $msg
-                ), array(), true, 'com.youngheart.apps.');
-            }
-        }
-		
+        if ($v) {
+        // 发送微信通知
+        util_curlUtil::getDataFromAWS('mobliemiro', 'WechatSendMsgAslp', array(
+            "userid" => $v, 'msg' => $msg
+        ), array(), true, 'com.youngheart.apps.');
+      }
+     }	
     }
     if(isset($_POST["isSendNext"])&&$_POST["isSendNext"]=="y" && $nextChecker!="")
     {
@@ -349,20 +364,20 @@ try{
         require($this->compDir."includes/send_html_mail.php");
 		
 		// 微信通知下一审批人
-        $msg = "您好！有新的审批单需要您审批！审批单号：" . $wfTaskId .
-            "（" . $flowName . "），此消息由" . $_SESSION["USERNAME"] . "选择给您发送！";
+        $msg = "您好！流程[" . $flowName . "]（单号：[" . $wfTaskId .
+        "]）已推送至您的待办任务，请您登录OA系统或微信手机端进行审批。";
         if (!empty($content)) {
-            $msg .= '审批意见：' . $content;
-        }
-        $userArr = explode(',', $TO_ID);
+        $msg .= '上一个审批人审批意见：' . $content;
+       }
+        $userArr = array_unique(explode(',', $TO_ID));
         foreach ($userArr as $v) {
-            if ($v) {
-                // 发送微信通知
-                util_curlUtil::getDataFromAWS('mobliemiro', 'WechatSendMsgAslp', array(
-                    "userid" => $v, 'msg' => $msg
-                ), array(), true, 'com.youngheart.apps.');
-            }
-        }
+        if ($v) {
+        // 发送微信通知
+        util_curlUtil::getDataFromAWS('mobliemiro', 'WechatSendMsgAslp', array(
+            "userid" => $v, 'msg' => $msg
+        ), array(), true, 'com.youngheart.apps.');
+       }
+     }
     }
 	
 	
@@ -437,6 +452,7 @@ if($requireType=='mobile'){
 		
 		//header("Location: ".$sendToURL.$gdbtablestr.'&sessionId='.session_id()); 
 		//succ_show($sendToURL.$gdbtablestr);
+		@file_put_contents($this->compDir.'temp/res/'.$_SESSION["USER_ID"].time().'.txt',json_encode($res));
 		echo json_encode( tmp_iconv( $res ) );
 		exit();
 }else{

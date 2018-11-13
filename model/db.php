@@ -840,7 +840,8 @@ class model_db
         //print($sql);
         //构建获取记录数
         $sql .= " limit " . $this->start . "," . $this->pageSize;
-
+//        header("Content-type:text/html;charset=gbk");
+//        print_r($sql);die();
         return $this->_db->getArray($sql);
     }
 

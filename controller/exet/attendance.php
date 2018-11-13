@@ -22,10 +22,9 @@ class controller_exet_attendance extends model_exet_attendance {
     }
     
     function c_monthsta(){
-		$sqlflag = $this->globalUtil->getSalaryScope(false,true,'','d.dept_id');
         $this->show->assign('form_url', '?model=exet_attendance&action=monthsta');
         $this->show->assign('sealist', $this->model_seachlist());
-        $this->show->assign('stalist', $this->model_monthsta(true, $sqlflag));
+        $this->show->assign('stalist', $this->model_monthsta());
         $this->show->display('exet_attendance');
     }
     

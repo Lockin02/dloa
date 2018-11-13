@@ -18,7 +18,7 @@ $speSetArr = array(
 		'lilan.he' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
 		'limin.chen' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
 		'weiying.li' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
-		'cuiting.cai' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
+        'cuiting.cai' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
 		'yongjun.zhuo' => '?model=finance_expense_exsummary&action=toAuditEdit&id=',
 		'zezhi.cao' => '?model=finance_expense_exsummary&action=toAuditEdit&id='
 	)

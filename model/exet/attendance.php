@@ -257,13 +257,9 @@ class model_exet_attendance extends model_base
     function model_ini() {
         $dateUtil= new includes_class_dateutil();
         $ymb=date('Y-m',mktime(0, 0, 0, date('m')-1, 1,   date('Y'))).'-25';
-        if($ymb=='2011-01-25'){
-            $ymb='2011-01-24';
-        }
+
         $yme=date('Y-m').'-24';
-        if($yme=='2011-01-24'){
-            $yme='2011-01-23';
-        }
+
         $sy=date("Y");
         $sm=date("n");
         try {

@@ -2137,6 +2137,8 @@ class model_salary_class extends model_base {
                 * ,'账号','开户行','税前扣除备注','税后扣除备注'
                 *
                 */
+
+//                var_dump($baseam,$swd,$bna,$gna,$jna,$hda,$spedel);die();
 				if ($outflag == 'list') {
 					$responce->rows [$i] ['id'] = $row ['userid'];
 					$responce->rows [$i] ['cell'] = un_iconv ( array (
@@ -2160,6 +2162,7 @@ class model_salary_class extends model_base {
 							$this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ),
                             round($this->salaryClass->decryptDeal($sp['SpeDelAm']), 2),
 //							round ( $this->salaryClass->decryptDeal ( $sp ['BaseNowAm'] ) + $bna2 - $this->salaryClass->decryptDeal ( $sp ['HolsDelAm'] ), 2 );
+
                             round ($bna+$gna+$jna-$hda-$spedel, 2), //离职工资小计
                             round ( $this->salaryClass->decryptDeal ( $sp ['SpeRewAm'] ) + $this->salaryClass->decryptDeal ( $sp ['SdyAm'] ) + $this->salaryClass->decryptDeal ( $sp ['OtherAm'] ) + $this->salaryClass->decryptDeal ( $sp ['bonusam'] ) + $this->salaryClass->decryptDeal ( $sp ['proam'] ), 2 ),
 							$this->salaryClass->decryptDeal ( $sp ['ShbAm'] ),

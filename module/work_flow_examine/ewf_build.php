@@ -16,6 +16,7 @@ $XSDeptI=array(364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379);
 $DxDeptI=array(271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,296,297,300,301,302,303,304,305,306,331,358,361,362,381,385,386,387);
 $YyDept=array(400,406,407,408);
 $ZcDept=array(399,403,404,405,409,410,411,412,413,414,415,416,417);
+$XzzhDept = array(404,405,413,415);
 
 $userGM=array("ljh","hua.yin","wei.ma","yanqing.wu","feng.guo");
 $directorI=array('patrick.tsao','garret.chen','richard.ye','eric.ye','dafa.yu','danian.zhu');
@@ -1005,6 +1006,19 @@ try{
 							
 							
                         }
+
+                        //张天林负责的归0
+                        foreach ($ckarray as $key=>$value){
+                            if ($value == 'tianlin.zhang'){
+                                $flowMoneyArr[$ckname[$value]] = 0;
+                            }
+                        }
+
+                        //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                        if(in_array($billDept,$XzzhDept)){
+                            $flowMoneyArr['部门总监'] = 100000;
+                        }
+
                         if($gmanager&&$gmanager!=$_SESSION['USER_ID']){
 							$ckarray[]=$gmanager;
 							$ckname[$gmanager]='总经理';	
@@ -1257,6 +1271,11 @@ try{
 													 	}
 														 
 													 }
+
+                                                      //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                                      if(in_array($billDept,$XzzhDept)){
+                                                          $flowMoneyArr['部门总监'] = 100000;
+                                                      }
 													 
 													 if(in_array($billDept,$YyDept)){
 													     $ckarray[]='chen.chen';
@@ -1334,6 +1353,13 @@ try{
                                                 }
                                             }
                                             $ckarray = array_flip($ckarray);
+                                        }
+
+                                        //张天林负责的归0
+                                        foreach ($ckarray as $key=>$value){
+                                            if ($value == 'tianlin.zhang'){
+                                                $flowMoneyArr[$ckname[$value]] = 0;
+                                            }
                                         }
 
 						                if($subLength){
@@ -1774,6 +1800,12 @@ try{
                                             if(in_array($billDept,$SaleDeptI)){
                                                 $flowMoneyArr['部门总监']=5000;
                                             }
+
+                                            //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                            if(in_array($billDept,$XzzhDept)){
+                                                $flowMoneyArr['部门总监'] = 100000;
+                                            }
+
                                             if($billDept=='357'&&$costManDeptId!='357'){
                                                 $ckarray[]='zequan.xu';
                                                 $ckname['zequan.xu']='副总经理';
@@ -1836,6 +1868,13 @@ try{
                                             }
                                         }
                                         $ckarray = array_flip($ckarray);
+                                    }
+
+                                    //张天林负责的归0
+                                    foreach ($ckarray as $key=>$value){
+                                        if ($value == 'tianlin.zhang'){
+                                            $flowMoneyArr[$ckname[$value]] = 0;
+                                        }
                                     }
 
                                 }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
@@ -2787,7 +2826,11 @@ try{
                                                  $ckarray[]=trim('zhongliang.hu',',');
                                                 $ckname[trim('zhongliang.hu',',')]='副总经理';
                                              }
-                                         }
+                                       }
+                                       //针对综合行政部及其下属部门规定部门总监的最大值为100000
+                                       if(in_array($billDept,$XzzhDept)){
+                                           $flowMoneyArr['部门总监'] = 100000;
+                                       }
                                        if(in_array($billDept,$YyDept)){
                                            $ckarray[]='chen.chen';
                                            $ckname['chen.chen']='中心负责人';
@@ -2852,6 +2895,13 @@ try{
                                     }
                                     $ckarray = array_flip($ckarray);
                                   }
+
+                                    //张天林负责的归0
+                                    foreach ($ckarray as $key=>$value){
+                                        if ($value == 'tianlin.zhang'){
+                                            $flowMoneyArr[$ckname[$value]] = 0;
+                                        }
+                                    }
 
                                 }elseif($tmpdetailtype=='2'||$tmpdetailtype=='3'){//合同项目费用 + 售前
                                   if($billProType=='esm'){//工程
@@ -4003,28 +4053,40 @@ try{
 		    }
 		}
 		//清理自己审批流前面的步骤==end
-		//针对张焕宁修改的流程=========begin
-		if($_SESSION['USER_ID'] == 'huanning.zhang') {
-		    $hi = 0;
-		    foreach($flow_step_arr as $kys=>$val){
-		        if(!in_array($val['Item'],array('财务会计','财务总监','会计审核','财务审批','会计','财务领导','财务负责人','海外会计'))&&count($flow_step_arr)>1){
-		            if($hi==0 && $flow_step_arr[$kys]['user_id'] != 'danian.zhu') {
-		                $flow_step_arr[$kys]['user'] = 'zequan.xu';
-		                $flow_step_arr[$kys]['Item'] = '副总裁';
-		                $sqlh = "INSERT into flow_step set SmallID='_SmallID',Wf_task_ID='".$flow_step_arr[$kys]['taskid']."',Flow_id='".$flow_step_arr[$kys]['Flow_id']."'
+
+        //针对张天林的流程的修改
+        if (!empty($flow_step_arr)){
+            foreach ($flow_step_arr as $key => $value){
+                if ($value['user_id'] == 'tianlin.zhang' or $value['user'] == 'tianlin.zhang'){
+                    unset($flow_step_arr[$key]);
+                }
+            }
+        }
+        // 针对张天林的流程修改
+
+        //针对张焕宁修改的流程=========begin
+        if($_SESSION['USER_ID'] == 'huanning.zhang') {
+            $hi = 0;
+            foreach($flow_step_arr as $kys=>$val){
+                if(!in_array($val['Item'],array('财务会计','财务总监','会计审核','财务审批','会计','财务领导','财务负责人','海外会计'))&&count($flow_step_arr)>1){
+                    if($hi==0 && $flow_step_arr[$kys]['user'] != 'danian.zhu') {
+                        $flow_step_arr[$kys]['user'] = 'zequan.xu';
+                        $flow_step_arr[$kys]['Item'] = '副总裁';
+                        $sqlh = "INSERT into flow_step set SmallID='_SmallID',Wf_task_ID='".$flow_step_arr[$kys]['taskid']."',Flow_id='".$flow_step_arr[$kys]['Flow_id']."'
                                 ,Step='".$flow_step_arr[$kys]['Step']."',StepID='".$flow_step_arr[$kys]['StepID']."',Item='副总裁',User='zequan.xu',PRCS_ITEM='".$flow_step_arr[$kys]['PRCS_ITEM']."'
                                 ,Flag='".$flow_step_arr[$kys]['Flag']."',status='ok',Flow_name='".$flow_step_arr[$kys]['Flow_name']."',secrecy='1',speed='1',quickpipe='0',quickreason='',sendread=''
                                 ,Flow_prop='".$flow_step_arr[$kys]['Flow_prop']."',PRCS_ALERT='".$flow_step_arr[$kys]['PRCS_ALERT']."',Flow_doc='1',Flow_type='1',ATTACHMENT_MEMO=''
                                 ,Start='".getlongdatetime()."', passlimit='".$flow_step_arr[$kys]['passlimit']."' ,isReceive='".$flow_step_arr[$kys]['isReceive']."',isEditPage='".$flow_step_arr[$kys]['isEditPage']."'";
-		                $flow_step_arr[$kys]['sql'] = $sqlh;
-		                $hi++;
-		            } else if($flow_step_arr[$kys]['user_id'] != 'danian.zhu') {
-		                unset($flow_step_arr[$kys]);
-		            }
-		        }
-		    }
-		}
-		//针对张焕宁修改的流程=========end
+                        $flow_step_arr[$kys]['sql'] = $sqlh;
+                        $hi++;
+                    } else if($flow_step_arr[$kys]['user'] != 'danian.zhu') {
+                        unset($flow_step_arr[$kys]);
+                    }
+                }
+            }
+        }
+        //针对张焕宁修改的流程=========end
+
 		
         $i=1;
         foreach($flow_step_arr as $key=>$val){
