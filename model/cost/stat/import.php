@@ -611,7 +611,7 @@ order by a.CostDateBegin";
 
         $nextTypeNum = ($nextTypeNum > 0)? $nextTypeNum : 2;
         if ('bx' == $company) {
-            $appUser[] = array('appName' => '财务会计', 'appUser' => 'dexia.zhong,lilan.he', 'createTime' => '', 'appTime' => '', 'type' => $nextTypeNum);
+            $appUser[] = array('appName' => '财务会计', 'appUser' => 'dexia.zhong,', 'createTime' => '', 'appTime' => '', 'type' => $nextTypeNum);
             $appUser[] = array('appName' => '财务总监', 'appUser' => 'jie1.wu,', 'createTime' => '', 'appTime' => '', 'type' => ($nextTypeNum + 1));
             $appUser[] = array('appName' => '财务负责人', 'appUser' => 'xinping.gou,', 'createTime' => '', 'appTime' => '', 'type' => ($nextTypeNum + 2));
         } else if ('sy' == $company) {
