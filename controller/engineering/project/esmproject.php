@@ -251,12 +251,16 @@ class controller_engineering_project_esmproject extends controller_base_action
                         $rows[$k]['projectRate'] = $workRate;
                         $rows[$k]['projectMoney'] = $conProjectDao->getCost($v['contractId'], $v['newProLine'], $conArr, 3); //税后项目金额
                         $rows[$k]['statusName'] = $conProjectDao->getProStatusEx($DeliverySchedule, $invoiceExe, $earningsType,$rentPerc); //状态
-                    }
+                        if($conArr['state'] == '7'){
+                            $rows[$k]['statusName'] = '异常关闭';
+                            $rows[$k]['status'] = 'GCXMZT06';//如果合同状态为异常关闭项目状态也改成异常关闭
+                        }
 
+                    }
+                    
                     $rows[$k]['projectProcess'] = sprintf("%.2f",$rows[$k]['projectProcess']);
                 }
             }
-
             //加密部分
             $rows = $this->sconfig->md5Rows($rows);
             //列表金额处理
@@ -465,6 +469,11 @@ class controller_engineering_project_esmproject extends controller_base_action
             'projectCodes' => '',
             'chkCode' => '',
         ), $_GET));
+        if($_GET['new']){
+            $_SESSION['new'] = true;
+        }else{
+            unset($_SESSION['new']);
+        }
         $this->view("showDetail");
     }
 
@@ -473,6 +482,8 @@ class controller_engineering_project_esmproject extends controller_base_action
      */
     function c_showDetailJson()
     {
+        set_time_limit (0);
+        ini_set('memory_limit','1024M');
         $chkCode = isset($_POST['chkCode'])? $_POST['chkCode'] : '';
         // 参数过滤
         $searchItem = $_POST;
@@ -701,6 +712,17 @@ class controller_engineering_project_esmproject extends controller_base_action
                 $searchItem['ids'] = $ids;
                 $this->service->getParam($searchItem);
                 $rst = $this->service->list_d();
+                break;
+            case 104:
+                //合同税点检查
+                if($_SESSION['new']){
+                    $ids = $_SESSION['err'];
+                }else{
+                    $ids = $_SESSION['errs'];
+                }
+                // echo count(explode(',',$ids));exit;
+                $sql = "select * from oa_contract_contract where id in ($ids)";
+                $rst = $this->service->_db->getArray($sql);
                 break;
             default :
                 $ids = isset($_SESSION[$searchItem['ids']])? $_SESSION[$searchItem['ids']] : $searchItem['ids'];
@@ -1543,7 +1565,8 @@ class controller_engineering_project_esmproject extends controller_base_action
         ) {
             $service->getParam($searchItem); //设置前台获取的参数信息
             $rows = $service->list_d('select_defaultAndFee');
-        } else {//如果没有选择全部，则进行权限查询并赋值
+        }
+        else {//如果没有选择全部，则进行权限查询并赋值
             if (!empty($sysLimit)) array_push($officeArr, $sysLimit);
             //办事处经理权限
             $officeIds = $service->getOfficeIds_d();
@@ -1636,6 +1659,7 @@ class controller_engineering_project_esmproject extends controller_base_action
                         $auditingCarFee = ($rentalcarCostArr)? $rentalcarCostArr['totalCost'] : 0;
                         $rows[$k]['feeCar'] = round(bcadd($v['feeCar'],$auditingCarFee,3),2);
                     } else if ($v['pType'] == "pro") {
+
                         //执行区域
                         $rs = $productDao->find(array('contractId' => $v['contractId'], 'newProLineCode' => $v['newProLine'],
                             'proTypeId' => '11', 'isDel' => '0'), null, 'exeDeptId,exeDeptName');
@@ -1709,6 +1733,9 @@ class controller_engineering_project_esmproject extends controller_base_action
                         $rows[$k]['earningsType'] = $earningsType;//收入确认方式
                         $rows[$k]['feeCostbx'] = sprintf("%.2f",$feeCostbx);
                         $rows[$k]['statusName'] = $conprojectDao->getProStatusEx($DeliverySchedule, $invoiceExe, $earningsType,$rentPerc); //状态
+                        if($conArr['state'] == '7'){
+                            $rows[$k]['statusName'] = '异常关闭';
+                        }                        
                     }
                 }
             }
@@ -1731,12 +1758,10 @@ class controller_engineering_project_esmproject extends controller_base_action
             set_time_limit(0); // 设置不超时
             $sql = base64_decode($_SESSION['engineering_project_esmproject_listSql']);
             $rows = $this->service->_db->getArray($sql);
-
             //扩展数据处理
             if ($rows) {
                 //试用预算，试用决算
                 $rows = $this->service->PKFeeDeal_d($rows,1);
-
                 $rentalcarDao = new model_outsourcing_vehicle_rentalcar();
                 // 其余信息处理
                 foreach ($rows as $k => $v) {
@@ -1757,6 +1782,11 @@ class controller_engineering_project_esmproject extends controller_base_action
                         $rows[$k]['curIncome'] = $this->service->getCurIncomeByPro($v);
                         //成本（总决算）处理
                         $rows[$k]['feeAll'] = $this->service->getFeeAllByPro($v);
+                    }
+
+                    if($rows[$k]['state'] == '7'){
+                        $rows[$k]['status'] = 'GCXMZT02';
+                        $rows[$k]['statusName'] = '异常关闭';//如果合同状态为异常关闭项目状态也改成异常关闭
                     }
                 }
                 //列表金额处理
@@ -1810,19 +1840,22 @@ class controller_engineering_project_esmproject extends controller_base_action
                 $resultArr = $this->service->updateProjectOtherBudget_d('budgetOutsourcing');//外包预决算
                 break;
             case 6:
-                $resultArr = $this->service->updateProjectPersonBudget_d();//人力预决算
+                $resultArr = $this->service->updateProjectPersonBudget_d();     //人力预决算
                 break;
             case 7:
-                $resultArr = $this->service->updateProjectFeeEqu_d();      //设备决算
+                $resultArr = $this->service->updateProjectFeeEqu_d();           //设备决算
                 break;
             case 8:
-                $resultArr = $this->service->updateProjectShipCost_d(0);      //发货成本
+                $resultArr = $this->service->updateProjectShipCost_d(0);        //导入其他成本(覆盖更新)
                 break;
             case 9:
-                $resultArr = $this->service->updateProjectShipCost_d(1);      //其他成本
+                $resultArr = $this->service->updateProjectShipCost_d(1);        //其他成本
                 break;
             case 10:
-                $resultArr = $this->service->conprojectExcel();      //合同项目导入
+                $resultArr = $this->service->conprojectExcel();                 //合同项目导入
+                break;
+            case 11:
+                $resultArr = $this->service->updateProjectShipCost_d(0,1);        //导入发货成本(单月累加)
                 break;
             default:
                 $resultArr = array();

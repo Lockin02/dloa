@@ -127,35 +127,35 @@ class model_engineering_util_esmexcelutil extends model_base
 			$excelActiveSheet->setCellValueByColumnAndRow(24, $n, empty($v['feePK']) ? 0 : $v['feePK']);
 
 			$excelActiveSheet->setCellValueByColumnAndRow(25, $n, $v['contractType'] == 'GCXMYD-04' ? '--' : bcdiv($v['exgross'], 100, 4));
-			$excelActiveSheet->setCellValueByColumnAndRow(26, $n, bcdiv($v['feeAllProcessCount'], 100, 4));
-			$excelActiveSheet->setCellValueByColumnAndRow(27, $n, bcdiv($v['projectProcess'], 100, 4));
-			$excelActiveSheet->setCellValueByColumnAndRow(28, $n, iconv("GBK", "utf-8", $v['province']));
+			// $excelActiveSheet->setCellValueByColumnAndRow(26, $n, bcdiv($v['feeAllProcessCount'], 100, 4));
+			$excelActiveSheet->setCellValueByColumnAndRow(26, $n, bcdiv($v['projectProcess'], 100, 4));
+			$excelActiveSheet->setCellValueByColumnAndRow(27, $n, iconv("GBK", "utf-8", $v['province']));
 			if ($v['planBeginDate'] != '0000-00-00' && !empty($v['planBeginDate'])) {
-				$excelActiveSheet->setCellValueByColumnAndRow(29, $n, $v['planBeginDate']);
+				$excelActiveSheet->setCellValueByColumnAndRow(28, $n, $v['planBeginDate']);
 			}
 			if ($v['planEndDate'] != '0000-00-00' && !empty($v['planEndDate'])) {
-				$excelActiveSheet->setCellValueByColumnAndRow(30, $n, $v['planEndDate']);
+				$excelActiveSheet->setCellValueByColumnAndRow(29, $n, $v['planEndDate']);
 			}
 			if ($v['actBeginDate'] != '0000-00-00' && !empty($v['actBeginDate'])) {
-				$excelActiveSheet->setCellValueByColumnAndRow(31, $n, $v['actBeginDate']);
+				$excelActiveSheet->setCellValueByColumnAndRow(30, $n, $v['actBeginDate']);
 			}
 			if ($v['actEndDate'] != '0000-00-00' && !empty($v['actEndDate'])) {
-				$excelActiveSheet->setCellValueByColumnAndRow(32, $n, $v['actEndDate']);
+				$excelActiveSheet->setCellValueByColumnAndRow(31, $n, $v['actEndDate']);
 			}
-			$excelActiveSheet->setCellValueByColumnAndRow(33, $n, iconv("GBK", "utf-8", $v['managerName']));
-			$excelActiveSheet->setCellValueByColumnAndRow(34, $n, iconv("GBK", "utf-8", $v['ExaStatus']));
-			$excelActiveSheet->setCellValueByColumnAndRow(35, $n, $v['peopleNumber']);
-			$excelActiveSheet->setCellValueByColumnAndRow(36, $n, iconv("GBK", "utf-8", $v['outsourcingName']));
-			$excelActiveSheet->setCellValueByColumnAndRow(37, $n, iconv("GBK", "utf-8", $v['categoryName']));
-			$excelActiveSheet->setCellValueByColumnAndRow(38, $n, iconv("GBK", "utf-8", $v['netName']));
-			$excelActiveSheet->setCellValueByColumnAndRow(39, $n, iconv("GBK", "utf-8", $v['attributeName']));
-			$excelActiveSheet->setCellValueByColumnAndRow(40, $n, $v['contractCode']);
-			$excelActiveSheet->setCellValueByColumnAndRow(41, $n, $v['rObjCode']);
-			$excelActiveSheet->setCellValueByColumnAndRow(42, $n, $v['contractType'] == 'GCXMYD-04' ? '--' : $v['contractMoney']);
-            $excelActiveSheet->setCellValueByColumnAndRow(43, $n, $v['contractType'] == 'GCXMYD-04' ? '0' : $v['curIncome']);
-			$excelActiveSheet->setCellValueByColumnAndRow(44, $n, bcdiv($v['workRate'], 100, 4));
-			$excelActiveSheet->setCellValueByColumnAndRow(45, $n, $v['updateTime']);
-            $excelActiveSheet->setCellValueByColumnAndRow(46, $n, $v['estimates']);
+			$excelActiveSheet->setCellValueByColumnAndRow(32, $n, iconv("GBK", "utf-8", $v['managerName']));
+			$excelActiveSheet->setCellValueByColumnAndRow(33, $n, iconv("GBK", "utf-8", $v['ExaStatus']));
+			$excelActiveSheet->setCellValueByColumnAndRow(34, $n, $v['peopleNumber']);
+			$excelActiveSheet->setCellValueByColumnAndRow(35, $n, iconv("GBK", "utf-8", $v['outsourcingName']));
+			$excelActiveSheet->setCellValueByColumnAndRow(36, $n, iconv("GBK", "utf-8", $v['categoryName']));
+			$excelActiveSheet->setCellValueByColumnAndRow(37, $n, iconv("GBK", "utf-8", $v['netName']));
+			$excelActiveSheet->setCellValueByColumnAndRow(38, $n, iconv("GBK", "utf-8", $v['attributeName']));
+			$excelActiveSheet->setCellValueByColumnAndRow(39, $n, $v['contractCode']);
+			$excelActiveSheet->setCellValueByColumnAndRow(40, $n, $v['rObjCode']);
+			$excelActiveSheet->setCellValueByColumnAndRow(41, $n, $v['contractType'] == 'GCXMYD-04' ? '--' : $v['contractMoney']);
+            $excelActiveSheet->setCellValueByColumnAndRow(42, $n, $v['contractType'] == 'GCXMYD-04' ? '0' : $v['curIncome']);
+			$excelActiveSheet->setCellValueByColumnAndRow(43, $n, bcdiv($v['workRate'], 100, 4));
+			$excelActiveSheet->setCellValueByColumnAndRow(44, $n, $v['updateTime']);
+            $excelActiveSheet->setCellValueByColumnAndRow(45, $n, $v['estimates']);
 		}
 
 		$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
@@ -203,47 +203,48 @@ class model_engineering_util_esmexcelutil extends model_base
 			$excelActiveSheet->setCellValueByColumnAndRow(9, $n, iconv("GBK", "utf-8", $v['categoryName']));//项目类别
             $projectProcess = bcdiv($v['feeProcess'], 100, 4);
 			$excelActiveSheet->setCellValueByColumnAndRow(10, $n, bcdiv($v['projectProcess'], 100, 6));//项目进度
-			$excelActiveSheet->setCellValueByColumnAndRow(11, $n, sprintf("%.4f",$projectProcess));//费用进度
-			$excelActiveSheet->setCellValueByColumnAndRow(12, $n, bcdiv($v['DeliverySchedule'], 100, 6));//发货进度
-			$excelActiveSheet->setCellValueByColumnAndRow(13, $n, $v['contractMoney']);//合同金额
-			$excelActiveSheet->setCellValueByColumnAndRow(14, $n, $v['projectRate']/100);//项目占比
-			$excelActiveSheet->setCellValueByColumnAndRow(15, $n, $v['projectMoneyWithTax']);//项目金额（税前）
-			$excelActiveSheet->setCellValueByColumnAndRow(16, $n, $v['estimates']);//项目概算
-            $excelActiveSheet->setCellValueByColumnAndRow(17, $n, $v['budgetAll']);//总预算
-			$excelActiveSheet->setCellValueByColumnAndRow(18, $n, $v['feeAll']);//总成本
-			$excelActiveSheet->setCellValueByColumnAndRow(19, $n, $v['contractType'] == 'GCXMYD-04' ? '0' : $v['curIncome']);//当前收入
-			$excelActiveSheet->setCellValueByColumnAndRow(20, $n, $v['reserveEarnings']);//预留营收
-			$excelActiveSheet->setCellValueByColumnAndRow(21, $n, $v['grossProfit']);//项目毛利
-			$excelActiveSheet->setCellValueByColumnAndRow(22, $n, $v['contractType'] == 'GCXMYD-04' ? '--' : bcdiv($v['exgross'], 100, 4));//毛利率
-            $excelActiveSheet->setCellValueByColumnAndRow(23, $n, $v['budgetField']);//报销支付预算
+			// $excelActiveSheet->setCellValueByColumnAndRow(11, $n, sprintf("%.4f",$projectProcess));//费用进度
+			$excelActiveSheet->setCellValueByColumnAndRow(11, $n, bcdiv($v['DeliverySchedule'], 100, 6));//发货进度
+			$excelActiveSheet->setCellValueByColumnAndRow(12, $n, $v['contractMoney']);//合同金额
+			// $excelActiveSheet->setCellValueByColumnAndRow(14, $n, $v['projectRate']/100);//项目占比
+			$excelActiveSheet->setCellValueByColumnAndRow(13, $n, $v['projectMoneyWithTax']);//项目金额（税前）
+			$excelActiveSheet->setCellValueByColumnAndRow(14, $n, $v['estimates']);//项目概算
+            $excelActiveSheet->setCellValueByColumnAndRow(15, $n, $v['budgetAll']);//总预算
+			$excelActiveSheet->setCellValueByColumnAndRow(16, $n, $v['feeAll']);//总成本
+			$excelActiveSheet->setCellValueByColumnAndRow(17, $n, $v['contractType'] == 'GCXMYD-04' ? '0' : $v['curIncome']);//当前收入
+			// $excelActiveSheet->setCellValueByColumnAndRow(20, $n, $v['reserveEarnings']);//预留营收
+			$excelActiveSheet->setCellValueByColumnAndRow(18, $n, $v['grossProfit']);//项目毛利
+			$excelActiveSheet->setCellValueByColumnAndRow(19, $n, $v['contractType'] == 'GCXMYD-04' ? '--' : bcdiv($v['exgross'], 100, 4));//毛利率
+            $excelActiveSheet->setCellValueByColumnAndRow(20, $n, $v['budgetField']);//报销支付预算
+            // $feeFieldCount = $v['feeField'];
 			$feeFieldCount = bcadd($v['feeField'], $v['feeFieldImport'], 2);
 			$feeFieldCount = bcadd($feeFieldCount, $v['feeFlights'], 2);
 			$feeFieldCount = bcadd($feeFieldCount, $v['feePayables'], 2);
 			$feeFieldCount = bcadd($feeFieldCount, $v['feeCar'], 2);
 			$feeFieldCount = bcadd($feeFieldCount, $v['feeCostbx'], 2);
 
-			$excelActiveSheet->setCellValueByColumnAndRow(24, $n, $feeFieldCount);//报销支付成本合计
+			$excelActiveSheet->setCellValueByColumnAndRow(21, $n, $feeFieldCount);//报销支付成本合计
 
-            $excelActiveSheet->setCellValueByColumnAndRow(25, $n, $v['budgetPerson']);//人力预算
+            $excelActiveSheet->setCellValueByColumnAndRow(22, $n, $v['budgetPerson']);//人力预算
 			$feePersonCount = bcadd($v['feePerson'], $v['feeSubsidy'], 2);
 			$feePersonCount = bcadd($feePersonCount, $v['feeSubsidyImport'], 2);
-			$excelActiveSheet->setCellValueByColumnAndRow(26, $n, $feePersonCount);//人力成本合计
+			$excelActiveSheet->setCellValueByColumnAndRow(23, $n, $feePersonCount);//人力成本合计
 
-            $excelActiveSheet->setCellValueByColumnAndRow(27, $n, $v['budgetEqu']);//设备预算
-			$excelActiveSheet->setCellValueByColumnAndRow(28, $n, bcadd($v['feeEqu'], $v['feeEquImport'], 2));//设备成本
-            $excelActiveSheet->setCellValueByColumnAndRow(29, $n, $v['budgetOutsourcing']);//外包预算
-			$excelActiveSheet->setCellValueByColumnAndRow(30, $n, $v['feeOutsourcing']);//外包成本
-            $excelActiveSheet->setCellValueByColumnAndRow(31, $n, bcadd($v['budgetOther'], empty($v['budgetPK']) ? 0 : $v['budgetPK'], 2));//其他预算
-            $excelActiveSheet->setCellValueByColumnAndRow(32, $n, bcadd($v['feeOther'], empty($v['feePK']) ? 0 : $v['feePK'], 2));//其他成本（合计）
+            $excelActiveSheet->setCellValueByColumnAndRow(24, $n, $v['budgetEqu']);//设备预算
+			$excelActiveSheet->setCellValueByColumnAndRow(25, $n, bcadd($v['feeEqu'], $v['feeEquImport'], 2));//设备成本
+            $excelActiveSheet->setCellValueByColumnAndRow(26, $n, $v['budgetOutsourcing']);//外包预算
+			$excelActiveSheet->setCellValueByColumnAndRow(27, $n, $v['feeOutsourcing']);//外包成本
+            $excelActiveSheet->setCellValueByColumnAndRow(28, $n, bcadd($v['budgetOther'], empty($v['budgetPK']) ? 0 : $v['budgetPK'], 2));//其他预算
+            $excelActiveSheet->setCellValueByColumnAndRow(29, $n, bcadd($v['feeOther'], empty($v['feePK']) ? 0 : $v['feePK'], 2));//其他成本（合计）
 
-			$excelActiveSheet->setCellValueByColumnAndRow(33, $n, $v['shipCostT']);//发货成本
-			$excelActiveSheet->setCellValueByColumnAndRow(34, $n, $v['shipCost']);//计提发货成本
-			$excelActiveSheet->setCellValueByColumnAndRow(35, $n, $v['equCost']);//存货核算成本
+			$excelActiveSheet->setCellValueByColumnAndRow(30, $n, $v['shipCostT']);//发货成本
+			$excelActiveSheet->setCellValueByColumnAndRow(31, $n, $v['shipCost']);//计提发货成本
+			// $excelActiveSheet->setCellValueByColumnAndRow(35, $n, $v['equCost']);//存货核算成本
 
-			$excelActiveSheet->setCellValueByColumnAndRow(36, $n, iconv("GBK", "utf-8", $v['outsourcingName']));//外包类型
+			$excelActiveSheet->setCellValueByColumnAndRow(32, $n, iconv("GBK", "utf-8", $v['outsourcingName']));//外包类型
 
-            $excelActiveSheet->setCellValueByColumnAndRow(37, $n, iconv("GBK", "utf-8", $v['managerName']));//项目经理
-			$excelActiveSheet->setCellValueByColumnAndRow(38, $n, iconv("GBK", "utf-8", $v['earningsType'] ? $v['earningsType'] : $v['incomeTypeName']));//收入确认方式
+            $excelActiveSheet->setCellValueByColumnAndRow(33, $n, iconv("GBK", "utf-8", $v['managerName']));//项目经理
+			$excelActiveSheet->setCellValueByColumnAndRow(34, $n, iconv("GBK", "utf-8", $v['earningsType'] ? $v['earningsType'] : $v['incomeTypeName']));//收入确认方式
 
 
         }

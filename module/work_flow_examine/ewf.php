@@ -200,7 +200,7 @@
     {
         $flow_arr[$flow_i][$msql->f("FLOW_ID")]=$msql->f("FLOW_NAME");
     }
-    
+
     if(!empty($ckpoin)){
         foreach($ckpoin as $val){
             $flow_i++;
@@ -218,7 +218,6 @@
         <tr>
             <td width="50%">
 <?php
-//        print_r($flow_arr);
         if($flow_arr){
             foreach($flow_arr as $key=>$val){
                 

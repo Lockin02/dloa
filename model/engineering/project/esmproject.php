@@ -1123,7 +1123,7 @@ class model_engineering_project_esmproject extends model_base
                                 $addOrUpdate = 0;
                             } else {
                                 //判断时候已经存在项目
-                                $rs = $this->find(array('projectCode' => $projectCode), null, 'contractId,managerId,managerName');
+                                $rs = $this->find(array('projectCode' => $projectCode), null, 'id,contractId,managerId,managerName');
                                 if (is_array($rs)) {
                                     $projectArr[$projectCode] = $rs;
                                     $addOrUpdate = 0;
@@ -1384,15 +1384,12 @@ class model_engineering_project_esmproject extends model_base
                             $inArr['attribute'] = 'GCXMSS-02';
                             $inArr['contractType'] = 'GCXMYD-01';
                         }
-
                         //项目占比
                         if ($addOrUpdate == 1) {
                             $inArr['workRate'] = 100;
                         }
-
                         try {
                             $this->start_d();
-
                             if ($addOrUpdate == 1) {
                                 //新增项目数据
                                 $newId = $this->add_d($inArr);
@@ -1412,7 +1409,6 @@ class model_engineering_project_esmproject extends model_base
                             } else {
                                 //更新项目数据
                                 $this->update(array('projectCode' => $projectCode), $inArr);
-
                                 //项目经理部分处理 如果修改了项目经理，则对项目成员列表中的项目经理进行修改
                                 if ($projectArr[$projectCode]['managerId'] != $managerId) {
                                     $conditionArr = array('projectCode' => $projectCode, 'memberId' => $projectArr[$projectCode]['managerId']);
@@ -1425,7 +1421,6 @@ class model_engineering_project_esmproject extends model_base
                                     $esmroleDao->update($roleCon, $roleArr);
                                 }
                             }
-
                             //调用策略
                             if (isset($inArr['contractType']) && in_array($inArr['contractType'], $this->initContractType)) {
                                 $projectInfo = array('contractType' => $inArr['contractType'], 'contractId' => $contractId);
@@ -1441,12 +1436,16 @@ class model_engineering_project_esmproject extends model_base
                                     //新增时处理
                                     $this->businessAdd_d($projectInfo, $strategyArr[$inArr['contractType']]);
                                 }
+
+                                //如果已有项目则更新 加上id
+                                if(!$addOrUpdate){
+                                    $projectInfo['id'] = $projectArr[$projectCode]['id'];
+                                }
                                 //处理确认
                                 $this->businessConfirm_d($projectInfo, $strategyArr[$inArr['contractType']]);
                                 //处理关闭
                                 $this->businessClose_d($projectInfo, $strategyArr[$inArr['contractType']]);
                             }
-
                             //项目信息同步
                             $this->updateProjectInfo_p($inArr);
 
@@ -1454,7 +1453,6 @@ class model_engineering_project_esmproject extends model_base
                         } catch (Exception $e) {
                             $this->rollBack();
                         }
-
                         if ($addOrUpdate == 1) {
                             if ($newId) {
                                 $tempArr['result'] = '导入成功';
@@ -2379,9 +2377,11 @@ class model_engineering_project_esmproject extends model_base
 
     /**
      * 发货成本
-     * @param type 0-发货成本 1-其他成本
+     * @param $type 0-发货成本 1-其他成本
+     * @param bool $isAddBefore true-单月累加 false-覆盖更新
+     * @return array
      */
-    function updateProjectShipCost_d($type)
+    function updateProjectShipCost_d($type,$isAddBefore = false)
     {
         set_time_limit(0);
         ini_set("memory_limit", "1000M");
@@ -2431,6 +2431,11 @@ class model_engineering_project_esmproject extends model_base
                         if ($feeEqu != 'NONE') {
                             $isSet = $this->get_table_fields($tableName, "projectCode='$projectCode'", "id");
                             if (!empty($isSet)) {
+                                if($type == 0 && $isAddBefore){// 导入发货成本(单月累加)
+                                    $dataInfo = $this->_db->get_one("select id,cost from {$tableName} where projectCode = '" . $projectCode . "';");
+                                    $dataInfoCost = (isset($dataInfo['cost']) && $dataInfo['cost'] > 0)? $dataInfo['cost'] : 0;
+                                    $feeEqu = round(bcadd($feeEqu,$dataInfoCost,4),2);
+                                }
                                 //update
                                 $sql = "update $tableName set cost='$feeEqu' where projectCode='$projectCode'";
                             } else {
@@ -2841,7 +2846,6 @@ class model_engineering_project_esmproject extends model_base
         $otherDatasDao = new model_common_otherdatas();
         $subsidyArr = $otherDatasDao->getConfig('engineering_budget_subsidy_id');
         $filterArr = $otherDatasDao->getConfig('engineering_budget_expense_id');
-
         // 报销系统费用获取
         $feeNow = $this->getFeeNow_d($obj['projectCode']);
 
@@ -2859,19 +2863,19 @@ class model_engineering_project_esmproject extends model_base
             $feePayables = 0;
             $fieldRecordDao = self::getObjCache('model_engineering_records_esmfieldrecord');
             $fieldRecordArr = $fieldRecordDao->feeDetail_d('payables', $obj['id']);
+
             foreach ($fieldRecordArr as $costVal) {
                 $feePayables = bcadd($feePayables, $costVal, 3);
             }
             $obj['feePayables'] = $feePayables;
 //        }
-
         // 加上租车登记的预提金额 PMS 715
         $rentalcarDao = new model_outsourcing_vehicle_rentalcar();
         $rentalcarCostArr = $rentalcarDao->getProjectAuditingCarFee($obj['id']);
         $auditingCarFee = ($rentalcarCostArr)? $rentalcarCostArr['totalCost'] : 0;
 
         //实时费用设置，现场决算 = 报销费用+费用分摊费用+费用维护+机票决算
-        $obj['feeFieldClean'] = $feeField;  // 报销决算
+        $obj['feeFieldClean'] = bcadd($feeField, $auditingCarFee, 2);  // 报销决算
         $feeField = bcadd($feeField, $obj['feePayables'], 2);  //费用分摊费用
         $feeField = bcadd($feeField, $obj['feeFieldImport'], 2);  //费用维护
         $feeField = bcadd($feeField, $obj['feeCar'], 2);  //租车
@@ -2896,7 +2900,7 @@ class model_engineering_project_esmproject extends model_base
         $obj['feePersonClean'] = $obj['feePerson'];
         $obj['feeSubsidy'] = $feeSubsidyNow;
         $obj['feePerson'] = bcadd($obj['feePerson'], $feeSubsidyNow, 2);
-        $obj['feePerson'] = bcadd($obj['feePerson'], $obj['feeSubsidyImport'], 2);
+        $obj['feePerson'] = bcadd($obj['feePerson'], $obj['feeSubsidyImport'], 2); //人力成本合计
         $obj['feePersonProcess'] = $this->countProcess_d($obj['budgetPerson'], $obj['feePerson']); // 设备进度
 
         // 获取设备决算
@@ -2905,7 +2909,7 @@ class model_engineering_project_esmproject extends model_base
         $obj['feeEquDepr'] = bcadd($esmDeviceFeeDao->getDeviceFee_d($obj['id'], '2'),
             $esmDeviceFeeDao->getDeviceFee_d($obj['id'], '1'), 2); // 从设备系统获取的决算
         $obj['feeEqu'] = bcadd($obj['feeEquClean'], $obj['feeEquDepr'], 2);
-        $obj['feeEqu'] = bcadd($obj['feeEqu'], $obj['feeEquImport'], 2);
+        $obj['feeEqu'] = bcadd($obj['feeEqu'], $obj['feeEquImport'], 2);  //设备成本合计
         $obj['feeEquProcess'] = $this->countProcess_d($obj['budgetEqu'], $obj['feeEqu']); // 设备进度
 
         $obj['feeOutsourcingProcess'] = $this->countProcess_d($obj['budgetOutsourcing'], $obj['feeOutsourcing']); // 外包进度
@@ -3049,8 +3053,8 @@ class model_engineering_project_esmproject extends model_base
                     $obj['curIncome'] = 0;
             }
 
-            // 项目收入处理 - 如果项目状态是异常关闭，那么项目营收为0
-            if ($obj['status'] == 'GCXMZT06') {
+            // 项目收入处理 - 如果合同状态是异常关闭，那么项目营收为0
+            if ($obj['contractStatus'] == '7') {
                 $obj['curIncome'] = 0;
             }
 
@@ -4279,6 +4283,7 @@ class model_engineering_project_esmproject extends model_base
                 $moduleName = $v['moduleName'];
                 $areaCode = $v['areaCode'];
                 $areaName = $v['areaName'];
+
                 $v = $this->feeDeal($v);
                 $v = $this->contractDeal($v);
                 if($v['contractId'] > 0){
@@ -4292,6 +4297,8 @@ class model_engineering_project_esmproject extends model_base
                 $projectIds[] = $v['id'];
 
                 // 更新项目信息
+                //pms 3055 'feeField' => $v['feeFieldClean'],改成'feeField' => $v['feeField']
+                //因为缺少了租车预提 feefield字段是报销总和 是包括租车预提的 clean是不包括
                 $this->edit_d(array(
                     'id' => $v['id'], 'moduleName' => $moduleName, 'module' => $module,
                     'areaCode' => $areaCode, 'areaName' => $areaName, 'contractRate' => $v['contractRate'],
@@ -4467,10 +4474,9 @@ class model_engineering_project_esmproject extends model_base
         $backArr['curIncome'] = 0;//项目营收
         $backArr['feeAll'] = 0;//总 决 算(实时)
         $this->searchArr = "";
-//        $this->searchArr['contractId'] = $cid;
-        $this->searchArr['contractCode'] = $conArr['contractCode']; //修改合同查询条件 pms3030
+        $this->searchArr['contractId'] = $cid;
+        //试用项目排除
         $rows = $this->pageBySqlId('select_defaultAndFeeForUpload');
-
         if($rows){
             $backArr['hasProject'] = true;
             // 项目信息处理
@@ -4479,7 +4485,7 @@ class model_engineering_project_esmproject extends model_base
                 // 预算预决算
                 $feeAll = $v['feeAll'];
                 if ($v['contractType'] == 'GCXMYD-01' && (!isset($v['pType']) || $v['pType'] == 'esm')) {
-                    //获取当前行的试用项目
+                    // 获取当前行的试用项目
                     $fee = 0;
                     $thisRowPKProject = $this->getPKInfo_d(null, $v);
                     if ($thisRowPKProject) {
@@ -4495,7 +4501,7 @@ class model_engineering_project_esmproject extends model_base
                 }
                 $projectMoneyWithTax = sprintf("%.3f", $v['projectMoney']);
                 $projectMoneyWithTax = bcmul($projectMoneyWithTax,1,10);
-                $backArr['allProjMoneyWithSchl'] += bcmul($projectMoneyWithTax,bcdiv($v['projectProcess'],100,6),6);//项目合同额
+                $backArr['allProjMoneyWithSchl'] += bcmul($projectMoneyWithTax,bcdiv($v['projectProcess'],100,11),10);//项目合同额
                 $backArr['budgetAll'] += sprintf("%.3f", $budgetAll);// 总预算
                 $backArr['curIncome'] += sprintf("%.3f", $v['curIncome']);//项目营收
                 $backArr['feeAll'] += sprintf("%.3f", $feeAll);//总 决 算(实时)

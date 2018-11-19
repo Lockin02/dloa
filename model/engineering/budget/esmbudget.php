@@ -850,6 +850,7 @@ class model_engineering_budget_esmbudget extends model_base
                             break;
                         case 'rentalCarAuditingCost':
                             $row['isRentalCarAuditingCost'] = 1;
+                            $remark[] = "报销成本：" . number_format($vi, 2);
                             break;
                         default:
                     }

@@ -869,8 +869,6 @@ class model_db
             $sql .= " order by " . $this->sort . " " . $asc;
         }
         $this->listSql = $sql;
-
-//						echo $sql."<br><br>";
         return $this->_db->getArray($sql);
     }
 
